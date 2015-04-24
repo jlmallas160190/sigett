@@ -1,0 +1,78 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+
+    <body>
+
+        <ui:composition template="./principal.xhtml">
+
+            <ui:define name="title">#{msg['lbl.tiposProyecto']}</ui:define>
+            <ui:define name="content">
+                <p:messages id="msm" showDetail="true"/>
+                <p:panel header="#{msg['lbl.buscar']} #{msg['lbl.por']} #{msg['lbl.tiposProyecto']}">
+                    <h:panelGrid styleClass="panelgrid" rowClasses="rowpanelgrid" columnClasses="col-sm-11,col-sm-1" columns="2">
+                        <p:inputText style="text-transform: none" placeholder="#{msg['lbl.buscar']}" value="#{administrarTipoProyectos.criterio}"/>
+                        <p:commandButton update="tblTiposProyectos,msm" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" value="#{msg['lbl.buscar']}" action="#{administrarTipoProyectos.listadoTipoProyectos(administrarTipoProyectos.criterio)}"  icon="ui-icon-search" />
+                    </h:panelGrid>
+                </p:panel>
+                <br/>
+                <p:panel header="#{msg['lbl.tiposProyecto']}">
+                    <p:dataTable id="tblTiposProyectos" value="#{administrarTipoProyectos.tipoProyectos}" var="item" rows="20" paginator="true"
+                                 rowIndexVar="rowIx" rowKey="#{item.id}" selectionMode="single" selection="#{sessionTipoProyecto.tipoProyecto}" editable="true" editMode="cell" rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'even-row' : 'odd-row'}" emptyMessage="#{msg['lbl.table.empty']}">
+                        <p:column sortBy="#{item.id}">
+                            <f:facet name="header">
+                                <h:outputText value="Id"/>
+                            </f:facet>
+                            <h:outputText value="#{item.id}"/>
+                        </p:column>
+                        <p:column sortBy="#{item.nombre}" rendered="#{administrarTipoProyectos.renderedNoEditar}">
+                            <f:facet name="header">
+                                <h:outputText value="#{msg['lbl.nombre']}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.nombre}"/>
+                        </p:column>
+                        <p:column sortBy="#{item.nombre}" rendered="#{administrarTipoProyectos.renderedEditar()}">
+                            <f:facet name="header">
+                                <h:outputText value="#{msg['lbl.nombre']}"/>
+                            </f:facet>
+                            <p:commandLink value="#{item.nombre}" update="@form" action="#{administrarTipoProyectos.editar(item)}" />
+                        </p:column>
+                        <p:column sortBy="#{item.descripcion}">
+                            <f:facet name="header">
+                                <h:outputText value="#{msg['lbl.descripcion']}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.descripcion}"/>
+                        </p:column>
+                        <p:column rendered="#{administrarTipoProyectos.renderedEliminar()}">
+                            <f:facet name="header">
+                                <h:outputText value="#{msg['lbl.estado']}"/>
+                            </f:facet>
+                            <p:cellEditor>  
+                                <f:facet name="output"><h:outputText value="#{item.esActivo}" /></f:facet>  
+                                <f:facet name="input">
+                                    <p:selectBooleanCheckbox  value="#{item.esActivo}">
+                                        <p:ajax update="tblTiposProyectos" event="change" listener="#{administrarTipoProyectos.desactivar(item)}"/>
+                                    </p:selectBooleanCheckbox>
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
+                    </p:dataTable>
+                    <f:facet name="footer">
+                        <h:panelGrid columns="1">
+                            <p:commandButton value="#{msg['lbl.crear']}" update="@form" rendered="#{administrarTipoProyectos.renderedCrear()}" icon="ui-icon-newwin" action="#{administrarTipoProyectos.crear()}">
+                                <f:param name="1" value="crear"/>
+                            </p:commandButton>
+                        </h:panelGrid>
+                    </f:facet>
+                </p:panel>               
+            </ui:define>
+            <ui:define name="data"></ui:define>
+        </ui:composition>
+
+    </body>
+</html>

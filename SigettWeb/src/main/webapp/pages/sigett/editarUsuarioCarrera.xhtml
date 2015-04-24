@@ -1,0 +1,125 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xml:lang="es" lang="es"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <body>
+
+        <ui:composition template="./../../principal.xhtml">
+            <ui:define name="title">
+                <h:outputText value="#{msg['lbl.editar']} #{msg['lbl.carrera']}"/>
+            </ui:define>
+            <ui:define name="content">                
+                <p:messages id="msm"/>
+                <p:panel header="#{msg['lbl.datos']} #{msg['lbl.carrera']}">
+                    <div class="row-fluid">
+                        <div class="col-sm-2">
+                            <p:panel>
+                                <p:graphicImage id="logo" styleClass="img-thumbnail" cache="false"  height="100" width="100" value="/AppServlet?id=#{sessionUsuarioCarrera.carrera.id}&amp;entity=Carrera"/>
+                                <f:facet name="footer">
+                                    <h:panelGrid >
+                                        <p:commandButton icon="ui-icon-upload"  onstart="PF('dlgLoading').show();" oncomplete="PF('dlgLoading').hide()" value="#{msg['lbl.subir']}"  onclick="PF('dlgLogo').show();"/>
+                                    </h:panelGrid>
+                                </f:facet>
+                            </p:panel>
+                        </div>
+                        <div class="col-sm-10">
+                            <h:panelGrid styleClass="panelgrid" rowClasses="rowpanelgrid" columnClasses="col-sm-2,col-sm-9,col-sm-1" columns="3">
+                                <h:outputLabel value="#{msg['lbl.sigla']}:"/>
+                                <p:inputText id="sigla"  validatorMessage="#{msg['lbl.formato_invalido']}" value="#{sessionUsuarioCarrera.carrera.sigla}" required="true" >
+                                    <p:ajax update="msmSigla" event="keyup"/>
+                                    <p:ajax update="@this" event="change"/>
+                                    <f:validateRegex pattern="^[A-Za-z]{1,20}$"/>
+                                </p:inputText>
+                                <p:message for="sigla" id="msmSigla"/>
+                                <h:outputLabel value="#{msg['lbl.nombre']}:"/>
+                                <h:outputLabel value="#{sessionUsuarioCarrera.carrera.nombre}"/>
+                                <h:inputHidden/>
+                                <h:outputLabel value="Id Sga:"  />
+                                <h:outputLabel value="#{sessionUsuarioCarrera.carrera.idSga}" />
+                                <h:inputHidden/>
+                                <h:outputLabel value="#{msg['lbl.area']}:"  />
+                                <h:outputLabel value="#{sessionUsuarioCarrera.carrera.areaId.nombre}" />
+                                <h:inputHidden/>
+                                <h:outputLabel value="#{msg['lbl.nivel']}:"  />
+                                <h:outputLabel value="#{sessionUsuarioCarrera.carrera.nivelId.nombre}" />
+                                <h:inputHidden/> 
+                                <h:outputLabel value="#{msg['lbl.lugar']}:"  />
+                                <p:inputText id="lugar" value="#{sessionUsuarioCarrera.carrera.lugar}" required="true" >
+                                    <p:ajax update="msmLugar" event="keyup"/>
+                                    <p:ajax update="@this" event="change"/>
+                                </p:inputText>
+                                <p:message for="lugar" id="msmLugar"/>
+                                <h:outputLabel value="#{msg['lbl.titulo']}:"  />
+                                <p:inputText id="titulo" value="#{sessionUsuarioCarrera.carrera.nombreTitulo}" required="true" >
+                                    <p:ajax update="msmTitulo" event="keyup"/>
+                                    <p:ajax update="@this" event="change"/>
+                                </p:inputText>
+                                <p:message for="titulo" id="msmTitulo"/>
+                            </h:panelGrid>
+                        </div>
+                    </div>
+                    <f:facet name="footer">
+                        <h:panelGrid>
+                            <p:commandButton id="guardar" value="#{msg['lbl.grabar']}" icon="ui-icon-disk" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" update="@form" action="#{administrarCarreras.grabarCarrera(sessionUsuarioCarrera.carrera,administrarCarreras.nivel,sessionUsuarioCarrera.carrera.areaId,sessionUsuarioCarrera.usuario)}">
+                                <f:param name="1" value="grabar-editar" />
+                            </p:commandButton>
+                        </h:panelGrid>
+                    </f:facet>
+                </p:panel>
+
+            </ui:define>
+            <ui:define name="data">
+
+                <p:dialog id="dlgLogo" header="#{msg['lbl.subir']} #{msg['lbl.logo']}" widgetVar="dlgLogo" modal="true"  >
+                    <h:panelGrid columns="1" >
+                        <p:fileUpload multiple="false" fileUploadListener="#{administrarCarreras.handleFileUpload}"  
+                                      update=":contenido:msm,:contenido:logo"  mode="advanced"  
+                                      allowTypes="/(\.|\/)(gif|jpe?g|png)$/" sizeLimit="#{administrarConfiguraciones.tamanioPermitidoFotos}" invalidFileMessage="#{msg['lbl.invalidTypeFileMessage']}"
+                                      invalidSizeMessage="#{msg['lbl.fileLimitMessage']}"
+                                      cancelLabel="#{msg['lbl.cancelar']}"  label="#{msg['lbl.seleccionar']}" oncomplete="dlgFoto.hide()" uploadLabel="#{msg['lbl.subir']}">
+                        </p:fileUpload>
+                    </h:panelGrid>
+                </p:dialog>
+            </ui:define>
+            <ui:define name="right">
+                <p:panel header="#{sessionUsuarioCarrera.carrera.nombre}">
+                    <h:panelGrid styleClass="panelgrid list-group" columns="1" >
+                        <p:commandLink styleClass="list-group-item" action="pretty:editarUsuarioCarrera">
+                            <p:graphicImage width="16" height="16" value="/resources/blacks/16x16/120.png"/>
+                            #{msg['lbl.inicio']}
+                        </p:commandLink>
+                        <p:commandLink styleClass="list-group-item" action="#{administrarPeriodoCoordinacion.navegarListado(sessionUsuario.usuario, sessionUsuarioCarrera.carrera)}">
+                            <p:graphicImage width="16" height="16" value="/resources/png/32px/Shape178.png"/>
+                            #{msg['lbl.periodosCoordinacion']}
+                        </p:commandLink>
+                        <p:commandLink styleClass="list-group-item" action="#{administrarCoordinadoresPeriodos.navegarListado(sessionUsuario.usuario, sessionUsuarioCarrera.carrera)}">
+                            <p:graphicImage width="16" height="16" value="/resources/png/32px/Shape147.png"/>
+                            #{msg['lbl.coordinadores']}
+                        </p:commandLink>
+                        <p:commandLink styleClass="list-group-item" action="pretty:configuracionesCarrera">
+                            <p:graphicImage width="16" height="16" value="/resources/blacks/16x16/240.png"/>
+                            #{msg['lbl.configuracion']}
+                        </p:commandLink>
+                        <p:commandLink styleClass="list-group-item" action="#{administrarLineasInvestigacionCarrera.viewLineasInvestigacionCarrera()}">
+                            <p:graphicImage width="16" height="16" value="/resources/png/32px/Shape102.png"/>
+                            #{msg['lbl.lineasInvestigacion']}
+                        </p:commandLink>
+                        <p:commandLink styleClass="list-group-item" action="#{administrarDocentesCarrera.viewDocentesCarrera()}">
+                            <p:graphicImage width="16" height="16" value="/resources/png/32px/Shape4.png"/>
+                            #{msg['lbl.docentes']}
+                        </p:commandLink>
+                        <p:commandLink styleClass="list-group-item" action="#{administrarEstudiantesCarrera.viewEstudiantesCarrera()}">
+                            <p:graphicImage width="16" height="16" value="/resources/png/32px/Shape198.png"/>
+                            #{msg['lbl.estudiantes']}
+                        </p:commandLink>
+                    </h:panelGrid>
+                </p:panel>
+            </ui:define>
+        </ui:composition>
+
+    </body>
+</html>

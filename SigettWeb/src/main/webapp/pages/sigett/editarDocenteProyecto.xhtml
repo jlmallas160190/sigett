@@ -1,0 +1,316 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xml:lang="es" lang="es">
+
+    <body>
+
+        <ui:composition template="./principalDocente.xhtml">     
+            <ui:define name="title">
+                <h:outputText value="#{msg['lbl.editar']} #{msg['lbl.docente']} #{msg['lbl.proyecto']}" />
+            </ui:define>
+            <ui:define name="top">
+                <f:view >
+                    <h:form id="superior">
+                        <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+                            <!-- Indicators -->
+                            <ol class="carousel-indicators">
+                                <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+                                <li data-target="#carousel-example-generic" data-slide-to="1"></li>
+                            </ol>
+
+                            <!-- Wrapper for slides -->
+                            <div class="carousel-inner">
+                                <div class="item active">
+                                    <div class="carousel-caption">
+                                        <h3>SIGETT</h3>
+                                    </div>
+                                </div>
+                                <div class="item">
+
+                                    <div class="carousel-caption">
+                                        <h3>SIGETT</h3>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <!-- Controls -->
+                            <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+                                <span class="glyphicon glyphicon-chevron-left"></span>
+                            </a>
+                            <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+                                <span class="glyphicon glyphicon-chevron-right"></span>
+                            </a>
+                        </div>
+
+                        <p:menubar>
+                            <p:menuitem icon="ui-icon-home" action="pretty:principalDocente" value="#{msg['lbl.inicio']}"/>
+                            <p:menuitem icon="ui-icon-pertinencia-project" value="#{msg['lbl.pertinencias']} #{msg['lbl.proyectos']}" action="pretty:docenteProyectos"/>
+                            <f:facet name="options">
+                                <p:outputLabel value="#{msg['lbl.saludo']}: #{sessionDocenteUsuario.docenteUsuario.docenteId.persona.nombres} #{sessionDocenteUsuario.docenteUsuario.docenteId.persona.apellidos}"></p:outputLabel>
+                                <p:outputLabel value="#{msg['lbl.rol']}: #{login.getRol(sessionDocenteUsuario.docenteUsuario.usuario)}"></p:outputLabel>
+                                <p:commandButton value="#{msg['lbl.cambiar']} #{msg['lbl.clave']}"  action="cambiarClaveDocente?faces-redirect=true"/>
+                                <p:commandButton value="#{msg['lbl.regresar']}" icon="ui-icon-arrowreturnthick-1-w" onclick="regresar()"/>
+                                <p:commandButton value="#{msg['lbl.salir']}" ajax="false" icon="ui-icon-power" action="#{loginDocente.logout()}" />
+
+                            </f:facet>
+                        </p:menubar>
+                    </h:form>
+                </f:view>
+            </ui:define>
+            <ui:define name="content">
+                <p:messages id="msm" showDetail="true"/>
+                <p:tabView id="datos">
+                    <p:ajax event="tabChange" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" update="tblPertinencias,crearPertinencia,dgAutores,:contenido:msm,:contenido:datos:pnlInicio" listener="#{administrarDocentesProyecto.onTabChange}"/>
+                    <p:tab id="inicio" title="#{msg['lbl.informacion']}">
+                        <p:panel id="pnlInicio" header="#{msg['lbl.informacion']}" toggleable="true">
+                            <h:panelGrid styleClass="panelgrid" rowClasses="rowpanelgrid" columnClasses="col-sm-2,col-sm-10" columns="2">
+                                <h:outputLabel value="#{msg['lbl.tema']}:"/>
+                                <h:outputText value="#{sessionDocenteProyecto.docenteProyecto.proyectoId.temaActual}"/>
+                                <h:outputLabel value="#{msg['lbl.fecha']} #{msg['lbl.inicio']}:"/>
+                                <p:calendar id="fechaInicio" navigator="true" pattern="dd/MM/yyyy" rendered="#{administrarCronograma.renderedEditarDatosCronograma}" locale="es" placeholder="#{msg['lbl.fecha']} #{msg['lbl.inicio']}" required="true"  requiredMessage="#{msg['lbl.fecha']} #{msg['lbl.inicio']} #{msg['lbl.obligatorio']}"  title="#{msg['lbl.fecha']} #{msg['lbl.inicio']}" value="#{sessionDocenteProyecto.docenteProyecto.proyectoId.cronograma.fechaInicio}">
+                                    <p:ajax event="dateSelect"  listener="#{administrarCronograma.setFechaInicio(sessionDocenteProyecto.docenteProyecto.proyectoId.cronograma)}"/>
+                                    <f:param  name="2" value="agregar-cronograma"/>
+                                    <p:ajax event="dateSelect" update="fechaInicio,:contenido:msm" listener="#{administrarCronograma.editarCronograma(sessionDocenteProyecto.docenteProyecto.proyectoId.cronograma)}"/>         
+                                </p:calendar>
+                                <h:outputText rendered="#{administrarCronograma.renderedEditarDatosCronograma==false}" value="#{sessionDocenteProyecto.docenteProyecto.proyectoId.cronograma.fechaInicio}">
+                                    <f:convertDateTime pattern="EEEEE dd MMMMM yyyy"/>
+                                </h:outputText>
+                                <h:outputLabel value="#{msg['lbl.fechaCulminación']}"/>
+                                <p:calendar  pattern="dd/MM/yyyy" navigator="true" rendered="#{administrarCronograma.renderedEditarDatosCronograma}" id="fechaFin" locale="es"   placeholder="#{msg['lbl.fechaCulminación']}" title="#{msg['lbl.fechaCulminación']}"  required="true" requiredMessage="#{msg['lbl.fechaCulminación']} #{msg['lbl.obligatorio']}" value="#{sessionDocenteProyecto.docenteProyecto.proyectoId.cronograma.fechaFin}">
+                                    <f:param  name="2" value="agregar-cronograma"/>
+                                    <p:ajax event="dateSelect" update=":contenido:msm,fechaInicio,fechaFin,duracion" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" listener="#{administrarCronograma.editarCronograma(sessionDocenteProyecto.docenteProyecto.proyectoId.cronograma)}"/> 
+                                </p:calendar>
+                                <h:outputText  rendered="#{administrarCronograma.renderedEditarDatosCronograma==false}" value="#{sessionDocenteProyecto.docenteProyecto.proyectoId.cronograma.fechaFin}">
+                                    <f:convertDateTime pattern="EEEEE dd MMMMM yyyy"/>
+                                </h:outputText>
+
+                                <h:outputLabel value="#{msg['lbl.duracion']}:"/>
+                                <h:outputLabel id="duracion" styleClass="informacion" value="#{sessionDocenteProyecto.docenteProyecto.proyectoId.cronograma.duracion} #{msg['lbl.dias']}"/>
+                                <h:outputLabel value="#{msg['lbl.tipoProyecto']}:"/>
+                                <h:outputText value="#{sessionDocenteProyecto.docenteProyecto.proyectoId.tipoProyectoId.nombre}"/>
+                                <h:outputLabel value="#{msg['lbl.categoria']}:"/>
+                                <h:outputText value="#{sessionDocenteProyecto.docenteProyecto.proyectoId.catalogoProyectoId.nombre}"/>
+                                <h:outputLabel value="#{msg['lbl.avance']}:"/>
+                                <p:progressBar id="avance" styleClass="avance" labelTemplate="#{sessionDocenteProyecto.docenteProyecto.proyectoId.cronograma.avance}%" value="#{sessionDocenteProyecto.docenteProyecto.proyectoId.cronograma.avance}"/>
+                                <h:outputLabel value="#{msg['lbl.faltante']}:"/>
+                                <p:progressBar id="faltante" styleClass="faltante" labelTemplate="#{sessionDocenteProyecto.docenteProyecto.proyectoId.cronograma.faltante}%" value="#{sessionDocenteProyecto.docenteProyecto.proyectoId.cronograma.faltante}"/>
+                            </h:panelGrid>
+                            <br/>
+                            <f:facet name="footer">
+                                <h:panelGrid >
+                                    <p:commandButton icon="ui-icon-disk" value="#{msg['lbl.grabar']}" update="@form" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" action="#{administrarCronograma.grabar(sessionDocenteProyecto.docenteProyecto.proyectoId.cronograma)}" rendered="#{administrarCronograma.renderedEditarDatosCronograma}"/>
+                                </h:panelGrid>
+                            </f:facet>
+                        </p:panel>  
+                    </p:tab>
+                    <p:tab id="pertinencias" title="#{msg['lbl.pertinencias']}">
+                        <p:poll  interval="#{administrarDocentesProyecto.intervalo}" update="crearPertinencia" listener="#{administrarPertinencias.renderedCrear(sessionDocenteUsuario.docenteUsuario.usuario,sessionDocenteProyecto.docenteProyecto.proyectoId)}"/>
+                        <p:poll  interval="#{administrarDocentesProyecto.intervalo}" update="tblPertinencias" listener="#{administrarPertinencias.renderedEditar(sessionDocenteUsuario.docenteUsuario.usuario,sessionDocenteProyecto.docenteProyecto.proyectoId)}"/>
+                        <p:poll  interval="#{administrarDocentesProyecto.intervalo}" update="tblPertinencias" listener="#{administrarPertinencias.renderedEliminar(sessionDocenteUsuario.docenteUsuario.usuario,sessionDocenteProyecto.docenteProyecto.proyectoId)}"/>
+                        <p:poll  interval="#{administrarDocentesProyecto.intervalo}" update="tblPertinencias" listener="#{administrarPertinencias.renderedImprimirInforme(sessionDocenteUsuario.docenteUsuario.usuario)}"/>
+
+                        <p:panel header="#{msg['lbl.listado']} #{msg['lbl.pertinencias']}" toggleable="true">
+                            <p:dataTable id="tblPertinencias" value="#{administrarPertinencias.pertinencias}" var="item" rows="10" paginator="true"
+                                         rowIndexVar="rowIx" editable="true" editMode="cell" rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'even-row' : 'odd-row'}" emptyMessage="#{msg['lbl.table.empty']}">
+                                <p:column>
+                                    <f:facet name="header">
+                                        <h:outputText value="#{msg['lbl.fecha']}"/>
+                                    </f:facet>
+                                    <h:outputText value="#{administrarConfiguraciones.timestamp(item.fecha)}"/>
+                                </p:column>
+                                <p:column rendered="#{administrarPertinencias.renderedEditar}">
+                                    <f:facet name="header">
+                                        <h:outputText value="#{msg['lbl.observacion']}"/>
+                                    </f:facet>
+                                    <p:commandLink value="#{item.observacion}" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" update=":editarPertinencia,:contenido:msm" action="#{administrarPertinencias.editar(sessionDocenteUsuario.docenteUsuario.usuario,item,sessionDocenteProyecto.docenteProyecto.proyectoId)}"/>
+                                </p:column>
+                                <p:column rendered="#{administrarPertinencias.renderedNoEditar}">
+                                    <f:facet name="header">
+                                        <h:outputText value="#{msg['lbl.observacion']}"/>
+                                    </f:facet>
+                                    <h:outputText value="#{item.observacion}" />
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">
+                                        <h:outputText value="#{msg['lbl.aceptar']}"/>
+                                    </f:facet>
+                                    <h:outputText value="#{item.esAceptado}" />
+                                </p:column>
+                                <p:column rendered="#{administrarPertinencias.renderedEliminar}">
+                                    <f:facet name="header">
+                                        <h:outputText value="#{msg['lbl.eliminar']}"/>
+                                    </f:facet>
+                                    <p:commandButton icon="ui-icon-trash"  update="tblPertinencias,:contenido:msm" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" onclick="if (!confirm('¿#{msg['lbl.confirmarEliminar']}?'))
+                                                return false;"  action="#{administrarPertinencias.remover(sessionDocenteUsuario.docenteUsuario.usuario,item,sessionDocenteProyecto.docenteProyecto)}"/>
+                                </p:column>
+                                <p:column rendered="#{administrarPertinencias.renderedImprimirInforme}">
+                                    <f:facet name="header">
+                                        <h:outputText value="#{msg['lbl.imprimir']} #{msg['lbl.informe']}"/>
+                                    </f:facet> 
+                                    <p:commandButton onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" icon="ui-icon-print" update=":contenido:msm,:informeDocenteProyecto" action="#{administrarPertinencias.imprimirOficio(item,sessionDocenteUsuario.docenteUsuario.usuario)}"/>
+                                </p:column>
+                            </p:dataTable>
+                            <br/>
+                            <div class="pnl-botones">
+                                <h:panelGrid id="crearPertinencia">
+                                    <p:commandButton value="#{msg['lbl.crear']}" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" rendered="#{administrarPertinencias.renderedCrear}" icon="ui-icon-newwin" update=":editarPertinencia,:contenido:msm" action="#{administrarPertinencias.crear(sessionDocenteUsuario.docenteUsuario.usuario,sessionDocenteProyecto.docenteProyecto.proyectoId)}"/>
+                                </h:panelGrid>
+                            </div>
+                        </p:panel>
+                    </p:tab>
+                    <p:tab title="#{msg['lbl.documentos']}">
+                        <p:panel header="#{msg['lbl.documentos']}" toggleable="true">
+                            <p:dataTable id="dgDocumentos" value="#{administrarDocumentosProyecto.anteproyectos}" var="doc" rows="20" paginator="true"
+                                         rowIndexVar="rowIx" editable="true" rowKey="#{doc.catalogoDocumentoProyectoId.nombre}" selectionMode="single" selection="#{doc}" editMode="cell" rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'even-row' : 'odd-row'}" emptyMessage="#{msg['lbl.table.empty']}">
+                                <p:column>
+                                    <f:facet name="header">
+                                        <h:outputText value="#{msg['lbl.documento']}"/>
+                                    </f:facet>
+                                    <h:outputText  value="#{doc.catalogoDocumentoProyectoId.nombre}"/>
+                                </p:column>
+                                <p:column >
+                                    <f:facet name="header">
+                                        <h:outputText value="#{msg['lbl.size']}"/>
+                                    </f:facet>
+                                    <h:outputText  value="#{administrarDocumentosProyecto.obtenerSizeKB(doc)}"/>
+                                </p:column>
+                                <p:column>
+                                    <f:facet name="header">
+                                        <h:outputText value="#{msg['lbl.descargar']}"/>
+                                    </f:facet> 
+                                    <p:commandLink action="#{administrarDocumentosProyecto.downloadDocumento(doc)}" ajax="false">
+                                        <p:graphicImage value="/resources/img/pdf.png"/>
+                                    </p:commandLink> 
+                                </p:column>
+                            </p:dataTable>
+                        </p:panel>
+                    </p:tab>
+                    <p:tab title="#{msg['lbl.lineasInvestigacion']}">
+                        <p:panel toggleable="true" header="#{msg['lbl.lineasInvestigacion']}">
+                            <p:dataGrid id="dgLineasInvestigacionProyecto" rowIndexVar="rowIx"  var="lp" paginator="true" rows="4" columns="1" value="#{sessionDocenteProyecto.docenteProyecto.proyectoId.lineaInvestigacionProyectoList}">
+                                <p:panel header="#{msg['lbl.informacion']}" toggleable="true">
+                                    <h:panelGrid styleClass="panelgrid" rowClasses="rowpanelgrid" columnClasses="col-sm-3,col-sm-9" columns="2">
+                                        <h:outputLabel value="#{msg['lbl.nombre']}:"/>
+                                        <h:outputText value="#{lp.lineaInvestigacionId.nombre}"/>
+                                        <h:outputLabel value="#{msg['lbl.descripcion']}:"/>
+                                        <h:outputText value="#{lp.lineaInvestigacionId.descripcion}"/>
+                                    </h:panelGrid>
+                                </p:panel>
+
+                            </p:dataGrid>
+                        </p:panel>
+                    </p:tab>
+                    <p:tab id="autores" title="#{msg['lbl.autores']}">
+                        <p:panel header="#{msg['lbl.autores']}"> 
+                            <p:dataGrid id="dgAutores" rowIndexVar="rowIx"  var="autor"
+                                        paginatorPosition="bottom" value="#{administrarAutoresProyecto.directorioAutoresDocenteProyecto}" paginator="true" columns="1" rows="4">
+                                <p:panel header="#{msg['lbl.datos']}" toggleable="true">
+                                    <div class="row-fluid">
+                                        <div class="col-sm-4">
+                                            <p:panel header="#{msg['lbl.foto']}" toggleable="true">
+                                                <p:graphicImage id="foto" cache="false"  styleClass="img-thumbnail" value="/AppServlet?id=#{autor.aspiranteId.estudianteCarrera.estudianteId.persona.id}&amp;entity=Persona"/>  
+                                            </p:panel>
+                                        </div>
+                                        <div class="col-sm-8">
+                                            <p:panel header="#{msg['lbl.informacion']}" toggleable="true">
+                                                <h:panelGrid columns="2" styleClass="panelgrid" rowClasses="rowpanelgrid" columnClasses="col-sm-4,col-sm-6"  >
+                                                    <h:outputLabel value="#{msg['lbl.nombres']}"/>
+                                                    <h:outputText value="#{autor.aspiranteId.estudianteCarrera.estudianteId.persona.nombres}"/>
+                                                    <h:outputLabel value="#{msg['lbl.apellidos']}"/>
+                                                    <h:outputText value="#{autor.aspiranteId.estudianteCarrera.estudianteId.persona.apellidos}"/>
+                                                    <h:outputLabel value="#{msg['lbl.fecha']} #{msg['lbl.inicio']}:"/>
+                                                    <h:outputText value="#{autor.fechaInicio}">
+                                                        <f:convertDateTime pattern="EEEEE dd MMMMM yyyy"/>
+                                                    </h:outputText>
+                                                    <h:outputLabel value="#{msg['lbl.fechaCulminación']}:"/>
+                                                    <h:outputText value="#{autor.fechaCulminacion}">
+                                                        <f:convertDateTime pattern="EEEEE dd MMMMM yyyy"/>
+                                                    </h:outputText>
+                                                    <h:outputLabel value="#{msg['lbl.estado']}"/>
+                                                    <h:outputText value="#{autor.aspiranteId.estudianteCarrera.estadoEstudianteCarrera.nombre}"/>
+                                                    <h:outputLabel value="#{msg['lbl.email']}"/>
+                                                    <h:outputText value="#{autor.aspiranteId.estudianteCarrera.estudianteId.persona.email}"/>
+                                                </h:panelGrid>
+                                            </p:panel>
+                                        </div>
+                                    </div>
+                                </p:panel>
+                            </p:dataGrid>
+                        </p:panel>
+                    </p:tab>
+                </p:tabView>
+            </ui:define>
+            <ui:define name="dlgs">
+                <p:dialog  widgetVar="dlgEditarPertinencia" header="#{msg['lbl.editar']} #{msg['lbl.pertinencia']}"  styleClass="modal-md" modal="true" >
+                    <h:form id="editarPertinencia" >
+                        <p:panel rendered="#{administrarPertinencias.renderedDlgEditar}">
+                            <p:messages id="msm" showDetail="true"/>
+                            <h:panelGrid styleClass="panelgrid" rowClasses="rowpanelgrid" columnClasses="col-sm-2,col-sm-9,col-sm-1" columns="3">
+                                <h:outputLabel value="#{msg['lbl.fecha']}:"/>
+                                <p:calendar id="fecha" locale="es" navigator="true"  value="#{sessionPertinencia.pertinencia.fecha}" rendered="true" requiredMessage="#{msg['lbl.fecha']} #{msg['lbl.obligatorio']}" pattern="dd/MM/yyyy hh:mm:ss">
+                                    <p:ajax event="dateSelect" update="msmFecha"/>
+                                    <p:ajax event="change" update="@this,msm"/>
+                                </p:calendar>
+                                <p:message id="msmFecha" display="icon" for="fecha"/>
+                                <h:outputLabel rendered="#{administrarPertinencias.renderedAceptar}" value="#{msg['lbl.aceptar']}:" for="aceptar" />
+                                <p:selectBooleanCheckbox rendered="#{administrarPertinencias.renderedAceptar}" value="#{sessionPertinencia.pertinencia.esAceptado}"/>
+                                <h:inputHidden rendered="#{administrarPertinencias.renderedAceptar}"/>
+                                <h:outputLabel rendered="#{administrarPertinencias.renderedAceptar}" value="#{msg['lbl.observacion']}:"/>
+                                <p:inputTextarea rendered="#{administrarPertinencias.renderedAceptar}" id="observacion" value="#{sessionPertinencia.pertinencia.observacion}" required="true" requiredMessage="#{msg['lbl.observacion']} #{msg['lbl.obligatorio']}">
+                                    <p:ajax event="keyup" update="msmObservacion"/>
+                                    <p:ajax event="change" update="@this,msm"/>
+                                </p:inputTextarea>
+                                <p:message rendered="#{administrarPertinencias.renderedAceptar}"  id="msmObservacion" display="icon" for="observacion"/>
+                            </h:panelGrid>
+                            <f:facet name="footer">
+                                <h:panelGrid class="pnl-botones" columns="2">
+                                    <p:commandButton value="#{msg['lbl.grabar']}" icon="ui-icon-disk" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" update="@form,:contenido:datos:tblPertinencias,:contenido:" action="#{administrarPertinencias.grabar(sessionDocenteUsuario.docenteUsuario.usuario,sessionPertinencia.pertinencia,sessionDocenteProyecto.docenteProyecto)}">
+                                        <f:param name="1" value="grabar-dlg"/>
+                                    </p:commandButton>
+                                    <p:commandButton value="#{msg['lbl.grabar']} #{msg['lbl.y']} #{msg['lbl.editar']}" icon="ui-icon-disk" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" update="@form,:contenido:datos:tblPertinencias" action="#{administrarPertinencias.grabar(sessionDocenteUsuario.docenteUsuario.usuario,sessionPertinencia.pertinencia,sessionDocenteProyecto.docenteProyecto)}">
+                                        <f:param name="1" value="grabar-editar-dlg"/>
+                                    </p:commandButton>
+                                </h:panelGrid>
+                            </f:facet>
+                        </p:panel>
+                    </h:form>
+                </p:dialog>
+
+                <p:dialog  id="dlgInformeDocenteProyecto" widgetVar="dlgInformeDocenteProyecto" header="#{msg['lbl.informe']}" styleClass="modal-md" modal="true" >
+                    <h:form id="informeDocenteProyecto">
+                        <p:panel rendered="#{administrarPertinencias.renderedDlgInforme}">
+                            <p:media value="/AppServlet?id=#{administrarPertinencias.pertinenciaId}&amp;entity=informeDocenteProyecto&amp;usuarioId=#{sessionDocenteUsuario.docenteUsuario.usuario.id}&amp;carreraId=#{administrarPertinencias.carreraId}&amp;" player="pdf" width="100%" height="400"/>
+                            <f:facet name="footer">
+                                <h:panelGrid columns="2" columnClasses="col-sm-1">
+                                    <p:commandLink  title="#{msg['lbl.descargar']}" ajax="false" action="#{administrarPertinencias.downloadInformeDocx(sessionDocenteUsuario.docenteUsuario.usuario)}">
+                                        <p:graphicImage height="25" width="25" value="/resources/img/icon_word.png"/>
+                                    </p:commandLink>
+                                    <p:commandButton value="#{msg['lbl.subir']}" icon="ui-icon-upload" onclick="PF('dlgSubirOficio').show()" rendered="#{sessionOficioCarrera.oficioCarrera.id !=null}"/>
+                                </h:panelGrid>
+                            </f:facet>
+                        </p:panel>
+                    </h:form>
+                </p:dialog>
+            </ui:define>
+            <ui:define name="data">
+                <p:dialog id="dlgSubirOficio" header="#{msg['lbl.subir']}" widgetVar="dlgSubirOficio" modal="true">
+                    <h:panelGrid columns="1" >
+                        <p:fileUpload multiple="false" fileUploadListener="#{administrarOficiosCarrera.handleFileUpload}"  
+                                      update=":contenido:msm,:informeDocenteProyecto,:dlgInformeDocenteProyecto"  mode="advanced"  
+                                      allowTypes="/(\.|\/)(pdf)$/" sizeLimit="#{administrarConfiguraciones.tamanioPermitidoArchivos}" invalidFileMessage="#{msg['lbl.invalidTypeFileMessage']}"
+                                      invalidSizeMessage="#{msg['lbl.fileLimitMessage']}"
+                                      cancelLabel="#{msg['lbl.cancelar']}"  label="#{msg['lbl.seleccionar']}" uploadLabel="#{msg['lbl.subir']}" >
+                        </p:fileUpload>
+                    </h:panelGrid>
+                </p:dialog>
+            </ui:define>
+        </ui:composition>
+
+    </body>
+</html>

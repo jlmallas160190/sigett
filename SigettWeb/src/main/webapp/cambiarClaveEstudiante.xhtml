@@ -1,0 +1,39 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <body>
+        <ui:composition template="./principalEstudiante.xhtml">
+            <ui:define name="title">#{msg['lbl.cambiar']} #{msg['lbl.clave']}</ui:define>
+            <ui:define name="content">
+                <p:messages id="msm"/>
+                <p:panel id="pnl" header="#{msg['lbl.cambiar']} #{msg['lbl.clave']}">
+                    <h:panelGrid styleClass="panelgrid" rowClasses="rowpanelgrid" columnClasses="col-sm-3,col-sm-9" columns="2">
+                        <h:outputLabel value="#{msg['lbl.clave']}" for="Password" />
+                        <p:password style="text-transform: none" maxlength="25" id="password" feedback="true" value="#{sessionEstudianteUsuario.estudianteUsuario.usuario.password}" title="#{msg['lbl.clave']}" required="true" requiredMessage="#{msg['lbl.clave']} #{msg['lbl.obligatorio']}">
+                            <f:validateRegex pattern="((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{6,20})"/>
+                        </p:password>
+                        <h:outputLabel value="#{msg['lbl.confirmar']} #{msg['lbl.clave']}:" for="Password" />
+                        <p:password style="text-transform: none"  id="confirmaPassword"  maxlength="25" feedback="true" value="#{administrarUsuarios.confirmarClaveEstudiante}" title="#{msg['lbl.confirmar']} #{msg['lbl.clave']}" required="true" requiredMessage="#{msg['lbl.confirmar']} #{msg['lbl.clave']}.">
+                            <f:validateRegex pattern="((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{6,20})"/>
+                        </p:password>
+                    </h:panelGrid>
+                </p:panel>
+                <br/>
+               <!-- <p:captcha label="Captcha" required="true" requiredMessage="{msg['lbl.message_required_captcha']}" theme="white" secure="true"/>-->
+                <br/>
+                <h:panelGrid styleClass="pnl-botones" columns="2">  
+                    <p:commandButton icon="ui-icon-disk" value="#{msg['lbl.grabar']}" onstart="PF('dlgLoading').show();" update="pnl,msm" oncomplete="PF('dlgLoading').hide()"  action="#{administrarUsuarios.guardarConClave(sessionEstudianteUsuario.estudianteUsuario.usuario,sessionEstudianteUsuario.estudianteUsuario.usuario,administrarUsuarios.confirmarClaveEstudiante)}">
+                        <f:param name="1" value="cambiar-clave-estudiante" />
+                    </p:commandButton>
+                </h:panelGrid>
+            </ui:define>
+            <ui:define name="dlgs"></ui:define>
+        </ui:composition>
+
+    </body>
+</html>

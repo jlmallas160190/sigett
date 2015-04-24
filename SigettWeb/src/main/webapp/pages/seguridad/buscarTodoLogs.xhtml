@@ -1,0 +1,98 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xml:lang="es" lang="es">
+
+    <body>
+
+        <ui:composition template="./../../principalAdmin.xhtml">
+
+            <ui:define name="content">
+                <p:panel header="#{msg['lbl.buscar']} #{msg['lbl.por']} #{msg['lbl.criterio']}">
+                    <h:panelGrid styleClass="panelgrid" rowClasses="rowpanelgrid" columnClasses="col-sm-2,col-sm-9,col-sm-1" columns="2">
+                        <h:outputLabel for="objetos" value="#{msg['lbl.entidad']}"/>
+                        <p:selectOneMenu id="objetos" value="#{administrarLogs.tabla}" >
+                            <f:selectItems value="#{administrarLogs.listadoObjetos()}"/>
+                        </p:selectOneMenu>
+                        <h:outputLabel for="fechaInicio" value="#{msg['lbl.fecha']} #{msg['lbl.inicio']}"/>
+                        <p:calendar id="fechaInicio" locale="es" pattern="yyyy-MM-dd" value="#{administrarLogs.fecha}" navigator="true"  />
+                        <h:outputLabel for="fechaFin" value="#{msg['lbl.fechaCulminación']}"/>
+                        <p:calendar id="fechaFin" pattern="yyyy-MM-dd" locale="es" value="#{administrarLogs.fechaFin}" navigator="true"  required="true" requiredMessage="#{msg['lbl.fechaCulminación']} #{msg['lbl.obligatorio']}"/>
+                    </h:panelGrid>
+                    <h:panelGrid styleClass="pnl-botones">
+                        <p:commandButton value="#{msg['lbl.buscar']}" icon="ui-icon-search" onstart="PF('dlgLoading').show();" oncomplete="PF('dlgLoading').hide()" update="tblLog" action="#{administrarLogs.listadoLogs(administrarLogs.tabla,administrarLogs.fecha,administrarLogs.fechaFin)}"/>
+                    </h:panelGrid>
+                </p:panel>
+                <br/>
+                <p:panel header="#{msg['lbl.logs']}" toggleable="true">
+                    <p:dataTable id="tblLog" value="#{administrarLogs.listadoLogs(administrarLogs.tabla,administrarLogs.fecha,administrarLogs.fechaFin)}" var="item" rows="20" paginator="true"
+                                 rowIndexVar="rowIx"  rowKey="#{item.id}" selection="#{item}" selectionMode="single" rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'even-row' : 'odd-row'}" emptyMessage="#{msg['lbl.table.empty']}">
+                        <f:facet name="header">
+                            <h:commandLink>
+                                <p:graphicImage name="./img/excel.png" />
+                                <p:dataExporter type="xls" target="tblLog" fileName="Logs" pageOnly="true"/>
+                            </h:commandLink>
+
+                            <h:commandLink>
+                                <p:graphicImage name="./img/pdf.png" />
+                                <p:dataExporter type="pdf" target="tblLog" encoding="ISO-8859-1" preProcessor="#{administrarLogs.preProcessPDF}" postProcessor="#{administrarLogs.postProcessPDF}" fileName="Logs" pageOnly="true" />
+                            </h:commandLink>
+
+                            <h:commandLink>
+                                <p:graphicImage name="./img/csv.png" />
+                                <p:dataExporter type="csv" target="tblLog" fileName="Logs" pageOnly="true" />
+                            </h:commandLink>
+
+                            <h:commandLink>
+                                <p:graphicImage name="./img/xml.png" />
+                                <p:dataExporter type="xml" target="tblLog" fileName="Logs" pageOnly="true" />
+                            </h:commandLink>
+                        </f:facet>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="Fecha"/>
+                            </f:facet>
+                            <h:outputText value="#{administrarConfiguraciones.date(item.fechaAccion)}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{msg['lbl.hora']}"/>
+                            </f:facet>
+                            <h:outputText value="#{administrarConfiguraciones.time(item.horaAccion)}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{msg['lbl.entidad']} #{msg['lbl.id']}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.tablaId}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{msg['lbl.usuario']}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.usuarioId}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{msg['lbl.informe']}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.informe}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{msg['lbl.accion']}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.accion}"/>
+                        </p:column>
+                    </p:dataTable>
+                </p:panel>
+            </ui:define>
+        </ui:composition>
+
+    </body>
+</html>
+

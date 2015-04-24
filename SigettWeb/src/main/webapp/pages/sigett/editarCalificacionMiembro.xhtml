@@ -1,0 +1,149 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xml:lang="es" lang="es">
+
+    <body>
+
+        <ui:composition template="./principalDocente.xhtml">
+            <ui:define name="title">
+                <h:outputText value="#{msg['lbl.calificacion']}"/>
+            </ui:define>
+            <ui:define name="content">
+                <p:messages id="msm"/>
+
+                <p:panel header="#{msg['lbl.parametros']}" toggleable="true">
+                    <p:dataTable  value="#{administrarCalificacionParametro.calificacionParametros}"
+                                  id="dgCalificaciones" var="calificacion" rows="10" paginator="true" 
+                                  rowIndexVar="rowIx" editable="true" rowKey="#{calificacion.parametroCatalogoEvaluacion.parametroId.nombre}" selection="#{calificacion}" selectionMode="single" editMode="cell" rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'even-row' : 'odd-row'}"
+                                  paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} "
+                                  emptyMessage="#{msg['lbl.table.empty']}" >
+                        <p:column >
+                            <h:panelGrid border="0" columns="4" style="background: #fff" columnClasses="col-sm-8,col-sm-2-col-sm-1,col-sm-1" styleClass="panelgrid" rowClasses="rowpanelgrid" >
+                                <h:outputLabel value="#{calificacion.parametroCatalogoEvaluacion.parametroId.nombre}"/>
+                                <p:inputText id="nota10" rendered="#{administrarCalificacionParametro.renderedRangoCalificacionSobre10}" value="#{calificacion.nota}">
+                                    <f:validateDoubleRange minimum="0.0" maximum="10.00"/>
+                                    <p:ajax update="msmRangoNota,@this" event="change"/>
+                                    <p:ajax update="@form" listener="#{administrarCalificacionMiembro.calculaNotaView(sessionCalificacionMiembro.calificacionMiembro)}" event="change"/>
+                                </p:inputText>
+                                <p:inputText id="nota100" rendered="#{administrarCalificacionParametro.renderedRangoCalificacionSobre10==false}"  value="#{calificacion.nota}">
+                                    <f:validateDoubleRange minimum="0.0" maximum="100.00"/>
+                                    <p:ajax update="msmRangoNota100,@this" event="change"/>
+                                </p:inputText>
+                                <p:commandButton icon="ui-icon-pencil" update=":contenido:msm,dgCalificaciones,:contenido:datos" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()"  action="#{administrarCalificacionParametro.grabar(calificacion,sessionCalificacionMiembro.calificacionMiembro,'grabar-cp')}"/>
+                                <p:message rendered="#{administrarCalificacionParametro.renderedRangoCalificacionSobre10}" display="icon" for="nota10" id="msmRangoNota"/>
+                                <p:message rendered="#{administrarCalificacionParametro.renderedRangoCalificacionSobre10==false}" display="icon" for="nota100" id="msmRangoNota1"/>
+                            </h:panelGrid>
+                        </p:column>
+                        <p:columnGroup type="footer">  
+                            <p:row>  
+                                <p:column style="text-align: right;font-size: 16px;color: #00703B!important;font-weight: bolder" footerText="#{sessionCalificacionMiembro.calificacionMiembro.nota}"/>
+                            </p:row>  
+                        </p:columnGroup>  
+                    </p:dataTable>
+                </p:panel>
+                <br/>
+                <p:panel header="#{msg['lbl.cambios']}" toggleable="true">
+                    <h:panelGrid styleClass="panelgrid" rowClasses="rowpanelgrid" columnClasses="col-sm-11,col-sm-1"  columns="2" >
+                        <p:inputText style="text-transform: none" value="#{administrarSugerenciaCalificacionMiembro.criterio}"/>
+                        <p:commandButton value="#{msg['lbl.buscar']}" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" icon="ui-icon-search" update="tblSugerencias,:contenido:msm" action="#{administrarSugerenciaCalificacionMiembro.buscar(sessionCalificacionMiembro.calificacionMiembro,administrarSugerenciaCalificacionMiembro.criterio)}"/>
+                    </h:panelGrid>
+                    <br/>
+                    <p:panel header=" #{msg['lbl.cambios']}">
+                        <p:dataTable id="tblSugerencias" value="#{administrarSugerenciaCalificacionMiembro.sugerenciaCalificacionMiembros}" var="sugerencia" rows="5" paginator="true"
+                                     rowIndexVar="rowIx" rowKey="#{sugerencia.descripcion}" selectionMode="single" selection="#{sugerencia}" editable="true" editMode="cell" rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'even-row' : 'odd-row'}" emptyMessage="#{msg['lbl.table.empty']}">
+                            <p:column sortBy="#{sugerencia.descripcion}">
+                                <f:facet name="header">
+                                    <h:outputText value="#{msg['lbl.cambio']}"/>
+                                </f:facet>
+                                <p:commandLink update=":dlgEditarSugerencia,:editarSugerencia,:contenido:msm" action="#{administrarSugerenciaCalificacionMiembro.editar(sugerencia)}" value="#{sugerencia.descripcion}">
+                                    <f:param name="1" value="editar-dlg"/>
+                                </p:commandLink>
+                            </p:column>
+                            <p:column >
+                                <f:facet name="header">
+                                    <h:outputText value="#{msg['lbl.eliminar']}"/>
+                                </f:facet>
+                                <p:commandButton  icon="ui-icon-trash"  onclick="if (!confirm('¿#{msg['lbl.confirmarEliminar']}?'))
+                                            return false;" update=":contenido:msm,tblSugerencias" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()"  action="#{administrarSugerenciaCalificacionMiembro.remover(sugerencia, sessionCalificacionMiembro.calificacionMiembro)}">
+                                    <f:param name="2" value="remover-prorroga"/>
+                                </p:commandButton>
+                            </p:column>
+                        </p:dataTable>
+                        <f:facet name="footer">
+                            <h:panelGrid id="crearSugerencia" styleClass="pnl-botones">
+                                <p:commandButton update=":dlgEditarSugerencia,:editarSugerencia,:contenido:msm"  onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()"  value="#{msg['lbl.crear']}"  action="#{administrarSugerenciaCalificacionMiembro.crear(sessionCalificacionMiembro.calificacionMiembro)}" icon="ui-icon-newwin">
+                                    <f:param name="1" value="crear-dlg"/>
+                                </p:commandButton>
+                            </h:panelGrid>
+                        </f:facet>
+                    </p:panel> 
+                </p:panel>
+                <br/>
+                <p:panel id="datos" header="#{msg['lbl.observacion']}" toggleable="true">
+                    <h:panelGrid columns="2" style="background: #fff" columnClasses="col-sm-11,col-sm-1" styleClass="panelgrid" rowClasses="rowpanelgrid">
+                        <p:editor id="observacion" style="text-transform: none"  required="true" requiredMessage="#{msg['lbl.observacion']} #{msg['lbl.obligatorio']}" value="#{sessionCalificacionMiembro.calificacionMiembro.observacion}">
+                        </p:editor>
+                        <p:messages for="observacion" id="msmObservacion"/>
+                    </h:panelGrid>
+                </p:panel>
+                <br/>
+                <h:panelGrid styleClass="pnl-botones" columns="2">
+                    <p:commandButton icon="ui-icon-disk" value="#{msg['lbl.grabar']}" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" update=":contenido:msm,dgCalificaciones" action="#{administrarCalificacionMiembro.grabar(sessionCalificacionMiembro.calificacionMiembro, 'grabar')}"/>
+                </h:panelGrid>
+
+            </ui:define>
+            <ui:define name="right">
+                <p:panel header="#{msg['lbl.documentos']}" toggleable="true">
+                    <p:dataGrid  value="#{sessionCalificacionMiembro.calificacionMiembro.evaluacionTribunal.tribunalId.proyectoId.documentoProyectoList}"
+                                 id="dgDocumentos" var="doc" columns="1" rows="10" paginator="true"
+                                 paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} "
+                                 paginatorPosition="bottom"
+                                 emptyMessage="#{msg['lbl.table.empty']}">
+                        <h:panelGrid style="background: #fff" rowClasses="rowpanelgrid" styleClass="panelgrid">
+                            <p:commandLink onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" update=":dlgEditarDocumentoProyecto,:editarDocumentoProyecto,:contenido:msm" action="#{administrarDocumentosProyecto.viewDocumento(doc)}" value="#{doc.catalogoDocumentoProyectoId.nombre}"/>
+                        </h:panelGrid>
+                    </p:dataGrid>
+                </p:panel>
+            </ui:define>
+            <ui:define name="dlgs">
+                <p:dialog id="dlgEditarSugerencia" header="#{msg['lbl.editar']} #{msg['lbl.cambio']}"  styleClass="modal-md" widgetVar="dlgEditarSugerencia" modal="true">
+                    <h:form id="editarSugerencia">
+                        <p:panel rendered="#{administrarSugerenciaCalificacionMiembro.renderedDlgEditar}">
+                            <p:messages id="msm"/>
+                            <h:panelGrid columns="3" styleClass="panelgrid" rowClasses="rowpanelgrid" columnClasses="col-sm-3,col-sm-8,col-sm-1">
+                                <h:outputLabel  value="#{msg['lbl.cambio']}:"/>
+                                <p:editor  style="text-transform: none" id="cambio" value="#{sessionSugerenciaCalificacionMiembro.sugerenciaCalificacionMiembro.descripcion}" required="true" requiredMessage="#{msg['lbl.cambio']} #{msg['lbl.obligatorio']}.">
+                                </p:editor>
+                                <p:message id="msmCambio" display="icon" for="cambio"/>
+                            </h:panelGrid>
+                            <br/>
+                            <h:panelGrid styleClass="pnl-botones" columns="1">
+                                <p:commandButton  value="#{msg['lbl.grabar']}" icon="ui-icon-disk" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" update="@form,:contenido:tblSugerencias,msm,:contenido:msm" action="#{administrarSugerenciaCalificacionMiembro.grabar(sessionSugerenciaCalificacionMiembro.sugerenciaCalificacionMiembro, sessionCalificacionMiembro.calificacionMiembro)}">
+                                    <f:param  name="1" value="grabar-dlg" />  
+                                </p:commandButton>
+                            </h:panelGrid>
+                        </p:panel>
+                    </h:form>
+                </p:dialog>
+                <p:dialog id="dlgEditarDocumentoProyecto" widgetVar="dlgEditarDocumentoProyecto"  header="#{msg['lbl.documento']}" styleClass="modal-md"  modal="true" >
+                    <h:form id="editarDocumentoProyecto" >
+                        <p:panel rendered="#{administrarDocumentosProyecto.renderedDlgEditar}">
+                            <p:media value="/AppServlet?id=#{administrarDocumentosProyecto.documentoProyecto.id}&amp;entity=DocumentoProyecto" player="pdf" width="100%" height="250"/>
+                        </p:panel>
+                        <br/>
+                        <h:panelGrid styleClass="pnl-botones" columns="1">
+                            <p:commandButton  value="#{msg['lbl.descargar']}" ajax="false" icon="ui-icon-pdf" onstart="PF('dlgLoading').show();" oncomplete="PF('dlgLoading').hide()" action="#{administrarDocumentosProyecto.downloadDocumento(administrarDocumentosProyecto.documentoProyecto)}"/>
+                        </h:panelGrid>
+                    </h:form>
+                </p:dialog>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

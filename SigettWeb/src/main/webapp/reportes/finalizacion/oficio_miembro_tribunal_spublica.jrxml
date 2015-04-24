@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="c93c8407-6ef4-4fe9-95d8-d851f059a1ae">
+	<property name="ireport.zoom" value="1.3310000000000004"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="335"/>
+	<parameter name="nOficio" class="java.lang.String"/>
+	<parameter name="autores" class="java.lang.String"/>
+	<parameter name="secretario" class="java.lang.String"/>
+	<parameter name="sello" class="java.lang.String"/>
+	<parameter name="articulos" class="java.lang.String"/>
+	<parameter name="presidente" class="java.lang.String"/>
+	<parameter name="miembros" class="java.lang.String"/>
+	<parameter name="lugarFecha" class="java.lang.String"/>
+	<parameter name="area" class="java.lang.String"/>
+	<parameter name="carrera" class="java.lang.String"/>
+	<parameter name="carreraSigla" class="java.lang.String"/>
+	<parameter name="carreraLogo" class="java.io.InputStream"/>
+	<parameter name="fechaSustentacion" class="java.lang.String"/>
+	<parameter name="tituloMiembro" class="java.lang.String"/>
+	<parameter name="miembro" class="java.lang.String"/>
+	<parameter name="cargoMiembro" class="java.lang.String"/>
+	<parameter name="tituloCoordinador" class="java.lang.String"/>
+	<parameter name="coordinador" class="java.lang.String"/>
+	<parameter name="proyecto" class="java.lang.String"/>
+	<parameter name="lugarSustentacion" class="java.lang.String"/>
+	<parameter name="tituloOtorgar" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="266" splitType="Stretch">
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToBandHeight" x="456" y="1" width="100" height="25" uuid="937fb289-eae2-4fef-a816-d589b8f83d26"/>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA["OFICIO-"+$P{carreraSigla}+"-UNL"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="-1" y="101" width="555" height="25" uuid="70c4a975-99e5-4b12-99c3-d2e6f6236545"/>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Carrera "+$P{carrera}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="0" y="76" width="554" height="25" uuid="a858488b-8bef-4cf3-9bfa-c888b1e6aca4"/>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="14" isBold="true" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{area}]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="503" y="26" width="50" height="50" uuid="8f2cce66-750a-470f-a806-5c17bd0a49e4"/>
+				<imageExpression><![CDATA[$P{carreraLogo}]]></imageExpression>
+			</image>
+			<image>
+				<reportElement x="0" y="26" width="50" height="50" uuid="ab077f7d-3ccb-464d-b95e-48005244ec6b"/>
+				<imageExpression><![CDATA[$P{sello}]]></imageExpression>
+			</image>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="168" width="554" height="15" uuid="937fb289-eae2-4fef-a816-d589b8f83d26"/>
+				<textElement textAlignment="Justified">
+					<font fontName="SansSerif" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{nOficio}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="1" y="183" width="36" height="15" uuid="63634b2b-15e9-4e6d-b262-a783da44df9b"/>
+				<textElement textAlignment="Justified">
+					<font fontName="SansSerif" size="11"/>
+				</textElement>
+				<text><![CDATA[Señor:]]></text>
+			</staticText>
+			<textField>
+				<reportElement stretchType="RelativeToBandHeight" x="37" y="183" width="516" height="15" uuid="937fb289-eae2-4fef-a816-d589b8f83d26"/>
+				<textElement textAlignment="Justified">
+					<font fontName="SansSerif" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{tituloMiembro}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+				<reportElement stretchType="RelativeToBandHeight" x="1" y="198" width="552" height="15" uuid="937fb289-eae2-4fef-a816-d589b8f83d26"/>
+				<textElement textAlignment="Justified" verticalAlignment="Top">
+					<font fontName="SansSerif" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{miembro}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="1" y="213" width="552" height="15" uuid="a1bf7e33-9702-4f5d-aeae-9bfe0938e76a"/>
+				<textElement textAlignment="Justified">
+					<font fontName="SansSerif" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{cargoMiembro}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="1" y="228" width="552" height="15" uuid="63634b2b-15e9-4e6d-b262-a783da44df9b"/>
+				<textElement textAlignment="Justified">
+					<font fontName="SansSerif" size="11"/>
+				</textElement>
+				<text><![CDATA[Ciudad:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="1" y="243" width="553" height="20" uuid="963911ad-3887-4b10-956a-c5dfa5f9ad95"/>
+				<textElement textAlignment="Justified">
+					<font fontName="SansSerif" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA["De mi Consideración"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="51" y="26" width="100" height="50" uuid="85c5a9b4-aea7-484a-ab5d-1ba981a8e427"/>
+				<textElement textAlignment="Justified" markup="html"/>
+				<textFieldExpression><![CDATA["<b>UNIVERSIDAD</b><br/> <b>NACIONAL</b> <br/> <b>DE LOJA</b"]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="50" y="26" width="1" height="50" uuid="fb55a4f3-7dfb-418a-9550-5b207275f89d"/>
+			</line>
+		</band>
+	</title>
+	<detail>
+		<band height="103" splitType="Stretch">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+				<reportElement x="1" y="0" width="555" height="100" uuid="eb6d3c3e-9527-433b-8df5-d988bd503325"/>
+				<textElement textAlignment="Justified" markup="styled">
+					<font fontName="SansSerif" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA["La Coordinación de la Carrera de "+$P{carrera}+" en atención a la solicitud presentada por "+$P{autores}+" aspirante a optar el título de "+$P{tituloOtorgar}+" quien ha obtenido la aprobación de tesis; de conformidad en los Arts. "+$P{articulos}+" se fija para el día "+$P{fechaSustentacion}+" cuyo tema versa como "+$P{proyecto}+" ente el tribunal examinador presidio por "+$P{presidente}+"; e integrado por los docentes "+$P{miembros}+". Acto que se desarrollará en "+$P{lugarSustentacion}+"."]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="64" splitType="Stretch">
+			<textField isStretchWithOverflow="true">
+				<reportElement x="1" y="17" width="552" height="15" uuid="a1bf7e33-9702-4f5d-aeae-9bfe0938e76a"/>
+				<textElement>
+					<font fontName="SansSerif" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{autores}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1" y="32" width="552" height="15" uuid="963911ad-3887-4b10-956a-c5dfa5f9ad95"/>
+				<textElement>
+					<font fontName="SansSerif" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Archivo"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1" y="47" width="555" height="15" uuid="963911ad-3887-4b10-956a-c5dfa5f9ad95"/>
+				<textElement>
+					<font fontName="SansSerif" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{secretario}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="1" y="2" width="554" height="15" uuid="63634b2b-15e9-4e6d-b262-a783da44df9b"/>
+				<textElement textAlignment="Justified">
+					<font fontName="SansSerif" size="11"/>
+				</textElement>
+				<text><![CDATA[C.C Expediente de graduación]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="174" splitType="Stretch">
+			<textField isStretchWithOverflow="true" pattern="">
+				<reportElement x="0" y="144" width="553" height="30" uuid="a1bf7e33-9702-4f5d-aeae-9bfe0938e76a"/>
+				<textElement>
+					<font fontName="SansSerif" size="11" isBold="true" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Coordinador de la Carrera de "+$P{carrera}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+				<reportElement stretchType="RelativeToBandHeight" x="0" y="129" width="556" height="15" isPrintWhenDetailOverflows="true" uuid="937fb289-eae2-4fef-a816-d589b8f83d26"/>
+				<textElement verticalAlignment="Top">
+					<font fontName="SansSerif" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{coordinador}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement stretchType="RelativeToBandHeight" x="0" y="114" width="556" height="15" uuid="937fb289-eae2-4fef-a816-d589b8f83d26"/>
+				<textElement textAlignment="Justified">
+					<font fontName="SansSerif" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{tituloCoordinador}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="70" width="100" height="20" uuid="963911ad-3887-4b10-956a-c5dfa5f9ad95"/>
+				<textElement>
+					<font fontName="SansSerif" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Atentamente,"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="0" width="554" height="50" uuid="d832af18-dbcf-4855-91b5-1a2cdeffcdcf"/>
+				<textElement>
+					<font fontName="SansSerif" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Particular que comunico a ustedes, para los fines legales subsiguientes, en su calidad de integrantes del Tribunal Examinador."]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

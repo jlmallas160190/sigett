@@ -1,0 +1,307 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <f:view >
+        <h:head>
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1"/>
+            <meta content="width=device-width, initial-scale=1"/>
+            <h:outputStylesheet name="./css/default.css"/>
+            <h:outputStylesheet name="./css/cssLayout.css"/>
+            <h:outputStylesheet name="./css/bootstrap.css" />
+            <h:outputStylesheet name="./css/bootstrap-responsive.min.css" />
+            <h:outputScript name="./js/bootstrap.js"/>
+            <h:outputScript name="./js/panel.js"/>
+            <h:outputScript name="./js/calendarEs.js"/>
+            <script>
+                function regresar() {
+                    window.history.back();
+                }
+            </script>
+            <ui:insert name="favicon"><link rel="shortcut icon" type="image/x-icon" href="#{resource['img/favicon.ico']}"/></ui:insert> 
+            <f:view >
+                <h:form id="tittle">
+                    <title>
+                        <ui:insert name="title">
+                            <h:outputText value="#{msg['lbl.principal']}"/>
+                        </ui:insert>
+                    </title>
+                </h:form>
+            </f:view>
+        </h:head>
+
+        <h:body>
+            <div id="top">
+                <ui:insert name="top">
+                    <f:view  >
+                        <h:form id="superior">
+                            <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+                                <!-- Indicators -->
+                                <ol class="carousel-indicators">
+                                    <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+                                    <li data-target="#carousel-example-generic" data-slide-to="1"></li>
+                                </ol>
+
+                                <!-- Wrapper for slides -->
+                                <div class="carousel-inner">
+                                    <div class="item active">
+                                        <div class="carousel-caption">
+                                            <h3>SIGETT</h3>
+                                        </div>
+                                    </div>
+                                    <div class="item">
+
+                                        <div class="carousel-caption">
+                                            <h3>SIGETT</h3>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <!-- Controls -->
+                                <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+                                    <span class="glyphicon glyphicon-chevron-left"></span>
+                                </a>
+                                <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+                                    <span class="glyphicon glyphicon-chevron-right"></span>
+                                </a>
+                            </div>
+                            <p:menubar>
+                                <f:facet name="options">
+                                    <p:outputLabel value="#{msg['lbl.saludo']}: #{sessionEstudianteUsuario.estudianteUsuario.estudianteId.persona.nombres} #{sessionEstudianteUsuario.estudianteUsuario.estudianteId.persona.apellidos}"></p:outputLabel>
+                                    <p:outputLabel value="#{msg['lbl.rol']}: #{login.getRol(sessionEstudianteUsuario.estudianteUsuario.usuario)}"></p:outputLabel>
+                                    <p:commandButton value="#{msg['lbl.regresar']}" icon="ui-icon-arrowreturnthick-1-w" onclick="regresar()"/>
+                                    <!--<p:commandButton value="{msg['lbl.cambiar']} #{msg['lbl.clave']}" icon="ui-icon-key" action="#{administrarUsuarios.abrirCambiarClaveEstudiante()}"/>-->
+                                    <p:commandButton value="#{msg['lbl.salir']}" ajax="false" icon="ui-icon-power" action="#{loginEstudiante.logout()}" />
+                                </f:facet>
+                            </p:menubar>
+                        </h:form>
+                    </f:view>
+                </ui:insert>
+            </div>
+            <div class="container-fluid">
+                <div class="row-fluid">
+                    <div class="col-md-2">
+                        <f:view >
+                            <h:form id="izquierda">
+                                <ui:insert name="left">
+                                    <p:panel header="#{msg['lbl.menu']} #{msg['lbl.principal']}">
+                                        <h:panelGrid styleClass="panelgrid" columns="2" rowClasses="rowpanelgrid" columnClasses="col-sm-2,col-sm-10">
+                                            <p:graphicImage width="16" height="16" value="/resources/blacks/16x16/120.png"/>
+                                            <p:commandLink onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" action="pretty:principalEstudiante"  value="#{msg['lbl.inicio']}"/>
+                                            <p:graphicImage width="16" height="16" value="/resources/png/32px/Shape8.png"/>
+                                            <p:commandLink action="pretty:autorProyectos" value="#{msg['lbl.proyectos']}"/>
+                                        </h:panelGrid>
+                                    </p:panel>
+                                </ui:insert>  
+                            </h:form>
+                        </f:view>
+                    </div>
+                    <div class="col-md-8">
+                        <f:view  >
+                            <h:form id="contenido"><ui:insert name="content">
+                                    <p:poll interval="#{administrarConfiguraciones.intervaloActualizaciones()}" listener="#{administrarActividades.notificacionActividadesAutorProyecto(sessionEstudianteUsuario.estudianteUsuario.estudianteId)}" update="schedule" />
+                                    <p:schedule id="schedule" value="#{administrarActividades.eventModelAutorProyecto}" widgetVar="myschedule" timeZone="GMT-5" view="agendaWeek">
+                                        <p:ajax event="eventSelect" listener="#{administrarActividades.onEventSelectAutorProyecto}" update=":dlgEditarActividad,:editarActividad" />                                      
+                                    </p:schedule>
+                                </ui:insert> 
+                            </h:form>
+                        </f:view>
+                        <f:view  >
+                            <ui:insert name="dlgs">
+                                <p:dialog id="dlgEditarActividad" header="#{msg['lbl.editar']} #{msg['lbl.actividad']}" styleClass="modal-md"  widgetVar="dlgEditarActividad"  modal="true" 
+                                          showEffect="clip" hideEffect="fold" closeOnEscape="true" >
+                                    <h:form id="editarActividad">
+                                        <p:messages id="msm"/>
+                                        <p:panel rendered="#{administrarActividades.renderedDlgEditar}">
+                                            <p:tabView id="tabViewDatosActividad">
+                                                <p:ajax event="tabChange" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" update="dgDocumentosActividad,crearDocumentos,dgRevisiones" listener="#{administrarActividades.onTabChange}"/>
+                                                <p:tab title="#{msg['lbl.informacion']} #{msg['lbl.inicio']}">
+                                                    <h:panelGrid columns="3" styleClass="panelgrid" rowClasses="rowpanelgrid" columnClasses="col-sm-3,col-sm-8,col-lg-1">
+                                                        <h:outputLabel value="#{msg['lbl.tipo']}:"  />
+                                                        <h:outputText value="#{sessionActividad.actividad.tipoActividadId.nombre}"/>
+                                                        <h:inputHidden/>
+                                                        <h:outputLabel  value="#{msg['lbl.nombre']}:"  />
+                                                        <p:inputTextarea style="text-transform: none" id="nombre" value="#{sessionActividad.actividad.nombre}" title="#{msg['lbl.nombre']}" required="true" requiredMessage="#{msg['lbl.nombre']} #{msg['lbl.obligatorio']}.">
+                                                            <p:ajax event="keyup" update="msmNombre"/>
+                                                        </p:inputTextarea>
+                                                        <p:message id="msmNombre" display="icon" for="nombre"/>
+                                                        <h:outputLabel  value="#{msg['lbl.descripcion']}:"  />
+                                                        <p:inputTextarea style="text-transform: none"  id="descripcion" value="#{sessionActividad.actividad.observacion}" title="#{msg['lbl.descripcion']}" required="true" requiredMessage="#{msg['lbl.descripcion']} #{msg['lbl.obligatorio']}.">
+                                                            <p:ajax event="keyup" update="msmDescripcion"/>
+                                                        </p:inputTextarea>
+                                                        <p:message id="msmDescripcion" display="icon" for="descripcion"/>
+                                                        <h:outputLabel  value="#{msg['lbl.lugar']}:"  />
+                                                        <p:inputTextarea style="text-transform: none" id="lugar" value="#{sessionActividad.actividad.lugarRevision}" title="#{msg['lbl.lugar']}" required="true" requiredMessage="#{msg['lbl.lugar']} #{msg['lbl.obligatorio']}.">
+                                                            <p:ajax event="keyup" update="msmLugar"/>
+                                                        </p:inputTextarea>
+                                                        <p:message id="msmLugar" display="icon" for="lugar"/>
+                                                        <h:outputLabel value="#{msg['lbl.fecha']} #{msg['lbl.inicio']}"/>
+                                                        <p:calendar  id="fecha"  navigator="true" locale="#{msg['lbl.lenguajeCalendar']}" pattern="dd/MM/yyyy" value="#{sessionActividad.actividad.fechaInicio}" title="#{msg['lbl.fecha']} #{msg['lbl.inicio']}" required="true" requiredMessage="#{msg['lbl.fecha']} #{msg['lbl.inicio']} #{msg['lbl.fecha']} #{msg['lbl.obligatorio']}.">
+                                                            <p:ajax event="dateSelect" update="msmFecha"/>
+                                                            <p:ajax event="dateSelect" update=":editarActividad:msm,fechaFin,duracion,porcentaje" listener="#{administrarActividades.calculaDuracionActividad(sessionActividad.actividad, sessionProyectosAutor.autorProyecto.proyectoId.cronograma)}"/>
+                                                        </p:calendar>
+                                                        <p:message id="msmFecha" display="icon" for="fecha"/>
+                                                        <h:outputLabel value="#{msg['lbl.fechaCulminación']}"/>
+                                                        <p:calendar  id="fechaFin"  navigator="true" locale="#{msg['lbl.lenguajeCalendar']}" pattern="dd/MM/yyyy" value="#{sessionActividad.actividad.fechaCulminacion}" title="#{msg['lbl.fechaCulminación']}" required="true" requiredMessage="#{msg['lbl.fechaCulminación']} #{msg['lbl.obligatorio']}.">
+                                                            <p:ajax event="dateSelect" update="msmFechaFin"/>
+                                                            <p:ajax event="dateSelect" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" update=":editarActividad:msm,@this,duracion,porcentaje" listener="#{administrarActividades.calculaDuracionActividad(sessionActividad.actividad,sessionProyectosAutor.autorProyecto.proyectoId.cronograma)}"/>
+                                                        </p:calendar>
+                                                        <p:message id="msmFechaFin" display="icon" for="fechaFin"/>
+                                                        <h:outputLabel value="#{msg['lbl.duracion']}"/>
+                                                        <h:outputLabel id="duracion" value="#{sessionActividad.actividad.duracion} #{msg['lbl.dias']}"/>
+                                                        <h:inputHidden/>
+                                                        <h:outputLabel value="%"/>
+                                                        <h:outputLabel id="porcentaje" value="#{sessionActividad.actividad.porcentajeDuracion}%"/>
+                                                        <h:inputHidden/>
+                                                    </h:panelGrid>  
+                                                </p:tab>
+                                                <p:tab id="tabDocumentos-autor1" title="#{msg['lbl.documentos']}" >
+                                                    <p:dataGrid value="#{administrarDocumentosActividad.documentosActividad}"
+                                                                id="dgDocumentosActividad" var="doc" columns="1" rows="2" paginator="true"
+                                                                paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} "
+                                                                emptyMessage="#{msg['lbl.table.empty']}.">
+                                                        <p:panel header="#{msg['lbl.documento']}" toggleable="true">
+                                                            <f:facet name="options">
+                                                                <p:menu style="width:20%!important;height:auto!important">
+                                                                    <p:submenu style="border: 1px transparent !important;background: #fff !important;color: #666!important" label="#{msg['lbl.descargar']}">
+                                                                        <p:menuitem ajax="false" value="#{msg['lbl.descargar']} pdf" icon="ui-icon-pdf" action="#{administrarActividades.download('pdf',sessionActividad.actividad)}" />
+                                                                        <p:menuitem  ajax="false" value="#{msg['lbl.descargar']} docx" icon="ui-icon-odt" action="#{administrarActividades.download('docx',sessionActividad.actividad)}" />
+                                                                    </p:submenu>
+                                                                </p:menu>
+                                                            </f:facet>
+                                                            <div class="row-fluid">
+                                                                <div class="col-sm-6">
+                                                                    <p:media width="100%" styleClass="img-thumbnail" height="100%" player="pdf" value="/AppServlet/?id=#{doc.id}&amp;entity=DocumentoActividad"/>
+                                                                </div>
+                                                                <div class="col-sm-6">
+                                                                    <h:panelGrid styleClass="panelgrid" rowClasses="rowpanelgrid" columnClasses="col-sm-4,col-sm-8" columns="2">
+                                                                        <h:outputLabel value="#{msg['lbl.size']}"/>
+                                                                        <h:outputText value="#{administrarDocumentosActividad.obtenerSizeKB(doc)}"/>
+                                                                        <h:outputLabel value="#{msg['lbl.tipo']}"/>
+                                                                        <h:outputText value="#{doc.tipoArchivo}"/>
+                                                                    </h:panelGrid>
+                                                                </div>
+                                                            </div>
+                                                            <br/>
+                                                            <h:panelGrid styleClass="pnl-botones"  columns="2">
+                                                                <p:commandButton icon="ui-icon-check-w"  rendered="#{administrarDocumentosActividad.renderedSeleccionar}" onclick="if (!confirm('¿#{msg['lbl.confirmarSeleccionar']}?'))
+                                                                            return false;" update="@form" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" action="#{administrarDocumentosActividad.seleccionarDocumento(doc,sessionEstudianteUsuario.estudianteUsuario.usuario,sessionActividad.actividad.cronogramaId.proyecto)}"  />
+                                                                <p:commandButton update=":editarDocumentoActividad,:dlgEditarDocumentoActividad" onstart="PF('dlgLoading').show()" rendered="#{administrarDocumentosActividad.renderedEditar}" oncomplete="PF('dlgLoading').hide()" action="#{administrarDocumentosActividad.editar(doc,sessionEstudianteUsuario.estudianteUsuario.usuario,sessionActividad.actividad,sessionActividad.actividad.cronogramaId.proyecto)}" icon="ui-icon-pencil"/>
+                                                                <p:commandButton update="@form" rendered="#{administrarDocumentosActividad.renderedEliminar}" onclick="if (!confirm('¿#{msg['lbl.confirmarEliminar']}?'))
+                                                                            return false;" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" action="#{administrarDocumentosActividad.remover(doc,sessionEstudianteUsuario.estudianteUsuario.usuario,sessionActividad.actividad.cronogramaId.proyecto)}" icon="ui-icon-trash"/>
+                                                            </h:panelGrid>
+                                                        </p:panel>
+                                                    </p:dataGrid>
+                                                    <br/>
+                                                    <h:panelGrid id="crearDocumentos" styleClass="pnl-botones">
+                                                        <p:commandButton rendered="#{administrarDocumentosActividad.renderedCrear}" icon="ui-icon-newwin" value="#{msg['lbl.crear']}" update=":editarDocumentoActividad" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" action="#{administrarDocumentosActividad.crear(sessionEstudianteUsuario.estudianteUsuario.usuario,sessionActividad.actividad,sessionActividad.actividad.cronogramaId.proyecto)}"/>
+                                                    </h:panelGrid>
+                                                </p:tab>
+                                                <p:tab id="tabRevisiones-autor" title="#{msg['lbl.revisiones']}">
+                                                    <p:panel header="#{msg['lbl.revisiones']}">
+                                                        <p:dataGrid id="dgRevisiones" value="#{administrarRevisiones.revisions}" var="revision" rows="4" columns="1"  paginator="true"
+                                                                    rowIndexVar="rowIx" emptyMessage="#{msg['lbl.table.empty']}">
+                                                            <p:panel header="#{msg['lbl.revisado']}: #{administrarConfiguraciones.date(revision.fecha)} #{msg['lbl.desde']}: #{administrarConfiguraciones.time(revision.horaInicio)} #{msg['lbl.hasta']}: #{administrarConfiguraciones.time(revision.horaFin)}" toggleable="true">
+                                                                <h:panelGrid styleClass="panelgrid" rowClasses="rowpanelgrid" columnClasses="col-sm-2,col-sm-10" columns="2">
+                                                                    <h:outputLabel value="Observación:"/>
+                                                                    <h:outputText  value="#{revision.observacion}"/>
+                                                                    <h:outputLabel value="Sugerencia:"/>
+                                                                    <h:outputText id="sugerencia" value="#{revision.sugerencia}"/>
+                                                                </h:panelGrid>
+                                                            </p:panel>
+                                                        </p:dataGrid>
+                                                    </p:panel>
+                                                </p:tab>
+                                            </p:tabView>
+                                            <br/>
+                                            <h:panelGrid styleClass="pnl-botones" columns="2">
+                                                <p:commandButton update="@form,:contenido:schedule" value="#{msg['lbl.grabar']}" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" action="#{administrarActividades.grabar(sessionActividad.actividad,sessionActividad.actividad.cronogramaId,sessionEstudianteUsuario.estudianteUsuario.usuario)}"  icon="ui-icon-disk">
+                                                    <f:param  name="1" value="grabar-editar-dlg" />    
+                                                    <f:param  name="2" value="estudiante" />
+                                                </p:commandButton>
+                                            </h:panelGrid>
+                                        </p:panel>
+                                    </h:form>
+                                </p:dialog>
+                                <p:dialog id="dlgEditarDocumentoActividad" header="#{msg['lbl.subir']}" widgetVar="dlgEditarDocumentoActividad" modal="true" styleClass="modal-sm"  >
+                                    <h:form id="editarDocumentoActividad">  
+                                        <h:panelGrid styleClass="panelgrid">
+                                            <p:fileUpload multiple="false" fileUploadListener="#{administrarDocumentosActividad.handleFileUpload}" 
+                                                          update=":editarActividad:msm,:editarActividad:tabViewDatosActividad:dgDocumentosActividad"  mode="advanced"  
+                                                          allowTypes="/(\.|\/)(pdf)$/" sizeLimit="#{administrarConfiguraciones.tamanioPermitidoArchivos}" invalidFileMessage="#{msg['lbl.invalidTypeFileMessage']}"
+                                                          cancelLabel="#{msg['lbl.cancelar']}"  invalidSizeMessage="#{msg['lbl.fileLimitMessage']}"  label="#{msg['lbl.seleccionar']}" uploadLabel="#{msg['lbl.subir']}">
+                                                <f:attribute name="1" value="autor1" />
+                                            </p:fileUpload>
+                                        </h:panelGrid>
+                                    </h:form>
+                                </p:dialog>
+                            </ui:insert>
+                        </f:view>
+                        <p:dialog id="dlgLoading" styleClass="load" draggable="false" closable="false" resizable="false"  showHeader="false"  widgetVar="dlgLoading" modal="true" >
+                            <h:panelGrid columns="2" >
+                                <h:outputLabel value="#{msg['lbl.cargando']}"/>
+                                <h:graphicImage   height="50" width="50" value="/resources/img/ajax-loader-green.gif" />
+                            </h:panelGrid>
+                        </p:dialog>
+                    </div>
+                    <div class="col-md-2">
+                        <f:view >
+                            <h:form id="derecha"> <ui:insert name="right"></ui:insert>
+                            </h:form>
+                        </f:view>
+                    </div>
+                </div>
+            </div>
+
+            <f:view >
+                <h:form id="inferior">
+                    <nav class="navbar navbar-inverse navbar-bottom" style="padding:0 0 100px 0;margin-top:50px">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <br/>
+                                    <p:panel header="#{msg['lbl.enlaces']}">
+                                        <h:panelGrid columns="1" styleClass="panelgrid" rowClasses="rowpanelgrid">
+                                            <h:commandLink styleClass="ui-commandlink"  target="_blank" value="#{msg['lbl.acceso']} #{msg['lbl.docente']}" action="pretty:loginDocente"/>
+                                            <h:commandLink styleClass="ui-commandlink" target="_blank" value="#{msg['lbl.acceso']} #{msg['lbl.usuario']}" action="pretty:login"/>
+                                        </h:panelGrid>
+                                    </p:panel>
+                                </div>
+                                <div class="col-md-4">
+                                    <br/>
+                                    <p:panel header="#{msg['lbl.informacion']}">
+                                        <center>
+                                            <span ><b> Universidad Nacional de Loja </b></span><br/>
+                                            <span>Carrera de Ingenieria en Sistemas</span> <br/>
+                                            <span>Loja - Ecuador</span>
+                                        </center>
+                                    </p:panel>
+                                </div>
+                                <div class="col-md-4">
+                                    <br/>
+                                    <p:panel header="#{msg['lbl.lenguajes']}">
+                                        <h:panelGrid styleClass="panelGroup" columns="2">
+                                            <p:commandLink update=":tittle,:contenido,:superior,:inferior,:izquierda,:derecha,:dlgLoading"  title="Spanish"  action="#{localizacion.localeChanged()}">
+                                                <f:param value="es" name="locale"/>
+                                                <p:graphicImage width="20" height="20" value="/resources/img/icon_spain.jpg"/>
+                                            </p:commandLink>
+                                            <p:commandLink title="English" update=":tittle,:contenido,:superior,:derecha,:inferior,:izquierda,:dlgLoading"  action="#{localizacion.localeChanged()}">
+                                                <f:param value="en" name="locale"/>
+                                                <p:graphicImage width="20" height="20" value="/resources/img/icon_british.png"/>
+                                            </p:commandLink>
+                                        </h:panelGrid>
+                                    </p:panel>
+                                </div>
+                            </div>
+                        </div>
+                    </nav>
+                </h:form>
+            </f:view>
+        </h:body>
+    </f:view>
+</html>

@@ -1,0 +1,54 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xml:lang="es" lang="es">
+
+    <body>
+
+        <ui:composition template="./../../principalAdmin.xhtml">
+            <ui:define name="content">
+                <h:panelGrid styleClass="pnl-botones">
+                    <p:commandButton value="#{msg['lbl.historial']}" icon="ui-icon-document-w" update="@form" action="#{administrarLogs.historico('ConfiguracionGeneral', sessionConfiguracion.configuracionGeneral.id)}"/>
+                </h:panelGrid>
+                <br/>
+                <p:messages id="msm" showDetail="true"/>
+                <p:panel header="#{msg['lbl.editar']} #{msg['lbl.configuracion']}">
+                    <h:panelGrid styleClass="panelgrid" rowClasses="rowpanelgrid" columnClasses="col-sm-2,col-sm-9,col-sm-1" columns="3">
+                        <h:outputLabel value="#{msg['lbl.nombre']}:" for="nombre" />
+                        <p:inputText id="nombre"  value="#{sessionConfiguracion.configuracionGeneral.nombre}" title="#{msg['lbl.nombre']}">
+                            <p:ajax event="keyup" update="msmNombre"/>
+                            <p:ajax event="change" update="@this,:contenido:msm"/>
+                        </p:inputText>
+                        <p:message id="msmNombre" display="icon" for="nombre"/>
+                        <h:outputLabel value="#{msg['lbl.descripcion']}:" for="descripcion" />
+                        <p:inputTextarea id="descripcion" cols="40" rows="5" value="#{sessionConfiguracion.configuracionGeneral.descripcion}" title="#{msg['lbl.descripcion']}" required="true" requiredMessage="#{msg['lbl.descripcion']} #{msg['lbl.obligatorio']}.">
+                            <p:ajax event="keyup" update="msmNombre"/>
+                            <p:ajax event="change" update="@this,:contenido:msm"/>
+                        </p:inputTextarea>
+                        <p:message id="msmDescripcion" display="icon" for="descripcion"/>
+                        <h:outputLabel  value="#{msg['lbl.valor']}:" for="valor" />
+                        <p:inputText style="text-transform: none" id="valor" value="#{sessionConfiguracion.configuracionGeneral.valor}" title="#{msg['lbl.valor']}" required="true" requiredMessage="#{msg['lbl.valor']} #{msg['lbl.obligatorio']}.">
+                            <p:ajax event="keyup" update="msmNombre"/>
+                            <p:ajax event="change" update="@this,:contenido:msm"/>
+                        </p:inputText>
+                        <p:message id="msmValor" display="icon" for="valor"/>
+                    </h:panelGrid>
+                </p:panel>
+                <br/>
+                <h:panelGrid styleClass="pnl-botones" columns="2">
+                    <p:commandButton id="guardar" icon="ui-icon-disk" value="#{msg['lbl.grabar']}" onstart="PF('dlgLoading').show();" oncomplete="PF('dlgLoading').hide()" update="@form" action="#{administrarConfiguraciones.grabar(sessionConfiguracion.configuracionGeneral)}">
+                        <f:param name="1" value="guardar" />
+                    </p:commandButton>
+                    <p:commandButton icon="ui-icon-disk" value="#{msg['lbl.grabar']} #{msg['lbl.editar']}" onstart="PF('dlgLoading').show();" oncomplete="PF('dlgLoading').hide()" update="@form" action="#{administrarConfiguraciones.grabar(sessionConfiguracion.configuracionGeneral)}">
+                        <f:param name="1" value="guardar-editar" />
+                    </p:commandButton>
+                </h:panelGrid>
+            </ui:define>
+        </ui:composition>
+
+    </body>
+</html>

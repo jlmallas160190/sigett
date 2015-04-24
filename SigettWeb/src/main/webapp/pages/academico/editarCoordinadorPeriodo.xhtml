@@ -1,0 +1,65 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xml:lang="es" lang="es">
+
+    <body>
+        <ui:composition template="./../sigett/editarUsuarioCarrera.xhtml">
+            <ui:define name="title">#{msg['lbl.editar']} #{msg['lbl.coordinador']}</ui:define>
+            <ui:define name="content">
+                <p:messages id="msm"/>
+                <p:panel header="#{msg['lbl.datos']} #{msg['lbl.coordinador']}" toggleable="true">
+                    <p:fragment autoUpdate="true">
+                        <h:panelGrid styleClass="panelgrid" rowClasses="rowpanelgrid" columnClasses="col-sm-10,col-sm-2" columns="2">
+                            <p:inputText placeholder="#{msg['lbl.ci']}" style="text-transform: none;" value="#{administrarCoordinadoresPeriodos.numeroIdentificacion}" />
+                            <p:commandButton update="datos,msm" value="#{msg['lbl.buscar']}" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" action="#{administrarCoordinadoresPeriodos.agregarCoordinador(administrarCoordinadoresPeriodos.numeroIdentificacion)}"  icon="ui-icon-search" />
+                        </h:panelGrid>
+                    </p:fragment>
+                    <h:panelGrid id="datos" styleClass="panelgrid" rowClasses="rowpanelgrid" columnClasses="col-sm-3,col-sm-9" columns="2">
+                        <h:outputLabel value="#{msg['lbl.ci']}:" for="numeroIdentificacion" />
+                        <h:outputText id="numeroIdentificacion"  value="#{sessionCoordinadorPeriodo.persona.numeroIdentificacion}" />
+                        <h:outputLabel value="#{msg['lbl.nombres']}:" for="nombres" />
+                        <h:outputText value="#{sessionCoordinadorPeriodo.persona.nombres}" />
+                        <h:outputLabel value="#{msg['lbl.apellidos']}:" for="apellidos" />
+                        <h:outputText value="#{sessionCoordinadorPeriodo.persona.apellidos}"/>
+                        <h:outputLabel value="#{msg['lbl.email']}:" for="email" />
+                        <h:outputText value="#{sessionCoordinadorPeriodo.persona.email}"/>
+                        <h:outputLabel value="#{msg['lbl.fechaNacimiento']}:" for="fechaNacimiento" />
+                        <h:outputText value="#{sessionCoordinadorPeriodo.persona.fechaNacimiento}">
+                            <f:convertDateTime pattern="EEEE dd MMMM yyyy"/>
+                        </h:outputText>
+                        <h:outputLabel  value="#{msg['lbl.es']} #{msg['lbl.vigente']}:"/>
+                        <p:selectBooleanCheckbox  value="#{sessionCoordinadorPeriodo.coordinadorPeriodo.esVigente}"/>
+                    </h:panelGrid>
+                </p:panel>
+                <br/>
+                <p:panel header="#{msg['lbl.periodoCoordinacion']}" toggleable="true">
+                    <h:panelGrid styleClass="panelgrid" rowClasses="rowpanelgrid" columnClasses="col-sm-2,col-sm-9,col-sm-1" columns="3">
+                        <h:outputLabel value="#{msg['lbl.periodoCoordinacion']}:"/>
+                        <p:selectOneMenu id="periodo" value="#{administrarCoordinadoresPeriodos.periodoCoordinacion}" required="true" requiredMessage="#{msg['lbl.periodoCoordinacion']} #{msg['lbl.obligatorio']}.">
+                            <!-- TODO: update below reference to list of available items-->
+                            <f:selectItems value="#{administrarPeriodoCoordinacion.buscarActivos()}"/>
+                            <p:ajax event="change" update="msmPeriodo"/>
+                        </p:selectOneMenu>
+                        <p:message id="msmPeriodo" display="icon" for="periodo"/>
+                    </h:panelGrid>
+                </p:panel>
+                <h:panelGrid styleClass="pnl-botones"  columns="2">
+                    <p:commandButton id="guardar" value="#{msg['lbl.grabar']}" icon="ui-icon-disk" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" update="@form" action="#{administrarCoordinadoresPeriodos.grabar(sessionCoordinadorPeriodo.coordinadorPeriodo,sessionUsuario.usuario,sessionUsuarioCarrera.usuarioCarrera.carreraId)}">
+                        <f:param name="1" value="grabar" />
+                    </p:commandButton>
+                    <p:commandButton value="#{msg['lbl.grabar']} #{msg['lbl.y']} #{msg['lbl.editar']}" icon="ui-icon-disk" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" update="@form" action="#{administrarCoordinadoresPeriodos.grabar(sessionCoordinadorPeriodo.coordinadorPeriodo,sessionUsuario.usuario,sessionUsuarioCarrera.usuarioCarrera.carreraId)}">
+                        <f:param name="1" value="grabar-editar" />
+                    </p:commandButton>
+                </h:panelGrid>
+            </ui:define>
+            <ui:define  name="data">
+            </ui:define>
+        </ui:composition>
+
+    </body>
+</html>

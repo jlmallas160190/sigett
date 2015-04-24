@@ -1,0 +1,112 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <body>
+
+        <ui:composition template="./principalDocente.xhtml">
+            <ui:define name="title">
+                <h:outputText value="#{msg['lbl.seguimientos']} #{msg['lbl.proyectos']}" />
+            </ui:define>
+            <ui:define name="search">
+                <br/>
+                <p:panel style="background: #fff">
+                    <h:panelGrid styleClass="panelgrid" rowClasses="rowpanelgrid" columnClasses="col-sm-11,col-sm-1" columns="2">
+                        <p:inputText style="text-transform: none" placeholder="#{msg['lbl.buscar']}" value="#{administrarProyectosDirector.criterio}"/>
+                        <p:commandButton onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" update=":contenido:tblDirectorProyectos,:contenido:msm" value="#{msg['lbl.buscar']}" action="#{administrarProyectosDirector.buscar(administrarProyectosDirector.criterio,sessionDocenteUsuario.docenteUsuario.docenteId)}"  icon="ui-icon-search" />
+                    </h:panelGrid>
+                </p:panel>
+            </ui:define>
+            <ui:define name="content">
+                <p:messages id="msm"/>
+                <p:panel header="#{msg['lbl.listado']} #{msg['lbl.proyectos']}" toggleable="true">
+                    <p:dataTable id="tblDirectorProyectos" value="#{administrarProyectosDirector.directorProyectos}" var="item" rows="20" paginator="true"
+                                 rowIndexVar="rowIx"  selectionMode="single" selection="#{sessionDirectorProyecto.directorProyecto}" rowKey="#{item.id}" rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'even-row' : 'odd-row'}" emptyMessage="#{msg['lbl.table.empty']}">
+                        <f:facet name="header">
+                            <h:commandLink>
+                                <p:graphicImage name="./img/csv.png" />
+                                <p:dataExporter type="csv" target="tblDirectorProyectos" encoding="ISO-8859-1" fileName="Proyectos"/>
+                            </h:commandLink>
+                            <p:commandButton id="toggler" type="button" value="Columns" style="float:right" icon="ui-icon-calculator" />
+                            <p:columnToggler datasource="tblDirectorProyectos" trigger="toggler" />
+                        </f:facet>
+
+                        <p:column rendered="#{administrarProyectosDirector.renderedEditar}" sortBy="#{item.proyectoId.temaActual}"  >
+                            <f:facet name="header">
+                                <h:outputText value="#{msg['lbl.tema']}"/>
+                            </f:facet>
+                            <p:commandLink value="#{item.proyectoId.temaActual}" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" update="@form" action="#{administrarProyectosDirector.editarDirectorProyecto(item,sessionDocenteUsuario.docenteUsuario.usuario,item.proyectoId)}"/>
+                        </p:column>
+                        <p:column sortBy="#{item.proyectoId.temaActual}" rendered="#{administrarProyectosDirector.renderedNoEditar}" >
+                            <f:facet name="header">
+                                <h:outputText value="#{msg['lbl.tema']}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.proyectoId.temaActual}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{msg['lbl.autores']}"/>
+                            </f:facet>
+                            <h:outputText value="#{viewProyectos.autores(item.proyectoId)}"/>
+                        </p:column>
+                        <p:column sortBy="#{item.proyectoId.cronograma.fechaInicio}">
+                            <f:facet name="header">
+                                <h:outputText value="#{msg['lbl.fecha']} #{msg['lbl.inicio']}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.proyectoId.cronograma.fechaInicio}">
+                                <f:convertDateTime parent="EEEEE, MMM yyyy"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column sortBy="#{item.proyectoId.cronograma.fechaProrroga}">
+                            <f:facet name="header">
+                                <h:outputText value="#{msg['lbl.fechaCulminación']}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.proyectoId.cronograma.fechaProrroga}">
+                                <f:convertDateTime parent="EEEEE, MMM yyyy"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column sortBy="#{item.proyectoId.tipoProyectoId.nombre}">
+                            <f:facet name="header">
+                                <h:outputText value="#{msg['lbl.tipoProyecto']}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.proyectoId.tipoProyectoId.nombre}"/>
+                        </p:column>
+                        <p:column sortBy="#{item.proyectoId.catalogoProyectoId.nombre}">
+                            <f:facet name="header">
+                                <h:outputText value="#{msg['lbl.categoria']}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.proyectoId.catalogoProyectoId.nombre}"/>
+                        </p:column>
+                        <p:column sortBy="#{item.proyectoId.estadoProyectoId.nombre}">
+                            <f:facet name="header">
+                                <h:outputText value="#{msg['lbl.estadoProyecto']}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.proyectoId.estadoProyectoId.nombre}"/>
+                        </p:column>
+                    </p:dataTable>
+                </p:panel>
+            </ui:define>
+            <ui:define name="right">
+                <p:panel header="#{msg['lbl.periodosAcademicos']}">
+                    <p:dataGrid id="dgPeriodos"  var="p"  paginator="true" rows="5" 
+                                 rowIndexVar="rowIx"  value="#{administrarProyectosDirector.listadoPeriodosAcademicos(sessionDocenteUsuario.docenteUsuario.docenteId)}">
+                            <p:panelGrid columns="3" columnClasses="col-sm-10,col-sm-2">
+                                <p:selectBooleanCheckbox  value="#{p.seleccionado}">
+                                    <p:ajax event="change" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" update=":contenido:tblDirectorProyectos" listener="#{administrarProyectosDirector.buscarPorPeriodos(p)}"/>
+                                </p:selectBooleanCheckbox>
+                                <h:outputText value="#{msg['lbl.desde']} #{administrarConfiguraciones.date(p.fechaInicio)} #{msg['lbl.hasta']} #{administrarConfiguraciones.date(p.fechaFin)}"/>
+                                <span class="badge">#{administrarProyectosDirector.countProyectosPeriodoCarrera(sessionDocenteUsuario.docenteUsuario.docenteId,p)}</span>
+                            </p:panelGrid>
+                    </p:dataGrid>
+                </p:panel>
+            </ui:define>
+            <ui:define name="dlgs"></ui:define>
+        </ui:composition>
+
+    </body>
+</html>
+

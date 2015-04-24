@@ -1,0 +1,47 @@
+<pretty-config xmlns="http://ocpsoft.org/schema/rewrite-config-prettyfaces" 
+               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+               xsi:schemaLocation="http://ocpsoft.org/schema/rewrite-config-prettyfaces
+                      http://ocpsoft.org/xml/ns/prettyfaces/rewrite-config-prettyfaces.xsd">
+
+    <url-mapping id="portada">
+        <pattern value="/portada" />
+        <view-id value="faces/portada.xhtml" />
+    </url-mapping>  
+    <url-mapping id="loginAdmin">
+        <pattern value="/loginAdmin" />
+        <view-id value="faces/loginAdmin.xhtml"/>       
+    </url-mapping>
+    <url-mapping id="login">
+        <pattern value="/login" />
+        <view-id value="faces/login.xhtml"/>       
+    </url-mapping>
+    <url-mapping id="loginEstudiante">
+        <pattern value="/loginEstudiante" />
+        <view-id value="faces/loginEstudiante.xhtml"/>       
+    </url-mapping>
+    <url-mapping id="loginDocente">
+        <pattern value="/loginDocente" />
+        <view-id value="faces/loginDocente.xhtml"/>       
+    </url-mapping>
+    
+    <url-mapping id="principalAdmin">
+        <pattern value="/principalAdmin" />
+        <view-id value="faces/principalAdmin.xhtml"/>       
+    </url-mapping>
+    <url-mapping id="principalEstudiante">
+        <pattern value="/principalEstudiante" />
+        <view-id value="faces/principalEstudiante.xhtml"/>       
+    </url-mapping>
+    <url-mapping id="principalDocente">
+        <pattern value="/principalDocente" />
+        <view-id value="faces/principalDocente.xhtml"/>       
+    </url-mapping>
+    <url-mapping id="login">
+        <pattern value="/login" />
+        <view-id value="faces/login.xhtml"/>       
+    </url-mapping>
+    <url-mapping id="principal">
+        <pattern value="/principal"/>
+        <view-id value="faces/principal.xhtml"/>       
+    </url-mapping>
+</pretty-config>

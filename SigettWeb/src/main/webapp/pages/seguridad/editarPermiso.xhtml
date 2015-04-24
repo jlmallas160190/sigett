@@ -1,0 +1,55 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xml:lang="es" lang="es">
+
+    <body>
+
+        <ui:composition template="./admin.xhtml">
+
+            <ui:define name="title">Editar Permiso</ui:define>
+
+            <ui:define name="content">
+                <f:view>
+                    <h:form id="editarPermiso">
+                        <p:messages id="msm"/>
+                        <p:panel header="Editar Permiso">
+                            <h:panelGrid styleClass="panelgrid"  rowClasses="rowpanelgrid" columnClasses="col-lg-1,col-lg-10,col-lg-1" columns="3">
+                                <h:outputLabel value="Nombre:" for="nombre" />
+                                <p:inputText id="nombre" value="#{sessionPermiso.permiso.nombre}" title="Nombre" required="true" requiredMessage="The Nombre field is required.">
+                                    <p:ajax event="change" update="@this,:editarPermiso:msm"/>
+                                    <p:ajax event="keyup" update="msmNombres"/>
+                                </p:inputText>
+                                <p:message id="msmNombres" display="icon" for="nombre"/>
+                                <h:outputLabel value="Código:" />
+                                <p:inputText id="codigo" style="text-transform: none" value="#{sessionPermiso.permiso.codigoNombre}" title="Código Nombre" required="true" requiredMessage="The Nombre field is required.">
+                                    <p:ajax event="change" update="@this,:editarPermiso:msm"/>
+                                    <p:ajax event="keyup" update="msmCodigo"/>
+                                </p:inputText>
+                                <p:message id="msmCodigo" display="icon" for="codigo"/>
+                            </h:panelGrid>
+                        </p:panel>
+                        <div class="pnl-botones">
+                            <h:panelGrid columns="2">
+                                <p:commandButton id="guardar" value="GUARDAR" icon="ui-icon-disk" update="@form"  action="#{administrarPermisos.grabar(sessionPermiso.permiso)}">
+                                    <f:param name="1" value="guardar" />
+                                </p:commandButton>
+                                <p:commandButton id="guardarCrear" icon="ui-icon-disk" value="GUARDAR Y CREAR OTRO" update="@form"  action="#{administrarPermisos.grabar(sessionPermiso.permiso)}">
+                                    <f:param name="1" value="guardarCrear" />
+                                </p:commandButton>
+                            </h:panelGrid>
+                        </div>
+                    </h:form>
+                </f:view>
+
+            </ui:define>
+
+
+        </ui:composition>
+
+    </body>
+</html>

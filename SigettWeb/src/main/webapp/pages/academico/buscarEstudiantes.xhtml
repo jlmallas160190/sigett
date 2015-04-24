@@ -1,0 +1,93 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <body>
+        <ui:composition template="./../../principalAdmin.xhtml">
+            <ui:define name="title">#{msg['lbl.buscar']} #{msg['lbl.estudiantes']}</ui:define>
+            <ui:define name="content">
+                <h:form>
+                    <p:messages id="msgs"/>
+                    <p:panel header="#{msg['lbl.buscar']} #{msg['lbl.por']} #{msg['lbl.criterio']}" toggleable="true">
+                        <h:panelGrid styleClass="panelgrid" rowClasses="row" columnClasses="col-lg-10,col-lg-1" columns="2">
+                            <p:inputText style="text-transform: none" value="#{administrarEstudiantes.criterio}" placeholder="#{msg['lbl.buscar']}"/>
+                            <p:commandButton update="tblEstudiantes,msgs" icon="ui-icon-search" value="#{msg['lbl.buscar']}" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()"  action="#{administrarEstudiantes.listadoEstudiantes(administrarEstudiantes.criterio)}"/>
+                        </h:panelGrid>
+                    </p:panel>
+                    <br/>
+                    <p:panel header="#{msg['lbl.estudiantes']}" toggleable="true">
+                        <p:dataTable id="tblEstudiantes" value="#{administrarEstudiantes.estudiantes}" var="item" rows="20" paginator="true"
+                                     rowIndexVar="rowIx"  rowKey="#{item.id}" selectionMode="single" selection="#{sessionEstudiante.estudiante}"  rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'even-row' : 'odd-row'}" emptyMessage="#{msg['lbl.table.empty']}">
+                            <f:facet name="header">
+                                <h:commandLink>
+                                    <p:graphicImage name="./img/excel.png" />
+                                    <p:dataExporter encoding="ISO-8859-1" type="xls" target="tblEstudiantes" fileName="Estudiantes"/>
+                                </h:commandLink>
+
+                                <h:commandLink>
+                                    <p:graphicImage name="./img/pdf.png" />
+                                    <p:dataExporter encoding="ISO-8859-1" type="pdf" target="tblEstudiantes" preProcessor="#{administrarEstudiantes.preProcessPDF}" postProcessor="#{administrarEstudiantes.postProcessPDF}"  fileName="Estudiantes"  />
+                                </h:commandLink>
+
+                                <h:commandLink>
+                                    <p:graphicImage name="./img/csv.png" />
+                                    <p:dataExporter type="csv" target="tblEstudiantes" encoding="ISO-8859-1" fileName="Estudiantes"/>
+                                </h:commandLink>
+
+                                <h:commandLink>
+                                    <p:graphicImage name="./img/xml.png" />
+                                    <p:dataExporter type="xml" target="tblEstudiantes" encoding="ISO-8859-1" fileName="Estudiantes" />
+                                </h:commandLink>
+                            </f:facet>
+                            <p:column sortBy="#{item.id}">
+                                <f:facet name="header">
+                                    <h:outputText value="Id"/>
+                                </f:facet>
+                                <h:outputText value="#{item.id}"/>
+                            </p:column>
+                            <p:column sortBy="#{item.persona.apellidos}">
+                                <f:facet name="header">
+                                    <h:outputText value="#{msg['lbl.estudiante']}"/>
+                                </f:facet>
+                                <h:outputText value="#{item}"/>
+                            </p:column>
+                            <p:column rendered="#{administrarEstudiantes.renderedEditar()}" sortBy="#{item.persona.numeroIdentificacion}">
+                                <f:facet name="header">
+                                    <h:outputText value="#{msg['lbl.ci']}"/>
+                                </f:facet>
+                                <p:commandLink value="#{item.persona.numeroIdentificacion}" update="@form" action="#{administrarEstudiantes.editar(item,sessionUsuario.usuario)}">
+                                    <f:param name="1" value="editar"/>
+                                </p:commandLink>
+                            </p:column>
+                            <p:column rendered="#{administrarEstudiantes.renderedNoEditar}"  sortBy="#{item.persona.numeroIdentificacion}">
+                                <f:facet name="header">
+                                    <h:outputText value="#{msg['lbl.ci']}"/>
+                                </f:facet>
+                                <h:outputText value="#{item.persona.numeroIdentificacion}" />
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="#{msg['lbl.email']}"/>
+                                </f:facet>
+                                <h:outputText value="#{item.persona.email}"/>
+                            </p:column>
+                        </p:dataTable>
+                        <f:facet name="footer">
+                            <h:panelGrid columns="1" >
+                                <p:commandButton value="#{msg['lbl.crear']}" rendered="#{administrarEstudiantes.renderedCrear()}" icon="ui-icon-newwin" update="@form"  action="#{administrarEstudiantes.crear(sessionUsuario.usuario)}">
+                                    <f:param name="1" value="crear"/>
+                                </p:commandButton>
+                            </h:panelGrid>
+                        </f:facet>
+                    </p:panel>
+                </h:form>
+            </ui:define>
+
+
+        </ui:composition>
+
+    </body>
+</html>

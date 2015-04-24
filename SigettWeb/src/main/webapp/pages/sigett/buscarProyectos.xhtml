@@ -1,0 +1,130 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+
+    <body>
+        <ui:composition template="./principal.xhtml">
+            <ui:define name="title">#{msg['lbl.buscar']} #{msg['lbl.proyectos']}</ui:define>
+            <ui:define name="search">
+                <p:panel style="background: #fff;padding: 10px">
+                    <h:panelGrid styleClass="panelgrid"  columnClasses="col-sm-10,col-sm-2" columns="2">
+                        <p:inputText id="criterio" style="text-transform: none" value="#{administrarProyectos.criterio}" placeholder="#{msg['lbl.buscar']}"/>
+                        <p:commandButton update=":contenido:tblProyectos,:contenido:msm" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" 
+                                         action="#{administrarProyectos.buscar(administrarProyectos.criterio,sessionUsuario.usuario)}"
+                                         value="#{msg['lbl.buscar']}" icon="ui-icon-search" />
+                    </h:panelGrid>
+                </p:panel>    
+            </ui:define>
+            <ui:define name="content">
+                <p:messages id="msm"/>
+                <p:panel header="#{msg['lbl.listado']} #{msg['lbl.proyectos']}" toggleable="true">
+                    <p:dataTable id="tblProyectos" value="#{administrarProyectos.proyectosPorWS}" var="item" rows="20" paginator="true" rowExpandMode="single" draggableColumns="true"
+                                 rowsPerPageTemplate="5,10,15,20,25,30,35,40,45,50" emptyMessage="#{msg['lbl.table.empty']}" rowIndexVar="rowIx" rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'even-row' : 'odd-row'}" rowKey="#{item.id}" selection="#{sessionProyecto.proyecto}" selectionMode="single">
+                        <f:facet name="header">
+                            <h:commandLink action="#{administrarProyectos.crearPDF()}">
+                                <p:graphicImage name="./img/pdf.png" />
+                            </h:commandLink>
+                            <p:commandButton id="toggler" type="button" value="Columns" style="float:right" icon="ui-icon-calculator" />
+                            <p:columnToggler datasource="tblProyectos" trigger="toggler" />
+                        </f:facet>
+                        <p:column sortBy="#{item.fechaCreated}" >
+                            <f:facet name="header">
+                                <h:outputText value="#{msg['lbl.creacion']}"/>
+                            </f:facet>
+                            <h:outputText value="#{administrarConfiguraciones.timestamp(item.fechaCreated)}" />
+                        </p:column>
+                        <p:column  rendered="#{administrarProyectos.renderedEditar()}" sortBy="#{item.temaActual}" >
+                            <f:facet name="header">
+                                <h:outputText value="#{msg['lbl.tema']}"/>
+                            </f:facet>
+                            <p:commandLink  value="#{item.temaActual}" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" update="@form" action="#{administrarProyectos.editar(item)}"/>
+                        </p:column>
+                        <p:column  rendered="#{administrarProyectos.renderedNoEditar}" sortBy="#{item.temaActual}" >
+                            <f:facet name="header">
+                                <h:outputText value="#{msg['lbl.tema']}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.temaActual}"/>
+                        </p:column>
+                        <p:column >
+                            <f:facet name="header">
+                                <h:outputText value="#{msg['lbl.autores']}"/>
+                            </f:facet>
+                            <h:outputText value="#{viewProyectos.autores(item)}"/>
+                        </p:column>
+                        <p:column sortBy="#{item.tipoProyectoId.nombre}" >
+                            <f:facet name="header">
+                                <h:outputText value="#{msg['lbl.tipo']}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.tipoProyectoId.nombre}"/>
+                        </p:column>
+                        <p:column sortBy="#{item.catalogoProyectoId.nombre}" >
+                            <f:facet name="header">
+                                <h:outputText value="#{msg['lbl.categoria']}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.catalogoProyectoId.nombre}"/>
+                        </p:column>
+                        <p:column >
+                            <f:facet name="header">
+                                <h:outputText value="#{msg['lbl.estado']}"/>
+                            </f:facet>
+                            <h:outputText value="#{administrarProyectos.estadoProyecto(item)}"/>
+                        </p:column>
+                    </p:dataTable>
+                    <f:facet name="footer">
+                        <h:panelGrid  columns="2">
+                            <p:commandButton value="#{msg['lbl.crear']}" rendered="#{administrarProyectos.renderedCrear()}" icon="ui-icon-newwin" action="#{administrarProyectos.crear()}"></p:commandButton>
+                            <p:commandButton value="#{msg['lbl.crear']} RDF" rendered="#{administrarProyectos.renderedGeneraIndividuosProyectos(sessionUsuario.usuario)}" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" update=":contenido:msm" icon="ui-icon-newwin" action="#{administrarProyectos.generaIndividuosRdf(sessionUsuario.usuario)}"></p:commandButton>
+                        </h:panelGrid>
+                    </f:facet>
+                </p:panel>
+            </ui:define>
+            <ui:define name="right">
+                <p:panel header="#{msg['lbl.carreras']}" toggleable="true">
+                    <p:dataTable id="dgCarreras" paginatorPosition="bottom" rowIndexVar="rowIx" rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'even-row' : 'odd-row'}" var="uc" rowKey="#{uc.carreraId.nombre}" selection="#{uc}" selectionMode="single" paginator="true" rows="10"  value="#{administrarUsuarioCarrera.carreras}">
+                        <p:ajax event="rowSelect" listener="#{administrarProyectos.onRowSelectCarrera}" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" update=":izquierda:dgLineasInvestigacionCarrera,:contenido:tblProyectos"/>
+                        <p:column filterBy="#{uc.carreraId.nombre}" filterMatchMode="contains" sortBy="#{uc.carreraId.nombre}">
+                            <f:facet name="header">
+                                <h:outputText value="#{msg['lbl.carrera']}"/>
+                            </f:facet>
+                            <h:outputText value="#{uc.carreraId.nombre}"/>
+                            <span class="badge">#{viewProyectos.countProyectosCarrera(uc.carreraId)}</span>
+                        </p:column> 
+                    </p:dataTable>
+                </p:panel>                
+                <br/>
+                <p:panel header="#{msg['lbl.periodosAcademicos']}">
+                    <p:dataGrid id="dgPeriodos"  var="p"  paginator="true" rows="5" rowIndexVar="rowIx" paginatorPosition="bottom"
+                                value="#{administrarProyectos.listadoPeriodosAcademicosCarrera(sessionUsuario.usuario)}">
+                        <h:panelGrid styleClass="panelgrid list-group" columns="1">
+                            <p:commandLink styleClass="list-group-item">
+                                #{msg['lbl.desde']} #{administrarConfiguraciones.date(p.fechaInicio)} #{msg['lbl.hasta']} #{administrarConfiguraciones.date(p.fechaFin)}
+                                <span class="badge">#{administrarProyectos.countProyectosPeriodoCarrera(p, sessionUsuario.usuario)}</span>
+                            </p:commandLink>
+                        </h:panelGrid>
+                    </p:dataGrid>
+                </p:panel>
+            </ui:define>
+            <ui:define name="left">
+                <p:panel toggleable="true"  header="#{msg['lbl.lineasInvestigacion']}">
+                    <p:dataTable id="dgLineasInvestigacionCarrera" paginatorPosition="bottom" rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'even-row' : 'odd-row'}" rowIndexVar="rowIx"  var="lc" rowKey="#{lc.lineaInvestigacionId.nombre}" selection="#{lc}" selectionMode="single" paginator="true" rows="8" value="#{administrarProyectos.lineaInvestigacionCarreras}">
+                        <p:ajax event="rowSelect"  listener="#{administrarProyectos.editarLineaInvestigacion}" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()"  update=":contenido:tblProyectos,:contenido:msm" />
+                        <p:column  filterBy="#{lc.lineaInvestigacionId.nombre}" filterMatchMode="contains">
+                            <f:facet name="header">
+                                <h:outputText value="#{msg['lbl.lineaInvestigacion']}"/>
+                            </f:facet>
+                            <h:outputText id="lc"   value="#{lc.lineaInvestigacionId.nombre}"/>
+                            <span class="badge">#{viewProyectos.countProyectosLineas(lc)}</span>    
+                        </p:column>
+                    </p:dataTable>
+                </p:panel>
+
+            </ui:define>
+        </ui:composition>
+
+    </body>
+</html>

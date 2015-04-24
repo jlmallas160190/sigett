@@ -1,0 +1,61 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xml:lang="es" lang="es">
+
+    <body>
+
+        <ui:composition template="./../sigett/editarUsuarioCarrera.xhtml">
+            <ui:define name="title">#{msg['lbl.periodosCoordinacion']}</ui:define>
+            <ui:define name="content">
+                <p:messages id="msgs"/>
+                <p:panel header="#{msg['lbl.periodosCoordinacion']}">
+                    <p:dataTable id="tblPeriodos" value="#{administrarPeriodoCoordinacion.periodosCoordinacion}" var="item" rows="20" paginator="true"
+                                 rowIndexVar="rowIx"  rowKey="#{item.id}" selectionMode="single" selection="#{item}" rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'even-row' : 'odd-row'}" emptyMessage="#{msg['lbl.table.empty']}">
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="Id"/>
+                            </f:facet>
+                            <h:outputText value="#{item.id}"/>
+                        </p:column>
+                        <p:column rendered="#{administrarPeriodoCoordinacion.renderedEditar}" sortBy="#{item.fechaInicio}" >
+                            <f:facet name="header">
+                                <h:outputText value="#{msg['lbl.fecha']} #{msg['lbl.inicio']}"/>
+                            </f:facet>
+                            <p:commandLink value="#{administrarConfiguraciones.date(item.fechaInicio)}" update="@this" action="#{administrarPeriodoCoordinacion.editar(item, sessionUsuario.usuario,sessionUsuarioCarrera.carrera)}">
+                                <f:param name="1" value="editar"/>
+                            </p:commandLink>
+                        </p:column>
+                        <p:column rendered="#{administrarPeriodoCoordinacion.renderedNoEditar}" sortBy="#{item.fechaInicio}" >
+                            <f:facet name="header">
+                                <h:outputText value="#{msg['lbl.fecha']} #{msg['lbl.inicio']}"/>
+                            </f:facet>
+                            <h:outputText value="#{administrarConfiguraciones.date(item.fechaInicio)}"/>
+                        </p:column>
+                        <p:column  sortBy="#{item.fechaFin}">
+                            <f:facet name="header">
+                                <h:outputText value="#{msg['lbl.fecha']} #{msg['lbl.fin']}"/>
+                            </f:facet>
+                            <h:outputText value="#{administrarConfiguraciones.date(item.fechaFin)}"/>
+                        </p:column>
+                    </p:dataTable>
+                    <f:facet name="footer">
+                        <h:panelGrid  columns="1">
+                            <p:commandButton value="#{msg['lbl.crear']}"  rendered="#{administrarPeriodoCoordinacion.renderedCrear}" icon="ui-icon-newwin" action="#{administrarPeriodoCoordinacion.crear(sessionUsuario.usuario,sessionUsuarioCarrera.carrera)}">
+                                <f:param name="1" value="crear"/>
+                            </p:commandButton>
+                        </h:panelGrid>
+                    </f:facet>
+                </p:panel>
+            </ui:define>
+            <ui:define name="data">
+
+            </ui:define>
+        </ui:composition>
+
+    </body>
+</html>

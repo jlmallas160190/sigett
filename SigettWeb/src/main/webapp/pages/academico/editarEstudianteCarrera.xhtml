@@ -1,0 +1,217 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xml:lang="es" lang="es">
+
+    <body>
+
+        <ui:composition template="./editarUsuarioCarrera.xhtml">
+            <ui:define name="title">#{msg['lbl.editar']} #{msg['lbl.estudiante']}</ui:define>
+            <ui:define name="content">
+                <p:messages id="msm" showDetail="true"/>
+                <p:tabView id="tabViewDatosEstudiante">
+                    <p:tab title="#{msg['lbl.datos']} #{msg['lbl.personales']}">
+                        <h:panelGrid styleClass="panelgrid" rowClasses="rowpanelgrid" columnClasses="col-sm-3,col-sm-7,col-sm-1,col-sm-1" columns="4">
+                            <f:facet name="header">
+                                <p:graphicImage id="foto" cache="false" styleClass="img-thumbnail" height="100" width="100" value="/AppServlet?id=#{sessionEstudianteCarrera.estudianteCarrera.estudianteId.persona.id}&amp;entity=Persona"/>
+                            </f:facet>
+                            <h:outputLabel value="#{msg['lbl.ci']}:" for="numeroIdentificacion" />
+                            <p:inputText  id="numeroIdentificacion" value="#{sessionEstudianteCarrera.estudianteCarrera.estudianteId.persona.numeroIdentificacion}" title="#{msg['lbl.ci']}" required="true" requiredMessage="#{msg['lbl.ci']} #{msg['lbl.obligatorio']}.">
+                                <p:ajax event="keyup" update="msmNumeroIdentificacion" />
+                                <p:ajax event="change" update="@this,:contenido:msm"/>
+                            </p:inputText>
+                            <p:fragment autoUpdate="true">
+                                <p:commandButton value="#{msg['lbl.sincronizar']}" update=":contenido:tabViewDatosEstudiante,:contenido:msm" onstart="PF('dlgLoading').show();" oncomplete="PF('dlgLoading').hide()" action="#{administrarEstudiantes.sgaWebServicesDatosEstudiante(sessionEstudianteCarrera.estudianteCarrera.estudianteId)}"/>
+                            </p:fragment>
+                            <p:message id="msmNumeroIdentificacion" display="icon" for="numeroIdentificacion"/>
+                            <h:outputLabel  value="#{msg['lbl.nombres']}:" for="nombres" />
+                            <p:inputText id="nombres" value="#{sessionEstudianteCarrera.estudianteCarrera.estudianteId.persona.nombres}" title="#{msg['lbl.nombres']}" required="true" requiredMessage="#{msg['lbl.nombres']} #{msg['lbl.obligatorio']}.">
+                                <p:ajax event="keyup" update="msmNombres"/>
+                                <p:ajax event="change" update="@this,:contenido:msm"/>
+                            </p:inputText>
+                            <h:inputHidden/>
+                            <p:message id="msmNombres" display="icon" for="nombres"/>
+                            <h:outputLabel  value="#{msg['lbl.apellidos']}:" for="apellidos" />
+                            <p:inputText  id="apellidos" value="#{sessionEstudianteCarrera.estudianteCarrera.estudianteId.persona.apellidos}" title="lbl.apellidos" required="true" requiredMessage="#{msg['lbl.apellidos']} #{msg['lbl.obligatorio']}.">
+                                <p:ajax event="keyup" update="msmApellidos"/>
+                                <p:ajax event="change" update="@this,:contenido:msm"/>
+                            </p:inputText>
+                            <h:inputHidden/>
+                            <p:message id="msmApellidos" display="icon" for="apellidos"/>
+                            <h:outputLabel value="#{msg['lbl.email']}:" for="email" />
+                            <p:inputText placeholder="Email" id="email" value="#{sessionEstudianteCarrera.estudianteCarrera.estudianteId.persona.email}" title="#{msg['lbl.email']}" required="true" requiredMessage="#{msg['lbl.email']} #{msg['lbl.obligatorio']}.">
+                                <p:ajax event="keyup" update="msmEmail"/>
+                                <p:ajax event="change" update="@this,:contenido:msm"/>
+                            </p:inputText>
+                            <h:inputHidden/>
+                            <p:message id="msmEmail" display="icon" for="email"/>
+                            <h:outputLabel value="#{msg['lbl.fechaNacimiento']}:" for="fechaNacimiento" />
+                            <p:calendar  id="fechaNacimiento"  yearRange="c-100:c+20" navigator="true" locale="es" pattern="dd/MM/yyyy" value="#{sessionEstudianteCarrera.estudianteCarrera.estudianteId.persona.fechaNacimiento}" title="#{msg['lbl.fechaNacimiento']}" required="true" requiredMessage="#{msg['lbl.fechaNacimiento']} #{msg['lbl.obligatorio']}.">
+                                <p:ajax event="dateSelect" update="msmFechaNacimiento"/>
+                                <p:ajax event="change" update="@this,:contenido:msm"/>
+                            </p:calendar>
+                            <h:inputHidden/>
+                            <p:message id="msmFechaNacimiento" display="icon" for="fechaNacimiento"/>
+                            <h:outputLabel value="#{msg['lbl.tipoDocId']}:" for="tipoDocumentoIdentificacionId" />
+                            <p:selectOneMenu  id="tipoDocumentoIdentificacionId" value="#{administrarEstudiantesCarrera.tipoDocumento}" required="true" requiredMessage="#{msg['lbl.tipoDocId']} #{msg['lbl.obligatorio']}.">
+                                <f:selectItems value="#{administrarEstudiantes.listadoTiposDocumentos()}"/>
+                                <p:ajax event="change" update="msmTipoDoc"/>
+                            </p:selectOneMenu>
+                            <h:inputHidden/>
+                            <p:message id="msmTipoDoc" for="tipoDocumentoIdentificacionId"/>
+                            <h:outputLabel  value="#{msg['lbl.genero']}:" for="generoId" />
+                            <p:selectOneMenu id="generoId" value="#{administrarEstudiantesCarrera.genero}" required="true" requiredMessage="#{msg['lbl.genero']} #{msg['lbl.obligatorio']}.">
+                                <!-- TODO: update below reference to list of available sessionEstudianteCarrera.estudianteCarreras-->
+                                <f:selectItems value="#{administrarEstudiantes.listadoGeneros()}"/>
+                                <p:ajax event="change" update="msmGenero"/>
+                            </p:selectOneMenu>
+                            <h:inputHidden/>
+                            <p:message id="msmGenero" for="generoId"/>
+                            <h:outputLabel  value="#{msg['lbl.estado']}:" for="activo" />
+                            <p:selectBooleanCheckbox id="activo" value="#{sessionEstudianteCarrera.estudianteCarrera.estudianteId.esActivo}"/>
+                            <h:inputHidden/>
+                            <h:inputHidden/>
+                            <h:outputLabel  value="#{msg['lbl.activo']}:"/>
+                            <p:selectBooleanCheckbox  value="#{sessionEstudianteCarrera.estudianteCarrera.esActivo}"/>
+                        </h:panelGrid>
+                    </p:tab>
+                    <p:tab id="tabFotos" title="#{msg['lbl.fotos']}" rendered="#{administrarEstudiantes.renderedFotos}">
+                        <h:panelGrid columns="1">
+                            <p:dataGrid  value="#{sessionEstudianteCarrera.estudianteCarrera.estudianteId.persona.fotoList}"
+                                         id="dgFotos" var="foto" 
+                                         paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} "
+                                         emptyMessage="#{msg['lbl.table.empty']}.">
+
+                                <p:graphicImage id="foto" cache="false" styleClass="img-thumbnail" height="100" width="100" value="/AppServlet?id=#{foto.id}&amp;entity=Foto"/>
+                                <br/>
+                                <h:panelGrid styleClass="pnl-botones" columns="3">
+                                    <p:commandButton icon="ui-icon-circle-plus" onstart="PF('dlgLoading').show();" oncomplete="PF('dlgLoading').hide()" rendered="#{administrarFotos.renderedSeleccionar(view.viewId)}"  onclick="if (!confirm('¿#{msg['lbl.confirmarSeleccionar']}?'))
+                                                return false;" action="#{administrarFotos.seleccionarFoto(foto,view.viewId)}" update="dgFotos,:contenido:msm,:contenido:tabViewDatosEstudiante:foto"/>
+                                    <p:commandButton  onstart="PF('dlgLoading').show();" oncomplete="PF('dlgLoading').hide()" update=":form-data,:contenido:msm" rendered="#{administrarFotos.renderedEditar()}"  action="#{administrarFotos.editar(foto,view.viewId)}" icon="ui-icon-pencil"/>
+                                    <p:commandButton rendered="#{administrarFotos.renderedRemover()}" update="dgFotos,:contenido:msm,:contenido:tabViewDatosEstudiante:foto" onclick="if (!confirm('¿#{msg['lbl.confirmarEliminar']}?'))
+                                                return false;" action="#{administrarFotos.removerFoto(foto,view.viewId)}" process="@this" onstart="PF('dlgLoading').show();" oncomplete="PF('dlgLoading').hide()" icon="ui-icon-trash"/>
+                                </h:panelGrid>
+                            </p:dataGrid>
+                        </h:panelGrid>
+                        <br/>
+                        <h:panelGrid styleClass="pnl-botones">
+                            <p:commandButton icon="ui-icon-newwin"  onstart="PF('dlgLoading').show();" oncomplete="PF('dlgLoading').hide()" value="#{msg['lbl.crear']}" update=":form-data" action="#{administrarFotos.crear(view.viewId)}"/>
+                        </h:panelGrid>
+                    </p:tab>
+                    <p:tab  title="#{msg['lbl.informacion']} #{msg['lbl.estudio']}" rendered="#{administrarEstudiantes.renderedInformacionEstudio}">
+                        <p:panel style="border: transparent">
+                            <h:panelGrid id="datosEstudianteCarrera" styleClass="panelgrid" rowClasses="rowpanelgrid" columnClasses="col-lg-2,col-lg-10" columns="2" >
+                                <h:outputLabel value="#{msg['lbl.estado']}:"/>
+                                <h:outputText value="#{sessionEstudianteCarrera.estudianteCarrera.estadoEstudianteCarrera.nombre}"/>
+                                <h:outputLabel value="#{msg['lbl.fechaIngreso']}:"/>
+                                <h:outputText value="#{administrarEstudiantesCarrera.obtenerPrimerMatricula(sessionEstudianteCarrera.estudianteCarrera).ofertaAcademica.fechaInicio}">
+                                    <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                </h:outputText>
+                                <h:outputLabel value="#{msg['lbl.ultimoModuloAprobado']}:"/>
+                                <h:outputText value="#{administrarEstudiantesCarrera.obtenerMatriculaUltima(sessionEstudianteCarrera.estudianteCarrera).numeroModuloMatriculado} #{administrarEstudiantesCarrera.obtenerMatriculaUltima(sessionEstudianteCarrera.estudianteCarrera).paralelo}"/>
+                                <h:outputLabel value="#{msg['lbl.fechaCulminación']}:"/>
+                                <h:outputText value="#{administrarEstudiantesCarrera.obtenerMatriculaUltima(sessionEstudianteCarrera.estudianteCarrera).ofertaAcademica.fechaFin}">
+                                    <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                </h:outputText>
+                                <h:outputLabel id="lbEsApto" rendered="#{administrarEstudiantesCarrera.renderedEsAptoAspirante}" value="#{msg['lbl.esApto']}:"/>
+                                <p:selectBooleanCheckbox id="esApto" rendered="#{administrarEstudiantesCarrera.renderedEsAptoAspirante}" value="#{sessionEstudianteCarrera.estudianteCarrera.aspirante.esApto}">
+                                    <p:ajax  listener="#{administrarEstudiantesCarrera.esAptoEstudiante(sessionEstudianteCarrera.estudianteCarrera)}" update=":contenido:msm"/>
+                                </p:selectBooleanCheckbox>
+                            </h:panelGrid>
+                            <br/>
+                            <p:overlayPanel appendToBody="true" my="left-top" showEffect="blind" for="detalleMatriculas" styleClass="modal-md"  hideEffect="fade">
+                                <p:dataTable id="tblReporteMatriculas" resizableColumns="true" value="#{administrarEstudiantesCarrera.listadoMatriculasEstudiante(sessionEstudianteCarrera.estudianteCarrera)}" var="rm" rows="5" paginator="true"
+                                             rowIndexVar="rowIx" rowKey="#{rm.matriculaId}" selection="#{rm}" selectionMode="single" rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'even-row' : 'odd-row'}" emptyMessage="No hay Datos Cargados">
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="#{msg['lbl.numero']} #{msg['lbl.matricula']}"/>
+                                        </f:facet>
+                                        <h:outputText value="#{rm.matriculaId}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="#{msg['lbl.modulo']}"/>
+                                        </f:facet>
+                                        <h:outputText value="#{rm.moduloMatriculado}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="#{msg['lbl.numero']} #{msg['lbl.modulo']}"/>
+                                        </f:facet>
+                                        <h:outputText value="#{rm.numeroModuloMatriculado}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="#{msg['lbl.paralelo']}"/>
+                                        </f:facet>
+                                        <h:outputText value="#{rm.paralelo}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="#{msg['lbl.nota']}"/>
+                                        </f:facet>
+                                        <h:outputText  value="#{rm.nota}">
+                                            <f:convertNumber minFractionDigits="2"/>
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="#{msg['lbl.periodoAcademico']}"/>
+                                        </f:facet>
+                                        <h:outputText value="#{administrarConfiguraciones.date(rm.ofertaAcademica.fechaInicio)}- #{administrarConfiguraciones.date(rm.ofertaAcademica.fechaFin)}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="#{msg['lbl.estado']}"/>
+                                        </f:facet>
+                                        <h:outputText value="#{rm.estadoMatriculaId.nombre}"/>
+                                    </p:column>
+                                </p:dataTable>
+
+                            </p:overlayPanel>
+                            <f:facet name="footer">
+                                <h:panelGrid columns="3">
+                                    <p:commandButton  icon="ui-icon-info" value="#{msg['lbl.matriculas']}" id="detalleMatriculas"/>
+                                    <p:commandButton onstart="PF('dlgLoading').show();" oncomplete="PF('dlgLoading').hide()" update="tblReporteMatriculas,:contenido:msm" value="#{msg['lbl.sincronizar']} SGA" action="#{administrarEstudiantesCarrera.sgaWebServicesEstudianteMatriculas(sessionEstudianteCarrera.estudianteCarrera,sessionUsuario.usuario)}" icon="ui-icon-refresh"/>
+                                    <p:commandButton icon="ui-icon-comprobar" value="#{msg['lbl.comprobar']}" process="@this" onstart="PF('dlgLoading').show();" oncomplete="PF('dlgLoading').hide()" update="datosEstudianteCarrera,esApto,:contenido:msm" action="#{administrarEstudiantesCarrera.compruebaEsAspiranteApto(sessionEstudianteCarrera.estudianteCarrera)}"/>
+                                </h:panelGrid>
+                            </f:facet>
+                        </p:panel>
+                    </p:tab>
+                </p:tabView>
+                <br/>
+                <h:panelGrid styleClass="pnl-botones" columns="3">
+                    <p:commandButton id="guardar" value="#{msg['lbl.grabar']}"  update=":contenido:msm,:contenido:tabViewDatosEstudiante" icon="ui-icon-disk"  action="#{administrarEstudiantesCarrera.grabar(sessionEstudianteCarrera.estudianteCarrera)}">
+                        <f:param name="1" value="grabar" />
+                    </p:commandButton>
+                    <p:commandButton id="guardarEditar"  onstart="PF('dlgLoading').show();" oncomplete="PF('dlgLoading').hide()" value="#{msg['lbl.grabar']} #{msg['lbl.editar']}" update=":contenido:msm,:contenido:tabViewDatosEstudiante" icon="ui-icon-disk" action="#{administrarEstudiantesCarrera.grabar(sessionEstudianteCarrera.estudianteCarrera)}">
+                        <f:param name="1" value="grabar-editar" />
+                    </p:commandButton>
+                    <p:commandButton rendered="#{sessionEstudianteCarrera.estudianteCarrera.id !=null}"  onstart="PF('dlgLoading').show();" oncomplete="PF('dlgLoading').hide()" value="#{msg['lbl.grabar']} #{msg['lbl.clave']}" update=":contenido:msm,:contenido:tabViewDatosEstudiante" icon="ui-icon-key" action="#{administrarUsuarios.grabarUsuarioEstudiante(sessionEstudianteCarrera.estudianteCarrera.estudianteId)}">
+                    </p:commandButton>
+                </h:panelGrid>
+
+            </ui:define>
+            <ui:define name="data">
+                <p:dialog id="dlgFoto" header="#{msg['lbl.editar']} #{msg['lbl.foto']}" widgetVar="dlgFoto" modal="true">
+                    <h:panelGrid columns="1" >
+                        <f:facet name="header">
+                            <p:graphicImage id="foto" cache="false"  height="100" width="100" value="/AppServlet?id=#{sessionFoto.foto.id}&amp;entity=Foto"/>
+                        </f:facet>
+                        <p:fileUpload multiple="false" fileUploadListener="#{administrarFotos.handleFileUpload}"
+                                      update=":contenido:msm,:contenido:tabViewDatosEstudiante:dgFotos"  mode="advanced"  
+                                      allowTypes="/(\.|\/)(gif|jpe?g|png)$/" sizeLimit="#{administrarConfiguraciones.tamanioPermitidoFotos}" invalidFileMessage="#{msg['lbl.invalidTypeFileMessage']}"
+                                      invalidSizeMessage="#{msg['lbl.fileLimitMessage']}"
+                                      cancelLabel="#{msg['lbl.cancelar']}"  label="#{msg['lbl.seleccionar']}" uploadLabel="#{msg['lbl.subir']}" oncomplete="dlgFoto.hide()">
+                        </p:fileUpload>
+                    </h:panelGrid>
+                </p:dialog>
+            </ui:define>
+        </ui:composition>
+
+    </body>
+</html>

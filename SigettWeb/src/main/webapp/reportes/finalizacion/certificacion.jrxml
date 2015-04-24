@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="71a65104-db3e-423c-8052-8b941b9d5c95">
+	<property name="ireport.zoom" value="1.1"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="director" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="autores" class="java.lang.String"/>
+	<parameter name="proyecto" class="java.lang.String"/>
+	<parameter name="razon" class="java.lang.String"/>
+	<parameter name="lugarFecha" class="java.lang.String"/>
+	<parameter name="carrera" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="111" splitType="Stretch">
+			<textField isStretchWithOverflow="true">
+				<reportElement x="0" y="0" width="555" height="25" uuid="70c4a975-99e5-4b12-99c3-d2e6f6236545"/>
+				<textElement textAlignment="Justified">
+					<font fontName="SansSerif" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Certificación de Director"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+				<reportElement stretchType="RelativeToBandHeight" x="0" y="44" width="555" height="30" uuid="937fb289-eae2-4fef-a816-d589b8f83d26"/>
+				<textElement textAlignment="Justified" verticalAlignment="Top">
+					<font fontName="SansSerif" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{director}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="">
+				<reportElement x="0" y="74" width="555" height="20" uuid="a1bf7e33-9702-4f5d-aeae-9bfe0938e76a"/>
+				<textElement textAlignment="Justified">
+					<font fontName="SansSerif" size="11" isBold="true" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["DOCENTE DE LA CARRERA DE "+$P{carrera}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="94" width="555" height="15" uuid="63634b2b-15e9-4e6d-b262-a783da44df9b"/>
+				<textElement textAlignment="Justified">
+					<font fontName="SansSerif" size="11"/>
+				</textElement>
+				<text><![CDATA[Certifica]]></text>
+			</staticText>
+		</band>
+	</title>
+	<detail>
+		<band height="108" splitType="Stretch">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+				<reportElement x="0" y="7" width="555" height="100" uuid="eb6d3c3e-9527-433b-8df5-d988bd503325"/>
+				<textElement textAlignment="Justified" markup="styled">
+					<font fontName="SansSerif" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Haber dirigido, revisado y corregido en todas su partes el desarrollo del trabajo de titulación titulado como: "+$P{proyecto}+", con la autoría de "+$P{autores}+". "+$P{razon}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="120">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+				<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="555" height="15" uuid="937fb289-eae2-4fef-a816-d589b8f83d26"/>
+				<textElement textAlignment="Justified" verticalAlignment="Top">
+					<font fontName="SansSerif" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{lugarFecha}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+				<reportElement stretchType="RelativeToBandHeight" x="0" y="70" width="555" height="30" uuid="937fb289-eae2-4fef-a816-d589b8f83d26"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font fontName="SansSerif" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{director}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="">
+				<reportElement x="0" y="100" width="555" height="20" uuid="a1bf7e33-9702-4f5d-aeae-9bfe0938e76a"/>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="11" isBold="true" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["DIRECTOR DE TRABAJO DE TITULACIÓN"]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

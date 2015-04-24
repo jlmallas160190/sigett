@@ -1,0 +1,49 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <body>
+
+        <ui:composition template="./principal.xhtml">
+            <ui:define name="title">#{msg['lbl.editar']} #{msg['lbl.tipo']} #{msg['lbl.actividad']}</ui:define>
+            <ui:define name="content">
+                <p:messages id="msm" showDetail="true"/>
+                <p:panel header="#{msg['lbl.editar']} #{msg['lbl.tipo']} #{msg['lbl.actividad']}">
+                    <h:panelGrid styleClass="panelgrid" rowClasses="rowpanelgrid" columnClasses="col-sm-2,col-sm-9,col-sm-1"  columns="3">
+                        <h:outputLabel value="#{msg['lbl.nombre']}:" for="nombre" />
+                        <p:inputText  id="nombre" validatorMessage="#{msg['lbl.formato_invalido']}" value="#{sessionTipoActividad.tipoActividad.nombre}" title="#{msg['lbl.nombre']}" required="true" requiredMessage="#{msg['lbl.nombre']} #{msg['lbl.obligatorio']}.">
+                            <p:ajax event="keyup" update="msmNombre"/>
+                            <f:validateRegex pattern="^[A-Za-z]{1,}([\s][A-Za-z]{1,})*$" />
+                        </p:inputText>
+                        <p:message id="msmNombre" display="icon" for="nombre"/>
+                        <h:outputLabel value="#{msg['lbl.descripcion']}:" for="Descripcion" />
+                        <p:inputTextarea id="descripcion" value="#{sessionTipoActividad.tipoActividad.descripcion}" title="#{msg['lbl.descripcion']}" required="true" requiredMessage="#{msg['lbl.descripcion']} #{msg['lbl.obligatorio']}.">
+                            <p:ajax event="keyup" update="msmDescripcion"/>
+                        </p:inputTextarea>
+                        <p:message id="msmDescripcion" display="icon" for="descripcion"/>
+                        <h:outputLabel value="#{msg['lbl.es']} #{msg['lbl.activo']}:" for="esActivo" />
+                        <p:selectBooleanCheckbox id="esActivo" value="#{sessionTipoActividad.tipoActividad.esActivo}"/>
+                    </h:panelGrid>
+                </p:panel>
+                <h:panelGrid styleClass="pnl-botones" columns="3">
+                    <p:commandButton id="guardar" value="#{msg['lbl.grabar']}" update="@form" icon="ui-icon-disk"  action="#{administrarTiposActividades.grabar(sessionTipoActividad.tipoActividad)}">
+                        <f:param name="1" value="grabar" />
+                    </p:commandButton>
+                    <p:commandButton id="guardarEditar" value="#{msg['lbl.grabar']} #{msg['lbl.y']} #{msg['lbl.editar']}" update="@form" icon="ui-icon-disk"  action="#{administrarTiposActividades.grabar(sessionTipoActividad.tipoActividad)}">
+                        <f:param name="1" value="grabar-editar" />
+                    </p:commandButton>
+                    <p:commandButton id="guardarCrear" value="#{msg['lbl.grabar']} #{msg['lbl.y']} #{msg['lbl.agregar']} #{msg['lbl.otro']}" icon="ui-icon-disk"  update="@form" action="#{administrarTiposActividades.grabar(sessionTipoActividad.tipoActividad)}">
+                        <f:param name="1" value="grabar-crear" />
+                    </p:commandButton>
+                </h:panelGrid>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>
+

@@ -1,0 +1,66 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xml:lang="es" lang="es">
+
+    <body>
+
+        <ui:composition template="./editarUsuarioCarrera.xhtml">
+
+            <ui:define name="title">
+                <h:outputText value="#{msg['lbl.editar']} #{msg['lbl.configuracion']}"/>
+            </ui:define>
+
+            <ui:define name="content">
+                <h:form>
+                    <p:idleMonitor timeout="4000" onidle="msm.show()" />
+                    <p:growl widgetVar="msm"  showDetail="true"/> 
+                    <p:panel header="#{msg['lbl.editar']} #{msg['lbl.configuracion']}">
+                        <h:panelGrid styleClass="panelgrid" rowClasses="rowpanelgrid" columnClasses="col-sm-1,col-sm-10,col-sm-1" columns="3">
+                            <h:outputLabel value="#{msg['lbl.nombre']}:"/>
+                            <p:inputText id="nombre" value="#{sessionConfiguracionCarrera.configuracionCarrera.nombre}" title="#{msg['lbl.nombre']}" required="true" requiredMessage="#{msg['lbl.nombre']} #{msg['lbl.obligatorio']}">
+                                <p:ajax update="msmNombre"/>
+                            </p:inputText>
+                            <p:message id="msmNombre" for="nombre"/>
+                            <h:outputLabel value="#{msg['lbl.observacion']}:"/>
+                            <p:inputTextarea id="observacion" value="#{sessionConfiguracionCarrera.configuracionCarrera.observacion}" title="#{msg['lbl.observacion']}" required="true" requiredMessage="#{msg['lbl.observacion']} #{msg['lbl.obligatorio']}">
+                                <p:ajax update="msmObservacion"/>
+                            </p:inputTextarea>
+                            <p:message id="msmObservacion" for="observacion"/>
+                            <h:outputLabel value="#{msg['lbl.codigo']}:"/>
+                            <p:inputText id="codigo" value="#{sessionConfiguracionCarrera.configuracionCarrera.codigo}" title="#{msg['lbl.codigo']}" required="true" requiredMessage="#{msg['lbl.codigo']} #{msg['lbl.obligatorio']}">
+                                <p:ajax update="msmCodigo"/>
+                            </p:inputText>
+                            <p:message id="msmCodigo" for="codigo"/>
+                            <h:outputLabel value="#{msg['lbl.valor']}:"  />
+                            <p:inputText id="valor" style="text-transform: none" value="#{sessionConfiguracionCarrera.configuracionCarrera.valor}" required="true" requiredMessage="#{msg['lbl.valor']} #{msg['lbl.obligatorio']}" title="#{msg['lbl.valor']}">
+                                <p:ajax update="msmValor"/>
+                            </p:inputText>
+                            <p:message id="msmValor" for="valor"/>
+                        </h:panelGrid>
+                        <br/>
+                        <div class="pnl-botones">
+                            <h:panelGrid columns="3">
+                                <p:commandButton value="#{msg['lbl.grabar']}" icon="ui-icon-disk" update="@form" action="#{administrarConfiguracionCarrera.grabar(sessionConfiguracionCarrera.configuracionCarrera)}">
+                                    <f:param name="1" value="grabar"/>
+                                </p:commandButton>
+                                <p:commandButton value="#{msg['lbl.grabar']} #{msg['lbl.editar']}" icon="ui-icon-disk" update="@form" action="#{administrarConfiguracionCarrera.grabar(sessionConfiguracionCarrera.configuracionCarrera)}">
+                                    <f:param name="1" value="grabar-editar"/>
+                                </p:commandButton>
+                                <p:commandButton value="#{msg['lbl.grabar']} #{msg['lbl.crear']} #{msg['lbl.otro']}" icon="ui-icon-disk" update="@form" action="#{administrarConfiguracionCarrera.grabar(sessionConfiguracionCarrera.configuracionCarrera)}">
+                                    <f:param name="1" value="grabar-crear"/>
+                                </p:commandButton>
+                            </h:panelGrid>
+                        </div>
+                    </p:panel>
+                </h:form>
+            </ui:define>
+            <ui:define name="data"></ui:define>
+        </ui:composition>
+
+    </body>
+</html>

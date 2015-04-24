@@ -1,0 +1,33 @@
+1.  SECRET_KEY='7hokf&$j7xiqvq%*!_3@!7wpxj+yPoEl'
+2.  timestamp='dd/MMMM/yyyy HH:mm:ss'
+3.  date='EEEEE dd MMMMM yyyy'
+4.  time='HH:mm:ss'
+5.  admin='zplYyXwG7pY='
+6.  usuario['MFb1DeQbZjIautikfcTw9g==']
+7.  clave['cNwNkdjrKPQNCPx15hl13A==']
+8.  articulos para denuncia de tt['133 y 134 del Reglamento de Régimen Académico de la UNIVERSIDAD NACIONAL DE LOJA']
+9.  articulos para pertinencia de tt['123 y 128 del Reglamento de Régimen Académico de la UNIVERSIDAD NACIONAL DE LOJA']
+10. asunto para pertinencia de tt['coherencia, estrucutura y pertinencia académica del proyecto de tesis que se adjunta; y, si este, de acuuerdo a su trascendencia y costo, amerita ser investigado']
+11. nota para pertinencia de tt['Me permito participarle que en caso de incumplimiento del plazo señalado, esta Coordinación retirará el proyecto y lo remitirá a otro docente, y se procederá a notificar de esta inobservancia a la autoridad inmediata superior para la sanción correspondiente.']
+12. abreaviacion de oficio['tt']
+13. articulos para adjudicación de tt['134 y 136 del Reglamento de Régimen Académico de la UNIVERSIDAD NACIONAL DE LOJA']
+14. asunto para adjudicación de tt['en virtud del dictamen favorable sobre la estructura y coherencia del proyecto, emitido por el profesor designado para el efecto, esta Coordinación designa a usted Director de la tesis antes indicada. ']
+15. nota para adjudicacion de tt['Para los fines legales subsecuentes, tengo a bien participar a usted, que el director de tesis tiene la obligación de monitorear, revisar y asesorar con pertinencia y rigurosidad científica el trabajo de investigación; y, notificar a la Coordinación de esta	Carrera, en caso que los aspirantes no cumplan satisfactoriamente con la ejecución del proyecto de tesis de grado de acuerdo con las orientaciones brindadas y en el lapso previsto en el cronograma respectivo.']
+16. articulos para desginar miembro de tribunal de tt['153 del Reglamento de Régimen Académico de la UNIVERSIDAD NACIONAL DE LOJA']
+17. asunto para desginar miembro de tribunal de tt['Califiquen en sesión reservada en el plazo perentorio de ocho días e intervengan en la sustentación pública de la misma.']
+18. nota para desginar miembro de tribunal de tt['Particular que comunico y solicito a ustedes, para los fines legales subsiguientes, en su calidad de integrantes del Tribunal Examinador respectivo.'] 
+19. asunto para prorroga de tt['solicito emita un informe a esta Coordinación, en el plazo de 8 días laborables, indicando el tiempo necesario para su culminación.']
+20. nota para prorroga de tt['Sin otro particular, me suscribo de usted.']
+21. asunto de informe de prorroga['Sin otro particular, me suscribo de usted.']
+22. artículos sustentación pública['157 y 158 , del Reglamento de Régimen Académico de la Universidad Nacional de Loja aprobado en 8 de julio del 2009.']
+23. user server=['sqM4kheflZI=']
+24. clave server=['yQg7AdPATZ0=']
+25. debian user=['jorge']
+26. debian clave=['anita160190']
+27. debian user ssh=['jmalla']
+28. debian clave=['jmalla']
+29. glassfish user=['admin']
+30. glassfish clave=['root']
+31. clave bd 'postgresql'
+32.  clave psql='adminadmin'
+

@@ -1,0 +1,79 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xml:lang="es" lang="es">
+
+    <body>
+
+        <ui:composition template="./principal.xhtml">
+            <ui:define name="title">#{msg['lbl.requisitos']}</ui:define>
+            <ui:define name="content">
+                <p:messages id="msm"/>
+                <p:panel header="#{msg['lbl.buscar']} #{msg['lbl.por']} #{msg['lbl.criterio']}">
+                    <h:panelGrid styleClass="panelgrid" rowClasses="rowpanelgrid" columnClasses="col-sm-11,col-sm-1" columns="2">
+                        <p:inputText style="text-transform: none" value="#{administrarCatalogoDocumentoExpediente.criterio}" placeholder="#{msg['lbl.buscar']}"/>
+                        <p:commandButton update="tblCatalogos,msm" icon="ui-icon-search" value="#{msg['lbl.buscar']}" onstart="PF('dlgLoading').hide()" oncomplete="PF('dlgLoading').hide()" action="#{administrarCatalogoDocumentoExpediente.buscar(administrarCatalogoDocumentoExpediente.criterio)}"/>
+                    </h:panelGrid>
+                </p:panel>
+                <br/>
+                <p:panel header="#{msg['lbl.requisitos']}">
+                    <p:dataTable id="tblCatalogos" value="#{administrarCatalogoDocumentoExpediente.catalogoDocumentoExpedientes}" var="item" rows="20" paginator="true"
+                                 rowIndexVar="rowIx" selectionMode="single" selection="#{sessionDocumentoExpediente.documentoExpediente}" rowKey="#{item.id}"  editable="true"  editMode="cell"  rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'even-row' : 'odd-row'}" emptyMessage="No hay Datos Cargados">
+                        <p:column sortBy="#{item.id}">
+                            <f:facet name="header">
+                                <h:outputText value="Id"/>
+                            </f:facet>
+                            <h:outputText value="#{item.id}" />
+                        </p:column>
+                        <p:column rendered="#{administrarCatalogoDocumentoExpediente.renderedEditar()}" sortBy="#{item.nombre}">
+                            <f:facet name="header">
+                                <h:outputText value="#{msg['lbl.nombre']}"/>
+                            </f:facet>
+                            <p:commandLink value="#{item.nombre}" update="@form"  action="#{administrarCatalogoDocumentoExpediente.editar(item)}">
+                                <f:param name="1" value="editar"/>
+                            </p:commandLink>
+                        </p:column>
+                        <p:column rendered="#{administrarCatalogoDocumentoExpediente.renderedNoEditar}" sortBy="#{item.nombre}">
+                            <f:facet name="header">
+                                <h:outputText value="#{msg['lbl.nombre']}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.nombre}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{msg['lbl.obligatorio']}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.esObligatorio}" />
+                        </p:column>
+                        <p:column >
+                            <f:facet name="header">
+                                <h:outputText value="#{msg['lbl.estado']}"/>
+                            </f:facet>
+                            <p:cellEditor>  
+                                <f:facet name="output"><h:outputText value="#{item.esActivo}" /></f:facet>  
+                                <f:facet name="input">
+                                    <p:selectBooleanCheckbox rendered="#{administrarCatalogoDocumentoExpediente.renderedEliminar()}"  value="#{item.esActivo}">
+                                        <p:ajax update="tblCatalogos" event="change" listener="#{administrarCatalogoDocumentoExpediente.remover(item)}"/>
+                                    </p:selectBooleanCheckbox>
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
+                    </p:dataTable>
+                    <f:facet name="footer">
+                        <h:panelGrid columns="1">
+                            <p:commandButton value="#{msg['lbl.crear']}" rendered="#{administrarCatalogoDocumentoExpediente.renderedCrear()}" icon="ui-icon-newwin" action="#{administrarCatalogoDocumentoExpediente.crear()}">
+                                <f:param name="1" value="crear"/>
+                            </p:commandButton>
+                        </h:panelGrid>
+                    </f:facet>
+                </p:panel>              
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

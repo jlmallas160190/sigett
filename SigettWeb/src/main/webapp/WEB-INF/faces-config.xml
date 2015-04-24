@@ -1,0 +1,45 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<faces-config version="2.2"
+              xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_2.xsd">
+    <application>
+        <locale-config>
+            <default-locale>es</default-locale>
+            <supported-locale>en</supported-locale>
+        </locale-config>
+        <resource-bundle>
+            <base-name>i18n.mensajes</base-name>
+            <var>msg</var>
+        </resource-bundle>
+    </application> 
+    <!--<navigation-rule>
+        <from-view-id>/buscarUsuarios.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>editarUsuario</from-outcome>
+            <to-view-id>/editarUsuario.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>crearUsuario</from-outcome>
+            <to-view-id>/crearUsuario.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>/editarUsuario.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>regresar</from-outcome>
+            <to-view-id>/buscarUsuarios.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>cambiarClave</from-outcome>
+            <to-view-id>/cambiarClave.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>/editarArea.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>editar</from-outcome>
+            <to-view-id>/editarCarrera.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>-->
+</faces-config>

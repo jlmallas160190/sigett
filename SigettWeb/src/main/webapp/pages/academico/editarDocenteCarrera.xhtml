@@ -1,0 +1,155 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xml:lang="es" lang="es">
+
+    <body>
+
+        <ui:composition template="./../sigett/editarUsuarioCarrera.xhtml">
+            <ui:define name="title">#{msg['lbl.editar']} #{msg['lbl.docente']}</ui:define>
+            <ui:define name="content">
+                <p:messages id="msgs" showDetail="true"/>
+                <p:tabView id="tabViewDatosDocente">
+                    <p:tab title="#{msg['lbl.datos']} #{msg['lbl.personales']}">
+                        <h:panelGrid styleClass="panelgrid" rowClasses="rowpanelgrid" columnClasses="col-sm-3,col-sm-7,col-sm-1,col-sm-1" columns="4">
+                            <f:facet name="header">
+                                <p:graphicImage id="foto" cache="false" styleClass="img-thumbnail"  height="100" width="100" value="/AppServlet?id=#{sessionDocenteCarrera.persona.id}&amp;entity=Persona"/>
+                            </f:facet>
+                            <h:outputLabel value="#{msg['lbl.ci']}:" for="numeroIdentificacion" />
+                            <p:inputText id="numeroIdentificacion" value="#{sessionDocenteCarrera.persona.numeroIdentificacion}" title="#{msg['lbl.ci']}" required="true" requiredMessage="#{msg['lbl.ci']} #{msg['lbl.obligatorio']}">
+                                <p:ajax event="keyup" update="msmNumeroIdentificacion"/>
+                                <p:ajax event="change" update="@this,:contenido:msgs"/>
+                            </p:inputText>
+                            <p:fragment autoUpdate="true">
+                                <p:commandButton value="#{msg['lbl.sincronizar']}" update=":contenido:tabViewDatosDocente,:contenido:msgs" onstart="PF('dlgLoading').show();" oncomplete="PF('dlgLoading').hide()" action="#{administrarDocentesCarrera.sgaWebServicesDatosDocente()}"/>
+                            </p:fragment>
+                            <p:message id="msmNumeroIdentificacion" display="icon" for="numeroIdentificacion"/>
+                            <h:outputLabel value="#{msg['lbl.nombres']}:" for="nombres" />
+                            <p:inputText id="nombres" value="#{sessionDocenteCarrera.persona.nombres}" title="#{msg['lbl.nombres']}" required="true" requiredMessage="#{msg['lbl.nombres']} #{msg['lbl.obligatorio']}">
+                                <p:ajax event="keyup" update="msmNombres"/>
+                                <p:ajax event="change" update="@this,:contenido:msgs"/>
+                            </p:inputText>
+                            <h:inputHidden/>
+                            <p:message id="msmNombres" display="icon" for="nombres"/>
+                            <h:outputLabel value="#{msg['lbl.apellidos']}:" for="apellidos" />
+                            <p:inputText id="apellidos" value="#{sessionDocenteCarrera.persona.apellidos}" title="#{msg['lbl.apellidos']}" required="true" requiredMessage="#{msg['lbl.apellidos']} #{msg['lbl.obligatorio']}.">
+                                <p:ajax event="keyup" update="msmApellidos"/>
+                                <p:ajax event="change" update="@this,:contenido:msgs"/>
+                            </p:inputText>
+                            <h:inputHidden/>
+                            <p:message id="msmApellidos" display="icon" for="apellidos"/>
+                            <h:outputLabel value="#{msg['lbl.email']}:" for="email" />
+                            <p:inputText id="email" value="#{sessionDocenteCarrera.persona.email}" title="#{msg['lbl.email']}" required="true" requiredMessage="#{msg['lbl.email']}.">
+                                <p:ajax event="keyup" update="msmEmail"/>
+                                <p:ajax event="change" update="@this,:contenido:msgs"/>
+                            </p:inputText>
+                            <h:inputHidden/>
+                            <p:message id="msmEmail" display="icon" for="email"/>
+                            <h:outputLabel value="#{msg['lbl.fechaNacimiento']}:" for="fechaNacimiento" />
+                            <p:calendar id="fechaNacimiento"  yearRange="c-100:c+20" navigator="true" locale="es" pattern="dd/MM/yyyy" value="#{sessionDocenteCarrera.persona.fechaNacimiento}" title="#{msg['lbl.fechaNacimiento']}" required="true" requiredMessage="#{msg['lbl.fechaNacimiento']} #{msg['lbl.obligatorio']}.">
+                                <p:ajax event="dateSelect" update="msmFechaNacimiento"/>
+                            </p:calendar>
+                            <h:inputHidden/>
+                            <p:message id="msmFechaNacimiento" display="icon" for="fechaNacimiento"/>
+                            <h:outputLabel value="#{msg['lbl.tipoDocId']}:" for="tipoDocumentoIdentificacionId" />
+                            <p:selectOneMenu id="tipoDocumentoIdentificacionId" value="#{administrarDocentesCarrera.tipoDocumento}" required="true" requiredMessage="#{msg['lbl.tipoDocId']} #{msg['lbl.obligatorio']}.">
+                                <!-- TODO: update below reference to list of available items-->
+                                <f:selectItems value="#{administrarDocentes.listadoTiposDocumentos()}"/>
+                                <p:ajax event="change" update="msmTipoDoc"/>
+                            </p:selectOneMenu>
+                            <h:inputHidden/>
+                            <p:message id="msmTipoDoc" for="tipoDocumentoIdentificacionId"/>
+                            <h:outputLabel value="#{msg['lbl.genero']}:" for="generoId" />
+                            <p:selectOneMenu id="generoId" value="#{administrarDocentesCarrera.genero}" required="true" requiredMessage="#{msg['lbl.genero']} #{msg['lbl.obligatorio']}.">
+                                <!-- TODO: update below reference to list of available items-->
+                                <f:selectItems value="#{administrarDocentes.listadoGeneros()}"/>
+                                <p:ajax event="change" update="msmGenero"/>
+                            </p:selectOneMenu>
+                            <h:inputHidden/>
+                            <p:message id="msmGenero" for="generoId"/>
+                            <h:outputLabel  value="#{msg['lbl.es']} #{msg['lbl.activo']}:"/>
+                            <p:selectBooleanCheckbox  value="#{sessionDocenteCarrera.docenteCarrera.esActivo}"/>
+                        </h:panelGrid>
+                    </p:tab>
+                    <p:tab title="#{msg['lbl.fotos']}" id="tabFotos" rendered="#{administrarDocentes.renderedFotos(sessionDocenteCarrera.docenteCarrera.docenteId)}">
+                        <h:panelGrid columns="1">
+                            <p:dataGrid  value="#{sessionDocenteCarrera.persona.fotoList}"
+                                         id="dgFotos" var="foto" 
+                                         paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} "
+                                         emptyMessage="#{msg['lbl.table.empty']}">
+                                <p:graphicImage id="foto" cache="false" styleClass="img-thumbnail" height="100" width="100" value="/AppServlet?id=#{foto.id}&amp;entity=Foto"/>
+                                <br/>
+                                <h:panelGrid styleClass="pnl-botones" columns="3">
+                                    <p:commandButton icon="ui-icon-circle-plus" rendered="#{administrarFotos.renderedSeleccionar(view.viewId)}" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" onclick="if (!confirm('¿#{msg['lbl.confirmarSeleccionar']}?'))
+                                                return false;" action="#{administrarFotos.seleccionarFoto(foto,view.viewId)}" update="dgFotos,:contenido:msgs,:contenido:tabViewDatosDocente:foto"/>
+                                    <p:commandButton  rendered="#{administrarFotos.renderedEditar()}" update=":form-data" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()"  action="#{administrarFotos.editar(foto,view.viewId)}" icon="ui-icon-pencil"/>
+                                    <p:commandButton update="dgFotos,:contenido:msgs,:contenido:tabViewDatosDocente:foto" onclick="if (!confirm('¿#{msg['lbl.confirmarEliminar']}?'))
+                                                return false;" action="#{administrarFotos.removerFoto(foto,view.viewId)}" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" rendered="#{administrarFotos.renderedRemover()}"  icon="ui-icon-trash"/>                                                
+                                </h:panelGrid>
+                            </p:dataGrid>
+                        </h:panelGrid>
+                        <br/>
+                        <h:panelGrid styleClass="pnl-botones" columns="1">
+                            <p:commandButton icon="ui-icon-newwin" value="#{msg['lbl.crear']}" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" rendered="#{administrarFotos.renderedCrear()}" update=":form-data" action="#{administrarFotos.crear(view.viewId)}"/>
+                        </h:panelGrid>
+                    </p:tab>
+                    <p:tab title="#{msg['lbl.titulo']}">
+                        <h:panelGrid styleClass="panelgrid" rowClasses="rowpanelgrid" columnClasses="col-sm-2,col-sm-10" columns="2">
+                            <h:outputLabel value="#{msg['lbl.titulo']}:" for="titulo"/>
+                            <p:selectOneMenu id="titulo" value="#{administrarDocentesCarrera.titulo}"   required="true" requiredMessage="The Título field is required.">
+                                <f:selectItems value="#{administrarDocentes.listadoTitulos()}"/>
+                                <p:ajax event="change" update="msmTitulo"/>
+                            </p:selectOneMenu>
+                            <p:message id="msmTitulo" for="titulo"/>
+                        </h:panelGrid>
+                    </p:tab>
+                    <p:tab title="#{msg['lbl.estadoLaboral']}">
+                        <h:panelGrid styleClass="panelgrid" rowClasses="rowpanelgrid" columnClasses="col-sm-2,col-sm-10" columns="3">
+                            <h:outputLabel value="#{msg['lbl.estadoLaboral']}:" for="estadoLaboral"/>
+                            <p:selectOneMenu id="estadoLaboral" value="#{administrarDocentesCarrera.estadoLaboral}"   required="true" requiredMessage="#{msg['lbl.estadoLaboral']} #{msg['lbl.obligatorio']}">
+                                <f:selectItems value="#{administrarDocentes.listadoEstadosLaborales()}"/>
+                                <p:ajax event="change" update="msmEstadoLaboral"/>
+                            </p:selectOneMenu>
+                            <p:message id="msmEstadoLaboral" for="estadoLaboral"/>
+                        </h:panelGrid>
+                    </p:tab>
+                    <p:tab title="#{msg['lbl.lineasInvestigacion']}">
+                        <p:pickList id="lineasInvestigacion" effect="bounce"  value="#{administrarDocentesCarrera.lineasInvestigacionDualList}" var="items" itemLabel="#{items}" itemValue="#{items}" showSourceControls="true" showTargetControls="true" showCheckbox="true"
+                                    showSourceFilter="true" showTargetFilter="true" filterMatchMode="contains"  >
+                            <f:facet name="sourceCaption">#{msg['lbl.lineasInvestigacion']} #{msg['lbl.disponibles']}</f:facet>
+                            <f:facet name="targetCaption">#{msg['lbl.lineasInvestigacion']} #{msg['lbl.seleccionadas']}</f:facet>
+                            <p:ajax event="transfer" listener="#{administrarDocentesCarrera.transferDocenteLineaInvestigacion}"></p:ajax>
+                        </p:pickList>
+                    </p:tab>
+                </p:tabView>
+                <br/>
+                <h:panelGrid  styleClass="pnl-botones" columns="3">
+                    <p:commandButton id="guardar" value="#{msg['lbl.grabar']}" update="@form" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" icon="ui-icon-disk"   action="#{administrarDocentesCarrera.grabar()}">
+                        <f:param name="1" value="grabar" />
+                    </p:commandButton>
+                    <p:commandButton id="guardarEditar" icon="ui-icon-disk" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" value="#{msg['lbl.grabar']} #{msg['lbl.editar']}" update="@form,tabViewDatosDocente:foto, tabViewDatosDocente:tabFotos"  action="#{administrarDocentesCarrera.grabar()}">
+                        <f:param name="1" value="grabar-editar" />
+                    </p:commandButton>
+                </h:panelGrid>
+            </ui:define>
+            <ui:define name="data">
+                <p:dialog id="dlgFoto" header="#{msg['lbl.subir']} #{msg['lbl.foto']}" widgetVar="dlgFoto" modal="true"  >
+                    <h:panelGrid columns="1">
+                        <p:fileUpload  fileUploadListener="#{administrarFotos.handleFileUpload}"  
+                                       update=":contenido:msgs,:contenido:tabViewDatosDocente:dgFotos" multiple="false" mode="advanced"  
+                                       allowTypes="/(\.|\/)(gif|jpe?g|png)$/" sizeLimit="#{administrarConfiguraciones.tamanioPermitidoFotos}" invalidSizeMessage="#{msg['lbl.fileLimitMessage']}" invalidFileMessage="#{msg['lbl.invalidTypeFileMessage']}"
+                                       cancelLabel="#{msg['lbl.cancelar']}"  label="#{msg['lbl.seleccionar']}" uploadLabel="#{msg['lbl.subir']}">
+                        </p:fileUpload>
+                    </h:panelGrid>
+                </p:dialog>
+            </ui:define>
+
+
+        </ui:composition>
+
+    </body>
+</html>
