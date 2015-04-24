@@ -30,5 +30,5 @@ public interface PeriodoAcademicoDao {
 
     List<PeriodoAcademico> buscarPorCriterio(PeriodoAcademico periodoAcademico);
 
-    PeriodoAcademico buscarPorIdSga(Long idSga);
+    PeriodoAcademico buscarPorIdSga(PeriodoAcademico periodoAcademico);
 }

@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.jlmallas.api.date.http;
+package com.jlmallas.api.http;
 
-import com.jlmallas.api.date.http.dto.SeguridadHttp;
+import com.jlmallas.api.http.dto.SeguridadHttp;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -22,8 +22,8 @@ public class UrlConexion {
         StringBuilder sb = new StringBuilder();
         try {
             URL url = new URL(seguridad.getUrl() != null ? seguridad.getUrl() : "");
-            String loginAdminPassword = seguridad.getUsuario() != null ? seguridad.getUsuario() : "" + ":"
-                    + seguridad.getClave() != null ? seguridad.getClave() : "";
+            String loginAdminPassword = seguridad.getUsuario() + ":"
+                    + seguridad.getClave();
             String encoded = new sun.misc.BASE64Encoder().encode(loginAdminPassword.getBytes());
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestProperty("Accept", "application/json");
@@ -37,6 +37,7 @@ public class UrlConexion {
                 sb.append(line);
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
 
         return sb.toString();

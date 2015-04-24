@@ -57,14 +57,8 @@ public class PeriodoAcademicoServiceImplement implements PeriodoAcademicoService
 
     @Override
     public PeriodoAcademico buscarPorIdSga(PeriodoAcademico periodoAcademico) {
-        List<PeriodoAcademico> periodoAcademicos = new ArrayList<>();
-        PeriodoAcademico periodoEncontrado = new PeriodoAcademico();
-        periodoAcademicos = periodoAcademicoDao.buscarPorCriterio(periodoAcademico);
-        if (periodoAcademicos == null) {
-            return periodoEncontrado;
-        }
-        periodoEncontrado = !periodoAcademicos.isEmpty() ? periodoAcademicos.get(0) : new PeriodoAcademico();
-        return periodoEncontrado;
+        return periodoAcademicoDao.buscarPorIdSga(periodoAcademico);
+       
     }
 
 }

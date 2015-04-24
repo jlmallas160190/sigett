@@ -10,6 +10,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
+import com.jlmallas.api.date.DateResource;
+import com.jlmallas.api.http.UrlConexion;
+import com.jlmallas.api.http.dto.SeguridadHttp;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 import com.ocpsoft.pretty.faces.annotation.URLMappings;
 import edu.unl.sigett.academico.managed.session.SessionOfertaAcademica;
@@ -56,8 +59,6 @@ public class AdministrarOfertas implements Serializable {
     @Inject
     private SessionUsuario sessionUsuario;
     @Inject
-    private SessionPeriodoAcademico sessionPeriodoAcademico;
-    @Inject
     private SessionOfertaAcademica sessionOfertaAcademica;
     @EJB
     private ConfiguracionGeneralFacadeLocal configuracionGeneralFacadeLocal;
@@ -66,7 +67,6 @@ public class AdministrarOfertas implements Serializable {
     @EJB
     private UsuarioFacadeLocal usuarioFacadeLocal;
 
-    private boolean esEditado = false;
     private List<OfertaAcademica> ofertaAcademicas = new ArrayList<OfertaAcademica>();
 
     public AdministrarOfertas() {
@@ -83,7 +83,7 @@ public class AdministrarOfertas implements Serializable {
                 sessionOfertaAcademica.setOfertaAcademica(new OfertaAcademica());
                 sessionOfertaAcademica.getOfertaAcademica().setIdSga("0");
                 sessionOfertaAcademica.getOfertaAcademica().setPeriodoAcademicoId(periodoAcademico);
-                esEditado = false;
+                sessionOfertaAcademica.setEsEditado(false);
                 navegacion = "pretty:crearOfertaAcademica";
             } else {
                 if (tienePermiso == 2) {
@@ -104,7 +104,7 @@ public class AdministrarOfertas implements Serializable {
             int tienePermiso = usuarioFacadeLocal.tienePermiso(sessionUsuario.getUsuario(), "editar_oferta_academica");
             if (tienePermiso == 1) {
                 sessionOfertaAcademica.setOfertaAcademica(ofertaAcademica);
-                esEditado = true;
+                sessionOfertaAcademica.setEsEditado(true);
                 navegacion = "pretty:editarOfertaAcademica";
             } else {
                 if (tienePermiso == 2) {
@@ -127,8 +127,9 @@ public class AdministrarOfertas implements Serializable {
             if (ofertaAcademica.getIdSga() == null) {
                 ofertaAcademica.setIdSga("");
             }
-            if (esEditado == false) {
-                sessionPeriodoAcademico.getPeriodoAcademico().getOfertaAcademicaList().add(ofertaAcademica);
+            if (sessionOfertaAcademica.isEsEditado() == false) {
+                sessionOfertaAcademica.getOfertaAcademicas().add(ofertaAcademica);
+                sessionOfertaAcademica.setOfertaAcademicasFilter(sessionOfertaAcademica.getOfertaAcademicas());
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_agregar"), "");
                 FacesContext.getCurrentInstance().addMessage(null, message);
             } else {
@@ -193,49 +194,109 @@ public class AdministrarOfertas implements Serializable {
     public void sgawsOfertasAcademicas(String periodoId) {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-        if (usuarioFacadeLocal.tienePermiso(sessionUsuario.getUsuario(), "sga_ws_oferta_academica") == 1) {
-            this.ofertaAcademicas = new ArrayList<>();
-            try {
-                Map parametros = new HashMap();
+        try {
+            if (usuarioFacadeLocal.tienePermiso(sessionUsuario.getUsuario(), "sga_ws_oferta_academica") == 1) {
+                this.ofertaAcademicas = new ArrayList<>();
+
                 String serviceUrl = configuracionGeneralFacadeLocal.find((int) 15).getValor();
-                String passwordService = configuracionGeneralFacadeLocal.find((int) 5).getValor();
-                String userService = configuracionGeneralFacadeLocal.find((int) 6).getValor();
                 String s = serviceUrl + "?id_periodo=" + periodoId;
-                parametros.put("url", s);
-                parametros.put("clave", passwordService);
-                parametros.put("usuario", userService);
-                parametros.put("msm_sincronizado", bundle.getString("lbl.sincronizado"));
-                parametros.put("msm_no_sincronizado", bundle.getString("lbl.no_sincronizar_web_services"));
-//                Map resultado = ofertaAcademicaConsumeService.getDatosOfertaAcademica(parametros);
-//                ofertaAcademicas = (List<OfertaAcademica>) resultado.get("ofertas");
-                for (OfertaAcademica oa : ofertaAcademicas) {
-                    if (oa == null) {
-                        oa = ofertaAcademicaFacadeLocal.buscarPorIdSga(oa.getIdSga());
-                    }
-                    if (oa == null) {
-                        sessionPeriodoAcademico.getPeriodoAcademico().getOfertaAcademicaList().add(oa);
-                        oa.setPeriodoAcademicoId(sessionPeriodoAcademico.getPeriodoAcademico());
-                    }
+                SeguridadHttp seguridad = new SeguridadHttp(configuracionGeneralFacadeLocal.find((int) 5).getValor(),
+                        s, configuracionGeneralFacadeLocal.find((int) 6).getValor());
+                UrlConexion conexion = new UrlConexion();
+                String datosJson = conexion.conectar(seguridad);
+                if (!datosJson.equalsIgnoreCase("")) {
+                    JsonParser parser = new JsonParser();
+                    JsonElement jsonElement = parser.parse(datosJson);
+                    recorrerElementosJson(jsonElement);
+                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.sincronizado"), "");
+                    FacesContext.getCurrentInstance().addMessage(null, message);
+                } else {
+                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.no_sincronizar_web_services"), "");
+                    FacesContext.getCurrentInstance().addMessage(null, message);
                 }
 
-//                String s = serviceUrl + "?id_periodo=" + periodoId;
-//                ConexionServicio conexionServicio = new ConexionServicio();
-//                String datosJson = conexionServicio.conectar(s, userService, passwordService);
-//                if (!datosJson.equalsIgnoreCase("")) {
-//                    JsonParser parser = new JsonParser();
-//                    JsonElement datos = parser.parse(conexionServicio.conectar(s, userService, passwordService));
-//                    dumpJsonElement(datos);
-//                } else {
-//                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.no_sincronizar_web_services"), "");
-//                    FacesContext.getCurrentInstance().addMessage(null, message);
-//                }
-            } catch (Exception e) {
+            } else {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.permiso_denegado_sincronizar"), "");
                 FacesContext.getCurrentInstance().addMessage(null, message);
             }
-        } else {
+        } catch (Exception e) {
             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.permiso_denegado_sincronizar"), "");
             FacesContext.getCurrentInstance().addMessage(null, message);
+        }
+    }
+
+    private void recorrerElementosJson(JsonElement elemento) throws Exception {
+        if (elemento.isJsonObject()) {
+            sessionOfertaAcademica.setOfertaAcademicaWS(new OfertaAcademica());
+            JsonObject obj = elemento.getAsJsonObject();
+            java.util.Set<java.util.Map.Entry<String, JsonElement>> entradas = obj.entrySet();
+            java.util.Iterator<java.util.Map.Entry<String, JsonElement>> iter = entradas.iterator();
+            while (iter.hasNext()) {
+                java.util.Map.Entry<String, JsonElement> entrada = iter.next();
+                sessionOfertaAcademica.setKey(entrada.getKey());
+                try {
+                    String e = new String(entrada.getValue().getAsString().getBytes(), "UTF-8");
+                    JsonParser jp = new JsonParser();
+                    JsonElement jsonElement = jp.parse(e);
+                    recorrerElementosJson(jsonElement);
+                    sessionOfertaAcademica.setOfertaAcademicasFilter(sessionOfertaAcademica.getOfertaAcademicas());
+                } catch (Exception e) {
+                    recorrerElementosJson(entrada.getValue());
+                }
+
+            }
+            return;
+        }
+        if (elemento.isJsonArray()) {
+            JsonArray array = elemento.getAsJsonArray();
+            sessionOfertaAcademica.setKeyEntero(0);
+            sessionOfertaAcademica.setOfertaAcademicaWS(new OfertaAcademica());
+            java.util.Iterator<JsonElement> iter = array.iterator();
+            while (iter.hasNext()) {
+                JsonElement entrada = iter.next();
+                recorrerElementosJson(entrada);
+            }
+            return;
+        }
+        if (elemento.isJsonPrimitive()) {
+            JsonPrimitive valor = elemento.getAsJsonPrimitive();
+            if (!valor.isString()) {
+                return;
+            }
+            if (sessionOfertaAcademica.getKeyEntero() == 0) {
+                sessionOfertaAcademica.getOfertaAcademicaWS().setIdSga(new String(valor.getAsString().getBytes()));
+                sessionOfertaAcademica.setKeyEntero(sessionOfertaAcademica.getKeyEntero() + 1);
+                return;
+            }
+            if (sessionOfertaAcademica.getKeyEntero() == 1) {
+                sessionOfertaAcademica.getOfertaAcademicaWS().setNombre(new String(valor.getAsString().getBytes()));
+                sessionOfertaAcademica.setKeyEntero(sessionOfertaAcademica.getKeyEntero() + 1);
+                return;
+            }
+            if (sessionOfertaAcademica.getKeyEntero() == 2) {
+                DateResource dateResource = new DateResource();
+                sessionOfertaAcademica.getOfertaAcademicaWS().setFechaInicio(dateResource.DeStringADate(new String(
+                        valor.getAsString().getBytes()), "yyyy-MMM-dd"));
+                sessionOfertaAcademica.setKeyEntero(sessionOfertaAcademica.getKeyEntero() + 1);
+                return;
+            }
+            if (sessionOfertaAcademica.getKeyEntero() == 3) {
+                DateResource dateResource = new DateResource();
+                sessionOfertaAcademica.getOfertaAcademicaWS().setFechaFin(dateResource.DeStringADate(new String(
+                        valor.getAsString().getBytes()), "yyyy-MMM-dd"));
+                sessionOfertaAcademica.setKeyEntero(sessionOfertaAcademica.getKeyEntero() + 1);
+                return;
+            }
+            sessionOfertaAcademica.setKeyEntero(sessionOfertaAcademica.getKeyEntero() + 1);
+            if (sessionOfertaAcademica.getOfertaAcademicaWS().getIdSga() == null
+                    && sessionOfertaAcademica.getOfertaAcademicaWS().getFechaInicio() == null && sessionOfertaAcademica.getOfertaAcademicaWS().
+                    getFechaFin() == null) {
+                return;
+            }
+            if (!sessionOfertaAcademica.getOfertaAcademicas().contains(sessionOfertaAcademica.getOfertaAcademicaWS())) {
+                sessionOfertaAcademica.getOfertaAcademicas().add(sessionOfertaAcademica.getOfertaAcademicaWS());
+            }
+            return;
         }
     }
 
@@ -247,14 +308,6 @@ public class AdministrarOfertas implements Serializable {
 
     public void setSessionUsuario(SessionUsuario sessionUsuario) {
         this.sessionUsuario = sessionUsuario;
-    }
-
-    public SessionPeriodoAcademico getSessionPeriodoAcademico() {
-        return sessionPeriodoAcademico;
-    }
-
-    public void setSessionPeriodoAcademico(SessionPeriodoAcademico sessionPeriodoAcademico) {
-        this.sessionPeriodoAcademico = sessionPeriodoAcademico;
     }
 
     public SessionOfertaAcademica getSessionOfertaAcademica() {
@@ -271,14 +324,6 @@ public class AdministrarOfertas implements Serializable {
 
     public void setOfertaAcademicas(List<OfertaAcademica> ofertaAcademicas) {
         this.ofertaAcademicas = ofertaAcademicas;
-    }
-
-    public boolean isEsEditado() {
-        return esEditado;
-    }
-
-    public void setEsEditado(boolean esEditado) {
-        this.esEditado = esEditado;
     }
 //</editor-fold>
 }

@@ -25,31 +25,43 @@
                             </f:facet>
                             <h:outputText value="#{item.idSga}"/>
                         </p:column>
-                        <p:column  rendered="#{administrarPeriodosAcademicos.renderedEditar}">
+                        <p:column sortBy="#{item.fechaInicio}" rendered="#{sessionPeriodoAcademico.renderedEditar}">
                             <f:facet name="header">
                                 <h:outputText value="#{msg['lbl.fecha']} #{msg['lbl.inicio']}"/>
                             </f:facet>
-                            <p:commandLink value="#{administrarConfiguraciones.date(item.fechaInicio)}" update="@form" action="#{administrarPeriodosAcademicos.editar(item,sessionUsuario.usuario)}">
-                                <f:param value="editar" name="1"/>
+                            <p:commandLink update="@form" oncomplete="PF('dlgLoading').hide()" onstart="PF('dlgLoading').show()"
+                                           action="#{administrarPeriodosAcademicos.editar(item,sessionUsuario.usuario)}">
+                                <h:outputText value="#{item.fechaInicio}">
+                                    <f:convertDateTime pattern="EEEEE dd MMMMM yyyy"/>
+                                </h:outputText>
+                                <f:param name="1" value="editar"/>
                             </p:commandLink>
                         </p:column>
-                        <p:column  rendered="#{administrarPeriodosAcademicos.renderedNoEditar}">
+                        <p:column  sortBy="#{item.fechaInicio}" rendered="#{sessionPeriodoAcademico.renderedNoEditar}">
                             <f:facet name="header">
                                 <h:outputText value="#{msg['lbl.fecha']} #{msg['lbl.inicio']}"/>
                             </f:facet>
-                            <h:outputText value="#{administrarConfiguraciones.date(item.fechaInicio)}"/>
+                            <h:outputText value="#{item.fechaInicio}">
+                                <f:convertDateTime pattern="EEEEE dd MMMMM yyyy"/>
+                            </h:outputText>
                         </p:column>
-                        <p:column>
+                        <p:column  sortBy="#{item.fechaFin}">
                             <f:facet name="header">
                                 <h:outputText value="#{msg['lbl.fecha']} #{msg['lbl.fin']}"/>
                             </f:facet>
-                            <h:outputText value="#{administrarConfiguraciones.date(item.fechaFin)}"/>
+                            <h:outputText value="#{item.fechaFin}">
+                                <f:convertDateTime pattern="EEEEE dd MMMMM yyyy"/>
+                            </h:outputText>
                         </p:column>
                     </p:dataTable>
                     <f:facet name="footer">
                         <h:panelGrid columns="2">
-                            <p:commandButton value="#{msg['lbl.crear']}" rendered="#{administrarPeriodosAcademicos.renderedCrear}"  onstart="PF('dlgLoading').show();" oncomplete="PF('dlgLoading').hide()" update="msm" icon="ui-icon-disk" action="#{administrarPeriodosAcademicos.crear(sessionUsuario.usuario)}"/>    
-                            <p:commandButton onstart="PF('dlgLoading').show();" rendered="#{administrarPeriodosAcademicos.renderedSincronizar}" oncomplete="PF('dlgLoading').hide()" value="#{msg['lbl.sincronizar']}" update="tblPeriodos,msm" icon="ui-icon-refresh" action="#{administrarPeriodosAcademicos.sgawsPeriodosAcademicos(sessionUsuario.usuario)}"/>
+                            <p:commandButton value="#{msg['lbl.crear']}" rendered="#{sessionPeriodoAcademico.renderedCrear}" 
+                                             onstart="PF('dlgLoading').show();" oncomplete="PF('dlgLoading').hide()" update="msm" icon="ui-icon-disk"
+                                             action="#{administrarPeriodosAcademicos.crear(sessionUsuario.usuario)}"/>    
+                            <p:commandButton onstart="PF('dlgLoading').show();" rendered="#{sessionPeriodoAcademico.renderedSincronizar}" 
+                                             oncomplete="PF('dlgLoading').hide()" value="#{msg['lbl.sincronizar']}" update="tblPeriodos,msm" 
+                                             icon="ui-icon-refresh" action="#{administrarPeriodosAcademicos.sgawsPeriodosAcademicos(sessionUsuario.usuario)}"/>
                         </h:panelGrid>
                     </f:facet>
                 </p:panel>

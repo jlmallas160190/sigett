@@ -20,7 +20,8 @@
                 <p:panel toggleable="true" header="Editar Oferta Academica">
                     <h:panelGrid styleClass="panelgrid" rowClasses="rowpanelgrid" columnClasses="col-sm-3,col-sm-8,col-sm-1" columns="3">
                         <h:outputLabel value="#{msg['lbl.nombre']}:" for="nombre" />
-                        <p:inputText id="nombre" value="#{sessionOfertaAcademica.ofertaAcademica.nombre}" title="#{msg['lbl.nombre']}" required="true" requiredMessage="#{msg['lbl.nombre']} #{msg['lbl.obligatorio']}">
+                        <p:inputText id="nombre" value="#{sessionOfertaAcademica.ofertaAcademica.nombre}" title="#{msg['lbl.nombre']}" 
+                                     onkeyup="this.value = this.value.toUpperCase()"  required="true" requiredMessage="#{msg['lbl.nombre']} #{msg['lbl.obligatorio']}">
                             <p:ajax event="keyup" update="msmNombre"/>
                             <p:ajax event="change" update="@this,:contenido:msm"/>
                         </p:inputText>

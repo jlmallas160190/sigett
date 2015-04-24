@@ -72,7 +72,7 @@ public class OfertaAcademica implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date fechaFin;
     @JoinColumn(name = "periodo_academico_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
+    @ManyToOne
     private PeriodoAcademico periodoAcademicoId;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "ofertaAcademicaId")
     private List<ReporteMatricula> reporteMatriculaList;

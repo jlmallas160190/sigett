@@ -35,15 +35,18 @@
                     </p:panel>
                     <br/>
                     <p:panel header="#{msg['lbl.ofertas_academicas']}" rendered="#{sessionOfertaAcademica.renderedTodo}" toggleable="true">
-                        <p:dataTable id="tblOfertas" value="#{sessionPeriodoAcademico.periodoAcademico.ofertaAcademicaList}" var="item" rows="20" paginator="true"
-                                     rowIndexVar="rowIx"  rowKey="#{item.nombre}" selection="#{item}" selectionMode="single" rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'even-row' : 'odd-row'}" emptyMessage="#{msg['lbl.table.empty']}">
-                            <p:column>
+                        <p:dataTable id="tblOfertas" 
+                                     value="#{sessionOfertaAcademica.ofertaAcademicas}" var="item" rows="20" paginator="true"
+                                     filteredValue="#{sessionOfertaAcademica.ofertaAcademicasFilter}"
+                                     rowIndexVar="rowIx"  rowKey="#{item.nombre}" selection="#{item}" selectionMode="single" 
+                                     rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'even-row' : 'odd-row'}" emptyMessage="#{msg['lbl.table.empty']}">
+                            <p:column filterBy="#{item.idSga}" sortBy="#{item.idSga}">
                                 <f:facet name="header">
                                     <h:outputText value="Id Sga"/>
                                 </f:facet>
                                 <h:outputText value="#{item.idSga}"/>
                             </p:column>
-                            <p:column>
+                            <p:column filterBy="#{item.nombre}" sortBy="#{item.nombre}">
                                 <f:facet name="header">
                                     <h:outputText value="Nombre"/>
                                 </f:facet>
@@ -53,13 +56,17 @@
                                 <f:facet name="header">
                                     <h:outputText value="#{msg['lbl.fecha']} #{msg['lbl.inicio']}"/>
                                 </f:facet>
-                                <h:outputText value="#{administrarConfiguraciones.date(item.fechaInicio)}"  />
+                                <h:outputText value="#{item.fechaInicio}">
+                                    <f:convertDateTime pattern="EEEEE dd MMMMM yyyy"/>
+                                </h:outputText>
                             </p:column>
-                            <p:column>
+                            <p:column  sortBy="#{item.fechaFin}">
                                 <f:facet name="header">
                                     <h:outputText value="#{msg['lbl.fechaCulminación']}"/>
                                 </f:facet>
-                                <h:outputText value="#{administrarConfiguraciones.date(item.fechaFin)}"  />
+                                <h:outputText value="#{item.fechaFin}">
+                                     <f:convertDateTime pattern="EEEEE dd MMMMM yyyy"/>
+                                </h:outputText>
                             </p:column>
                         </p:dataTable>
 

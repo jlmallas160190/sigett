@@ -65,7 +65,7 @@ public class PeriodoAcademico implements Serializable {
     @Size(min = 1, max = 15)
     @Column(name = "id_sga")
     private String idSga;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "periodoAcademicoId")
+    @OneToMany(mappedBy = "periodoAcademicoId")
     private List<OfertaAcademica> ofertaAcademicaList;
 
     public PeriodoAcademico() {

@@ -53,7 +53,8 @@ public class OfertaAcademicaDaoImplement extends AbstractFacade<OfertaAcademica>
     public OfertaAcademica ultimaOfertaPorFechaYPeriodoLectivo(Integer periodoId) {
         List<OfertaAcademica> ofertaAcademicas = new ArrayList<>();
         try {
-            Query query = em.createQuery("SELECT o from OfertaAcademica o WHERE " + " o.fechaFin= (SELECT MAX(o1.fechaFin) FROM OfertaAcademica o1 WHERE o1.periodoAcademicoId.id=:id)");
+            Query query = em.createQuery("SELECT o from OfertaAcademica o WHERE " + " o.fechaFin= (SELECT MAX(o1.fechaFin) FROM OfertaAcademica o1 "
+                    + "WHERE o1.periodoAcademicoId.id=:id)");
             query.setParameter("id", periodoId);
             ofertaAcademicas = query.getResultList();
             return !ofertaAcademicas.isEmpty() ? ofertaAcademicas.get(0) : null;

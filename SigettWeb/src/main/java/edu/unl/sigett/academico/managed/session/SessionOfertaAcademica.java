@@ -7,6 +7,8 @@ package edu.unl.sigett.academico.managed.session;
 
 import edu.jlmallas.academico.entity.OfertaAcademica;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Named;
 
@@ -19,13 +21,22 @@ import javax.inject.Named;
 public class SessionOfertaAcademica implements Serializable {
 
     private OfertaAcademica ofertaAcademica;
+    private List<OfertaAcademica> ofertaAcademicas;
+    private List<OfertaAcademica> ofertaAcademicasFilter;
+    private OfertaAcademica ofertaAcademicaWS;
     private boolean renderedTodo;
     private boolean renderedEditar;
     private boolean renderedCrear;
     private boolean renderedSincronizar;
     private boolean renderedNoEditar;
+    private boolean esEditado = false;
+    private String key;
+    private int keyEntero;
 
     public SessionOfertaAcademica() {
+        this.ofertaAcademicaWS = new OfertaAcademica();
+        this.ofertaAcademicas = new ArrayList<>();
+        this.ofertaAcademicasFilter = new ArrayList<>();
         this.ofertaAcademica = new OfertaAcademica();
     }
 
@@ -73,8 +84,56 @@ public class SessionOfertaAcademica implements Serializable {
         return renderedNoEditar;
     }
 
+    public OfertaAcademica getOfertaAcademicaWS() {
+        return ofertaAcademicaWS;
+    }
+
     public void setRenderedNoEditar(boolean renderedNoEditar) {
         this.renderedNoEditar = renderedNoEditar;
+    }
+
+    public List<OfertaAcademica> getOfertaAcademicas() {
+        return ofertaAcademicas;
+    }
+
+    public void setOfertaAcademicas(List<OfertaAcademica> ofertaAcademicas) {
+        this.ofertaAcademicas = ofertaAcademicas;
+    }
+
+    public List<OfertaAcademica> getOfertaAcademicasFilter() {
+        return ofertaAcademicasFilter;
+    }
+
+    public void setOfertaAcademicasFilter(List<OfertaAcademica> ofertaAcademicasFilter) {
+        this.ofertaAcademicasFilter = ofertaAcademicasFilter;
+    }
+
+    public boolean isEsEditado() {
+        return esEditado;
+    }
+
+    public void setEsEditado(boolean esEditado) {
+        this.esEditado = esEditado;
+    }
+
+    public void setOfertaAcademicaWS(OfertaAcademica ofertaAcademicaWS) {
+        this.ofertaAcademicaWS = ofertaAcademicaWS;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
+
+    public int getKeyEntero() {
+        return keyEntero;
+    }
+
+    public void setKeyEntero(int keyEntero) {
+        this.keyEntero = keyEntero;
     }
 
 }
