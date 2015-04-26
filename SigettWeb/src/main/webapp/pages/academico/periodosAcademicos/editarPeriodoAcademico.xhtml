@@ -1,0 +1,50 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xml:lang="es" lang="es">
+
+    <body>
+        <ui:composition template="./../../../principalAdmin.xhtml">
+            <ui:define name="title">#{msg['lbl.periodoAcademico']}</ui:define>
+            <ui:define name="content">
+                <p:messages id="msm"/>
+                <p:panel>
+                    <f:facet name="header">
+                        <h:panelGrid>
+                            <p:commandButton  value="#{msg['lbl.historial']}" icon="ui-icon-document-w" update="@form" action="#{administrarLogs.historico('PeriodoAcademico', sessionPeriodoAcademico.periodoAcademico.id)}"/>
+                        </h:panelGrid>  
+                    </f:facet>
+                    <p:panel header="#{msg['lbl.periodoAcademico']}" toggleable="true">
+                        <h:panelGrid  styleClass="panelgrid" rowClasses="rowpanelgrid" columnClasses="col-sm-3,col-sm-8,col-sm-1" columns="3">
+                            <h:outputLabel value="#{msg['lbl.fecha']} #{msg['lbl.inicio']}:" for="fechaInicio" />
+                            <p:calendar id="fechaInicio" navigator="true" locale="es"  pattern="dd/MM/yyyy" required="true" requiredMessage="#{msg['lbl.fecha']} #{msg['lbl.inicio']} #{msg['lbl.obligatorio']}." value="#{sessionPeriodoAcademico.periodoAcademico.fechaInicio}">
+                                <p:ajax event="dateSelect" update="msmFechaInicio,,@this"/>
+                            </p:calendar>
+                            <p:message id="msmFechaInicio" display="icon" for="fechaInicio"/>
+                            <h:outputLabel value="#{msg['lbl.fechaCulminación']}:" for="fechaFin" />
+                            <p:calendar id="fechaFin" locale="es" navigator="true" pattern="dd/MM/yyyy" required="true" requiredMessage="#{msg['lbl.fechaCulminación']} #{msg['lbl.obligatorio']}." value="#{sessionPeriodoAcademico.periodoAcademico.fechaFin}">
+                                <p:ajax event="dateSelect" update="msmFechaFin,@this"/>
+                            </p:calendar>
+                            <p:message id="msmFechaFin" display="icon" for="fechaFin"/>
+                        </h:panelGrid>
+                    </p:panel>
+                    <br/>
+                    <p:panel header="#{msg['lbl.ofertas_academicas']}" rendered="#{sessionOfertaAcademica.renderedTodo}" toggleable="true">
+                        <ui:include src="tablaOfertaAcademicas.xhtml" />
+                        <f:facet name="footer">
+                            <ui:include src="botonesOfertaAcademica.xhtml" /> 
+                        </f:facet>
+                    </p:panel>
+                    <f:facet name="footer">
+                         <ui:include src="botonesPeriodoAcademico.xhtml" /> 
+                    </f:facet>
+                </p:panel>
+            </ui:define>
+        </ui:composition>
+
+    </body>
+</html>

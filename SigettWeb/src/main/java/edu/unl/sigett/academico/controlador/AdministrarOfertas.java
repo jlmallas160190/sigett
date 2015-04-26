@@ -16,7 +16,6 @@ import com.jlmallas.api.http.dto.SeguridadHttp;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 import com.ocpsoft.pretty.faces.annotation.URLMappings;
 import edu.unl.sigett.academico.managed.session.SessionOfertaAcademica;
-import edu.unl.sigett.academico.managed.session.SessionPeriodoAcademico;
 import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
 import edu.jlmallas.academico.entity.OfertaAcademica;
 import edu.jlmallas.academico.entity.PeriodoAcademico;
@@ -32,10 +31,7 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import edu.unl.sigett.session.ConfiguracionGeneralFacadeLocal;
-import edu.jlmallas.academico.service.OfertaAcademicaFacadeLocal;
 import com.jlmallas.seguridad.session.UsuarioFacadeLocal;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  *
@@ -47,12 +43,12 @@ import java.util.Map;
     @URLMapping(
             id = "editarOfertaAcademica",
             pattern = "/editarOfertaAcademica/#{sessionOfertaAcademica.ofertaAcademica.id}",
-            viewId = "/faces/pages/academico/editarOfertaAcademica.xhtml"
+            viewId = "/faces/pages/academico/periodosAcademicos/editarOfertaAcademica.xhtml"
     ),
     @URLMapping(
             id = "crearOfertaAcademica",
             pattern = "/crearOfertaAcademica/",
-            viewId = "/faces/pages/academico/editarOfertaAcademica.xhtml"
+            viewId = "/faces/pages/academico/periodosAcademicos/editarOfertaAcademica.xhtml"
     )})
 public class AdministrarOfertas implements Serializable {
 
@@ -62,8 +58,6 @@ public class AdministrarOfertas implements Serializable {
     private SessionOfertaAcademica sessionOfertaAcademica;
     @EJB
     private ConfiguracionGeneralFacadeLocal configuracionGeneralFacadeLocal;
-    @EJB
-    private OfertaAcademicaFacadeLocal ofertaAcademicaFacadeLocal;
     @EJB
     private UsuarioFacadeLocal usuarioFacadeLocal;
 
@@ -260,9 +254,6 @@ public class AdministrarOfertas implements Serializable {
         }
         if (elemento.isJsonPrimitive()) {
             JsonPrimitive valor = elemento.getAsJsonPrimitive();
-            if (!valor.isString()) {
-                return;
-            }
             if (sessionOfertaAcademica.getKeyEntero() == 0) {
                 sessionOfertaAcademica.getOfertaAcademicaWS().setIdSga(new String(valor.getAsString().getBytes()));
                 sessionOfertaAcademica.setKeyEntero(sessionOfertaAcademica.getKeyEntero() + 1);
@@ -276,25 +267,22 @@ public class AdministrarOfertas implements Serializable {
             if (sessionOfertaAcademica.getKeyEntero() == 2) {
                 DateResource dateResource = new DateResource();
                 sessionOfertaAcademica.getOfertaAcademicaWS().setFechaInicio(dateResource.DeStringADate(new String(
-                        valor.getAsString().getBytes()), "yyyy-MMM-dd"));
+                        valor.getAsString().getBytes()), "yyyy-MM-dd"));
                 sessionOfertaAcademica.setKeyEntero(sessionOfertaAcademica.getKeyEntero() + 1);
                 return;
             }
             if (sessionOfertaAcademica.getKeyEntero() == 3) {
                 DateResource dateResource = new DateResource();
                 sessionOfertaAcademica.getOfertaAcademicaWS().setFechaFin(dateResource.DeStringADate(new String(
-                        valor.getAsString().getBytes()), "yyyy-MMM-dd"));
+                        valor.getAsString().getBytes()), "yyyy-MM-dd"));
                 sessionOfertaAcademica.setKeyEntero(sessionOfertaAcademica.getKeyEntero() + 1);
-                return;
             }
             sessionOfertaAcademica.setKeyEntero(sessionOfertaAcademica.getKeyEntero() + 1);
-            if (sessionOfertaAcademica.getOfertaAcademicaWS().getIdSga() == null
-                    && sessionOfertaAcademica.getOfertaAcademicaWS().getFechaInicio() == null && sessionOfertaAcademica.getOfertaAcademicaWS().
-                    getFechaFin() == null) {
-                return;
-            }
-            if (!sessionOfertaAcademica.getOfertaAcademicas().contains(sessionOfertaAcademica.getOfertaAcademicaWS())) {
+            if (sessionOfertaAcademica.getOfertaAcademicaWS().getIdSga() != null
+                    && sessionOfertaAcademica.getOfertaAcademicaWS().getFechaInicio() != null && sessionOfertaAcademica.getOfertaAcademicaWS().
+                    getFechaFin() != null) {
                 sessionOfertaAcademica.getOfertaAcademicas().add(sessionOfertaAcademica.getOfertaAcademicaWS());
+                return;
             }
             return;
         }

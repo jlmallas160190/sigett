@@ -36,8 +36,6 @@ import edu.jlmallas.academico.service.OfertaAcademicaFacadeLocal;
 import edu.jlmallas.academico.service.PeriodoAcademicoService;
 import com.jlmallas.seguridad.session.UsuarioFacadeLocal;
 import edu.unl.sigett.academico.managed.session.SessionOfertaAcademica;
-import java.util.HashMap;
-import java.util.Map;
 import javax.annotation.PostConstruct;
 
 /**
@@ -50,17 +48,17 @@ import javax.annotation.PostConstruct;
     @URLMapping(
             id = "editarPeriodoAcademico",
             pattern = "/periodoAcademico/#{sessionPeriodoAcademico.periodoAcademico.id}",
-            viewId = "/faces/pages/academico/editarPeriodoAcademico.xhtml"
+            viewId = "/faces/pages/academico/periodosAcademicos/editarPeriodoAcademico.xhtml"
     ),
     @URLMapping(
             id = "crearPeriodoAcademico",
             pattern = "/crearPeriodoAcademico/",
-            viewId = "/faces/pages/academico/editarPeriodoAcademico.xhtml"
+            viewId = "/faces/pages/academico/periodosAcademicos/editarPeriodoAcademico.xhtml"
     ),
     @URLMapping(
             id = "periodosAcademicos",
             pattern = "/periodosAcademicos/",
-            viewId = "/faces/pages/academico/buscarPeriodosAcademicos.xhtml"
+            viewId = "/faces/pages/academico/periodosAcademicos/index.xhtml"
     )})
 public class AdministrarPeriodosAcademicos implements Serializable {
 
@@ -81,9 +79,6 @@ public class AdministrarPeriodosAcademicos implements Serializable {
     private ConfiguracionGeneralFacadeLocal configuracionGeneralFacadeLocal;
     @EJB
     private UsuarioFacadeLocal usuarioFacadeLocal;
-
-    public AdministrarPeriodosAcademicos() {
-    }
 
     //<editor-fold defaultstate="collapsed" desc="MÉTODOS CRUD">
     @PostConstruct
@@ -242,23 +237,24 @@ public class AdministrarPeriodosAcademicos implements Serializable {
 
     public void grabarOfertas(List<OfertaAcademica> ofertaAcademicas) {
         for (OfertaAcademica ofertaAcademica : ofertaAcademicas) {
+            ofertaAcademica.setPeriodoAcademicoId(sessionPeriodoAcademico.getPeriodoAcademico());
             if (ofertaAcademica.getIdSga() == null) {
                 ofertaAcademica.setIdSga("");
             }
             if (ofertaAcademica.getId() == null) {
                 ofertaAcademicaFacadeLocal.create(ofertaAcademica);
-                logFacadeLocal.create(logFacadeLocal.crearLog("OfertaAcademica", ofertaAcademica.getId() + "", "CREAR", "|IdSga= " +
-                        ofertaAcademica.getIdSga() + "|Nombre= " + ofertaAcademica.getNombre() + "|FechaInicio= " + 
-                        ofertaAcademica.getFechaInicio() + "|FechaFin" + ofertaAcademica.getFechaFin(), sessionUsuario.getUsuario()));
+                logFacadeLocal.create(logFacadeLocal.crearLog("OfertaAcademica", ofertaAcademica.getId() + "", "CREAR", "|IdSga= "
+                        + ofertaAcademica.getIdSga() + "|Nombre= " + ofertaAcademica.getNombre() + "|FechaInicio= "
+                        + ofertaAcademica.getFechaInicio() + "|FechaFin" + ofertaAcademica.getFechaFin(), sessionUsuario.getUsuario()));
             } else {
                 ofertaAcademica.setFechaFin(ofertaAcademica.getFechaFin());
                 ofertaAcademica.setFechaInicio(ofertaAcademica.getFechaInicio());
                 ofertaAcademica.setIdSga(ofertaAcademica.getIdSga());
                 ofertaAcademica.setNombre(ofertaAcademica.getNombre());
                 ofertaAcademicaFacadeLocal.edit(ofertaAcademica);
-                logFacadeLocal.create(logFacadeLocal.crearLog("OfertaAcademica", ofertaAcademica.getId() + "", "EDITAR", "|IdSga= " +
-                        ofertaAcademica.getIdSga() + "|Nombre= " + ofertaAcademica.getNombre() + "|FechaInicio= " + ofertaAcademica.getFechaInicio() + 
-                        "|FechaFin" + ofertaAcademica.getFechaFin(), sessionUsuario.getUsuario()));
+                logFacadeLocal.create(logFacadeLocal.crearLog("OfertaAcademica", ofertaAcademica.getId() + "", "EDITAR", "|IdSga= "
+                        + ofertaAcademica.getIdSga() + "|Nombre= " + ofertaAcademica.getNombre() + "|FechaInicio= " + ofertaAcademica.getFechaInicio()
+                        + "|FechaFin" + ofertaAcademica.getFechaFin(), sessionUsuario.getUsuario()));
             }
         }
     }
@@ -266,6 +262,7 @@ public class AdministrarPeriodosAcademicos implements Serializable {
     public void buscar(Usuario usuario) {
         try {
             sessionPeriodoAcademico.setPeriodoAcademicos(new ArrayList<PeriodoAcademico>());
+            sessionPeriodoAcademico.setPeriodoAcademicosFilter(new ArrayList<PeriodoAcademico>());
             FacesContext facesContext = FacesContext.getCurrentInstance();
             ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
             int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "buscar_periodo_academico");
@@ -278,9 +275,9 @@ public class AdministrarPeriodosAcademicos implements Serializable {
             if (tienePermiso == 2) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_buscar") + ". " + bundle.getString("lbl.msm_consulte"), "");
                 FacesContext.getCurrentInstance().addMessage(null, message);
-                return;
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -289,7 +286,7 @@ public class AdministrarPeriodosAcademicos implements Serializable {
 
             PeriodoAcademico p = periodoAcademicoFacadeLocal.buscarPorIdSga(new PeriodoAcademico(null, null, null, pa.getIdSga()));
             if (p == null) {
-                periodoAcademicoFacadeLocal.guardar(p);
+                periodoAcademicoFacadeLocal.guardar(pa);
                 logFacadeLocal.create(logFacadeLocal.crearLog("PeriodoAcademico", pa.getId() + "", "CREAR", "|Fecha Inicio" + pa.getFechaInicio() + "|Fecha Fin= " + pa.getFechaFin(), sessionUsuario.getUsuario()));
                 continue;
             }
@@ -391,13 +388,11 @@ public class AdministrarPeriodosAcademicos implements Serializable {
                 sessionPeriodoAcademico.setKeyEntero(sessionPeriodoAcademico.getKeyEntero() + 1);
             }
             sessionPeriodoAcademico.setKeyEntero(sessionPeriodoAcademico.getKeyEntero() + 1);
-            if (sessionPeriodoAcademico.isEsNuevoPeriodo() == false && sessionPeriodoAcademico.getPeriodoAcademicoWs().getIdSga() == null
-                    && sessionPeriodoAcademico.getPeriodoAcademicoWs().getFechaInicio() == null
-                    && sessionPeriodoAcademico.getPeriodoAcademicoWs().getFechaFin() == null) {
-                return;
-            }
-            if (!sessionPeriodoAcademico.getPeriodoAcademicosGrabar().contains(sessionPeriodoAcademico.getPeriodoAcademicoWs())) {
+            if (sessionPeriodoAcademico.isEsNuevoPeriodo() == true && sessionPeriodoAcademico.getPeriodoAcademicoWs().getIdSga() != null
+                    && sessionPeriodoAcademico.getPeriodoAcademicoWs().getFechaInicio() != null
+                    && sessionPeriodoAcademico.getPeriodoAcademicoWs().getFechaFin() != null) {
                 sessionPeriodoAcademico.getPeriodoAcademicosGrabar().add(sessionPeriodoAcademico.getPeriodoAcademicoWs());
+                return;
             }
             return;
         }
