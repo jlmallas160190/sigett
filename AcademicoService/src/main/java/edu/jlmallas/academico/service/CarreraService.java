@@ -26,11 +26,9 @@ public interface CarreraService {
 
     Carrera buscarIdSga(String id);
 
-    List<Carrera> buscarPorArea(Integer areaId);
-
     List<Carrera> findAll();
 
-    List<Carrera> buscarPorCriteriosArea(String criterio, Integer areaId);
+    List<Carrera> buscarPorCriterio(Carrera carrera);
 
     List<Carrera> findRange(int[] range);
 

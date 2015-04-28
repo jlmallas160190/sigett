@@ -112,7 +112,7 @@ public class ViewProyectos implements Serializable {
             int pos = area.indexOf(":");
             Area a = areaFacadeLocal.buscarPorId(Integer.parseInt(area.substring(0, pos)));
             if (a != null) {
-                for (Carrera c : carreraFacadeLocal.buscarPorArea(a.getId())) {
+                for (Carrera c : carreraFacadeLocal.buscarPorCriterio(carrera)) {
                     if (c.getNombre().toLowerCase().contains(criterio.toLowerCase())) {
                         carreras.add(c);
                     }

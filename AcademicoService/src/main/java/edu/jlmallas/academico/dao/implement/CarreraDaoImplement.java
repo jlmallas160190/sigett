@@ -9,6 +9,7 @@ import edu.jlmallas.academico.dao.AbstractFacade;
 import edu.jlmallas.academico.dao.CarreraDao;
 import edu.jlmallas.academico.entity.Carrera;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.Query;
@@ -39,28 +40,23 @@ public class CarreraDaoImplement extends AbstractFacade<Carrera> implements Carr
     }
 
     @Override
-    public List<Carrera> buscarPorArea(Integer id) {
-        try {
-            Query query = em.createQuery("SELECT c from Carrera c where (c.areaId.id=:id)");
-            query.setParameter("id", id);
-            return query.getResultList();
-        } catch (Exception e) {
-            System.out.println(e);
+    public List<Carrera> buscarPorCriterio(Carrera carrera) {
+        StringBuilder sql = new StringBuilder();
+        HashMap<String, Object> parametros = new HashMap<String, Object>();
+        sql.append("Select c from Carrera c where 1=1 ");
+        if (carrera.getAreaId() != null) {
+            sql.append(" and c.areaId=:area");
+            parametros.put("area", carrera.getAreaId());
         }
-        return null;
-    }
-
-    @Override
-    public List<Carrera> buscarPorCriteriosArea(String criterio, Integer areaId) {
-        try {
-            Query query = em.createQuery("SELECT c from Carrera c where" + " (c.nombre like concat('%',:nombre,'%')) and c.areaId.id:=areaId");
-            query.setParameter("nombre", criterio);
-            query.setParameter("areaId", areaId);
-            return query.getResultList();
-
-        } catch (Exception e) {
-            System.out.println(e);
+        if (carrera.getNombre() != null) {
+            sql.append(" and c.nombre=:nombre");
+            parametros.put("nombre", carrera.getNombre());
         }
-        return null;
+        sql.append(" order by c.nombre asc ");
+        final Query q = em.createQuery(sql.toString());
+        for (String key : parametros.keySet()) {
+            q.setParameter(key, parametros.get(key));
+        }
+        return q.getResultList();
     }
 }

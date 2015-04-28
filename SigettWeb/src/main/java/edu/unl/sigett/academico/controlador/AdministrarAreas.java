@@ -10,6 +10,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
+import com.jlmallas.api.http.UrlConexion;
+import com.jlmallas.api.http.dto.SeguridadHttp;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 import com.ocpsoft.pretty.faces.annotation.URLMappings;
 import edu.unl.sigett.academico.managed.session.SessionArea;
@@ -35,9 +37,10 @@ import com.jlmallas.seguridad.session.LogFacadeLocal;
 import com.jlmallas.soporte.session.ObjetoFacadeLocal;
 import com.jlmallas.soporte.session.ProyectoSoftwareFacadeLocal;
 import com.jlmallas.seguridad.session.UsuarioFacadeLocal;
+import edu.unl.sigett.academico.managed.session.SessionCarrera;
+import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
 import edu.unl.sigett.session.ProyectoCarreraOfertaFacadeLocal;
-import java.util.HashMap;
-import java.util.Map;
+import javax.annotation.PostConstruct;
 
 /**
  *
@@ -49,24 +52,26 @@ import java.util.Map;
     @URLMapping(
             id = "editarArea",
             pattern = "/editarArea/#{sessionArea.area.id}",
-            viewId = "/faces/pages/academico/editarArea.xhtml"
+            viewId = "/faces/pages/academico/areas/editarArea.xhtml"
     ),
     @URLMapping(
             id = "crearArea",
             pattern = "/crearArea/",
-            viewId = "/faces/pages/academico/editarArea.xhtml"
+            viewId = "/faces/pages/academico/areas/editarArea.xhtml"
     ),
     @URLMapping(
             id = "areas",
             pattern = "/areas/",
-            viewId = "/faces/pages/academico/buscarAreas.xhtml"
+            viewId = "/faces/pages/academico/areas/index.xhtml"
     )})
 public class AdministrarAreas implements Serializable {
 
     @Inject
     private SessionArea sessionArea;
     @Inject
-    private AdministrarCarreras administrarCarreras;
+    private SessionUsuario sessionUsuario;
+    @Inject
+    private SessionCarrera sessionCarrera;
     @EJB
     private AreaService areaFacadeLocal;
     @EJB
@@ -84,23 +89,17 @@ public class AdministrarAreas implements Serializable {
     @EJB
     private ProyectoCarreraOfertaFacadeLocal proyectoCarreraOfertaFacadeLocal;
 
-    private List<Area> areas;
-    private List<Carrera> carrerasGrabar = new ArrayList<>();
     private List<Area> directorioAreas;
 
-    private boolean renderedNoEditar;
-
-    private boolean renderedEditar;
-    private boolean renderedCrear;
-    private boolean renderedSincronizar;
-
-    private String areaConverter;
-
     private String criterioDirectorioArea;
-    private String criterio;
 
     public AdministrarAreas() {
 
+    }
+
+    @PostConstruct
+    public void init() {
+        buscar(sessionUsuario.getUsuario());
     }
 
     //<editor-fold defaultstate="collapsed" desc="MÉTODOS CRUD">
@@ -132,11 +131,10 @@ public class AdministrarAreas implements Serializable {
             int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "crear_area");
             if (tienePermiso == 1) {
                 sessionArea.setArea(new Area());
-                carrerasGrabar = new ArrayList<>();
-                administrarCarreras.renderedCrear(usuario);
-                administrarCarreras.renderedEditar(usuario);
-                administrarCarreras.renderedSgaWs(usuario);
-                administrarCarreras.buscar("", usuario, sessionArea.getArea());
+                sessionCarrera.setCarreras(sessionArea.getArea().getCarreraList());
+                this.renderedCrearCarrera(usuario);
+                this.renderedEditarCarrera(usuario);
+                this.renderedSgaWsCarrera(usuario);
                 navagacion = "pretty:crearArea";
             } else {
                 if (tienePermiso == 2) {
@@ -174,11 +172,11 @@ public class AdministrarAreas implements Serializable {
             int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "editar_area");
             if (tienePermiso == 1) {
                 sessionArea.setArea(area);
-                administrarCarreras.buscar("", usuario, sessionArea.getArea());
-                administrarCarreras.renderedCrear(usuario);
-                administrarCarreras.renderedEditar(usuario);
-                administrarCarreras.renderedSgaWs(usuario);
-                buscar("", usuario);
+                sessionCarrera.setCarreras(sessionArea.getArea().getCarreraList());
+                this.renderedCrearCarrera(usuario);
+                this.renderedEditarCarrera(usuario);
+                this.renderedSgaWsCarrera(usuario);
+                buscar(usuario);
                 navegacion = "pretty:editarArea";
             } else {
                 if (tienePermiso == 2) {
@@ -218,58 +216,62 @@ public class AdministrarAreas implements Serializable {
                 int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "crear_area");
                 if (tienePermiso == 1) {
                     areaFacadeLocal.guardar(area);
-                    logFacadeLocal.create(logFacadeLocal.crearLog("Area", area.getId() + "", "CREAR", "|Nombre= " + area.getNombre() + "|Sigla= " + area.getSigla(), usuario));
-                    buscar("", usuario);
+                    logFacadeLocal.create(logFacadeLocal.crearLog("Area", area.getId() + "", "CREAR", "|Nombre= " + area.getNombre() + "|Sigla= "
+                            + area.getSigla(), usuario));
+                    buscar(usuario);
                     if (param.equalsIgnoreCase("grabar")) {
                         sessionArea.setArea(new Area());
-                        navegacion = "pretty:areas";
-                    } else {
-                        if (param.equalsIgnoreCase("grabar-editar")) {
-                            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_grabar"), "");
-                            FacesContext.getCurrentInstance().addMessage(null, message);
-                        } else {
-                            if (param.equalsIgnoreCase("grabar-crear")) {
-                                sessionArea.setArea(new Area());
-                                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_grabar"), "");
-                                FacesContext.getCurrentInstance().addMessage(null, message);
-                            }
-                        }
+                        return navegacion = "pretty:areas";
                     }
-                } else {
-                    if (tienePermiso == 2) {
-                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_crear") + ". " + bundle.getString("lbl.msm_consulte"), "");
+                    if (param.equalsIgnoreCase("grabar-editar")) {
+                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_grabar"), "");
+                        FacesContext.getCurrentInstance().addMessage(null, message);
+                        return navegacion;
+                    }
+                    if (param.equalsIgnoreCase("grabar-crear")) {
+                        sessionArea.setArea(new Area());
+                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_grabar"), "");
                         FacesContext.getCurrentInstance().addMessage(null, message);
                     }
+                    return navegacion;
                 }
-            } else {
+
+                if (tienePermiso == 2) {
+                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_crear") + ". " + bundle.getString("lbl.msm_consulte"), "");
+                    FacesContext.getCurrentInstance().addMessage(null, message);
+                }
+                return navegacion;
+            }
+            if (area.getId() != null) {
                 int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "editar_area");
                 if (tienePermiso == 1) {
-                    carrerasGrabar = new ArrayList<>();
                     sessionArea.getArea().setCarreraList(new ArrayList<Carrera>());
                     areaFacadeLocal.actualizar(area);
-                    logFacadeLocal.create(logFacadeLocal.crearLog("Area", area.getId() + "", "EDITAR", "|Nombre= " + area.getNombre() + "|Sigla= " + area.getSigla(), usuario));
-                    carrerasGrabar = area.getCarreraList();
-                    buscar("", usuario);
+                    logFacadeLocal.create(logFacadeLocal.crearLog("Area", area.getId() + "", "EDITAR", "|Nombre= " + area.getNombre() + "|Sigla= "
+                            + area.getSigla(), usuario));
+                    buscar(usuario);
                     if (param.equalsIgnoreCase("grabar")) {
                         navegacion = "pretty:areas";
-                    } else {
-                        if (param.equalsIgnoreCase("grabar-editar")) {
-                            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_editar"), "");
-                            FacesContext.getCurrentInstance().addMessage(null, message);
-                        } else {
-                            if (param.equalsIgnoreCase("grabar-crear")) {
-                                sessionArea.setArea(new Area());
-                                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_editar"), "");
-                                FacesContext.getCurrentInstance().addMessage(null, message);
-                            }
-                        }
+                        return navegacion;
                     }
-                } else {
-                    if (tienePermiso == 2) {
-                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_crear") + ". " + bundle.getString("lbl.msm_consulte"), "");
+                    if (param.equalsIgnoreCase("grabar-editar")) {
+                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_editar"), "");
+                        FacesContext.getCurrentInstance().addMessage(null, message);
+                        return navegacion;
+                    }
+                    if (param.equalsIgnoreCase("grabar-crear")) {
+                        sessionArea.setArea(new Area());
+                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_editar"), "");
                         FacesContext.getCurrentInstance().addMessage(null, message);
                     }
+                    return navegacion;
                 }
+                if (tienePermiso == 2) {
+                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_crear") + ". "
+                            + bundle.getString("lbl.msm_consulte"), "");
+                    FacesContext.getCurrentInstance().addMessage(null, message);
+                }
+                return navegacion;
             }
         } catch (Exception e) {
             String mensaje = "Error al grabar Area...";
@@ -357,18 +359,14 @@ public class AdministrarAreas implements Serializable {
         return var;
     }
 
-    public void buscar(String criterio, Usuario usuario) {
-        this.areas = new ArrayList<>();
+    public void buscar(Usuario usuario) {
+        sessionArea.setAreas(new ArrayList<Area>());
         try {
             FacesContext facesContext = FacesContext.getCurrentInstance();
             ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
             int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "buscar_area");
             if (tienePermiso == 1) {
-                Area areaBuscar = new Area();
-                areaBuscar.setNombre(criterio);
-                areaBuscar.setSigla(criterio);
-                areaBuscar.setSecretario(criterio);
-                areas = areaFacadeLocal.buscarPorCriterio(areaBuscar);
+                sessionArea.setAreas(areaFacadeLocal.buscarPorCriterio(new Area()));
             } else {
                 if (tienePermiso == 2) {
                     FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_buscar") + ". " + bundle.getString("lbl.msm_consulte"), "");
@@ -402,14 +400,16 @@ public class AdministrarAreas implements Serializable {
             Area a1 = !areas.isEmpty() ? areas.get(0) : null;
             if (a1 == null) {
                 areaFacadeLocal.guardar(a);
-                logFacadeLocal.create(logFacadeLocal.crearLog("Area", a.getId() + "", "CREAR", "|Nombre= " + a.getNombre() + "|Sigla= " + a.getSigla(), usuario));
+                logFacadeLocal.create(logFacadeLocal.crearLog("Area", a.getId() + "", "CREAR", "|Nombre= " + a.getNombre() + "|Sigla= "
+                        + a.getSigla(), usuario));
             } else {
                 a1.setNombre(a.getNombre());
                 a1.setSigla(a.getSigla());
                 a1.setSecretario(a.getSecretario());
                 a = a1;
                 areaFacadeLocal.actualizar(a);
-                logFacadeLocal.create(logFacadeLocal.crearLog("Area", a.getId() + "", "EDITAR", "|Nombre= " + a.getNombre() + "|Sigla= " + a.getSigla(), usuario));
+                logFacadeLocal.create(logFacadeLocal.crearLog("Area", a.getId() + "", "EDITAR", "|Nombre= " + a.getNombre() + "|Sigla= "
+                        + a.getSigla(), usuario));
             }
 
         }
@@ -420,34 +420,129 @@ public class AdministrarAreas implements Serializable {
     public void sgawsListaAreas(Usuario usuario) {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-        if (usuarioFacadeLocal.tienePermiso(usuario, "sga_ws_area") == 1) {
-            Map parametros = new HashMap();
-            String serviceUrl = configuracionGeneralFacadeLocal.find((int) 4).getValor();
-            String passwordService = configuracionGeneralFacadeLocal.find((int) 5).getValor();
-            String userService = configuracionGeneralFacadeLocal.find((int) 6).getValor();
-            String s = serviceUrl;
-            parametros.put("url", s);
-            parametros.put("clave", passwordService);
-            parametros.put("usuario", userService);
-            parametros.put("msm_sincronizado", bundle.getString("lbl.sincronizado"));
-            parametros.put("msm_no_sincronizado", bundle.getString("lbl.no_sincronizar_web_services"));
-//            Map resultado = areaConsumeService.getDatosArea(parametros);
-//            sessionArea.setAreasWS((List<Area>) resultado.get("areas"));
-            guardarAreas(usuario);
+        try {
+            if (usuarioFacadeLocal.tienePermiso(usuario, "sga_ws_area") == 1) {
+                SeguridadHttp seguridad = new SeguridadHttp(configuracionGeneralFacadeLocal.find((int) 5).getValor(),
+                        configuracionGeneralFacadeLocal.find((int) 4).getValor(), configuracionGeneralFacadeLocal.find((int) 6).getValor());
+                UrlConexion conexion = new UrlConexion();
+                String datosJson = conexion.conectar(seguridad);
+                if (!datosJson.equalsIgnoreCase("")) {
+                    JsonParser parser = new JsonParser();
+                    JsonElement jsonElement = parser.parse(datosJson);
+                    parseElementosJson(jsonElement);
+                    guardarAreas(usuario);
+                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.sincronizado"), "");
+                    FacesContext.getCurrentInstance().addMessage(null, message);
+                }
+            } else {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.permiso_denegado_sincronizar"), "");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+            }
+        } catch (Exception e) {
+        }
+
+    }
+
+    private void parseElementosJson(JsonElement elemento) throws Exception {
+        try {
+            if (elemento.isJsonObject()) {
+                sessionArea.setAreaWs(new Area());
+                JsonObject obj = elemento.getAsJsonObject();
+                java.util.Set<java.util.Map.Entry<String, JsonElement>> entradas = obj.entrySet();
+                java.util.Iterator<java.util.Map.Entry<String, JsonElement>> iter = entradas.iterator();
+                while (iter.hasNext()) {
+                    java.util.Map.Entry<String, JsonElement> entrada = iter.next();
+                    sessionArea.setKey(entrada.getKey());
+                    try {
+                        String e = new String(entrada.getValue().getAsString().getBytes(), "UTF-8");
+                        JsonParser jp = new JsonParser();
+                        JsonElement jsonElement = jp.parse(e);
+                        parseElementosJson(jsonElement);
+
+                    } catch (Exception e) {
+                        parseElementosJson(entrada.getValue());
+                    }
+
+                }
+                return;
+            }
+            if (elemento.isJsonArray()) {
+                JsonArray array = elemento.getAsJsonArray();
+                sessionArea.setKeyEntero(0);
+                sessionArea.setAreaWs(new Area());
+                sessionArea.setEsNuevaArea(true);
+                java.util.Iterator<JsonElement> iter = array.iterator();
+                while (iter.hasNext()) {
+                    JsonElement entrada = iter.next();
+                    parseElementosJson(entrada);
+                }
+                return;
+            }
+            if (elemento.isJsonPrimitive()) {
+                JsonPrimitive valor = elemento.getAsJsonPrimitive();
+                if (!valor.isString()) {
+                    return;
+                }
+                if (sessionArea.getKeyEntero() == 0) {
+                    sessionArea.getAreaWs().setSigla(new String(valor.getAsString().getBytes()));
+                    sessionArea.setKeyEntero(sessionArea.getKeyEntero() + 1);
+                    return;
+                }
+                if (sessionArea.getKeyEntero() == 1) {
+                    sessionArea.getAreaWs().setNombre(new String(valor.getAsString().getBytes()));
+                    sessionArea.setKeyEntero(sessionArea.getKeyEntero() + 1);
+                    return;
+                }
+                if (sessionArea.getKeyEntero() == 2) {
+                    sessionArea.getAreaWs().setSecretario(new String(valor.getAsString().getBytes()));
+                    sessionArea.setKeyEntero(sessionArea.getKeyEntero() + 1);
+                }
+                sessionArea.setKeyEntero(sessionArea.getKeyEntero() + 1);
+                sessionArea.getAreasWS().add(sessionArea.getAreaWs());
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+//</editor-fold>
+    //<editor-fold defaultstate="collapsed" desc="MÉTODOS RENDERED">
+
+    public void renderedSgaWsCarrera(Usuario usuario) {
+        int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "sga_ws_carrera");
+        if (tienePermiso == 1) {
+            sessionCarrera.setRenderedSincronizar(true);
         } else {
-            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.permiso_denegado_sincronizar"), "");
-            FacesContext.getCurrentInstance().addMessage(null, message);
+            sessionCarrera.setRenderedSincronizar(false);
         }
     }
 
-//</editor-fold>
-    //<editor-fold defaultstate="collapsed" desc="MÉTODOS RENDERED">
+    public void renderedCrearCarrera(Usuario usuario) {
+        int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "crear_carrera");
+        if (tienePermiso == 1) {
+            sessionCarrera.setRenderedCrear(true);
+        } else {
+            sessionCarrera.setRenderedCrear(false);
+        }
+    }
+
+    public void renderedEditarCarrera(Usuario usuario) {
+        int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "editar_carrera");
+        if (tienePermiso == 1) {
+            sessionCarrera.setRenderedEditar(true);
+            sessionCarrera.setRenderedNoEditar(false);
+        } else {
+            sessionCarrera.setRenderedEditar(false);
+            sessionCarrera.setRenderedNoEditar(true);
+        }
+    }
+
     public void renderedSgaWs(Usuario usuario) {
         int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "sga_ws_area");
         if (tienePermiso == 1) {
-            renderedSincronizar = true;
+            sessionArea.setRenderedSincronizar(true);
         } else {
-            renderedSincronizar = false;
+            sessionArea.setRenderedSincronizar(false);
         }
     }
 
@@ -462,57 +557,25 @@ public class AdministrarAreas implements Serializable {
     public void renderedCrear(Usuario usuario) {
         int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "crear_area");
         if (tienePermiso == 1) {
-            renderedCrear = true;
+            sessionArea.setRenderedCrear(true);
         } else {
-            renderedCrear = false;
+            sessionArea.setRenderedCrear(false);
         }
     }
 
     public void renderedEditar(Usuario usuario) {
         int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "editar_area");
         if (tienePermiso == 1) {
-            renderedNoEditar = false;
-            renderedEditar = true;
+            sessionArea.setRenderedEditar(true);
+            sessionArea.setRenderedNoEditar(false);
         } else {
-            renderedEditar = false;
-            renderedNoEditar = true;
+            sessionArea.setRenderedEditar(false);
+            sessionArea.setRenderedNoEditar(true);
         }
     }
 
 //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="SET Y GET">
-    public boolean isRenderedEditar() {
-        return renderedEditar;
-    }
-
-    public void setRenderedEditar(boolean renderedEditar) {
-        this.renderedEditar = renderedEditar;
-    }
-
-    public boolean isRenderedCrear() {
-        return renderedCrear;
-    }
-
-    public void setRenderedCrear(boolean renderedCrear) {
-        this.renderedCrear = renderedCrear;
-    }
-
-    public boolean isRenderedSincronizar() {
-        return renderedSincronizar;
-    }
-
-    public void setRenderedSincronizar(boolean renderedSincronizar) {
-        this.renderedSincronizar = renderedSincronizar;
-    }
-
-    public String getAreaConverter() {
-        return areaConverter;
-    }
-
-    public void setAreaConverter(String areaConverter) {
-        this.areaConverter = areaConverter;
-    }
-
     public SessionArea getSessionArea() {
         return sessionArea;
     }
@@ -521,44 +584,12 @@ public class AdministrarAreas implements Serializable {
         this.sessionArea = sessionArea;
     }
 
-    public String getCriterio() {
-        return criterio;
-    }
-
-    public void setCriterio(String criterio) {
-        this.criterio = criterio;
-    }
-
-    public List<Carrera> getCarrerasGrabar() {
-        return carrerasGrabar;
-    }
-
-    public void setCarrerasGrabar(List<Carrera> carrerasGrabar) {
-        this.carrerasGrabar = carrerasGrabar;
-    }
-
     public String getCriterioDirectorioArea() {
         return criterioDirectorioArea;
     }
 
     public void setCriterioDirectorioArea(String criterioDirectorioArea) {
         this.criterioDirectorioArea = criterioDirectorioArea;
-    }
-
-    public List<Area> getAreas() {
-        return areas;
-    }
-
-    public void setAreas(List<Area> areas) {
-        this.areas = areas;
-    }
-
-    public boolean isRenderedNoEditar() {
-        return renderedNoEditar;
-    }
-
-    public void setRenderedNoEditar(boolean renderedNoEditar) {
-        this.renderedNoEditar = renderedNoEditar;
     }
 
     public List<Area> getDirectorioAreas() {

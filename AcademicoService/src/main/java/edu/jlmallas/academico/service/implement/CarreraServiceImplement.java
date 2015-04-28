@@ -53,18 +53,13 @@ public class CarreraServiceImplement implements CarreraService {
     }
 
     @Override
-    public List<Carrera> buscarPorArea(Integer areaId) {
-        return carreraDao.buscarPorArea(areaId);
-    }
-
-    @Override
     public List<Carrera> findAll() {
         return carreraDao.findAll();
     }
 
     @Override
-    public List<Carrera> buscarPorCriteriosArea(String criterio, Integer areaId) {
-        return carreraDao.buscarPorCriteriosArea(criterio, areaId);
+    public List<Carrera> buscarPorCriterio(Carrera carrera) {
+        return carreraDao.buscarPorCriterio(carrera);
     }
 
     @Override

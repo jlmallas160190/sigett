@@ -106,7 +106,7 @@ public class AdministrarUsuarioCarrera implements Serializable {
                 sessionUsuarioCarrera.setUsuarioCarrera(usuarioCarrera);
                 sessionUsuarioCarrera.setCarrera(carreraFacadeLocal.find(usuarioCarrera.getCarreraId()));
                 sessionUsuarioCarrera.setUsuario(usuarioFacadeLocal.find(usuarioCarrera.getUsuarioId()));
-                carreras.setNivel(sessionUsuarioCarrera.getCarrera().getNivelId().toString());
+//                carreras.setNivel(sessionUsuarioCarrera.getCarrera().getNivelId().toString());
                 navegacion = "pretty:editarUsuarioCarrera";
             } else {
                 if (tienePermiso == 2) {

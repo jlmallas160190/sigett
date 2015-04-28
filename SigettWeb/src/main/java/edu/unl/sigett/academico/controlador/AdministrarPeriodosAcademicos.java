@@ -376,7 +376,7 @@ public class AdministrarPeriodosAcademicos implements Serializable {
                 return;
             }
             if (sessionPeriodoAcademico.getKeyEntero() == 1) {
-                String fecha = new String(valor.getAsString());
+                String fecha = valor.getAsString();
                 int pos = fecha.indexOf("-");
                 if (pos > 0) {
                     String fechaInicio = fecha.substring(0, pos);
@@ -392,9 +392,7 @@ public class AdministrarPeriodosAcademicos implements Serializable {
                     && sessionPeriodoAcademico.getPeriodoAcademicoWs().getFechaInicio() != null
                     && sessionPeriodoAcademico.getPeriodoAcademicoWs().getFechaFin() != null) {
                 sessionPeriodoAcademico.getPeriodoAcademicosGrabar().add(sessionPeriodoAcademico.getPeriodoAcademicoWs());
-                return;
             }
-            return;
         }
 
     }
