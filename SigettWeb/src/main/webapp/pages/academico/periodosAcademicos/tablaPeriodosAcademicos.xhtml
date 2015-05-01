@@ -17,7 +17,10 @@
             </f:facet>
             <h:outputText value="#{item.idSga}"/>
         </p:column>
-        <p:column sortBy="#{item.fechaInicio}" rendered="#{sessionPeriodoAcademico.renderedEditar}">
+        <p:column sortBy="#{item.fechaInicio}" 
+                  filterBy="#{item.fechaInicio}"
+                   filterMatchMode="contains"
+                  rendered="#{sessionPeriodoAcademico.renderedEditar}">
             <f:facet name="header">
                 <h:outputText value="#{msg['lbl.fecha']} #{msg['lbl.inicio']}"/>
             </f:facet>
@@ -29,7 +32,10 @@
                 <f:param name="1" value="editar"/>
             </p:commandLink>
         </p:column>
-        <p:column  sortBy="#{item.fechaInicio}" rendered="#{sessionPeriodoAcademico.renderedNoEditar}">
+        <p:column  sortBy="#{item.fechaInicio}" 
+                   filterBy="#{item.fechaInicio}"
+                   filterMatchMode="contains"
+                   rendered="#{sessionPeriodoAcademico.renderedNoEditar}">
             <f:facet name="header">
                 <h:outputText value="#{msg['lbl.fecha']} #{msg['lbl.inicio']}"/>
             </f:facet>
@@ -37,7 +43,9 @@
                 <f:convertDateTime pattern="EEEEE dd MMMMM yyyy"/>
             </h:outputText>
         </p:column>
-        <p:column  sortBy="#{item.fechaFin}">
+        <p:column sortBy="#{item.fechaFin}"
+                  filterBy="#{item.fechaFin}"
+                   filterMatchMode="contains">
             <f:facet name="header">
                 <h:outputText value="#{msg['lbl.fecha']} #{msg['lbl.fin']}"/>
             </f:facet>

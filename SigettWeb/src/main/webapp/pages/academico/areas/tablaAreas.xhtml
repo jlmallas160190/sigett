@@ -8,19 +8,25 @@
     <p:dataTable id="tblAreas" value="#{sessionArea.areas}" var="item" rows="20" paginator="true"
                  rowIndexVar="rowIx"  rowKey="#{item.id}" selection="#{item}" selectionMode="single"
                  rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'even-row' : 'odd-row'}" emptyMessage="#{msg['lbl.table.empty']}">
-        <p:column sortBy="#{item.nombre}" filterBy="#{item.nombre}" rendered="#{sessionArea.renderedEditar}">
+        <p:column sortBy="#{item.nombre}" filterBy="#{item.nombre}"
+                  filterMatchMode="contains"
+                  rendered="#{sessionArea.renderedEditar}">
             <f:facet name="header">
                 <h:outputText value="#{msg['lbl.nombre']}"/>
             </f:facet>
             <p:commandLink value="#{item.nombre}"  update="@form" action="#{administrarAreas.editar(item,sessionUsuario.usuario)}"/>
         </p:column>
-        <p:column sortBy="#{item.nombre}" filterBy="#{item.nombre}" rendered="#{sessionArea.renderedNoEditar}">
+        <p:column sortBy="#{item.nombre}" filterBy="#{item.nombre}"
+                  filterMatchMode="contains"
+                  rendered="#{sessionArea.renderedNoEditar}">
             <f:facet name="header">
                 <h:outputText value="#{msg['lbl.nombre']}"/>
             </f:facet>
             <h:outputText value="#{item.nombre}"/>
         </p:column>
-        <p:column filterBy="#{item.sigla}" sortBy="#{item.sigla}">
+        <p:column filterBy="#{item.sigla}" 
+                  filterMatchMode="contains"
+                  sortBy="#{item.sigla}">
             <f:facet name="header">
                 <h:outputText value="#{msg['lbl.sigla']}"/>
             </f:facet>

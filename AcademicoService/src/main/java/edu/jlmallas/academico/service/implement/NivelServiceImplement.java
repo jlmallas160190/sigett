@@ -3,15 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.jlmallas.academico.service;
+package edu.jlmallas.academico.service.implement;
 
 import edu.jlmallas.academico.dao.AbstractFacade;
+import edu.jlmallas.academico.dao.NivelDao;
 import edu.jlmallas.academico.entity.Nivel;
+import edu.jlmallas.academico.service.NivelService;
 import java.util.ArrayList;
 import java.util.List;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 /**
@@ -19,21 +20,25 @@ import javax.persistence.Query;
  * @author JorgeLuis
  */
 @Stateless
-public class NivelFacade extends AbstractFacade<Nivel> implements NivelFacadeLocal {
+public class NivelServiceImplement extends AbstractFacade<Nivel> implements NivelService {
 
-    public NivelFacade() {
+    @EJB
+    private NivelDao nivelDao;
+
+    public NivelServiceImplement() {
         super(Nivel.class);
     }
 
-    public Nivel buscarPorNombre(String nombre) {
+    public Nivel buscarPorNombre(Nivel nivel) {
         List<Nivel> niveles = new ArrayList<>();
         try {
-            Query query = em.createNamedQuery("Nivel.findByNombre");
-            query.setParameter("nombre", nombre);
-            niveles = query.getResultList();
+            niveles = nivelDao.buscarPorNombre(nivel);
+            if (niveles == null) {
+                return null;
+            }
             return !niveles.isEmpty() ? niveles.get(0) : null;
         } catch (Exception e) {
-            System.out.println(e);
+            e.printStackTrace();
         }
         return null;
     }

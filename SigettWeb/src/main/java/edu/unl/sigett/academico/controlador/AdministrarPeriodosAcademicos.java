@@ -241,6 +241,10 @@ public class AdministrarPeriodosAcademicos implements Serializable {
             if (ofertaAcademica.getIdSga() == null) {
                 ofertaAcademica.setIdSga("");
             }
+            OfertaAcademica oa = ofertaAcademicaFacadeLocal.buscarPorIdSga(ofertaAcademica.getIdSga());
+            if (oa != null) {
+                continue;
+            }
             if (ofertaAcademica.getId() == null) {
                 ofertaAcademicaFacadeLocal.create(ofertaAcademica);
                 logFacadeLocal.create(logFacadeLocal.crearLog("OfertaAcademica", ofertaAcademica.getId() + "", "CREAR", "|IdSga= "

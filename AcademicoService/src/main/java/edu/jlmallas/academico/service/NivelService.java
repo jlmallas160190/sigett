@@ -14,7 +14,7 @@ import javax.ejb.Local;
  * @author JorgeLuis
  */
 @Local
-public interface NivelFacadeLocal {
+public interface NivelService {
 
     void create(Nivel nivel);
 
@@ -28,7 +28,7 @@ public interface NivelFacadeLocal {
 
     List<Nivel> findRange(int[] range);
 
-    Nivel buscarPorNombre(String nombre);
+    Nivel buscarPorNombre(Nivel nivel);
 
     int count();
 

@@ -20,19 +20,25 @@
             </f:facet>
             <p:commandLink value="#{item.idSga}" update="@form" action="#{administrarCarreras.editar(item,sessionUsuario.usuario)}"/>
         </p:column>
-        <p:column sortBy="#{item.nombre}" filterBy="#{item.nombre}" rendered="#{sessionCarrera.renderedEditar}">
+        <p:column sortBy="#{item.nombre}" filterBy="#{item.nombre}" 
+                  filterMatchMode="contains"
+                  rendered="#{sessionCarrera.renderedEditar}">
             <f:facet name="header">
                 <h:outputText value="#{msg['lbl.nombre']}"/>
             </f:facet>
             <p:commandLink value="#{item.nombre}" update="@form" action="#{administrarCarreras.editar(item,sessionUsuario.usuario)}"/>
         </p:column>
-        <p:column sortBy="#{item.nombre}" filterBy="#{item.nombre}" rendered="#{sessionCarrera.renderedNoEditar}">
+        <p:column sortBy="#{item.nombre}" filterBy="#{item.nombre}" 
+                  filterMatchMode="contains"
+                  rendered="#{sessionCarrera.renderedNoEditar}">
             <f:facet name="header">
                 <h:outputText value="#{msg['lbl.nombre']}"/>
             </f:facet>
             <h:outputText value="#{item.nombre}"/>
         </p:column>
-        <p:column filterBy="#{item.nombre}" sortBy="#{item.nivelId.nombre}">
+        <p:column filterBy="#{item.nombre}" 
+                  filterMatchMode="contains"
+                  sortBy="#{item.nivelId.nombre}">
             <f:facet name="header">
                 <h:outputText value="#{msg['lbl.nivel']}"/>
             </f:facet>

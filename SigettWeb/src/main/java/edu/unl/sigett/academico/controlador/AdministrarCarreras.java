@@ -36,7 +36,7 @@ import edu.jlmallas.academico.service.CarreraService;
 import edu.unl.sigett.session.ConfiguracionCarreraFacadeLocal;
 import com.jlmallas.soporte.session.ExcepcionFacadeLocal;
 import com.jlmallas.seguridad.session.LogFacadeLocal;
-import edu.jlmallas.academico.service.NivelFacadeLocal;
+import edu.jlmallas.academico.service.NivelService;
 import com.jlmallas.soporte.session.ObjetoFacadeLocal;
 import com.jlmallas.soporte.session.ProyectoSoftwareFacadeLocal;
 import com.jlmallas.seguridad.session.UsuarioFacadeLocal;
@@ -64,7 +64,7 @@ import javax.annotation.PostConstruct;
     )
 })
 public class AdministrarCarreras implements Serializable {
-    
+
     @Inject
     private SessionCarrera sessionCarrera;
     @Inject
@@ -72,7 +72,7 @@ public class AdministrarCarreras implements Serializable {
     @Inject
     SessionUsuario sessionUsuario;
     @EJB
-    private NivelFacadeLocal nivelFacadeLocal;
+    private NivelService nivelFacadeLocal;
     @EJB
     private CarreraService carreraFacadeLocal;
     @EJB
@@ -89,7 +89,7 @@ public class AdministrarCarreras implements Serializable {
     private ConfiguracionCarreraFacadeLocal configuracionCarreraFacadeLocal;
     @EJB
     private ConfiguracionGeneralFacadeLocal configuracionGeneralFacadeLocal;
-    
+
     @PostConstruct
     public void init() {
         buscar(sessionUsuario.getUsuario(), sessionArea.getArea());
@@ -132,18 +132,18 @@ public class AdministrarCarreras implements Serializable {
         }
         return navegacion;
     }
-    
+
     public List<Nivel> listadoNiveles() {
         try {
             return nivelFacadeLocal.findAll();
         } catch (Exception e) {
             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_FATAL, e.getMessage(), "");
             FacesContext.getCurrentInstance().addMessage(null, message);
-            
+
         }
         return null;
     }
-    
+
     public String grabarCarrera(Carrera carrera, String nivel, Area area, Usuario usuario) {
         String navegacion = "";
         try {
@@ -176,7 +176,7 @@ public class AdministrarCarreras implements Serializable {
                     configuracionCarrera1.setCarreraId(carrera.getId());
                     configuracionCarrera1.setTipo("numerico");
                     configuracionCarreraFacadeLocal.create(configuracionCarrera1);
-                    
+
                     ConfiguracionCarrera configuracionCarrera3 = new ConfiguracionCarrera();
                     configuracionCarrera3.setNombre("Número de Oficio");
                     configuracionCarrera3.setCodigo("NO");
@@ -185,7 +185,7 @@ public class AdministrarCarreras implements Serializable {
                     configuracionCarrera3.setCarreraId(carrera.getId());
                     configuracionCarrera3.setTipo("numerico");
                     configuracionCarreraFacadeLocal.create(configuracionCarrera3);
-                    
+
                     ConfiguracionCarrera configuracionCarrera2 = new ConfiguracionCarrera();
                     configuracionCarrera2.setNombre("Número de Modulo aprobado para ser egresado");
                     configuracionCarrera2.setCodigo("ME");
@@ -194,7 +194,7 @@ public class AdministrarCarreras implements Serializable {
                     configuracionCarrera2.setCarreraId(carrera.getId());
                     configuracionCarrera2.setTipo("numerico");
                     configuracionCarreraFacadeLocal.create(configuracionCarrera2);
-                    
+
                     ConfiguracionCarrera configuracionCarrera = new ConfiguracionCarrera();
                     configuracionCarrera.setNombre("ID de Oferta Academica Actual de la Carrera");
                     configuracionCarrera.setCodigo("OA");
@@ -203,7 +203,7 @@ public class AdministrarCarreras implements Serializable {
                     configuracionCarrera.setCarreraId(carrera.getId());
                     configuracionCarrera.setTipo("boton");
                     configuracionCarreraFacadeLocal.create(configuracionCarrera);
-                    
+
                     ConfiguracionCarrera configuracionCarrera4 = new ConfiguracionCarrera();
                     configuracionCarrera4.setNombre("Número de Acta de tesis");
                     configuracionCarrera4.setCodigo("NA");
@@ -284,7 +284,7 @@ public class AdministrarCarreras implements Serializable {
                         configuracionCarrera4.setTipo("numerico");
                         configuracionCarreraFacadeLocal.create(configuracionCarrera4);
                     }
-                    
+
                     if (param.equalsIgnoreCase("grabar")) {
                         carrera = new Carrera();
                         navegacion = "pretty:editarArea";
@@ -323,7 +323,7 @@ public class AdministrarCarreras implements Serializable {
         }
         return navegacion;
     }
-    
+
     public String editar(Carrera carrera, Usuario usuario) {
         String navagacion = "";
         try {
@@ -360,7 +360,7 @@ public class AdministrarCarreras implements Serializable {
         }
         return navagacion;
     }
-    
+
     public void handleFileUpload(FileUploadEvent event) {
         try {
             sessionCarrera.setContents((event.getFile().getContents()));
@@ -368,7 +368,7 @@ public class AdministrarCarreras implements Serializable {
             e.printStackTrace();
         }
     }
-    
+
     public List<Carrera> listarPorArea(Area area) {
         try {
             Carrera carreraBuscar = new Carrera();
@@ -379,7 +379,7 @@ public class AdministrarCarreras implements Serializable {
         }
         return null;
     }
-    
+
     public void buscar(Usuario usuario, Area area) {
         sessionCarrera.setCarreras(new ArrayList<Carrera>());
         try {
@@ -404,15 +404,16 @@ public class AdministrarCarreras implements Serializable {
             }
         }
     }
-    
+
     public void grabarCarreras() {
         for (Carrera carrera : sessionCarrera.getCarrerasGrabar()) {
             Carrera c = null;
+            carrera.setAreaId(sessionArea.getArea());
             if (!carrera.getIdSga().equalsIgnoreCase("")) {
                 c = carreraFacadeLocal.buscarIdSga(carrera.getIdSga());
             } else {
                 if (carrera.getId() != null) {
-                    c = carreraFacadeLocal.find(carrera.getId());
+                    c = carreraFacadeLocal.find(carrera.getIdSga());
                 }
             }
             if (c == null) {
@@ -452,7 +453,7 @@ public class AdministrarCarreras implements Serializable {
                 configuracionCarrera.setCarreraId(carrera.getId());
                 configuracionCarrera.setTipo("boton");
                 configuracionCarreraFacadeLocal.create(configuracionCarrera);
-                
+
                 ConfiguracionCarrera configuracionCarrera4 = new ConfiguracionCarrera();
                 configuracionCarrera4.setNombre("Número de Acta de tesis");
                 configuracionCarrera4.setCodigo("NA");
@@ -512,7 +513,7 @@ public class AdministrarCarreras implements Serializable {
                         configuracionCarrera3.setTipo("numerico");
                         configuracionCarreraFacadeLocal.create(configuracionCarrera3);
                     }
-                    
+
                     if (configuracionCarreraFacadeLocal.buscarPorCarreraId(carrera.getId(), "NA") == null) {
                         ConfiguracionCarrera configuracionCarrera4 = new ConfiguracionCarrera();
                         configuracionCarrera4.setNombre("Número de Acta de tesis");
@@ -540,7 +541,7 @@ public class AdministrarCarreras implements Serializable {
             sessionCarrera.setRenderedSincronizar(false);
         }
     }
-    
+
     public void renderedCrear(Usuario usuario) {
         int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "crear_carrera");
         if (tienePermiso == 1) {
@@ -549,7 +550,7 @@ public class AdministrarCarreras implements Serializable {
             sessionCarrera.setRenderedCrear(false);
         }
     }
-    
+
     public void renderedEditar(Usuario usuario) {
         int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "editar_carrera");
         if (tienePermiso == 1) {
@@ -578,6 +579,7 @@ public class AdministrarCarreras implements Serializable {
                     JsonParser parser = new JsonParser();
                     JsonElement jsonElement = parser.parse(datosJson);
                     parseJsonElement(jsonElement);
+                    grabarCarreras();
                     FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.sincronizado"), "");
                     FacesContext.getCurrentInstance().addMessage(null, message);
                 }
@@ -589,7 +591,7 @@ public class AdministrarCarreras implements Serializable {
             FacesContext.getCurrentInstance().addMessage(null, message);
         }
     }
-    
+
     private void parseJsonElement(JsonElement elemento) throws Exception {
         if (elemento.isJsonObject()) {
             sessionCarrera.setCarreraWs(new Carrera());
@@ -616,7 +618,7 @@ public class AdministrarCarreras implements Serializable {
             sessionCarrera.setCarreraWs(new Carrera());
             java.util.Iterator<JsonElement> iter = array.iterator();
             while (iter.hasNext()) {
-                
+
                 JsonElement entrada = iter.next();
                 parseJsonElement(entrada);
             }
@@ -624,16 +626,29 @@ public class AdministrarCarreras implements Serializable {
         }
         if (elemento.isJsonPrimitive()) {
             JsonPrimitive valor = elemento.getAsJsonPrimitive();
-            
+            if (sessionCarrera.getKeyEntero() == 0) {
+                sessionCarrera.getCarreraWs().setIdSga(valor.getAsString());
+                sessionCarrera.setKeyEntero(sessionCarrera.getKeyEntero() + 1);
+                return;
+            }
             if (sessionCarrera.getKeyEntero() == 1) {
                 sessionCarrera.getCarreraWs().setNombre(new String(valor.getAsString().getBytes()));
                 sessionCarrera.getCarreraWs().setSigla("S/N");
                 sessionCarrera.setKeyEntero(sessionCarrera.getKeyEntero() + 1);
                 return;
             }
-            
+            if (sessionCarrera.getKeyEntero() == 2) {
+                sessionCarrera.setKeyEntero(sessionCarrera.getKeyEntero() + 1);
+                return;
+            }
+            if (sessionCarrera.getKeyEntero() == 3) {
+                sessionCarrera.getCarreraWs().setModalidad(new String(valor.getAsString().getBytes()));
+                sessionCarrera.setKeyEntero(sessionCarrera.getKeyEntero() + 1);
+            }
             if (sessionCarrera.getKeyEntero() == 4) {
-                Nivel n = nivelFacadeLocal.buscarPorNombre(valor.getAsString());
+                Nivel nivelBuscar = new Nivel();
+                nivelBuscar.setNombre(valor.getAsString());
+                Nivel n = nivelFacadeLocal.buscarPorNombre(nivelBuscar);
                 if (n != null) {
                     sessionCarrera.getCarreraWs().setNivelId(n);
                 } else {
@@ -645,19 +660,13 @@ public class AdministrarCarreras implements Serializable {
                 sessionCarrera.setKeyEntero(sessionCarrera.getKeyEntero() + 1);
                 return;
             }
-            if (sessionCarrera.getKeyEntero() == 3) {
-                sessionCarrera.getCarreraWs().setModalidad(new String(valor.getAsString().getBytes()));
-                sessionCarrera.setKeyEntero(sessionCarrera.getKeyEntero() + 1);
-            }
-            Carrera c = carreraFacadeLocal.buscarIdSga(sessionCarrera.getCarreraWs().getIdSga());
-            if (c == null) {
-                sessionCarrera.getCarrera().setEsEditado(true);
-                sessionCarrera.getCarrerasGrabar().add(sessionCarrera.getCarreraWs());
-            }
+            sessionCarrera.setKeyEntero(sessionCarrera.getKeyEntero() + 1);
+            sessionCarrera.getCarreraWs().setEsEditado(true);
+            sessionCarrera.getCarrerasGrabar().add(sessionCarrera.getCarreraWs());
         }
-        
+
     }
-    
+
     public void sgaWebServicesParalelosCarrera(Carrera c, String param) {
 //        FacesContext facesContext = FacesContext.getCurrentInstance();
 //        ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
@@ -685,7 +694,7 @@ public class AdministrarCarreras implements Serializable {
 //            FacesContext.getCurrentInstance().addMessage(null, message);
 //        }
     }
-    
+
     private void recorrerElementosJsonParalelosCarrera(JsonElement elemento, Carrera c, String param) throws Exception {
         try {
 //            if (elemento.isJsonObject()) {
@@ -732,7 +741,7 @@ public class AdministrarCarreras implements Serializable {
 //            }
 
         } catch (Exception e) {
-            
+
         }
     }
 
@@ -741,7 +750,7 @@ public class AdministrarCarreras implements Serializable {
     public SessionCarrera getSessionCarrera() {
         return sessionCarrera;
     }
-    
+
     public void setSessionCarrera(SessionCarrera sessionCarrera) {
         this.sessionCarrera = sessionCarrera;
     }

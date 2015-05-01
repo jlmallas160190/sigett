@@ -41,6 +41,7 @@ import edu.unl.sigett.academico.managed.session.SessionCarrera;
 import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
 import edu.unl.sigett.session.ProyectoCarreraOfertaFacadeLocal;
 import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  *
@@ -114,6 +115,7 @@ public class AdministrarAreas implements Serializable {
     public String abrirBuscarAreas(Usuario usuario) {
         String navegacion = "";
         try {
+            buscar(usuario);
             renderedCrear(usuario);
             renderedEditar(usuario);
             renderedSgaWs(usuario);
@@ -393,6 +395,12 @@ public class AdministrarAreas implements Serializable {
     }
 
     private void guardarAreas(Usuario usuario) {
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        HttpServletRequest request = (HttpServletRequest) facesContext.getExternalContext().getRequest();
+        String ipAddress = request.getHeader("X-Real-IP");
+        if (ipAddress == null) {
+            ipAddress = request.getRemoteAddr();
+        }
         for (Area a : sessionArea.getAreasWS()) {
             Area areaBuscar = new Area();
             areaBuscar.setSigla(a.getSigla());
@@ -401,7 +409,7 @@ public class AdministrarAreas implements Serializable {
             if (a1 == null) {
                 areaFacadeLocal.guardar(a);
                 logFacadeLocal.create(logFacadeLocal.crearLog("Area", a.getId() + "", "CREAR", "|Nombre= " + a.getNombre() + "|Sigla= "
-                        + a.getSigla(), usuario));
+                        + a.getSigla()+"|"+ipAddress, usuario));
             } else {
                 a1.setNombre(a.getNombre());
                 a1.setSigla(a.getSigla());
@@ -409,10 +417,10 @@ public class AdministrarAreas implements Serializable {
                 a = a1;
                 areaFacadeLocal.actualizar(a);
                 logFacadeLocal.create(logFacadeLocal.crearLog("Area", a.getId() + "", "EDITAR", "|Nombre= " + a.getNombre() + "|Sigla= "
-                        + a.getSigla(), usuario));
+                        + a.getSigla()+"|"+ipAddress, usuario));
             }
-
         }
+        buscar(usuario);
     }
 
     //</editor-fold>
@@ -432,6 +440,9 @@ public class AdministrarAreas implements Serializable {
                     parseElementosJson(jsonElement);
                     guardarAreas(usuario);
                     FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.sincronizado"), "");
+                    FacesContext.getCurrentInstance().addMessage(null, message);
+                } else {
+                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.no_sincronizar_web_services"), "");
                     FacesContext.getCurrentInstance().addMessage(null, message);
                 }
             } else {

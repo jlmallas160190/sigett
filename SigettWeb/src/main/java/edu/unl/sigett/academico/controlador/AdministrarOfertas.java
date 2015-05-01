@@ -279,8 +279,10 @@ public class AdministrarOfertas implements Serializable {
             }
             sessionOfertaAcademica.setKeyEntero(sessionOfertaAcademica.getKeyEntero() + 1);
             if (sessionOfertaAcademica.getOfertaAcademicaWS().getIdSga() != null
-                    && sessionOfertaAcademica.getOfertaAcademicaWS().getFechaInicio() != null && sessionOfertaAcademica.getOfertaAcademicaWS().
+                    && sessionOfertaAcademica.getOfertaAcademicaWS().getFechaInicio() != null &&
+                    sessionOfertaAcademica.getOfertaAcademicaWS().
                     getFechaFin() != null) {
+                
                 sessionOfertaAcademica.getOfertaAcademicas().add(sessionOfertaAcademica.getOfertaAcademicaWS());
                 return;
             }

@@ -20,7 +20,9 @@
             </f:facet>
             <p:commandLink value="#{item.nombre}" update="tblOfertas" action="#{administrarOfertas.editar(item,sessionUsuario.usuario)}"/>
         </p:column>
-        <p:column sortBy="#{item.fechaInicio}">
+        <p:column sortBy="#{item.fechaInicio}"
+                  filterBy="#{item.fechaInicio}"
+                   filterMatchMode="contains">
             <f:facet name="header">
                 <h:outputText value="#{msg['lbl.fecha']} #{msg['lbl.inicio']}"/>
             </f:facet>
@@ -28,7 +30,9 @@
                 <f:convertDateTime pattern="EEEEE dd MMMMM yyyy"/>
             </h:outputText>
         </p:column>
-        <p:column  sortBy="#{item.fechaFin}">
+        <p:column  sortBy="#{item.fechaFin}"
+                   filterBy="#{item.fechaFin}"
+                   filterMatchMode="contains">
             <f:facet name="header">
                 <h:outputText value="#{msg['lbl.fechaCulminación']}"/>
             </f:facet>
