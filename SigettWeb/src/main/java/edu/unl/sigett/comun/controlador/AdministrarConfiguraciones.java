@@ -11,7 +11,7 @@ import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
 import edu.unl.sigett.seguridad.managed.session.SessionConfiguracion;
 import edu.unl.sigett.entity.ConfiguracionGeneral;
 import com.jlmallas.soporte.entity.Objeto;
-import com.jlmallas.seguridad.entity.Usuario;
+import org.jlmallas.seguridad.entity.Usuario;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -25,10 +25,10 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import edu.unl.sigett.session.ConfiguracionGeneralFacadeLocal;
 import com.jlmallas.soporte.session.ExcepcionFacadeLocal;
-import com.jlmallas.seguridad.session.LogFacadeLocal;
+import org.jlmallas.seguridad.dao.LogDao;
 import com.jlmallas.soporte.session.ObjetoFacadeLocal;
 import com.jlmallas.soporte.session.ProyectoSoftwareFacadeLocal;
-import com.jlmallas.seguridad.session.UsuarioFacadeLocal;
+import org.jlmallas.seguridad.dao.UsuarioDao;
 
 /**
  *
@@ -62,7 +62,7 @@ public class AdministrarConfiguraciones implements Serializable {
     @EJB
     private ConfiguracionGeneralFacadeLocal configuracionGeneralFacadeLocal;
     @EJB
-    private LogFacadeLocal logFacadeLocal;
+    private LogDao logFacadeLocal;
     @EJB
     private ExcepcionFacadeLocal excepcionFacadeLocal;
     @EJB
@@ -70,7 +70,7 @@ public class AdministrarConfiguraciones implements Serializable {
     @EJB
     private ProyectoSoftwareFacadeLocal proyectoSoftwareFacadeLocal;
     @EJB
-    private UsuarioFacadeLocal usuarioFacadeLocal;
+    private UsuarioDao usuarioFacadeLocal;
 
     private List<ConfiguracionGeneral> configuracionGenerals;
 

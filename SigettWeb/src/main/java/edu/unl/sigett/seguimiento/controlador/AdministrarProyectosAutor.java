@@ -15,7 +15,7 @@ import edu.unl.sigett.comun.controlador.AdministrarConfiguraciones;
 import edu.unl.sigett.seguridad.managed.session.SessionEstudianteUsuario;
 import edu.unl.sigett.entity.AutorProyecto;
 import edu.jlmallas.academico.entity.Estudiante;
-import com.jlmallas.seguridad.entity.Usuario;
+import org.jlmallas.seguridad.entity.Usuario;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +29,7 @@ import javax.inject.Named;
 import org.primefaces.event.TabChangeEvent;
 import edu.unl.sigett.session.ActividadFacadeLocal;
 import edu.unl.sigett.session.AutorProyectoFacadeLocal;
-import com.jlmallas.seguridad.session.UsuarioFacadeLocal;
+import org.jlmallas.seguridad.dao.UsuarioDao;
 
 /**
  *
@@ -71,7 +71,7 @@ public class AdministrarProyectosAutor implements Serializable {
     @EJB
     private AutorProyectoFacadeLocal autorProyectoFacadeLocal;
     @EJB
-    private UsuarioFacadeLocal usuarioFacadeLocal;
+    private UsuarioDao usuarioFacadeLocal;
     @EJB
     private ActividadFacadeLocal actividadFacadeLocal;
 

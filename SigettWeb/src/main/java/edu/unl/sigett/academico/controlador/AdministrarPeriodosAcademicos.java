@@ -5,21 +5,21 @@
  */
 package edu.unl.sigett.academico.controlador;
 
-import com.jlmallas.api.date.DateResource;
+import org.jlmallas.api.date.DateResource;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
-import com.jlmallas.api.http.UrlConexion;
-import com.jlmallas.api.http.dto.SeguridadHttp;
+import org.jlmallas.api.http.UrlConexion;
+import org.jlmallas.api.http.dto.SeguridadHttp;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 import com.ocpsoft.pretty.faces.annotation.URLMappings;
 import edu.unl.sigett.academico.managed.session.SessionPeriodoAcademico;
 import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
 import edu.jlmallas.academico.entity.OfertaAcademica;
 import edu.jlmallas.academico.entity.PeriodoAcademico;
-import com.jlmallas.seguridad.entity.Usuario;
+import org.jlmallas.seguridad.entity.Usuario;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,10 +31,10 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import edu.unl.sigett.session.ConfiguracionGeneralFacadeLocal;
-import com.jlmallas.seguridad.session.LogFacadeLocal;
+import org.jlmallas.seguridad.dao.LogDao;
 import edu.jlmallas.academico.service.OfertaAcademicaFacadeLocal;
 import edu.jlmallas.academico.service.PeriodoAcademicoService;
-import com.jlmallas.seguridad.session.UsuarioFacadeLocal;
+import org.jlmallas.seguridad.dao.UsuarioDao;
 import edu.unl.sigett.academico.managed.session.SessionOfertaAcademica;
 import javax.annotation.PostConstruct;
 
@@ -72,13 +72,13 @@ public class AdministrarPeriodosAcademicos implements Serializable {
     @EJB
     private PeriodoAcademicoService periodoAcademicoFacadeLocal;
     @EJB
-    private LogFacadeLocal logFacadeLocal;
+    private LogDao logFacadeLocal;
     @EJB
     private OfertaAcademicaFacadeLocal ofertaAcademicaFacadeLocal;
     @EJB
     private ConfiguracionGeneralFacadeLocal configuracionGeneralFacadeLocal;
     @EJB
-    private UsuarioFacadeLocal usuarioFacadeLocal;
+    private UsuarioDao usuarioFacadeLocal;
 
     //<editor-fold defaultstate="collapsed" desc="MÉTODOS CRUD">
     @PostConstruct

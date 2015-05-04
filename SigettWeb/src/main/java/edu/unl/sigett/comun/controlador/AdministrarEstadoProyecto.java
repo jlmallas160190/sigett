@@ -10,7 +10,7 @@ import com.ocpsoft.pretty.faces.annotation.URLMappings;
 import edu.unl.sigett.postulacion.managed.session.SessionEstadoProyecto;
 import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
 import edu.unl.sigett.entity.EstadoProyecto;
-import com.jlmallas.seguridad.entity.Usuario;
+import org.jlmallas.seguridad.entity.Usuario;
 import java.io.Serializable;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -21,8 +21,8 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import edu.unl.sigett.session.EstadoProyectoFacadeLocal;
-import com.jlmallas.seguridad.session.LogFacadeLocal;
-import com.jlmallas.seguridad.session.UsuarioFacadeLocal;
+import org.jlmallas.seguridad.dao.LogDao;
+import org.jlmallas.seguridad.dao.UsuarioDao;
 
 /**
  *
@@ -56,10 +56,10 @@ public class AdministrarEstadoProyecto implements Serializable {
     @EJB
     private EstadoProyectoFacadeLocal estadoProyectoFacadeLocal;
     @EJB
-    private LogFacadeLocal logFacadeLocal;
+    private LogDao logFacadeLocal;
     private String criterio;
     @EJB
-    private UsuarioFacadeLocal usuarioFacadeLocal;
+    private UsuarioDao usuarioFacadeLocal;
     private List<EstadoProyecto> estadosProyectos;
     private boolean renderedNoEditar;
     private boolean renderedBuscar;

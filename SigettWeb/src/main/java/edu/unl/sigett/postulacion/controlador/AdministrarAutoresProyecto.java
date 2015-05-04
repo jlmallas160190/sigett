@@ -16,7 +16,7 @@ import edu.unl.sigett.entity.AutorProyecto;
 import edu.unl.sigett.entity.EstadoAutor;
 import edu.unl.sigett.entity.Proyecto;
 import edu.unl.sigett.entity.RenunciaAutor;
-import com.jlmallas.seguridad.entity.Usuario;
+import org.jlmallas.seguridad.entity.Usuario;
 import edu.unl.sigett.entity.UsuarioCarrera;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -34,7 +34,7 @@ import org.primefaces.event.TabChangeEvent;
 import edu.unl.sigett.session.AspiranteFacadeLocal;
 import edu.unl.sigett.session.AutorProyectoFacadeLocal;
 import edu.unl.sigett.session.EstadoAutorFacadeLocal;
-import com.jlmallas.seguridad.session.UsuarioFacadeLocal;
+import org.jlmallas.seguridad.dao.UsuarioDao;
 import edu.jlmallas.academico.entity.EstudianteCarrera;
 import edu.jlmallas.academico.service.EstudianteCarreraFacadeLocal;
 import edu.unl.sigett.enumeration.EstadoAutorEnum;
@@ -70,7 +70,7 @@ public class AdministrarAutoresProyecto implements Serializable {
     @EJB
     private EstadoAutorFacadeLocal estadoAutorFacadeLocal;
     @EJB
-    private UsuarioFacadeLocal usuarioFacadeLocal;
+    private UsuarioDao usuarioFacadeLocal;
     @EJB
     private AutorProyectoFacadeLocal autorProyectoFacadeLocal;
     @EJB

@@ -13,7 +13,7 @@ import com.lowagie.text.pdf.PdfPTable;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 import com.ocpsoft.pretty.faces.annotation.URLMappings;
 import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
-import com.jlmallas.seguridad.entity.Log;
+import org.jlmallas.seguridad.entity.Log;
 import com.jlmallas.soporte.entity.Objeto;
 import java.io.IOException;
 import java.io.Serializable;
@@ -28,9 +28,9 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletResponse;
-import com.jlmallas.seguridad.session.LogFacadeLocal;
+import org.jlmallas.seguridad.dao.LogDao;
 import com.jlmallas.soporte.session.ObjetoFacadeLocal;
-import com.jlmallas.seguridad.session.UsuarioFacadeLocal;
+import org.jlmallas.seguridad.dao.UsuarioDao;
 
 /**
  *
@@ -52,9 +52,9 @@ public class AdministrarLogs implements Serializable {
     @EJB
     private ObjetoFacadeLocal objetoFacadeLocal;
     @EJB
-    private UsuarioFacadeLocal usuarioFacadeLocal;
+    private UsuarioDao usuarioFacadeLocal;
     @EJB
-    private LogFacadeLocal logFacadeLocal;
+    private LogDao logFacadeLocal;
 
     private Date fecha;
     private Date fechaFin;

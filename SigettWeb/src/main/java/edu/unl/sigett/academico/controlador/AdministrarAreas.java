@@ -10,8 +10,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
-import com.jlmallas.api.http.UrlConexion;
-import com.jlmallas.api.http.dto.SeguridadHttp;
+import org.jlmallas.api.http.UrlConexion;
+import org.jlmallas.api.http.dto.SeguridadHttp;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 import com.ocpsoft.pretty.faces.annotation.URLMappings;
 import edu.unl.sigett.academico.managed.session.SessionArea;
@@ -19,7 +19,7 @@ import edu.jlmallas.academico.entity.Area;
 import edu.jlmallas.academico.entity.Carrera;
 import com.jlmallas.soporte.entity.Objeto;
 import edu.unl.sigett.entity.ProyectoCarreraOferta;
-import com.jlmallas.seguridad.entity.Usuario;
+import org.jlmallas.seguridad.entity.Usuario;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,10 +33,10 @@ import javax.inject.Named;
 import edu.jlmallas.academico.service.AreaService;
 import edu.unl.sigett.session.ConfiguracionGeneralFacadeLocal;
 import com.jlmallas.soporte.session.ExcepcionFacadeLocal;
-import com.jlmallas.seguridad.session.LogFacadeLocal;
+import org.jlmallas.seguridad.dao.LogDao;
 import com.jlmallas.soporte.session.ObjetoFacadeLocal;
 import com.jlmallas.soporte.session.ProyectoSoftwareFacadeLocal;
-import com.jlmallas.seguridad.session.UsuarioFacadeLocal;
+import org.jlmallas.seguridad.dao.UsuarioDao;
 import edu.unl.sigett.academico.managed.session.SessionCarrera;
 import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
 import edu.unl.sigett.session.ProyectoCarreraOfertaFacadeLocal;
@@ -76,7 +76,7 @@ public class AdministrarAreas implements Serializable {
     @EJB
     private AreaService areaFacadeLocal;
     @EJB
-    private LogFacadeLocal logFacadeLocal;
+    private LogDao logFacadeLocal;
     @EJB
     private ConfiguracionGeneralFacadeLocal configuracionGeneralFacadeLocal;
     @EJB
@@ -86,7 +86,7 @@ public class AdministrarAreas implements Serializable {
     @EJB
     private ProyectoSoftwareFacadeLocal proyectoSoftwareFacadeLocal;
     @EJB
-    private UsuarioFacadeLocal usuarioFacadeLocal;
+    private UsuarioDao usuarioFacadeLocal;
     @EJB
     private ProyectoCarreraOfertaFacadeLocal proyectoCarreraOfertaFacadeLocal;
 

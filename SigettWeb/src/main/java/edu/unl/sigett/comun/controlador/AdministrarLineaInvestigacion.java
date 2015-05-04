@@ -12,7 +12,7 @@ import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
 import edu.jlmallas.academico.entity.Carrera;
 import edu.unl.sigett.entity.LineaInvestigacion;
 import edu.unl.sigett.entity.LineaInvestigacionCarrera;
-import com.jlmallas.seguridad.entity.Usuario;
+import org.jlmallas.seguridad.entity.Usuario;
 import edu.unl.sigett.entity.UsuarioCarrera;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -29,8 +29,8 @@ import org.primefaces.model.DualListModel;
 import edu.jlmallas.academico.service.CarreraService;
 import edu.unl.sigett.session.LineaInvestigacionCarreraFacadeLocal;
 import edu.unl.sigett.session.LineaInvestigacionFacadeLocal;
-import com.jlmallas.seguridad.session.LogFacadeLocal;
-import com.jlmallas.seguridad.session.UsuarioFacadeLocal;
+import org.jlmallas.seguridad.dao.LogDao;
+import org.jlmallas.seguridad.dao.UsuarioDao;
 import edu.unl.sigett.session.UsuarioCarreraFacadeLocal;
 
 /**
@@ -64,7 +64,7 @@ public class AdministrarLineaInvestigacion implements Serializable {
     @EJB
     private LineaInvestigacionFacadeLocal lineaInvestigacionFacadeLocal;
     @EJB
-    private LogFacadeLocal logFacadeLocal;
+    private LogDao logFacadeLocal;
     private DualListModel<Carrera> carrerasDualList;
     private String criterio;
     private List<LineaInvestigacionCarrera> licsRemovidos;
@@ -74,7 +74,7 @@ public class AdministrarLineaInvestigacion implements Serializable {
     @EJB
     private CarreraService carreraFacadeLocal;
     @EJB
-    private UsuarioFacadeLocal usuarioFacadeLocal;
+    private UsuarioDao usuarioFacadeLocal;
     @EJB
     private UsuarioCarreraFacadeLocal usuarioCarreraFacadeLocal;
 

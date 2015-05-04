@@ -5,7 +5,7 @@
  */
 package edu.unl.sigett.seguimiento.controlador;
 
-import com.jlmallas.api.date.DateResource;
+import org.jlmallas.api.date.DateResource;
 import com.jlmallas.comun.entity.Persona;
 import com.jlmallas.comun.service.PersonaFacadeLocal;
 import edu.unl.sigett.postulacion.controlador.AdministrarCronograma;
@@ -27,7 +27,7 @@ import edu.jlmallas.academico.entity.Estudiante;
 import edu.unl.sigett.entity.Evento;
 import edu.unl.sigett.entity.Proyecto;
 import edu.unl.sigett.entity.TipoActividad;
-import com.jlmallas.seguridad.entity.Usuario;
+import org.jlmallas.seguridad.entity.Usuario;
 import java.io.ByteArrayInputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -60,10 +60,10 @@ import edu.unl.sigett.session.ActividadFacadeLocal;
 import edu.unl.sigett.session.CatalogoEventoFacadeLocal;
 import edu.unl.sigett.session.EstadoActividadFacadeLocal;
 import edu.unl.sigett.session.EventoFacadeLocal;
-import com.jlmallas.seguridad.session.LogFacadeLocal;
+import org.jlmallas.seguridad.dao.LogDao;
 import edu.unl.sigett.session.ProyectoFacadeLocal;
 import edu.unl.sigett.session.TipoActividadFacadeLocal;
-import com.jlmallas.seguridad.session.UsuarioFacadeLocal;
+import org.jlmallas.seguridad.dao.UsuarioDao;
 import edu.unl.sigett.enumeration.EstadoProyectoEnum;
 
 /**
@@ -96,7 +96,7 @@ public class AdministrarActividades implements Serializable {
     private AdministrarRevisiones administrarRevisiones;
 
     @EJB
-    private LogFacadeLocal logFacadeLocal;
+    private LogDao logFacadeLocal;
     @EJB
     private ActividadFacadeLocal actividadFacadeLocal;
     @EJB
@@ -104,7 +104,7 @@ public class AdministrarActividades implements Serializable {
     @EJB
     private EstadoActividadFacadeLocal estadoActividadFacadeLocal;
     @EJB
-    private UsuarioFacadeLocal usuarioFacadeLocal;
+    private UsuarioDao usuarioFacadeLocal;
     @EJB
     private ProyectoFacadeLocal proyectoFacadeLocal;
     @EJB

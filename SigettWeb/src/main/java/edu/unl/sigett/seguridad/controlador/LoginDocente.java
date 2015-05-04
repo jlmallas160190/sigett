@@ -12,7 +12,7 @@ import edu.unl.sigett.seguimiento.controlador.AdministrarActividades;
 import edu.unl.sigett.seguimiento.controlador.AdministrarProyectosDirector;
 import edu.unl.sigett.seguridad.managed.session.SessionDocenteUsuario;
 import edu.unl.sigett.entity.DocenteUsuario;
-import com.jlmallas.seguridad.entity.Usuario;
+import org.jlmallas.seguridad.entity.Usuario;
 import java.io.Serializable;
 import java.util.ResourceBundle;
 import javax.ejb.EJB;
@@ -23,7 +23,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import edu.unl.sigett.session.ConfiguracionGeneralFacadeLocal;
 import edu.unl.sigett.session.DocenteUsuarioFacadeLocal;
-import com.jlmallas.seguridad.session.UsuarioFacadeLocal;
+import org.jlmallas.seguridad.dao.UsuarioDao;
 import edu.jlmallas.academico.service.DocenteFacadeLocal;
 import java.util.HashMap;
 import java.util.Map;
@@ -50,7 +50,7 @@ public class LoginDocente implements Serializable {
     private boolean resultado;
 
     @EJB
-    private UsuarioFacadeLocal usuarioFacadeLocal;
+    private UsuarioDao usuarioFacadeLocal;
     @EJB
     private DocenteUsuarioFacadeLocal docenteUsuarioFacadeLocal;
     @EJB

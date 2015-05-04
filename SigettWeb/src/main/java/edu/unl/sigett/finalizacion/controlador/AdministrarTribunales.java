@@ -15,7 +15,7 @@ import edu.unl.sigett.entity.EvaluacionTribunal;
 import edu.unl.sigett.entity.Miembro;
 import edu.unl.sigett.entity.Proyecto;
 import edu.unl.sigett.entity.Tribunal;
-import com.jlmallas.seguridad.entity.Usuario;
+import org.jlmallas.seguridad.entity.Usuario;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,10 +29,10 @@ import javax.inject.Named;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.TabChangeEvent;
 import edu.unl.sigett.session.AutorProyectoFacadeLocal;
-import com.jlmallas.seguridad.session.LogFacadeLocal;
+import org.jlmallas.seguridad.dao.LogDao;
 import edu.unl.sigett.session.MiembroFacadeLocal;
 import edu.unl.sigett.session.TribunalFacadeLocal;
-import com.jlmallas.seguridad.session.UsuarioFacadeLocal;
+import org.jlmallas.seguridad.dao.UsuarioDao;
 import edu.jlmallas.academico.entity.EstudianteCarrera;
 import edu.jlmallas.academico.enumeration.EstadoEstudianteCarreraEnum;
 import edu.jlmallas.academico.service.EstudianteCarreraFacadeLocal;
@@ -66,9 +66,9 @@ public class AdministrarTribunales implements Serializable {
     @EJB
     private TribunalFacadeLocal tribunalFacadeLocal;
     @EJB
-    private UsuarioFacadeLocal usuarioFacadeLocal;
+    private UsuarioDao usuarioFacadeLocal;
     @EJB
-    private LogFacadeLocal logFacadeLocal;
+    private LogDao logFacadeLocal;
     @EJB
     private AutorProyectoFacadeLocal autorProyectoFacadeLocal;
     @EJB

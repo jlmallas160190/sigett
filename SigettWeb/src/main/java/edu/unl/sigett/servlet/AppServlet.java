@@ -27,7 +27,7 @@ import edu.unl.sigett.entity.OficioCarrera;
 import edu.unl.sigett.entity.Pertinencia;
 import edu.unl.sigett.entity.Prorroga;
 import edu.jlmallas.academico.entity.ReporteMatricula;
-import com.jlmallas.seguridad.entity.Usuario;
+import org.jlmallas.seguridad.entity.Usuario;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -63,7 +63,7 @@ import edu.unl.sigett.session.OficioCarreraFacadeLocal;
 import edu.unl.sigett.session.PertinenciaFacadeLocal;
 import edu.unl.sigett.session.ProrrogaFacadeLocal;
 import edu.jlmallas.academico.service.ReporteMatriculaFacadeLocal;
-import com.jlmallas.seguridad.session.UsuarioFacadeLocal;
+import org.jlmallas.seguridad.dao.UsuarioDao;
 import edu.jlmallas.academico.entity.Docente;
 import edu.jlmallas.academico.entity.EstudianteCarrera;
 import edu.jlmallas.academico.service.DocenteCarreraFacadeLocal;
@@ -96,7 +96,7 @@ public class AppServlet extends HttpServlet {
     @EJB
     private ConfiguracionGeneralFacadeLocal configuracionGeneralFacadeLocal;
     @EJB
-    private UsuarioFacadeLocal usuarioFacadeLocal;
+    private UsuarioDao usuarioFacadeLocal;
     @EJB
     private ActaFacadeLocal actaFacadeLocal;
     @EJB

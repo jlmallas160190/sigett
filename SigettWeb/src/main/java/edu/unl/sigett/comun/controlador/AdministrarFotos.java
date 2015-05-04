@@ -26,7 +26,7 @@ import javax.inject.Named;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import com.jlmallas.comun.service.FotoFacadeLocal;
-import com.jlmallas.seguridad.session.UsuarioFacadeLocal;
+import org.jlmallas.seguridad.dao.UsuarioDao;
 
 /**
  *
@@ -50,7 +50,7 @@ public class AdministrarFotos implements Serializable {
     private FotoFacadeLocal fotoFacadeLocal;
     private String paginaActual;
     @EJB
-    private UsuarioFacadeLocal usuarioFacadeLocal;
+    private UsuarioDao usuarioFacadeLocal;
     @Inject
     private SessionDocenteCarrera sessionDocenteCarrera;
 

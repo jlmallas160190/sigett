@@ -67,10 +67,10 @@ import edu.jlmallas.academico.service.EstadoLaboralFacadeLocal;
 import edu.unl.sigett.session.LineaInvestigacionCarreraFacadeLocal;
 import edu.unl.sigett.session.LineaInvestigacionDocenteFacadeLocal;
 import edu.unl.sigett.session.LineaInvestigacionFacadeLocal;
-import com.jlmallas.seguridad.session.LogFacadeLocal;
+import org.jlmallas.seguridad.dao.LogDao;
 import com.jlmallas.comun.service.PersonaFacadeLocal;
 import edu.jlmallas.academico.service.TituloDocenteFacadeLocal;
-import com.jlmallas.seguridad.session.UsuarioFacadeLocal;
+import org.jlmallas.seguridad.dao.UsuarioDao;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -109,7 +109,7 @@ public class AdministrarDocentesCarrera implements Serializable {
     private AdministrarUsuarios administrarUsuarios;
 
     @EJB
-    private LogFacadeLocal logFacadeLocal;
+    private LogDao logFacadeLocal;
     @EJB
     private DocenteCarreraFacadeLocal docenteCarreraFacadeLocal;
     @EJB
@@ -121,7 +121,7 @@ public class AdministrarDocentesCarrera implements Serializable {
     @EJB
     private EstadoLaboralFacadeLocal estadoLaboralFacadeLocal;
     @EJB
-    private UsuarioFacadeLocal usuarioFacadeLocal;
+    private UsuarioDao usuarioFacadeLocal;
     @EJB
     private LineaInvestigacionDocenteFacadeLocal lineaInvestigacionDocenteFacadeLocal;
     @EJB

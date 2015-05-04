@@ -10,10 +10,10 @@ import com.ocpsoft.pretty.faces.annotation.URLMappings;
 import edu.unl.sigett.seguridad.managed.session.SessionRol;
 import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
 import com.jlmallas.soporte.entity.Objeto;
-import com.jlmallas.seguridad.entity.Permiso;
-import com.jlmallas.seguridad.entity.Rol;
-import com.jlmallas.seguridad.entity.RolPermiso;
-import com.jlmallas.seguridad.entity.Usuario;
+import org.jlmallas.seguridad.entity.Permiso;
+import org.jlmallas.seguridad.entity.Rol;
+import org.jlmallas.seguridad.entity.RolPermiso;
+import org.jlmallas.seguridad.entity.Usuario;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,13 +27,13 @@ import javax.inject.Named;
 import org.primefaces.event.TransferEvent;
 import org.primefaces.model.DualListModel;
 import com.jlmallas.soporte.session.ExcepcionFacadeLocal;
-import com.jlmallas.seguridad.session.LogFacadeLocal;
+import org.jlmallas.seguridad.dao.LogDao;
 import com.jlmallas.soporte.session.ObjetoFacadeLocal;
-import com.jlmallas.seguridad.session.PermisoFacadeLocal;
+import org.jlmallas.seguridad.dao.PermisoDao;
 import com.jlmallas.soporte.session.ProyectoSoftwareFacadeLocal;
-import com.jlmallas.seguridad.session.RolFacadeLocal;
-import com.jlmallas.seguridad.session.RolPermisoFacadeLocal;
-import com.jlmallas.seguridad.session.UsuarioFacadeLocal;
+import org.jlmallas.seguridad.dao.RolDao;
+import org.jlmallas.seguridad.dao.RolPermisoDao;
+import org.jlmallas.seguridad.dao.UsuarioDao;
 
 /**
  *
@@ -65,13 +65,13 @@ public class AdministrarRoles implements Serializable {
     private SessionRol sessionRol;
 
     @EJB
-    private RolFacadeLocal rolFacadeLocal;
+    private RolDao rolFacadeLocal;
     @EJB
-    private PermisoFacadeLocal permisoFacadeLocal;
+    private PermisoDao permisoFacadeLocal;
     @EJB
-    private RolPermisoFacadeLocal rolPermisoFacadeLocal;
+    private RolPermisoDao rolPermisoFacadeLocal;
     @EJB
-    private LogFacadeLocal logFacadeLocal;
+    private LogDao logFacadeLocal;
     @EJB
     private ExcepcionFacadeLocal excepcionFacadeLocal;
     @EJB
@@ -79,7 +79,7 @@ public class AdministrarRoles implements Serializable {
     @EJB
     private ProyectoSoftwareFacadeLocal proyectoSoftwareFacadeLocal;
     @EJB
-    private UsuarioFacadeLocal usuarioFacadeLocal;
+    private UsuarioDao usuarioFacadeLocal;
 
     private DualListModel<Permiso> permisosDualList;
     private List<RolPermiso> rolPermisosRemovidos;

@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+    <h:panelGrid rowClasses="rowpanelgrid" styleClass="panelgrid" columns="3" columnClasses="col-sm-3,col-sm-8,col-lg-1">  
+        <h:outputLabel value="#{msg['lbl.nombres']}:" for="nombres" />
+        <p:inputText  value="#{sessionAdminUsuario.usuario.nombres}" title="#{msg['lbl.nombres']}" required="true" 
+                     requiredMessage="#{msg['lbl.nombres']} #{msg['lbl.obligatorio']}.">
+            <p:ajax event="change" update="@this,:contenido:msm"/>
+        </p:inputText>
+        <p:message  display="icon"/>
+        <h:outputLabel value="#{msg['lbl.apellidos']}:"  />
+        <p:inputText  value="#{aviewUsuariousuario.apellidos}" title="#{msg['lbl.apellidos']}" required="true" 
+                     requiredMessage="#{msg['lbl.apellidos']} #{msg['lbl.obligatorio']}.">
+            <p:ajax event="change" update="@this,:contenido:msm"/>
+        </p:inputText>
+        <p:message  display="icon" />
+        <h:outputLabel value="#{msg['lbl.email']}:" for="email" />
+        <p:inputText  value="#{adviewUsuariosuario.email}" title="#{msg['lbl.email']}" required="true" 
+                     requiredMessage="#{msg['lbl.email']} #{msg['lbl.obligatorio']}.">
+            <p:ajax event="change" update="@this,:contenido:msm"/>
+        </p:inputText>
+        <p:message display="icon" />
+        <h:outputLabel value="#{msg['lbl.activo']}:" for="esActivo" />
+        <p:selectBooleanCheckbox label="#{msg['lbl.activo']}" value="#{admviewUsuariouario.esActivo}"/>
+        <h:inputHidden/>
+        <h:outputLabel value="#{msg['lbl.superUsuario']}:" for="esSuperuser" />
+        <p:selectBooleanCheckbox  value="#{admiviewUsuarioario.esSuperuser}" />
+    </h:panelGrid>
+
+</html>

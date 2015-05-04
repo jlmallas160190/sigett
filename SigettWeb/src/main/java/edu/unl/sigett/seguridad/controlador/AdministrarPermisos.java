@@ -8,7 +8,7 @@ package edu.unl.sigett.seguridad.controlador;
 import edu.unl.sigett.seguridad.managed.session.SessionPermiso;
 import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
 import com.jlmallas.soporte.entity.Objeto;
-import com.jlmallas.seguridad.entity.Permiso;
+import org.jlmallas.seguridad.entity.Permiso;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,11 +19,11 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import com.jlmallas.soporte.session.ExcepcionFacadeLocal;
-import com.jlmallas.seguridad.session.LogFacadeLocal;
+import org.jlmallas.seguridad.dao.LogDao;
 import com.jlmallas.soporte.session.ObjetoFacadeLocal;
-import com.jlmallas.seguridad.session.PermisoFacadeLocal;
+import org.jlmallas.seguridad.dao.PermisoDao;
 import com.jlmallas.soporte.session.ProyectoSoftwareFacadeLocal;
-import com.jlmallas.seguridad.session.UsuarioFacadeLocal;
+import org.jlmallas.seguridad.dao.UsuarioDao;
 
 /**
  *
@@ -36,12 +36,12 @@ public class AdministrarPermisos implements Serializable {
     @Inject
     private SessionUsuario sessionUsuario;
     @EJB
-    private PermisoFacadeLocal permisoFacadeLocal;
+    private PermisoDao permisoFacadeLocal;
     @Inject
     private SessionPermiso sessionPermiso;
     private String criterio;
     @EJB
-    private LogFacadeLocal logFacadeLocal;
+    private LogDao logFacadeLocal;
     @EJB
     private ExcepcionFacadeLocal excepcionFacadeLocal;
     @EJB
@@ -49,7 +49,7 @@ public class AdministrarPermisos implements Serializable {
     @EJB
     private ProyectoSoftwareFacadeLocal proyectoSoftwareFacadeLocal;
     @EJB
-    private UsuarioFacadeLocal usuarioFacadeLocal;
+    private UsuarioDao usuarioFacadeLocal;
 
     public AdministrarPermisos() {
     }

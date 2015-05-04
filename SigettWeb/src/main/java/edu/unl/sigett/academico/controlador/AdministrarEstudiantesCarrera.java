@@ -5,7 +5,7 @@
  */
 package edu.unl.sigett.academico.controlador;
 
-import com.jlmallas.api.date.DateResource;
+import org.jlmallas.api.date.DateResource;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -41,7 +41,7 @@ import com.jlmallas.comun.entity.Persona;
 import com.jlmallas.comun.enumeration.CatalogoEnum;
 import com.jlmallas.comun.service.ItemFacadeLocal;
 import edu.jlmallas.academico.entity.ReporteMatricula;
-import com.jlmallas.seguridad.entity.Usuario;
+import org.jlmallas.seguridad.entity.Usuario;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -66,11 +66,11 @@ import edu.jlmallas.academico.service.EstadoEstudianteCarreraFacadeLocal;
 import edu.jlmallas.academico.service.EstadoMatriculaFacadeLocal;
 import edu.jlmallas.academico.service.EstudianteCarreraFacadeLocal;
 import edu.jlmallas.academico.service.EstudianteFacadeLocal;
-import com.jlmallas.seguridad.session.LogFacadeLocal;
+import org.jlmallas.seguridad.dao.LogDao;
 import edu.jlmallas.academico.service.OfertaAcademicaFacadeLocal;
 import com.jlmallas.comun.service.PersonaFacadeLocal;
 import edu.jlmallas.academico.service.ReporteMatriculaFacadeLocal;
-import com.jlmallas.seguridad.session.UsuarioFacadeLocal;
+import org.jlmallas.seguridad.dao.UsuarioDao;
 
 /**
  *
@@ -112,11 +112,11 @@ public class AdministrarEstudiantesCarrera implements Serializable {
     @EJB
     private EstudianteFacadeLocal estudianteFacadeLocal;
     @EJB
-    private LogFacadeLocal logFacadeLocal;
+    private LogDao logFacadeLocal;
     @EJB
     private EstudianteCarreraFacadeLocal estudianteCarreraFacadeLocal;
     @EJB
-    private UsuarioFacadeLocal usuarioFacadeLocal;
+    private UsuarioDao usuarioFacadeLocal;
     @EJB
     private ItemFacadeLocal itemFacadeLocal;
     @EJB

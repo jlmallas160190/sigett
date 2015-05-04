@@ -9,7 +9,7 @@ import edu.unl.sigett.entity.AutorProyecto;
 import edu.unl.sigett.entity.EstadoAutor;
 import edu.unl.sigett.entity.Proyecto;
 import edu.unl.sigett.entity.RenunciaAutor;
-import com.jlmallas.seguridad.entity.Usuario;
+import org.jlmallas.seguridad.entity.Usuario;
 import java.io.Serializable;
 import java.util.List;
 import javax.ejb.EJB;
@@ -23,7 +23,7 @@ import edu.unl.sigett.session.AutorProyectoFacadeLocal;
 import edu.unl.sigett.session.EstadoAutorFacadeLocal;
 import edu.unl.sigett.session.RenunciaAutorFacadeLocal;
 import edu.unl.sigett.session.RenunciaFacadeLocal;
-import com.jlmallas.seguridad.session.UsuarioFacadeLocal;
+import org.jlmallas.seguridad.dao.UsuarioDao;
 import edu.unl.sigett.adjudicacion.session.SessionRenunciaAutor;
 import edu.unl.sigett.postulacion.managed.session.SessionAutorProyecto;
 import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
@@ -50,7 +50,7 @@ public class AdministrarRenunciasAutor implements Serializable {
     @EJB
     private RenunciaFacadeLocal renunciaFacadeLocal;
     @EJB
-    private UsuarioFacadeLocal usuarioFacadeLocal;
+    private UsuarioDao usuarioFacadeLocal;
     @EJB
     private AutorProyectoFacadeLocal autorProyectoFacadeLocal;
 

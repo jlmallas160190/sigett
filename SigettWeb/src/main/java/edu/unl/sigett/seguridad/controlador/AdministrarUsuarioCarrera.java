@@ -10,7 +10,7 @@ import com.ocpsoft.pretty.faces.annotation.URLMapping;
 import com.ocpsoft.pretty.faces.annotation.URLMappings;
 import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
 import edu.unl.sigett.seguridad.managed.session.SessionUsuarioCarrera;
-import com.jlmallas.seguridad.entity.Usuario;
+import org.jlmallas.seguridad.entity.Usuario;
 import edu.unl.sigett.entity.UsuarioCarrera;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -23,7 +23,7 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import edu.unl.sigett.session.UsuarioCarreraFacadeLocal;
-import com.jlmallas.seguridad.session.UsuarioFacadeLocal;
+import org.jlmallas.seguridad.dao.UsuarioDao;
 import edu.jlmallas.academico.entity.Carrera;
 import edu.jlmallas.academico.service.CarreraService;
 
@@ -49,7 +49,7 @@ public class AdministrarUsuarioCarrera implements Serializable {
     @Inject
     private SessionUsuarioCarrera sessionUsuarioCarrera;
     @EJB
-    private UsuarioFacadeLocal usuarioFacadeLocal;
+    private UsuarioDao usuarioFacadeLocal;
     @EJB
     private UsuarioCarreraFacadeLocal usuarioCarreraFacadeLocal;
     @EJB

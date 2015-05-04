@@ -25,7 +25,7 @@ import edu.unl.sigett.entity.OficioCarrera;
 import edu.unl.sigett.entity.Proyecto;
 import edu.unl.sigett.entity.ProyectoCarreraOferta;
 import edu.unl.sigett.entity.RenunciaDirector;
-import com.jlmallas.seguridad.entity.Usuario;
+import org.jlmallas.seguridad.entity.Usuario;
 import edu.unl.sigett.entity.UsuarioCarrera;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -53,7 +53,7 @@ import edu.unl.sigett.session.DirectorProyectoFacadeLocal;
 import edu.unl.sigett.session.EstadoDirectorFacadeLocal;
 import edu.unl.sigett.session.LineaInvestigacionDocenteFacadeLocal;
 import edu.unl.sigett.session.OficioCarreraFacadeLocal;
-import com.jlmallas.seguridad.session.UsuarioFacadeLocal;
+import org.jlmallas.seguridad.dao.UsuarioDao;
 import edu.jlmallas.academico.entity.Docente;
 import edu.jlmallas.academico.entity.DocenteCarrera;
 import edu.jlmallas.academico.entity.EstudianteCarrera;
@@ -95,7 +95,7 @@ public class AdministrarDirectoresProyecto implements Serializable {
     @EJB
     private ConfiguracionGeneralFacadeLocal configuracionGeneralFacadeLocal;
     @EJB
-    private UsuarioFacadeLocal usuarioFacadeLocal;
+    private UsuarioDao usuarioFacadeLocal;
     @EJB
     private AutorProyectoFacadeLocal autorProyectoFacadeLocal;
     @EJB

@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <p:panel>
+        <p:panel header="#{msg['lbl.usuario']}" toggleable="true">
+            <ui:include src="datosUsuario.xhtml" /> 
+        </p:panel>
+        <br/>
+        <p:panel header="#{msg['lbl.datos']} #{msg['lbl.usuario']}" toggleable="true">
+            <ui:include src="datosPersonalesUsuario.xhtml"/>
+        </p:panel>
+        <br/>
+        <p:panel header="#{msg['lbl.roles']}" toggleable="true">
+            <ui:include src="rolesUsuario.xhtml"/>
+        </p:panel>
+        <br/>
+        <p:panel header="#{msg['lbl.permisos']}" toggleable="true">
+            <ui:include src="permisosUsuario.xhtml"/>
+        </p:panel>
+        <br/>
+        <p:panel header="#{msg['lbl.carreras']}" toggleable="true">
+            <ui:include src="carrerasUsuario.xhtml"/>
+        </p:panel>
+        <f:facet name="footer">
+            <ui:include src="botonesUsuario.xhtml"/>
+        </f:facet>
+    </p:panel>
+</body>
+</html>

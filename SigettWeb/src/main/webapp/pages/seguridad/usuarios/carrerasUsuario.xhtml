@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <h:panelGrid columns="1">
+        <p:pickList id="carreras" value="#{sessionAdminUsuario.carrerasDualList}" var="items" itemLabel="#{items}" itemValue="#{items}"
+                    showSourceControls="true" showTargetControls="true" showCheckbox="true"
+                    showSourceFilter="true" showTargetFilter="true" filterMatchMode="contains"  >
+            <f:facet name="sourceCaption">#{sessionAdminUsuario.numeroCarrerasDisponibles}: #{msg['lbl.carreras']} #{msg['lbl.disponibles']}</f:facet>
+            <f:facet name="targetCaption">#{sessionAdminUsuario.numeroCarrerasSeleccionadas}: #{msg['lbl.carreras']}</f:facet>
+            <p:ajax event="transfer" update="carreras" listener="#{administrarUsuarios.transferUsuariosCarreras}"></p:ajax>
+        </p:pickList>
+    </h:panelGrid>
+
+</html>

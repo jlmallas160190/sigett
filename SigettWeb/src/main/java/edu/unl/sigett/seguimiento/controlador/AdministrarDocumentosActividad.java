@@ -16,7 +16,7 @@ import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
 import edu.unl.sigett.entity.Actividad;
 import edu.unl.sigett.entity.DocumentoActividad;
 import edu.unl.sigett.entity.Proyecto;
-import com.jlmallas.seguridad.entity.Usuario;
+import org.jlmallas.seguridad.entity.Usuario;
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.List;
@@ -31,8 +31,8 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import edu.unl.sigett.session.ConfiguracionGeneralFacadeLocal;
 import edu.unl.sigett.session.DocumentoActividadFacadeLocal;
-import com.jlmallas.seguridad.session.LogFacadeLocal;
-import com.jlmallas.seguridad.session.UsuarioFacadeLocal;
+import org.jlmallas.seguridad.dao.LogDao;
+import org.jlmallas.seguridad.dao.UsuarioDao;
 
 /**
  *
@@ -62,9 +62,9 @@ public class AdministrarDocumentosActividad implements Serializable {
     @EJB
     ConfiguracionGeneralFacadeLocal configuracionGeneralFacadeLocal;
     @EJB
-    private LogFacadeLocal logFacadeLocal;
+    private LogDao logFacadeLocal;
     @EJB
-    private UsuarioFacadeLocal usuarioFacadeLocal;
+    private UsuarioDao usuarioFacadeLocal;
 
     private List<DocumentoActividad> documentosActividad;
 

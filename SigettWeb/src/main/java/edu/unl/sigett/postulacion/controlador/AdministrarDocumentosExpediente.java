@@ -10,7 +10,7 @@ import edu.unl.sigett.comun.managed.session.SessionExpediente;
 import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
 import edu.unl.sigett.entity.CatalogoDocumentoExpediente;
 import edu.unl.sigett.entity.DocumentoExpediente;
-import com.jlmallas.seguridad.entity.Usuario;
+import org.jlmallas.seguridad.entity.Usuario;
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.List;
@@ -25,8 +25,8 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import edu.unl.sigett.session.CatalogoDocumentoExpedienteFacadeLocal;
 import edu.unl.sigett.session.DocumentoExpedienteFacadeLocal;
-import com.jlmallas.seguridad.session.LogFacadeLocal;
-import com.jlmallas.seguridad.session.UsuarioFacadeLocal;
+import org.jlmallas.seguridad.dao.LogDao;
+import org.jlmallas.seguridad.dao.UsuarioDao;
 
 /**
  *
@@ -49,9 +49,9 @@ public class AdministrarDocumentosExpediente implements Serializable {
     @EJB
     private DocumentoExpedienteFacadeLocal documentoExpedienteFacadeLocal;
     @EJB
-    private LogFacadeLocal logFacadeLocal;
+    private LogDao logFacadeLocal;
     @EJB
-    private UsuarioFacadeLocal usuarioFacadeLocal;
+    private UsuarioDao usuarioFacadeLocal;
     private boolean renderedDlgEditar;
     private boolean renderedCrear;
     private boolean renderedEditar;

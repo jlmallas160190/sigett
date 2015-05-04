@@ -7,8 +7,14 @@
       xmlns:p="http://primefaces.org/ui">
 
     <body>
-        <ui:composition template="./../../../principalAdmin.xhtml">
+        <ui:composition template="./../../../template.xhtml">
             <ui:define name="title">#{msg['lbl.periodosAcademicos']}</ui:define>
+            <ui:define name="top">
+                <ui:include src="./../../admin/menu.xhtml"/>
+            </ui:define>
+            <ui:define name="left">
+                <ui:include src="./../../admin/menuIzquierdo.xhtml"/>
+            </ui:define>
             <ui:define name="content">
                 <p:messages id="msm"/>
                 <p:panel header="#{msg['lbl.periodosAcademicos']}">

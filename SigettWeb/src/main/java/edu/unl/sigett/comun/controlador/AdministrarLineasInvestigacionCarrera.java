@@ -13,7 +13,7 @@ import edu.unl.sigett.seguridad.managed.session.SessionUsuarioCarrera;
 import edu.jlmallas.academico.entity.Carrera;
 import edu.unl.sigett.entity.LineaInvestigacion;
 import edu.unl.sigett.entity.LineaInvestigacionCarrera;
-import com.jlmallas.seguridad.entity.Usuario;
+import org.jlmallas.seguridad.entity.Usuario;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,8 +26,8 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import edu.unl.sigett.session.LineaInvestigacionCarreraFacadeLocal;
 import edu.unl.sigett.session.LineaInvestigacionFacadeLocal;
-import com.jlmallas.seguridad.session.LogFacadeLocal;
-import com.jlmallas.seguridad.session.UsuarioFacadeLocal;
+import org.jlmallas.seguridad.dao.LogDao;
+import org.jlmallas.seguridad.dao.UsuarioDao;
 
 /**
  *
@@ -61,11 +61,11 @@ public class AdministrarLineasInvestigacionCarrera implements Serializable {
     @Inject
     private SessionUsuarioCarrera sessionUsuarioCarrera;
     @EJB
-    private LogFacadeLocal logFacadeLocal;
+    private LogDao logFacadeLocal;
     @EJB
     private LineaInvestigacionCarreraFacadeLocal lineaInvestigacionCarreraFacadeLocal;
     @EJB
-    private UsuarioFacadeLocal usuarioFacadeLocal;
+    private UsuarioDao usuarioFacadeLocal;
     private boolean renderedNoEditar;
     @EJB
     private LineaInvestigacionFacadeLocal lineaInvestigacionFacadeLocal;

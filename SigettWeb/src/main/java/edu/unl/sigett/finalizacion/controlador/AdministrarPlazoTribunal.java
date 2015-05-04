@@ -5,7 +5,7 @@
  */
 package edu.unl.sigett.finalizacion.controlador;
 
-import com.jlmallas.api.date.DateResource;
+import org.jlmallas.api.date.DateResource;
 import edu.unl.sigett.finalizacion.managed.session.SessionPlazoEvaluacionTribunal;
 import edu.unl.sigett.seguridad.managed.session.SessionDocenteUsuario;
 import edu.unl.sigett.entity.EvaluacionTribunal;

@@ -10,8 +10,8 @@ import edu.unl.sigett.comun.controlador.AdministrarConfiguraciones;
 import edu.unl.sigett.postulacion.controlador.AdministrarDocentesProyecto;
 import edu.unl.sigett.postulacion.controlador.AdministrarProyectos;
 import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
-import com.jlmallas.seguridad.entity.RolUsuario;
-import com.jlmallas.seguridad.entity.Usuario;
+import org.jlmallas.seguridad.entity.RolUsuario;
+import org.jlmallas.seguridad.entity.Usuario;
 import java.io.Serializable;
 import java.util.ResourceBundle;
 import javax.ejb.EJB;
@@ -20,7 +20,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
-import com.jlmallas.seguridad.session.UsuarioFacadeLocal;
+import org.jlmallas.seguridad.dao.UsuarioDao;
 
 /**
  *
@@ -43,7 +43,7 @@ public class Login implements Serializable {
     @Inject
     private AdministrarProyectos administrarProyectos;
     @EJB
-    private UsuarioFacadeLocal usuarioFacadeLocal;
+    private UsuarioDao usuarioFacadeLocal;
     @EJB
     private ConfiguracionFacadeLocal configuracionFacadeLocal;
     
@@ -100,7 +100,7 @@ public class Login implements Serializable {
                     administrarProyectos.buscarProyectosCaducados(sessionUsuario.getUsuario());
                     administrarProyectos.buscarProyectosEnSustentacionPrivada(sessionUsuario.getUsuario());
                     administrarProyectos.buscarProyectosEnSustentacionPublica(sessionUsuario.getUsuario());
-                    administrarUsuarios.actualizaRendered(sessionUsuario.getUsuario());
+//                    administrarUsuarios.actualizaRendered(sessionUsuario.getUsuario());
                     administrarUsuarioCarrera.usuarioCarreras(sessionUsuario.getUsuario());
                     navegacion = "pretty:principal";
                 } else {

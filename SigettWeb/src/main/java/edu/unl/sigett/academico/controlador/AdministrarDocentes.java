@@ -24,7 +24,7 @@ import com.jlmallas.comun.entity.Persona;
 import com.jlmallas.comun.enumeration.CatalogoEnum;
 import com.jlmallas.comun.service.ItemFacadeLocal;
 import edu.jlmallas.academico.entity.TituloDocente;
-import com.jlmallas.seguridad.entity.Usuario;
+import org.jlmallas.seguridad.entity.Usuario;
 import edu.unl.sigett.entity.UsuarioCarrera;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -48,11 +48,11 @@ import edu.jlmallas.academico.service.EstadoLaboralFacadeLocal;
 import edu.unl.sigett.session.LineaInvestigacionCarreraFacadeLocal;
 import edu.unl.sigett.session.LineaInvestigacionDocenteFacadeLocal;
 import edu.unl.sigett.session.LineaInvestigacionFacadeLocal;
-import com.jlmallas.seguridad.session.LogFacadeLocal;
+import org.jlmallas.seguridad.dao.LogDao;
 import com.jlmallas.comun.service.NacionalidadFacadeLocal;
 import com.jlmallas.comun.service.PersonaFacadeLocal;
 import edu.jlmallas.academico.service.TituloDocenteFacadeLocal;
-import com.jlmallas.seguridad.session.UsuarioFacadeLocal;
+import org.jlmallas.seguridad.dao.UsuarioDao;
 import edu.unl.sigett.comun.controlador.AdministrarLineasInvestigacionDocente;
 import edu.unl.sigett.session.UsuarioCarreraFacadeLocal;
 import java.util.HashMap;
@@ -109,7 +109,7 @@ public class AdministrarDocentes implements Serializable {
     @EJB
     private LineaInvestigacionDocenteFacadeLocal lineaInvestigacionDocenteFacadeLocal;
     @EJB
-    private LogFacadeLocal logFacadeLocal;
+    private LogDao logFacadeLocal;
     @EJB
     private CarreraService carreraFacadeLocal;
     @EJB
@@ -117,7 +117,7 @@ public class AdministrarDocentes implements Serializable {
     @EJB
     private LineaInvestigacionCarreraFacadeLocal lineaInvestigacionCarreraFacadeLocal;
     @EJB
-    private UsuarioFacadeLocal usuarioFacadeLocal;
+    private UsuarioDao usuarioFacadeLocal;
     @EJB
     private LineaInvestigacionFacadeLocal lineaInvestigacionFacadeLocal;
     @EJB

@@ -15,7 +15,7 @@ import edu.jlmallas.academico.entity.Docente;
 import edu.unl.sigett.entity.EstadoActividad;
 import edu.unl.sigett.entity.Proyecto;
 import edu.unl.sigett.entity.Revision;
-import com.jlmallas.seguridad.entity.Usuario;
+import org.jlmallas.seguridad.entity.Usuario;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -30,9 +30,9 @@ import javax.inject.Named;
 import org.primefaces.context.RequestContext;
 import edu.unl.sigett.session.ActividadFacadeLocal;
 import edu.unl.sigett.session.EstadoActividadFacadeLocal;
-import com.jlmallas.seguridad.session.LogFacadeLocal;
+import org.jlmallas.seguridad.dao.LogDao;
 import edu.unl.sigett.session.RevisionFacadeLocal;
-import com.jlmallas.seguridad.session.UsuarioFacadeLocal;
+import org.jlmallas.seguridad.dao.UsuarioDao;
 
 /**
  *
@@ -57,13 +57,13 @@ public class AdministrarRevisiones implements Serializable {
     @EJB
     private RevisionFacadeLocal revisionFacadeLocal;
     @EJB
-    private LogFacadeLocal logFacadeLocal;
+    private LogDao logFacadeLocal;
     @EJB
     private ActividadFacadeLocal actividadFacadeLocal;
     @EJB
     private EstadoActividadFacadeLocal estadoActividadFacadeLocal;
     @EJB
-    private UsuarioFacadeLocal usuarioFacadeLocal;
+    private UsuarioDao usuarioFacadeLocal;
 
     private boolean renderedCrear;
     private boolean renderedEditar;

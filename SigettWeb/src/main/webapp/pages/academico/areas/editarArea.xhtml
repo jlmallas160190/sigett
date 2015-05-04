@@ -10,8 +10,11 @@
 
     <body>
 
-        <ui:composition template="./../../../principalAdmin.xhtml">
+        <ui:composition template="./../../../template.xhtml">
             <ui:define name="title">#{msg['lbl.area']}</ui:define>
+            <ui:define name="top">
+                <ui:include src="./../../admin/menu.xhtml"/>
+            </ui:define>
             <ui:define name="content">
                 <p:messages id="msm"/>
                 <p:panel>
@@ -52,7 +55,7 @@
                         </p:panel>
                     </p:panel>
                     <f:facet name="footer">
-                         <ui:include src="botonesArea.xhtml" /> 
+                        <ui:include src="botonesArea.xhtml" /> 
                     </f:facet>
                 </p:panel>
             </ui:define>

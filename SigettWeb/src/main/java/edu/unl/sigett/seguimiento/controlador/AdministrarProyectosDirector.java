@@ -22,7 +22,7 @@ import edu.jlmallas.academico.entity.DocenteCarrera;
 import edu.jlmallas.academico.entity.OfertaAcademica;
 import edu.unl.sigett.entity.Proyecto;
 import edu.unl.sigett.entity.ProyectoCarreraOferta;
-import com.jlmallas.seguridad.entity.Usuario;
+import org.jlmallas.seguridad.entity.Usuario;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -39,7 +39,7 @@ import edu.unl.sigett.session.ActividadFacadeLocal;
 import edu.unl.sigett.session.ConfiguracionGeneralFacadeLocal;
 import edu.unl.sigett.session.DirectorProyectoFacadeLocal;
 import edu.unl.sigett.session.ProyectoCarreraOfertaFacadeLocal;
-import com.jlmallas.seguridad.session.UsuarioFacadeLocal;
+import org.jlmallas.seguridad.dao.UsuarioDao;
 import edu.jlmallas.academico.service.OfertaAcademicaFacadeLocal;
 import java.util.HashMap;
 import java.util.Map;
@@ -85,7 +85,7 @@ public class AdministrarProyectosDirector implements Serializable {
     private AdministrarCronograma administrarCronograma;
 
     @EJB
-    private UsuarioFacadeLocal usuarioFacadeLocal;
+    private UsuarioDao usuarioFacadeLocal;
     @EJB
     private DirectorProyectoFacadeLocal directorProyectoFacadeLocal;
     @EJB

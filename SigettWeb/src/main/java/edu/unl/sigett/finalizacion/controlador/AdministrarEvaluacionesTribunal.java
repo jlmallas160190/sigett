@@ -27,7 +27,7 @@ import edu.unl.sigett.entity.Proyecto;
 import edu.unl.sigett.entity.RangoEquivalencia;
 import edu.unl.sigett.entity.RangoNota;
 import edu.unl.sigett.entity.Tribunal;
-import com.jlmallas.seguridad.entity.Usuario;
+import org.jlmallas.seguridad.entity.Usuario;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -64,7 +64,7 @@ import edu.unl.sigett.session.MiembroFacadeLocal;
 import edu.unl.sigett.session.ProyectoFacadeLocal;
 import edu.unl.sigett.session.RangoEquivalenciaFacadeLocal;
 import edu.unl.sigett.session.RangoNotaFacadeLocal;
-import com.jlmallas.seguridad.session.UsuarioFacadeLocal;
+import org.jlmallas.seguridad.dao.UsuarioDao;
 import edu.jlmallas.academico.entity.EstudianteCarrera;
 import edu.jlmallas.academico.enumeration.EstadoEstudianteCarreraEnum;
 import edu.jlmallas.academico.service.DocenteFacadeLocal;
@@ -100,7 +100,7 @@ public class AdministrarEvaluacionesTribunal implements Serializable {
     private AdministrarCalificacionMiembro administrarCalificacionMiembro;
 
     @EJB
-    private UsuarioFacadeLocal usuarioFacadeLocal;
+    private UsuarioDao usuarioFacadeLocal;
     @EJB
     private CatalogoEvaluacionFacadeLocal catalogoEvaluacionFacadeLocal;
     @EJB

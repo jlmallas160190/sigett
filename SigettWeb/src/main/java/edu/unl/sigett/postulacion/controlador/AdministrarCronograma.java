@@ -5,7 +5,7 @@
  */
 package edu.unl.sigett.postulacion.controlador;
 
-import com.jlmallas.api.date.DateResource;
+import org.jlmallas.api.date.DateResource;
 import edu.unl.sigett.entity.Actividad;
 import edu.unl.sigett.entity.AutorProyecto;
 import edu.unl.sigett.entity.CatalogoDuracion;
@@ -14,7 +14,7 @@ import edu.unl.sigett.entity.Cronograma;
 import edu.unl.sigett.entity.DuracionCronograma;
 import edu.unl.sigett.entity.EstadoProyecto;
 import edu.unl.sigett.entity.Proyecto;
-import com.jlmallas.seguridad.entity.Usuario;
+import org.jlmallas.seguridad.entity.Usuario;
 import edu.unl.sigett.enumeration.EstadoProyectoEnum;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;

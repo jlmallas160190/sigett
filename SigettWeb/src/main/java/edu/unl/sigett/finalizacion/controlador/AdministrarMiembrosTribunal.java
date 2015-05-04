@@ -26,7 +26,7 @@ import edu.unl.sigett.entity.OficioCarrera;
 import edu.unl.sigett.entity.Proyecto;
 import edu.unl.sigett.entity.ProyectoCarreraOferta;
 import edu.unl.sigett.entity.Tribunal;
-import com.jlmallas.seguridad.entity.Usuario;
+import org.jlmallas.seguridad.entity.Usuario;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -54,7 +54,7 @@ import edu.unl.sigett.session.MiembroFacadeLocal;
 import edu.unl.sigett.session.OficioCarreraFacadeLocal;
 import edu.unl.sigett.session.ProyectoCarreraOfertaFacadeLocal;
 import edu.unl.sigett.session.ProyectoFacadeLocal;
-import com.jlmallas.seguridad.session.UsuarioFacadeLocal;
+import org.jlmallas.seguridad.dao.UsuarioDao;
 import edu.jlmallas.academico.entity.EstudianteCarrera;
 import edu.jlmallas.academico.service.EstudianteCarreraFacadeLocal;
 import edu.unl.sigett.comun.controlador.AdministrarNotificaciones;
@@ -82,7 +82,7 @@ public class AdministrarMiembrosTribunal implements Serializable {
     private AdministrarNotificaciones administrarNotificaciones;
 
     @EJB
-    private UsuarioFacadeLocal usuarioFacadeLocal;
+    private UsuarioDao usuarioFacadeLocal;
     @EJB
     private ConfiguracionGeneralFacadeLocal configuracionGeneralFacadeLocal;
     @EJB

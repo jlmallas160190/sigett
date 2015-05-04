@@ -10,16 +10,16 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
-import com.jlmallas.api.date.DateResource;
-import com.jlmallas.api.http.UrlConexion;
-import com.jlmallas.api.http.dto.SeguridadHttp;
+import org.jlmallas.api.date.DateResource;
+import org.jlmallas.api.http.UrlConexion;
+import org.jlmallas.api.http.dto.SeguridadHttp;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 import com.ocpsoft.pretty.faces.annotation.URLMappings;
 import edu.unl.sigett.academico.managed.session.SessionOfertaAcademica;
 import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
 import edu.jlmallas.academico.entity.OfertaAcademica;
 import edu.jlmallas.academico.entity.PeriodoAcademico;
-import com.jlmallas.seguridad.entity.Usuario;
+import org.jlmallas.seguridad.entity.Usuario;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +31,7 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import edu.unl.sigett.session.ConfiguracionGeneralFacadeLocal;
-import com.jlmallas.seguridad.session.UsuarioFacadeLocal;
+import org.jlmallas.seguridad.dao.UsuarioDao;
 
 /**
  *
@@ -59,7 +59,7 @@ public class AdministrarOfertas implements Serializable {
     @EJB
     private ConfiguracionGeneralFacadeLocal configuracionGeneralFacadeLocal;
     @EJB
-    private UsuarioFacadeLocal usuarioFacadeLocal;
+    private UsuarioDao usuarioFacadeLocal;
 
     private List<OfertaAcademica> ofertaAcademicas = new ArrayList<OfertaAcademica>();
 

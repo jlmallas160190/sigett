@@ -11,7 +11,7 @@ import edu.unl.sigett.postulacion.managed.session.SessionTemaProyecto;
 import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
 import edu.unl.sigett.entity.Proyecto;
 import edu.unl.sigett.entity.TemaProyecto;
-import com.jlmallas.seguridad.entity.Usuario;
+import org.jlmallas.seguridad.entity.Usuario;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +24,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import edu.unl.sigett.session.ProyectoFacadeLocal;
 import edu.unl.sigett.session.TemaProyectoFacadeLocal;
-import com.jlmallas.seguridad.session.UsuarioFacadeLocal;
+import org.jlmallas.seguridad.dao.UsuarioDao;
 import edu.unl.sigett.enumeration.EstadoProyectoEnum;
 
 /**
@@ -44,7 +44,7 @@ public class AdministrarTemaProyectos implements Serializable {
     @EJB
     private TemaProyectoFacadeLocal temaProyectoFacadeLocal;
     @EJB
-    private UsuarioFacadeLocal usuarioFacadeLocal;
+    private UsuarioDao usuarioFacadeLocal;
     @EJB
     private ProyectoFacadeLocal proyectoFacadeLocal;
     

@@ -21,7 +21,7 @@ import edu.unl.sigett.entity.OficioCarrera;
 import edu.unl.sigett.entity.Pertinencia;
 import edu.unl.sigett.entity.Proyecto;
 import edu.unl.sigett.entity.ProyectoCarreraOferta;
-import com.jlmallas.seguridad.entity.Usuario;
+import org.jlmallas.seguridad.entity.Usuario;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -44,11 +44,11 @@ import edu.unl.sigett.session.ConfiguracionGeneralFacadeLocal;
 import edu.jlmallas.academico.service.CoordinadorPeriodoFacadeLocal;
 import edu.unl.sigett.session.EstadoAutorFacadeLocal;
 import edu.unl.sigett.session.EstadoProyectoFacadeLocal;
-import com.jlmallas.seguridad.session.LogFacadeLocal;
+import org.jlmallas.seguridad.dao.LogDao;
 import edu.unl.sigett.session.OficioCarreraFacadeLocal;
 import edu.unl.sigett.session.PertinenciaFacadeLocal;
 import edu.unl.sigett.session.ProyectoFacadeLocal;
-import com.jlmallas.seguridad.session.UsuarioFacadeLocal;
+import org.jlmallas.seguridad.dao.UsuarioDao;
 import edu.jlmallas.academico.entity.Docente;
 import edu.jlmallas.academico.entity.EstudianteCarrera;
 import edu.jlmallas.academico.service.DocenteFacadeLocal;
@@ -76,7 +76,7 @@ public class AdministrarPertinencias implements Serializable {
     private SessionOficioCarrera sessionOficioCarrera;
 
     @EJB
-    private LogFacadeLocal logFacadeLocal;
+    private LogDao logFacadeLocal;
     @EJB
     private PertinenciaFacadeLocal pertinenciaFacadeLocal;
     private List<Pertinencia> pertinenciasGrabar;
@@ -92,7 +92,7 @@ public class AdministrarPertinencias implements Serializable {
     @EJB
     private AutorProyectoFacadeLocal autorProyectoFacadeLocal;
     @EJB
-    UsuarioFacadeLocal usuarioFacadeLocal;
+    UsuarioDao usuarioFacadeLocal;
     @EJB
     private CoordinadorPeriodoFacadeLocal coordinadorPeriodoFacadeLocal;
 

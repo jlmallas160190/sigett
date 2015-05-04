@@ -10,7 +10,7 @@ import edu.unl.sigett.comun.managed.session.SessionExpediente;
 import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
 import edu.unl.sigett.entity.AutorProyecto;
 import edu.unl.sigett.entity.Expediente;
-import com.jlmallas.seguridad.entity.Usuario;
+import org.jlmallas.seguridad.entity.Usuario;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -23,7 +23,7 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import org.primefaces.context.RequestContext;
-import com.jlmallas.seguridad.session.UsuarioFacadeLocal;
+import org.jlmallas.seguridad.dao.UsuarioDao;
 
 /**
  *
@@ -42,7 +42,7 @@ public class AdministrarExpedientes implements Serializable {
     private boolean esEditado;
     private boolean renderedNoEditar;
     @EJB
-    private UsuarioFacadeLocal usuarioFacadeLocal;
+    private UsuarioDao usuarioFacadeLocal;
     private List<Expediente> expedientes;
     private boolean renderedEditar;
     private boolean renderedCrear;

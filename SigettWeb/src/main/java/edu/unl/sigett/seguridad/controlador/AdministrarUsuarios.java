@@ -10,35 +10,24 @@ import com.jlmallas.comun.service.ConfiguracionFacadeLocal;
 import com.jlmallas.comun.service.PersonaFacadeLocal;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 import com.ocpsoft.pretty.faces.annotation.URLMappings;
-import edu.unl.sigett.comun.controlador.AdministrarCatalogoDocumentoExpediente;
-import edu.unl.sigett.comun.controlador.AdministrarCatalogoProyectos;
-import edu.unl.sigett.academico.controlador.AdministrarDocentes;
-import edu.unl.sigett.comun.controlador.AdministrarEstadoProyecto;
-import edu.unl.sigett.academico.controlador.AdministrarEstudiantes;
-import edu.unl.sigett.comun.controlador.AdministrarLineaInvestigacion;
-import edu.unl.sigett.comun.controlador.AdministrarLineasInvestigacionCarrera;
-import edu.unl.sigett.comun.controlador.AdministrarTipoProyectos;
-import edu.unl.sigett.seguimiento.controlador.AdministrarEstadosActividades;
-import edu.unl.sigett.seguridad.managed.session.AdminUsuario;
-import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
+import edu.unl.sigett.seguridad.managed.session.SessionAdminUsuario;
 import edu.jlmallas.academico.entity.Carrera;
 import edu.jlmallas.academico.entity.Docente;
 import edu.unl.sigett.entity.DocenteUsuario;
 import edu.jlmallas.academico.entity.Estudiante;
 import edu.unl.sigett.entity.EstudianteUsuario;
 import com.jlmallas.soporte.entity.Objeto;
-import com.jlmallas.seguridad.entity.Permiso;
-import com.jlmallas.seguridad.entity.Rol;
-import com.jlmallas.seguridad.entity.RolUsuario;
-import com.jlmallas.seguridad.entity.Usuario;
+import org.jlmallas.seguridad.entity.Permiso;
+import org.jlmallas.seguridad.entity.Rol;
+import org.jlmallas.seguridad.entity.RolUsuario;
+import org.jlmallas.seguridad.entity.Usuario;
 import edu.unl.sigett.entity.UsuarioCarrera;
-import com.jlmallas.seguridad.entity.UsuarioPermiso;
+import org.jlmallas.seguridad.entity.UsuarioPermiso;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import javax.ejb.EJB;
-import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
@@ -49,16 +38,18 @@ import edu.jlmallas.academico.service.CarreraService;
 import edu.unl.sigett.session.DocenteUsuarioFacadeLocal;
 import edu.unl.sigett.session.EstudianteUsuarioFacadeLocal;
 import com.jlmallas.soporte.session.ExcepcionFacadeLocal;
-import com.jlmallas.seguridad.session.LogFacadeLocal;
 import com.jlmallas.soporte.session.ObjetoFacadeLocal;
-import com.jlmallas.seguridad.session.PermisoFacadeLocal;
+import org.jlmallas.seguridad.dao.PermisoDao;
 import com.jlmallas.soporte.session.ProyectoSoftwareFacadeLocal;
-import com.jlmallas.seguridad.session.RolFacadeLocal;
-import com.jlmallas.seguridad.session.RolUsuarioFacadeLocal;
+import com.ocpsoft.pretty.PrettyContext;
+import org.jlmallas.seguridad.dao.RolDao;
+import org.jlmallas.seguridad.dao.RolUsuarioDao;
 import edu.unl.sigett.session.UsuarioCarreraFacadeLocal;
-import com.jlmallas.seguridad.session.UsuarioFacadeLocal;
-import com.jlmallas.seguridad.session.UsuarioPermisoFacadeLocal;
-import edu.unl.sigett.academico.managed.session.SessionDocente;
+import javax.annotation.PostConstruct;
+import javax.enterprise.context.SessionScoped;
+import org.jlmallas.seguridad.dao.UsuarioDao;
+import org.jlmallas.seguridad.dao.UsuarioPermisoDao;
+import org.jlmallas.seguridad.dao.LogDao;
 
 /**
  *
@@ -75,12 +66,12 @@ import edu.unl.sigett.academico.managed.session.SessionDocente;
     @URLMapping(
             id = "crearUsuario",
             pattern = "/crearUsuario/",
-            viewId = "/faces/pages/seguridad/crearUsuario.xhtml"
+            viewId = "/faces/pages/seguridad/usuarios/crearUsuario.xhtml"
     ),
     @URLMapping(
             id = "usuarios",
             pattern = "/usuarios/",
-            viewId = "/faces/pages/seguridad/buscarUsuarios.xhtml"
+            viewId = "/faces/pages/seguridad/usuarios/index.xhtml"
     ),
     @URLMapping(
             id = "cambiarClave",
@@ -98,49 +89,20 @@ import edu.unl.sigett.academico.managed.session.SessionDocente;
             viewId = "/faces/cambiarClaveDocente.xhtml"
     )})
 public class AdministrarUsuarios implements Serializable {
-    
+
     @Inject
-    private AdminUsuario adminUsuario;
-    @Inject
-    private SessionUsuario sessionUsuario;
-    @Inject
-    private AdministrarLineaInvestigacion administrarLineaInvestigacion;
-    @Inject
-    private AdministrarLineasInvestigacionCarrera administrarLineasInvestigacionCarrera;
-    @Inject
-    private AdministrarEstudiantes administrarEstudiantes;
-    @Inject
-    private AdministrarUsuarioCarrera administrarUsuarioCarrera;
-    @Inject
-    private AdministrarCatalogoDocumentoExpediente requisitos;
-    @Inject
-    private AdministrarTipoProyectos administrarTipoProyectos;
-    @Inject
-    private AdministrarEstadoProyecto administrarEstadoProyecto;
-    @Inject
-    private AdministrarEstadosActividades administrarEstadosActividades;
-    @Inject
-    private AdministrarCatalogoProyectos administrarCatalogoProyectos;
-    @Inject
-    private SessionDocente sessionDocente;
-    private DualListModel<Rol> rolesDualList;
-    private DualListModel<Permiso> permisosDualList;
-    private DualListModel<Carrera> carrerasDualList;
-    private List<RolUsuario> rolesUsuariosRemovidos;
-    private List<UsuarioCarrera> usuariosCarrerasRemovidas;
-    private List<UsuarioPermiso> usuariosPermisoRemovidos;
-    private List<Usuario> usuarios;
-    
+    private SessionAdminUsuario sessionAdminUsuario;
+
     @EJB
     private CarreraService carreraFacadeLocal;
     @EJB
-    private UsuarioCarreraFacadeLocal usuarioCarreraFacadeLocal;
+    private UsuarioCarreraFacadeLocal usuarioCarreraDao;
     @EJB
-    private RolFacadeLocal rolFacadeLocal;
+    private RolDao rolDao;
     @EJB
-    private RolUsuarioFacadeLocal rolUsuarioFacadeLocal;
+    private RolUsuarioDao rolUsuarioFacadeLocal;
     @EJB
-    private LogFacadeLocal logFacadeLocal;
+    private LogDao logDao;
     @EJB
     private ExcepcionFacadeLocal excepcionFacadeLocal;
     @EJB
@@ -148,11 +110,11 @@ public class AdministrarUsuarios implements Serializable {
     @EJB
     private ProyectoSoftwareFacadeLocal proyectoSoftwareFacadeLocal;
     @EJB
-    private PermisoFacadeLocal permisoFacadeLocal;
+    private PermisoDao permisoFacadeLocal;
     @EJB
-    private UsuarioPermisoFacadeLocal usuarioPermisoFacadeLocal;
+    private UsuarioPermisoDao usuarioPermisoFacadeLocal;
     @EJB
-    private UsuarioFacadeLocal usuarioFacadeLocal;
+    private UsuarioDao usuarioDao;
     @EJB
     private EstudianteUsuarioFacadeLocal estudianteUsuarioFacadeLocal;
     @EJB
@@ -161,43 +123,29 @@ public class AdministrarUsuarios implements Serializable {
     private PersonaFacadeLocal personaFacadeLocal;
     @EJB
     private ConfiguracionFacadeLocal configuracionFacadeLocal;
-    
-    private int numeroCarrerasDisponibles = 0;
-    private int numeroCarrerasSeleccionadas = 0;
-    private int numeroPermisosDisponibles = 0;
-    private int numeroPermisosSeleccionados = 0;
-    private String confirmarClaveEstudiante;
-    private String criterio;
-    private String confirmaClave;
-    
-    private boolean renderedNoEditar;
-    private boolean renderedEditar;
-    private boolean renderedCrear;
-    private boolean renderedSincronizar;
-    
-    public AdministrarUsuarios() {
-        confirmaClave = "";
-        rolesDualList = new DualListModel<>();
-        permisosDualList = new DualListModel<>();
-        carrerasDualList = new DualListModel<>();
+
+    @PostConstruct
+    public void AdministrarUsuarios() {
+        sessionAdminUsuario.setRolesDualList(new DualListModel<Rol>());
+        sessionAdminUsuario.setPermisosDualList(new DualListModel<Permiso>());
+        sessionAdminUsuario.setCarrerasDualList(new DualListModel<Carrera>());
     }
 
     //<editor-fold defaultstate="collapsed" desc="MÉTODOS CRUD">
     public String editar(Usuario usuario, Usuario session) {
-        String navegacion = "";
         try {
             FacesContext facesContext = FacesContext.getCurrentInstance();
             ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            int tienePermiso = usuarioFacadeLocal.tienePermiso(session, "editar_usuario");
+            int tienePermiso = usuarioDao.tienePermiso(session, "editar_usuario");
             if (tienePermiso == 1) {
-                adminUsuario.setUsuario(usuario);
-                rolesUsuariosRemovidos = new ArrayList<>();
-                usuariosPermisoRemovidos = new ArrayList<>();
-                usuariosCarrerasRemovidas = new ArrayList<>();
+                sessionAdminUsuario.setUsuario(usuario);
+                sessionAdminUsuario.setRolesUsuariosRemovidos(new ArrayList<RolUsuario>());
+                sessionAdminUsuario.setUsuariosPermisoRemovidos(new ArrayList<UsuarioPermiso>());
+                sessionAdminUsuario.setUsuariosCarrerasRemovidas(new ArrayList<UsuarioCarrera>());
                 listarRoles(usuario);
                 listarPermisos(usuario);
                 listarCarreras(usuario);
-                navegacion = "pretty:editarUsuario";
+                return ("pretty:editarUsuario");
             } else {
                 if (tienePermiso == 2) {
                     FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_editar") + ". " + bundle.getString("lbl.msm_consulte"), "");
@@ -211,70 +159,44 @@ public class AdministrarUsuarios implements Serializable {
             }
             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_FATAL, e.getMessage(), "");
             FacesContext.getCurrentInstance().addMessage(null, message);
-            if (sessionUsuario.getUsuario() != null) {
+            if (session != null) {
                 Objeto obj = objetoFacadeLocal.buscarPorNombre("Usuario");
                 if (obj == null) {
                     obj = new Objeto(null, "Usuario", "Usuario");
                     obj.setProyectoSoftwareId(proyectoSoftwareFacadeLocal.find((int) 1));
                     objetoFacadeLocal.create(obj);
                 }
-                excepcionFacadeLocal.create(excepcionFacadeLocal.crearExcepcion(sessionUsuario.getUsuario().toString(), mensaje, obj));
+                excepcionFacadeLocal.create(excepcionFacadeLocal.crearExcepcion(session.toString(), mensaje, obj));
             }
         }
-        
-        return navegacion;
+        return "";
     }
-    
+
     public String abrirBuscarUsuarios(Usuario usuario) {
-        String navegacion = "";
         try {
             renderedCrear(usuario);
             renderedEditar(usuario);
-            navegacion = "pretty:usuarios";
+            return "pretty:usuarios";
         } catch (Exception e) {
+            e.printStackTrace();
         }
-        return navegacion;
+        return "";
     }
-    
-    public void actualizaRendered(Usuario usuario) {
-        if (usuario.getId() != null) {
-            administrarCatalogoProyectos.renderedBuscar(usuario);
-            renderedBuscarDocente(usuario);
-            requisitos.renderedBuscar(usuario);
-            administrarEstadoProyecto.renderedBuscar(usuario);
-            administrarEstadosActividades.renderedBuscar(usuario);
-            administrarEstudiantes.renderedBuscar(usuario);
-            administrarLineaInvestigacion.renderedBuscar(usuario);
-            administrarLineasInvestigacionCarrera.renderedBuscar(usuario);
-            administrarTipoProyectos.renderedBuscar(usuario);
-            administrarUsuarioCarrera.renderedBuscar(usuario);
-        }
-    }
-    
-    public boolean renderedCrear() {
-        boolean var = false;
-        int tienePermiso = usuarioFacadeLocal.tienePermiso(sessionUsuario.getUsuario(), "crear_docente");
-        if (tienePermiso == 1) {
-            var = true;
-        }
-        return var;
-    }
-    
+
     public String crear(Usuario usuario) {
-        String navegacion = "";
         try {
             FacesContext facesContext = FacesContext.getCurrentInstance();
             ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "crear_usuario");
+            int tienePermiso = usuarioDao.tienePermiso(usuario, "crear_usuario");
             if (tienePermiso == 1) {
-                adminUsuario.setUsuario(new Usuario());
-                listarRoles(adminUsuario.getUsuario());
-                listarPermisos(adminUsuario.getUsuario());
-                listarCarreras(adminUsuario.getUsuario());
-                rolesUsuariosRemovidos = new ArrayList<>();
-                usuariosPermisoRemovidos = new ArrayList<>();
-                usuariosCarrerasRemovidas = new ArrayList<>();
-                navegacion = "pretty:crearUsuario";
+                sessionAdminUsuario.setUsuario(new Usuario());
+                listarRoles(sessionAdminUsuario.getUsuario());
+                listarPermisos(sessionAdminUsuario.getUsuario());
+                listarCarreras(sessionAdminUsuario.getUsuario());
+                sessionAdminUsuario.setRolesUsuariosRemovidos(new ArrayList<RolUsuario>());
+                sessionAdminUsuario.setUsuariosCarrerasRemovidas(new ArrayList<UsuarioCarrera>());
+                sessionAdminUsuario.setUsuariosPermisoRemovidos(new ArrayList<UsuarioPermiso>());
+                return ("pretty:crearUsuario");
             } else {
                 if (tienePermiso == 2) {
                     FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_crear") + ". " + bundle.getString("lbl.msm_consulte"), "");
@@ -289,32 +211,35 @@ public class AdministrarUsuarios implements Serializable {
             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_FATAL, mensaje, "");
             FacesContext.getCurrentInstance().addMessage(null, message);
             Objeto obj = objetoFacadeLocal.buscarPorNombre("Usuario");
-            if (sessionUsuario.getUsuario() != null) {
+            if (usuario != null) {
                 if (obj == null) {
                     obj = new Objeto(null, "Usuario", "Usuario");
                     obj.setProyectoSoftwareId(proyectoSoftwareFacadeLocal.find((int) 1));
                     objetoFacadeLocal.create(obj);
                 }
-                excepcionFacadeLocal.create(excepcionFacadeLocal.crearExcepcion(sessionUsuario.getUsuario().toString(), mensaje, obj));
+                excepcionFacadeLocal.create(excepcionFacadeLocal.crearExcepcion(usuario.toString(), mensaje, obj));
             }
         }
-        return navegacion;
+        return "";
     }
-    
-    public void buscar(String criterio, Usuario usuario) {
+
+    public void buscar(Usuario usuario) {
         try {
             FacesContext facesContext = FacesContext.getCurrentInstance();
             ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "buscar_usuario");
+            int tienePermiso = usuarioDao.tienePermiso(usuario, "buscar_usuario");
             if (tienePermiso == 1) {
-                usuarios = usuarioFacadeLocal.buscarPorCriterios(criterio);
+                Usuario usuarioBuscar = new Usuario();
+                sessionAdminUsuario.setUsuario(usuario);
+                sessionAdminUsuario.setUsuarios(usuarioDao.buscarPorCriterio(usuarioBuscar));
             } else {
                 if (tienePermiso == 2) {
-                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_buscar") + ". " + bundle.getString("lbl.msm_consulte"), "");
+                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_buscar") + ". "
+                            + bundle.getString("lbl.msm_consulte"), "");
                     FacesContext.getCurrentInstance().addMessage(null, message);
                 }
             }
-            
+
         } catch (Exception e) {
             String mensaje = "Error al buscar Usuarios.";
             if (e.getMessage() != null) {
@@ -322,99 +247,101 @@ public class AdministrarUsuarios implements Serializable {
             }
             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_FATAL, e.getMessage(), "");
             FacesContext.getCurrentInstance().addMessage(null, message);
-            if (sessionUsuario.getUsuario() != null) {
+            if (usuario != null) {
                 Objeto obj = objetoFacadeLocal.buscarPorNombre("Usuario");
                 if (obj == null) {
                     obj = new Objeto(null, "Usuario", "Usuario");
                     obj.setProyectoSoftwareId(proyectoSoftwareFacadeLocal.find((int) 1));
                     objetoFacadeLocal.create(obj);
                 }
-                excepcionFacadeLocal.create(excepcionFacadeLocal.crearExcepcion(sessionUsuario.getUsuario().toString(), mensaje, obj));
+                excepcionFacadeLocal.create(excepcionFacadeLocal.crearExcepcion(usuario.toString(), mensaje, obj));
             }
         }
     }
-    
-    public void guardarUsuariosCarreras(Usuario usuario) {
+
+    public void guardarUsuariosCarreras() {
         List<UsuarioCarrera> usuarioCarreras = new ArrayList<>();
-        for (Object o : carrerasDualList.getTarget()) {
+        for (Object o : sessionAdminUsuario.getCarrerasDualList().getTarget()) {
             int pos = o.toString().indexOf(":");
             Integer id = Integer.parseInt(o.toString().substring(0, pos));
             Carrera c = carreraFacadeLocal.find(id);
             UsuarioCarrera usuarioCarrera = new UsuarioCarrera();
             usuarioCarrera.setCarreraId(c.getId());
-            usuarioCarrera.setUsuarioId(usuario.getId());
+            usuarioCarrera.setUsuarioId(sessionAdminUsuario.getUsuario().getId());
             usuarioCarreras.add(usuarioCarrera);
         }
         for (UsuarioCarrera uc : usuarioCarreras) {
-            if (contieneCarrera(usuarioCarreraFacadeLocal.buscarPorUsuario(usuario.getId()), uc) == false) {
-                usuarioCarreraFacadeLocal.create(uc);
-                logFacadeLocal.create(logFacadeLocal.crearLog("UsuarioCarrera", uc.getId() + "", "CREAR", "|Usuario= " + usuario + "|Carrera= " + uc.getCarreraId(), sessionUsuario.getUsuario()));
+            if (contieneCarrera(usuarioCarreraDao.buscarPorUsuario(sessionAdminUsuario.getUsuario().getId()), uc) == false) {
+                usuarioCarreraDao.create(uc);
             }
         }
     }
-    
-    public void guardarUsuariosPermiso(Usuario usuario) {
+
+    public void guardarUsuariosPermiso() {
         List<UsuarioPermiso> usuarioPermisos = new ArrayList<>();
-        for (Object permiso : permisosDualList.getTarget()) {
+        for (Object permiso : sessionAdminUsuario.getPermisosDualList().getTarget()) {
             int pos = permiso.toString().indexOf(":");
             Long id = Long.parseLong(permiso.toString().substring(0, pos));
             Permiso p = permisoFacadeLocal.find(id);
             UsuarioPermiso usuarioPermiso = new UsuarioPermiso();
             usuarioPermiso.setPermisoId(p);
-            usuarioPermiso.setUsuarioId(usuario);
+            usuarioPermiso.setUsuarioId(sessionAdminUsuario.getUsuario());
             usuarioPermisos.add(usuarioPermiso);
-            
         }
         for (UsuarioPermiso usuarioPermiso : usuarioPermisos) {
-            if (contienePermiso(usuarioPermisoFacadeLocal.buscarPorUsuario(usuario.getId()), usuarioPermiso) == false) {
+            if (contienePermiso(usuarioPermisoFacadeLocal.buscarPorUsuario(sessionAdminUsuario.getUsuario().getId()), usuarioPermiso) == false) {
                 usuarioPermisoFacadeLocal.create(usuarioPermiso);
-                logFacadeLocal.create(logFacadeLocal.crearLog("UsuarioPermiso", usuarioPermiso.getId() + "", "CREAR", "|Usuario= " + usuario + "|Permiso= " + usuarioPermiso.getPermisoId(), sessionUsuario.getUsuario()));
             }
-            
         }
     }
-    
-    public void guardarRolesUsuario(Usuario usuario) {
+
+    public void guardarRolesUsuario() {
         List<RolUsuario> rolUsuarios = new ArrayList<>();
-        for (Object r : rolesDualList.getTarget()) {
+        for (Object r : sessionAdminUsuario.getRolesDualList().getTarget()) {
             int v = r.toString().indexOf(":");
             Long id = Long.parseLong(r.toString().substring(0, v));
-            Rol rol = rolFacadeLocal.find(id);
+            Rol rol = rolDao.find(id);
             RolUsuario rolUsuario = new RolUsuario();
             rolUsuario.setRolId(rol);
-            rolUsuario.setUsuarioId(usuario);
+            rolUsuario.setUsuarioId(sessionAdminUsuario.getUsuario());
             rolUsuarios.add(rolUsuario);
         }
         for (RolUsuario rolUsuario : rolUsuarios) {
-            if (contieneRol(rolUsuarioFacadeLocal.buscarPorUsuario(usuario.getId()), rolUsuario) == false) {
+            if (contieneRol(rolUsuarioFacadeLocal.buscarPorUsuario(sessionAdminUsuario.getUsuario().getId()), rolUsuario) == false) {
                 rolUsuarioFacadeLocal.create(rolUsuario);
-                logFacadeLocal.create(logFacadeLocal.crearLog("RolUsuario", rolUsuario.getId() + "", "CREAR", "|Rol=" + rolUsuario.getRolId() + "|Usuario=" + rolUsuario.getUsuarioId(), sessionUsuario.getUsuario()));
+                logDao.create(logDao.crearLog("RolUsuario", rolUsuario.getId() + "", "CREAR", "|Rol=" + rolUsuario.getRolId()
+                        + "|Usuario=" + rolUsuario.getUsuarioId(), sessionAdminUsuario.getUsuario()));
             }
         }
     }
-    
-    public String guardar(Usuario usuario, Usuario session) {
-        String navegacion = "";
+
+    public String guardar(Usuario sessionUsuario) {
         try {
             FacesContext facesContext = FacesContext.getCurrentInstance();
             ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
             String param = (String) facesContext.getExternalContext().getRequestParameterMap().get("1");
-            int tienePermiso = usuarioFacadeLocal.tienePermiso(session, "editar_usuario");//editar Usuario
+            int tienePermiso = usuarioDao.tienePermiso(sessionUsuario, "editar_usuario");//editar Usuario
             if (tienePermiso == 1) {
-                if (usuarioFacadeLocal.unicoUsername(usuario.getUsername()) == false || usuarioFacadeLocal.find(usuario.getId()).equals(usuarioFacadeLocal.buscarPorUsuario(usuario.getUsername()))) {
-                    usuario.setUsuarioPermisoList(new ArrayList<UsuarioPermiso>());
-                    usuarioFacadeLocal.edit(usuario);
-                    logFacadeLocal.create(logFacadeLocal.crearLog("Usuario", usuario.getId() + "", "EDITAR", "|Username= " + usuario.getUsername() + "|EsActivo=" + usuario.getEsActivo() + "|EsSuperuser= " + usuario.getEsSuperuser() + "|Nombres= " + usuario.getNombres() + "|Apellidos= " + usuario.getApellidos() + "|Email= " + usuario.getEmail(), session));
-                    guardarRolesUsuario(usuario);
-                    removerRolUsuarios(usuario);
-                    guardarUsuariosPermiso(usuario);
-                    removerUsuariosPermisos(usuario);
-                    guardarUsuariosCarreras(usuario);
-                    removerUsuariosCarreras(usuario);
-                    buscar("", usuario);
+                if (usuarioDao.unicoUsername(sessionAdminUsuario.getUsuario().getUsername()) == false || usuarioDao.find(sessionAdminUsuario.getUsuario().getId()).
+                        equals(usuarioDao.buscarPorUsuario(sessionAdminUsuario.getUsuario().getUsername()))) {
+                    sessionAdminUsuario.getUsuario().setUsuarioPermisoList(new ArrayList<UsuarioPermiso>());
+                    usuarioDao.edit(sessionAdminUsuario.getUsuario());
+                    logDao.create(logDao.crearLog("Usuario", sessionAdminUsuario.getUsuario().getId() + "", "EDITAR", "|Username= "
+                            + sessionAdminUsuario.getUsuario().getUsername() + "|EsActivo=" + sessionAdminUsuario.getUsuario().getEsActivo() + "|EsSuperuser= "
+                            + sessionAdminUsuario.getUsuario().getEsSuperuser()
+                            + "|Nombres= " + sessionAdminUsuario.getUsuario().getNombres() + "|Apellidos= " + sessionAdminUsuario.getUsuario().getApellidos()
+                            + "|Email= "
+                            + sessionAdminUsuario.getUsuario().getEmail(), sessionUsuario));
+                    guardarRolesUsuario();
+                    removerRolUsuarios();
+                    guardarUsuariosPermiso();
+                    removerUsuariosPermisos();
+                    guardarUsuariosCarreras();
+                    removerUsuariosCarreras();
+                    buscar(sessionUsuario);
                     if (param.equalsIgnoreCase("guardar")) {
-                        navegacion = "pretty:usuarios";
-                        adminUsuario.setUsuario(new Usuario());
+                        sessionAdminUsuario.setUsuario(new Usuario());
+                        return ("pretty:usuarios");
                     } else {
                         if (param.equalsIgnoreCase("guardar-editar")) {
                             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_editar"), "");
@@ -422,22 +349,23 @@ public class AdministrarUsuarios implements Serializable {
                         } else {
                             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_editar"), "");
                             FacesContext.getCurrentInstance().addMessage(null, message);
-                            adminUsuario.setUsuario(new Usuario());
+                            sessionAdminUsuario.setUsuario(new Usuario());
                         }
                     }
                 } else {
-                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.usuario") + " " + bundle.getString("lbl.msm_existe"), "");
+                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.usuario") + " "
+                            + bundle.getString("lbl.msm_existe"), "");
                     FacesContext.getCurrentInstance().addMessage(null, message);
                 }
             } else {
                 if (tienePermiso == 2) {
-                    navegacion = "";
-                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_crear") + ". " + bundle.getString("lbl.msm_consulte"), "");
+                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_crear") + ". "
+                            + bundle.getString("lbl.msm_consulte"), "");
                     FacesContext.getCurrentInstance().addMessage(null, message);
                 }
-                
+
             }
-            
+
         } catch (Exception e) {
             String mensaje = "Error al grabar Usuario...";
             if (e.getMessage() != null) {
@@ -445,44 +373,46 @@ public class AdministrarUsuarios implements Serializable {
             }
             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_FATAL, e.getMessage(), "");
             FacesContext.getCurrentInstance().addMessage(null, message);
-            if (sessionUsuario.getUsuario() != null) {
+            if (sessionUsuario != null) {
                 Objeto obj = objetoFacadeLocal.buscarPorNombre("Usuario");
                 if (obj == null) {
                     obj = new Objeto(null, "Usuario", "Usuario");
                     obj.setProyectoSoftwareId(proyectoSoftwareFacadeLocal.find((int) 1));
                     objetoFacadeLocal.create(obj);
                 }
-                excepcionFacadeLocal.create(excepcionFacadeLocal.crearExcepcion(sessionUsuario.getUsuario().toString(), mensaje, obj));
+                excepcionFacadeLocal.create(excepcionFacadeLocal.crearExcepcion(sessionUsuario.toString(), mensaje, obj));
             }
         }
-        return navegacion;
+        return "";
     }
-    
-    public String guardarConClave(Usuario usuario, Usuario sessionUsr, String confirmaClave) {
-        String navegacion = "";
+
+    public String guardarConClave(Usuario sessionUsuario) {
         try {
             FacesContext facesContext = FacesContext.getCurrentInstance();
             ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
             String param = (String) facesContext.getExternalContext().getRequestParameterMap().get("1");
-            if (usuario.getPassword().equalsIgnoreCase(confirmaClave)) {
-                if (usuario.getId() == null) {
-                    int tienePermiso = usuarioFacadeLocal.tienePermiso(sessionUsr, "crear_usuario");
+            if (sessionAdminUsuario.getUsuario().getPassword().equalsIgnoreCase(sessionAdminUsuario.getConfirmarClave())) {
+                if (sessionAdminUsuario.getUsuario().getId() == null) {
+                    int tienePermiso = usuarioDao.tienePermiso(sessionUsuario, "crear_usuario");
                     if (tienePermiso == 1) {
-                        if (usuarioFacadeLocal.unicoUsername(usuario.getUsername()) == false) {
-                            usuario.setPassword(configuracionFacadeLocal.encriptaClave(usuario.getPassword()));
-                            usuario.setUsuarioPermisoList(new ArrayList<UsuarioPermiso>());
-                            usuarioFacadeLocal.create(usuario);
-                            logFacadeLocal.create(logFacadeLocal.crearLog("Usuario", usuario.getId() + "", "CREAR", "|Username= " + usuario.getUsername() + "|EsActivo=" + usuario.getEsActivo() + "|EsSuperuser= " + usuario.getEsSuperuser() + "|Nombres= " + usuario.getNombres() + "|Apellidos= " + usuario.getApellidos() + "|Email= " + usuario.getEmail(), sessionUsr));
-                            guardarRolesUsuario(usuario);
-                            removerRolUsuarios(usuario);
-                            guardarUsuariosPermiso(usuario);
-                            removerUsuariosPermisos(usuario);
-                            guardarUsuariosCarreras(usuario);
-                            removerUsuariosCarreras(usuario);
-                            buscar("", sessionUsr);
+                        if (usuarioDao.unicoUsername(sessionAdminUsuario.getUsuario().getUsername()) == false) {
+                            sessionAdminUsuario.getUsuario().setPassword(configuracionFacadeLocal.encriptaClave(sessionAdminUsuario.getUsuario().getPassword()));
+                            sessionAdminUsuario.getUsuario().setUsuarioPermisoList(new ArrayList<UsuarioPermiso>());
+                            usuarioDao.create(sessionAdminUsuario.getUsuario());
+                            logDao.create(logDao.crearLog("Usuario", sessionAdminUsuario.getUsuario().getId() + "", "CREAR", "|Username= "
+                                    + sessionAdminUsuario.getUsuario().getUsername() + "|EsActivo=" + sessionAdminUsuario.getUsuario().getEsActivo()
+                                    + "|EsSuperuser= " + sessionAdminUsuario.getUsuario().getEsSuperuser() + "|Nombres= " + sessionAdminUsuario.getUsuario().getNombres()
+                                    + "|Apellidos= " + sessionAdminUsuario.getUsuario().getApellidos() + "|Email= " + sessionAdminUsuario.getUsuario().getEmail(), sessionUsuario));
+                            guardarRolesUsuario();
+                            removerRolUsuarios();
+                            guardarUsuariosPermiso();
+                            removerUsuariosPermisos();
+                            guardarUsuariosCarreras();
+                            removerUsuariosCarreras();
+                            buscar(sessionUsuario);
                             if (param.equalsIgnoreCase("guardar")) {
-                                navegacion = "pretty:usuarios";
-                                adminUsuario.setUsuario(new Usuario());
+                                sessionAdminUsuario.setUsuario(new Usuario());
+                                return ("pretty:usuarios");
                             } else {
                                 if (param.equalsIgnoreCase("guardar-editar")) {
                                     FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_grabar"), "");
@@ -490,7 +420,7 @@ public class AdministrarUsuarios implements Serializable {
                                 } else {
                                     FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_grabar"), "");
                                     FacesContext.getCurrentInstance().addMessage(null, message);
-                                    adminUsuario.setUsuario(new Usuario());
+                                    sessionAdminUsuario.setUsuario(new Usuario());
                                 }
                             }
                         } else {
@@ -504,36 +434,41 @@ public class AdministrarUsuarios implements Serializable {
                         }
                     }
                 } else {
-                    int tienePermiso = usuarioFacadeLocal.tienePermiso(sessionUsr, "editar_usuario");
+                    int tienePermiso = usuarioDao.tienePermiso(sessionUsuario, "editar_usuario");
                     if (tienePermiso == 1) {
-                        if (usuarioFacadeLocal.unicoUsername(usuario.getUsername()) == false || usuarioFacadeLocal.find(usuario.getId()).equals(usuarioFacadeLocal.buscarPorUsuario(usuario.getUsername()))) {
-                            usuario.setPassword(configuracionFacadeLocal.encriptaClave(usuario.getPassword()));
-                            usuario.setUsuarioPermisoList(new ArrayList<UsuarioPermiso>());
-                            usuarioFacadeLocal.edit(usuario);
-                            logFacadeLocal.create(logFacadeLocal.crearLog("Usuario", usuario.getId() + "", "EDITAR", "|Username= " + usuario.getUsername() + "|EsActivo=" + usuario.getEsActivo() + "|EsSuperuser= " + usuario.getEsSuperuser() + "|Nombres= " + usuario.getNombres() + "|Apellidos= " + usuario.getApellidos() + "|Email= " + usuario.getEmail(), sessionUsr));
-                            guardarRolesUsuario(usuario);
-                            removerRolUsuarios(usuario);
-                            buscar("", sessionUsr);
+                        if (usuarioDao.unicoUsername(sessionAdminUsuario.getUsuario().getUsername()) == false || usuarioDao.find(sessionAdminUsuario.getUsuario().getId())
+                                .equals(usuarioDao.buscarPorUsuario(sessionAdminUsuario.getUsuario().getUsername()))) {
+                            sessionAdminUsuario.getUsuario().setPassword(configuracionFacadeLocal.encriptaClave(sessionAdminUsuario.getUsuario().getPassword()));
+                            sessionAdminUsuario.getUsuario().setUsuarioPermisoList(new ArrayList<UsuarioPermiso>());
+                            usuarioDao.edit(sessionAdminUsuario.getUsuario());
+                            logDao.create(logDao.crearLog("Usuario", sessionAdminUsuario.getUsuario().getId() + "", "EDITAR", "|Username= "
+                                    + sessionAdminUsuario.getUsuario().getUsername() + "|EsActivo=" + sessionAdminUsuario.getUsuario().getEsActivo() + "|EsSuperuser= "
+                                    + sessionAdminUsuario.getUsuario().getEsSuperuser() + "|Nombres= " + sessionAdminUsuario.getUsuario().getNombres() + "|Apellidos= "
+                                    + sessionAdminUsuario.getUsuario().getApellidos() + "|Email= " + sessionAdminUsuario.getUsuario().getEmail(), sessionUsuario));
+                            guardarRolesUsuario();
+                            removerRolUsuarios();
+                            buscar(sessionUsuario);
+                            sessionAdminUsuario.setVisualizarEditar(false);
                             if (param.equalsIgnoreCase("guardar")) {
-                                navegacion = "pretty:usuarios";
-                                adminUsuario.setUsuario(new Usuario());
+                                sessionAdminUsuario.setUsuario(new Usuario());
+                                return ("pretty:usuarios");
                             } else {
                                 if (param.equalsIgnoreCase("grabar-editar")) {
                                     FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_editar"), "");
                                     FacesContext.getCurrentInstance().addMessage(null, message);
                                 } else {
                                     if (param.equalsIgnoreCase("grabar-crear")) {
-                                        adminUsuario.setUsuario(new Usuario());
+                                        sessionAdminUsuario.setUsuario(new Usuario());
                                         FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_editar"), "");
                                         FacesContext.getCurrentInstance().addMessage(null, message);
                                     } else {
                                         if (param.equalsIgnoreCase("cambiar-clave-estudiante")) {
-                                            navegacion = "pretty:principalEstudiante";
+//                                            navegacion = "pretty:principalEstudiante";
                                             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_editar"), "");
                                             FacesContext.getCurrentInstance().addMessage(null, message);
                                         } else {
                                             if (param.equalsIgnoreCase("cambiar-clave-docente")) {
-                                                navegacion = "pretty:principalDocente";
+//                                                navegacion = "pretty:principalDocente";
                                                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_editar"), "");
                                                 FacesContext.getCurrentInstance().addMessage(null, message);
                                             }
@@ -563,26 +498,26 @@ public class AdministrarUsuarios implements Serializable {
             }
             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_FATAL, e.getMessage(), "");
             FacesContext.getCurrentInstance().addMessage(null, message);
-            if (sessionUsr != null) {
+            if (sessionUsuario != null) {
                 Objeto obj = objetoFacadeLocal.buscarPorNombre("Usuario");
                 if (obj == null) {
                     obj = new Objeto(null, "Usuario", "Usuario");
                     obj.setProyectoSoftwareId(proyectoSoftwareFacadeLocal.find((int) 1));
                     objetoFacadeLocal.create(obj);
                 }
-                excepcionFacadeLocal.create(excepcionFacadeLocal.crearExcepcion(sessionUsr.toString(), mensaje, obj));
+                excepcionFacadeLocal.create(excepcionFacadeLocal.crearExcepcion(sessionUsuario.toString(), mensaje, obj));
             }
         }
-        return navegacion;
+        return "";
     }
-    
+
     public void grabarUsuarioEstudiante(Estudiante estudiante) {
         try {
             Usuario usuario = null;
             Persona personaEstudiante = personaFacadeLocal.find(estudiante.getId());
             EstudianteUsuario estudianteUsuario1 = estudianteUsuarioFacadeLocal.buscarPorEstudiante(estudiante.getId());
             if (estudianteUsuario1 != null) {
-                usuario = usuarioFacadeLocal.find(estudianteUsuario1.getId());
+                usuario = usuarioDao.find(estudianteUsuario1.getId());
             }
             if (usuario == null) {
                 usuario = new Usuario();
@@ -593,14 +528,14 @@ public class AdministrarUsuarios implements Serializable {
                 usuario.setEsActivo(true);
                 usuario.setPassword(configuracionFacadeLocal.encriptaClave(personaEstudiante.getNumeroIdentificacion()));
                 usuario.setUsername(personaEstudiante.getNumeroIdentificacion());
-                if (usuarioFacadeLocal.unicoUsername(usuario.getUsername()) == false) {
-                    usuarioFacadeLocal.create(usuario);
+                if (usuarioDao.unicoUsername(usuario.getUsername()) == false) {
+                    usuarioDao.create(usuario);
                     EstudianteUsuario estudianteUsuario = new EstudianteUsuario();
                     estudianteUsuario.setEstudianteId(estudiante.getId());
                     estudianteUsuario.setId(usuario.getId());
                     estudianteUsuario.setId(usuario.getId());
                     estudianteUsuarioFacadeLocal.create(estudianteUsuario);
-                    Rol rol = rolFacadeLocal.find((long) 2);
+                    Rol rol = rolDao.find((long) 2);
                     if (rol != null) {
                         RolUsuario rolUsuario = new RolUsuario();
                         rolUsuario.setRolId(rol);
@@ -609,22 +544,22 @@ public class AdministrarUsuarios implements Serializable {
                     }
                 }
             } else {
-                if (usuarioFacadeLocal.unicoUsername(usuario.getUsername()) == false) {
+                if (usuarioDao.unicoUsername(usuario.getUsername()) == false) {
                     usuario.setPassword(configuracionFacadeLocal.encriptaClave(personaEstudiante.getNumeroIdentificacion()));
-                    usuarioFacadeLocal.edit(usuario);
+                    usuarioDao.edit(usuario);
                 }
             }
         } catch (Exception e) {
         }
     }
-    
+
     public void grabarUsuarioDocente(Docente docente) {
         try {
             Usuario usuario = null;
             DocenteUsuario du = docenteUsuarioFacadeLocal.buscarPorDocente(docente.getId());
             Persona personaDocente = personaFacadeLocal.find(docente.getId());
             if (du != null) {
-                usuario = usuarioFacadeLocal.find(du.getId());
+                usuario = usuarioDao.find(du.getId());
             }
             if (usuario == null) {
                 usuario = new Usuario();
@@ -635,14 +570,14 @@ public class AdministrarUsuarios implements Serializable {
                 usuario.setEsActivo(true);
                 usuario.setPassword(configuracionFacadeLocal.encriptaClave(personaDocente.getNumeroIdentificacion()));
                 usuario.setUsername(personaDocente.getNumeroIdentificacion());
-                if (usuarioFacadeLocal.unicoUsername(usuario.getUsername()) == false) {
-                    usuarioFacadeLocal.create(usuario);
+                if (usuarioDao.unicoUsername(usuario.getUsername()) == false) {
+                    usuarioDao.create(usuario);
                     DocenteUsuario docenteUsuario = new DocenteUsuario();
                     docenteUsuario.setDocenteId(docente.getId());
                     docenteUsuario.setId(usuario.getId());
                     docenteUsuario.setId(usuario.getId());
                     docenteUsuarioFacadeLocal.create(docenteUsuario);
-                    Rol rol = rolFacadeLocal.find((long) 1);
+                    Rol rol = rolDao.find((long) 1);
                     if (rol != null) {
                         RolUsuario rolUsuario = new RolUsuario();
                         rolUsuario.setRolId(rol);
@@ -652,12 +587,12 @@ public class AdministrarUsuarios implements Serializable {
                 }
             } else {
                 usuario.setPassword(configuracionFacadeLocal.encriptaClave(personaDocente.getNumeroIdentificacion()));
-                usuarioFacadeLocal.edit(usuario);
+                usuarioDao.edit(usuario);
             }
         } catch (Exception e) {
         }
     }
-    
+
     public boolean contieneCarrera(List<UsuarioCarrera> usuarioCarreras, UsuarioCarrera usuarioCarrera) {
         boolean var = false;
         if (usuarioCarreras != null) {
@@ -672,7 +607,7 @@ public class AdministrarUsuarios implements Serializable {
         }
         return var;
     }
-    
+
     public boolean contienePermiso(List<UsuarioPermiso> usuarioPermisos, UsuarioPermiso usuarioPermiso) {
         boolean var = false;
         for (UsuarioPermiso up : usuarioPermisos) {
@@ -683,7 +618,7 @@ public class AdministrarUsuarios implements Serializable {
         }
         return var;
     }
-    
+
     public boolean contieneRol(List<RolUsuario> rolUsuarios, RolUsuario rolUsuario) {
         boolean var = false;
         for (RolUsuario r : rolUsuarios) {
@@ -694,7 +629,7 @@ public class AdministrarUsuarios implements Serializable {
         }
         return var;
     }
-    
+
     public Long devuelveCarreraEliminar(List<UsuarioCarrera> usuarioCarreras, UsuarioCarrera usuarioCarrera) {
         Long var = (long) 0;
         for (UsuarioCarrera uc : usuarioCarreras) {
@@ -707,16 +642,7 @@ public class AdministrarUsuarios implements Serializable {
         }
         return var;
     }
-    
-    public void renderedBuscarDocente(Usuario usuario) {
-        int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "buscar_docente");
-        if (tienePermiso == 1) {
-            sessionDocente.setRenderedBuscar(true);
-        } else {
-            sessionDocente.setRenderedBuscar(false);
-        }
-    }
-    
+
     public Long devuelvePermisoEliminar(List<UsuarioPermiso> usuarioPermisos, UsuarioPermiso usuarioPermiso) {
         Long var = (long) 0;
         for (UsuarioPermiso up : usuarioPermisos) {
@@ -727,7 +653,7 @@ public class AdministrarUsuarios implements Serializable {
         }
         return var;
     }
-    
+
     public Long devuelveRolEliminar(List<RolUsuario> rolUsuarios, RolUsuario rolUsuario) {
         Long var = (long) 0;
         for (RolUsuario r : rolUsuarios) {
@@ -738,18 +664,17 @@ public class AdministrarUsuarios implements Serializable {
         }
         return var;
     }
-    
-    public void listarCarreras(Usuario usuario) {
+
+    public void listarCarreras(Usuario sessionUsuario) {
         List<Carrera> usuarioCarreras = new ArrayList<>();
         List<Carrera> carreras = new ArrayList<>();
         try {
-            if (usuario != null) {
-                if (usuario.getId() != null) {
-                    for (UsuarioCarrera uc : usuarioCarreraFacadeLocal.buscarPorUsuario(usuario.getId())) {
+            if (sessionAdminUsuario.getUsuario() != null) {
+                if (sessionAdminUsuario.getUsuario().getId() != null) {
+                    for (UsuarioCarrera uc : usuarioCarreraDao.buscarPorUsuario(sessionAdminUsuario.getUsuario().getId())) {
                         Carrera carrera = carreraFacadeLocal.find(uc.getCarreraId());
                         usuarioCarreras.add(carrera);
                     }
-                    
                 }
             }
             for (Carrera c : carreraFacadeLocal.findAll()) {
@@ -757,9 +682,9 @@ public class AdministrarUsuarios implements Serializable {
                     carreras.add(c);
                 }
             }
-            carrerasDualList = new DualListModel<>(carreras, usuarioCarreras);
-            numeroCarrerasDisponibles = carrerasDualList.getSource().size();
-            numeroCarrerasSeleccionadas = carrerasDualList.getTarget().size();
+            sessionAdminUsuario.setCarrerasDualList(new DualListModel<>(carreras, usuarioCarreras));
+            sessionAdminUsuario.setNumeroCarrerasDisponibles(sessionAdminUsuario.getCarrerasDualList().getSource().size());
+            sessionAdminUsuario.setNumeroCarrerasSeleccionadas(sessionAdminUsuario.getCarrerasDualList().getTarget().size());
         } catch (Exception e) {
             String mensaje = "Error al buscar Usuarios Carreras.";
             if (e.getMessage() != null) {
@@ -767,25 +692,25 @@ public class AdministrarUsuarios implements Serializable {
             }
             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_FATAL, mensaje, "");
             FacesContext.getCurrentInstance().addMessage(null, message);
-            if (sessionUsuario.getUsuario() != null) {
+            if (sessionUsuario != null) {
                 Objeto obj = objetoFacadeLocal.buscarPorNombre("Usuario");
                 if (obj == null) {
                     obj = new Objeto(null, "Usuario", "Usuario");
                     obj.setProyectoSoftwareId(proyectoSoftwareFacadeLocal.find((int) 1));
                     objetoFacadeLocal.create(obj);
                 }
-                excepcionFacadeLocal.create(excepcionFacadeLocal.crearExcepcion(sessionUsuario.getUsuario().toString(), mensaje, obj));
+                excepcionFacadeLocal.create(excepcionFacadeLocal.crearExcepcion(sessionUsuario.toString(), mensaje, obj));
             }
         }
     }
-    
-    public void listarPermisos(Usuario usuario) {
+
+    public void listarPermisos(Usuario sessionUsuario) {
         List<Permiso> usuariosPermisos = new ArrayList<>();
         List<Permiso> permisos = new ArrayList<>();
         try {
-            if (usuario != null) {
-                if (usuario.getId() != null) {
-                    for (UsuarioPermiso usuarioPermiso : usuario.getUsuarioPermisoList()) {
+            if (sessionAdminUsuario.getUsuario() != null) {
+                if (sessionAdminUsuario.getUsuario().getId() != null) {
+                    for (UsuarioPermiso usuarioPermiso : sessionAdminUsuario.getUsuario().getUsuarioPermisoList()) {
                         usuariosPermisos.add(usuarioPermiso.getPermisoId());
                     }
                 }
@@ -795,9 +720,9 @@ public class AdministrarUsuarios implements Serializable {
                     permisos.add(permiso);
                 }
             }
-            permisosDualList = new DualListModel<>(permisos, usuariosPermisos);
-            numeroPermisosDisponibles = permisosDualList.getSource().size();
-            numeroPermisosSeleccionados = permisosDualList.getTarget().size();
+            sessionAdminUsuario.setPermisosDualList(new DualListModel<>(permisos, usuariosPermisos));
+            sessionAdminUsuario.setNumeroPermisosDisponibles(sessionAdminUsuario.getPermisosDualList().getSource().size());
+            sessionAdminUsuario.setNumeroPermisosSeleccionados(sessionAdminUsuario.getPermisosDualList().getTarget().size());
         } catch (Exception e) {
             String mensaje = "Error al buscar Usuarios Permiso...";
             if (e.getMessage() != null) {
@@ -805,89 +730,63 @@ public class AdministrarUsuarios implements Serializable {
             }
             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_FATAL, e.getMessage(), "");
             FacesContext.getCurrentInstance().addMessage(null, message);
-            if (sessionUsuario.getUsuario() != null) {
+            if (sessionUsuario != null) {
                 Objeto obj = objetoFacadeLocal.buscarPorNombre("Usuario");
                 if (obj == null) {
                     obj = new Objeto(null, "Usuario", "Usuario");
                     obj.setProyectoSoftwareId(proyectoSoftwareFacadeLocal.find((int) 1));
                     objetoFacadeLocal.create(obj);
                 }
-                excepcionFacadeLocal.create(excepcionFacadeLocal.crearExcepcion(sessionUsuario.getUsuario().toString(), mensaje, obj));
+                excepcionFacadeLocal.create(excepcionFacadeLocal.crearExcepcion(sessionUsuario.toString(), mensaje, obj));
             }
         }
-        
+
     }
-    
-    public void removerUsuariosCarreras(Usuario usuario) {
-        if (usuario != null) {
-            if (usuario.getId() != null) {
-                for (UsuarioCarrera usuarioCarrera : usuariosCarrerasRemovidas) {
-                    Long id = devuelveCarreraEliminar(usuarioCarreraFacadeLocal.buscarPorUsuario(usuario.getId()), usuarioCarrera);
+
+    public void removerUsuariosCarreras() {
+        if (sessionAdminUsuario.getUsuario() != null) {
+            if (sessionAdminUsuario.getUsuario().getId() != null) {
+                for (UsuarioCarrera usuarioCarrera : sessionAdminUsuario.getUsuariosCarrerasRemovidas()) {
+                    Long id = devuelveCarreraEliminar(usuarioCarreraDao.buscarPorUsuario(sessionAdminUsuario.getUsuario().getId()), usuarioCarrera);
                     UsuarioCarrera uc = new UsuarioCarrera();
-                    uc = usuarioCarreraFacadeLocal.find(id);
+                    uc = usuarioCarreraDao.find(id);
                     if (uc != null) {
-                        logFacadeLocal.create(logFacadeLocal.crearLog("UsuarioCarrera", uc.getId() + "", "ELIMINAR", "ELIMINAR: |Usuario= " + usuario + "|Carrera= " + uc.getCarreraId(), sessionUsuario.getUsuario()));
-                        usuarioCarreraFacadeLocal.remove(uc);
+                        usuarioCarreraDao.remove(uc);
                     }
                 }
             }
         }
     }
-    
-    public void removerUsuariosPermisos(Usuario usuario) {
-        if (usuario != null) {
-            if (usuario.getId() != null) {
-                for (UsuarioPermiso usuarioPermiso : usuariosPermisoRemovidos) {
-                    Long id = devuelvePermisoEliminar(usuarioPermisoFacadeLocal.buscarPorUsuario(usuario.getId()), usuarioPermiso);
-                    UsuarioPermiso up = new UsuarioPermiso();
-                    up = usuarioPermisoFacadeLocal.find(id);
-                    if (up != null) {
-                        logFacadeLocal.create(logFacadeLocal.crearLog("UsuarioPermiso", up.getId() + "", "ELIMINAR", "ELIMINAR: |Pemiso= " + up.getPermisoId() + "|Usuario= " + usuario, sessionUsuario.getUsuario()));
-                        usuarioPermisoFacadeLocal.remove(up);
-                    }
+
+    public void removerUsuariosPermisos() {
+        if (sessionAdminUsuario.getUsuario() == null) {
+            return;
+        }
+        if (sessionAdminUsuario.getUsuario().getId() != null) {
+            for (UsuarioPermiso usuarioPermiso : sessionAdminUsuario.getUsuariosPermisoRemovidos()) {
+                Long id = devuelvePermisoEliminar(usuarioPermisoFacadeLocal.buscarPorUsuario(sessionAdminUsuario.getUsuario().getId()), usuarioPermiso);
+                UsuarioPermiso up = new UsuarioPermiso();
+                up = usuarioPermisoFacadeLocal.find(id);
+                if (up != null) {
+                    usuarioPermisoFacadeLocal.remove(up);
                 }
             }
         }
     }
-    
-    public String abrirCambiarClaveEstudiante() {
-        String navegacion = "";
-        try {
-            rolesUsuariosRemovidos = new ArrayList<>();
-            usuariosPermisoRemovidos = new ArrayList<>();
-            usuariosCarrerasRemovidas = new ArrayList<>();
-            navegacion = "pretty:cambiarClaveEstudiante";
-        } catch (Exception e) {
-        }
-        return navegacion;
-    }
-    
-    public String abrirCambiarClaveDocente() {
-        String navegacion = "";
-        try {
-            rolesUsuariosRemovidos = new ArrayList<>();
-            usuariosPermisoRemovidos = new ArrayList<>();
-            usuariosCarrerasRemovidas = new ArrayList<>();
-            navegacion = "pretty:cambiarClaveDocente";
-        } catch (Exception e) {
-        }
-        return navegacion;
-    }
-    
-    public void removerRolUsuarios(Usuario usuario) {
-        if (usuario.getId() != null) {
-            for (RolUsuario rolUsuario : rolesUsuariosRemovidos) {
-                Long id = devuelveRolEliminar(rolUsuarioFacadeLocal.buscarPorUsuario(usuario.getId()), rolUsuario);
+
+    public void removerRolUsuarios() {
+        if (sessionAdminUsuario.getUsuario().getId() != null) {
+            for (RolUsuario rolUsuario : sessionAdminUsuario.getRolesUsuariosRemovidos()) {
+                Long id = devuelveRolEliminar(rolUsuarioFacadeLocal.buscarPorUsuario(sessionAdminUsuario.getUsuario().getId()), rolUsuario);
                 RolUsuario r = new RolUsuario();
                 r = rolUsuarioFacadeLocal.find(id);
                 if (r != null) {
-                    logFacadeLocal.create(logFacadeLocal.crearLog("RolUsuario", r.getId() + "", "ELIMINAR", "|Rol= " + rolUsuario.getRolId() + "|Usuario= " + rolUsuario.getUsuarioId(), sessionUsuario.getUsuario()));
                     rolUsuarioFacadeLocal.remove(r);
                 }
             }
         }
     }
-    
+
     public void transferUsuariosPermisos(TransferEvent event) {
         try {
             for (Object item : event.getItems()) {
@@ -897,16 +796,16 @@ public class AdministrarUsuarios implements Serializable {
                 UsuarioPermiso up = new UsuarioPermiso();
                 up.setPermisoId(p);
                 if (event.isRemove()) {
-                    usuariosPermisoRemovidos.add(up);
+                    sessionAdminUsuario.getUsuariosPermisoRemovidos().add(up);
                 } else {
-                    if (contienePermiso(usuariosPermisoRemovidos, up)) {
-                        usuariosPermisoRemovidos.remove(up);
+                    if (contienePermiso(sessionAdminUsuario.getUsuariosPermisoRemovidos(), up)) {
+                        sessionAdminUsuario.getUsuariosPermisoRemovidos().remove(up);
                     }
                 }
-                numeroPermisosDisponibles = permisosDualList.getSource().size();
-                numeroPermisosSeleccionados = permisosDualList.getTarget().size();
+                sessionAdminUsuario.setNumeroPermisosDisponibles(sessionAdminUsuario.getPermisosDualList().getSource().size());
+                sessionAdminUsuario.setNumeroPermisosSeleccionados(sessionAdminUsuario.getPermisosDualList().getTarget().size());
             }
-            
+
         } catch (Exception e) {
             String mensaje = "Error en Transefer Rol Usuarios...";
             if (e.getMessage() != null) {
@@ -914,19 +813,10 @@ public class AdministrarUsuarios implements Serializable {
             }
             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_FATAL, e.getMessage(), "");
             FacesContext.getCurrentInstance().addMessage(null, message);
-            if (sessionUsuario.getUsuario() != null) {
-                Objeto obj = objetoFacadeLocal.buscarPorNombre("Usuario");
-                if (obj == null) {
-                    obj = new Objeto(null, "Usuario", "Usuario");
-                    obj.setProyectoSoftwareId(proyectoSoftwareFacadeLocal.find((int) 1));
-                    objetoFacadeLocal.create(obj);
-                }
-                excepcionFacadeLocal.create(excepcionFacadeLocal.crearExcepcion(sessionUsuario.getUsuario().toString(), mensaje, obj));
-            }
         }
-        
+
     }
-    
+
     public void transferUsuariosCarreras(TransferEvent event) {
         try {
             for (Object item : event.getItems()) {
@@ -936,16 +826,16 @@ public class AdministrarUsuarios implements Serializable {
                 UsuarioCarrera uc = new UsuarioCarrera();
                 uc.setCarreraId(c.getId());
                 if (event.isRemove()) {
-                    usuariosCarrerasRemovidas.add(uc);
+                    sessionAdminUsuario.getUsuariosCarrerasRemovidas().add(uc);
                 } else {
-                    if (contieneCarrera(usuariosCarrerasRemovidas, uc)) {
-                        usuariosCarrerasRemovidas.remove(uc);
+                    if (contieneCarrera(sessionAdminUsuario.getUsuariosCarrerasRemovidas(), uc)) {
+                        sessionAdminUsuario.getUsuariosCarrerasRemovidas().remove(uc);
                     }
                 }
-                numeroCarrerasDisponibles = carrerasDualList.getSource().size();
-                numeroCarrerasSeleccionadas = carrerasDualList.getTarget().size();
+                sessionAdminUsuario.setNumeroCarrerasDisponibles(sessionAdminUsuario.getCarrerasDualList().getSource().size());
+                sessionAdminUsuario.setNumeroCarrerasSeleccionadas(sessionAdminUsuario.getCarrerasDualList().getTarget().size());
             }
-            
+
         } catch (Exception e) {
             String mensaje = "Error en Transefer Rol Usuarios...";
             if (e.getMessage() != null) {
@@ -953,36 +843,27 @@ public class AdministrarUsuarios implements Serializable {
             }
             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_FATAL, mensaje, "");
             FacesContext.getCurrentInstance().addMessage(null, message);
-            if (sessionUsuario.getUsuario() != null) {
-                Objeto obj = objetoFacadeLocal.buscarPorNombre("Usuario");
-                if (obj == null) {
-                    obj = new Objeto(null, "Usuario", "Usuario");
-                    obj.setProyectoSoftwareId(proyectoSoftwareFacadeLocal.find((int) 1));
-                    objetoFacadeLocal.create(obj);
-                }
-                excepcionFacadeLocal.create(excepcionFacadeLocal.crearExcepcion(sessionUsuario.getUsuario().toString(), mensaje, obj));
-            }
         }
-        
+
     }
-    
+
     public void transferRolUsuarios(TransferEvent event) {
         try {
             for (Object item : event.getItems()) {
                 int v = item.toString().indexOf(":");
                 Long id = Long.parseLong(item.toString().substring(0, v));
-                Rol rol = rolFacadeLocal.find(id);
+                Rol rol = rolDao.find(id);
                 RolUsuario rolUsuario = new RolUsuario();
                 rolUsuario.setRolId(rol);
                 if (event.isRemove()) {
-                    rolesUsuariosRemovidos.add(rolUsuario);
+                    sessionAdminUsuario.getRolesUsuariosRemovidos().add(rolUsuario);
                 } else {
-                    if (contieneRol(rolesUsuariosRemovidos, rolUsuario)) {
-                        rolesUsuariosRemovidos.remove(rolUsuario);
+                    if (contieneRol(sessionAdminUsuario.getRolesUsuariosRemovidos(), rolUsuario)) {
+                        sessionAdminUsuario.getRolesUsuariosRemovidos().remove(rolUsuario);
                     }
                 }
             }
-            
+
         } catch (Exception e) {
             String mensaje = "Error en Transefer Rol Usuarios.";
             if (e.getMessage() != null) {
@@ -990,21 +871,11 @@ public class AdministrarUsuarios implements Serializable {
             }
             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_FATAL, mensaje, "");
             FacesContext.getCurrentInstance().addMessage(null, message);
-            if (sessionUsuario.getUsuario() != null) {
-                Objeto obj = objetoFacadeLocal.buscarPorNombre("Usuario");
-                if (obj == null) {
-                    obj = new Objeto(null, "Usuario", "Usuario");
-                    obj.setProyectoSoftwareId(proyectoSoftwareFacadeLocal.find((int) 1));
-                    objetoFacadeLocal.create(obj);
-                }
-                excepcionFacadeLocal.create(excepcionFacadeLocal.crearExcepcion(sessionUsuario.getUsuario().toString(), mensaje, obj));
-            }
         }
-        
     }
-    
+
     public void listarRoles(Usuario usuario) {
-        
+
         List<Rol> rolesUsuarios = new ArrayList<>();
         List<Rol> roles = new ArrayList<>();
         try {
@@ -1015,13 +886,13 @@ public class AdministrarUsuarios implements Serializable {
                     }
                 }
             }
-            for (Rol r : rolFacadeLocal.findAll()) {
+            for (Rol r : rolDao.findAll()) {
                 if (!rolesUsuarios.contains(r)) {
                     roles.add(r);
                 }
             }
-            roles = rolFacadeLocal.findAll();
-            rolesDualList = new DualListModel<>(roles, rolesUsuarios);
+            roles = rolDao.findAll();
+            sessionAdminUsuario.setRolesDualList(new DualListModel<>(roles, rolesUsuarios));
         } catch (Exception e) {
             String mensaje = "Error al buscar Roles Usuarios.";
             if (e.getMessage() != null) {
@@ -1029,200 +900,32 @@ public class AdministrarUsuarios implements Serializable {
             }
             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_FATAL, e.getMessage(), "");
             FacesContext.getCurrentInstance().addMessage(null, message);
-            if (sessionUsuario.getUsuario() != null) {
-                Objeto obj = objetoFacadeLocal.buscarPorNombre("Usuario");
-                if (obj == null) {
-                    obj = new Objeto(null, "Usuario", "Usuario");
-                    obj.setProyectoSoftwareId(proyectoSoftwareFacadeLocal.find((int) 1));
-                    objetoFacadeLocal.create(obj);
-                }
-                excepcionFacadeLocal.create(excepcionFacadeLocal.crearExcepcion(sessionUsuario.getUsuario().toString(), mensaje, obj));
-            }
         }
     }
 //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="RENDERED">
 
-    public void renderedCrear(Usuario usu) {
-        int tienePermiso = usuarioFacadeLocal.tienePermiso(sessionUsuario.getUsuario(), "crear_usuario");
+    public void renderedCrear(Usuario usuario) {
+        int tienePermiso = usuarioDao.tienePermiso(usuario, "crear_usuario");
         if (tienePermiso == 1) {
-            renderedCrear = true;
+            sessionAdminUsuario.setRenderedCrear(true);
         } else {
-            renderedCrear = false;
-        }
-    }
-    
-    public void renderedEditar(Usuario usuario) {
-        int tienePermiso = usuarioFacadeLocal.tienePermiso(sessionUsuario.getUsuario(), "editar_usuario");
-        if (tienePermiso == 1) {
-            renderedEditar = true;
-            renderedNoEditar = false;
-        } else {
-            renderedEditar = false;
-            renderedNoEditar = true;
+            sessionAdminUsuario.setRenderedCrear(false);
         }
     }
 
+    public void renderedEditar(Usuario usuario) {
+        int tienePermiso = usuarioDao.tienePermiso(usuario, "editar_usuario");
+        if (tienePermiso == 1) {
+            sessionAdminUsuario.setRenderedEditar(true);
+            sessionAdminUsuario.setRenderedNoEditar(false);
+        } else {
+            sessionAdminUsuario.setRenderedEditar(false);
+            sessionAdminUsuario.setRenderedNoEditar(true);
+        }
+    }
+
+    //</editor-fold>
 //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="SET Y GET">
-    public boolean isRenderedEditar() {
-        return renderedEditar;
-    }
-    
-    public void setRenderedEditar(boolean renderedEditar) {
-        this.renderedEditar = renderedEditar;
-    }
-    
-    public boolean isRenderedCrear() {
-        return renderedCrear;
-    }
-    
-    public void setRenderedCrear(boolean renderedCrear) {
-        this.renderedCrear = renderedCrear;
-    }
-    
-    public boolean isRenderedSincronizar() {
-        return renderedSincronizar;
-    }
-    
-    public void setRenderedSincronizar(boolean renderedSincronizar) {
-        this.renderedSincronizar = renderedSincronizar;
-    }
-    
-    public SessionUsuario getSessionUsuario() {
-        return sessionUsuario;
-    }
-    
-    public void setSessionUsuario(SessionUsuario sessionUsuario) {
-        this.sessionUsuario = sessionUsuario;
-    }
-    
-    public AdminUsuario getAdminUsuario() {
-        return adminUsuario;
-    }
-    
-    public void setAdminUsuario(AdminUsuario adminUsuario) {
-        this.adminUsuario = adminUsuario;
-    }
-    
-    public String getCriterio() {
-        return criterio;
-    }
-    
-    public void setCriterio(String criterio) {
-        this.criterio = criterio;
-    }
-    
-    public String getConfirmaClave() {
-        return confirmaClave;
-    }
-    
-    public void setConfirmaClave(String confirmaClave) {
-        this.confirmaClave = confirmaClave;
-    }
-    
-    public DualListModel<Rol> getRolesDualList() {
-        return rolesDualList;
-    }
-    
-    public void setRolesDualList(DualListModel<Rol> rolesDualList) {
-        this.rolesDualList = rolesDualList;
-    }
-    
-    public List<RolUsuario> getRolesUsuariosRemovidos() {
-        return rolesUsuariosRemovidos;
-    }
-    
-    public void setRolesUsuariosRemovidos(List<RolUsuario> rolesUsuariosRemovidos) {
-        this.rolesUsuariosRemovidos = rolesUsuariosRemovidos;
-    }
-    
-    public DualListModel<Permiso> getPermisosDualList() {
-        return permisosDualList;
-    }
-    
-    public void setPermisosDualList(DualListModel<Permiso> permisosDualList) {
-        this.permisosDualList = permisosDualList;
-    }
-    
-    public List<UsuarioPermiso> getUsuariosPermisoRemovidos() {
-        return usuariosPermisoRemovidos;
-    }
-    
-    public void setUsuariosPermisoRemovidos(List<UsuarioPermiso> usuariosPermisoRemovidos) {
-        this.usuariosPermisoRemovidos = usuariosPermisoRemovidos;
-    }
-    
-    public DualListModel<Carrera> getCarrerasDualList() {
-        return carrerasDualList;
-    }
-    
-    public void setCarrerasDualList(DualListModel<Carrera> carrerasDualList) {
-        this.carrerasDualList = carrerasDualList;
-    }
-    
-    public List<UsuarioCarrera> getUsuariosCarrerasRemovidas() {
-        return usuariosCarrerasRemovidas;
-    }
-    
-    public void setUsuariosCarrerasRemovidas(List<UsuarioCarrera> usuariosCarrerasRemovidas) {
-        this.usuariosCarrerasRemovidas = usuariosCarrerasRemovidas;
-    }
-    
-    public int getNumeroCarrerasDisponibles() {
-        return numeroCarrerasDisponibles;
-    }
-    
-    public void setNumeroCarrerasDisponibles(int numeroCarrerasDisponibles) {
-        this.numeroCarrerasDisponibles = numeroCarrerasDisponibles;
-    }
-    
-    public int getNumeroPermisosDisponibles() {
-        return numeroPermisosDisponibles;
-    }
-    
-    public void setNumeroPermisosDisponibles(int numeroPermisosDisponibles) {
-        this.numeroPermisosDisponibles = numeroPermisosDisponibles;
-    }
-    
-    public int getNumeroPermisosSeleccionados() {
-        return numeroPermisosSeleccionados;
-    }
-    
-    public void setNumeroPermisosSeleccionados(int numeroPermisosSeleccionados) {
-        this.numeroPermisosSeleccionados = numeroPermisosSeleccionados;
-    }
-    
-    public int getNumeroCarrerasSeleccionadas() {
-        return numeroCarrerasSeleccionadas;
-    }
-    
-    public void setNumeroCarrerasSeleccionadas(int numeroCarrerasSeleccionadas) {
-        this.numeroCarrerasSeleccionadas = numeroCarrerasSeleccionadas;
-    }
-    
-    public List<Usuario> getUsuarios() {
-        return usuarios;
-    }
-    
-    public void setUsuarios(List<Usuario> usuarios) {
-        this.usuarios = usuarios;
-    }
-    
-    public boolean isRenderedNoEditar() {
-        return renderedNoEditar;
-    }
-    
-    public void setRenderedNoEditar(boolean renderedNoEditar) {
-        this.renderedNoEditar = renderedNoEditar;
-    }
-    
-    public String getConfirmarClaveEstudiante() {
-        return confirmarClaveEstudiante;
-    }
-    
-    public void setConfirmarClaveEstudiante(String confirmarClaveEstudiante) {
-        this.confirmarClaveEstudiante = confirmarClaveEstudiante;
-    }
-//</editor-fold>
 }

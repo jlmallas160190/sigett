@@ -10,7 +10,7 @@ import com.ocpsoft.pretty.faces.annotation.URLMappings;
 import edu.unl.sigett.postulacion.managed.session.SessionTipoProyecto;
 import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
 import edu.unl.sigett.entity.TipoProyecto;
-import com.jlmallas.seguridad.entity.Usuario;
+import org.jlmallas.seguridad.entity.Usuario;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,9 +22,9 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import org.primefaces.context.RequestContext;
-import com.jlmallas.seguridad.session.LogFacadeLocal;
+import org.jlmallas.seguridad.dao.LogDao;
 import edu.unl.sigett.session.TipoProyectoFacadeLocal;
-import com.jlmallas.seguridad.session.UsuarioFacadeLocal;
+import org.jlmallas.seguridad.dao.UsuarioDao;
 
 /**
  *
@@ -58,11 +58,11 @@ public class AdministrarTipoProyectos implements Serializable {
     @EJB
     private TipoProyectoFacadeLocal tipoProyectoFacadeLocal;
     @EJB
-    private LogFacadeLocal logFacadeLocal;
+    private LogDao logFacadeLocal;
     private String criterio;
     private boolean renderedNoEditar = false;
     @EJB
-    private UsuarioFacadeLocal usuarioFacadeLocal;
+    private UsuarioDao usuarioFacadeLocal;
     private List<TipoProyecto> tipoProyectos;
     private boolean renderedCrearAux;
     private boolean renderedCrear;

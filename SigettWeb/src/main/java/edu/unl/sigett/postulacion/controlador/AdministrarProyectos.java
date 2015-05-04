@@ -68,7 +68,7 @@ import edu.unl.sigett.entity.RenunciaAutor;
 import edu.unl.sigett.entity.RenunciaDirector;
 import edu.unl.sigett.entity.TemaProyecto;
 import edu.unl.sigett.entity.TipoProyecto;
-import com.jlmallas.seguridad.entity.Usuario;
+import org.jlmallas.seguridad.entity.Usuario;
 import edu.unl.sigett.entity.UsuarioCarrera;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -114,14 +114,14 @@ import edu.unl.sigett.session.ExpedienteFacadeLocal;
 import edu.unl.sigett.session.LineaInvestigacionCarreraFacadeLocal;
 import edu.unl.sigett.session.LineaInvestigacionFacadeLocal;
 import edu.unl.sigett.session.LineaInvestigacionProyectoFacadeLocal;
-import com.jlmallas.seguridad.session.LogFacadeLocal;
+import org.jlmallas.seguridad.dao.LogDao;
 import edu.jlmallas.academico.service.OfertaAcademicaFacadeLocal;
 import edu.unl.sigett.session.ProyectoCarreraOfertaFacadeLocal;
 import edu.unl.sigett.session.ProyectoFacadeLocal;
 import edu.unl.sigett.session.TemaProyectoFacadeLocal;
 import edu.unl.sigett.session.TipoProyectoFacadeLocal;
 import edu.unl.sigett.session.UsuarioCarreraFacadeLocal;
-import com.jlmallas.seguridad.session.UsuarioFacadeLocal;
+import org.jlmallas.seguridad.dao.UsuarioDao;
 import edu.jlmallas.academico.entity.EstudianteCarrera;
 import edu.jlmallas.academico.service.DocenteFacadeLocal;
 import edu.jlmallas.academico.service.EstudianteCarreraFacadeLocal;
@@ -213,7 +213,7 @@ public class AdministrarProyectos implements Serializable {
     @EJB
     private EstadoProyectoFacadeLocal estadoProyectoFacadeLocal;
     @EJB
-    private LogFacadeLocal logFacadeLocal;
+    private LogDao logFacadeLocal;
     @EJB
     private LineaInvestigacionFacadeLocal lineaInvestigacionFacadeLocal;
     @EJB
@@ -253,7 +253,7 @@ public class AdministrarProyectos implements Serializable {
     @EJB
     private ExpedienteFacadeLocal expedienteFacadeLocal;
     @EJB
-    private UsuarioFacadeLocal usuarioFacadeLocal;
+    private UsuarioDao usuarioFacadeLocal;
     @EJB
     private CatalogoProyectoFacadeLocal catalogoProyectoFacadeLocal;
     @EJB

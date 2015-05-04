@@ -10,7 +10,7 @@ import com.ocpsoft.pretty.faces.annotation.URLMappings;
 import edu.unl.sigett.academico.managed.session.SessionPeriodoCoordinacion;
 import edu.jlmallas.academico.entity.Carrera;
 import edu.jlmallas.academico.entity.PeriodoCoordinacion;
-import com.jlmallas.seguridad.entity.Usuario;
+import org.jlmallas.seguridad.entity.Usuario;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +23,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import org.primefaces.context.RequestContext;
 import edu.jlmallas.academico.service.PeriodoCoordinacionFacadeLocal;
-import com.jlmallas.seguridad.session.UsuarioFacadeLocal;
+import org.jlmallas.seguridad.dao.UsuarioDao;
 
 /**
  *
@@ -52,7 +52,7 @@ public class AdministrarPeriodoCoordinacion implements Serializable {
     @Inject
     private SessionPeriodoCoordinacion sessionPeriodoCoordinacion;
     @EJB
-    private UsuarioFacadeLocal usuarioFacadeLocal;
+    private UsuarioDao usuarioFacadeLocal;
     private List<PeriodoCoordinacion> periodosCoordinacion;
     @EJB
     private PeriodoCoordinacionFacadeLocal periodoCoordinacionFacadeLocal;

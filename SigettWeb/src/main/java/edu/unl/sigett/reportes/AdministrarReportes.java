@@ -37,7 +37,7 @@ import edu.unl.sigett.session.OficioCarreraFacadeLocal;
 import edu.unl.sigett.entity.Acta;
 import edu.unl.sigett.entity.ConfiguracionArea;
 import edu.unl.sigett.entity.RangoEquivalencia;
-import com.jlmallas.seguridad.entity.Usuario;
+import org.jlmallas.seguridad.entity.Usuario;
 import edu.unl.sigett.entity.CatalogoActa;
 import edu.unl.sigett.enumeration.CatalogoActaEnum;
 import edu.unl.sigett.enumeration.CatalogoOficioEnum;

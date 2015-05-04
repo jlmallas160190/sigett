@@ -5,7 +5,7 @@
  */
 package edu.unl.sigett.seguridad.managed.session;
 
-import com.jlmallas.seguridad.entity.Usuario;
+import org.jlmallas.seguridad.entity.Usuario;
 import edu.jlmallas.academico.entity.Carrera;
 import edu.unl.sigett.entity.UsuarioCarrera;
 import java.io.Serializable;

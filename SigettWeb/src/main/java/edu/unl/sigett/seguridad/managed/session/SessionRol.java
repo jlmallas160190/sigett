@@ -5,7 +5,7 @@
  */
 package edu.unl.sigett.seguridad.managed.session;
 
-import com.jlmallas.seguridad.entity.Rol;
+import org.jlmallas.seguridad.entity.Rol;
 import java.io.Serializable;
 import javax.enterprise.context.SessionScoped;
 

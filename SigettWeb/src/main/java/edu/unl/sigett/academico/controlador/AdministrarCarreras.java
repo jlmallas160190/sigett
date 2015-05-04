@@ -10,8 +10,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
-import com.jlmallas.api.http.UrlConexion;
-import com.jlmallas.api.http.dto.SeguridadHttp;
+import org.jlmallas.api.http.UrlConexion;
+import org.jlmallas.api.http.dto.SeguridadHttp;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 import com.ocpsoft.pretty.faces.annotation.URLMappings;
 import edu.unl.sigett.academico.managed.session.SessionCarrera;
@@ -20,7 +20,7 @@ import edu.jlmallas.academico.entity.Carrera;
 import edu.unl.sigett.entity.ConfiguracionCarrera;
 import edu.jlmallas.academico.entity.Nivel;
 import com.jlmallas.soporte.entity.Objeto;
-import com.jlmallas.seguridad.entity.Usuario;
+import org.jlmallas.seguridad.entity.Usuario;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,11 +35,11 @@ import org.primefaces.event.FileUploadEvent;
 import edu.jlmallas.academico.service.CarreraService;
 import edu.unl.sigett.session.ConfiguracionCarreraFacadeLocal;
 import com.jlmallas.soporte.session.ExcepcionFacadeLocal;
-import com.jlmallas.seguridad.session.LogFacadeLocal;
+import org.jlmallas.seguridad.dao.LogDao;
 import edu.jlmallas.academico.service.NivelService;
 import com.jlmallas.soporte.session.ObjetoFacadeLocal;
 import com.jlmallas.soporte.session.ProyectoSoftwareFacadeLocal;
-import com.jlmallas.seguridad.session.UsuarioFacadeLocal;
+import org.jlmallas.seguridad.dao.UsuarioDao;
 import edu.unl.sigett.academico.managed.session.SessionArea;
 import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
 import edu.unl.sigett.session.ConfiguracionGeneralFacadeLocal;
@@ -76,7 +76,7 @@ public class AdministrarCarreras implements Serializable {
     @EJB
     private CarreraService carreraFacadeLocal;
     @EJB
-    private LogFacadeLocal logFacadeLocal;
+    private LogDao logFacadeLocal;
     @EJB
     private ExcepcionFacadeLocal excepcionFacadeLocal;
     @EJB
@@ -84,7 +84,7 @@ public class AdministrarCarreras implements Serializable {
     @EJB
     private ProyectoSoftwareFacadeLocal proyectoSoftwareFacadeLocal;
     @EJB
-    private UsuarioFacadeLocal usuarioFacadeLocal;
+    private UsuarioDao usuarioFacadeLocal;
     @EJB
     private ConfiguracionCarreraFacadeLocal configuracionCarreraFacadeLocal;
     @EJB

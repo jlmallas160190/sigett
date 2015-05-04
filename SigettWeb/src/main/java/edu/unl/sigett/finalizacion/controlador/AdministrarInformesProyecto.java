@@ -18,7 +18,7 @@ import edu.unl.sigett.entity.EstadoProyecto;
 import edu.unl.sigett.entity.InformeProyecto;
 import edu.unl.sigett.entity.Proyecto;
 import edu.unl.sigett.entity.ProyectoCarreraOferta;
-import com.jlmallas.seguridad.entity.Usuario;
+import org.jlmallas.seguridad.entity.Usuario;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -41,9 +41,9 @@ import edu.unl.sigett.session.DirectorProyectoFacadeLocal;
 import edu.unl.sigett.session.EstadoAutorFacadeLocal;
 import edu.unl.sigett.session.EstadoProyectoFacadeLocal;
 import edu.unl.sigett.session.InformeProyectoFacadeLocal;
-import com.jlmallas.seguridad.session.LogFacadeLocal;
+import org.jlmallas.seguridad.dao.LogDao;
 import edu.unl.sigett.session.ProyectoFacadeLocal;
-import com.jlmallas.seguridad.session.UsuarioFacadeLocal;
+import org.jlmallas.seguridad.dao.UsuarioDao;
 import edu.jlmallas.academico.entity.Docente;
 import edu.jlmallas.academico.entity.EstudianteCarrera;
 import edu.jlmallas.academico.service.DocenteCarreraFacadeLocal;
@@ -64,13 +64,13 @@ public class AdministrarInformesProyecto implements Serializable {
     private SessionInformeProyecto sessionInformeProyecto;
 
     @EJB
-    private UsuarioFacadeLocal usuarioFacadeLocal;
+    private UsuarioDao usuarioFacadeLocal;
     @EJB
     private CatalogoInformeProyectoFacadeLocal catalogoInformeProyectoFacadeLocal;
     @EJB
     private InformeProyectoFacadeLocal informeProyectoFacadeLocal;
     @EJB
-    private LogFacadeLocal logFacadeLocal;
+    private LogDao logFacadeLocal;
     @EJB
     private EstadoAutorFacadeLocal estadoAutorFacadeLocal;
     @EJB

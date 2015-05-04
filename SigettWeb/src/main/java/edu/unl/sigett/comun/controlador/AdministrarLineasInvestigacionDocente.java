@@ -10,7 +10,7 @@ import edu.jlmallas.academico.entity.DocenteCarrera;
 import edu.unl.sigett.entity.LineaInvestigacion;
 import edu.unl.sigett.entity.LineaInvestigacionCarrera;
 import edu.unl.sigett.entity.LineaInvestigacionDocente;
-import com.jlmallas.seguridad.entity.Usuario;
+import org.jlmallas.seguridad.entity.Usuario;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +24,7 @@ import org.primefaces.model.DualListModel;
 import edu.unl.sigett.session.LineaInvestigacionCarreraFacadeLocal;
 import edu.unl.sigett.session.LineaInvestigacionDocenteFacadeLocal;
 import edu.unl.sigett.session.LineaInvestigacionFacadeLocal;
-import com.jlmallas.seguridad.session.LogFacadeLocal;
+import org.jlmallas.seguridad.dao.LogDao;
 
 /**
  *
@@ -42,7 +42,7 @@ public class AdministrarLineasInvestigacionDocente implements Serializable {
     @EJB
     private LineaInvestigacionFacadeLocal lineaInvestigacionFacadeLocal;
     @EJB
-    private LogFacadeLocal logFacadeLocal;
+    private LogDao logFacadeLocal;
     private List<LineaInvestigacionDocente> lineaInvestigacionDocentesRemovidos;
     private List<LineaInvestigacionDocente> lineaInvestigacionDocentesAgregados;
 

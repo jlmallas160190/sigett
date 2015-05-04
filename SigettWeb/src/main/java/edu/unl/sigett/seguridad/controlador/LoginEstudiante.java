@@ -14,7 +14,7 @@ import com.jlmallas.comun.service.ConfiguracionFacadeLocal;
 import edu.unl.sigett.seguimiento.controlador.AdministrarActividades;
 import edu.unl.sigett.seguridad.managed.session.SessionEstudianteUsuario;
 import edu.unl.sigett.entity.EstudianteUsuario;
-import com.jlmallas.seguridad.entity.Usuario;
+import org.jlmallas.seguridad.entity.Usuario;
 import java.io.Serializable;
 import java.util.ResourceBundle;
 import javax.ejb.EJB;
@@ -25,7 +25,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import edu.unl.sigett.session.ConfiguracionGeneralFacadeLocal;
 import edu.unl.sigett.session.EstudianteUsuarioFacadeLocal;
-import com.jlmallas.seguridad.session.UsuarioFacadeLocal;
+import org.jlmallas.seguridad.dao.UsuarioDao;
 import edu.jlmallas.academico.service.EstudianteFacadeLocal;
 
 /**
@@ -44,7 +44,7 @@ public class LoginEstudiante implements Serializable {
     private boolean resultado;
 
     @EJB
-    private UsuarioFacadeLocal usuarioFacadeLocal;
+    private UsuarioDao usuarioFacadeLocal;
     @EJB
     private EstudianteUsuarioFacadeLocal estudianteUsuarioFacadeLocal;
     @EJB

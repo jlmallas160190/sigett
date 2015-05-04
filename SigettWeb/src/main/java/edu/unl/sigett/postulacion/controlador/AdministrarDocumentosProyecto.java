@@ -13,7 +13,7 @@ import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
 import edu.unl.sigett.entity.CatalogoDocumentoProyecto;
 import edu.unl.sigett.entity.DocumentoProyecto;
 import edu.unl.sigett.entity.Proyecto;
-import com.jlmallas.seguridad.entity.Usuario;
+import org.jlmallas.seguridad.entity.Usuario;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -32,8 +32,8 @@ import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
 import edu.unl.sigett.session.CatalogoDocumentoProyectoFacadeLocal;
 import edu.unl.sigett.session.DocumentoProyectoFacadeLocal;
-import com.jlmallas.seguridad.session.LogFacadeLocal;
-import com.jlmallas.seguridad.session.UsuarioFacadeLocal;
+import org.jlmallas.seguridad.dao.LogDao;
+import org.jlmallas.seguridad.dao.UsuarioDao;
 
 /**
  *
@@ -55,12 +55,12 @@ public class AdministrarDocumentosProyecto implements Serializable {
     private SessionEstudianteUsuario sessionEstudianteUsuario;
     private UploadedFile uploadedFile;
     @EJB
-    private LogFacadeLocal logFacadeLocal;
+    private LogDao logFacadeLocal;
     @EJB
     private CatalogoDocumentoProyectoFacadeLocal catalogoDocumentoProyectoFacadeLocal;
     private String catalogoDocumentoProyecto;
     @EJB
-    private UsuarioFacadeLocal usuarioFacadeLocal;
+    private UsuarioDao usuarioFacadeLocal;
     @EJB
     private DocumentoProyectoFacadeLocal documentoProyectoFacadeLocal;
 

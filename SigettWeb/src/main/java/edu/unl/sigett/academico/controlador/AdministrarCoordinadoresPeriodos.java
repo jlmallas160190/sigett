@@ -13,7 +13,7 @@ import edu.jlmallas.academico.entity.Coordinador;
 import edu.jlmallas.academico.entity.CoordinadorPeriodo;
 import edu.jlmallas.academico.entity.PeriodoCoordinacion;
 import com.jlmallas.comun.entity.Persona;
-import com.jlmallas.seguridad.entity.Usuario;
+import org.jlmallas.seguridad.entity.Usuario;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +29,7 @@ import edu.jlmallas.academico.service.CoordinadorFacadeLocal;
 import edu.jlmallas.academico.service.CoordinadorPeriodoFacadeLocal;
 import edu.jlmallas.academico.service.PeriodoCoordinacionFacadeLocal;
 import com.jlmallas.comun.service.PersonaFacadeLocal;
-import com.jlmallas.seguridad.session.UsuarioFacadeLocal;
+import org.jlmallas.seguridad.dao.UsuarioDao;
 
 /**
  *
@@ -65,7 +65,7 @@ public class AdministrarCoordinadoresPeriodos implements Serializable {
     @EJB
     private PersonaFacadeLocal personaFacadeLocal;
     @EJB
-    private UsuarioFacadeLocal usuarioFacadeLocal;
+    private UsuarioDao usuarioFacadeLocal;
     private List<CoordinadorPeriodo> coordinadorPeriodos;
     private String numeroIdentificacion;
     private boolean renderedCrear;

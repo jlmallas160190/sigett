@@ -10,7 +10,7 @@ import com.ocpsoft.pretty.faces.annotation.URLMappings;
 import edu.unl.sigett.postulacion.managed.session.SessionCatalogoProyecto;
 import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
 import edu.unl.sigett.entity.CatalogoProyecto;
-import com.jlmallas.seguridad.entity.Usuario;
+import org.jlmallas.seguridad.entity.Usuario;
 import java.io.Serializable;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -22,8 +22,8 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import org.primefaces.context.RequestContext;
 import edu.unl.sigett.session.CatalogoProyectoFacadeLocal;
-import com.jlmallas.seguridad.session.LogFacadeLocal;
-import com.jlmallas.seguridad.session.UsuarioFacadeLocal;
+import org.jlmallas.seguridad.dao.LogDao;
+import org.jlmallas.seguridad.dao.UsuarioDao;
 
 /**
  *
@@ -56,12 +56,12 @@ public class AdministrarCatalogoProyectos implements Serializable {
     private SessionCatalogoProyecto sessionCatalogoProyecto;
     private String criterio;
     @EJB
-    private LogFacadeLocal logFacadeLocal;
+    private LogDao logFacadeLocal;
     @EJB
     private CatalogoProyectoFacadeLocal catalogoProyectoFacadeLocal;
     private boolean renderedNoEditar;
     @EJB
-    private UsuarioFacadeLocal usuarioFacadeLocal;
+    private UsuarioDao usuarioFacadeLocal;
     private List<CatalogoProyecto> catalogoProyectos;
     private boolean renderedCrearAux;
     private boolean renderedCrear;

@@ -5,7 +5,7 @@
  */
 package edu.unl.sigett.adjudicacion.controlador;
 
-import com.jlmallas.api.date.DateResource;
+import org.jlmallas.api.date.DateResource;
 import com.jlmallas.comun.entity.Persona;
 import com.jlmallas.comun.service.PersonaFacadeLocal;
 import edu.unl.sigett.adjudicacion.session.SessionProrroga;
@@ -27,7 +27,7 @@ import edu.unl.sigett.entity.OficioCarrera;
 import edu.unl.sigett.entity.Prorroga;
 import edu.unl.sigett.entity.Proyecto;
 import edu.unl.sigett.entity.ProyectoCarreraOferta;
-import com.jlmallas.seguridad.entity.Usuario;
+import org.jlmallas.seguridad.entity.Usuario;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -50,11 +50,11 @@ import edu.unl.sigett.session.ConfiguracionCarreraFacadeLocal;
 import edu.unl.sigett.session.ConfiguracionGeneralFacadeLocal;
 import edu.jlmallas.academico.service.CoordinadorPeriodoFacadeLocal;
 import edu.unl.sigett.session.DirectorProyectoFacadeLocal;
-import com.jlmallas.seguridad.session.LogFacadeLocal;
+import org.jlmallas.seguridad.dao.LogDao;
 import edu.unl.sigett.session.OficioCarreraFacadeLocal;
 import edu.unl.sigett.session.ProrrogaFacadeLocal;
 import edu.unl.sigett.session.ProyectoFacadeLocal;
-import com.jlmallas.seguridad.session.UsuarioFacadeLocal;
+import org.jlmallas.seguridad.dao.UsuarioDao;
 import edu.jlmallas.academico.entity.Docente;
 import edu.jlmallas.academico.entity.EstudianteCarrera;
 import edu.jlmallas.academico.service.DocenteCarreraFacadeLocal;
@@ -99,13 +99,13 @@ public class AdministrarProrrogas implements Serializable {
     @EJB
     private ActividadFacadeLocal actividadFacadeLocal;
     @EJB
-    private UsuarioFacadeLocal usuarioFacadeLocal;
+    private UsuarioDao usuarioFacadeLocal;
     @EJB
     private ProyectoFacadeLocal proyectoFacadeLocal;
     @EJB
     private ProrrogaFacadeLocal prorrogaFacadeLocal;
     @EJB
-    private LogFacadeLocal logFacadeLocal;
+    private LogDao logFacadeLocal;
     @EJB
     private DirectorProyectoFacadeLocal directorProyectoFacadeLocal;
     @EJB

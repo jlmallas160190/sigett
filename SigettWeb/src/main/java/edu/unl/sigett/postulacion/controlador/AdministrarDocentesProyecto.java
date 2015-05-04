@@ -27,7 +27,7 @@ import edu.unl.sigett.entity.LineaInvestigacionDocente;
 import edu.unl.sigett.entity.OficioCarrera;
 import edu.unl.sigett.entity.Proyecto;
 import edu.unl.sigett.entity.ProyectoCarreraOferta;
-import com.jlmallas.seguridad.entity.Usuario;
+import org.jlmallas.seguridad.entity.Usuario;
 import edu.unl.sigett.entity.UsuarioCarrera;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -53,10 +53,10 @@ import edu.unl.sigett.session.ConfiguracionGeneralFacadeLocal;
 import edu.jlmallas.academico.service.CoordinadorPeriodoFacadeLocal;
 import edu.jlmallas.academico.service.DocenteCarreraFacadeLocal;
 import edu.unl.sigett.session.DocenteProyectoFacadeLocal;
-import com.jlmallas.seguridad.session.LogFacadeLocal;
+import org.jlmallas.seguridad.dao.LogDao;
 import edu.unl.sigett.session.OficioCarreraFacadeLocal;
 import edu.unl.sigett.session.UsuarioCarreraFacadeLocal;
-import com.jlmallas.seguridad.session.UsuarioFacadeLocal;
+import org.jlmallas.seguridad.dao.UsuarioDao;
 import edu.jlmallas.academico.entity.EstudianteCarrera;
 import edu.jlmallas.academico.service.DocenteFacadeLocal;
 import edu.jlmallas.academico.service.EstudianteCarreraFacadeLocal;
@@ -125,13 +125,13 @@ public class AdministrarDocentesProyecto implements Serializable {
     @EJB
     private DocenteCarreraFacadeLocal docenteCarreraFacadeLocal;
     @EJB
-    private LogFacadeLocal logFacadeLocal;
+    private LogDao logFacadeLocal;
     @EJB
     private ConfiguracionGeneralFacadeLocal configuracionGeneralFacadeLocal;
     @EJB
     private DocenteProyectoFacadeLocal docenteProyectoFacadeLocal;
     @EJB
-    private UsuarioFacadeLocal usuarioFacadeLocal;
+    private UsuarioDao usuarioFacadeLocal;
     @EJB
     private UsuarioCarreraFacadeLocal usuarioCarreraFacadeLocal;
     @EJB

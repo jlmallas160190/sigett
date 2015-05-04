@@ -21,9 +21,9 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import org.primefaces.context.RequestContext;
-import com.jlmallas.seguridad.session.LogFacadeLocal;
+import org.jlmallas.seguridad.dao.LogDao;
 import edu.unl.sigett.session.TipoActividadFacadeLocal;
-import com.jlmallas.seguridad.session.UsuarioFacadeLocal;
+import org.jlmallas.seguridad.dao.UsuarioDao;
 
 /**
  *
@@ -56,13 +56,13 @@ public class AdministrarTiposActividades implements Serializable {
     private SessionTipoActividad sessionTipoActividad;
     private String criterio;
     @EJB
-    private LogFacadeLocal logFacadeLocal;
+    private LogDao logFacadeLocal;
     @EJB
     private TipoActividadFacadeLocal tipoActividadFacadeLocal;
     private List<TipoActividad> tipoActividades;
     private boolean noEditar;
     @EJB
-    private UsuarioFacadeLocal usuarioFacadeLocal;
+    private UsuarioDao usuarioFacadeLocal;
 
     public AdministrarTiposActividades() {
     }
