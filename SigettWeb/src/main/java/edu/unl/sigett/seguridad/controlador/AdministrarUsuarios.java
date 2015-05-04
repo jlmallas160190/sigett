@@ -448,7 +448,6 @@ public class AdministrarUsuarios implements Serializable {
                             guardarRolesUsuario();
                             removerRolUsuarios();
                             buscar(sessionUsuario);
-                            sessionAdminUsuario.setVisualizarEditar(false);
                             if (param.equalsIgnoreCase("guardar")) {
                                 sessionAdminUsuario.setUsuario(new Usuario());
                                 return ("pretty:usuarios");

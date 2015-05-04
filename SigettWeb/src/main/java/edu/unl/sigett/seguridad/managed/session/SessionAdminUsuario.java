@@ -28,14 +28,10 @@ import org.primefaces.model.DualListModel;
  * @author JorgeLuis
  */
 @Named
-@ConversationScoped
+@SessionScoped
 public class SessionAdminUsuario implements Serializable {
 
-    @Inject
-    private Conversation conversation;
-
     private Usuario usuario;
-    private boolean visualizarEditar;
     private String confirmarClave;
     private DualListModel<Rol> rolesDualList;
     private DualListModel<Permiso> permisosDualList;
@@ -58,15 +54,7 @@ public class SessionAdminUsuario implements Serializable {
 
     private boolean renderedSincronizar;
 
-    @PostConstruct
-    public void init() {
-        if (conversation.isTransient()) {
-            conversation.begin();
-        }
-    }
-
     public SessionAdminUsuario() {
-        this.visualizarEditar = false;
         this.confirmarClave = "";
         this.usuario = new Usuario();
     }
@@ -77,14 +65,6 @@ public class SessionAdminUsuario implements Serializable {
 
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
-    }
-
-    public boolean isVisualizarEditar() {
-        return visualizarEditar;
-    }
-
-    public void setVisualizarEditar(boolean visualizarEditar) {
-        this.visualizarEditar = visualizarEditar;
     }
 
     public String getConfirmarClave() {
@@ -237,14 +217,6 @@ public class SessionAdminUsuario implements Serializable {
 
     public void setRenderedSincronizar(boolean renderedSincronizar) {
         this.renderedSincronizar = renderedSincronizar;
-    }
-
-    public Conversation getConversation() {
-        return conversation;
-    }
-
-    public void setConversation(Conversation conversation) {
-        this.conversation = conversation;
     }
 
 }
