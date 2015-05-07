@@ -7,52 +7,60 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
     <body>
-        <p:panel toggleable="true">
-            <f:facet name="header">
-                <h:panelGrid>
-                    <p:commandButton value="#{msg['lbl.historial']}" update="@form" icon="ui-icon-document-w"
-                                     action="#{administrarLogs.historico('Usuario', viewUsuario.usuario.id)}"/>
-                </h:panelGrid>
-            </f:facet>
-            <p:panel header="#{msg['lbl.editar']} #{msg['lbl.usuario']}" toggleable="true">
-                <h:panelGrid styleClass="panelgrid" rowClasses="rowpanelgrid" columnClasses="col-sm-3,col-sm-8,col-sm-1" columns="3">
-                    <h:outputLabel value="#{msg['lbl.usuario']}:" for="username" />
-                    <p:inputText id="username" style="text-transform: none" value="#{viewUsuario.usuario.username}" 
-                                 title="#{msg['lbl.usuario']}" required="true" requiredMessage="#{msg['lbl.usuario']} #{msg['lbl.obligatorio']}">
-                        <p:ajax event="keyup" update="msmNombre"/>
-                        <p:ajax event="change" update="@this,:contenido:msm"/>
-                        <f:validateRegex pattern="^[A-Za-z0-9]{1,}([\s][A-Za-z0-9]{1,})*$" />
-                    </p:inputText>
-                    <p:message id="msmNombre" display="icon" for="username"/>
-                    <h:outputLabel value="#{msg['lbl.clave']}:"/>
-                    <p:commandLink  value="#{msg['lbl.cambiar']} #{msg['lbl.clave']}" action="pretty:cambiarClave"/>
-                </h:panelGrid>
-            </p:panel>   
-            <br/>
-            <p:panel header="#{msg['lbl.datos']} #{msg['lbl.usuario']}" toggleable="true">
-                <ui:include src="datosPersonalesUsuario.xhtml"/>
-            </p:panel> 
-            <br/>
-            <p:panel header="#{msg['lbl.roles']}" toggleable="true">
-                <ui:include src="rolesUsuario.xhtml"/>
-            </p:panel>
-            <br/>
-            <p:panel header="#{msg['lbl.permisos']}" toggleable="true">
-                <ui:include src="permisosUsuario.xhtml"/>
-            </p:panel>
-            <br/>
-            <p:panel header="#{msg['lbl.carreras']}" toggleable="true">
-                <ui:include src="carrerasUsuario.xhtml"/>
-            </p:panel>   
-            <f:facet name="footer">
-                <ui:include src="botonesEditarUsuario.xhtml"/>
-            </f:facet>
-        </p:panel>
-        <p:panel id="pnlCambiarClave" header="Cambiar Clave">
-            <ui:include src="cambiarClave.xhtml"/>
-            <f:facet name="footer">
-                <ui:include src="botonesUsuario.xhtml"/>
-            </f:facet>
-        </p:panel>
+        <ui:composition template="./../../../template.xhtml">
+            <ui:define name="top">
+                <ui:include src="./../../admin/menu.xhtml"/>
+            </ui:define>
+            <ui:define name="left">
+                <ui:include src="./../../admin/menuIzquierdo.xhtml"/>
+            </ui:define>
+            <ui:define name="title">#{msg['lbl.usuario']}</ui:define>
+            <ui:define name="content">
+                <p:growl id="msm"/>
+                <p:panel toggleable="true">
+                    <f:facet name="header">
+                        <h:panelGrid>
+                            <p:commandButton value="#{msg['lbl.historial']}" icon="ui-icon-document-w"
+                                             action="#{administrarLogs.historico('Usuario',sessionAdminUsuario.usuario.id)}"/>
+                        </h:panelGrid>
+                    </f:facet>
+                    <p:panel header="#{msg['lbl.editar']} #{msg['lbl.usuario']}" toggleable="true">
+                        <h:panelGrid styleClass="panelgrid" rowClasses="rowpanelgrid"
+                                     columnClasses="col-sm-3,col-sm-8,col-sm-1" columns="3">
+                            <h:outputLabel value="#{msg['lbl.usuario']}:"/>
+                            <p:inputText id="username" style="text-transform: none" value="#{sessionAdminUsuario.usuario.username}" 
+                                         title="#{msg['lbl.usuario']}" required="true" requiredMessage="#{msg['lbl.usuario']} #{msg['lbl.obligatorio']}">
+                                <p:ajax event="keyup" update="msmNombre"/>
+                                <p:ajax event="change" update="@this"/>
+                                <f:validateRegex pattern="^[A-Za-z0-9]{1,}([\s][A-Za-z0-9]{1,})*$" />
+                            </p:inputText>
+                            <p:message id="msmNombre" display="icon" for="username"/>
+                            <h:outputLabel value="#{msg['lbl.clave']}:"/>
+                            <p:commandLink  value="#{msg['lbl.cambiar']} #{msg['lbl.clave']}" action="pretty:cambiarClave"/>
+                        </h:panelGrid>
+                    </p:panel>   
+                    <br/>
+                    <p:panel header="#{msg['lbl.datos']} #{msg['lbl.usuario']}" toggleable="true">
+                        <ui:include src="datosPersonalesUsuario.xhtml"/>
+                    </p:panel> 
+                    <br/>
+                    <p:panel header="#{msg['lbl.roles']}" toggleable="true">
+                        <ui:include src="rolesUsuario.xhtml"/>
+                    </p:panel>
+                    <br/>
+                    <p:panel header="#{msg['lbl.permisos']}" toggleable="true">
+                        <ui:include src="permisosUsuario.xhtml"/>
+                    </p:panel>
+                    <br/>
+                    <p:panel header="#{msg['lbl.carreras']}" toggleable="true">
+                        <ui:include src="carrerasUsuario.xhtml"/>
+                    </p:panel>   
+                    <f:facet name="footer">
+                        <ui:include src="botonesEditarUsuario.xhtml"/>
+                    </f:facet>
+                </p:panel>
+               
+            </ui:define>
+        </ui:composition>
     </body>
 </html>

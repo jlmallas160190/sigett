@@ -173,6 +173,7 @@ public class AdministrarAreas implements Serializable {
             ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
             int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "editar_area");
             if (tienePermiso == 1) {
+                area=areaFacadeLocal.buscarPorId(area.getId());
                 sessionArea.setArea(area);
                 sessionCarrera.setCarreras(sessionArea.getArea().getCarreraList());
                 this.renderedCrearCarrera(usuario);

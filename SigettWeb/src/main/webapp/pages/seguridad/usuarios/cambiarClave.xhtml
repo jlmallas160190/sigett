@@ -3,22 +3,40 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
     <body>
-        
-            <h:panelGrid styleClass="panelgrid" rowClasses="rowpanelgrid" columnClasses="col-sm-1,col-sm-11" columns="2">
-                <h:outputLabel value="Password:" for="Password" />
-                <p:password style="text-transform: none" maxlength="20" id="password" feedback="true" 
-                            value="#{sessionAdminUsuario.usuario.password}" title="Password" required="true" requiredMessage="Clave es requerida.">
-                    <f:validateRegex pattern="^[A-Za-z0-9]{1,20}$" />
-                </p:password>
-                <h:outputLabel value="Confirmar Password:" for="Password" />
-                <p:password style="text-transform: none"  id="confirmaPassword"  maxlength="20" feedback="true" 
-                            value="#{administrarUsuarios.confirmaClave}" title="Confirma Password" required="true" 
-                            requiredMessage="Confirmación es requerida.">
-                    <f:validateRegex pattern="^[A-Za-z0-9]{1,20}$" />
-                </p:password>
-            </h:panelGrid>
+        <ui:composition template="./../../../template.xhtml">
+            <ui:define name="top">
+                <ui:include src="./../../admin/menu.xhtml"/>
+            </ui:define>
+            <ui:define name="left">
+                <ui:include src="./../../admin/menuIzquierdo.xhtml"/>
+            </ui:define>
+            <ui:define name="title">#{msg['lbl.usuario']}</ui:define>
+            <ui:define name="content">
+                <p:growl id="msm"/>
+                <p:panel toggleable="true">
+                    <h:panelGrid styleClass="panelgrid" rowClasses="rowpanelgrid" columnClasses="col-sm-1,col-sm-11" columns="2">
+                        <h:outputLabel value="Password:" for="Password" />
+                        <p:password style="text-transform: none" maxlength="20" id="password" feedback="true" 
+                                    value="#{sessionAdminUsuario.usuario.password}" title="Password" required="true" 
+                                    requiredMessage="Clave es requerida.">
+                            <f:validateRegex pattern="^[A-Za-z0-9]{1,20}$" />
+                        </p:password>
+                        <h:outputLabel value="Confirmar Password:" for="Password" />
+                        <p:password style="text-transform: none"  id="confirmaPassword"  maxlength="20" feedback="true" 
+                                    value="#{sessionAdminUsuario.confirmarClave}" title="Confirma Password" required="true" 
+                                    requiredMessage="Confirmación es requerida.">
+                            <f:validateRegex pattern="^[A-Za-z0-9]{1,20}$" />
+                        </p:password>
+                    </h:panelGrid>
+                    <f:facet  name="footer">
+                        <ui:include src="botonesUsuario.xhtml"/>
+                    </f:facet>
+                </p:panel>
+            </ui:define>
+        </ui:composition>
     </body>
 </html>

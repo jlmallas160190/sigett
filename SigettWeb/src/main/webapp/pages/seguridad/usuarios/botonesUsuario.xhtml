@@ -5,23 +5,17 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
     <h:panelGrid styleClass="pnl-botones" columns="3">  
-        <p:commandButton value="#{msg['lbl.grabar']}" icon="ui-icon-disk" update="pnlCrearUsuario,pnlUsuarios"
+        <p:commandButton value="#{msg['lbl.grabar']}" icon="ui-icon-disk" update="@form"
                          onstart="PF('dlgLoading').show();" oncomplete="PF('dlgLoading').hide()" 
                          action="#{administrarUsuarios.guardarConClave(sessionUsuario.usuario)}">
             <f:param name="1" value="guardar" />
             <f:param name="2" value="guardar" />
         </p:commandButton>
-        <p:commandButton value="#{msg['lbl.grabar']} #{msg['lbl.editar']}" icon="ui-icon-disk" update="pnlCrearUsuario,pnlUsuarios"
+        <p:commandButton value="#{msg['lbl.grabar']} #{msg['lbl.editar']}" icon="ui-icon-disk" update="@form"
                          onstart="PF('dlgLoading').show();" oncomplete="dlgLoading.hide()" 
                          action="#{administrarUsuarios.guardarConClave(sessionUsuario.usuario)}">
             <f:param name="1" value="guardar-editar"/>
             <f:param name="2" value="guardar" />
-        </p:commandButton>
-        <p:commandButton value="#{msg['lbl.grabar']} #{msg['lbl.agregar']} #{msg['lbl.otro']}" update="pnlCrearUsuario,pnlUsuarios" 
-                         onstart="PF('dlgLoading').show();"
-                         oncomplete="dlgLoading.hide()" action="#{administrarUsuarios.guardarConClave(sessionUsuario.usuario)}">
-            <f:param name="1" value="guardarCrear" />
-            <f:param name="2" value="guardarCrear"/>
         </p:commandButton>
     </h:panelGrid>
 

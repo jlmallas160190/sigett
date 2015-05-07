@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <body>
+        <p:pickList id="permisos"  effect="bounce" value="#{administrarRoles.permisosDualList}" var="items" itemLabel="#{items}" itemValue="#{items}"
+                    showSourceControls="true" showTargetControls="true" showCheckbox="true"
+                    showSourceFilter="true" showTargetFilter="true" filterMatchMode="contains"  >
+            <f:facet name="sourceCaption">#{administrarRoles.numeroPermisosDisponibles}:#{msg['lbl.permisos']} #{msg['lbl.disponibles']}</f:facet>
+            <f:facet name="targetCaption">#{administrarRoles.numeroPermisosSeleccionados}: #{msg['lbl.permisos']}</f:facet>
+            <p:ajax event="transfer" update="@this" listener="#{administrarRoles.transferRolPermisos}"></p:ajax>
+        </p:pickList>
+    </body>
+
+</html>

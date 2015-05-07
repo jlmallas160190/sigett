@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <body>
+        <h:panelGrid styleClass="pnl-botones"  columns="3">
+            <p:commandButton id="guardar" value="#{msg['lbl.grabar']}" icon="ui-icon-disk" onstart="PF('dlgLoading').show()" 
+                             oncomplete="PF('dlgLoading').hide()" update="@form" 
+                             action="#{administrarRoles.guardar(sessionRol.rol,sessionUsuario.usuario)}">
+                <f:param name="1" value="guardar" />
+            </p:commandButton>
+            <p:commandButton value="#{msg['lbl.grabar']} #{msg['lbl.editar']}" icon="ui-icon-disk" onstart="PF('dlgLoading').show()" 
+                             oncomplete="PF('dlgLoading').hide()" update="@form" 
+                             action="#{administrarRoles.guardar(sessionRol.rol,sessionUsuario.usuario)}">
+                <f:param name="1" value="guardar-editar" />
+            </p:commandButton>
+            <p:commandButton id="guardarCrear" icon="ui-icon-disk" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" 
+                             value="#{msg['lbl.grabar']} #{msg['lbl.agregar']} #{msg['lbl.otro']}" update="@form" 
+                             action="#{administrarRoles.guardar(sessionRol.rol,sessionUsuario.usuario)}">
+                <f:param name="1" value="guardarCrear" />
+            </p:commandButton>
+        </h:panelGrid>
+    </body>
+</html>

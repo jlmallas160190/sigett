@@ -41,7 +41,6 @@ import com.jlmallas.soporte.session.ExcepcionFacadeLocal;
 import com.jlmallas.soporte.session.ObjetoFacadeLocal;
 import org.jlmallas.seguridad.dao.PermisoDao;
 import com.jlmallas.soporte.session.ProyectoSoftwareFacadeLocal;
-import com.ocpsoft.pretty.PrettyContext;
 import org.jlmallas.seguridad.dao.RolDao;
 import org.jlmallas.seguridad.dao.RolUsuarioDao;
 import edu.unl.sigett.session.UsuarioCarreraFacadeLocal;
@@ -60,8 +59,8 @@ import org.jlmallas.seguridad.dao.LogDao;
 @URLMappings(mappings = {
     @URLMapping(
             id = "editarUsuario",
-            pattern = "/editarUsuario/#{adminUsuario.usuario.id}",
-            viewId = "/faces/pages/seguridad/editarUsuario.xhtml"
+            pattern = "/editarUsuario/#{sessionAdminUsuario.usuario.id}",
+            viewId = "/faces/pages/seguridad/usuarios/editarUsuario.xhtml"
     ),
     @URLMapping(
             id = "crearUsuario",
@@ -75,8 +74,8 @@ import org.jlmallas.seguridad.dao.LogDao;
     ),
     @URLMapping(
             id = "cambiarClave",
-            pattern = "/cambiarClave/#{adminUsuario.usuario.id}",
-            viewId = "/faces/cambiarClave.xhtml"
+            pattern = "/cambiarClave/#{sessionAdminUsuario.usuario.id}",
+            viewId = "/faces/pages/seguridad/usuarios/cambiarClave.xhtml"
     ),
     @URLMapping(
             id = "cambiarClaveEstudiante",
@@ -138,6 +137,7 @@ public class AdministrarUsuarios implements Serializable {
             ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
             int tienePermiso = usuarioDao.tienePermiso(session, "editar_usuario");
             if (tienePermiso == 1) {
+                usuario = usuarioDao.find(usuario.getId());
                 sessionAdminUsuario.setUsuario(usuario);
                 sessionAdminUsuario.setRolesUsuariosRemovidos(new ArrayList<RolUsuario>());
                 sessionAdminUsuario.setUsuariosPermisoRemovidos(new ArrayList<UsuarioPermiso>());
@@ -176,6 +176,7 @@ public class AdministrarUsuarios implements Serializable {
         try {
             renderedCrear(usuario);
             renderedEditar(usuario);
+            buscar(usuario);
             return "pretty:usuarios";
         } catch (Exception e) {
             e.printStackTrace();

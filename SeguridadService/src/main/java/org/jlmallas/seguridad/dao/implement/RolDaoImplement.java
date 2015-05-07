@@ -7,6 +7,7 @@ package org.jlmallas.seguridad.dao.implement;
 
 import org.jlmallas.seguridad.entity.Rol;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.Query;
@@ -25,14 +26,19 @@ public class RolDaoImplement extends AbstractDao<Rol> implements RolDao {
     }
 
     @Override
-    public List<Rol> buscarPorNombre(String nombre) {
-        List<Rol> roles = new ArrayList<>();
-        try {
-            Query query = em.createQuery("Select rol from Rol rol where " + " (LOWER(rol.nombre) like concat('%',LOWER(:nombre),'%'))");
-            query.setParameter("nombre", nombre);
-            roles = query.getResultList();
-        } catch (Exception e) {
+    public List<Rol> buscarPorCriterio(Rol rol) {
+        StringBuilder sql = new StringBuilder();
+        HashMap<String, Object> parametros = new HashMap<>();
+        sql.append("Select r from Rol r where 1=1 ");
+        if (rol.getNombre() != null) {
+            sql.append(" and (LOWER(r.nombre) like concat('%',LOWER(:nombre),'%'))");
+            parametros.put("nombre", rol.getNombre());
         }
-        return roles;
+        sql.append(" order by r.nombre asc ");
+        final Query q = em.createQuery(sql.toString());
+        for (String key : parametros.keySet()) {
+            q.setParameter(key, parametros.get(key));
+        }
+        return q.getResultList();
     }
 }

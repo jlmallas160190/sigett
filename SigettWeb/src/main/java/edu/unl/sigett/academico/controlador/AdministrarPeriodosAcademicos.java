@@ -136,6 +136,7 @@ public class AdministrarPeriodosAcademicos implements Serializable {
             String param = (String) facesContext.getExternalContext().getRequestParameterMap().get("1");
             int tienePermiso = usuarioFacadeLocal.tienePermiso(sessionUsuario.getUsuario(), "editar_periodo_academico");
             if (tienePermiso == 1) {
+                periodoAcademico = periodoAcademicoFacadeLocal.buscarPorId(periodoAcademico.getId());
                 sessionPeriodoAcademico.setPeriodoAcademico(periodoAcademico);
                 sessionOfertaAcademica.setOfertaAcademicas(periodoAcademico.getOfertaAcademicaList());
                 sessionOfertaAcademica.setOfertaAcademicasFilter(periodoAcademico.getOfertaAcademicaList());

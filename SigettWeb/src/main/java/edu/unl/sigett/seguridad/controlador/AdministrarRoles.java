@@ -31,6 +31,7 @@ import org.jlmallas.seguridad.dao.LogDao;
 import com.jlmallas.soporte.session.ObjetoFacadeLocal;
 import org.jlmallas.seguridad.dao.PermisoDao;
 import com.jlmallas.soporte.session.ProyectoSoftwareFacadeLocal;
+import javax.annotation.PostConstruct;
 import org.jlmallas.seguridad.dao.RolDao;
 import org.jlmallas.seguridad.dao.RolPermisoDao;
 import org.jlmallas.seguridad.dao.UsuarioDao;
@@ -45,17 +46,17 @@ import org.jlmallas.seguridad.dao.UsuarioDao;
     @URLMapping(
             id = "editarRol",
             pattern = "/editarRol/#{sessionRol.rol.id}",
-            viewId = "/faces/pages/seguridad/editarRol.xhtml"
+            viewId = "/faces/pages/seguridad/roles/editarRol.xhtml"
     ),
     @URLMapping(
             id = "crearRol",
             pattern = "/crearRol/",
-            viewId = "/faces/pages/seguridad/crearRol.xhtml"
+            viewId = "/faces/pages/seguridad/roles/crearRol.xhtml"
     ),
     @URLMapping(
             id = "roles",
             pattern = "/roles/",
-            viewId = "/faces/pages/seguridad/buscarRoles.xhtml"
+            viewId = "/faces/pages/seguridad/roles/index.xhtml"
     )})
 public class AdministrarRoles implements Serializable {
 
@@ -65,7 +66,7 @@ public class AdministrarRoles implements Serializable {
     private SessionRol sessionRol;
 
     @EJB
-    private RolDao rolFacadeLocal;
+    private RolDao rolDao;
     @EJB
     private PermisoDao permisoFacadeLocal;
     @EJB
@@ -88,7 +89,6 @@ public class AdministrarRoles implements Serializable {
 
     private int numeroPermisosDisponibles = 0;
     private int numeroPermisosSeleccionados = 0;
-    private String criterio;
 
     private boolean renderedNoEditar;
     private boolean renderedEditar;
@@ -148,13 +148,13 @@ public class AdministrarRoles implements Serializable {
         }
     }
 
-    public void buscar(String criterio, Usuario usuario) {
+    public void buscar(Usuario usuario) {
         try {
             FacesContext facesContext = FacesContext.getCurrentInstance();
             ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
             int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "buscar_rol");
             if (tienePermiso == 1) {
-                roles = rolFacadeLocal.buscarPorNombre(criterio);
+                roles = rolDao.buscarPorCriterio(new Rol());
             } else {
                 if (tienePermiso == 2) {
                     FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_buscar") + ". " + bundle.getString("lbl.msm_consulte"), "");
@@ -183,6 +183,7 @@ public class AdministrarRoles implements Serializable {
     public String abrirBuscarRoles(Usuario usuario) {
         String navegacion = "";
         try {
+            buscar(usuario);
             renderedCrear(usuario);
             renderedEditar(usuario);
             navegacion = "pretty:roles";
@@ -260,6 +261,7 @@ public class AdministrarRoles implements Serializable {
             ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
             int tienePermiso = usuarioFacadeLocal.tienePermiso(sessionUsuario.getUsuario(), "editar_rol");
             if (tienePermiso == 1) {
+                rol = rolDao.find(rol.getId());
                 sessionRol.setRol(rol);
                 listarPermisos(rol);
                 rolPermisosRemovidos = new ArrayList<>();
@@ -356,7 +358,7 @@ public class AdministrarRoles implements Serializable {
                     List<RolPermiso> rolPermisos = new ArrayList<>();
                     rolPermisos = rolPermisoFacadeLocal.buscarPorRol(rol.getId());
                     rol.setRolPermisoList(new ArrayList<RolPermiso>());
-                    rolFacadeLocal.create(rol);
+                    rolDao.create(rol);
                     logFacadeLocal.create(logFacadeLocal.crearLog("Rol", rol.getId() + "", "CREAR", "|Nombre= " + rol.getNombre(), usuario));
                     guardarRolesPermiso(rol);
                     rol.getRolPermisoList().addAll(rolPermisos);
@@ -388,7 +390,7 @@ public class AdministrarRoles implements Serializable {
                     List<RolPermiso> rolPermisos = rolPermisoFacadeLocal.buscarPorRol(rol.getId());
                     rolPermisos = rol.getRolPermisoList();
                     rol.setRolPermisoList(new ArrayList<RolPermiso>());
-                    rolFacadeLocal.edit(rol);
+                    rolDao.edit(rol);
                     logFacadeLocal.create(logFacadeLocal.crearLog("Rol", rol.getId() + "", "EDITAR", "|Nombre= " + rol.getNombre(), sessionUsuario.getUsuario()));
                     guardarRolesPermiso(rol);
                     removerRolPermisos(rol);
@@ -481,14 +483,6 @@ public class AdministrarRoles implements Serializable {
 
     public void setSessionRol(SessionRol sessionRol) {
         this.sessionRol = sessionRol;
-    }
-
-    public String getCriterio() {
-        return criterio;
-    }
-
-    public void setCriterio(String criterio) {
-        this.criterio = criterio;
     }
 
     public DualListModel<Permiso> getPermisosDualList() {

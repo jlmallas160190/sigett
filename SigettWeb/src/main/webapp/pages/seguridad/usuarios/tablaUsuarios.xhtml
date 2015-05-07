@@ -15,7 +15,7 @@
             <f:facet name="header">
                 <h:outputText value="#{msg['lbl.usuario']}"/>
             </f:facet>
-            <p:commandLink value="#{item.username}" update="pnlUsuarios,pnlEditarUsuario" 
+            <p:commandLink value="#{item.username}" 
                            action="#{administrarUsuarios.editar(item,sessionUsuario.usuario)}"/>
         </p:column>
         <p:column sortBy="#{item.username}"

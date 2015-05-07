@@ -46,7 +46,6 @@ public class SessionAdminUsuario implements Serializable {
     private int numeroPermisosSeleccionados = 0;
     private String confirmarClaveEstudiante;
     private String criterio;
-    private String confirmaClave;
 
     private boolean renderedNoEditar;
     private boolean renderedEditar;
@@ -178,15 +177,6 @@ public class SessionAdminUsuario implements Serializable {
     public void setCriterio(String criterio) {
         this.criterio = criterio;
     }
-
-    public String getConfirmaClave() {
-        return confirmaClave;
-    }
-
-    public void setConfirmaClave(String confirmaClave) {
-        this.confirmaClave = confirmaClave;
-    }
-
     public boolean isRenderedNoEditar() {
         return renderedNoEditar;
     }

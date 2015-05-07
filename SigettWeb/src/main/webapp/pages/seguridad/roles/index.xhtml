@@ -7,7 +7,7 @@
 
     <body>
         <ui:composition template="./../../../template.xhtml">
-            <ui:define name="title">#{msg['lbl.usuarios']}</ui:define>
+            <ui:define name="title">#{msg['lbl.roles']}</ui:define>
             <ui:define name="top">
                 <ui:include src="./../../admin/menu.xhtml"/>
             </ui:define>
@@ -16,11 +16,11 @@
             </ui:define>
             <ui:define name="content">
                 <p:growl id="msm"/>
-                <p:panel id="pnlUsuarios"
+                <p:panel toggleable="true"
                         header="#{msg['lbl.usuarios']}">
-                    <ui:include src="tablaUsuarios.xhtml" /> 
+                    <ui:include src="tablaRoles.xhtml" /> 
                     <f:facet name="footer">
-                        <ui:include src="botonesTablaUsuarios.xhtml" /> 
+                        <ui:include src="botonesTablaRoles.xhtml" /> 
                     </f:facet>
                 </p:panel>
             </ui:define>

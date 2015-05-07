@@ -42,7 +42,7 @@ import org.jlmallas.seguridad.dao.UsuarioDao;
     @URLMapping(
             id = "logs",
             pattern = "/logs/",
-            viewId = "/faces/pages/seguridad/buscarLogs.xhtml"
+            viewId = "/faces/pages/buscarLogs.xhtml"
     )})
 public class AdministrarLogs implements Serializable {
 
