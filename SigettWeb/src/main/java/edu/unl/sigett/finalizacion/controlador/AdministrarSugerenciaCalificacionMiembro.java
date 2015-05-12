@@ -19,7 +19,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import org.primefaces.context.RequestContext;
-import edu.unl.sigett.session.SugerenciaCalificacionMiembroFacadeLocal;
+import edu.unl.sigett.dao.SugerenciaCalificacionMiembroFacadeLocal;
 
 /**
  *

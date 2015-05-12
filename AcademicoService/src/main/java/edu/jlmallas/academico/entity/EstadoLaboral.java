@@ -14,8 +14,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -41,9 +39,9 @@ public class EstadoLaboral implements Serializable {
     @Basic(optional = false)
     @Column(name = "id")
     private Long id;
-    @JoinColumn(name = "tipo_contrato_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private TipoContrato tipoContratoId;
+    @Basic(optional = false)
+    @Column(name = "tipo_contrato_id")
+    private Long tipoContratoId;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "estadoLaboralId")
     private List<Docente> docenteList;
 
@@ -62,11 +60,11 @@ public class EstadoLaboral implements Serializable {
         this.id = id;
     }
 
-    public TipoContrato getTipoContratoId() {
+    public Long getTipoContratoId() {
         return tipoContratoId;
     }
 
-    public void setTipoContratoId(TipoContrato tipoContratoId) {
+    public void setTipoContratoId(Long tipoContratoId) {
         this.tipoContratoId = tipoContratoId;
     }
 
@@ -101,7 +99,7 @@ public class EstadoLaboral implements Serializable {
 
     @Override
     public String toString() {
-        return id + ": " + tipoContratoId.getNombre();
+        return id + "";
     }
 
 }

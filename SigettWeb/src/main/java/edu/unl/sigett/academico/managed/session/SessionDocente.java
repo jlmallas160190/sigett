@@ -7,8 +7,11 @@ package edu.unl.sigett.academico.managed.session;
 
 import com.jlmallas.comun.entity.Persona;
 import edu.jlmallas.academico.entity.Docente;
+import edu.unl.sigett.academico.dto.DocentePersona;
 import edu.unl.sigett.entity.Director;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Named;
 
@@ -21,15 +24,17 @@ import javax.inject.Named;
 public class SessionDocente implements Serializable {
 
     private Docente docente;
-    private Persona persona;
-   private Director director;
-   private boolean renderedBuscar;
+    private Director director;
+    private DocentePersona docentePersona;
+    private List<DocentePersona> docentePersonas;
+    private boolean renderedBuscar;
 
     public SessionDocente() {
-        this.renderedBuscar=false;
+        this.docentePersona = new DocentePersona();
+        this.docentePersonas = new ArrayList<>();
+        this.renderedBuscar = false;
         this.docente = new Docente();
-        this.persona = new Persona();
-        this.director= new Director();
+        this.director = new Director();
     }
 
     public Docente getDocente() {
@@ -40,12 +45,12 @@ public class SessionDocente implements Serializable {
         this.docente = docente;
     }
 
-    public Persona getPersona() {
-        return persona;
+    public DocentePersona getDocentePersona() {
+        return docentePersona;
     }
 
-    public void setPersona(Persona persona) {
-        this.persona = persona;
+    public void setDocentePersona(DocentePersona docentePersona) {
+        this.docentePersona = docentePersona;
     }
 
     public Director getDirector() {
@@ -62,6 +67,14 @@ public class SessionDocente implements Serializable {
 
     public void setRenderedBuscar(boolean renderedBuscar) {
         this.renderedBuscar = renderedBuscar;
+    }
+
+    public List<DocentePersona> getDocentePersonas() {
+        return docentePersonas;
+    }
+
+    public void setDocentePersonas(List<DocentePersona> docentePersonas) {
+        this.docentePersonas = docentePersonas;
     }
 
 }

@@ -33,7 +33,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import org.primefaces.event.FileUploadEvent;
 import edu.jlmallas.academico.service.CarreraService;
-import edu.unl.sigett.session.ConfiguracionCarreraFacadeLocal;
+import edu.unl.sigett.dao.ConfiguracionCarreraDao;
 import com.jlmallas.soporte.session.ExcepcionFacadeLocal;
 import org.jlmallas.seguridad.dao.LogDao;
 import edu.jlmallas.academico.service.NivelService;
@@ -42,7 +42,7 @@ import com.jlmallas.soporte.session.ProyectoSoftwareFacadeLocal;
 import org.jlmallas.seguridad.dao.UsuarioDao;
 import edu.unl.sigett.academico.managed.session.SessionArea;
 import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
-import edu.unl.sigett.session.ConfiguracionGeneralFacadeLocal;
+import edu.unl.sigett.dao.ConfiguracionGeneralDao;
 import javax.annotation.PostConstruct;
 
 /**
@@ -86,9 +86,9 @@ public class AdministrarCarreras implements Serializable {
     @EJB
     private UsuarioDao usuarioFacadeLocal;
     @EJB
-    private ConfiguracionCarreraFacadeLocal configuracionCarreraFacadeLocal;
+    private ConfiguracionCarreraDao configuracionCarreraFacadeLocal;
     @EJB
-    private ConfiguracionGeneralFacadeLocal configuracionGeneralFacadeLocal;
+    private ConfiguracionGeneralDao configuracionGeneralFacadeLocal;
 
     @PostConstruct
     public void init() {

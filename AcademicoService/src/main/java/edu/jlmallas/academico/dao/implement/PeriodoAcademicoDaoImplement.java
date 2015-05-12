@@ -5,7 +5,7 @@
  */
 package edu.jlmallas.academico.dao.implement;
 
-import edu.jlmallas.academico.dao.AbstractFacade;
+import edu.jlmallas.academico.dao.AbstractDao;
 import edu.jlmallas.academico.dao.PeriodoAcademicoDao;
 import edu.jlmallas.academico.entity.PeriodoAcademico;
 import java.util.ArrayList;
@@ -19,7 +19,7 @@ import javax.persistence.Query;
  * @author jorge-luis
  */
 @Stateless
-public class PeriodoAcademicoDaoImplement extends AbstractFacade<PeriodoAcademico> implements PeriodoAcademicoDao {
+public class PeriodoAcademicoDaoImplement extends AbstractDao<PeriodoAcademico> implements PeriodoAcademicoDao {
     
     public PeriodoAcademicoDaoImplement() {
         super(PeriodoAcademico.class);

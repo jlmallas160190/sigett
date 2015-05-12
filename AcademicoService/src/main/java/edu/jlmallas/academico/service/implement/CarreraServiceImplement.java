@@ -5,7 +5,7 @@
  */
 package edu.jlmallas.academico.service.implement;
 
-import edu.jlmallas.academico.dao.AbstractFacade;
+import edu.jlmallas.academico.dao.AbstractDao;
 import edu.jlmallas.academico.dao.CarreraDao;
 import edu.jlmallas.academico.entity.Carrera;
 import edu.jlmallas.academico.service.CarreraService;

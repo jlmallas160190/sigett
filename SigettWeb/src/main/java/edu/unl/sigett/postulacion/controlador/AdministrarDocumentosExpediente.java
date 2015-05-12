@@ -23,8 +23,8 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
-import edu.unl.sigett.session.CatalogoDocumentoExpedienteFacadeLocal;
-import edu.unl.sigett.session.DocumentoExpedienteFacadeLocal;
+import edu.unl.sigett.dao.CatalogoDocumentoExpedienteFacadeLocal;
+import edu.unl.sigett.dao.DocumentoExpedienteFacadeLocal;
 import org.jlmallas.seguridad.dao.LogDao;
 import org.jlmallas.seguridad.dao.UsuarioDao;
 

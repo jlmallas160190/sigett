@@ -27,11 +27,11 @@ import javax.inject.Named;
 import org.primefaces.event.TransferEvent;
 import org.primefaces.model.DualListModel;
 import edu.jlmallas.academico.service.CarreraService;
-import edu.unl.sigett.session.LineaInvestigacionCarreraFacadeLocal;
-import edu.unl.sigett.session.LineaInvestigacionFacadeLocal;
+import edu.unl.sigett.dao.LineaInvestigacionCarreraFacadeLocal;
+import edu.unl.sigett.dao.LineaInvestigacionFacadeLocal;
 import org.jlmallas.seguridad.dao.LogDao;
 import org.jlmallas.seguridad.dao.UsuarioDao;
-import edu.unl.sigett.session.UsuarioCarreraFacadeLocal;
+import edu.unl.sigett.dao.UsuarioCarreraDao;
 
 /**
  *
@@ -76,7 +76,7 @@ public class AdministrarLineaInvestigacion implements Serializable {
     @EJB
     private UsuarioDao usuarioFacadeLocal;
     @EJB
-    private UsuarioCarreraFacadeLocal usuarioCarreraFacadeLocal;
+    private UsuarioCarreraDao usuarioCarreraFacadeLocal;
 
     private List<LineaInvestigacion> lineasInvestigacion;
     private boolean renderedNoEditar;

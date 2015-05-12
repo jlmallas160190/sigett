@@ -22,7 +22,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import org.primefaces.context.RequestContext;
 import org.jlmallas.seguridad.dao.LogDao;
-import edu.unl.sigett.session.TipoActividadFacadeLocal;
+import edu.unl.sigett.dao.TipoActividadFacadeLocal;
 import org.jlmallas.seguridad.dao.UsuarioDao;
 
 /**

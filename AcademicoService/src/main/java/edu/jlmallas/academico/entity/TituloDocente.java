@@ -50,6 +50,10 @@ public class TituloDocente implements Serializable {
     public TituloDocente() {
     }
 
+    public TituloDocente(Titulo tituloId) {
+        this.tituloId = tituloId;
+    }
+
     public TituloDocente(Long id) {
         this.id = id;
     }

@@ -5,9 +5,11 @@
  */
 package edu.unl.sigett.seguridad.controlador;
 
-import edu.unl.sigett.academico.controlador.AdministrarCarreras;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 import com.ocpsoft.pretty.faces.annotation.URLMappings;
+import edu.jlmallas.academico.dao.CarreraDao;
+import edu.jlmallas.academico.entity.Carrera;
+import edu.unl.sigett.dao.ConfiguracionCarreraDao;
 import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
 import edu.unl.sigett.seguridad.managed.session.SessionUsuarioCarrera;
 import org.jlmallas.seguridad.entity.Usuario;
@@ -22,10 +24,11 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
-import edu.unl.sigett.session.UsuarioCarreraFacadeLocal;
+import edu.unl.sigett.dao.UsuarioCarreraDao;
 import org.jlmallas.seguridad.dao.UsuarioDao;
-import edu.jlmallas.academico.entity.Carrera;
-import edu.jlmallas.academico.service.CarreraService;
+import edu.unl.sigett.dto.UsuarioCarreraAux;
+import edu.unl.sigett.entity.ConfiguracionCarrera;
+import org.primefaces.event.FileUploadEvent;
 
 /**
  *
@@ -36,77 +39,66 @@ import edu.jlmallas.academico.service.CarreraService;
 @URLMappings(mappings = {
     @URLMapping(
             id = "editarUsuarioCarrera",
-            pattern = "/editarUsuarioCarrera/#{sessionUsuarioCarrera.usuarioCarrera.id}",
-            viewId = "/faces/pages/sigett/editarUsuarioCarrera.xhtml"
+            pattern = "/editarUsuarioCarrera/#{sessionUsuarioCarrera.usuarioCarreraAux.carrera.id}",
+            viewId = "/faces/pages/sigett/usuarioCarrera/editarUsuarioCarrera.xhtml"
     ),
     @URLMapping(
             id = "carrerasUsuario",
             pattern = "/carrerasUsuario/",
-            viewId = "/faces/faces/pages/sigett//buscarCarrerasUsuario.xhtml"
+            viewId = "/faces/faces/pages/sigett/buscarCarrerasUsuario.xhtml"
     )})
 public class AdministrarUsuarioCarrera implements Serializable {
     
     @Inject
     private SessionUsuarioCarrera sessionUsuarioCarrera;
-    @EJB
-    private UsuarioDao usuarioFacadeLocal;
-    @EJB
-    private UsuarioCarreraFacadeLocal usuarioCarreraFacadeLocal;
-    @EJB
-    private CarreraService carreraFacadeLocal;
-    
     @Inject
     private SessionUsuario sessionUsuario;
-    private List<UsuarioCarrera> usuarioCarreras;
-    private boolean renderedNoEditar;
-    private String criterio;
-    private boolean renderedBuscar;
-    private List<UsuarioCarrera> carreras;
+    @EJB
+    private UsuarioDao usuarioDao;
+    @EJB
+    private UsuarioCarreraDao usuarioCarreraDao;
+    @EJB
+    private CarreraDao carreraDao;
+    @EJB
+    private ConfiguracionCarreraDao configuracionCarreraDao;
     
     public AdministrarUsuarioCarrera() {
     }
-    
-    public boolean renderedEditar() {
-        boolean var = false;
-        int tienePermiso = usuarioFacadeLocal.tienePermiso(sessionUsuario.getUsuario(), "editar_usuario_carrera");
+    public void init(){
+        buscar();
+    }
+
+    //<editor-fold defaultstate="collapsed" desc="MÉTODOS CRUD">
+    public void renderedEditar() {
+        int tienePermiso = usuarioDao.tienePermiso(sessionUsuario.getUsuario(), "editar_usuario_carrera");
         if (tienePermiso == 1) {
-            var = true;
-            renderedNoEditar = false;
-        } else {
-            renderedNoEditar = true;
+            sessionUsuarioCarrera.setRenderedEditar(true);
+            sessionUsuarioCarrera.setRenderedEditar(false);
+            return;
         }
-        return var;
+        sessionUsuarioCarrera.setRenderedEditar(false);
+        sessionUsuarioCarrera.setRenderedEditar(true);
     }
     
     public void renderedBuscar(Usuario usuario) {
-        int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "buscar_docente");
+        int tienePermiso = usuarioDao.tienePermiso(usuario, "buscar_docente");
         if (tienePermiso == 1) {
-            renderedBuscar = true;
-        } else {
-            renderedBuscar = false;
+            sessionUsuarioCarrera.setRenderedBuscar(true);
+            return;
         }
+        sessionUsuarioCarrera.setRenderedBuscar(false);
     }
-    
-    public Carrera getCarrera(UsuarioCarrera usuarioCarrera) {
-        try {
-            return carreraFacadeLocal.find(usuarioCarrera.getCarreraId());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-    
-    public String editar(UsuarioCarrera usuarioCarrera, AdministrarCarreras carreras) {
+//</editor-fold>
+
+    public String editar(UsuarioCarreraAux usuarioCarreraAux) {
         String navegacion = "";
         try {
             FacesContext facesContext = FacesContext.getCurrentInstance();
             ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            int tienePermiso = usuarioFacadeLocal.tienePermiso(sessionUsuario.getUsuario(), "editar_usuario_carrera");
+            int tienePermiso = usuarioDao.tienePermiso(sessionUsuario.getUsuario(), "editar_usuario_carrera");
             if (tienePermiso == 1) {
-                sessionUsuarioCarrera.setUsuarioCarrera(usuarioCarrera);
-                sessionUsuarioCarrera.setCarrera(carreraFacadeLocal.find(usuarioCarrera.getCarreraId()));
-                sessionUsuarioCarrera.setUsuario(usuarioFacadeLocal.find(usuarioCarrera.getUsuarioId()));
-//                carreras.setNivel(sessionUsuarioCarrera.getCarrera().getNivelId().toString());
+                usuarioCarreraAux.setCarrera(carreraDao.find(usuarioCarreraAux.getCarrera().getId()));
+                sessionUsuarioCarrera.setUsuarioCarreraAux(usuarioCarreraAux);
                 navegacion = "pretty:editarUsuarioCarrera";
             } else {
                 if (tienePermiso == 2) {
@@ -122,52 +114,120 @@ public class AdministrarUsuarioCarrera implements Serializable {
         
     }
     
-    public void buscar(String criterio) {
+    public void buscar() {
         try {
+            sessionUsuarioCarrera.setUsuarioCarrerasAuxs(new ArrayList<UsuarioCarreraAux>());
             FacesContext facesContext = FacesContext.getCurrentInstance();
             ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            int tienePermiso = usuarioFacadeLocal.tienePermiso(sessionUsuario.getUsuario(), "buscar_usuario_carrera");
+            int tienePermiso = usuarioDao.tienePermiso(sessionUsuario.getUsuario(), "buscar_usuario_carrera");
             if (tienePermiso == 1) {
-                usuarioCarreras = usuarioCarreraFacadeLocal.buscarPorUsuario(sessionUsuario.getUsuario().getId());
-            } else {
-                if (tienePermiso == 2) {
-                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_buscar") + ". " + bundle.getString("lbl.msm_consulte"), "");
-                    FacesContext.getCurrentInstance().addMessage(null, message);
+                UsuarioCarrera usuarioCarrera = new UsuarioCarrera();
+                usuarioCarrera.setUsuarioId(sessionUsuario.getUsuario().getId());
+                List<UsuarioCarrera> usuarioCarreras = usuarioCarreraDao.buscar(usuarioCarrera);
+                if (usuarioCarreras == null) {
+                    return;
                 }
+                for (UsuarioCarrera uc : usuarioCarreras) {
+                    UsuarioCarreraAux usuarioCarreraAux = new UsuarioCarreraAux(uc, usuarioDao.find(uc.getUsuarioId()),
+                            carreraDao.find(uc.getCarreraId()));
+                    sessionUsuarioCarrera.getUsuarioCarrerasAuxs().add(usuarioCarreraAux);
+                }
+                return;
             }
+            if (tienePermiso == 2) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_buscar") + ". "
+                        + bundle.getString("lbl.msm_consulte"), "");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+            }
+            
         } catch (Exception e) {
             System.out.println(e);
         }
     }
     
-    public void usuarioCarreras(Usuario usuario) {
-        carreras = new ArrayList<>();
+    public String grabarCarrera() {
+        String navegacion = "";
         try {
             FacesContext facesContext = FacesContext.getCurrentInstance();
             ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "buscar_usuario_carrera");
-            if (tienePermiso == 1) {
-                for (UsuarioCarrera uc : usuarioCarreraFacadeLocal.buscarPorUsuario(sessionUsuario.getUsuario().getId())) {
-                    carreras.add(uc);
-                }
-            } else {
-                if (tienePermiso == 2) {
-                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_buscar") + ". " + bundle.getString("lbl.msm_consulte"), "");
-                    FacesContext.getCurrentInstance().addMessage(null, message);
-                }
+            String param = (String) facesContext.getExternalContext().getRequestParameterMap().get("1");
+            if (sessionUsuarioCarrera.getUsuarioCarreraAux().getCarrera().getIdSga() == null) {
+                sessionUsuarioCarrera.getUsuarioCarreraAux().getCarrera().setIdSga("");
             }
+            if (configuracionCarreraDao.buscarPorCarreraId(sessionUsuarioCarrera.getUsuarioCarreraAux().getCarrera()
+                    .getId(), "MA") == null) {
+                ConfiguracionCarrera configuracionCarrera1 = new ConfiguracionCarrera();
+                configuracionCarrera1.setNombre("Número de Módulo Aprobado por el estudiante para ser Apto a realizar un trabajo de titulación");
+                configuracionCarrera1.setCodigo("MA");
+                configuracionCarrera1.setValor("?");
+                configuracionCarrera1.setObservacion("S/N");
+                configuracionCarrera1.setCarreraId(sessionUsuarioCarrera.getUsuarioCarreraAux().getCarrera().getId());
+                configuracionCarrera1.setTipo("numerico");
+                configuracionCarreraDao.create(configuracionCarrera1);
+            }
+            if (configuracionCarreraDao.buscarPorCarreraId(sessionUsuarioCarrera.getUsuarioCarreraAux().getCarrera().getId(), "ME") == null) {
+                ConfiguracionCarrera configuracionCarrera2 = new ConfiguracionCarrera();
+                configuracionCarrera2.setNombre("Número de Modulo aprobado para ser egresado");
+                configuracionCarrera2.setCodigo("ME");
+                configuracionCarrera2.setValor("?");
+                configuracionCarrera2.setObservacion("S/N");
+                configuracionCarrera2.setCarreraId(sessionUsuarioCarrera.getUsuarioCarreraAux().getCarrera().getId());
+                configuracionCarrera2.setTipo("numerico");
+                configuracionCarreraDao.create(configuracionCarrera2);
+            }
+            if (configuracionCarreraDao.buscarPorCarreraId(sessionUsuarioCarrera.getUsuarioCarreraAux().getCarrera().getId(), "OA") == null) {
+                ConfiguracionCarrera configuracionCarrera = new ConfiguracionCarrera();
+                configuracionCarrera.setNombre("ID de Oferta Academica Actual de la Carrera");
+                configuracionCarrera.setCodigo("OA");
+                configuracionCarrera.setValor("?");
+                configuracionCarrera.setObservacion("S/N");
+                configuracionCarrera.setCarreraId(sessionUsuarioCarrera.getUsuarioCarreraAux().getCarrera().getId());
+                configuracionCarrera.setTipo("boton");
+                configuracionCarreraDao.create(configuracionCarrera);
+            }
+            if (configuracionCarreraDao.buscarPorCarreraId(sessionUsuarioCarrera.getUsuarioCarreraAux().getCarrera().getId(), "NO") == null) {
+                ConfiguracionCarrera configuracionCarrera3 = new ConfiguracionCarrera();
+                configuracionCarrera3.setNombre("Número de Oficio");
+                configuracionCarrera3.setCodigo("NO");
+                configuracionCarrera3.setValor("1");
+                configuracionCarrera3.setObservacion("Número de Oficio");
+                configuracionCarrera3.setCarreraId(sessionUsuarioCarrera.getUsuarioCarreraAux().getCarrera().getId());
+                configuracionCarrera3.setTipo("numerico");
+                configuracionCarreraDao.create(configuracionCarrera3);
+            }
+            if (configuracionCarreraDao.buscarPorCarreraId(sessionUsuarioCarrera.getUsuarioCarreraAux().getCarrera().getId(), "NA") == null) {
+                ConfiguracionCarrera configuracionCarrera4 = new ConfiguracionCarrera();
+                configuracionCarrera4.setNombre("Número de Acta de tesis");
+                configuracionCarrera4.setCodigo("NA");
+                configuracionCarrera4.setValor("?");
+                configuracionCarrera4.setObservacion("S/N");
+                configuracionCarrera4.setCarreraId(sessionUsuarioCarrera.getUsuarioCarreraAux().getCarrera().getId());
+                configuracionCarrera4.setTipo("numerico");
+                configuracionCarreraDao.create(configuracionCarrera4);
+            }
+            carreraDao.edit(sessionUsuarioCarrera.getUsuarioCarreraAux().getCarrera());
+            if (param.equalsIgnoreCase("grabar")) {
+                sessionUsuarioCarrera.setUsuarioCarreraAux(new UsuarioCarreraAux(new UsuarioCarrera(), new Usuario(), new Carrera()));
+                return "pretty:editarArea";
+            }
+            
+            if (param.equalsIgnoreCase("grabar-editar")) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.carrera") + " " + bundle.getString("lbl.msm_editar"), "");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+            }
+            this.buscar();
         } catch (Exception e) {
-            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), "");
-            FacesContext.getCurrentInstance().addMessage(null, message);
+            e.printStackTrace();
         }
+        return navegacion;
     }
     
-    public List<UsuarioCarrera> getCarreras() {
-        return carreras;
-    }
-    
-    public void setCarreras(List<UsuarioCarrera> carreras) {
-        this.carreras = carreras;
+    public void handleFileUpload(FileUploadEvent event) {
+        try {
+            sessionUsuarioCarrera.getUsuarioCarreraAux().getCarrera().setLogo(event.getFile().getContents());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
     
     public SessionUsuarioCarrera getSessionUsuarioCarrera() {
@@ -185,37 +245,4 @@ public class AdministrarUsuarioCarrera implements Serializable {
     public void setSessionUsuario(SessionUsuario sessionUsuario) {
         this.sessionUsuario = sessionUsuario;
     }
-    
-    public List<UsuarioCarrera> getUsuarioCarreras() {
-        return usuarioCarreras;
-    }
-    
-    public void setUsuarioCarreras(List<UsuarioCarrera> usuarioCarreras) {
-        this.usuarioCarreras = usuarioCarreras;
-    }
-    
-    public boolean isRenderedNoEditar() {
-        return renderedNoEditar;
-    }
-    
-    public void setRenderedNoEditar(boolean renderedNoEditar) {
-        this.renderedNoEditar = renderedNoEditar;
-    }
-    
-    public String getCriterio() {
-        return criterio;
-    }
-    
-    public void setCriterio(String criterio) {
-        this.criterio = criterio;
-    }
-    
-    public boolean isRenderedBuscar() {
-        return renderedBuscar;
-    }
-    
-    public void setRenderedBuscar(boolean renderedBuscar) {
-        this.renderedBuscar = renderedBuscar;
-    }
-    
 }

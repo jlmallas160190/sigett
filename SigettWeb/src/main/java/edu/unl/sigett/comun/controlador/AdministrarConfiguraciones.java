@@ -13,9 +13,7 @@ import edu.unl.sigett.entity.ConfiguracionGeneral;
 import com.jlmallas.soporte.entity.Objeto;
 import org.jlmallas.seguridad.entity.Usuario;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.ResourceBundle;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
@@ -23,7 +21,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
-import edu.unl.sigett.session.ConfiguracionGeneralFacadeLocal;
+import edu.unl.sigett.dao.ConfiguracionGeneralDao;
 import com.jlmallas.soporte.session.ExcepcionFacadeLocal;
 import org.jlmallas.seguridad.dao.LogDao;
 import com.jlmallas.soporte.session.ObjetoFacadeLocal;
@@ -50,7 +48,7 @@ import org.jlmallas.seguridad.dao.UsuarioDao;
     @URLMapping(
             id = "configuraciones",
             pattern = "/configuraciones/",
-            viewId = "/faces/pages/comun/buscarConfiguraciones.xhtml"
+            viewId = "/faces/pages/comun/configuraciones/index.xhtml"
     )})
 public class AdministrarConfiguraciones implements Serializable {
 
@@ -60,7 +58,7 @@ public class AdministrarConfiguraciones implements Serializable {
     private SessionConfiguracion sessionConfiguracion;
 
     @EJB
-    private ConfiguracionGeneralFacadeLocal configuracionGeneralFacadeLocal;
+    private ConfiguracionGeneralDao configuracionGeneralDao;
     @EJB
     private LogDao logFacadeLocal;
     @EJB
@@ -72,10 +70,10 @@ public class AdministrarConfiguraciones implements Serializable {
     @EJB
     private UsuarioDao usuarioFacadeLocal;
 
-    private List<ConfiguracionGeneral> configuracionGenerals;
-
-    private boolean renderedNoEditar;
-    private String criterio;
+    public void init() {
+        this.renderedEditar();
+        this.buscar();
+    }
 
     public AdministrarConfiguraciones() {
     }
@@ -119,7 +117,7 @@ public class AdministrarConfiguraciones implements Serializable {
 
     public String timestamp(Date fecha) {
         try {
-            return configuracionGeneralFacadeLocal.timestampFormat(fecha);
+            return configuracionGeneralDao.timestampFormat(fecha);
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -128,7 +126,7 @@ public class AdministrarConfiguraciones implements Serializable {
 
     public String date(Date fecha) {
         try {
-            return configuracionGeneralFacadeLocal.dateFormat(fecha);
+            return configuracionGeneralDao.dateFormat(fecha);
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -137,20 +135,18 @@ public class AdministrarConfiguraciones implements Serializable {
 
     public String time(Date fecha) {
         try {
-            return configuracionGeneralFacadeLocal.timeFormat(fecha);
+            return configuracionGeneralDao.timeFormat(fecha);
         } catch (Exception e) {
             System.out.println(e);
         }
         return null;
     }
 
-    public int intervaloActualizaciones() {
-        int intervalo = 100;
+    public void intervaloActualizaciones() {
         try {
-            intervalo = Integer.parseInt(configuracionGeneralFacadeLocal.find(32).getValor());
+            sessionConfiguracion.setTamanioPermitidoImagenes(Long.parseLong(configuracionGeneralDao.find((int) 32).getValor()));
         } catch (Exception e) {
         }
-        return intervalo;
     }
 
     public String editar(ConfiguracionGeneral configuracionGeneral, Usuario usuario) {
@@ -205,7 +201,7 @@ public class AdministrarConfiguraciones implements Serializable {
                             configuracionGeneral.setValor("NO");
                         }
                     }
-                    configuracionGeneralFacadeLocal.create(configuracionGeneral);
+                    configuracionGeneralDao.create(configuracionGeneral);
                     logFacadeLocal.create(logFacadeLocal.crearLog("ConfiguracionGeneral", configuracionGeneral.getId() + "", "CREAR", "|Nombre= " + configuracionGeneral.getNombre() + "|Valor= " + configuracionGeneral.getValor(), sessionUsuario.getUsuario()));
                     if (param.equalsIgnoreCase("guardar")) {
                         navegacion = "pretty:configuraciones";
@@ -236,7 +232,7 @@ public class AdministrarConfiguraciones implements Serializable {
                             configuracionGeneral.setValor("No");
                         }
                     }
-                    configuracionGeneralFacadeLocal.edit(configuracionGeneral);
+                    configuracionGeneralDao.edit(configuracionGeneral);
                     logFacadeLocal.create(logFacadeLocal.crearLog("ConfiguracionGeneral", configuracionGeneral.getId() + "", "EDITAR", "|Nombre= " + configuracionGeneral.getNombre() + "|Valor= " + configuracionGeneral.getValor(), sessionUsuario.getUsuario()));
                     if (param.equalsIgnoreCase("guardar")) {
                         navegacion = "pretty:configuraciones";
@@ -278,14 +274,14 @@ public class AdministrarConfiguraciones implements Serializable {
         return navegacion;
     }
 
-    public void buscar(String criterio) {
+    public void buscar() {
         try {
             FacesContext facesContext = FacesContext.getCurrentInstance();
             ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
             int tienePermiso = usuarioFacadeLocal.tienePermiso(sessionUsuario.getUsuario(), "buscar_configuracion_general");
             if (tienePermiso == 1) {
-                this.configuracionGenerals = new ArrayList<>();
-                for (ConfiguracionGeneral configuracionGeneral : configuracionGeneralFacadeLocal.buscarPorNombre(criterio)) {
+                sessionConfiguracion.getConfiguracionesGenerales().clear();
+                for (ConfiguracionGeneral configuracionGeneral : configuracionGeneralDao.buscar(new ConfiguracionGeneral())) {
                     if (configuracionGeneral.getTipo().equalsIgnoreCase("radio")) {
                         if (configuracionGeneral.getValor().equalsIgnoreCase("SI")) {
                             configuracionGeneral.setRadio(true);
@@ -293,7 +289,7 @@ public class AdministrarConfiguraciones implements Serializable {
                             configuracionGeneral.setRadio(false);
                         }
                     }
-                    configuracionGenerals.add(configuracionGeneral);
+                    sessionConfiguracion.getConfiguracionesGenerales().add(configuracionGeneral);
                 }
             } else {
                 if (tienePermiso == 2) {
@@ -320,45 +316,30 @@ public class AdministrarConfiguraciones implements Serializable {
         }
     }
 
-    public long getTamanioPermitidoArchivos() {
-        long tamanioMax = 0;
+    public void obtenerTamanioPermitidoArchivos() {
         try {
-            tamanioMax = Long.parseLong(configuracionGeneralFacadeLocal.find((int) 8).getValor());
+            sessionConfiguracion.setTamanioPermitidoImagenes(Long.parseLong(configuracionGeneralDao.find((int) 8).getValor()));
         } catch (Exception e) {
         }
-        return tamanioMax;
     }
 
-    public long getTamanioPermitidoFotos() {
-        long tamanioMax = 0;
+    public void obtenerTamanioPermitidoFotos() {
         try {
-            tamanioMax = Long.parseLong(configuracionGeneralFacadeLocal.find((int) 11).getValor());
+            sessionConfiguracion.setTamanioPermitidoImagenes(Long.parseLong(configuracionGeneralDao.find((int) 11).getValor()));
         } catch (Exception e) {
+            e.printStackTrace();
         }
-        return tamanioMax;
     }
 //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="MÉTODOS RENDERED">
 
-    public boolean renderedCrear() {
-        boolean var = false;
-        int tienePermiso = usuarioFacadeLocal.tienePermiso(sessionUsuario.getUsuario(), "crear_configuracion_general");
-        if (tienePermiso == 1) {
-            var = true;
-        }
-        return var;
-    }
-
-    public boolean renderedEditar() {
-        boolean var = false;
+    private void renderedEditar() {
         int tienePermiso = usuarioFacadeLocal.tienePermiso(sessionUsuario.getUsuario(), "editar_configuracion_general");
         if (tienePermiso == 1) {
-            var = true;
-            renderedNoEditar = false;
+            sessionConfiguracion.setRenderedEditar(true);
         } else {
-            renderedNoEditar = true;
+            sessionConfiguracion.setRenderedEditar(false);
         }
-        return var;
     }
 //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="SET Y GET">
@@ -379,28 +360,5 @@ public class AdministrarConfiguraciones implements Serializable {
         this.sessionConfiguracion = sessionConfiguracion;
     }
 
-    public String getCriterio() {
-        return criterio;
-    }
-
-    public void setCriterio(String criterio) {
-        this.criterio = criterio;
-    }
-
-    public List<ConfiguracionGeneral> getConfiguracionGenerals() {
-        return configuracionGenerals;
-    }
-
-    public void setConfiguracionGenerals(List<ConfiguracionGeneral> configuracionGenerals) {
-        this.configuracionGenerals = configuracionGenerals;
-    }
-
-    public boolean isRenderedNoEditar() {
-        return renderedNoEditar;
-    }
-
-    public void setRenderedNoEditar(boolean renderedNoEditar) {
-        this.renderedNoEditar = renderedNoEditar;
-    }
 //</editor-fold>
 }

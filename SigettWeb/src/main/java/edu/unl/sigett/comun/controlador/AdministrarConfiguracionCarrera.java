@@ -25,10 +25,13 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
-import edu.unl.sigett.session.ConfiguracionCarreraFacadeLocal;
-import edu.unl.sigett.session.ConfiguracionGeneralFacadeLocal;
+import edu.unl.sigett.dao.ConfiguracionCarreraDao;
+import edu.unl.sigett.dao.ConfiguracionGeneralDao;
 import org.jlmallas.seguridad.dao.LogDao;
-import edu.jlmallas.academico.service.OfertaAcademicaFacadeLocal;
+import edu.jlmallas.academico.service.OfertaAcademicaService;
+import java.util.List;
+import org.jlmallas.api.http.UrlConexion;
+import org.jlmallas.api.http.dto.SeguridadHttp;
 import org.jlmallas.seguridad.dao.UsuarioDao;
 
 /**
@@ -44,14 +47,9 @@ import org.jlmallas.seguridad.dao.UsuarioDao;
             viewId = "/faces/pages/sigett/editarConfiguracionCarrera.xhtml"
     ),
     @URLMapping(
-            id = "crearConfiguracionCarrera",
-            pattern = "/crearConfiguracionCarrera/",
-            viewId = "/faces/pages/sigett/editarConfiguracionCarrera.xhtml"
-    ),
-    @URLMapping(
             id = "configuracionesCarrera",
             pattern = "/configuracionesCarrera/",
-            viewId = "/faces/pages/sigett/buscarConfiguracionesCarrera.xhtml"
+            viewId = "/faces/pages/sigett/configuracionesCarrera/index.xhtml"
     )})
 public class AdministrarConfiguracionCarrera implements Serializable {
 
@@ -62,20 +60,22 @@ public class AdministrarConfiguracionCarrera implements Serializable {
     @Inject
     private SessionUsuarioCarrera sessionUsuarioCarrera;
     @EJB
-    private ConfiguracionCarreraFacadeLocal configuracionCarreraFacadeLocal;
+    private ConfiguracionCarreraDao configuracionCarreraDao;
     @EJB
     private LogDao logFacadeLocal;
     @EJB
-    private OfertaAcademicaFacadeLocal ofertaAcademicaFacadeLocal;
+    private OfertaAcademicaService ofertaAcademicaFacadeLocal;
     @EJB
     private UsuarioDao usuarioFacadeLocal;
     @EJB
-    private ConfiguracionGeneralFacadeLocal configuracionGeneralFacadeLocal;
-
-    private boolean tieneModulos = false;
-    private boolean renderedNoEditar;
+    private ConfiguracionGeneralDao configuracionGeneralFacadeLocal;
 
     public AdministrarConfiguracionCarrera() {
+    }
+
+    public void init() {
+        renderedEditar();
+        this.buscar();
     }
 
     //<editor-fold defaultstate="collapsed" desc="MÉTODOS CRUD">
@@ -99,6 +99,17 @@ public class AdministrarConfiguracionCarrera implements Serializable {
         } catch (Exception e) {
         }
         return navegacion;
+    }
+
+    public void buscar() {
+        sessionConfiguracionCarrera.getConfiguracionCarreras().clear();
+        ConfiguracionCarrera configuracionCarreraBuscar = new ConfiguracionCarrera();
+        configuracionCarreraBuscar.setCarreraId(sessionUsuarioCarrera.getUsuarioCarreraAux().getCarrera().getId());
+        List<ConfiguracionCarrera> configuracionCarreras = configuracionCarreraDao.buscar(configuracionCarreraBuscar);
+        if (configuracionCarreras == null) {
+            return;
+        }
+        sessionConfiguracionCarrera.setConfiguracionCarreras(configuracionCarreras);
     }
 
     public String editar(ConfiguracionCarrera configuracionCarrera) {
@@ -129,24 +140,24 @@ public class AdministrarConfiguracionCarrera implements Serializable {
             FacesContext facesContext = FacesContext.getCurrentInstance();
             ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
             String param = (String) facesContext.getExternalContext().getRequestParameterMap().get("1");
-            configuracionCarrera.setCarreraId(sessionUsuarioCarrera.getUsuarioCarrera().getCarreraId());
+//            configuracionCarrera.setCarreraId(sessionUsuarioCarrera.getUsuarioCarrera().getCarreraId());
             if (configuracionCarrera.getId() == null) {
                 int tienePermiso = usuarioFacadeLocal.tienePermiso(sessionUsuario.getUsuario(), "crear_configuracion_carrera");
                 if (tienePermiso == 1) {
                     if (param.equalsIgnoreCase("grabar")) {
-                        configuracionCarreraFacadeLocal.create(configuracionCarrera);
+                        configuracionCarreraDao.create(configuracionCarrera);
                         logFacadeLocal.create(logFacadeLocal.crearLog("ConfiguracionCarrera", configuracionCarrera.getId() + "", "CREAR", "|Nombre= " + configuracionCarrera.getNombre() + "|Valor= " + configuracionCarrera.getValor() + "|Carrera= " + configuracionCarrera.getCarreraId(), sessionUsuario.getUsuario()));
                         sessionConfiguracionCarrera.setConfiguracionCarrera(new ConfiguracionCarrera());
                         navegacion = "pretty:editarUsuarioCarrera";
                     } else {
                         if (param.equalsIgnoreCase("grabar-editar")) {
-                            configuracionCarreraFacadeLocal.create(configuracionCarrera);
+                            configuracionCarreraDao.create(configuracionCarrera);
                             logFacadeLocal.create(logFacadeLocal.crearLog("ConfiguracionCarrera", configuracionCarrera.getId() + "", "CREAR", "|Nombre= " + configuracionCarrera.getNombre() + "|Valor= " + configuracionCarrera.getValor() + "|Carrera= " + configuracionCarrera.getCarreraId(), sessionUsuario.getUsuario()));
                             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.configuracion") + " " + bundle.getString("lbl.msm_grabar"), "");
                             FacesContext.getCurrentInstance().addMessage(null, message);
                         } else {
                             if (param.equalsIgnoreCase("grabar-crear")) {
-                                configuracionCarreraFacadeLocal.create(configuracionCarrera);
+                                configuracionCarreraDao.create(configuracionCarrera);
                                 logFacadeLocal.create(logFacadeLocal.crearLog("ConfiguracionCarrera", configuracionCarrera.getId() + "", "CREAR", "|Nombre= " + configuracionCarrera.getNombre() + "|Valor= " + configuracionCarrera.getValor() + "|Carrera= " + configuracionCarrera.getCarreraId(), sessionUsuario.getUsuario()));
                                 sessionConfiguracionCarrera.setConfiguracionCarrera(new ConfiguracionCarrera());
                             }
@@ -164,19 +175,19 @@ public class AdministrarConfiguracionCarrera implements Serializable {
                 int tienePermiso = usuarioFacadeLocal.tienePermiso(sessionUsuario.getUsuario(), "editar_configuracion_carrera");
                 if (tienePermiso == 1) {
                     if (param.equalsIgnoreCase("grabar")) {
-                        configuracionCarreraFacadeLocal.edit(configuracionCarrera);
+                        configuracionCarreraDao.edit(configuracionCarrera);
                         logFacadeLocal.create(logFacadeLocal.crearLog("ConfiguracionCarrera", configuracionCarrera.getId() + "", "EDITAR", "|Nombre= " + configuracionCarrera.getNombre() + "|Valor= " + configuracionCarrera.getValor() + "|Carrera= " + configuracionCarrera.getCarreraId(), sessionUsuario.getUsuario()));
                         sessionConfiguracionCarrera.setConfiguracionCarrera(new ConfiguracionCarrera());
                         navegacion = "pretty:editarUsuarioCarrera";
                     } else {
                         if (param.equalsIgnoreCase("grabar-editar")) {
-                            configuracionCarreraFacadeLocal.edit(configuracionCarrera);
+                            configuracionCarreraDao.edit(configuracionCarrera);
                             logFacadeLocal.create(logFacadeLocal.crearLog("ConfiguracionCarrera", configuracionCarrera.getId() + "", "EDITAR", "|Nombre= " + configuracionCarrera.getNombre() + "|Valor= " + configuracionCarrera.getValor() + "|Carrera= " + configuracionCarrera.getCarreraId(), sessionUsuario.getUsuario()));
                             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.configuracion") + " " + bundle.getString("lbl.msm_editar"), "");
                             FacesContext.getCurrentInstance().addMessage(null, message);
                         } else {
                             if (param.equalsIgnoreCase("grabar-crear")) {
-                                configuracionCarreraFacadeLocal.edit(configuracionCarrera);
+                                configuracionCarreraDao.edit(configuracionCarrera);
                                 logFacadeLocal.create(logFacadeLocal.crearLog("ConfiguracionCarrera", configuracionCarrera.getId() + "", "EDITAR", "|Nombre= " + configuracionCarrera.getNombre() + "|Valor= " + configuracionCarrera.getValor() + "|Carrera= " + configuracionCarrera.getCarreraId(), sessionUsuario.getUsuario()));
                                 sessionConfiguracionCarrera.setConfiguracionCarrera(new ConfiguracionCarrera());
                             }
@@ -202,11 +213,14 @@ public class AdministrarConfiguracionCarrera implements Serializable {
             ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
             if (configuracionCarrera.getId() != null) {
                 for (OfertaAcademica ofertaAcademica : ofertaAcademicaFacadeLocal.buscarPorPeriodoActual()) {
-                    if (sgaWebServicesModulosCarrera(sessionUsuarioCarrera.getCarrera(), ofertaAcademica)) {
+                    sgaWebServicesModulosCarrera(sessionUsuarioCarrera.getUsuarioCarreraAux().getCarrera(), ofertaAcademica);
+                    if (sessionConfiguracionCarrera.isTieneModulos()) {
                         configuracionCarrera.setValor(ofertaAcademica.getIdSga() + "");
                         configuracionCarrera.setObservacion(ofertaAcademica.getNombre());
-                        configuracionCarreraFacadeLocal.edit(configuracionCarrera);
-                        logFacadeLocal.create(logFacadeLocal.crearLog("ConfiguracionCarrera", configuracionCarrera.getId() + "", "EDITAR", "|Nombre= " + configuracionCarrera.getNombre() + "|Codigo= " + configuracionCarrera.getCodigo() + "|Valor= " + configuracionCarrera.getValor() + "Carrera= " + configuracionCarrera.getCarreraId(), sessionUsuario.getUsuario()));
+                        configuracionCarreraDao.edit(configuracionCarrera);
+                        logFacadeLocal.create(logFacadeLocal.crearLog("ConfiguracionCarrera", configuracionCarrera.getId() + "", "EDITAR", "|Nombre= "
+                                + configuracionCarrera.getNombre() + "|Codigo= " + configuracionCarrera.getCodigo() + "|Valor= "
+                                + configuracionCarrera.getValor() + "Carrera= " + configuracionCarrera.getCarreraId(), sessionUsuario.getUsuario()));
                         break;
                     }
                 }
@@ -220,50 +234,34 @@ public class AdministrarConfiguracionCarrera implements Serializable {
 //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="MÉTODOS RENDERED">
 
-    public boolean renderedCrear() {
-        boolean var = false;
-        int tienePermiso = usuarioFacadeLocal.tienePermiso(sessionUsuario.getUsuario(), "crear_configuracion_carrera");
-        if (tienePermiso == 1) {
-            var = true;
-        }
-        return var;
-    }
-
-    public boolean renderedEditar() {
-        boolean var = false;
+    public void renderedEditar() {
         int tienePermiso = usuarioFacadeLocal.tienePermiso(sessionUsuario.getUsuario(), "editar_configuracion_carrera");
         if (tienePermiso == 1) {
-            var = true;
-            renderedNoEditar = false;
+            sessionConfiguracionCarrera.setRenderedEditar(true);
         } else {
-            renderedNoEditar = true;
+            sessionConfiguracionCarrera.setRenderedEditar(false);
         }
-        return var;
     }
 
 //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="WEB SERVICES CONSUMES">
-    public boolean sgaWebServicesModulosCarrera(Carrera carrera, OfertaAcademica ofertaAcademica) {
-        boolean actual = false;
+    public void sgaWebServicesModulosCarrera(Carrera carrera, OfertaAcademica ofertaAcademica) {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
         if (usuarioFacadeLocal.tienePermiso(sessionUsuario.getUsuario(), "sga_ws_modulos_carrera") == 1) {
             try {
-//                ConexionServicio conexionServicio = new ConexionServicio();
-//                String serviceUrl = configuracionGeneralFacadeLocal.find((int) 27).getValor();
-//                String passwordService = configuracionGeneralFacadeLocal.find((int) 5).getValor();
-//                String userService = configuracionGeneralFacadeLocal.find((int) 6).getValor();
-//                String s = serviceUrl + "?id_oferta=" + ofertaAcademica.getIdSga() + ";id_carrera=" + carrera.getIdSga();
-//                String datosJson = conexionServicio.conectar(s, userService, passwordService);
-//                if (!datosJson.equalsIgnoreCase("")) {
-//                    JsonParser parser = new JsonParser();
-//                    JsonElement datos = parser.parse(datosJson);
-//                    tieneModulos = false;
-//                    actual = recorrerElementosJson(datos);
-//                } else {
-//                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.no_sincronizar_web_services"), "");
-//                    FacesContext.getCurrentInstance().addMessage(null, message);
-//                }
+                String serviceUrl = configuracionGeneralFacadeLocal.find((int) 27).getValor();
+                String s = serviceUrl + "?id_oferta=" + ofertaAcademica.getIdSga() + ";id_carrera=" + carrera.getIdSga();
+                SeguridadHttp seguridad = new SeguridadHttp(configuracionGeneralFacadeLocal.find((int) 5).getValor(),
+                        s, configuracionGeneralFacadeLocal.find((int) 6).getValor());
+                UrlConexion conexion = new UrlConexion();
+                String datosJson = conexion.conectar(seguridad);
+                if (!datosJson.equalsIgnoreCase("")) {
+                    JsonParser parser = new JsonParser();
+                    JsonElement datos = parser.parse(datosJson);
+                    sessionConfiguracionCarrera.setTieneModulos(false);
+                    parserModulosCarrera(datos);
+                }
             } catch (Exception e) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_FATAL, bundle.getString("lbl.no_sincronizar_web_services"), "");
                 FacesContext.getCurrentInstance().addMessage(null, message);
@@ -273,10 +271,9 @@ public class AdministrarConfiguracionCarrera implements Serializable {
             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.permiso_denegado_sincronizar") + ". " + bundle.getString("lbl.msm_consulte"), "");
             FacesContext.getCurrentInstance().addMessage(null, message);
         }
-        return actual;
     }
 
-    private boolean recorrerElementosJson(JsonElement elemento) throws Exception {
+    private void parserModulosCarrera(JsonElement elemento) throws Exception {
         try {
             if (elemento.isJsonObject()) {
                 JsonObject obj = elemento.getAsJsonObject();
@@ -285,22 +282,22 @@ public class AdministrarConfiguracionCarrera implements Serializable {
                 while (iter.hasNext()) {
                     java.util.Map.Entry<String, JsonElement> entrada = iter.next();
                     try {
-                        if (tieneModulos == false) {
+                        if (!sessionConfiguracionCarrera.isTieneModulos()) {
                             String e = new String(entrada.getValue().getAsString().getBytes(), "UTF-8");
                             JsonParser jp = new JsonParser();
                             JsonElement jsonElement = jp.parse(e);
-                            recorrerElementosJson(jsonElement);
+                            parserModulosCarrera(jsonElement);
                         }
                     } catch (Exception e) {
-                        recorrerElementosJson(entrada.getValue());
+                        parserModulosCarrera(entrada.getValue());
                     }
                 }
             } else if (elemento.isJsonArray()) {
                 JsonArray array = elemento.getAsJsonArray();
                 if (array.size() > 2) {
-                    tieneModulos = true;
+                    sessionConfiguracionCarrera.setTieneModulos(true);
                 } else {
-                    tieneModulos = false;
+                    sessionConfiguracionCarrera.setTieneModulos(false);
                 }
             } else if (elemento.isJsonPrimitive()) {
 
@@ -308,7 +305,6 @@ public class AdministrarConfiguracionCarrera implements Serializable {
         } catch (Exception e) {
             System.out.println(e);
         }
-        return tieneModulos;
     }
 //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="SET Y GET">
@@ -335,14 +331,6 @@ public class AdministrarConfiguracionCarrera implements Serializable {
 
     public void setSessionUsuarioCarrera(SessionUsuarioCarrera sessionUsuarioCarrera) {
         this.sessionUsuarioCarrera = sessionUsuarioCarrera;
-    }
-
-    public boolean isRenderedNoEditar() {
-        return renderedNoEditar;
-    }
-
-    public void setRenderedNoEditar(boolean renderedNoEditar) {
-        this.renderedNoEditar = renderedNoEditar;
     }
 
 //</editor-fold>

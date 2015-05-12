@@ -25,7 +25,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
-import com.jlmallas.comun.service.FotoFacadeLocal;
+import com.jlmallas.comun.dao.FotoFacadeLocal;
 import org.jlmallas.seguridad.dao.UsuarioDao;
 
 /**
@@ -174,56 +174,56 @@ public class AdministrarFotos implements Serializable {
 
     public void grabarFoto(Foto foto) {
         try {
-            FacesContext facesContext = FacesContext.getCurrentInstance();
-            ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            if (foto.getId() == null) {
-                int tienePermiso = usuarioFacadeLocal.tienePermiso(sessionUsuario.getUsuario(), "crear_foto");
-                if (tienePermiso == 1) {
-                    foto.setEsActual(false);
-                    if (paginaActual.equalsIgnoreCase("/editarDocente.xhtml")) {
-                        sessionDocente.getPersona().getFotoList().add(foto);
-                        foto.setPersonaId(sessionDocente.getPersona());
-                    } else {
-                        if (paginaActual.equalsIgnoreCase("/editarEstudiante.xhtml")) {
-                            sessionEstudiante.getPersona().getFotoList().add(foto);
-                            foto.setPersonaId(sessionEstudiante.getPersona());
-                        } else {
-                            if (paginaActual.equalsIgnoreCase("/editarDocenteCarrera.xhtml")) {
-                                sessionDocenteCarrera.getPersona().getFotoList().add(foto);
-                                foto.setPersonaId(sessionDocenteCarrera.getPersona());
-                            } else {
-                                if (paginaActual.equalsIgnoreCase("/editarEstudianteCarrera.xhtml")) {
-                                    sessionEstudianteCarrera.getPersona().getFotoList().add(foto);
-                                    foto.setPersonaId(sessionEstudianteCarrera.getPersona());
-                                }
-                            }
-                        }
-                    }
-                    fotoFacadeLocal.create(foto);
-                    RequestContext.getCurrentInstance().execute("PF('dlgFoto').hide()");
-                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.foto") + " " + bundle.getString("lbl.msm_grabar"), "");
-                    FacesContext.getCurrentInstance().addMessage(null, message);
-                } else {
-                    if (tienePermiso == 2) {
-                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm.permiso_denegado_crear") + " ." + bundle.getString("lbl.msm_consulte"), "");
-                        FacesContext.getCurrentInstance().addMessage(null, message);
-                    }
-                }
-            } else {
-                int tienePermiso = usuarioFacadeLocal.tienePermiso(sessionUsuario.getUsuario(), "editar_foto");
-                if (tienePermiso == 1) {
-                    foto.setEsActual(false);
-                    fotoFacadeLocal.edit(foto);
-                    RequestContext.getCurrentInstance().execute("PF('dlgFoto').hide()");
-                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.foto") + " " + bundle.getString("lbl.msm_editar"), "");
-                    FacesContext.getCurrentInstance().addMessage(null, message);
-                } else {
-                    if (tienePermiso == 2) {
-                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_editar") + " ." + bundle.getString("lbl.msm_consulte"), "");
-                        FacesContext.getCurrentInstance().addMessage(null, message);
-                    }
-                }
-            }
+//            FacesContext facesContext = FacesContext.getCurrentInstance();
+//            ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
+//            if (foto.getId() == null) {
+//                int tienePermiso = usuarioFacadeLocal.tienePermiso(sessionUsuario.getUsuario(), "crear_foto");
+//                if (tienePermiso == 1) {
+//                    foto.setEsActual(false);
+//                    if (paginaActual.equalsIgnoreCase("/editarDocente.xhtml")) {
+//                        sessionDocente.getPersona().getFotoList().add(foto);
+//                        foto.setPersonaId(sessionDocente.getPersona());
+//                    } else {
+//                        if (paginaActual.equalsIgnoreCase("/editarEstudiante.xhtml")) {
+//                            sessionEstudiante.getPersona().getFotoList().add(foto);
+//                            foto.setPersonaId(sessionEstudiante.getPersona());
+//                        } else {
+//                            if (paginaActual.equalsIgnoreCase("/editarDocenteCarrera.xhtml")) {
+//                                sessionDocenteCarrera.getPersona().getFotoList().add(foto);
+//                                foto.setPersonaId(sessionDocenteCarrera.getPersona());
+//                            } else {
+//                                if (paginaActual.equalsIgnoreCase("/editarEstudianteCarrera.xhtml")) {
+//                                    sessionEstudianteCarrera.getPersona().getFotoList().add(foto);
+//                                    foto.setPersonaId(sessionEstudianteCarrera.getPersona());
+//                                }
+//                            }
+//                        }
+//                    }
+//                    fotoFacadeLocal.create(foto);
+//                    RequestContext.getCurrentInstance().execute("PF('dlgFoto').hide()");
+//                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.foto") + " " + bundle.getString("lbl.msm_grabar"), "");
+//                    FacesContext.getCurrentInstance().addMessage(null, message);
+//                } else {
+//                    if (tienePermiso == 2) {
+//                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm.permiso_denegado_crear") + " ." + bundle.getString("lbl.msm_consulte"), "");
+//                        FacesContext.getCurrentInstance().addMessage(null, message);
+//                    }
+//                }
+//            } else {
+//                int tienePermiso = usuarioFacadeLocal.tienePermiso(sessionUsuario.getUsuario(), "editar_foto");
+//                if (tienePermiso == 1) {
+//                    foto.setEsActual(false);
+//                    fotoFacadeLocal.edit(foto);
+//                    RequestContext.getCurrentInstance().execute("PF('dlgFoto').hide()");
+//                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.foto") + " " + bundle.getString("lbl.msm_editar"), "");
+//                    FacesContext.getCurrentInstance().addMessage(null, message);
+//                } else {
+//                    if (tienePermiso == 2) {
+//                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_editar") + " ." + bundle.getString("lbl.msm_consulte"), "");
+//                        FacesContext.getCurrentInstance().addMessage(null, message);
+//                    }
+//                }
+//            }
 
         } catch (Exception e) {
             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), "");
@@ -334,39 +334,39 @@ public class AdministrarFotos implements Serializable {
 
     public void removerFoto(Foto foto, String pagina) {
         try {
-            FacesContext facesContext = FacesContext.getCurrentInstance();
-            ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            int tienePermiso = usuarioFacadeLocal.tienePermiso(sessionUsuario.getUsuario(), "eliminar_foto");
-            if (tienePermiso == 1) {
-                if (foto.getId() != null) {
-                    if (pagina.equalsIgnoreCase("/editarDocente.xhtml")) {
-                        sessionDocente.getPersona().getFotoList().remove(foto);
-                        fotoFacadeLocal.remove(foto);
-                    } else {
-                        if (pagina.equalsIgnoreCase("/editarEstudiante.xhtml")) {
-                            sessionEstudiante.getPersona().getFotoList().remove(foto);
-                            fotoFacadeLocal.remove(foto);
-                        } else {
-                            if (pagina.equalsIgnoreCase("/editarDocenteCarrera.xhtml")) {
-                                sessionDocenteCarrera.getPersona().getFotoList().remove(foto);
-                                fotoFacadeLocal.remove(foto);
-                            } else {
-                                if (pagina.equalsIgnoreCase("/editarDocenteCarrera.xhtml")) {
-                                    sessionEstudianteCarrera.getPersona().getFotoList().remove(foto);
-                                    fotoFacadeLocal.remove(foto);
-                                }
-                            }
-                        }
-                    }
-                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.foto") + " " + bundle.getString("lbl.msm_eliminar"), "");
-                    FacesContext.getCurrentInstance().addMessage(null, message);
-                }
-            } else {
-                if (tienePermiso == 2) {
-                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_eliminar") + " ." + bundle.getString("lbl.msm_consulte"), "");
-                    FacesContext.getCurrentInstance().addMessage(null, message);
-                }
-            }
+//            FacesContext facesContext = FacesContext.getCurrentInstance();
+//            ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
+//            int tienePermiso = usuarioFacadeLocal.tienePermiso(sessionUsuario.getUsuario(), "eliminar_foto");
+//            if (tienePermiso == 1) {
+//                if (foto.getId() != null) {
+//                    if (pagina.equalsIgnoreCase("/editarDocente.xhtml")) {
+//                        sessionDocente.getPersona().getFotoList().remove(foto);
+//                        fotoFacadeLocal.remove(foto);
+//                    } else {
+//                        if (pagina.equalsIgnoreCase("/editarEstudiante.xhtml")) {
+//                            sessionEstudiante.getPersona().getFotoList().remove(foto);
+//                            fotoFacadeLocal.remove(foto);
+//                        } else {
+//                            if (pagina.equalsIgnoreCase("/editarDocenteCarrera.xhtml")) {
+//                                sessionDocenteCarrera.getPersona().getFotoList().remove(foto);
+//                                fotoFacadeLocal.remove(foto);
+//                            } else {
+//                                if (pagina.equalsIgnoreCase("/editarDocenteCarrera.xhtml")) {
+//                                    sessionEstudianteCarrera.getPersona().getFotoList().remove(foto);
+//                                    fotoFacadeLocal.remove(foto);
+//                                }
+//                            }
+//                        }
+//                    }
+//                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.foto") + " " + bundle.getString("lbl.msm_eliminar"), "");
+//                    FacesContext.getCurrentInstance().addMessage(null, message);
+//                }
+//            } else {
+//                if (tienePermiso == 2) {
+//                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_eliminar") + " ." + bundle.getString("lbl.msm_consulte"), "");
+//                    FacesContext.getCurrentInstance().addMessage(null, message);
+//                }
+//            }
         } catch (Exception e) {
         }
 

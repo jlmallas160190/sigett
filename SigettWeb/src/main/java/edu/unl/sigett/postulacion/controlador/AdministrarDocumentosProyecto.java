@@ -30,8 +30,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
-import edu.unl.sigett.session.CatalogoDocumentoProyectoFacadeLocal;
-import edu.unl.sigett.session.DocumentoProyectoFacadeLocal;
+import edu.unl.sigett.dao.CatalogoDocumentoProyectoFacadeLocal;
+import edu.unl.sigett.dao.DocumentoProyectoFacadeLocal;
 import org.jlmallas.seguridad.dao.LogDao;
 import org.jlmallas.seguridad.dao.UsuarioDao;
 

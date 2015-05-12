@@ -7,7 +7,7 @@ package edu.unl.sigett.adjudicacion.controlador;
 
 import org.jlmallas.api.date.DateResource;
 import com.jlmallas.comun.entity.Persona;
-import com.jlmallas.comun.service.PersonaFacadeLocal;
+import com.jlmallas.comun.dao.PersonaDao;
 import edu.unl.sigett.adjudicacion.session.SessionProrroga;
 import edu.unl.sigett.postulacion.managed.session.SessionProyecto;
 import edu.unl.sigett.reportes.AdministrarReportes;
@@ -15,14 +15,11 @@ import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
 import edu.unl.sigett.entity.Actividad;
 import edu.unl.sigett.entity.AutorProyecto;
 import edu.jlmallas.academico.entity.Carrera;
-import edu.unl.sigett.entity.CatalogoOficio;
 import edu.unl.sigett.entity.ConfiguracionCarrera;
 import edu.unl.sigett.entity.ConfiguracionProyecto;
 import edu.jlmallas.academico.entity.CoordinadorPeriodo;
 import edu.unl.sigett.entity.Cronograma;
 import edu.unl.sigett.entity.DirectorProyecto;
-import edu.unl.sigett.entity.EstadoAutor;
-import edu.unl.sigett.entity.EstadoProyecto;
 import edu.unl.sigett.entity.OficioCarrera;
 import edu.unl.sigett.entity.Prorroga;
 import edu.unl.sigett.entity.Proyecto;
@@ -42,23 +39,23 @@ import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.primefaces.context.RequestContext;
-import edu.unl.sigett.session.ActividadFacadeLocal;
-import edu.unl.sigett.session.AutorProyectoFacadeLocal;
+import edu.unl.sigett.dao.ActividadFacadeLocal;
+import edu.unl.sigett.dao.AutorProyectoFacadeLocal;
 import edu.jlmallas.academico.service.CarreraService;
-import edu.unl.sigett.session.CatalogoOficioFacadeLocal;
-import edu.unl.sigett.session.ConfiguracionCarreraFacadeLocal;
-import edu.unl.sigett.session.ConfiguracionGeneralFacadeLocal;
+import edu.unl.sigett.dao.CatalogoOficioFacadeLocal;
+import edu.unl.sigett.dao.ConfiguracionCarreraDao;
+import edu.unl.sigett.dao.ConfiguracionGeneralDao;
 import edu.jlmallas.academico.service.CoordinadorPeriodoFacadeLocal;
-import edu.unl.sigett.session.DirectorProyectoFacadeLocal;
+import edu.unl.sigett.dao.DirectorProyectoFacadeLocal;
 import org.jlmallas.seguridad.dao.LogDao;
-import edu.unl.sigett.session.OficioCarreraFacadeLocal;
-import edu.unl.sigett.session.ProrrogaFacadeLocal;
-import edu.unl.sigett.session.ProyectoFacadeLocal;
+import edu.unl.sigett.dao.OficioCarreraFacadeLocal;
+import edu.unl.sigett.dao.ProrrogaFacadeLocal;
+import edu.unl.sigett.dao.ProyectoFacadeLocal;
 import org.jlmallas.seguridad.dao.UsuarioDao;
 import edu.jlmallas.academico.entity.Docente;
 import edu.jlmallas.academico.entity.EstudianteCarrera;
-import edu.jlmallas.academico.service.DocenteCarreraFacadeLocal;
-import edu.jlmallas.academico.service.DocenteFacadeLocal;
+import edu.jlmallas.academico.dao.DocenteCarreraDao;
+import edu.jlmallas.academico.dao.DocenteDao;
 import edu.jlmallas.academico.service.EstudianteCarreraFacadeLocal;
 import edu.unl.sigett.comun.managed.session.SessionOficioCarrera;
 import edu.unl.sigett.enumeration.CatalogoOficioEnum;
@@ -85,13 +82,13 @@ public class AdministrarProrrogas implements Serializable {
     private SessionOficioCarrera sessionOficioCarrera;
 
     @EJB
-    private ConfiguracionGeneralFacadeLocal configuracionGeneralFacadeLocal;
+    private ConfiguracionGeneralDao configuracionGeneralFacadeLocal;
     @EJB
     private CarreraService carreraFacadeLocal;
     @EJB
     private AutorProyectoFacadeLocal autorProyectoFacadeLocal;
     @EJB
-    private ConfiguracionCarreraFacadeLocal configuracionCarreraFacadeLocal;
+    private ConfiguracionCarreraDao configuracionCarreraFacadeLocal;
     @EJB
     private OficioCarreraFacadeLocal oficioCarreraFacadeLocal;
     @EJB
@@ -111,13 +108,13 @@ public class AdministrarProrrogas implements Serializable {
     @EJB
     private CoordinadorPeriodoFacadeLocal coordinadorPeriodoFacadeLocal;
     @EJB
-    private PersonaFacadeLocal personaFacadeLocal;
+    private PersonaDao personaFacadeLocal;
     @EJB
     private EstudianteCarreraFacadeLocal estudianteCarreraFacadeLocal;
     @EJB
-    private DocenteCarreraFacadeLocal docenteCarreraFacadeLocal;
+    private DocenteCarreraDao docenteCarreraFacadeLocal;
     @EJB
-    private DocenteFacadeLocal docenteFacadeLocal;
+    private DocenteDao docenteFacadeLocal;
 
     private boolean renderedDlgEditar;
     private boolean renderedNoEditar;

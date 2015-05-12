@@ -31,7 +31,7 @@ import edu.jlmallas.academico.entity.EstudianteCarrera;
 import com.jlmallas.comun.entity.Nacionalidad;
 import com.jlmallas.comun.entity.Persona;
 import com.jlmallas.comun.enumeration.CatalogoEnum;
-import com.jlmallas.comun.service.ItemFacadeLocal;
+import com.jlmallas.comun.dao.ItemDao;
 import org.jlmallas.seguridad.entity.Usuario;
 import edu.unl.sigett.entity.UsuarioCarrera;
 import java.io.ByteArrayOutputStream;
@@ -53,17 +53,17 @@ import javax.servlet.http.HttpServletResponse;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.TransferEvent;
 import org.primefaces.model.DualListModel;
-import edu.unl.sigett.session.AspiranteFacadeLocal;
+import edu.unl.sigett.dao.AspiranteFacadeLocal;
 import edu.jlmallas.academico.service.CarreraService;
-import edu.unl.sigett.session.ConfiguracionGeneralFacadeLocal;
+import edu.unl.sigett.dao.ConfiguracionGeneralDao;
 import edu.jlmallas.academico.service.EstadoEstudianteCarreraFacadeLocal;
 import edu.jlmallas.academico.service.EstudianteCarreraFacadeLocal;
 import edu.jlmallas.academico.service.EstudianteFacadeLocal;
 import org.jlmallas.seguridad.dao.LogDao;
-import com.jlmallas.comun.service.NacionalidadFacadeLocal;
-import com.jlmallas.comun.service.PersonaFacadeLocal;
+import com.jlmallas.comun.dao.NacionalidadFacadeLocal;
+import com.jlmallas.comun.dao.PersonaDao;
 import org.jlmallas.seguridad.dao.UsuarioDao;
-import edu.unl.sigett.session.UsuarioCarreraFacadeLocal;
+import edu.unl.sigett.dao.UsuarioCarreraDao;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -101,11 +101,11 @@ public class AdministrarEstudiantes implements Serializable {
     private AdministrarUsuarios administrarUsuarios;
 
     @EJB
-    private PersonaFacadeLocal personaFacadeLocal;
+    private PersonaDao personaFacadeLocal;
     @EJB
     private EstudianteFacadeLocal estudianteFacadeLocal;
     @EJB
-    private ItemFacadeLocal itemFacadeLocal;
+    private ItemDao itemFacadeLocal;
     @EJB
     private LogDao logFacadeLocal;
     @EJB
@@ -119,11 +119,11 @@ public class AdministrarEstudiantes implements Serializable {
     @EJB
     private UsuarioDao usuarioFacadeLocal;
     @EJB
-    private ConfiguracionGeneralFacadeLocal configuracionGeneralFacadeLocal;
+    private ConfiguracionGeneralDao configuracionGeneralFacadeLocal;
     @EJB
     private NacionalidadFacadeLocal nacionalidadFacadeLocal;
     @EJB
-    private UsuarioCarreraFacadeLocal usuarioCarreraFacadeLocal;
+    private UsuarioCarreraDao usuarioCarreraFacadeLocal;
 //    @EJB(lookup = "java:global/SigettWebService/EstudianteConsumeServiceImplement!edu.unl.sigett.academico.service.EstudianteConsumeService")
 //    @EJB
 //    private EstudianteConsumeService estudianteConsumeService;

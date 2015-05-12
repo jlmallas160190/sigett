@@ -5,7 +5,7 @@
  */
 package edu.unl.sigett.seguimiento.controlador;
 
-import com.jlmallas.comun.service.PersonaFacadeLocal;
+import com.jlmallas.comun.dao.PersonaDao;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 import com.ocpsoft.pretty.faces.annotation.URLMappings;
 import edu.unl.sigett.adjudicacion.controlador.AdministrarDirectoresProyecto;
@@ -33,11 +33,11 @@ import org.primefaces.event.SelectEvent;
 import edu.jlmallas.academico.service.AreaService;
 import edu.jlmallas.academico.service.CarreraService;
 import edu.jlmallas.academico.service.EstudianteCarreraFacadeLocal;
-import edu.jlmallas.academico.service.OfertaAcademicaFacadeLocal;
-import edu.unl.sigett.session.ConfiguracionGeneralFacadeLocal;
-import edu.unl.sigett.session.LineaInvestigacionCarreraFacadeLocal;
-import edu.unl.sigett.session.ProyectoCarreraOfertaFacadeLocal;
-import edu.unl.sigett.session.ProyectoFacadeLocal;
+import edu.jlmallas.academico.service.OfertaAcademicaService;
+import edu.unl.sigett.dao.ConfiguracionGeneralDao;
+import edu.unl.sigett.dao.LineaInvestigacionCarreraFacadeLocal;
+import edu.unl.sigett.dao.ProyectoCarreraOfertaFacadeLocal;
+import edu.unl.sigett.dao.ProyectoFacadeLocal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -88,13 +88,13 @@ public class ViewProyectos implements Serializable {
     @EJB
     private ProyectoFacadeLocal proyectoFacadeLocal;
     @EJB
-    private OfertaAcademicaFacadeLocal ofertaAcademicaFacadeLocal;
+    private OfertaAcademicaService ofertaAcademicaFacadeLocal;
     @EJB
     private EstudianteCarreraFacadeLocal estudianteCarreraFacadeLocal;
     @EJB
-    private PersonaFacadeLocal personaFacadeLocal;
+    private PersonaDao personaFacadeLocal;
     @EJB
-    private ConfiguracionGeneralFacadeLocal configuracionGeneralFacadeLocal;
+    private ConfiguracionGeneralDao configuracionGeneralFacadeLocal;
     @EJB
     private LineaInvestigacionCarreraFacadeLocal lineaInvestigacionCarreraFacadeLocal;
     @EJB

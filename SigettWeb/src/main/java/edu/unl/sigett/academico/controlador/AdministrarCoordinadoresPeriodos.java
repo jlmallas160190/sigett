@@ -28,7 +28,7 @@ import org.primefaces.context.RequestContext;
 import edu.jlmallas.academico.service.CoordinadorFacadeLocal;
 import edu.jlmallas.academico.service.CoordinadorPeriodoFacadeLocal;
 import edu.jlmallas.academico.service.PeriodoCoordinacionFacadeLocal;
-import com.jlmallas.comun.service.PersonaFacadeLocal;
+import com.jlmallas.comun.dao.PersonaDao;
 import org.jlmallas.seguridad.dao.UsuarioDao;
 
 /**
@@ -63,7 +63,7 @@ public class AdministrarCoordinadoresPeriodos implements Serializable {
     @EJB
     private CoordinadorFacadeLocal coordinadorFacadeLocal;
     @EJB
-    private PersonaFacadeLocal personaFacadeLocal;
+    private PersonaDao personaFacadeLocal;
     @EJB
     private UsuarioDao usuarioFacadeLocal;
     private List<CoordinadorPeriodo> coordinadorPeriodos;

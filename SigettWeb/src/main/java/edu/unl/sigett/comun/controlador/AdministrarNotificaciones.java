@@ -7,10 +7,10 @@ package edu.unl.sigett.comun.controlador;
 
 import org.jlmallas.api.email.Mail;
 import com.jlmallas.comun.entity.Persona;
-import com.jlmallas.comun.service.PersonaFacadeLocal;
+import com.jlmallas.comun.dao.PersonaDao;
 import edu.jlmallas.academico.entity.DocenteCarrera;
 import edu.jlmallas.academico.entity.EstudianteCarrera;
-import edu.jlmallas.academico.service.DocenteCarreraFacadeLocal;
+import edu.jlmallas.academico.dao.DocenteCarreraDao;
 import edu.jlmallas.academico.service.EstudianteCarreraFacadeLocal;
 import edu.unl.sigett.adjudicacion.session.SessionDirectorProyecto;
 import edu.unl.sigett.entity.AutorProyecto;
@@ -29,9 +29,9 @@ import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
-import edu.unl.sigett.session.AutorProyectoFacadeLocal;
-import edu.unl.sigett.session.ConfiguracionGeneralFacadeLocal;
-import edu.unl.sigett.session.DirectorProyectoFacadeLocal;
+import edu.unl.sigett.dao.AutorProyectoFacadeLocal;
+import edu.unl.sigett.dao.ConfiguracionGeneralDao;
+import edu.unl.sigett.dao.DirectorProyectoFacadeLocal;
 import javax.inject.Inject;
 
 /**
@@ -46,16 +46,16 @@ public class AdministrarNotificaciones implements Serializable {
     private SessionMiembro sessionMiembro;
     private String notificacion = "";
     @EJB
-    private ConfiguracionGeneralFacadeLocal configuracionGeneralFacadeLocal;
+    private ConfiguracionGeneralDao configuracionGeneralFacadeLocal;
     private int numeroNotificacionesParaDirector = 0;
     @EJB
     private DirectorProyectoFacadeLocal directorProyectoFacadeLocal;
     @EJB
     private AutorProyectoFacadeLocal autorProyectoFacadeLocal;
     @EJB
-    private PersonaFacadeLocal personaFacadeLocal;
+    private PersonaDao personaFacadeLocal;
     @EJB
-    private DocenteCarreraFacadeLocal docenteCarreraFacadeLocal;
+    private DocenteCarreraDao docenteCarreraFacadeLocal;
     @EJB
     private EstudianteCarreraFacadeLocal estudianteCarreraFacadeLocal;
 

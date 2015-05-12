@@ -6,7 +6,7 @@
 package edu.jlmallas.academico.service;
 
 import edu.jlmallas.academico.entity.CoordinadorPeriodo;
-import edu.jlmallas.academico.dao.AbstractFacade;
+import edu.jlmallas.academico.dao.AbstractDao;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -19,7 +19,7 @@ import javax.persistence.Query;
  * @author JorgeLuis
  */
 @Stateless
-public class CoordinadorPeriodoFacade extends AbstractFacade<CoordinadorPeriodo> implements CoordinadorPeriodoFacadeLocal {
+public class CoordinadorPeriodoFacade extends AbstractDao<CoordinadorPeriodo> implements CoordinadorPeriodoFacadeLocal {
 
     public CoordinadorPeriodoFacade() {
         super(CoordinadorPeriodo.class);

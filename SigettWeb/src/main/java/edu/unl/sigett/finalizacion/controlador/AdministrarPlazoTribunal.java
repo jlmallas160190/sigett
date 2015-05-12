@@ -19,9 +19,9 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import org.primefaces.context.RequestContext;
-import edu.unl.sigett.session.ConfiguracionGeneralFacadeLocal;
-import edu.unl.sigett.session.EvaluacionTribunalFacadeLocal;
-import edu.unl.sigett.session.PlazoEvaluacionTribunalFacadeLocal;
+import edu.unl.sigett.dao.ConfiguracionGeneralDao;
+import edu.unl.sigett.dao.EvaluacionTribunalFacadeLocal;
+import edu.unl.sigett.dao.PlazoEvaluacionTribunalFacadeLocal;
 
 /**
  *
@@ -43,7 +43,7 @@ public class AdministrarPlazoTribunal implements Serializable {
     @EJB
     private EvaluacionTribunalFacadeLocal evaluacionTribunalFacadeLocal;
     @EJB
-    private ConfiguracionGeneralFacadeLocal configuracionGeneralFacadeLocal;
+    private ConfiguracionGeneralDao configuracionGeneralFacadeLocal;
 
     private boolean renderedEditarDlg;
 

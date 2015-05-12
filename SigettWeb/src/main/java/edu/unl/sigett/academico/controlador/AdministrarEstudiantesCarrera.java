@@ -39,7 +39,7 @@ import edu.jlmallas.academico.entity.EstudianteCarrera;
 import edu.jlmallas.academico.entity.OfertaAcademica;
 import com.jlmallas.comun.entity.Persona;
 import com.jlmallas.comun.enumeration.CatalogoEnum;
-import com.jlmallas.comun.service.ItemFacadeLocal;
+import com.jlmallas.comun.dao.ItemDao;
 import edu.jlmallas.academico.entity.ReporteMatricula;
 import org.jlmallas.seguridad.entity.Usuario;
 import java.io.ByteArrayOutputStream;
@@ -59,16 +59,16 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
-import edu.unl.sigett.session.AspiranteFacadeLocal;
-import edu.unl.sigett.session.ConfiguracionCarreraFacadeLocal;
-import edu.unl.sigett.session.ConfiguracionGeneralFacadeLocal;
+import edu.unl.sigett.dao.AspiranteFacadeLocal;
+import edu.unl.sigett.dao.ConfiguracionCarreraDao;
+import edu.unl.sigett.dao.ConfiguracionGeneralDao;
 import edu.jlmallas.academico.service.EstadoEstudianteCarreraFacadeLocal;
 import edu.jlmallas.academico.service.EstadoMatriculaFacadeLocal;
 import edu.jlmallas.academico.service.EstudianteCarreraFacadeLocal;
 import edu.jlmallas.academico.service.EstudianteFacadeLocal;
 import org.jlmallas.seguridad.dao.LogDao;
-import edu.jlmallas.academico.service.OfertaAcademicaFacadeLocal;
-import com.jlmallas.comun.service.PersonaFacadeLocal;
+import edu.jlmallas.academico.service.OfertaAcademicaService;
+import com.jlmallas.comun.dao.PersonaDao;
 import edu.jlmallas.academico.service.ReporteMatriculaFacadeLocal;
 import org.jlmallas.seguridad.dao.UsuarioDao;
 
@@ -108,7 +108,7 @@ public class AdministrarEstudiantesCarrera implements Serializable {
     private AdministrarUsuarios administrarUsuarios;
 
     @EJB
-    private PersonaFacadeLocal personaFacadeLocal;
+    private PersonaDao personaFacadeLocal;
     @EJB
     private EstudianteFacadeLocal estudianteFacadeLocal;
     @EJB
@@ -118,19 +118,19 @@ public class AdministrarEstudiantesCarrera implements Serializable {
     @EJB
     private UsuarioDao usuarioFacadeLocal;
     @EJB
-    private ItemFacadeLocal itemFacadeLocal;
+    private ItemDao itemFacadeLocal;
     @EJB
     private EstadoEstudianteCarreraFacadeLocal estadoEstudianteCarreraFacadeLocal;
     @EJB
     private AspiranteFacadeLocal aspiranteFacadeLocal;
     @EJB
-    private ConfiguracionCarreraFacadeLocal configuracionCarreraFacadeLocal;
+    private ConfiguracionCarreraDao configuracionCarreraFacadeLocal;
     @EJB
-    private ConfiguracionGeneralFacadeLocal configuracionGeneralFacadeLocal;
+    private ConfiguracionGeneralDao configuracionGeneralFacadeLocal;
     @EJB
     private ReporteMatriculaFacadeLocal reporteMatriculaFacadeLocal;
     @EJB
-    private OfertaAcademicaFacadeLocal ofertaAcademicaFacadeLocal;
+    private OfertaAcademicaService ofertaAcademicaFacadeLocal;
     @EJB
     private EstadoMatriculaFacadeLocal estadoMatriculaFacadeLocal;
 
@@ -172,7 +172,7 @@ public class AdministrarEstudiantesCarrera implements Serializable {
                 sessionEstudianteCarrera.setPersona(new Persona());
                 sessionEstudianteCarrera.setAspirante(new Aspirante());
                 sessionEstudianteCarrera.getEstudianteCarrera().setEstudianteId(new Estudiante());
-                sessionEstudianteCarrera.getEstudianteCarrera().setCarreraId(sessionUsuarioCarrera.getCarrera());
+//                sessionEstudianteCarrera.getEstudianteCarrera().setCarreraId(sessionUsuarioCarrera.getCarrera());
                 administrarEstudiantes.renderedFotos(new Estudiante());
                 administrarEstudiantes.renderedInformacionEstudio(new Estudiante());
                 habilitaCampoEsAptoAspirante(usuario);
@@ -226,15 +226,15 @@ public class AdministrarEstudiantesCarrera implements Serializable {
             ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
             int tienePermiso = usuarioFacadeLocal.tienePermiso(sessionUsuario.getUsuario(), "buscar_estudiante_carrera");
             if (tienePermiso == 1) {
-                for (EstudianteCarrera estudianteCarrera : estudianteCarreraFacadeLocal.buscarPorCarrera(sessionUsuarioCarrera.getCarrera().getId())) {
-                    Persona persona = personaFacadeLocal.find(estudianteCarrera.getEstudianteId().getId());
-                    if (persona.getApellidos().toLowerCase().contains(criterio.toLowerCase()) || persona.getNombres().toLowerCase().contains(criterio.toLowerCase())
-                            || persona.getNumeroIdentificacion().contains(criterio)) {
-                        if (!estudianteCarreras.contains(estudianteCarrera)) {
-                            this.estudianteCarreras.add(estudianteCarrera);
-                        }
-                    }
-                }
+//                for (EstudianteCarrera estudianteCarrera : estudianteCarreraFacadeLocal.buscarPorCarrera(sessionUsuarioCarrera.getCarrera().getId())) {
+//                    Persona persona = personaFacadeLocal.find(estudianteCarrera.getEstudianteId().getId());
+//                    if (persona.getApellidos().toLowerCase().contains(criterio.toLowerCase()) || persona.getNombres().toLowerCase().contains(criterio.toLowerCase())
+//                            || persona.getNumeroIdentificacion().contains(criterio)) {
+//                        if (!estudianteCarreras.contains(estudianteCarrera)) {
+//                            this.estudianteCarreras.add(estudianteCarrera);
+//                        }
+//                    }
+//                }
             } else {
                 if (tienePermiso == 2) {
                     FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_buscar") + ". " + bundle.getString("lbl.msm_consulte"), "");

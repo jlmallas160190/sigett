@@ -21,9 +21,9 @@ import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import org.primefaces.event.TransferEvent;
 import org.primefaces.model.DualListModel;
-import edu.unl.sigett.session.LineaInvestigacionCarreraFacadeLocal;
-import edu.unl.sigett.session.LineaInvestigacionDocenteFacadeLocal;
-import edu.unl.sigett.session.LineaInvestigacionFacadeLocal;
+import edu.unl.sigett.dao.LineaInvestigacionCarreraFacadeLocal;
+import edu.unl.sigett.dao.LineaInvestigacionDocenteDao;
+import edu.unl.sigett.dao.LineaInvestigacionFacadeLocal;
 import org.jlmallas.seguridad.dao.LogDao;
 
 /**
@@ -38,7 +38,7 @@ public class AdministrarLineasInvestigacionDocente implements Serializable {
     @EJB
     private LineaInvestigacionCarreraFacadeLocal lineaInvestigacionCarreraFacadeLocal;
     @EJB
-    private LineaInvestigacionDocenteFacadeLocal lineaInvestigacionDocenteFacadeLocal;
+    private LineaInvestigacionDocenteDao lineaInvestigacionDocenteFacadeLocal;
     @EJB
     private LineaInvestigacionFacadeLocal lineaInvestigacionFacadeLocal;
     @EJB
@@ -89,15 +89,15 @@ public class AdministrarLineasInvestigacionDocente implements Serializable {
     public void eliminar(Docente docente, Usuario usuario, List<LineaInvestigacionDocente> lineaInvestigacionDocentes) {
         try {
             if (docente.getId() != null) {
-                for (LineaInvestigacionDocente ld : lineaInvestigacionDocentes) {
-                    Long id = devuelveLineaInvestigacionEliminar(lineaInvestigacionDocenteFacadeLocal.buscarPorDocenteId(docente.getId()), ld);
-                    LineaInvestigacionDocente lid = null;
-                    lid = lineaInvestigacionDocenteFacadeLocal.find(id);
-                    if (lid != null) {
-                        logFacadeLocal.create(logFacadeLocal.crearLog("LineaInvestigacionDocente", ld.getId() + "", "ELIMINAR", " LineaInvestigacion=" + ld.getLineaInvestigacionId() + "|Docente=" + ld.getDocenteId(), usuario));
-                        lineaInvestigacionDocenteFacadeLocal.remove(lid);
-                    }
-                }
+//                for (LineaInvestigacionDocente ld : lineaInvestigacionDocentes) {
+//                    Long id = devuelveLineaInvestigacionEliminar(lineaInvestigacionDocenteFacadeLocal.buscarPorDocenteId(docente.getId()), ld);
+//                    LineaInvestigacionDocente lid = null;
+//                    lid = lineaInvestigacionDocenteFacadeLocal.find(id);
+//                    if (lid != null) {
+//                        logFacadeLocal.create(logFacadeLocal.crearLog("LineaInvestigacionDocente", ld.getId() + "", "ELIMINAR", " LineaInvestigacion=" + ld.getLineaInvestigacionId() + "|Docente=" + ld.getDocenteId(), usuario));
+//                        lineaInvestigacionDocenteFacadeLocal.remove(lid);
+//                    }
+//                }
             }
         } catch (Exception e) {
             System.out.println(e);
@@ -117,11 +117,11 @@ public class AdministrarLineasInvestigacionDocente implements Serializable {
 
     public void grabar(Docente docente, Usuario usuario, List<LineaInvestigacionDocente> lineaInvestigacionDocentes) {
         for (LineaInvestigacionDocente lineaInvestigacionDocente : lineaInvestigacionDocentes) {
-            if (contieneLineaInvestigacion(lineaInvestigacionDocenteFacadeLocal.buscarPorDocenteId(docente.getId()), lineaInvestigacionDocente) == false) {
-                lineaInvestigacionDocente.setDocenteId(docente.getId());
-                lineaInvestigacionDocenteFacadeLocal.create(lineaInvestigacionDocente);
-                logFacadeLocal.create(logFacadeLocal.crearLog("LineaInvestigacionDocente", lineaInvestigacionDocente.getId() + "", "CREAR", "|LineaInvestigacion= " + lineaInvestigacionDocente.getLineaInvestigacionId() + "|Docente=" + lineaInvestigacionDocente.getDocenteId(), usuario));
-            }
+//            if (contieneLineaInvestigacion(lineaInvestigacionDocenteFacadeLocal.buscarPorDocenteId(docente.getId()), lineaInvestigacionDocente) == false) {
+//                lineaInvestigacionDocente.setDocenteId(docente.getId());
+//                lineaInvestigacionDocenteFacadeLocal.create(lineaInvestigacionDocente);
+//                logFacadeLocal.create(logFacadeLocal.crearLog("LineaInvestigacionDocente", lineaInvestigacionDocente.getId() + "", "CREAR", "|LineaInvestigacion= " + lineaInvestigacionDocente.getLineaInvestigacionId() + "|Docente=" + lineaInvestigacionDocente.getDocenteId(), usuario));
+//            }
         }
     }
 
@@ -141,9 +141,9 @@ public class AdministrarLineasInvestigacionDocente implements Serializable {
         List<LineaInvestigacion> lineaInvestigaciones = new ArrayList<>();
         try {
             if (docente.getId() != null) {
-                for (LineaInvestigacionDocente lid : lineaInvestigacionDocenteFacadeLocal.buscarPorDocenteId(docente.getId())) {
-                    lineaInvestigacionDocentes.add(lid.getLineaInvestigacionId());
-                }
+//                for (LineaInvestigacionDocente lid : lineaInvestigacionDocenteFacadeLocal.buscarPorDocenteId(docente.getId())) {
+//                    lineaInvestigacionDocentes.add(lid.getLineaInvestigacionId());
+//                }
                 for (DocenteCarrera docenteCarrera : docente.getDocenteCarreraList()) {
                     List<LineaInvestigacionCarrera> lics = new ArrayList<>();
                     lics = lineaInvestigacionCarreraFacadeLocal.buscarPorCarrera(docenteCarrera.getCarreraId().getId());

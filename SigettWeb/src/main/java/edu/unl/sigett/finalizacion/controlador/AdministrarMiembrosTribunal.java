@@ -6,7 +6,7 @@
 package edu.unl.sigett.finalizacion.controlador;
 
 import com.jlmallas.comun.entity.Persona;
-import com.jlmallas.comun.service.PersonaFacadeLocal;
+import com.jlmallas.comun.dao.PersonaDao;
 import edu.unl.sigett.finalizacion.managed.session.SessionMiembro;
 import edu.unl.sigett.postulacion.managed.session.SessionProyecto;
 import edu.unl.sigett.reportes.AdministrarReportes;
@@ -41,19 +41,19 @@ import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.primefaces.context.RequestContext;
-import edu.unl.sigett.session.AutorProyectoFacadeLocal;
-import edu.unl.sigett.session.CargoMiembroFacadeLocal;
+import edu.unl.sigett.dao.AutorProyectoFacadeLocal;
+import edu.unl.sigett.dao.CargoMiembroFacadeLocal;
 import edu.jlmallas.academico.service.CarreraService;
-import edu.unl.sigett.session.CatalogoOficioFacadeLocal;
-import edu.unl.sigett.session.ConfiguracionCarreraFacadeLocal;
-import edu.unl.sigett.session.ConfiguracionGeneralFacadeLocal;
+import edu.unl.sigett.dao.CatalogoOficioFacadeLocal;
+import edu.unl.sigett.dao.ConfiguracionCarreraDao;
+import edu.unl.sigett.dao.ConfiguracionGeneralDao;
 import edu.jlmallas.academico.service.CoordinadorPeriodoFacadeLocal;
-import edu.jlmallas.academico.service.DocenteCarreraFacadeLocal;
-import edu.jlmallas.academico.service.DocenteFacadeLocal;
-import edu.unl.sigett.session.MiembroFacadeLocal;
-import edu.unl.sigett.session.OficioCarreraFacadeLocal;
-import edu.unl.sigett.session.ProyectoCarreraOfertaFacadeLocal;
-import edu.unl.sigett.session.ProyectoFacadeLocal;
+import edu.jlmallas.academico.dao.DocenteCarreraDao;
+import edu.jlmallas.academico.dao.DocenteDao;
+import edu.unl.sigett.dao.MiembroFacadeLocal;
+import edu.unl.sigett.dao.OficioCarreraFacadeLocal;
+import edu.unl.sigett.dao.ProyectoCarreraOfertaFacadeLocal;
+import edu.unl.sigett.dao.ProyectoFacadeLocal;
 import org.jlmallas.seguridad.dao.UsuarioDao;
 import edu.jlmallas.academico.entity.EstudianteCarrera;
 import edu.jlmallas.academico.service.EstudianteCarreraFacadeLocal;
@@ -84,19 +84,19 @@ public class AdministrarMiembrosTribunal implements Serializable {
     @EJB
     private UsuarioDao usuarioFacadeLocal;
     @EJB
-    private ConfiguracionGeneralFacadeLocal configuracionGeneralFacadeLocal;
+    private ConfiguracionGeneralDao configuracionGeneralFacadeLocal;
     @EJB
-    private DocenteCarreraFacadeLocal docenteCarreraFacadeLocal;
+    private DocenteCarreraDao docenteCarreraFacadeLocal;
     @EJB
     private ProyectoCarreraOfertaFacadeLocal proyectoCarreraOfertaFacadeLocal;
     @EJB
     private CargoMiembroFacadeLocal cargoMiembroFacadeLocal;
     @EJB
-    private DocenteFacadeLocal docenteFacadeLocal;
+    private DocenteDao docenteFacadeLocal;
     @EJB
     private AutorProyectoFacadeLocal autorProyectoFacadeLocal;
     @EJB
-    private ConfiguracionCarreraFacadeLocal configuracionCarreraFacadeLocal;
+    private ConfiguracionCarreraDao configuracionCarreraFacadeLocal;
     @EJB
     private OficioCarreraFacadeLocal oficioCarreraFacadeLocal;
     @EJB
@@ -112,7 +112,7 @@ public class AdministrarMiembrosTribunal implements Serializable {
     @EJB
     private EstudianteCarreraFacadeLocal estudianteCarreraFacadeLocal;
     @EJB
-    private PersonaFacadeLocal personaFacadeLocal;
+    private PersonaDao personaFacadeLocal;
 
     private boolean renderedEditar;
     private boolean renderedNoEditar;
@@ -562,28 +562,28 @@ public class AdministrarMiembrosTribunal implements Serializable {
             miembros1 = miembroFacadeLocal.buscarPorTribunal(tribunal.getId());
             if (permiteAgregarDirectorTribunal()) {
                 for (ProyectoCarreraOferta proyectoCarreraOferta : proyectoCarreraOfertaFacadeLocal.buscarPorProyecto(proyecto.getId())) {
-                    for (DocenteCarrera docenteCarrera : docenteCarreraFacadeLocal.buscarPorCarrera(proyectoCarreraOferta.getCarreraId())) {
-                        Docente docente = docenteFacadeLocal.find(docenteCarrera.getDocenteId());
-                        Persona personaDocente = personaFacadeLocal.find(docente.getId());
-                        if (personaDocente.getApellidos().toLowerCase().contains(criterio.toLowerCase())
-                                || personaDocente.getNombres().toLowerCase().contains(criterio.toLowerCase())
-                                || personaDocente.getNumeroIdentificacion().toLowerCase().contains(criterio.toLowerCase())) {
-                            if (!miembros1.isEmpty()) {
-                                for (Miembro miembro : miembros1) {
-                                    if (miembro.getDocenteId() != docenteCarrera.getDocenteId().getId()) {
-                                        if (!docentes.contains(docenteCarrera.getDocenteId())) {
-                                            docentes.add(docenteCarrera.getDocenteId());
-                                        }
-                                    }
-
-                                }
-                            } else {
-                                if (!docentes.contains(docenteCarrera.getDocenteId())) {
-                                    docentes.add(docenteCarrera.getDocenteId());
-                                }
-                            }
-                        }
-                    }
+//                    for (DocenteCarrera docenteCarrera : docenteCarreraFacadeLocal.buscarPorCarrera(proyectoCarreraOferta.getCarreraId())) {
+//                        Docente docente = docenteFacadeLocal.find(docenteCarrera.getDocenteId());
+//                        Persona personaDocente = personaFacadeLocal.find(docente.getId());
+//                        if (personaDocente.getApellidos().toLowerCase().contains(criterio.toLowerCase())
+//                                || personaDocente.getNombres().toLowerCase().contains(criterio.toLowerCase())
+//                                || personaDocente.getNumeroIdentificacion().toLowerCase().contains(criterio.toLowerCase())) {
+//                            if (!miembros1.isEmpty()) {
+//                                for (Miembro miembro : miembros1) {
+//                                    if (miembro.getDocenteId() != docenteCarrera.getDocenteId().getId()) {
+//                                        if (!docentes.contains(docenteCarrera.getDocenteId())) {
+//                                            docentes.add(docenteCarrera.getDocenteId());
+//                                        }
+//                                    }
+//
+//                                }
+//                            } else {
+//                                if (!docentes.contains(docenteCarrera.getDocenteId())) {
+//                                    docentes.add(docenteCarrera.getDocenteId());
+//                                }
+//                            }
+//                        }
+//                    }
                 }
             } else {
 

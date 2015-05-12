@@ -6,8 +6,8 @@
 package edu.unl.sigett.postulacion.controlador;
 
 import com.jlmallas.comun.entity.Persona;
-import com.jlmallas.comun.service.ItemFacadeLocal;
-import com.jlmallas.comun.service.PersonaFacadeLocal;
+import com.jlmallas.comun.dao.ItemDao;
+import com.jlmallas.comun.dao.PersonaDao;
 import edu.unl.sigett.academico.controlador.AdministrarEstudiantesCarrera;
 import edu.unl.sigett.academico.controlador.AdministrarEstudiantes;
 import edu.unl.sigett.comun.controlador.AdministrarCatalogoProyectos;
@@ -96,39 +96,39 @@ import org.primefaces.event.SelectEvent;
 import org.primefaces.event.TabChangeEvent;
 import org.primefaces.event.TransferEvent;
 import org.primefaces.model.DualListModel;
-import edu.unl.sigett.session.AutorProyectoFacadeLocal;
+import edu.unl.sigett.dao.AutorProyectoFacadeLocal;
 import edu.jlmallas.academico.service.CarreraService;
-import edu.unl.sigett.session.CatalogoDocumentoExpedienteFacadeLocal;
-import edu.unl.sigett.session.CatalogoProyectoFacadeLocal;
-import edu.unl.sigett.session.ConfiguracionCarreraFacadeLocal;
-import edu.unl.sigett.session.ConfiguracionGeneralFacadeLocal;
-import edu.unl.sigett.session.ConfiguracionProyectoFacadeLocal;
-import edu.unl.sigett.session.CronogramaFacadeLocal;
-import edu.unl.sigett.session.DirectorProyectoFacadeLocal;
-import edu.jlmallas.academico.service.DocenteCarreraFacadeLocal;
-import edu.unl.sigett.session.DocenteProyectoFacadeLocal;
-import edu.unl.sigett.session.DocumentoProyectoFacadeLocal;
-import edu.unl.sigett.session.EstadoAutorFacadeLocal;
-import edu.unl.sigett.session.EstadoProyectoFacadeLocal;
-import edu.unl.sigett.session.ExpedienteFacadeLocal;
-import edu.unl.sigett.session.LineaInvestigacionCarreraFacadeLocal;
-import edu.unl.sigett.session.LineaInvestigacionFacadeLocal;
-import edu.unl.sigett.session.LineaInvestigacionProyectoFacadeLocal;
+import edu.unl.sigett.dao.CatalogoDocumentoExpedienteFacadeLocal;
+import edu.unl.sigett.dao.CatalogoProyectoFacadeLocal;
+import edu.unl.sigett.dao.ConfiguracionCarreraDao;
+import edu.unl.sigett.dao.ConfiguracionGeneralDao;
+import edu.unl.sigett.dao.ConfiguracionProyectoFacadeLocal;
+import edu.unl.sigett.dao.CronogramaFacadeLocal;
+import edu.unl.sigett.dao.DirectorProyectoFacadeLocal;
+import edu.jlmallas.academico.dao.DocenteCarreraDao;
+import edu.unl.sigett.dao.DocenteProyectoFacadeLocal;
+import edu.unl.sigett.dao.DocumentoProyectoFacadeLocal;
+import edu.unl.sigett.dao.EstadoAutorFacadeLocal;
+import edu.unl.sigett.dao.EstadoProyectoFacadeLocal;
+import edu.unl.sigett.dao.ExpedienteFacadeLocal;
+import edu.unl.sigett.dao.LineaInvestigacionCarreraFacadeLocal;
+import edu.unl.sigett.dao.LineaInvestigacionFacadeLocal;
+import edu.unl.sigett.dao.LineaInvestigacionProyectoFacadeLocal;
 import org.jlmallas.seguridad.dao.LogDao;
-import edu.jlmallas.academico.service.OfertaAcademicaFacadeLocal;
-import edu.unl.sigett.session.ProyectoCarreraOfertaFacadeLocal;
-import edu.unl.sigett.session.ProyectoFacadeLocal;
-import edu.unl.sigett.session.TemaProyectoFacadeLocal;
-import edu.unl.sigett.session.TipoProyectoFacadeLocal;
-import edu.unl.sigett.session.UsuarioCarreraFacadeLocal;
+import edu.jlmallas.academico.service.OfertaAcademicaService;
+import edu.unl.sigett.dao.ProyectoCarreraOfertaFacadeLocal;
+import edu.unl.sigett.dao.ProyectoFacadeLocal;
+import edu.unl.sigett.dao.TemaProyectoFacadeLocal;
+import edu.unl.sigett.dao.TipoProyectoFacadeLocal;
+import edu.unl.sigett.dao.UsuarioCarreraDao;
 import org.jlmallas.seguridad.dao.UsuarioDao;
 import edu.jlmallas.academico.entity.EstudianteCarrera;
-import edu.jlmallas.academico.service.DocenteFacadeLocal;
+import edu.jlmallas.academico.dao.DocenteDao;
 import edu.jlmallas.academico.service.EstudianteCarreraFacadeLocal;
 import edu.unl.sigett.enumeration.EstadoAutorEnum;
 import edu.unl.sigett.enumeration.EstadoDirectorEnum;
 import edu.unl.sigett.enumeration.EstadoProyectoEnum;
-import edu.unl.sigett.session.LineaInvestigacionDocenteFacadeLocal;
+import edu.unl.sigett.dao.LineaInvestigacionDocenteDao;
 
 /**
  *
@@ -225,13 +225,13 @@ public class AdministrarProyectos implements Serializable {
     @EJB
     private DocenteProyectoFacadeLocal docenteProyectoFacadeLocal;
     @EJB
-    private UsuarioCarreraFacadeLocal usuarioCarreraFacadeLocal;
+    private UsuarioCarreraDao usuarioCarreraFacadeLocal;
     @EJB
-    private DocenteCarreraFacadeLocal docenteCarreraFacadeLocal;
+    private DocenteCarreraDao docenteCarreraFacadeLocal;
     @EJB
     private TemaProyectoFacadeLocal temaProyectoFacadeLocal;
     @EJB
-    private ConfiguracionGeneralFacadeLocal configuracionGeneralFacadeLocal;
+    private ConfiguracionGeneralDao configuracionGeneralFacadeLocal;
     @EJB
     private ConfiguracionProyectoFacadeLocal configuracionProyectoFacadeLocal;
     @EJB
@@ -239,11 +239,11 @@ public class AdministrarProyectos implements Serializable {
     @EJB
     private DirectorProyectoFacadeLocal directorProyectoFacadeLocal;
     @EJB
-    private ConfiguracionCarreraFacadeLocal configuracionCarreraFacadeLocal;
+    private ConfiguracionCarreraDao configuracionCarreraFacadeLocal;
     @EJB
     private ProyectoCarreraOfertaFacadeLocal proyectoCarreraOfertaFacadeLocal;
     @EJB
-    private OfertaAcademicaFacadeLocal ofertaAcademicaFacadeLocal;
+    private OfertaAcademicaService ofertaAcademicaFacadeLocal;
     @EJB
     private CatalogoDocumentoExpedienteFacadeLocal catalogoDocumentoExpedienteFacadeLocal;
     @EJB
@@ -259,15 +259,15 @@ public class AdministrarProyectos implements Serializable {
     @EJB
     private CronogramaFacadeLocal cronogramaFacadeLocal;
     @EJB
-    private LineaInvestigacionDocenteFacadeLocal lineaInvestigacionDocenteFacadeLocal;
+    private LineaInvestigacionDocenteDao lineaInvestigacionDocenteFacadeLocal;
     @EJB
     private EstudianteCarreraFacadeLocal estudianteCarreraFacadeLocal;
     @EJB
-    private PersonaFacadeLocal personaFacadeLocal;
+    private PersonaDao personaFacadeLocal;
     @EJB
-    private DocenteFacadeLocal docenteFacadeLocal;
+    private DocenteDao docenteFacadeLocal;
     @EJB
-    private ItemFacadeLocal itemFacadeLocal;
+    private ItemDao itemFacadeLocal;
     
 
     private DualListModel<LineaInvestigacion> lineasInvestigacionDualList;
@@ -680,12 +680,12 @@ public class AdministrarProyectos implements Serializable {
                 for (LineaInvestigacionProyecto lineaInvestigacionProyecto : lips) {
                     for (DocenteProyecto docenteProyecto : proyecto.getDocenteProyectoList()) {
                         if (docenteProyecto.getEsActivo()) {
-                            for (LineaInvestigacionDocente ld : lineaInvestigacionDocenteFacadeLocal.buscarPorDocenteId(docenteProyecto.getDocenteId())) {
-                                if (lineaInvestigacionProyecto.getLineaInvestigacionId().equals(ld.getLineaInvestigacionId())) {
-                                    var = true;
-                                    break;
-                                }
-                            }
+//                            for (LineaInvestigacionDocente ld : lineaInvestigacionDocenteFacadeLocal.buscarPorDocenteId(docenteProyecto.getDocenteId())) {
+//                                if (lineaInvestigacionProyecto.getLineaInvestigacionId().equals(ld.getLineaInvestigacionId())) {
+//                                    var = true;
+//                                    break;
+//                                }
+//                            }
                         }
                     }
                 }
@@ -2312,39 +2312,39 @@ public class AdministrarProyectos implements Serializable {
                     }
                 }
                 for (UsuarioCarrera usuarioCarrera : usuarioCarreraFacadeLocal.buscarPorUsuario(sessionUsuario.getUsuario().getId())) {
-                    for (DocenteCarrera docenteCarrera : docenteCarreraFacadeLocal.buscarPorCarrera(usuarioCarrera.getCarreraId())) {
-                        Docente docente = docenteFacadeLocal.find(docenteCarrera.getDocenteId());
-                        for (LineaInvestigacionDocente ld : lineaInvestigacionDocenteFacadeLocal.buscarPorDocenteId(docente.getId())) {
-                            for (LineaInvestigacionProyecto lp : proyecto.getLineaInvestigacionProyectoList()) {
-                                if (lp.getLineaInvestigacionId().equals(ld.getLineaInvestigacionId())) {
-                                    if (docenteCarrera.isEsActivo()) {
-                                        if (!docentesProyectos.contains(docenteCarrera.getDocenteId())) {
-                                            if (!docentes.contains(docenteCarrera.getDocenteId())) {
-                                                docentes.add(docenteCarrera.getDocenteId());
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
+//                    for (DocenteCarrera docenteCarrera : docenteCarreraFacadeLocal.buscarPorCarrera(usuarioCarrera.getCarreraId())) {
+//                        Docente docente = docenteFacadeLocal.find(docenteCarrera.getDocenteId());
+//                        for (LineaInvestigacionDocente ld : lineaInvestigacionDocenteFacadeLocal.buscarPorDocenteId(docente.getId())) {
+//                            for (LineaInvestigacionProyecto lp : proyecto.getLineaInvestigacionProyectoList()) {
+//                                if (lp.getLineaInvestigacionId().equals(ld.getLineaInvestigacionId())) {
+//                                    if (docenteCarrera.isEsActivo()) {
+//                                        if (!docentesProyectos.contains(docenteCarrera.getDocenteId())) {
+//                                            if (!docentes.contains(docenteCarrera.getDocenteId())) {
+//                                                docentes.add(docenteCarrera.getDocenteId());
+//                                            }
+//                                        }
+//                                    }
+//                                }
+//                            }
+//                        }
+//                    }
                 }
             } else {
                 for (UsuarioCarrera usuarioCarrera : usuarioCarreraFacadeLocal.buscarPorUsuario(sessionUsuario.getUsuario().getId())) {
-                    for (DocenteCarrera docenteCarrera : docenteCarreraFacadeLocal.buscarPorCarrera(usuarioCarrera.getCarreraId())) {
-                        Docente docente = docenteFacadeLocal.find(docenteCarrera.getDocenteId());
-                        for (LineaInvestigacionDocente ld : lineaInvestigacionDocenteFacadeLocal.buscarPorDocenteId(docente.getId())) {
-                            for (LineaInvestigacionProyecto lp : proyecto.getLineaInvestigacionProyectoList()) {
-                                if (lp.getLineaInvestigacionId().equals(ld.getLineaInvestigacionId())) {
-                                    if (docenteCarrera.isEsActivo()) {
-                                        if (!docentes.contains(docenteCarrera.getDocenteId())) {
-                                            docentes.add(docenteCarrera.getDocenteId());
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
+//                    for (DocenteCarrera docenteCarrera : docenteCarreraFacadeLocal.buscarPorCarrera(usuarioCarrera.getCarreraId())) {
+//                        Docente docente = docenteFacadeLocal.find(docenteCarrera.getDocenteId());
+//                        for (LineaInvestigacionDocente ld : lineaInvestigacionDocenteFacadeLocal.buscarPorDocenteId(docente.getId())) {
+//                            for (LineaInvestigacionProyecto lp : proyecto.getLineaInvestigacionProyectoList()) {
+//                                if (lp.getLineaInvestigacionId().equals(ld.getLineaInvestigacionId())) {
+//                                    if (docenteCarrera.isEsActivo()) {
+//                                        if (!docentes.contains(docenteCarrera.getDocenteId())) {
+//                                            docentes.add(docenteCarrera.getDocenteId());
+//                                        }
+//                                    }
+//                                }
+//                            }
+//                        }
+//                    }
                 }
             }
 

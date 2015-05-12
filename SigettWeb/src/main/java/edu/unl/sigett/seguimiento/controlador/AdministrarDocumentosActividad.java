@@ -29,8 +29,8 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
-import edu.unl.sigett.session.ConfiguracionGeneralFacadeLocal;
-import edu.unl.sigett.session.DocumentoActividadFacadeLocal;
+import edu.unl.sigett.dao.ConfiguracionGeneralDao;
+import edu.unl.sigett.dao.DocumentoActividadFacadeLocal;
 import org.jlmallas.seguridad.dao.LogDao;
 import org.jlmallas.seguridad.dao.UsuarioDao;
 
@@ -60,7 +60,7 @@ public class AdministrarDocumentosActividad implements Serializable {
     @EJB
     private DocumentoActividadFacadeLocal documentoActividadFacadeLocal;
     @EJB
-    ConfiguracionGeneralFacadeLocal configuracionGeneralFacadeLocal;
+    ConfiguracionGeneralDao configuracionGeneralFacadeLocal;
     @EJB
     private LogDao logFacadeLocal;
     @EJB

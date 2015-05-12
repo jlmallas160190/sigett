@@ -5,7 +5,7 @@
  */
 package edu.jlmallas.academico.dao.implement;
 
-import edu.jlmallas.academico.dao.AbstractFacade;
+import edu.jlmallas.academico.dao.AbstractDao;
 import edu.jlmallas.academico.dao.CarreraDao;
 import edu.jlmallas.academico.entity.Carrera;
 import java.util.ArrayList;
@@ -19,7 +19,7 @@ import javax.persistence.Query;
  * @author jorge-luis
  */
 @Stateless
-public class CarreraDaoImplement extends AbstractFacade<Carrera> implements CarreraDao {
+public class CarreraDaoImplement extends AbstractDao<Carrera> implements CarreraDao {
 
     public CarreraDaoImplement() {
         super(Carrera.class);

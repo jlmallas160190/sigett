@@ -1,0 +1,41 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+    <body>
+        <h:panelGrid styleClass="panelgrid list-group" columns="1" >
+            <p:commandLink styleClass="list-group-item" action="pretty:editarUsuarioCarrera">
+                <p:graphicImage width="16" height="16" value="/resources/blacks/16x16/120.png"/>
+                #{msg['lbl.inicio']}
+            </p:commandLink>
+            <p:commandLink styleClass="list-group-item" 
+                           action="#{administrarPeriodoCoordinacion.navegarListado
+                                     (sessionUsuario.usuario, sessionUsuarioCarrera.usuarioCarreraAux.carrera)}">
+                <p:graphicImage width="16" height="16" value="/resources/png/32px/Shape178.png"/>
+                #{msg['lbl.periodosCoordinacion']}
+            </p:commandLink>
+            <p:commandLink styleClass="list-group-item" action="#{administrarCoordinadoresPeriodos.navegarListado(sessionUsuario.usuario, 
+                                                                  sessionUsuarioCarrera.usuarioCarreraAux.carrera)}">
+                <p:graphicImage width="16" height="16" value="/resources/png/32px/Shape147.png"/>
+                #{msg['lbl.coordinadores']}
+            </p:commandLink>
+            <p:commandLink styleClass="list-group-item" action="pretty:configuracionesCarrera">
+                <p:graphicImage width="16" height="16" value="/resources/blacks/16x16/240.png"/>
+                #{msg['lbl.configuracion']}
+            </p:commandLink>
+            <p:commandLink styleClass="list-group-item" action="#{administrarLineasInvestigacionCarrera.viewLineasInvestigacionCarrera()}">
+                <p:graphicImage width="16" height="16" value="/resources/png/32px/Shape102.png"/>
+                #{msg['lbl.lineasInvestigacion']}
+            </p:commandLink>
+            <p:commandLink styleClass="list-group-item" ajax="false" action="pretty:docentesCarrera">
+                <p:graphicImage width="16" height="16" value="/resources/png/32px/Shape4.png"/>
+                #{msg['lbl.docentes']}
+            </p:commandLink>
+           <!--commandLink styleClass="list-group-item" action="#{administrarEstudiantesCarrera.viewEstudiantesCarrera()}">
+                <p:graphicImage width="16" height="16" value="/resources/png/32px/Shape198.png"/>
+            #{msg['lbl.estudiantes']}
+        </p:commandLink>-->
+        </h:panelGrid>
+    </body>
+</html>

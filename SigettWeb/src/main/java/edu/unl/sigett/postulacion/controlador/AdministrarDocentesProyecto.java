@@ -6,7 +6,7 @@
 package edu.unl.sigett.postulacion.controlador;
 
 import com.jlmallas.comun.entity.Persona;
-import com.jlmallas.comun.service.PersonaFacadeLocal;
+import com.jlmallas.comun.dao.PersonaDao;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 import com.ocpsoft.pretty.faces.annotation.URLMappings;
 import edu.unl.sigett.postulacion.managed.session.SessionDocenteProyecto;
@@ -45,26 +45,26 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.TabChangeEvent;
-import edu.unl.sigett.session.AutorProyectoFacadeLocal;
+import edu.unl.sigett.dao.AutorProyectoFacadeLocal;
 import edu.jlmallas.academico.service.CarreraService;
-import edu.unl.sigett.session.CatalogoOficioFacadeLocal;
-import edu.unl.sigett.session.ConfiguracionCarreraFacadeLocal;
-import edu.unl.sigett.session.ConfiguracionGeneralFacadeLocal;
+import edu.unl.sigett.dao.CatalogoOficioFacadeLocal;
+import edu.unl.sigett.dao.ConfiguracionCarreraDao;
+import edu.unl.sigett.dao.ConfiguracionGeneralDao;
 import edu.jlmallas.academico.service.CoordinadorPeriodoFacadeLocal;
-import edu.jlmallas.academico.service.DocenteCarreraFacadeLocal;
-import edu.unl.sigett.session.DocenteProyectoFacadeLocal;
+import edu.jlmallas.academico.dao.DocenteCarreraDao;
+import edu.unl.sigett.dao.DocenteProyectoFacadeLocal;
 import org.jlmallas.seguridad.dao.LogDao;
-import edu.unl.sigett.session.OficioCarreraFacadeLocal;
-import edu.unl.sigett.session.UsuarioCarreraFacadeLocal;
+import edu.unl.sigett.dao.OficioCarreraFacadeLocal;
+import edu.unl.sigett.dao.UsuarioCarreraDao;
 import org.jlmallas.seguridad.dao.UsuarioDao;
 import edu.jlmallas.academico.entity.EstudianteCarrera;
-import edu.jlmallas.academico.service.DocenteFacadeLocal;
+import edu.jlmallas.academico.dao.DocenteDao;
 import edu.jlmallas.academico.service.EstudianteCarreraFacadeLocal;
 import edu.unl.sigett.comun.managed.session.SessionOficioCarrera;
 import edu.unl.sigett.enumeration.CatalogoOficioEnum;
 import edu.unl.sigett.enumeration.EstadoAutorEnum;
 import edu.unl.sigett.enumeration.EstadoProyectoEnum;
-import edu.unl.sigett.session.LineaInvestigacionDocenteFacadeLocal;
+import edu.unl.sigett.dao.LineaInvestigacionDocenteDao;
 import edu.unl.sigett.util.MessageView;
 import java.util.HashMap;
 import java.util.Map;
@@ -115,7 +115,7 @@ public class AdministrarDocentesProyecto implements Serializable {
     @EJB
     private CarreraService carreraFacadeLocal;
     @EJB
-    private ConfiguracionCarreraFacadeLocal configuracionCarreraFacadeLocal;
+    private ConfiguracionCarreraDao configuracionCarreraFacadeLocal;
     @EJB
     private AutorProyectoFacadeLocal autorProyectoFacadeLocal;
     @EJB
@@ -123,27 +123,27 @@ public class AdministrarDocentesProyecto implements Serializable {
     @EJB
     private CatalogoOficioFacadeLocal catalogoOficioFacadeLocal;
     @EJB
-    private DocenteCarreraFacadeLocal docenteCarreraFacadeLocal;
+    private DocenteCarreraDao docenteCarreraFacadeLocal;
     @EJB
     private LogDao logFacadeLocal;
     @EJB
-    private ConfiguracionGeneralFacadeLocal configuracionGeneralFacadeLocal;
+    private ConfiguracionGeneralDao configuracionGeneralFacadeLocal;
     @EJB
     private DocenteProyectoFacadeLocal docenteProyectoFacadeLocal;
     @EJB
     private UsuarioDao usuarioFacadeLocal;
     @EJB
-    private UsuarioCarreraFacadeLocal usuarioCarreraFacadeLocal;
+    private UsuarioCarreraDao usuarioCarreraFacadeLocal;
     @EJB
     private CoordinadorPeriodoFacadeLocal coordinadorPeriodoFacadeLocal;
     @EJB
-    private PersonaFacadeLocal personaFacadeLocal;
+    private PersonaDao personaFacadeLocal;
     @EJB
     private EstudianteCarreraFacadeLocal estudianteCarreraFacadeLocal;
     @EJB
-    private DocenteFacadeLocal docenteFacadeLocal;
+    private DocenteDao docenteFacadeLocal;
     @EJB
-    private LineaInvestigacionDocenteFacadeLocal lineaInvestigacionDocenteFacadeLocal;
+    private LineaInvestigacionDocenteDao lineaInvestigacionDocenteFacadeLocal;
 
     private String criterioDocenteDisponible;
     private String criterioDocenteProyecto;
@@ -431,7 +431,7 @@ public class AdministrarDocentesProyecto implements Serializable {
                 sessionDocenteProyecto.setDocenteProyecto(docenteProyecto);
                 administrarDocumentosProyecto.buscarAnteproyectos(docenteProyecto.getProyectoId(), sessionDocenteUsuario.getUsuario());
                 administrarAutoresProyecto.buscarAutoresDesdeDocenteProyecto("", docenteProyecto.getProyectoId());
-                intervalo = administrarConfiguraciones.intervaloActualizaciones();
+//                intervalo = administrarConfiguraciones.intervaloActualizaciones();
                 administrarPertinencias.renderedCrear(sessionDocenteUsuario.getUsuario(), docenteProyecto);
                 administrarPertinencias.renderedEditar(sessionDocenteUsuario.getUsuario(), docenteProyecto);
                 administrarPertinencias.renderedEliminar(sessionDocenteUsuario.getUsuario(), docenteProyecto);
@@ -648,15 +648,15 @@ public class AdministrarDocentesProyecto implements Serializable {
         List<Docente> docentesDisponiblesSorteo = new ArrayList<>();
         try {
             for (UsuarioCarrera usuarioCarrera :usuarioCarreraFacadeLocal.buscarPorUsuario(sessionUsuario.getUsuario().getId())) {
-                for (DocenteCarrera docenteCarrera : docenteCarreraFacadeLocal.buscarPorCarrera(usuarioCarrera.getCarreraId())) {
-                    for (LineaInvestigacion li : lineaInvestigacions) {
-                        for (LineaInvestigacionDocente lid : lineaInvestigacionDocenteFacadeLocal.buscarPorDocenteId(docenteCarrera.getDocenteId().getId())) {
-                            if (lid.getLineaInvestigacionId().equals(li)) {
-                                docentesDisponiblesSorteo.add(docenteCarrera.getDocenteId());
-                            }
-                        }
-                    }
-                }
+//                for (DocenteCarrera docenteCarrera : docenteCarreraFacadeLocal.buscarPorCarrera(usuarioCarrera.getCarreraId())) {
+//                    for (LineaInvestigacion li : lineaInvestigacions) {
+//                        for (LineaInvestigacionDocente lid : lineaInvestigacionDocenteFacadeLocal.buscarPorDocenteId(docenteCarrera.getDocenteId().getId())) {
+//                            if (lid.getLineaInvestigacionId().equals(li)) {
+//                                docentesDisponiblesSorteo.add(docenteCarrera.getDocenteId());
+//                            }
+//                        }
+//                    }
+//                }
             }
         } catch (Exception e) {
         }
@@ -669,24 +669,24 @@ public class AdministrarDocentesProyecto implements Serializable {
             int tienePermiso = usuarioFacadeLocal.tienePermiso(sessionUsuario.getUsuario(), "buscar_docente_especialista");
             if (tienePermiso == 1) {
                 for (UsuarioCarrera usuarioCarrera : usuarioCarreraFacadeLocal.buscarPorUsuario(sessionUsuario.getUsuario().getId())) {
-                    for (DocenteCarrera docenteCarrera : docenteCarreraFacadeLocal.buscarPorCarrera(usuarioCarrera.getCarreraId())) {
-                        if (docenteCarrera.isEsActivo()) {
-                            Persona persona=personaFacadeLocal.find(docenteCarrera.getDocenteId());
-                            for (LineaInvestigacion li : lineaInvestigacions) {
-                                for (LineaInvestigacionDocente lid : lineaInvestigacionDocenteFacadeLocal.buscarPorDocenteId(docenteCarrera.getDocenteId().getId())) {
-                                    if (lid.getLineaInvestigacionId().equals(li)) {
-                                        if (persona.getApellidos().toLowerCase().contains(criterio.toLowerCase()) || 
-                                                persona.getNombres().toLowerCase().contains(criterio.toLowerCase())
-                                                ||persona.getNumeroIdentificacion().contains(criterio)) {
-                                            if (!docentesDisponibles.contains(docenteCarrera.getDocenteId())) {
-                                                docentesDisponibles.add(docenteCarrera.getDocenteId());
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
+//                    for (DocenteCarrera docenteCarrera : docenteCarreraFacadeLocal.buscarPorCarrera(usuarioCarrera.getCarreraId())) {
+//                        if (docenteCarrera.isEsActivo()) {
+//                            Persona persona=personaFacadeLocal.find(docenteCarrera.getDocenteId());
+//                            for (LineaInvestigacion li : lineaInvestigacions) {
+//                                for (LineaInvestigacionDocente lid : lineaInvestigacionDocenteFacadeLocal.buscarPorDocenteId(docenteCarrera.getDocenteId().getId())) {
+//                                    if (lid.getLineaInvestigacionId().equals(li)) {
+//                                        if (persona.getApellidos().toLowerCase().contains(criterio.toLowerCase()) || 
+//                                                persona.getNombres().toLowerCase().contains(criterio.toLowerCase())
+//                                                ||persona.getNumeroIdentificacion().contains(criterio)) {
+//                                            if (!docentesDisponibles.contains(docenteCarrera.getDocenteId())) {
+//                                                docentesDisponibles.add(docenteCarrera.getDocenteId());
+//                                            }
+//                                        }
+//                                    }
+//                                }
+//                            }
+//                        }
+//                    }
                 }
             } else {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "No tiene permisos para buscar Docentes Especialistas. Consulte con el administrador del Sistema.", "");

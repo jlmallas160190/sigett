@@ -5,7 +5,7 @@
  */
 package edu.unl.sigett.finalizacion.controlador;
 
-import com.jlmallas.comun.service.ConfiguracionFacadeLocal;
+import com.jlmallas.comun.dao.ConfiguracionDao;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 import com.ocpsoft.pretty.faces.annotation.URLMappings;
 import edu.unl.sigett.finalizacion.managed.session.SessionCalificacionMiembro;
@@ -29,11 +29,11 @@ import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
-import edu.unl.sigett.session.CalificacionMiembroFacadeLocal;
-import edu.unl.sigett.session.CalificacionParametroFacadeLocal;
-import edu.unl.sigett.session.EvaluacionTribunalFacadeLocal;
-import edu.unl.sigett.session.MiembroFacadeLocal;
-import edu.unl.sigett.session.RangoEquivalenciaFacadeLocal;
+import edu.unl.sigett.dao.CalificacionMiembroFacadeLocal;
+import edu.unl.sigett.dao.CalificacionParametroFacadeLocal;
+import edu.unl.sigett.dao.EvaluacionTribunalFacadeLocal;
+import edu.unl.sigett.dao.MiembroFacadeLocal;
+import edu.unl.sigett.dao.RangoEquivalenciaFacadeLocal;
 
 /**
  *
@@ -74,7 +74,7 @@ public class AdministrarCalificacionMiembro implements Serializable {
     @EJB
     private RangoEquivalenciaFacadeLocal rangoEquivalenciaFacadeLocal;
     @EJB
-    private ConfiguracionFacadeLocal configuracionFacadeLocal;
+    private ConfiguracionDao configuracionFacadeLocal;
 
     private List<CalificacionMiembro> calificacionMiembros;
     private List<CalificacionMiembro> calificacionMiembrosConsulta;

@@ -28,10 +28,10 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import org.primefaces.context.RequestContext;
-import edu.unl.sigett.session.ActividadFacadeLocal;
-import edu.unl.sigett.session.EstadoActividadFacadeLocal;
+import edu.unl.sigett.dao.ActividadFacadeLocal;
+import edu.unl.sigett.dao.EstadoActividadFacadeLocal;
 import org.jlmallas.seguridad.dao.LogDao;
-import edu.unl.sigett.session.RevisionFacadeLocal;
+import edu.unl.sigett.dao.RevisionFacadeLocal;
 import org.jlmallas.seguridad.dao.UsuarioDao;
 
 /**

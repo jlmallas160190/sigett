@@ -27,8 +27,8 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import org.primefaces.event.TabChangeEvent;
-import edu.unl.sigett.session.ActividadFacadeLocal;
-import edu.unl.sigett.session.AutorProyectoFacadeLocal;
+import edu.unl.sigett.dao.ActividadFacadeLocal;
+import edu.unl.sigett.dao.AutorProyectoFacadeLocal;
 import org.jlmallas.seguridad.dao.UsuarioDao;
 
 /**
@@ -141,7 +141,7 @@ public class AdministrarProyectosAutor implements Serializable {
             int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "editar_autor_proyecto");
             if (tienePermiso == 1) {
                 sessionProyectosAutor.setAutorProyecto(autorProyecto);
-                intervalo = administrarConfiguraciones.intervaloActualizaciones();
+//                intervalo = administrarConfiguraciones.intervaloActualizaciones();
                 /*----------------------------------------Documentos-------------------------------------------------*/
                 administrarDocumentosProyecto.buscarPorAutor(sessionProyectosAutor.getAutorProyecto().getProyectoId());
                 administrarDocumentosProyecto.renderedCrear(sessionEstudianteUsuario.getUsuario());

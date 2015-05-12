@@ -6,7 +6,7 @@
 package edu.unl.sigett.adjudicacion.controlador;
 
 import com.jlmallas.comun.entity.Persona;
-import com.jlmallas.comun.service.PersonaFacadeLocal;
+import com.jlmallas.comun.dao.PersonaDao;
 import edu.unl.sigett.adjudicacion.session.SessionDirectorProyecto;
 import edu.unl.sigett.adjudicacion.session.SessionRenunciaDirector;
 import edu.unl.sigett.postulacion.managed.session.SessionProyecto;
@@ -42,28 +42,28 @@ import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.primefaces.context.RequestContext;
-import edu.unl.sigett.session.AutorProyectoFacadeLocal;
+import edu.unl.sigett.dao.AutorProyectoFacadeLocal;
 import edu.jlmallas.academico.service.CarreraService;
-import edu.unl.sigett.session.CatalogoOficioFacadeLocal;
-import edu.unl.sigett.session.ConfiguracionCarreraFacadeLocal;
-import edu.unl.sigett.session.ConfiguracionGeneralFacadeLocal;
+import edu.unl.sigett.dao.CatalogoOficioFacadeLocal;
+import edu.unl.sigett.dao.ConfiguracionCarreraDao;
+import edu.unl.sigett.dao.ConfiguracionGeneralDao;
 import edu.jlmallas.academico.service.CoordinadorPeriodoFacadeLocal;
-import edu.unl.sigett.session.DirectorFacadeLocal;
-import edu.unl.sigett.session.DirectorProyectoFacadeLocal;
-import edu.unl.sigett.session.EstadoDirectorFacadeLocal;
-import edu.unl.sigett.session.LineaInvestigacionDocenteFacadeLocal;
-import edu.unl.sigett.session.OficioCarreraFacadeLocal;
+import edu.unl.sigett.dao.DirectorFacadeLocal;
+import edu.unl.sigett.dao.DirectorProyectoFacadeLocal;
+import edu.unl.sigett.dao.EstadoDirectorFacadeLocal;
+import edu.unl.sigett.dao.LineaInvestigacionDocenteDao;
+import edu.unl.sigett.dao.OficioCarreraFacadeLocal;
 import org.jlmallas.seguridad.dao.UsuarioDao;
 import edu.jlmallas.academico.entity.Docente;
 import edu.jlmallas.academico.entity.DocenteCarrera;
 import edu.jlmallas.academico.entity.EstudianteCarrera;
-import edu.jlmallas.academico.service.DocenteCarreraFacadeLocal;
+import edu.jlmallas.academico.dao.DocenteCarreraDao;
 import edu.jlmallas.academico.service.EstudianteCarreraFacadeLocal;
 import edu.unl.sigett.comun.managed.session.SessionOficioCarrera;
 import edu.unl.sigett.enumeration.CatalogoOficioEnum;
 import edu.unl.sigett.enumeration.EstadoAutorEnum;
 import edu.unl.sigett.enumeration.EstadoProyectoEnum;
-import edu.unl.sigett.session.UsuarioCarreraFacadeLocal;
+import edu.unl.sigett.dao.UsuarioCarreraDao;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -93,13 +93,13 @@ public class AdministrarDirectoresProyecto implements Serializable {
     @EJB
     private EstadoDirectorFacadeLocal estadoDirectorFacadeLocal;
     @EJB
-    private ConfiguracionGeneralFacadeLocal configuracionGeneralFacadeLocal;
+    private ConfiguracionGeneralDao configuracionGeneralFacadeLocal;
     @EJB
     private UsuarioDao usuarioFacadeLocal;
     @EJB
     private AutorProyectoFacadeLocal autorProyectoFacadeLocal;
     @EJB
-    private ConfiguracionCarreraFacadeLocal configuracionCarreraFacadeLocal;
+    private ConfiguracionCarreraDao configuracionCarreraFacadeLocal;
     @EJB
     private OficioCarreraFacadeLocal oficioCarreraFacadeLocal;
     @EJB
@@ -107,17 +107,17 @@ public class AdministrarDirectoresProyecto implements Serializable {
     @EJB
     private CarreraService carreraFacadeLocal;
     @EJB
-    private LineaInvestigacionDocenteFacadeLocal lineaInvestigacionDocenteFacadeLocal;
+    private LineaInvestigacionDocenteDao lineaInvestigacionDocenteFacadeLocal;
     @EJB
     private CoordinadorPeriodoFacadeLocal coordinadorPeriodoFacadeLocal;
     @EJB
     private EstudianteCarreraFacadeLocal estudianteCarreraFacadeLocal;
     @EJB
-    private PersonaFacadeLocal personaFacadeLocal;
+    private PersonaDao personaFacadeLocal;
     @EJB
-    private UsuarioCarreraFacadeLocal usuarioCarreraFacadeLocal;
+    private UsuarioCarreraDao usuarioCarreraFacadeLocal;
     @EJB
-    private DocenteCarreraFacadeLocal docenteCarreraFacadeLocal;
+    private DocenteCarreraDao docenteCarreraFacadeLocal;
 
     private List<DirectorProyecto> directorProyectos;
     private List<Director> directoresDisponibles;
@@ -591,11 +591,11 @@ public class AdministrarDirectoresProyecto implements Serializable {
                 for (Director director : directorFacadeLocal.buscarAptos(usuarioCarrera.getCarreraId())) {
                     DocenteCarrera dc = docenteCarreraFacadeLocal.find(director.getId());
                     for (LineaInvestigacion li : lineaInvestigacions) {
-                        for (LineaInvestigacionDocente lid : lineaInvestigacionDocenteFacadeLocal.buscarPorDocenteId(dc.getDocenteId().getId())) {
-                            if (lid.getLineaInvestigacionId().equals(li)) {
-                                directors.add(director);
-                            }
-                        }
+//                        for (LineaInvestigacionDocente lid : lineaInvestigacionDocenteFacadeLocal.buscarPorDocenteId(dc.getDocenteId().getId())) {
+//                            if (lid.getLineaInvestigacionId().equals(li)) {
+//                                directors.add(director);
+//                            }
+//                        }
                     }
                 }
             }
@@ -617,16 +617,16 @@ public class AdministrarDirectoresProyecto implements Serializable {
                         DocenteCarrera dc = docenteCarreraFacadeLocal.find(director.getId());
                         Persona p = personaFacadeLocal.find(dc.getDocenteId().getId());
                         for (LineaInvestigacion li : lineaInvestigacions) {
-                            for (LineaInvestigacionDocente lid : lineaInvestigacionDocenteFacadeLocal.buscarPorDocenteId(dc.getDocenteId().getId())) {
-                                if (lid.getLineaInvestigacionId().equals(li)) {
-                                    if (p.getApellidos().toUpperCase().contains(criterio.toUpperCase()) || p.getNombres().toUpperCase().contains(criterio.toUpperCase())
-                                            || p.getNumeroIdentificacion().contains(criterio)) {
-                                        if (!directoresDisponibles.contains(director)) {
-                                            directoresDisponibles.add(director);
-                                        }
-                                    }
-                                }
-                            }
+//                            for (LineaInvestigacionDocente lid : lineaInvestigacionDocenteFacadeLocal.buscarPorDocenteId(dc.getDocenteId().getId())) {
+//                                if (lid.getLineaInvestigacionId().equals(li)) {
+//                                    if (p.getApellidos().toUpperCase().contains(criterio.toUpperCase()) || p.getNombres().toUpperCase().contains(criterio.toUpperCase())
+//                                            || p.getNumeroIdentificacion().contains(criterio)) {
+//                                        if (!directoresDisponibles.contains(director)) {
+//                                            directoresDisponibles.add(director);
+//                                        }
+//                                    }
+//                                }
+//                            }
                         }
                     }
                 }

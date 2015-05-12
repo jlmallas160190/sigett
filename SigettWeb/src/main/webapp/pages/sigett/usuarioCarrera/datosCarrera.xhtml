@@ -1,0 +1,46 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+        <h:panelGrid styleClass="panelgrid" rowClasses="rowpanelgrid" columnClasses="col-sm-2,col-sm-9,col-sm-1" columns="3">
+            <h:outputLabel value="#{msg['lbl.sigla']}:"/>
+            <p:inputText id="sigla"  validatorMessage="#{msg['lbl.formato_invalido']}" 
+                         value="#{sessionUsuarioCarrera.usuarioCarreraAux.carrera.sigla}" required="true" >
+                <p:ajax update="msmSigla" event="keyup"/>
+                <p:ajax update="@this" event="change"/>
+                <f:validateRegex pattern="^[A-Za-z]{1,20}$"/>
+            </p:inputText>
+            <p:message for="sigla" id="msmSigla"/>
+            <h:outputLabel value="#{msg['lbl.nombre']}:"/>
+            <h:outputLabel value="#{sessionUsuarioCarrera.usuarioCarreraAux.carrera.nombre}"/>
+            <h:inputHidden/>
+            <h:outputLabel value="Id Sga:"  />
+            <h:outputLabel value="#{sessionUsuarioCarrera.usuarioCarreraAux.carrera.idSga}" />
+            <h:inputHidden/>
+            <h:outputLabel value="#{msg['lbl.area']}:"  />
+            <h:outputLabel value="#{sessionUsuarioCarrera.usuarioCarreraAux.carrera.areaId.nombre}" />
+            <h:inputHidden/>
+            <h:outputLabel value="#{msg['lbl.nivel']}:"  />
+            <h:outputLabel value="#{sessionUsuarioCarrera.usuarioCarreraAux.carrera.nivelId.nombre}" />
+            <h:inputHidden/> 
+            <h:outputLabel value="#{msg['lbl.lugar']}:"  />
+            <p:inputText id="lugar" onkeyup="this.value=this.value.toUpperCase()" 
+                         value="#{sessionUsuarioCarrera.usuarioCarreraAux.carrera.lugar}" required="true" >
+                <p:ajax update="msmLugar" event="keyup"/>
+                <p:ajax update="@this" event="change"/>
+            </p:inputText>
+            <p:message for="lugar" id="msmLugar"/>
+            <h:outputLabel value="#{msg['lbl.titulo']}:"  />
+            <p:inputText id="titulo" onkeyup="this.value=this.value.toUpperCase()" value="#{sessionUsuarioCarrera.usuarioCarreraAux.carrera.nombreTitulo}" required="true" >
+                <p:ajax update="msmTitulo" event="keyup"/>
+                <p:ajax update="@this" event="change"/>
+            </p:inputText>
+            <p:message for="titulo" id="msmTitulo"/>
+        </h:panelGrid>
+    </body>
+
+</html>

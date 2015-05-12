@@ -23,12 +23,12 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import org.primefaces.context.RequestContext;
-import edu.unl.sigett.session.DirectorProyectoFacadeLocal;
-import edu.unl.sigett.session.EstadoDirectorFacadeLocal;
-import edu.unl.sigett.session.EstadoProyectoFacadeLocal;
-import edu.unl.sigett.session.ProyectoFacadeLocal;
-import edu.unl.sigett.session.RenunciaDirectorFacadeLocal;
-import edu.unl.sigett.session.RenunciaFacadeLocal;
+import edu.unl.sigett.dao.DirectorProyectoFacadeLocal;
+import edu.unl.sigett.dao.EstadoDirectorFacadeLocal;
+import edu.unl.sigett.dao.EstadoProyectoFacadeLocal;
+import edu.unl.sigett.dao.ProyectoFacadeLocal;
+import edu.unl.sigett.dao.RenunciaDirectorFacadeLocal;
+import edu.unl.sigett.dao.RenunciaFacadeLocal;
 import org.jlmallas.seguridad.dao.UsuarioDao;
 
 /**

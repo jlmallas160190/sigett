@@ -6,7 +6,7 @@
 package edu.unl.sigett.postulacion.controlador;
 
 import com.jlmallas.comun.entity.Persona;
-import com.jlmallas.comun.service.PersonaFacadeLocal;
+import com.jlmallas.comun.dao.PersonaDao;
 import edu.unl.sigett.postulacion.managed.session.SessionDocenteProyecto;
 import edu.unl.sigett.postulacion.managed.session.SessionPertinencia;
 import edu.unl.sigett.reportes.AdministrarReportes;
@@ -36,22 +36,22 @@ import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.primefaces.context.RequestContext;
-import edu.unl.sigett.session.AutorProyectoFacadeLocal;
+import edu.unl.sigett.dao.AutorProyectoFacadeLocal;
 import edu.jlmallas.academico.service.CarreraService;
-import edu.unl.sigett.session.CatalogoOficioFacadeLocal;
-import edu.unl.sigett.session.ConfiguracionCarreraFacadeLocal;
-import edu.unl.sigett.session.ConfiguracionGeneralFacadeLocal;
+import edu.unl.sigett.dao.CatalogoOficioFacadeLocal;
+import edu.unl.sigett.dao.ConfiguracionCarreraDao;
+import edu.unl.sigett.dao.ConfiguracionGeneralDao;
 import edu.jlmallas.academico.service.CoordinadorPeriodoFacadeLocal;
-import edu.unl.sigett.session.EstadoAutorFacadeLocal;
-import edu.unl.sigett.session.EstadoProyectoFacadeLocal;
+import edu.unl.sigett.dao.EstadoAutorFacadeLocal;
+import edu.unl.sigett.dao.EstadoProyectoFacadeLocal;
 import org.jlmallas.seguridad.dao.LogDao;
-import edu.unl.sigett.session.OficioCarreraFacadeLocal;
-import edu.unl.sigett.session.PertinenciaFacadeLocal;
-import edu.unl.sigett.session.ProyectoFacadeLocal;
+import edu.unl.sigett.dao.OficioCarreraFacadeLocal;
+import edu.unl.sigett.dao.PertinenciaFacadeLocal;
+import edu.unl.sigett.dao.ProyectoFacadeLocal;
 import org.jlmallas.seguridad.dao.UsuarioDao;
 import edu.jlmallas.academico.entity.Docente;
 import edu.jlmallas.academico.entity.EstudianteCarrera;
-import edu.jlmallas.academico.service.DocenteFacadeLocal;
+import edu.jlmallas.academico.dao.DocenteDao;
 import edu.jlmallas.academico.service.EstudianteCarreraFacadeLocal;
 import edu.unl.sigett.comun.managed.session.SessionOficioCarrera;
 import edu.unl.sigett.enumeration.CatalogoOficioEnum;
@@ -76,13 +76,13 @@ public class AdministrarPertinencias implements Serializable {
     private SessionOficioCarrera sessionOficioCarrera;
 
     @EJB
-    private LogDao logFacadeLocal;
+    private LogDao logDao;
     @EJB
     private PertinenciaFacadeLocal pertinenciaFacadeLocal;
     private List<Pertinencia> pertinenciasGrabar;
     private List<Pertinencia> pertinenciasRemover;
     @EJB
-    private ConfiguracionGeneralFacadeLocal configuracionGeneralFacadeLocal;
+    private ConfiguracionGeneralDao configuracionGeneralFacadeLocal;
     @EJB
     private EstadoProyectoFacadeLocal estadoProyectoFacadeLocal;
     @EJB
@@ -111,15 +111,15 @@ public class AdministrarPertinencias implements Serializable {
     @EJB
     private CarreraService carreraFacadeLocal;
     @EJB
-    private ConfiguracionCarreraFacadeLocal configuracionCarreraFacadeLocal;
+    private ConfiguracionCarreraDao configuracionCarreraFacadeLocal;
     @EJB
     private OficioCarreraFacadeLocal oficioCarreraFacadeLocal;
     @EJB
     private CatalogoOficioFacadeLocal catalogoOficioFacadeLocal;
     @EJB
-    private PersonaFacadeLocal personaFacadeLocal;
+    private PersonaDao personaFacadeLocal;
     @EJB
-    private DocenteFacadeLocal docenteFacadeLocal;
+    private DocenteDao docenteFacadeLocal;
     @EJB
     private EstudianteCarreraFacadeLocal estudianteCarreraFacadeLocal;
 
@@ -418,7 +418,7 @@ public class AdministrarPertinencias implements Serializable {
                     if (tienePermiso == 1) {
                         pertinencia.setDocenteProyectoId(docenteProyecto);
                         pertinenciaFacadeLocal.create(pertinencia);
-                        logFacadeLocal.create(logFacadeLocal.crearLog("Pertinencia", pertinencia.getId() + "", "CREAR", "|Docente= " + pertinencia.getDocenteProyectoId().getDocenteId()
+                        logDao.create(logDao.crearLog("Pertinencia", pertinencia.getId() + "", "CREAR", "|Docente= " + pertinencia.getDocenteProyectoId().getDocenteId()
                                 + "|Proyecto= " + pertinencia.getDocenteProyectoId().getProyectoId().getId() + "|Fecha= " + pertinencia.getFecha() + "|EsActivo= " + pertinencia.getEsActivo(), usuario));
                         if (pertinencia.getEsAceptado()) {
                             estadoProyecto = estadoProyectoFacadeLocal.find(2);
@@ -451,7 +451,7 @@ public class AdministrarPertinencias implements Serializable {
                     int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "editar_pertinencia");
                     if (tienePermiso == 1) {
                         pertinenciaFacadeLocal.edit(pertinencia);
-                        logFacadeLocal.create(logFacadeLocal.crearLog("Pertinencia", pertinencia.getId() + "", "EDITAR", "|Docente= " + pertinencia.getDocenteProyectoId().getDocenteId() + "|Proyecto= "
+                        logDao.create(logDao.crearLog("Pertinencia", pertinencia.getId() + "", "EDITAR", "|Docente= " + pertinencia.getDocenteProyectoId().getDocenteId() + "|Proyecto= "
                                 + pertinencia.getDocenteProyectoId().getProyectoId().getId() + "|Fecha= " + pertinencia.getFecha() + "|EsActivo= " + pertinencia.getEsActivo(), usuario));
                         if (pertinencia.getEsAceptado()) {
                             estadoProyecto = estadoProyectoFacadeLocal.buscarPorCodigo(EstadoProyectoEnum.PERTINENTE.getTipo());
@@ -504,7 +504,7 @@ public class AdministrarPertinencias implements Serializable {
                 if (tienePermiso == 1) {
                     pertinencia.setEsActivo(false);
                     pertinenciaFacadeLocal.edit(pertinencia);
-                    logFacadeLocal.create(logFacadeLocal.crearLog("Pertinencia", pertinencia.getId() + "", "EDITAR", "|Docente= " + pertinencia.getDocenteProyectoId().getDocenteId()
+                    logDao.create(logDao.crearLog("Pertinencia", pertinencia.getId() + "", "EDITAR", "|Docente= " + pertinencia.getDocenteProyectoId().getDocenteId()
                             + "|Proyecto= " + pertinencia.getDocenteProyectoId().getProyectoId().getId() + "|Fecha= " + pertinencia.getFecha() + "|EsActivo= " + pertinencia.getEsActivo(), usuario));
                     if (!existePertinencias(docenteProyecto)) {
                         EstadoProyecto estadoProyecto = estadoProyectoFacadeLocal.buscarPorCodigo(EstadoProyectoEnum.INICIO.getTipo());

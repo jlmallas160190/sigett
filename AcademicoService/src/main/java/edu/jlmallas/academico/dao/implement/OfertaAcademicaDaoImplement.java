@@ -5,7 +5,7 @@
  */
 package edu.jlmallas.academico.dao.implement;
 
-import edu.jlmallas.academico.dao.AbstractFacade;
+import edu.jlmallas.academico.dao.AbstractDao;
 import edu.jlmallas.academico.dao.OfertaAcademicaDao;
 import edu.jlmallas.academico.entity.OfertaAcademica;
 import java.util.ArrayList;
@@ -18,7 +18,7 @@ import javax.persistence.Query;
  * @author jorge-luis
  */
 @Stateless
-public class OfertaAcademicaDaoImplement extends AbstractFacade<OfertaAcademica> implements OfertaAcademicaDao {
+public class OfertaAcademicaDaoImplement extends AbstractDao<OfertaAcademica> implements OfertaAcademicaDao {
 
     public OfertaAcademicaDaoImplement() {
         super(OfertaAcademica.class);

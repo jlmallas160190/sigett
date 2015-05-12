@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package edu.unl.sigett.entity;
 
 import java.io.Serializable;
@@ -33,6 +32,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Director.findById", query = "SELECT d FROM Director d WHERE d.id = :id"),
     @NamedQuery(name = "Director.findByEsActivo", query = "SELECT d FROM Director d WHERE d.esActivo = :esActivo")})
 public class Director implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
@@ -42,7 +42,7 @@ public class Director implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "es_activo")
-    private boolean esActivo;
+    private Boolean esActivo;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "directorId")
     private List<DirectorProyecto> directorProyectoList;
 
@@ -53,7 +53,7 @@ public class Director implements Serializable {
         this.id = id;
     }
 
-    public Director(Long id, boolean esActivo) {
+    public Director(Long id, Boolean esActivo) {
         this.id = id;
         this.esActivo = esActivo;
     }
@@ -66,11 +66,11 @@ public class Director implements Serializable {
         this.id = id;
     }
 
-    public boolean getEsActivo() {
+    public Boolean isEsActivo() {
         return esActivo;
     }
 
-    public void setEsActivo(boolean esActivo) {
+    public void setEsActivo(Boolean esActivo) {
         this.esActivo = esActivo;
     }
 
@@ -107,5 +107,5 @@ public class Director implements Serializable {
     public String toString() {
         return "edu.unl.sigett.entity.Director[ id=" + id + " ]";
     }
-    
+
 }

@@ -26,10 +26,10 @@ import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import org.primefaces.context.RequestContext;
-import edu.unl.sigett.session.CatalogoDuracionFacadeLocal;
-import edu.unl.sigett.session.ConfiguracionGeneralFacadeLocal;
-import edu.unl.sigett.session.CronogramaFacadeLocal;
-import edu.unl.sigett.session.ProyectoFacadeLocal;
+import edu.unl.sigett.dao.CatalogoDuracionFacadeLocal;
+import edu.unl.sigett.dao.ConfiguracionGeneralDao;
+import edu.unl.sigett.dao.CronogramaFacadeLocal;
+import edu.unl.sigett.dao.ProyectoFacadeLocal;
 
 /**
  *
@@ -42,7 +42,7 @@ public class AdministrarCronograma implements Serializable {
     @EJB
     private CatalogoDuracionFacadeLocal catalogoDuracionFacadeLocal;
     @EJB
-    private ConfiguracionGeneralFacadeLocal configuracionGeneralFacadeLocal;
+    private ConfiguracionGeneralDao configuracionGeneralFacadeLocal;
     @EJB
     private CronogramaFacadeLocal cronogramaFacadeLocal;
     @EJB

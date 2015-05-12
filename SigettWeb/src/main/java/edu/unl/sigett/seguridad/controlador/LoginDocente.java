@@ -5,7 +5,7 @@
  */
 package edu.unl.sigett.seguridad.controlador;
 
-import com.jlmallas.comun.service.ConfiguracionFacadeLocal;
+import com.jlmallas.comun.dao.ConfiguracionDao;
 import edu.unl.sigett.finalizacion.controlador.AdministrarTribunales;
 import edu.unl.sigett.postulacion.controlador.AdministrarDocentesProyecto;
 import edu.unl.sigett.seguimiento.controlador.AdministrarActividades;
@@ -21,10 +21,10 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
-import edu.unl.sigett.session.ConfiguracionGeneralFacadeLocal;
-import edu.unl.sigett.session.DocenteUsuarioFacadeLocal;
+import edu.unl.sigett.dao.ConfiguracionGeneralDao;
+import edu.unl.sigett.dao.DocenteUsuarioDao;
 import org.jlmallas.seguridad.dao.UsuarioDao;
-import edu.jlmallas.academico.service.DocenteFacadeLocal;
+import edu.jlmallas.academico.dao.DocenteDao;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -52,13 +52,13 @@ public class LoginDocente implements Serializable {
     @EJB
     private UsuarioDao usuarioFacadeLocal;
     @EJB
-    private DocenteUsuarioFacadeLocal docenteUsuarioFacadeLocal;
+    private DocenteUsuarioDao docenteUsuarioFacadeLocal;
     @EJB
-    private ConfiguracionGeneralFacadeLocal configuracionGeneralFacadeLocal;
+    private ConfiguracionGeneralDao configuracionGeneralFacadeLocal;
     @EJB
-    private DocenteFacadeLocal docenteFacadeLocal;
+    private DocenteDao docenteFacadeLocal;
     @EJB
-    private ConfiguracionFacadeLocal configuracionFacadeLocal;
+    private ConfiguracionDao configuracionFacadeLocal;
 
     public LoginDocente() {
     }

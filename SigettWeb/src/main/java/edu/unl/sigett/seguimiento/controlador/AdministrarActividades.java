@@ -7,7 +7,7 @@ package edu.unl.sigett.seguimiento.controlador;
 
 import org.jlmallas.api.date.DateResource;
 import com.jlmallas.comun.entity.Persona;
-import com.jlmallas.comun.service.PersonaFacadeLocal;
+import com.jlmallas.comun.dao.PersonaDao;
 import edu.unl.sigett.postulacion.controlador.AdministrarCronograma;
 import edu.unl.sigett.postulacion.managed.session.SessionProyecto;
 import edu.unl.sigett.seguimiento.session.SessionActividad;
@@ -56,13 +56,13 @@ import org.primefaces.model.DualListModel;
 import org.primefaces.model.ScheduleEvent;
 import org.primefaces.model.ScheduleModel;
 import org.primefaces.model.TreeNode;
-import edu.unl.sigett.session.ActividadFacadeLocal;
-import edu.unl.sigett.session.CatalogoEventoFacadeLocal;
-import edu.unl.sigett.session.EstadoActividadFacadeLocal;
-import edu.unl.sigett.session.EventoFacadeLocal;
+import edu.unl.sigett.dao.ActividadFacadeLocal;
+import edu.unl.sigett.dao.CatalogoEventoFacadeLocal;
+import edu.unl.sigett.dao.EstadoActividadFacadeLocal;
+import edu.unl.sigett.dao.EventoFacadeLocal;
 import org.jlmallas.seguridad.dao.LogDao;
-import edu.unl.sigett.session.ProyectoFacadeLocal;
-import edu.unl.sigett.session.TipoActividadFacadeLocal;
+import edu.unl.sigett.dao.ProyectoFacadeLocal;
+import edu.unl.sigett.dao.TipoActividadFacadeLocal;
 import org.jlmallas.seguridad.dao.UsuarioDao;
 import edu.unl.sigett.enumeration.EstadoProyectoEnum;
 
@@ -112,7 +112,7 @@ public class AdministrarActividades implements Serializable {
     @EJB
     private CatalogoEventoFacadeLocal catalogoEventoFacadeLocal;
     @EJB
-    private PersonaFacadeLocal personaFacadeLocal;
+    private PersonaDao personaFacadeLocal;
 
     private List<Actividad> actividades;
     private List<Actividad> actividadesPorDirectorProyecto;

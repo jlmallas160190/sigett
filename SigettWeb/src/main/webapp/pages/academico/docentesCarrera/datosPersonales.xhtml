@@ -1,0 +1,83 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <body>
+        <h:panelGrid styleClass="panelgrid" rowClasses="rowpanelgrid" columnClasses="col-sm-3,col-sm-7,col-sm-1,col-sm-1" columns="4">
+            <f:facet name="header">
+                <p:graphicImage id="foto" styleClass="img-thumbnail" cache="false"  height="100" width="100" 
+                                value="/AppServlet?id=#{sessionDocenteCarrera.docenteCarreraAux.persona.id}&amp;entity=Persona"/>
+            </f:facet>
+            <h:outputLabel value="#{msg['lbl.ci']}:" for="numeroIdentificacion" />
+            <p:inputText id="numeroIdentificacion" value="#{sessionDocenteCarrera.docenteCarreraAux.persona.numeroIdentificacion}"
+                         title="#{msg['lbl.ci']}"
+                         required="true" 
+                         requiredMessage="#{msg['lbl.ci']} #{msg['lbl.obligatorio']}.">
+                <p:ajax event="keyup" update="msmNumeroIdentificacion"/>
+                <p:ajax event="change" update="@this,:contenido:msgs"/>
+            </p:inputText>
+            <p:fragment autoUpdate="true">
+                <p:commandButton icon="ui-icon-refresh" value="#{msg['lbl.sincronizar']}" update=":contenido:tabViewDatosDocente,:contenido:msgs" 
+                                 onstart="PF('dlgLoading').show();" oncomplete="PF('dlgLoading').hide()" 
+                                 action="#{administrarDocentesCarrera.sgaWebServicesDatosDocente()}"/>
+            </p:fragment>
+            <p:message id="msmNumeroIdentificacion" display="icon" for="numeroIdentificacion"/>
+            <h:outputLabel value="#{msg['lbl.nombres']}:" for="nombres" />
+            <p:inputText id="nombres" value="#{sessionDocenteCarrera.docenteCarreraAux.persona.nombres}" title="#{msg['lbl.nombres']}" required="true" 
+                         requiredMessage="#{msg['lbl.nombres']} #{msg['lbl.obligatorio']}.">
+                <p:ajax event="keyup" update="msmNombres"/>
+                <p:ajax event="change" update="@this,:contenido:msgs"/>
+            </p:inputText>
+            <h:inputHidden/>
+            <p:message id="msmNombres" display="icon" for="nombres"/>
+            <h:outputLabel value="#{msg['lbl.apellidos']}:" for="apellidos" />
+            <p:inputText id="apellidos" value="#{sessionDocenteCarrera.docenteCarreraAux.persona.apellidos}" title="#{msg['lbl.apellidos']}" 
+                         required="true" 
+                         requiredMessage="#{msg['lbl.apellidos']} #{msg['lbl.obligatorio']}.">
+                <p:ajax event="keyup" update="msmApellidos"/>
+                <p:ajax event="change" update="@this,:contenido:msgs"/>
+            </p:inputText>
+            <h:inputHidden/>
+            <p:message id="msmApellidos" display="icon" for="apellidos"/>
+            <h:outputLabel value="#{msg['lbl.email']}:" for="email" />
+            <p:inputText id="email" value="#{sessionDocenteCarrera.docenteCarreraAux.persona.email}" title="#{msg['lbl.email']}" required="true"
+                         requiredMessage="#{msg['lbl.email']} #{msg['lbl.obligatorio']}.">
+                <p:ajax event="keyup" update="msmEmail"/>
+                <p:ajax event="change" update="@this,:contenido:msgs"/>
+            </p:inputText>
+            <h:inputHidden/>
+            <p:message id="msmEmail" display="icon" for="email"/>
+            <h:outputLabel value="#{msg['lbl.fechaNacimiento']}:" for="fechaNacimiento" />
+            <p:calendar id="fechaNacimiento" yearRange="c-100:c+20" navigator="true" locale="es" pattern="dd/MM/yyyy" 
+                        value="#{sessionDocenteCarrera.docenteCarreraAux.persona.fechaNacimiento}" title="#{msg['lbl.fechaNacimiento']}" 
+                        required="true" requiredMessage="#{msg['lbl.fechaNacimiento']} #{msg['lbl.obligatorio']}.">
+                <p:ajax event="dateSelect" update="msmFechaNacimiento"/>
+                <p:ajax event="change" update="@this,:contenido:msgs"/>
+            </p:calendar>
+            <h:inputHidden/>
+            <p:message id="msmFechaNacimiento" display="icon" for="fechaNacimiento"/>
+            <h:outputLabel value="#{msg['lbl.tipoDocId']}:" for="tipoDocumentoIdentificacionId" />
+            <p:selectOneMenu id="tipoDocumentoIdentificacionId" value="#{sessionDocenteCarrera.tipoDocumento}" required="true" 
+                             requiredMessage="#{msg['lbl.tipoDocId']} #{msg['lbl.obligatorio']}.">
+                <!-- TODO: update below reference to list of available items-->
+                <f:selectItems value="#{sessionDocenteCarrera.tiposDocumento}"/>
+                <p:ajax event="change" update="msmTipoDoc"/>
+            </p:selectOneMenu>
+            <h:inputHidden/>
+            <p:message id="msmTipoDoc" for="tipoDocumentoIdentificacionId"/>
+            <h:outputLabel value="#{msg['lbl.genero']}:" for="generoId" />
+            <p:selectOneMenu id="generoId" value="#{sessionDocenteCarrera.genero}" required="true" 
+                             requiredMessage="#{msg['lbl.genero']} #{msg['lbl.obligatorio']}.">
+                <!-- TODO: update below reference to list of available items-->
+                <f:selectItems value="#{sessionDocenteCarrera.generos}"/>
+                <p:ajax event="change" update="msmGenero"/>
+            </p:selectOneMenu>
+            <h:inputHidden/>
+            <p:message id="msmGenero" for="generoId"/>
+        </h:panelGrid>
+    </body>
+
+</html>

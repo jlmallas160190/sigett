@@ -6,7 +6,7 @@
 package edu.unl.sigett.postulacion.controlador;
 
 import com.jlmallas.comun.entity.Persona;
-import com.jlmallas.comun.service.PersonaFacadeLocal;
+import com.jlmallas.comun.dao.PersonaDao;
 import edu.unl.sigett.adjudicacion.session.SessionRenunciaAutor;
 import edu.unl.sigett.postulacion.managed.session.SessionAutorProyecto;
 import edu.unl.sigett.postulacion.managed.session.SessionProyecto;
@@ -31,15 +31,15 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.TabChangeEvent;
-import edu.unl.sigett.session.AspiranteFacadeLocal;
-import edu.unl.sigett.session.AutorProyectoFacadeLocal;
-import edu.unl.sigett.session.EstadoAutorFacadeLocal;
+import edu.unl.sigett.dao.AspiranteFacadeLocal;
+import edu.unl.sigett.dao.AutorProyectoFacadeLocal;
+import edu.unl.sigett.dao.EstadoAutorFacadeLocal;
 import org.jlmallas.seguridad.dao.UsuarioDao;
 import edu.jlmallas.academico.entity.EstudianteCarrera;
 import edu.jlmallas.academico.service.EstudianteCarreraFacadeLocal;
 import edu.unl.sigett.enumeration.EstadoAutorEnum;
 import edu.unl.sigett.enumeration.EstadoProyectoEnum;
-import edu.unl.sigett.session.UsuarioCarreraFacadeLocal;
+import edu.unl.sigett.dao.UsuarioCarreraDao;
 import edu.unl.sigett.util.MessageView;
 
 /**
@@ -76,9 +76,9 @@ public class AdministrarAutoresProyecto implements Serializable {
     @EJB
     private EstudianteCarreraFacadeLocal estudianteCarreraFacadeLocal;
     @EJB
-    private PersonaFacadeLocal personaFacadeLocal;
+    private PersonaDao personaFacadeLocal;
     @EJB
-    private UsuarioCarreraFacadeLocal usuarioCarreraFacadeLocal;
+    private UsuarioCarreraDao usuarioCarreraFacadeLocal;
 
     private List<Aspirante> aspirantes;
     private List<AutorProyecto> autorProyectos;

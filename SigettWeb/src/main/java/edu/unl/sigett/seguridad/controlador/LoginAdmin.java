@@ -5,7 +5,7 @@
  */
 package edu.unl.sigett.seguridad.controlador;
 
-import com.jlmallas.comun.service.ConfiguracionFacadeLocal;
+import com.jlmallas.comun.dao.ConfiguracionDao;
 import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
 import org.jlmallas.seguridad.entity.Usuario;
 import java.io.Serializable;
@@ -29,7 +29,7 @@ public class LoginAdmin implements Serializable {
     @EJB
     private UsuarioDao usuarioFacadeLocal;
     @EJB
-    private ConfiguracionFacadeLocal configuracionFacadeLocal;
+    private ConfiguracionDao configuracionFacadeLocal;
     @Inject
     private SessionUsuario sessionUsuario;
     

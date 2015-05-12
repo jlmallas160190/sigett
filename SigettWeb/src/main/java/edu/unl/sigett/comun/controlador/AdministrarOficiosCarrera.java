@@ -6,7 +6,7 @@
 package edu.unl.sigett.comun.controlador;
 
 import edu.unl.sigett.entity.OficioCarrera;
-import edu.unl.sigett.session.OficioCarreraFacadeLocal;
+import edu.unl.sigett.dao.OficioCarreraFacadeLocal;
 import edu.unl.sigett.comun.managed.session.SessionOficioCarrera;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;

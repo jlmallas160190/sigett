@@ -23,11 +23,11 @@ import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
-import edu.unl.sigett.session.CalificacionMiembroFacadeLocal;
-import edu.unl.sigett.session.CalificacionParametroFacadeLocal;
-import edu.unl.sigett.session.EvaluacionTribunalFacadeLocal;
-import edu.unl.sigett.session.ParametroCatalogoEvaluacionFacadeLocal;
-import edu.unl.sigett.session.RangoEquivalenciaFacadeLocal;
+import edu.unl.sigett.dao.CalificacionMiembroFacadeLocal;
+import edu.unl.sigett.dao.CalificacionParametroFacadeLocal;
+import edu.unl.sigett.dao.EvaluacionTribunalFacadeLocal;
+import edu.unl.sigett.dao.ParametroCatalogoEvaluacionFacadeLocal;
+import edu.unl.sigett.dao.RangoEquivalenciaFacadeLocal;
 
 /**
  *

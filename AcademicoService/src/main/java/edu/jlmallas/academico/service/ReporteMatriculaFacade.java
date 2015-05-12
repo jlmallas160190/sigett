@@ -5,7 +5,7 @@
  */
 package edu.jlmallas.academico.service;
 
-import edu.jlmallas.academico.dao.AbstractFacade;
+import edu.jlmallas.academico.dao.AbstractDao;
 import edu.jlmallas.academico.entity.ReporteMatricula;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +19,7 @@ import javax.persistence.Query;
  * @author JorgeLuis
  */
 @Stateless
-public class ReporteMatriculaFacade extends AbstractFacade<ReporteMatricula> implements ReporteMatriculaFacadeLocal {
+public class ReporteMatriculaFacade extends AbstractDao<ReporteMatricula> implements ReporteMatriculaFacadeLocal {
 
 
     public ReporteMatriculaFacade() {

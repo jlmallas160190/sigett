@@ -55,7 +55,6 @@ public class Item implements Serializable {
     @Column(name = "es_activo")
     private boolean esActivo;
     @Basic(optional = false)
-    @NotNull
     @Column(name = "id_padre")
     private Long idPadre;
     @JoinColumn(name = "catalogo_id", referencedColumnName = "id")

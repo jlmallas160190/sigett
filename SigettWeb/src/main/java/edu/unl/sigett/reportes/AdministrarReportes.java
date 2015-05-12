@@ -30,10 +30,10 @@ import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperRunManager;
 import net.sf.jasperreports.engine.export.ooxml.JRDocxExporter;
-import edu.unl.sigett.session.ActaFacadeLocal;
-import edu.unl.sigett.session.CatalogoOficioFacadeLocal;
-import edu.unl.sigett.session.ConfiguracionCarreraFacadeLocal;
-import edu.unl.sigett.session.OficioCarreraFacadeLocal;
+import edu.unl.sigett.dao.ActaFacadeLocal;
+import edu.unl.sigett.dao.CatalogoOficioFacadeLocal;
+import edu.unl.sigett.dao.ConfiguracionCarreraDao;
+import edu.unl.sigett.dao.OficioCarreraFacadeLocal;
 import edu.unl.sigett.entity.Acta;
 import edu.unl.sigett.entity.ConfiguracionArea;
 import edu.unl.sigett.entity.RangoEquivalencia;
@@ -41,8 +41,8 @@ import org.jlmallas.seguridad.entity.Usuario;
 import edu.unl.sigett.entity.CatalogoActa;
 import edu.unl.sigett.enumeration.CatalogoActaEnum;
 import edu.unl.sigett.enumeration.CatalogoOficioEnum;
-import edu.unl.sigett.session.CategoriaActaFacadeLocal;
-import edu.unl.sigett.session.ConfiguracionAreaFacadeLocal;
+import edu.unl.sigett.dao.CategoriaActaFacadeLocal;
+import edu.unl.sigett.dao.ConfiguracionAreaFacadeLocal;
 import java.util.Date;
 
 /**
@@ -53,7 +53,7 @@ public class AdministrarReportes implements Serializable {
 
     public void oficioDocenteProyecto(HttpServletResponse response, Map datosReporte, OficioCarrera oficioCarrera, String path, String pathSetting,
             String tipo, Integer nroOficio, Carrera carrera, String fecha, String plazo,
-            String usuario, ConfiguracionCarreraFacadeLocal configuracionCarreraFacadeLocal, ConfiguracionCarrera configuracionCarrera,
+            String usuario, ConfiguracionCarreraDao configuracionCarreraFacadeLocal, ConfiguracionCarrera configuracionCarrera,
             Long tablaId, OficioCarreraFacadeLocal oficioCarreraFacadeLocal, CatalogoOficioFacadeLocal catalogoOficioFacadeLocal) {
         try {
             byte[] bytes = null;
@@ -118,7 +118,7 @@ public class AdministrarReportes implements Serializable {
         }
     }
 
-    public void responseProrrogaAutorProyecto(String tipo, String fecha, HttpServletResponse response, Map datosReporte, ConfiguracionCarreraFacadeLocal configuracionCarreraFacadeLocal,
+    public void responseProrrogaAutorProyecto(String tipo, String fecha, HttpServletResponse response, Map datosReporte, ConfiguracionCarreraDao configuracionCarreraFacadeLocal,
             ConfiguracionCarrera configuracionCarrera, OficioCarrera oficioCarrera, Long tablaId, OficioCarreraFacadeLocal oficioCarreraFacadeLocal,
             CatalogoOficioFacadeLocal catalogoOficioFacadeLocal, Carrera carrera, Integer nroOficio, String secretario,
             String fechaEmision, String resolucion, String path, String pathSetting) {
@@ -183,7 +183,7 @@ public class AdministrarReportes implements Serializable {
     }
 
     public void informeDocenteProyecto(String tipo, String fecha, String fechaOficio, Pertinencia pertinencia, HttpServletResponse response,
-            Map datosReporte, ConfiguracionCarreraFacadeLocal configuracionCarreraFacadeLocal, ConfiguracionCarrera configuracionCarrera, OficioCarrera oficioCarrera,
+            Map datosReporte, ConfiguracionCarreraDao configuracionCarreraFacadeLocal, ConfiguracionCarrera configuracionCarrera, OficioCarrera oficioCarrera,
             OficioCarreraFacadeLocal oficioCarreraFacadeLocal, CatalogoOficioFacadeLocal catalogoOficioFacadeLocal, Carrera carrera, Integer nroOficio, String path, String resolucion) {
         try {
             Calendar fechaActual = Calendar.getInstance();
@@ -246,7 +246,7 @@ public class AdministrarReportes implements Serializable {
     }
 
     public void oficioDirectorProrroga(String tipo, String fecha, HttpServletResponse response, Map datosReporte,
-            ConfiguracionCarreraFacadeLocal configuracionCarreraFacadeLocal, ConfiguracionCarrera configuracionCarrera, OficioCarrera oficioCarrera,
+            ConfiguracionCarreraDao configuracionCarreraFacadeLocal, ConfiguracionCarrera configuracionCarrera, OficioCarrera oficioCarrera,
             Long tablaId, OficioCarreraFacadeLocal oficioCarreraFacadeLocal, CatalogoOficioFacadeLocal catalogoOficioFacadeLocal,
             Carrera carrera, Integer nroOficio, String secretario, String path, String pathSetting) {
         try {
@@ -311,7 +311,7 @@ public class AdministrarReportes implements Serializable {
     }
 
     public void informeDirectorProrroga(String tipo, String fechaOficio, String objetivos, String avance, String resolucion, String fecha,
-            HttpServletResponse response, Map datosReporte, ConfiguracionCarreraFacadeLocal configuracionCarreraFacadeLocal, ConfiguracionCarrera configuracionCarrera,
+            HttpServletResponse response, Map datosReporte, ConfiguracionCarreraDao configuracionCarreraFacadeLocal, ConfiguracionCarrera configuracionCarrera,
             OficioCarrera oficioCarrera, Long tablaId, OficioCarreraFacadeLocal oficioCarreraFacadeLocal, CatalogoOficioFacadeLocal catalogoOficioFacadeLocal,
             Carrera carrera, Integer nroOficio, String secretario, Long prorrogaId, String path, String pathSetting) {
         try {
@@ -374,7 +374,7 @@ public class AdministrarReportes implements Serializable {
         }
     }
 
-    public void oficioDirectorProyecto(HttpServletResponse response, Map datosReporte, String fecha, ConfiguracionCarreraFacadeLocal configuracionCarreraFacadeLocal,
+    public void oficioDirectorProyecto(HttpServletResponse response, Map datosReporte, String fecha, ConfiguracionCarreraDao configuracionCarreraFacadeLocal,
             ConfiguracionCarrera configuracionCarrera, String tipo, OficioCarrera oficioCarrera, Long tablaId, OficioCarreraFacadeLocal oficioCarreraFacadeLocal,
             CatalogoOficioFacadeLocal catalogoOficioFacadeLocal, Carrera carrera, Integer nroOficio, String usuario, String path, String pathSetting) {
         try {
@@ -440,7 +440,7 @@ public class AdministrarReportes implements Serializable {
         }
     }
 
-    public void oficioMiembroTribunalSprivada(String tipo, String fecha, HttpServletResponse response, Map datosReporte, ConfiguracionCarreraFacadeLocal configuracionCarreraFacadeLocal,
+    public void oficioMiembroTribunalSprivada(String tipo, String fecha, HttpServletResponse response, Map datosReporte, ConfiguracionCarreraDao configuracionCarreraFacadeLocal,
             ConfiguracionCarrera configuracionCarrera, OficioCarrera oficioCarrera, String presidente, String miembros, Long tablaId,
             OficioCarreraFacadeLocal oficioCarreraFacadeLocal, CatalogoOficioFacadeLocal catalogoOficioFacadeLocal, Carrera carrera, Integer nroOficio, String secretario, String path, String pathSetting) {
         try {
@@ -549,7 +549,7 @@ public class AdministrarReportes implements Serializable {
     }
 
     public void oficioMiembroTribunalSpublica(String tipo, String fecha, String fechaSustentacion, String lugarSustentacion, HttpServletResponse response, Map datosReporte,
-            ConfiguracionCarreraFacadeLocal configuracionCarreraFacadeLocal, ConfiguracionCarrera configuracionCarrera, OficioCarrera oficioCarrera,
+            ConfiguracionCarreraDao configuracionCarreraFacadeLocal, ConfiguracionCarrera configuracionCarrera, OficioCarrera oficioCarrera,
             String presidente, String miembros, Long tablaId, OficioCarreraFacadeLocal oficioCarreraFacadeLocal, CatalogoOficioFacadeLocal catalogoOficioFacadeLocal,
             Carrera carrera, Integer nroOficio, String secretario, String path, String pathSetting) {
         try {
@@ -616,7 +616,7 @@ public class AdministrarReportes implements Serializable {
         }
     }
 
-    public void actaGrado(String tipo, HttpServletResponse response, EvaluacionTribunal evaluacionTribunal, ConfiguracionAreaFacadeLocal configuracionAreaFacadeLocal, ConfiguracionCarreraFacadeLocal configuracionCarreraFacadeLocal, ActaFacadeLocal actaFacadeLocal, CategoriaActaFacadeLocal categoriaActaFacadeLocal, Carrera carrera, String presidente, String presidenteCargo, String miembros, String miembrosCargo, String autor, String autorCargo,
+    public void actaGrado(String tipo, HttpServletResponse response, EvaluacionTribunal evaluacionTribunal, ConfiguracionAreaFacadeLocal configuracionAreaFacadeLocal, ConfiguracionCarreraDao configuracionCarreraFacadeLocal, ActaFacadeLocal actaFacadeLocal, CategoriaActaFacadeLocal categoriaActaFacadeLocal, Carrera carrera, String presidente, String presidenteCargo, String miembros, String miembrosCargo, String autor, String autorCargo,
             String notasPublica, double promedioPrivada, double promedioEstudio, String secretario, String generoAutor, String nacionalidadAutor, String ciAutor, String fechaInicioEstudio, String fechaFinEstudio, String path, String pathSetting, String lenguaje, Usuario usuario) {
         try {
             String nivel = "";
@@ -767,7 +767,7 @@ public class AdministrarReportes implements Serializable {
         }
     }
 
-    private void actualizarNroOficio(ConfiguracionCarrera configuracionCarrera, ConfiguracionCarreraFacadeLocal configuracionCarreraFacadeLocal) {
+    private void actualizarNroOficio(ConfiguracionCarrera configuracionCarrera, ConfiguracionCarreraDao configuracionCarreraFacadeLocal) {
         try {
             int valor = Integer.parseInt(configuracionCarrera.getValor()) + 1;
             configuracionCarrera.setValor(valor + "");

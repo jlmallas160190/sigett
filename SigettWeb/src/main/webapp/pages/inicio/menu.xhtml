@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+        <!--<p:poll update="menuBar" listeneradministrarUsuarios.actualizaRendered(sessionUsuario.usuario)}" interval="#{administrarConfiguraciones.intervaloActualizaciones()}"/>-->
+        <p:menubar id="menuBar">   
+            <p:menuitem icon="ui-icon-home" action="pretty:principal" value="#{msg['lbl.inicio']}"/>
+            <p:submenu icon="ui-icon-tt" label="#{msg['lbl.administrar']} #{msg['lbl.proyectos']}">
+                <p:menuitem icon="ui-icon-tt" value="#{msg['lbl.proyectos']}"  action="pretty:proyectos"></p:menuitem>
+            </p:submenu>
+            <f:facet name="options">
+                <p:outputLabel value="#{msg['lbl.saludo']}: #{sessionUsuario.usuario.nombres} #{sessionUsuario.usuario.apellidos}"></p:outputLabel>
+                <p:outputLabel value="#{msg['lbl.rol']}: #{login.getRol(sessionUsuario.usuario)}"></p:outputLabel>
+                <p:commandButton value="#{msg['lbl.regresar']}" icon="ui-icon-arrowreturnthick-1-w" onclick="regresar()"/>
+                <p:commandButton  value="#{msg['lbl.salir']}" icon="ui-icon-power" action="#{login.logout()}" />
+            </f:facet>
+        </p:menubar>
+    </body>
+
+</html>

@@ -1,0 +1,20 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <body>
+        <p:panel header="#{msg['lbl.logo']}" toggleable="true">
+            <p:graphicImage id="logo" styleClass="img-thumbnail" cache="false"  height="100" width="100" 
+                            value="/AppServlet?id=#{sessionUsuarioCarrera.usuarioCarreraAux.carrera.id}&amp;entity=Carrera"/>
+            <f:facet name="footer">
+                <h:panelGrid >
+                    <p:commandButton icon="ui-icon-upload"  onstart="PF('dlgLoading').show();" oncomplete="PF('dlgLoading').hide()" 
+                                     value="#{msg['lbl.subir']}"  onclick="PF('dlgLogo').show();"/>
+                </h:panelGrid>
+            </f:facet>
+        </p:panel>
+    </body>
+
+</html>

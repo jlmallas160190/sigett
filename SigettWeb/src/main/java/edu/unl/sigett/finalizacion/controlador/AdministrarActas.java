@@ -9,7 +9,7 @@ import org.jlmallas.api.date.DateResource;
 import org.jlmallas.api.text.GeneraDoc;
 import org.jlmallas.api.text.GeneraPdf;
 import com.jlmallas.comun.entity.Persona;
-import com.jlmallas.comun.service.PersonaFacadeLocal;
+import com.jlmallas.comun.dao.PersonaDao;
 import edu.unl.sigett.entity.Acta;
 import edu.unl.sigett.entity.AutorProyecto;
 import edu.unl.sigett.entity.CalificacionMiembro;
@@ -43,16 +43,16 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.primefaces.context.RequestContext;
-import edu.unl.sigett.session.ActaFacadeLocal;
-import edu.unl.sigett.session.AutorProyectoFacadeLocal;
+import edu.unl.sigett.dao.ActaFacadeLocal;
+import edu.unl.sigett.dao.AutorProyectoFacadeLocal;
 import edu.jlmallas.academico.service.CarreraService;
-import edu.jlmallas.academico.service.DocenteFacadeLocal;
+import edu.jlmallas.academico.dao.DocenteDao;
 import edu.jlmallas.academico.service.EstudianteCarreraFacadeLocal;
 import edu.unl.sigett.enumeration.EstadoAutorEnum;
-import edu.unl.sigett.session.CategoriaActaFacadeLocal;
-import edu.unl.sigett.session.ConfiguracionCarreraFacadeLocal;
-import edu.unl.sigett.session.EvaluacionTribunalFacadeLocal;
-import edu.unl.sigett.session.MiembroFacadeLocal;
+import edu.unl.sigett.dao.CategoriaActaFacadeLocal;
+import edu.unl.sigett.dao.ConfiguracionCarreraDao;
+import edu.unl.sigett.dao.EvaluacionTribunalFacadeLocal;
+import edu.unl.sigett.dao.MiembroFacadeLocal;
 
 /**
  *
@@ -73,15 +73,15 @@ public class AdministrarActas implements Serializable {
     @EJB
     private CategoriaActaFacadeLocal categoriaActaFacadeLocal;
     @EJB
-    private ConfiguracionCarreraFacadeLocal configuracionCarreraFacadeLocal;
+    private ConfiguracionCarreraDao configuracionCarreraFacadeLocal;
     @EJB
     private CarreraService carreraFacadeLocal;
     @EJB
     private EstudianteCarreraFacadeLocal estudianteCarreraFacadeLocal;
     @EJB
-    private PersonaFacadeLocal personaFacadeLocal;
+    private PersonaDao personaFacadeLocal;
     @EJB
-    private DocenteFacadeLocal docenteFacadeLocal;
+    private DocenteDao docenteFacadeLocal;
 
     private boolean renderedDlgActaPrivada;
     private boolean renderedDlgActaGrado;

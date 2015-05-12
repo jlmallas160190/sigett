@@ -5,7 +5,7 @@
  */
 package edu.jlmallas.academico.dao.implement;
 
-import edu.jlmallas.academico.dao.AbstractFacade;
+import edu.jlmallas.academico.dao.AbstractDao;
 import edu.jlmallas.academico.dao.AreaDao;
 import edu.jlmallas.academico.entity.Area;
 import java.util.HashMap;
@@ -18,7 +18,7 @@ import javax.persistence.Query;
  * @author jorge-luis
  */
 @Stateless
-public class AreaDaoImplement extends AbstractFacade<Area> implements AreaDao {
+public class AreaDaoImplement extends AbstractDao<Area> implements AreaDao {
 
     public AreaDaoImplement() {
         super(Area.class);
@@ -27,7 +27,7 @@ public class AreaDaoImplement extends AbstractFacade<Area> implements AreaDao {
     @Override
     public List<Area> buscarPorCriterio(Area area) {
         StringBuilder sql = new StringBuilder();
-        HashMap<String, Object> parametros = new HashMap<String, Object>();
+        HashMap<String, Object> parametros = new HashMap<>();
         sql.append("Select a from Area a where 1=1 ");
         if (area.getNombre() != null) {
             sql.append(" and a.nombre=:nombre ");

@@ -5,7 +5,7 @@
  */
 package edu.jlmallas.academico.service;
 
-import edu.jlmallas.academico.dao.AbstractFacade;
+import edu.jlmallas.academico.dao.AbstractDao;
 import edu.jlmallas.academico.entity.Coordinador;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -16,7 +16,7 @@ import javax.persistence.PersistenceContext;
  * @author JorgeLuis
  */
 @Stateless
-public class CoordinadorFacade extends AbstractFacade<Coordinador> implements CoordinadorFacadeLocal {
+public class CoordinadorFacade extends AbstractDao<Coordinador> implements CoordinadorFacadeLocal {
 
     public CoordinadorFacade() {
         super(Coordinador.class);

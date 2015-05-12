@@ -53,8 +53,6 @@ public class TipoContrato implements Serializable {
     @Size(min = 1, max = 100)
     @Column(name = "codigo")
     private String codigo;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "tipoContratoId")
-    private List<EstadoLaboral> estadoLaboralList;
 
     public TipoContrato() {
     }
@@ -90,15 +88,6 @@ public class TipoContrato implements Serializable {
 
     public void setCodigo(String codigo) {
         this.codigo = codigo;
-    }
-
-    @XmlTransient
-    public List<EstadoLaboral> getEstadoLaboralList() {
-        return estadoLaboralList;
-    }
-
-    public void setEstadoLaboralList(List<EstadoLaboral> estadoLaboralList) {
-        this.estadoLaboralList = estadoLaboralList;
     }
 
     @Override

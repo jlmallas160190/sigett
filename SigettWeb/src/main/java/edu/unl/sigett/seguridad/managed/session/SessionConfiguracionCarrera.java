@@ -7,6 +7,8 @@ package edu.unl.sigett.seguridad.managed.session;
 
 import edu.unl.sigett.entity.ConfiguracionCarrera;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Named;
 
@@ -19,8 +21,13 @@ import javax.inject.Named;
 public class SessionConfiguracionCarrera implements Serializable {
 
     private ConfiguracionCarrera configuracionCarrera;
+    private boolean renderedEditar;
+    private boolean tieneModulos;
+    private List<ConfiguracionCarrera> configuracionCarreras;
 
     public SessionConfiguracionCarrera() {
+        this.tieneModulos = false;
+        this.configuracionCarreras = new ArrayList<>();
         this.configuracionCarrera = new ConfiguracionCarrera();
     }
 
@@ -30,6 +37,30 @@ public class SessionConfiguracionCarrera implements Serializable {
 
     public void setConfiguracionCarrera(ConfiguracionCarrera configuracionCarrera) {
         this.configuracionCarrera = configuracionCarrera;
+    }
+
+    public boolean isRenderedEditar() {
+        return renderedEditar;
+    }
+
+    public void setRenderedEditar(boolean renderedEditar) {
+        this.renderedEditar = renderedEditar;
+    }
+
+    public List<ConfiguracionCarrera> getConfiguracionCarreras() {
+        return configuracionCarreras;
+    }
+
+    public void setConfiguracionCarreras(List<ConfiguracionCarrera> configuracionCarreras) {
+        this.configuracionCarreras = configuracionCarreras;
+    }
+
+    public boolean isTieneModulos() {
+        return tieneModulos;
+    }
+
+    public void setTieneModulos(boolean tieneModulos) {
+        this.tieneModulos = tieneModulos;
     }
 
 }

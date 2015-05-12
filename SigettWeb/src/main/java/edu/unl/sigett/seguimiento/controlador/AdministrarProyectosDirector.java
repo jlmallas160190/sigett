@@ -6,7 +6,7 @@
 package edu.unl.sigett.seguimiento.controlador;
 
 import com.jlmallas.comun.entity.Persona;
-import com.jlmallas.comun.service.PersonaFacadeLocal;
+import com.jlmallas.comun.dao.PersonaDao;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 import com.ocpsoft.pretty.faces.annotation.URLMappings;
 import edu.unl.sigett.adjudicacion.controlador.AdministrarProrrogas;
@@ -35,12 +35,12 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import org.primefaces.event.TabChangeEvent;
-import edu.unl.sigett.session.ActividadFacadeLocal;
-import edu.unl.sigett.session.ConfiguracionGeneralFacadeLocal;
-import edu.unl.sigett.session.DirectorProyectoFacadeLocal;
-import edu.unl.sigett.session.ProyectoCarreraOfertaFacadeLocal;
+import edu.unl.sigett.dao.ActividadFacadeLocal;
+import edu.unl.sigett.dao.ConfiguracionGeneralDao;
+import edu.unl.sigett.dao.DirectorProyectoFacadeLocal;
+import edu.unl.sigett.dao.ProyectoCarreraOfertaFacadeLocal;
 import org.jlmallas.seguridad.dao.UsuarioDao;
-import edu.jlmallas.academico.service.OfertaAcademicaFacadeLocal;
+import edu.jlmallas.academico.service.OfertaAcademicaService;
 import java.util.HashMap;
 import java.util.Map;
 import javax.annotation.PostConstruct;
@@ -91,13 +91,13 @@ public class AdministrarProyectosDirector implements Serializable {
     @EJB
     private ActividadFacadeLocal actividadFacadeLocal;
     @EJB
-    private ConfiguracionGeneralFacadeLocal configuracionGeneralFacadeLocal;
+    private ConfiguracionGeneralDao configuracionGeneralFacadeLocal;
     @EJB
     private ProyectoCarreraOfertaFacadeLocal proyectoCarreraOfertaFacadeLocal;
     @EJB
-    private OfertaAcademicaFacadeLocal ofertaAcademicaFacadeLocal;
+    private OfertaAcademicaService ofertaAcademicaFacadeLocal;
     @EJB
-    private PersonaFacadeLocal personaFacadeLocal;
+    private PersonaDao personaFacadeLocal;
 
     private List<DirectorProyecto> directorProyectos;
     private List<OfertaAcademica> ofertasAcademicas;
@@ -290,7 +290,7 @@ public class AdministrarProyectosDirector implements Serializable {
                 administrarRevisiones.renderedCrear(sessionDocenteUsuario.getUsuario());
                 administrarRevisiones.renderedEditar(sessionDocenteUsuario.getUsuario());
                 administrarRevisiones.renderedEliminar(sessionDocenteUsuario.getUsuario());
-                intervalo = administrarConfiguraciones.intervaloActualizaciones();
+//                intervalo = administrarConfiguraciones.intervaloActualizaciones();
                 navegacion = "pretty:editarDirectorProyecto";
             } else {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_editar") + ". " + bundle.getString("lbl.msm_consulte"), "");

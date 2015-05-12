@@ -200,7 +200,6 @@ a:link:hover, a:visited:hover  {
 
 .ui-widget-content .ui-inputfield, .ui-widget-header .ui-inputfield{
     width: 100% !important;
-    text-transform: uppercase; 
     overflow:visible !important;
     max-width: 100% !important;
     min-width: 100% !important;

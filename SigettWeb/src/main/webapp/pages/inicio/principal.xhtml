@@ -3,289 +3,32 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <body>
+        <ui:composition template="./../../template.xhtml">
+            <ui:define name="title">
+                <h:outputText value="#{msg['lbl.principal']}"/>
+            </ui:define>
 
-    <h:head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <h:outputStylesheet name="./css/default.css"/>
-        <h:outputStylesheet name="./css/cssLayout.css"/>
-        <f:view >
-            <h:form id="tittle">
-                <title>
-                    <ui:insert name="title">
-                        <h:outputText value="#{msg['lbl.principal']}"/>
-                    </ui:insert>
-                </title>
-            </h:form>
-        </f:view>
-        <ui:insert name="favicon"><link rel="shortcut icon" type="image/x-icon" href="#{resource['img/favicon.ico']}"/></ui:insert> 
-        <h:outputStylesheet name="./css/bootstrap.css" />
-        <h:outputScript name="./js/bootstrap.js"/>
-        <h:outputScript name="./js/calendarEs.js"/>
-        <h:outputScript name="./js/listgroup.js"/>
+            <ui:define name="top">
+                <ui:include src="menu.xhtml"/>
+            </ui:define>
 
-        <script>
-            function regresar() {
-                window.history.back();
-            }
-        </script>
-    </h:head>
+            <ui:define name="left">
+                <ui:include src="menuIzquierdo.xhtml"/>
+            </ui:define>
+            <ui:insert name="content">
+            </ui:insert>
+            <ui:define name="right">
+                <p:panel header="#{msg['lbl.administrar']} #{msg['lbl.carreras']}" toggleable="true">
+                    <ui:include src="menuDerecha.xhtml"/>
+                </p:panel>
+                <f:metadata>
+                    <f:event type="preRenderView" listener="#{administrarUsuarioCarrera.init()}"/>
+                </f:metadata>
+            </ui:define>
 
-    <h:body>
-        <div id="top">
-            <f:view >
-                <h:form id="superior">
-                    <p:poll update="menuBar" listener="#{administrarUsuarios.actualizaRendered(sessionUsuario.usuario)}" interval="#{administrarConfiguraciones.intervaloActualizaciones()}"/>
-                    <p:menubar id="menuBar">   
-                        <p:menuitem icon="ui-icon-home" action="pretty:principal" value="#{msg['lbl.inicio']}"/>
-                        <p:submenu icon="ui-icon-document"  label="#{msg['lbl.administracion']}">
-                            <p:menuitem icon="ui-icon-li" value="#{msg['lbl.lineasInvestigacion']}" rendered="#{administrarLineaInvestigacion.renderedBuscar}" action="pretty:lineasInvestigacion"></p:menuitem>
-                            <p:menuitem icon="ui-icon-docente" value="#{msg['lbl.docentes']}" rendered="#{administrarDocentes.renderedBuscar}" action="pretty:docentes"></p:menuitem>
-                            <p:menuitem icon="ui-icon-estudiante"  value="#{msg['lbl.estudiantes']}" rendered="#{administrarEstudiantes.renderedBuscar}" action="pretty:estudiantes"></p:menuitem>
-                            <p:menuitem icon="ui-icon-requisito" value="#{msg['lbl.requisitos']}" rendered="#{administrarCatalogoDocumentoExpediente.renderedBuscar}" action="pretty:categoriasRequisitos"></p:menuitem>
-                            <p:menuitem icon="ui-icon-carrera" value="#{msg['lbl.carreras']}" rendered="#{administrarUsuarioCarrera.renderedBuscar}" action="pretty:carrerasUsuario"></p:menuitem>
-                        </p:submenu>
-                        <p:submenu icon="ui-icon-tt" label="#{msg['lbl.administrar']} #{msg['lbl.proyectos']}">
-                            <p:menuitem icon="ui-icon-tt" value="#{msg['lbl.proyectos']}"  action="pretty:proyectos"></p:menuitem>
-                            <!--<p:menuitem icon="ui-icon-cp" value="{msg['lbl.tiposProyecto']}" rendered="{administrarTipoProyectos.renderedBuscar}"  action="pretty:tiposProyecto"></p:menuitem>-->
-                            <!--<p:menuitem icon="ui-icon-cp" value="{msg['lbl.categorias']} {msg['lbl.proyectos']}" rendered="{administrarCatalogoProyectos.renderedBuscar}" action="pretty:categorias"></p:menuitem>-->
-                            <!--<p:menuitem icon="ui-icon-cp" value="{msg['lbl.estado']} {msg['lbl.proyectos']}" rendered="{administrarEstadoProyecto.renderedBuscar}" action="pretty:estadosProyecto"></p:menuitem>-->
-
-                        </p:submenu>
-                        <f:facet name="options">
-                            <p:outputLabel value="#{msg['lbl.saludo']}: #{sessionUsuario.usuario.nombres} #{sessionUsuario.usuario.apellidos}"></p:outputLabel>
-                            <p:outputLabel value="#{msg['lbl.rol']}: #{login.getRol(sessionUsuario.usuario)}"></p:outputLabel>
-                            <p:commandButton value="#{msg['lbl.regresar']}" icon="ui-icon-arrowreturnthick-1-w" onclick="regresar()"/>
-                            <p:commandButton  value="#{msg['lbl.salir']}" icon="ui-icon-power" action="#{login.logout()}" />
-                        </f:facet>
-                    </p:menubar>
-                    <ui:insert name="top">
-                        <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
-                            <!-- Indicators -->
-                            <ol class="carousel-indicators">
-                                <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
-                                <li data-target="#carousel-example-generic" data-slide-to="1"></li>
-                            </ol>
-
-                            <!-- Wrapper for slides -->
-                            <div class="carousel-inner">
-                                <div class="item active">
-
-                                    <div class="carousel-caption">
-                                        <p:commandLink value="SIGETT"/>
-                                    </div>
-                                </div>
-                                <div class="item">
-
-                                    <div class="carousel-caption">
-                                        <h3>SIGETT</h3>
-                                    </div>
-                                </div>
-
-                            </div>
-
-                            <!-- Controls -->
-                            <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
-                                <span class="glyphicon glyphicon-chevron-left"></span>
-                            </a>
-                            <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
-                                <span class="glyphicon glyphicon-chevron-right"></span>
-                            </a>
-                        </div> <!-- Carousel -->
-
-                    </ui:insert>
-                    <ui:insert name="search">
-                        
-                    </ui:insert>
-                </h:form>
-            </f:view>
-        </div>
-        <div  class="container-fluid">
-            <div class="row-fluid">
-                <div class="col-md-2">
-                    <f:view >
-                        <h:form id="izquierda">
-                            <ui:insert name="left">
-                                <p:poll update="panelMenu" listener="#{administrarUsuarios.actualizaRendered(sessionUsuario.usuario)}" interval="#{administrarConfiguraciones.intervaloActualizaciones()}"/>
-                                <p:panel id="panelMenu" header="#{msg['lbl.menu']} #{msg['lbl.principal']}">
-                                    <h:panelGrid styleClass="panelgrid list-group" columns="1">
-
-                                        <p:commandLink styleClass="list-group-item active" action="pretty:principal">
-                                            <p:graphicImage width="16" height="16" value="/resources/blacks/16x16/120.png"/>
-                                            #{msg['lbl.inicio']}
-                                        </p:commandLink>
-                                        <p:commandLink styleClass="list-group-item" action="pretty:proyectos">
-                                            <p:graphicImage width="16" height="16" value="/resources/png/32px/Shape8.png"/>
-                                            #{msg['lbl.proyectos']}
-                                        </p:commandLink>
-                                        <p:commandLink styleClass="list-group-item" rendered="#{administrarLineaInvestigacion.renderedBuscar}" action="pretty:lineasInvestigacion">
-                                            <p:graphicImage width="16" height="16" rendered="#{administrarLineaInvestigacion.renderedBuscar}" value="/resources/png/32px/Shape102.png"/>
-                                            #{msg['lbl.lineasInvestigacion']}
-                                        </p:commandLink>
-
-                                        <p:commandLink styleClass="list-group-item" update="@this" rendered="#{administrarCatalogoDocumentoExpediente.renderedBuscar}" action="pretty:requisitos">
-                                            <p:graphicImage width="16" height="16" rendered="#{administrarCatalogoDocumentoExpediente.renderedBuscar}" value="/resources/blacks/16x16/83.png"/>
-                                            #{msg['lbl.requisitos']}
-                                        </p:commandLink>
-                                        <p:commandLink styleClass="list-group-item" rendered="#{administrarEstadosActividades.renderedBuscar}"  action="pretty:estadosActividades">
-                                            <p:graphicImage  width="16" height="16" rendered="#{administrarEstadosActividades.renderedBuscar}" value="/resources/blacks/16x16/36.png"/>
-                                            #{msg['lbl.estados']} #{msg['lbl.actividades']}
-                                        </p:commandLink>
-                                        <!--<p:commandLink styleClass="list-group-item" rendered="{administrarTipoProyectos.renderedBuscar}" action="pretty:tiposActividades">
-                                            <p:graphicImage width="16" height="16" rendered="{administrarTipoProyectos.renderedBuscar}" value="/resources/blacks/16x16/36.png"/>
-                                            {msg['lbl.tipos']} {msg['lbl.actividades']}
-                                        </p:commandLink>-->
-                                        <!--<p:commandLink styleClass="list-group-item" rendered="{administrarTiposRecurso.renderedBuscar}" action="pretty:tiposRecurso">
-                                            <p:graphicImage rendered="{administrarTiposRecurso.renderedBuscar}" width="16" height="16" value="/resources/blacks/16x16/36.png"/>
-                                            {msg['lbl.tipos']} {msg['lbl.recursos']}
-                                        </p:commandLink>-->
-                                    </h:panelGrid>
-                                </p:panel>
-                            </ui:insert>
-                        </h:form>
-                    </f:view>
-                </div>
-
-                <div class="col-md-8">
-                    <f:view >
-                        <h:form id="contenido">
-                            <ui:insert name="content">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <p:poll interval="#{administrarConfiguraciones.intervaloActualizaciones()}" update="pp" listener="#{administrarProyectos.buscarProyectosInicio(sessionUsuario.usuario)}"/>
-                                        <p:poll interval="#{administrarConfiguraciones.intervaloActualizaciones()}" update="pd" listener="#{administrarProyectos.buscarProyectosAdjudicaciónDirector(sessionUsuario.usuario)}"/>
-                                        <p:poll  interval="#{login.intervalo}" update="pspr" listener="#{administrarProyectos.buscarProyectosEnSustentacionPrivada(sessionUsuario.usuario)}"/>
-                                        <p:poll  interval="#{login.intervalo}" update="psp" listener="#{administrarProyectos.buscarProyectosEnSustentacionPublica(sessionUsuario.usuario)}"/>                                      
-                                        <p:poll  interval="#{login.intervalo}" update="pc" listener="#{administrarProyectos.buscarProyectosCaducados(sessionUsuario.usuario)}"/>
-                                        <p:panel><p:poll interval="#{login.intervalo}" update="pf" listener="#{administrarProyectos.buscarProyectosPorCulminar(sessionUsuario.usuario)}"/>
-                                            <h:panelGrid styleClass="panelgrid list-group" columns="1">
-                                                <p:commandLink id="pp" rendered="#{login.viewNotificacionesSecretarioAbogado==false}" styleClass="list-group-item active" action="#{administrarProyectos.buscar(administrarProyectos.proyectosInicio)}" update="tblProyectos" >
-                                                    #{msg['lbl.pertinencias']} #{msg['lbl.proyectos']}<span class="badge">#{administrarProyectos.proyectosInicio.size()}</span>                                                
-                                                </p:commandLink>
-                                                <p:commandLink id="pd" rendered="#{login.viewNotificacionesSecretarioAbogado==false}" styleClass="list-group-item" action="#{administrarProyectos.buscar(administrarProyectos.proyectosAdjudicacionDirector)}" update="tblProyectos">                                                
-                                                    #{msg['lbl.adjudicar_director_proyecto']}
-                                                    <span class="badge">#{administrarProyectos.proyectosAdjudicacionDirector.size()}</span>
-                                                </p:commandLink>
-                                                <p:commandLink id="pspr" rendered="#{login.viewNotificacionesSecretarioAbogado==false}" styleClass="list-group-item" action="#{administrarProyectos.buscar(administrarProyectos.proyectosEnSustentacionPrivada)}" update="tblProyectos">                                                
-                                                    #{msg['lbl.proyectos_sprivada']} <span class="badge">#{administrarProyectos.proyectosEnSustentacionPrivada.size()}</span>
-                                                </p:commandLink>
-                                                <p:commandLink id="psp" rendered="#{login.viewNotificacionesSecretarioAbogado==true}" styleClass="list-group-item" action="#{administrarProyectos.buscar(administrarProyectos.proyectosEnSustentacionPublica)}" update="tblProyectos">                                                
-                                                    #{msg['lbl.proyectos_spublica']}<span class="badge">#{administrarProyectos.proyectosEnSustentacionPublica.size()}</span>
-                                                </p:commandLink>
-                                                <p:commandLink id="pc" rendered="#{login.viewNotificacionesSecretarioAbogado==false}" styleClass="list-group-item" action="#{administrarProyectos.buscar(administrarProyectos.proyectosCaducados)}" update="tblProyectos">                                                
-                                                    #{msg['lbl.proyectos_caducados']}
-                                                    <span class="badge">#{administrarProyectos.proyectosCaducados.size()}</span>
-                                                </p:commandLink>
-                                                <p:commandLink rendered="#{login.viewNotificacionesSecretarioAbogado==false}" id="pf" styleClass="list-group-item" action="#{administrarProyectos.buscar(administrarProyectos.proyectosCaducados)}" update="tblProyectos">                                                
-                                                    #{msg['lbl.proyectos_por_culminar']}
-                                                    <span class="badge">#{administrarProyectos.proyectosPorCulminar.size()}</span>
-                                                </p:commandLink>
-                                            </h:panelGrid>
-                                        </p:panel>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <p:panel  toggleable="true">
-                                            <p:dataGrid id="tblProyectos" paginatorPosition="bottom"  var="proyecto" columns="1" paginator="true" rows="10"  rowIndexVar="rowIx" emptyMessage="#{msg['lbl.table.empty']}" value="#{administrarProyectos.proyectos}">
-                                                <p:commandLink onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" value="#{proyecto.temaActual}" action="#{administrarProyectos.editar(proyecto)}"/>                                             
-                                                <br/>
-                                                <p:outputLabel style="text-align: right;width: 100%" value="(#{viewProyectos.autores(proyecto)})"/>
-                                                <p:separator/>
-                                            </p:dataGrid>
-                                        </p:panel>
-                                    </div>
-                                </div>
-                            </ui:insert>
-                        </h:form>
-                    </f:view>
-                    <f:view  >
-                        <h:form id="form-data" enctype="multipart/form-data">
-                            <ui:insert name="data">
-                            </ui:insert>
-                        </h:form>
-                    </f:view>
-                    <f:view  >
-                        <ui:insert name="dlgs">
-
-                        </ui:insert>
-                    </f:view>
-                    <p:dialog id="dlgLoading" styleClass="load"   showHeader="false"  widgetVar="dlgLoading" modal="true" >
-                        <h:panelGrid columns="2" >
-                            <h:outputLabel value="#{msg['lbl.cargando']}"/>
-                            <h:graphicImage   height="50" width="50" value="/resources/img/ajax-loader-green.gif" />
-                        </h:panelGrid>
-                    </p:dialog>
-                </div>
-                <div class="col-md-2" >
-                    <f:view >
-                        <h:form id="derecha">
-                            <ui:insert name="right">
-                                <p:poll interval="#{administrarConfiguraciones.intervaloActualizaciones()}" update="misCarreras" listener="#{administrarUsuarioCarrera.usuarioCarreras(sessionUsuario.usuario)}"/>
-                                <p:panel header="#{msg['lbl.administrar']} #{msg['lbl.carreras']}" toggleable="true">
-                                    <p:dataTable paginatorPosition="bottom" id="misCarreras" var="uc" paginator="true" rows="10" selection="#{uc}" selectionMode="single" rowKey="#{uc.carreraId}" rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'even-row' : 'odd-row'}" rowIndexVar="rowIx" emptyMessage="#{msg['lbl.table.empty']}" value="#{administrarUsuarioCarrera.carreras}">
-                                        <p:column filterBy="#{administrarUsuarioCarrera.getCarrera(uc).nombre}" filterMatchMode="contains">
-                                            <p:commandLink value="#{administrarUsuarioCarrera.getCarrera(uc).nombre}"  action="#{administrarUsuarioCarrera.editar(uc, administrarCarreras)}"/>
-                                        </p:column>
-                                    </p:dataTable>
-                                </p:panel>
-                                <br/>
-                                <p:panel header="#{msg['lbl.sustentaciones']}" toggleable="true">
-                                    <h:panelGrid styleClass="panelgrid list-group" columns="2" columnClasses="col-sm-1,col-sm-10">
-                                        <p:commandLink styleClass="list-group-item" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" action="#{administrarEvaluacionesTribunal.viewConsultaTribunales(sessionUsuario.usuario)}">
-                                            <p:graphicImage width="16" height="16" value="/resources/png/32px/Shape149.png"/>
-                                            #{msg['lbl.sustentaciones']}
-                                        </p:commandLink>
-                                    </h:panelGrid>
-                                </p:panel>
-                            </ui:insert>
-                        </h:form>
-                    </f:view>
-                </div>
-            </div>
-        </div>
-        <f:view >
-            <h:form id="inferior">
-                <nav class="navbar navbar-inverse navbar-bottom" style="padding:0 0 100px 0;margin-top:50px">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <br/>
-                                <p:panel header="#{msg['lbl.enlaces']}">
-                                    <h:panelGrid columns="1" styleClass="panelgrid" rowClasses="rowpanelgrid">
-                                        <h:commandLink styleClass="ui-commandlink"  target="_blank" value="#{msg['lbl.acceso']} #{msg['lbl.docente']}" action="pretty:loginDocente"/>
-                                        <h:commandLink styleClass="ui-commandlink" target="_blank" value="#{msg['lbl.acceso']} #{msg['lbl.estudiante']}" action="pretty:loginEstudiante"/>
-                                    </h:panelGrid>
-                                </p:panel>
-                            </div>
-                            <div class="col-md-4">
-                                <br/>
-                                <p:panel header="#{msg['lbl.informacion']}">
-                                    <center>
-                                        <span ><b> Universidad Nacional de Loja </b></span><br/>
-                                        <span>Carrera de Ingenieria en Sistemas</span> <br/>
-                                        <span>Loja - Ecuador</span>
-                                    </center>
-                                </p:panel>
-                            </div>
-                            <div class="col-md-4">
-                                <br/>
-                                <p:panel header="#{msg['lbl.lenguajes']}">
-                                    <h:panelGrid columnClasses="col-sm-1" columns="2">
-                                        <p:commandLink update=":tittle,:contenido,:superior,:derecha,:inferior,:izquierda,:dlgLoading"  title="Spanish"  action="#{localizacion.localeChanged()}">
-                                            <f:param value="es" name="locale"/>
-                                            <p:graphicImage width="20" height="20" value="/resources/img/icon_spain.jpg"/>
-                                        </p:commandLink>
-                                        <p:commandLink title="English" update=":tittle,:contenido,:superior,:derecha,:inferior,:izquierda,:dlgLoading"  action="#{localizacion.localeChanged()}">
-                                            <f:param value="en" name="locale"/>
-                                            <p:graphicImage width="20" height="20" value="/resources/img/icon_british.png"/>
-                                        </p:commandLink>
-                                    </h:panelGrid>
-                                </p:panel>
-                            </div>
-                        </div>
-                    </div>
-                </nav>
-            </h:form>
-        </f:view>
-    </h:body>
+        </ui:composition>
+    </body>   
 </html>

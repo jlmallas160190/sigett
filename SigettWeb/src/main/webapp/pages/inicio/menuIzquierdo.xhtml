@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+    <body>
+        <!--<p:poll update="panelMenu" listener="{administrarUsuarios.actualizaRendered(sessionUsuario.usuario)}" interval="{administrarConfiguraciones.intervaloActualizaciones()}"/>-->
+        <p:panel id="panelMenu" header="#{msg['lbl.menu']} #{msg['lbl.principal']}">
+            <h:panelGrid styleClass="panelgrid list-group" columns="1">
+
+                <p:commandLink styleClass="list-group-item active" action="pretty:principal">
+                    <p:graphicImage width="16" height="16" value="/resources/blacks/16x16/120.png"/>
+                    #{msg['lbl.inicio']}
+                </p:commandLink>
+                <p:commandLink styleClass="list-group-item" action="pretty:proyectos">
+                    <p:graphicImage width="16" height="16" value="/resources/png/32px/Shape8.png"/>
+                    #{msg['lbl.proyectos']}
+                </p:commandLink>
+                <p:commandLink styleClass="list-group-item" rendered="#{administrarLineaInvestigacion.renderedBuscar}" action="pretty:lineasInvestigacion">
+                    <p:graphicImage width="16" height="16" rendered="#{administrarLineaInvestigacion.renderedBuscar}" value="/resources/png/32px/Shape102.png"/>
+                    #{msg['lbl.lineasInvestigacion']}
+                </p:commandLink>
+
+                <p:commandLink styleClass="list-group-item" update="@this" rendered="#{administrarCatalogoDocumentoExpediente.renderedBuscar}" action="pretty:requisitos">
+                    <p:graphicImage width="16" height="16" rendered="#{administrarCatalogoDocumentoExpediente.renderedBuscar}" value="/resources/blacks/16x16/83.png"/>
+                    #{msg['lbl.requisitos']}
+                </p:commandLink>
+            </h:panelGrid>
+        </p:panel>
+    </body>
+
+</html>

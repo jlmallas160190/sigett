@@ -5,10 +5,10 @@
  */
 package edu.unl.sigett.seguridad.managed.session;
 
-import org.jlmallas.seguridad.entity.Usuario;
-import edu.jlmallas.academico.entity.Carrera;
-import edu.unl.sigett.entity.UsuarioCarrera;
+import edu.unl.sigett.dto.UsuarioCarreraAux;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Named;
 
@@ -20,38 +20,64 @@ import javax.inject.Named;
 @SessionScoped
 public class SessionUsuarioCarrera implements Serializable {
 
-    private UsuarioCarrera usuarioCarrera;
-    private Carrera carrera;
-    private Usuario usuario;
+    private UsuarioCarreraAux usuarioCarreraAux;
+    private List<UsuarioCarreraAux> usuarioCarrerasAuxs;
+    private boolean renderedNoEditar;
+    private boolean renderedBuscar;
+    private boolean renderedEditar;
+    private boolean renderedCrear;
 
     public SessionUsuarioCarrera() {
-        this.usuario= new Usuario();
-        this.usuarioCarrera = new UsuarioCarrera();
-        this.carrera=new Carrera();
+        this.usuarioCarrerasAuxs = new ArrayList<>();
+        this.usuarioCarreraAux = new UsuarioCarreraAux();
     }
 
-    public UsuarioCarrera getUsuarioCarrera() {
-        return usuarioCarrera;
+    public UsuarioCarreraAux getUsuarioCarreraAux() {
+        return usuarioCarreraAux;
     }
 
-    public void setUsuarioCarrera(UsuarioCarrera usuarioCarrera) {
-        this.usuarioCarrera = usuarioCarrera;
+    public void setUsuarioCarreraAux(UsuarioCarreraAux usuarioCarreraAux) {
+        this.usuarioCarreraAux = usuarioCarreraAux;
     }
 
-    public Carrera getCarrera() {
-        return carrera;
+    public List<UsuarioCarreraAux> getUsuarioCarrerasAuxs() {
+        return usuarioCarrerasAuxs;
     }
 
-    public void setCarrera(Carrera carrera) {
-        this.carrera = carrera;
+    public void setUsuarioCarrerasAuxs(List<UsuarioCarreraAux> usuarioCarrerasAuxs) {
+        this.usuarioCarrerasAuxs = usuarioCarrerasAuxs;
     }
 
-    public Usuario getUsuario() {
-        return usuario;
+    public boolean isRenderedNoEditar() {
+        return renderedNoEditar;
     }
 
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
+    public void setRenderedNoEditar(boolean renderedNoEditar) {
+        this.renderedNoEditar = renderedNoEditar;
+    }
+
+    public boolean isRenderedBuscar() {
+        return renderedBuscar;
+    }
+
+    public void setRenderedBuscar(boolean renderedBuscar) {
+        this.renderedBuscar = renderedBuscar;
+    }
+
+    public boolean isRenderedEditar() {
+        return renderedEditar;
+    }
+
+    public void setRenderedEditar(boolean renderedEditar) {
+        this.renderedEditar = renderedEditar;
+    }
+
+    public boolean isRenderedCrear() {
+        return renderedCrear;
+    }
+
+    public void setRenderedCrear(boolean renderedCrear) {
+        this.renderedCrear = renderedCrear;
     }
 
 }

@@ -5,7 +5,7 @@
  */
 package edu.unl.sigett.seguridad.controlador;
 
-import com.jlmallas.comun.service.ConfiguracionFacadeLocal;
+import com.jlmallas.comun.dao.ConfiguracionDao;
 import edu.unl.sigett.comun.controlador.AdministrarConfiguraciones;
 import edu.unl.sigett.postulacion.controlador.AdministrarDocentesProyecto;
 import edu.unl.sigett.postulacion.controlador.AdministrarProyectos;
@@ -33,20 +33,14 @@ public class Login implements Serializable {
     @Inject
     private SessionUsuario sessionUsuario;
     @Inject
-    private AdministrarUsuarios administrarUsuarios;
-    @Inject
-    private AdministrarUsuarioCarrera administrarUsuarioCarrera;
-    @Inject
-    private AdministrarConfiguraciones administrarConfiguraciones;
-    @Inject
     private AdministrarDocentesProyecto administrarDocentesProyecto;
     @Inject
     private AdministrarProyectos administrarProyectos;
     @EJB
     private UsuarioDao usuarioFacadeLocal;
     @EJB
-    private ConfiguracionFacadeLocal configuracionFacadeLocal;
-    
+    private ConfiguracionDao configuracionFacadeLocal;
+
     private int intervalo;
     private boolean viewNotificacionesSecretarioAbogado;
 
@@ -81,7 +75,7 @@ public class Login implements Serializable {
         String navegacion = "";
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-        int var = usuarioFacadeLocal.logear(username,configuracionFacadeLocal.encriptaClave(password));
+        int var = usuarioFacadeLocal.logear(username, configuracionFacadeLocal.encriptaClave(password));
         if (var == 1) {
             if (sessionUsuario.getUsuario().getId() == null) {
                 sessionUsuario.setUsuario(usuarioFacadeLocal.buscarPorUsuario(username));
@@ -92,7 +86,6 @@ public class Login implements Serializable {
                             break;
                         }
                     }
-                    intervalo = administrarConfiguraciones.intervaloActualizaciones();
                     administrarDocentesProyecto.docenteProyectosSinPertinencia(sessionUsuario.getUsuario());
                     administrarProyectos.buscarProyectosInicio(sessionUsuario.getUsuario());
                     administrarProyectos.buscarProyectosAdjudicaciónDirector(sessionUsuario.getUsuario());
@@ -100,8 +93,6 @@ public class Login implements Serializable {
                     administrarProyectos.buscarProyectosCaducados(sessionUsuario.getUsuario());
                     administrarProyectos.buscarProyectosEnSustentacionPrivada(sessionUsuario.getUsuario());
                     administrarProyectos.buscarProyectosEnSustentacionPublica(sessionUsuario.getUsuario());
-//                    administrarUsuarios.actualizaRendered(sessionUsuario.getUsuario());
-                    administrarUsuarioCarrera.usuarioCarreras(sessionUsuario.getUsuario());
                     navegacion = "pretty:principal";
                 } else {
                     FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_user_no_active") + ". " + bundle.getString("lbl.msm_consulte"), "");

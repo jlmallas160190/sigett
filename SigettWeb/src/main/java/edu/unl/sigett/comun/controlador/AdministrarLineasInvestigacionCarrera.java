@@ -24,8 +24,8 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
-import edu.unl.sigett.session.LineaInvestigacionCarreraFacadeLocal;
-import edu.unl.sigett.session.LineaInvestigacionFacadeLocal;
+import edu.unl.sigett.dao.LineaInvestigacionCarreraFacadeLocal;
+import edu.unl.sigett.dao.LineaInvestigacionFacadeLocal;
 import org.jlmallas.seguridad.dao.LogDao;
 import org.jlmallas.seguridad.dao.UsuarioDao;
 
@@ -85,7 +85,7 @@ public class AdministrarLineasInvestigacionCarrera implements Serializable {
             if (tienePermiso == 1) {
                 sessionLineaInvestigacionCarrera.setLineaInvestigacionCarrera(new LineaInvestigacionCarrera());
                 sessionLineaInvestigacionCarrera.getLineaInvestigacionCarrera().setLineaInvestigacionId(new LineaInvestigacion());
-                sessionLineaInvestigacionCarrera.getLineaInvestigacionCarrera().setCarreraId(sessionUsuarioCarrera.getUsuarioCarrera().getCarreraId());
+//                sessionLineaInvestigacionCarrera.getLineaInvestigacionCarrera().setCarreraId(sessionUsuarioCarrera.getUsuarioCarrera().getCarreraId());
                 navegacion = "pretty:crearLineaInvestigacionCarrera";
             } else {
                 if (tienePermiso == 2) {
@@ -169,11 +169,11 @@ public class AdministrarLineasInvestigacionCarrera implements Serializable {
 
             int tienePermiso = usuarioFacadeLocal.tienePermiso(sessionUsuario.getUsuario(), "buscar_linea_investigacion_carrera");
             if (tienePermiso == 1) {
-                for (LineaInvestigacionCarrera lc : lineaInvestigacionCarreraFacadeLocal.buscarPorCarrera(sessionUsuarioCarrera.getUsuarioCarrera().getCarreraId())) {
-                    if (lc.getLineaInvestigacionId().getNombre().toLowerCase().contains(criterio.toLowerCase())) {
-                        this.lineaInvestigacionCarreras.add(lc);
-                    }
-                }
+//                for (LineaInvestigacionCarrera lc : lineaInvestigacionCarreraFacadeLocal.buscarPorCarrera(sessionUsuarioCarrera.getUsuarioCarrera().getCarreraId())) {
+//                    if (lc.getLineaInvestigacionId().getNombre().toLowerCase().contains(criterio.toLowerCase())) {
+//                        this.lineaInvestigacionCarreras.add(lc);
+//                    }
+//                }
             } else {
                 if (tienePermiso == 2) {
                     FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_buscar") + ". " + bundle.getString("lbl.msm_consulte"), "");

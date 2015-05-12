@@ -6,7 +6,7 @@
 
 package edu.jlmallas.academico.dao.implement;
 
-import edu.jlmallas.academico.dao.AbstractFacade;
+import edu.jlmallas.academico.dao.AbstractDao;
 import edu.jlmallas.academico.dao.NivelDao;
 import edu.jlmallas.academico.entity.Nivel;
 import java.util.HashMap;
@@ -19,7 +19,7 @@ import javax.persistence.Query;
  * @author jorge-luis
  */
 @Stateless
-public class NivelDaoImplement extends AbstractFacade<Nivel> implements NivelDao {
+public class NivelDaoImplement extends AbstractDao<Nivel> implements NivelDao {
 
     public NivelDaoImplement() {
         super(Nivel.class);

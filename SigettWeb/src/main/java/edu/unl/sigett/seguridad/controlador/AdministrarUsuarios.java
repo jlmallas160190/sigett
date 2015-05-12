@@ -6,8 +6,8 @@
 package edu.unl.sigett.seguridad.controlador;
 
 import com.jlmallas.comun.entity.Persona;
-import com.jlmallas.comun.service.ConfiguracionFacadeLocal;
-import com.jlmallas.comun.service.PersonaFacadeLocal;
+import com.jlmallas.comun.dao.ConfiguracionDao;
+import com.jlmallas.comun.dao.PersonaDao;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 import com.ocpsoft.pretty.faces.annotation.URLMappings;
 import edu.unl.sigett.seguridad.managed.session.SessionAdminUsuario;
@@ -35,15 +35,15 @@ import javax.inject.Named;
 import org.primefaces.event.TransferEvent;
 import org.primefaces.model.DualListModel;
 import edu.jlmallas.academico.service.CarreraService;
-import edu.unl.sigett.session.DocenteUsuarioFacadeLocal;
-import edu.unl.sigett.session.EstudianteUsuarioFacadeLocal;
+import edu.unl.sigett.dao.DocenteUsuarioDao;
+import edu.unl.sigett.dao.EstudianteUsuarioFacadeLocal;
 import com.jlmallas.soporte.session.ExcepcionFacadeLocal;
 import com.jlmallas.soporte.session.ObjetoFacadeLocal;
 import org.jlmallas.seguridad.dao.PermisoDao;
 import com.jlmallas.soporte.session.ProyectoSoftwareFacadeLocal;
 import org.jlmallas.seguridad.dao.RolDao;
 import org.jlmallas.seguridad.dao.RolUsuarioDao;
-import edu.unl.sigett.session.UsuarioCarreraFacadeLocal;
+import edu.unl.sigett.dao.UsuarioCarreraDao;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
 import org.jlmallas.seguridad.dao.UsuarioDao;
@@ -95,7 +95,7 @@ public class AdministrarUsuarios implements Serializable {
     @EJB
     private CarreraService carreraFacadeLocal;
     @EJB
-    private UsuarioCarreraFacadeLocal usuarioCarreraDao;
+    private UsuarioCarreraDao usuarioCarreraDao;
     @EJB
     private RolDao rolDao;
     @EJB
@@ -117,11 +117,11 @@ public class AdministrarUsuarios implements Serializable {
     @EJB
     private EstudianteUsuarioFacadeLocal estudianteUsuarioFacadeLocal;
     @EJB
-    private DocenteUsuarioFacadeLocal docenteUsuarioFacadeLocal;
+    private DocenteUsuarioDao docenteUsuarioFacadeLocal;
     @EJB
-    private PersonaFacadeLocal personaFacadeLocal;
+    private PersonaDao personaFacadeLocal;
     @EJB
-    private ConfiguracionFacadeLocal configuracionFacadeLocal;
+    private ConfiguracionDao configuracionFacadeLocal;
 
     @PostConstruct
     public void AdministrarUsuarios() {
@@ -548,46 +548,6 @@ public class AdministrarUsuarios implements Serializable {
                     usuario.setPassword(configuracionFacadeLocal.encriptaClave(personaEstudiante.getNumeroIdentificacion()));
                     usuarioDao.edit(usuario);
                 }
-            }
-        } catch (Exception e) {
-        }
-    }
-
-    public void grabarUsuarioDocente(Docente docente) {
-        try {
-            Usuario usuario = null;
-            DocenteUsuario du = docenteUsuarioFacadeLocal.buscarPorDocente(docente.getId());
-            Persona personaDocente = personaFacadeLocal.find(docente.getId());
-            if (du != null) {
-                usuario = usuarioDao.find(du.getId());
-            }
-            if (usuario == null) {
-                usuario = new Usuario();
-                usuario.setApellidos(personaDocente.getApellidos());
-                usuario.setNombres(personaDocente.getNombres());
-                usuario.setEmail(personaDocente.getEmail());
-                usuario.setEsSuperuser(false);
-                usuario.setEsActivo(true);
-                usuario.setPassword(configuracionFacadeLocal.encriptaClave(personaDocente.getNumeroIdentificacion()));
-                usuario.setUsername(personaDocente.getNumeroIdentificacion());
-                if (usuarioDao.unicoUsername(usuario.getUsername()) == false) {
-                    usuarioDao.create(usuario);
-                    DocenteUsuario docenteUsuario = new DocenteUsuario();
-                    docenteUsuario.setDocenteId(docente.getId());
-                    docenteUsuario.setId(usuario.getId());
-                    docenteUsuario.setId(usuario.getId());
-                    docenteUsuarioFacadeLocal.create(docenteUsuario);
-                    Rol rol = rolDao.find((long) 1);
-                    if (rol != null) {
-                        RolUsuario rolUsuario = new RolUsuario();
-                        rolUsuario.setRolId(rol);
-                        rolUsuario.setUsuarioId(usuario);
-                        rolUsuarioFacadeLocal.create(rolUsuario);
-                    }
-                }
-            } else {
-                usuario.setPassword(configuracionFacadeLocal.encriptaClave(personaDocente.getNumeroIdentificacion()));
-                usuarioDao.edit(usuario);
             }
         } catch (Exception e) {
         }

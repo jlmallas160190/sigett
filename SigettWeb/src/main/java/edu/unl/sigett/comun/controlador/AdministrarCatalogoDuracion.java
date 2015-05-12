@@ -15,7 +15,7 @@ import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
-import edu.unl.sigett.session.CatalogoDuracionFacadeLocal;
+import edu.unl.sigett.dao.CatalogoDuracionFacadeLocal;
 
 /**
  *

@@ -10,7 +10,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
-import com.jlmallas.comun.service.ConfiguracionFacadeLocal;
+import com.jlmallas.comun.dao.ConfiguracionDao;
 import edu.unl.sigett.seguimiento.controlador.AdministrarActividades;
 import edu.unl.sigett.seguridad.managed.session.SessionEstudianteUsuario;
 import edu.unl.sigett.entity.EstudianteUsuario;
@@ -23,8 +23,8 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
-import edu.unl.sigett.session.ConfiguracionGeneralFacadeLocal;
-import edu.unl.sigett.session.EstudianteUsuarioFacadeLocal;
+import edu.unl.sigett.dao.ConfiguracionGeneralDao;
+import edu.unl.sigett.dao.EstudianteUsuarioFacadeLocal;
 import org.jlmallas.seguridad.dao.UsuarioDao;
 import edu.jlmallas.academico.service.EstudianteFacadeLocal;
 
@@ -48,11 +48,11 @@ public class LoginEstudiante implements Serializable {
     @EJB
     private EstudianteUsuarioFacadeLocal estudianteUsuarioFacadeLocal;
     @EJB
-    private ConfiguracionGeneralFacadeLocal configuracionGeneralFacadeLocal;
+    private ConfiguracionGeneralDao configuracionGeneralFacadeLocal;
     @EJB
     private EstudianteFacadeLocal estudianteFacadeLocal;
     @EJB
-    private ConfiguracionFacadeLocal configuracionFacadeLocal;
+    private ConfiguracionDao configuracionFacadeLocal;
 
     public LoginEstudiante() {
     }

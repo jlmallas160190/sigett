@@ -31,7 +31,7 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import edu.jlmallas.academico.service.AreaService;
-import edu.unl.sigett.session.ConfiguracionGeneralFacadeLocal;
+import edu.unl.sigett.dao.ConfiguracionGeneralDao;
 import com.jlmallas.soporte.session.ExcepcionFacadeLocal;
 import org.jlmallas.seguridad.dao.LogDao;
 import com.jlmallas.soporte.session.ObjetoFacadeLocal;
@@ -39,7 +39,7 @@ import com.jlmallas.soporte.session.ProyectoSoftwareFacadeLocal;
 import org.jlmallas.seguridad.dao.UsuarioDao;
 import edu.unl.sigett.academico.managed.session.SessionCarrera;
 import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
-import edu.unl.sigett.session.ProyectoCarreraOfertaFacadeLocal;
+import edu.unl.sigett.dao.ProyectoCarreraOfertaFacadeLocal;
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 
@@ -78,7 +78,7 @@ public class AdministrarAreas implements Serializable {
     @EJB
     private LogDao logFacadeLocal;
     @EJB
-    private ConfiguracionGeneralFacadeLocal configuracionGeneralFacadeLocal;
+    private ConfiguracionGeneralDao configuracionGeneralFacadeLocal;
     @EJB
     private ExcepcionFacadeLocal excepcionFacadeLocal;
     @EJB

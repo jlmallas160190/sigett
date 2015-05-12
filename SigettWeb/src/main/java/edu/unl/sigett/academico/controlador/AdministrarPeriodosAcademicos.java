@@ -30,9 +30,9 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
-import edu.unl.sigett.session.ConfiguracionGeneralFacadeLocal;
+import edu.unl.sigett.dao.ConfiguracionGeneralDao;
 import org.jlmallas.seguridad.dao.LogDao;
-import edu.jlmallas.academico.service.OfertaAcademicaFacadeLocal;
+import edu.jlmallas.academico.service.OfertaAcademicaService;
 import edu.jlmallas.academico.service.PeriodoAcademicoService;
 import org.jlmallas.seguridad.dao.UsuarioDao;
 import edu.unl.sigett.academico.managed.session.SessionOfertaAcademica;
@@ -74,9 +74,9 @@ public class AdministrarPeriodosAcademicos implements Serializable {
     @EJB
     private LogDao logFacadeLocal;
     @EJB
-    private OfertaAcademicaFacadeLocal ofertaAcademicaFacadeLocal;
+    private OfertaAcademicaService ofertaAcademicaFacadeLocal;
     @EJB
-    private ConfiguracionGeneralFacadeLocal configuracionGeneralFacadeLocal;
+    private ConfiguracionGeneralDao configuracionGeneralFacadeLocal;
     @EJB
     private UsuarioDao usuarioFacadeLocal;
 

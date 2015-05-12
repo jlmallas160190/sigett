@@ -5,7 +5,7 @@
  */
 package edu.jlmallas.academico.service.implement;
 
-import edu.jlmallas.academico.dao.AbstractFacade;
+import edu.jlmallas.academico.dao.AbstractDao;
 import edu.jlmallas.academico.dao.NivelDao;
 import edu.jlmallas.academico.entity.Nivel;
 import edu.jlmallas.academico.service.NivelService;
@@ -20,7 +20,7 @@ import javax.persistence.Query;
  * @author JorgeLuis
  */
 @Stateless
-public class NivelServiceImplement extends AbstractFacade<Nivel> implements NivelService {
+public class NivelServiceImplement extends AbstractDao<Nivel> implements NivelService {
 
     @EJB
     private NivelDao nivelDao;

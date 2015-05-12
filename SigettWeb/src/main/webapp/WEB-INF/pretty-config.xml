@@ -13,7 +13,7 @@
     </url-mapping>
     <url-mapping id="login">
         <pattern value="/login" />
-        <view-id value="faces/inicio/login.xhtml"/>       
+        <view-id value="faces/pages/inicio/login.xhtml"/>       
     </url-mapping>
     <url-mapping id="loginEstudiante">
         <pattern value="/loginEstudiante" />
@@ -37,6 +37,6 @@
     </url-mapping>
     <url-mapping id="principal">
         <pattern value="/principal"/>
-        <view-id value="faces/inicio/principal.xhtml"/>       
+        <view-id value="faces/pages/inicio/principal.xhtml"/>       
     </url-mapping>
 </pretty-config>

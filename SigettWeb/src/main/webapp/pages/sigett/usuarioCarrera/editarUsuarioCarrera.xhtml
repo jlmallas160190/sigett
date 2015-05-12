@@ -1,0 +1,54 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xml:lang="es" lang="es"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <body>
+
+        <ui:composition template="./../../../template.xhtml">
+            <ui:define name="title">
+                <h:outputText value="#{msg['lbl.editar']} #{msg['lbl.carrera']}"/>
+            </ui:define>
+            <ui:define name="top">
+                <ui:include src="./../../inicio/menu.xhtml"/>
+            </ui:define>
+            <ui:define name="left">
+                <ui:include src="./../../inicio/menuIzquierdo.xhtml"/>
+            </ui:define>
+            <ui:define name="content">                
+                <p:messages id="msm"/>
+                <p:panel header="#{msg['lbl.datos']} #{msg['lbl.carrera']}">
+                    <div class="row-fluid">
+                        <div class="col-sm-2">
+                            <ui:include src="logo.xhtml"/>  
+                        </div>
+                        <div class="col-sm-10">
+                            <ui:include src="datosCarrera.xhtml"/>  
+                        </div>
+                    </div>
+                    <f:facet name="footer">
+                        <ui:include src="botonesGrabado.xhtml"/>  
+                    </f:facet>
+                </p:panel>
+
+            </ui:define>
+            <ui:define name="data">
+                <p:dialog id="dlgLogo" header="#{msg['lbl.subir']} #{msg['lbl.logo']}" widgetVar="dlgLogo" modal="true" >
+                    <ui:include src="subirLogo.xhtml"/>  
+                </p:dialog>
+                <f:metadata>
+                    <f:event type="preRenderView" listener="#{administrarConfiguraciones.obtenerTamanioPermitidoFotos()}"/>
+                </f:metadata>
+            </ui:define>
+            <ui:define name="right">
+                <p:panel header="#{sessionUsuarioCarrera.usuarioCarreraAux.carrera.nombre}">
+                    <ui:include src="menu.xhtml"/>  
+                </p:panel>
+            </ui:define>
+        </ui:composition>
+
+    </body>
+</html>

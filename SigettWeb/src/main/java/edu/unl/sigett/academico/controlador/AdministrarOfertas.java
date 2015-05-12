@@ -30,7 +30,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
-import edu.unl.sigett.session.ConfiguracionGeneralFacadeLocal;
+import edu.unl.sigett.dao.ConfiguracionGeneralDao;
 import org.jlmallas.seguridad.dao.UsuarioDao;
 
 /**
@@ -57,7 +57,7 @@ public class AdministrarOfertas implements Serializable {
     @Inject
     private SessionOfertaAcademica sessionOfertaAcademica;
     @EJB
-    private ConfiguracionGeneralFacadeLocal configuracionGeneralFacadeLocal;
+    private ConfiguracionGeneralDao configuracionGeneralFacadeLocal;
     @EJB
     private UsuarioDao usuarioFacadeLocal;
 

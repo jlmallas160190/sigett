@@ -5,7 +5,7 @@
  */
 package edu.jlmallas.academico.service;
 
-import edu.jlmallas.academico.dao.AbstractFacade;
+import edu.jlmallas.academico.dao.AbstractDao;
 import edu.jlmallas.academico.entity.EstadoEstudianteCarrera;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +19,7 @@ import javax.persistence.Query;
  * @author JorgeLuis
  */
 @Stateless
-public class EstadoEstudianteCarreraFacade extends AbstractFacade<EstadoEstudianteCarrera> implements EstadoEstudianteCarreraFacadeLocal {
+public class EstadoEstudianteCarreraFacade extends AbstractDao<EstadoEstudianteCarrera> implements EstadoEstudianteCarreraFacadeLocal {
 
     public EstadoEstudianteCarreraFacade() {
         super(EstadoEstudianteCarrera.class);

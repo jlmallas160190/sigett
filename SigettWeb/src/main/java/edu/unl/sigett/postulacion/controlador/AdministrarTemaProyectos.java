@@ -22,8 +22,8 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
-import edu.unl.sigett.session.ProyectoFacadeLocal;
-import edu.unl.sigett.session.TemaProyectoFacadeLocal;
+import edu.unl.sigett.dao.ProyectoFacadeLocal;
+import edu.unl.sigett.dao.TemaProyectoFacadeLocal;
 import org.jlmallas.seguridad.dao.UsuarioDao;
 import edu.unl.sigett.enumeration.EstadoProyectoEnum;
 

@@ -23,7 +23,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import org.primefaces.context.RequestContext;
 import org.jlmallas.seguridad.dao.LogDao;
-import edu.unl.sigett.session.TipoProyectoFacadeLocal;
+import edu.unl.sigett.dao.TipoProyectoFacadeLocal;
 import org.jlmallas.seguridad.dao.UsuarioDao;
 
 /**

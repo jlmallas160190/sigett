@@ -1,0 +1,51 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <body>
+        <p:dataTable id="tblDocentes" value="#{sessionDocenteCarrera.docenteCarreraAuxs}" var="item" rows="20" paginator="true"
+                     rowIndexVar="rowIx"  rowKey="#{item.docenteCarrera.id}" selectionMode="single" 
+                     selection="#{sessionDocenteCarrera.docenteCarreraAux}" 
+                     rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'even-row' : 'odd-row'}" emptyMessage="#{msg['lbl.table.empty']}">
+            <!--<f:facet name="header">
+                <h:commandLink action="{administrarDocentesCarrera.crearPDF(sessionUsuarioCarrera.carrera)}">
+                    <p:graphicImage name="./img/pdf.png" />
+                </h:commandLink>
+            </f:facet>-->
+            <p:column rendered="#{sessionDocenteCarrera.renderedEditar}" 
+                      sortBy="#{sessionDocenteCarrera.docenteCarreraAux.persona.numeroIdentificacion}" 
+                      filterBy="#{sessionDocenteCarrera.docenteCarreraAux.persona.numeroIdentificacion}"
+                      filterMatchMode="contains">
+                <f:facet name="header">
+                    <h:outputText value="#{msg['lbl.ci']}"/>
+                </f:facet>
+                <p:commandLink value="#{sessionDocenteCarrera.docenteCarreraAux.persona.numeroIdentificacion}" 
+                               action="#{administrarDocentesCarrera.editar(item)}"/>
+            </p:column>
+            <p:column rendered="#{sessionDocenteCarrera.renderedNoEditar}" 
+                      sortBy="#{sessionDocenteCarrera.docenteCarreraAux.persona.numeroIdentificacion}"
+                      filterBy="#{sessionDocenteCarrera.docenteCarreraAux.persona.numeroIdentificacion}"
+                      filterMatchMode="contains">
+                <f:facet name="header">
+                    <h:outputText value="#{msg['lbl.ci']}"/>
+                </f:facet>
+                <h:outputText value="#{sessionDocenteCarrera.docenteCarreraAux.persona.numeroIdentificacion}"/>
+            </p:column>
+            <p:column  sortBy="#{sessionDocenteCarrera.docenteCarreraAux.persona.apellidos}"
+                       filterBy="#{sessionDocenteCarrera.docenteCarreraAux.persona.apellidos}"
+                       filterMatchMode="contains">
+                <f:facet name="header">
+                    <h:outputText value="#{msg['lbl.docente']}"/>
+                </f:facet>
+                <h:outputText value="#{sessionDocenteCarrera.docenteCarreraAux.persona.nombres}
+                              #{sessionDocenteCarrera.docenteCarreraAux.persona.apellidos}"/>
+        </p:column>
+        <p:column headerText="#{msg['lbl.email']}">
+            <h:outputText value="#{sessionDocenteCarrera.docenteCarreraAux.persona.email}"/>
+        </p:column>
+    </p:dataTable>
+</body>
+
+</html>

@@ -24,8 +24,8 @@ import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import edu.jlmallas.academico.service.AreaService;
-import edu.jlmallas.academico.service.OfertaAcademicaFacadeLocal;
-import edu.unl.sigett.session.ProyectoFacadeLocal;
+import edu.jlmallas.academico.service.OfertaAcademicaService;
+import edu.unl.sigett.dao.ProyectoFacadeLocal;
 
 /**
  *
@@ -42,7 +42,7 @@ public class AdministrarProyectosCarreraOferta implements Serializable {
     private PeriodoAcademico periodoAcademico;
     private LineaInvestigacion li;
     @EJB
-    private OfertaAcademicaFacadeLocal ofertaAcademicaFacadeLocal;
+    private OfertaAcademicaService ofertaAcademicaFacadeLocal;
     private List<Proyecto> proyectos;
     private boolean selectByEstado;
     private boolean selectByCategoria;

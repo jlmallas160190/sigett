@@ -6,7 +6,7 @@
 package edu.unl.sigett.finalizacion.controlador;
 
 import com.jlmallas.comun.entity.Persona;
-import com.jlmallas.comun.service.PersonaFacadeLocal;
+import com.jlmallas.comun.dao.PersonaDao;
 import edu.unl.sigett.finalizacion.managed.session.SessionInformeProyecto;
 import edu.unl.sigett.reportes.AdministrarReportes;
 import edu.unl.sigett.entity.AutorProyecto;
@@ -33,20 +33,20 @@ import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.primefaces.context.RequestContext;
-import edu.unl.sigett.session.AutorProyectoFacadeLocal;
+import edu.unl.sigett.dao.AutorProyectoFacadeLocal;
 import edu.jlmallas.academico.service.CarreraService;
-import edu.unl.sigett.session.CatalogoInformeProyectoFacadeLocal;
-import edu.unl.sigett.session.ConfiguracionGeneralFacadeLocal;
-import edu.unl.sigett.session.DirectorProyectoFacadeLocal;
-import edu.unl.sigett.session.EstadoAutorFacadeLocal;
-import edu.unl.sigett.session.EstadoProyectoFacadeLocal;
-import edu.unl.sigett.session.InformeProyectoFacadeLocal;
+import edu.unl.sigett.dao.CatalogoInformeProyectoFacadeLocal;
+import edu.unl.sigett.dao.ConfiguracionGeneralDao;
+import edu.unl.sigett.dao.DirectorProyectoFacadeLocal;
+import edu.unl.sigett.dao.EstadoAutorFacadeLocal;
+import edu.unl.sigett.dao.EstadoProyectoFacadeLocal;
+import edu.unl.sigett.dao.InformeProyectoFacadeLocal;
 import org.jlmallas.seguridad.dao.LogDao;
-import edu.unl.sigett.session.ProyectoFacadeLocal;
+import edu.unl.sigett.dao.ProyectoFacadeLocal;
 import org.jlmallas.seguridad.dao.UsuarioDao;
 import edu.jlmallas.academico.entity.Docente;
 import edu.jlmallas.academico.entity.EstudianteCarrera;
-import edu.jlmallas.academico.service.DocenteCarreraFacadeLocal;
+import edu.jlmallas.academico.dao.DocenteCarreraDao;
 import edu.jlmallas.academico.service.EstudianteCarreraFacadeLocal;
 import edu.unl.sigett.enumeration.EstadoAutorEnum;
 import java.util.HashMap;
@@ -84,13 +84,13 @@ public class AdministrarInformesProyecto implements Serializable {
     @EJB
     private DirectorProyectoFacadeLocal directorProyectoFacadeLocal;
     @EJB
-    private ConfiguracionGeneralFacadeLocal configuracionGeneralFacadeLocal;
+    private ConfiguracionGeneralDao configuracionGeneralFacadeLocal;
     @EJB
     private EstudianteCarreraFacadeLocal estudianteCarreraFacadeLocal;
     @EJB
-    private PersonaFacadeLocal personaFacadeLocal;
+    private PersonaDao personaFacadeLocal;
     @EJB
-    private DocenteCarreraFacadeLocal docenteCarreraFacadeLocal;
+    private DocenteCarreraDao docenteCarreraFacadeLocal;
 
     private List<InformeProyecto> informeProyectos;
 

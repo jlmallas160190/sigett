@@ -6,7 +6,7 @@
 package edu.jlmallas.academico.service.implement;
 
 import edu.jlmallas.academico.entity.PeriodoCoordinacion;
-import edu.jlmallas.academico.dao.AbstractFacade;
+import edu.jlmallas.academico.dao.AbstractDao;
 import edu.jlmallas.academico.service.PeriodoCoordinacionFacadeLocal;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -19,7 +19,7 @@ import javax.persistence.Query;
  * @author JorgeLuis
  */
 @Stateless
-public class PeriodoCoordinacionServiceImplement extends AbstractFacade<PeriodoCoordinacion> implements PeriodoCoordinacionFacadeLocal {
+public class PeriodoCoordinacionServiceImplement extends AbstractDao<PeriodoCoordinacion> implements PeriodoCoordinacionFacadeLocal {
 
     public PeriodoCoordinacionServiceImplement() {
         super(PeriodoCoordinacion.class);

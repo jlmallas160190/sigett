@@ -6,7 +6,7 @@
 package edu.unl.sigett.finalizacion.controlador;
 
 import com.jlmallas.comun.entity.Persona;
-import com.jlmallas.comun.service.PersonaFacadeLocal;
+import com.jlmallas.comun.dao.PersonaDao;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 import com.ocpsoft.pretty.faces.annotation.URLMappings;
 import edu.unl.sigett.finalizacion.managed.session.SessionEvaluacionTribunal;
@@ -49,25 +49,25 @@ import org.primefaces.model.DefaultScheduleEvent;
 import org.primefaces.model.DefaultScheduleModel;
 import org.primefaces.model.ScheduleEvent;
 import org.primefaces.model.ScheduleModel;
-import edu.unl.sigett.session.AutorProyectoFacadeLocal;
-import edu.unl.sigett.session.CalificacionMiembroFacadeLocal;
-import edu.unl.sigett.session.CatalogoEvaluacionFacadeLocal;
-import edu.unl.sigett.session.CatalogoEventoFacadeLocal;
-import edu.unl.sigett.session.ConfiguracionGeneralFacadeLocal;
-import edu.unl.sigett.session.EstadoAutorFacadeLocal;
+import edu.unl.sigett.dao.AutorProyectoFacadeLocal;
+import edu.unl.sigett.dao.CalificacionMiembroFacadeLocal;
+import edu.unl.sigett.dao.CatalogoEvaluacionFacadeLocal;
+import edu.unl.sigett.dao.CatalogoEventoFacadeLocal;
+import edu.unl.sigett.dao.ConfiguracionGeneralDao;
+import edu.unl.sigett.dao.EstadoAutorFacadeLocal;
 import edu.jlmallas.academico.service.EstadoEstudianteCarreraFacadeLocal;
-import edu.unl.sigett.session.EstadoProyectoFacadeLocal;
+import edu.unl.sigett.dao.EstadoProyectoFacadeLocal;
 import edu.jlmallas.academico.service.EstudianteCarreraFacadeLocal;
-import edu.unl.sigett.session.EvaluacionTribunalFacadeLocal;
-import edu.unl.sigett.session.EventoFacadeLocal;
-import edu.unl.sigett.session.MiembroFacadeLocal;
-import edu.unl.sigett.session.ProyectoFacadeLocal;
-import edu.unl.sigett.session.RangoEquivalenciaFacadeLocal;
-import edu.unl.sigett.session.RangoNotaFacadeLocal;
+import edu.unl.sigett.dao.EvaluacionTribunalFacadeLocal;
+import edu.unl.sigett.dao.EventoFacadeLocal;
+import edu.unl.sigett.dao.MiembroFacadeLocal;
+import edu.unl.sigett.dao.ProyectoFacadeLocal;
+import edu.unl.sigett.dao.RangoEquivalenciaFacadeLocal;
+import edu.unl.sigett.dao.RangoNotaFacadeLocal;
 import org.jlmallas.seguridad.dao.UsuarioDao;
 import edu.jlmallas.academico.entity.EstudianteCarrera;
 import edu.jlmallas.academico.enumeration.EstadoEstudianteCarreraEnum;
-import edu.jlmallas.academico.service.DocenteFacadeLocal;
+import edu.jlmallas.academico.dao.DocenteDao;
 import edu.unl.sigett.enumeration.CatalogoEvaluacionEnum;
 import edu.unl.sigett.enumeration.CatalogoEventoEnum;
 import edu.unl.sigett.enumeration.EstadoAutorEnum;
@@ -118,7 +118,7 @@ public class AdministrarEvaluacionesTribunal implements Serializable {
     @EJB
     private CalificacionMiembroFacadeLocal calificacionMiembroFacadeLocal;
     @EJB
-    private ConfiguracionGeneralFacadeLocal configuracionGeneralFacadeLocal;
+    private ConfiguracionGeneralDao configuracionGeneralFacadeLocal;
     @EJB
     private EstadoAutorFacadeLocal estadoAutorFacadeLocal;
     @EJB
@@ -132,9 +132,9 @@ public class AdministrarEvaluacionesTribunal implements Serializable {
     @EJB
     private EventoFacadeLocal eventoFacadeLocal;
     @EJB
-    private PersonaFacadeLocal personaFacadeLocal;
+    private PersonaDao personaFacadeLocal;
     @EJB
-    private DocenteFacadeLocal docenteFacadeLocal;
+    private DocenteDao docenteFacadeLocal;
 
     private boolean renderedEditar;
     private boolean renderedNoEditar;

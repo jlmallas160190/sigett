@@ -14,7 +14,7 @@ import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
-import edu.unl.sigett.session.CatalogoInformeProyectoFacadeLocal;
+import edu.unl.sigett.dao.CatalogoInformeProyectoFacadeLocal;
 
 /**
  *

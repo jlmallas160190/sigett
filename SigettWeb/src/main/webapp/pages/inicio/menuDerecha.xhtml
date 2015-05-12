@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui">
+
+    <body>
+            <p:dataTable paginatorPosition="bottom" id="carrerasUsuario" var="uc" paginator="true" rows="10" selection="#{uc}" selectionMode="single"
+                         rowKey="#{uc.carrera.nombre}" rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'even-row' : 'odd-row'}" 
+                         rowIndexVar="rowIx" emptyMessage="#{msg['lbl.table.empty']}" value="#{sessionUsuarioCarrera.usuarioCarrerasAuxs}">
+                <p:column filterBy="#{uc.carrera.nombre}" sortBy="#{uc.carrera.nombre}" filterMatchMode="contains">
+                    <p:commandLink value="#{uc.carrera.nombre}" action="#{administrarUsuarioCarrera.editar(uc)}"/>
+                </p:column>
+            </p:dataTable>
+          
+        <!--<p:panel header="{msg['lbl.sustentaciones']}" toggleable="true">
+            <h:panelGrid styleClass="panelgrid list-group" columns="2" columnClasses="col-sm-1,col-sm-10">
+                <p:commandLink styleClass="list-group-item" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" 
+        action="{administrarEvaluacionesTribunal.viewConsultaTribunales(sessionUsuario.usuario)}">
+                    <p:graphicImage width="16" height="16" value="/resources/png/32px/Shape149.png"/>
+                    {msg['lbl.sustentaciones']}
+                </p:commandLink>
+            </h:panelGrid>
+        </p:panel>-->
+    </body>
+
+</html>
