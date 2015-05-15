@@ -67,12 +67,15 @@ import javax.servlet.http.HttpServletRequest;
     )})
 public class AdministrarAreas implements Serializable {
 
+    //<editor-fold defaultstate="collapsed" desc="INYECCIÓN DE MANAGED BEANS">
     @Inject
     private SessionArea sessionArea;
     @Inject
     private SessionUsuario sessionUsuario;
     @Inject
     private SessionCarrera sessionCarrera;
+    //</editor-fold>
+    //<editor-fold defaultstate="collapsed" desc="INYECCIÓN DE SERVICIOS">
     @EJB
     private AreaService areaFacadeLocal;
     @EJB
@@ -89,7 +92,7 @@ public class AdministrarAreas implements Serializable {
     private UsuarioDao usuarioFacadeLocal;
     @EJB
     private ProyectoCarreraOfertaFacadeLocal proyectoCarreraOfertaFacadeLocal;
-
+//</editor-fold>
     private List<Area> directorioAreas;
 
     private String criterioDirectorioArea;
@@ -98,8 +101,11 @@ public class AdministrarAreas implements Serializable {
 
     }
 
-    @PostConstruct
     public void init() {
+        renderedCrear(sessionUsuario.getUsuario());
+        renderedEditar(sessionUsuario.getUsuario());
+        renderedSgaWs(sessionUsuario.getUsuario());
+        renderedSgaWsCarrera(sessionUsuario.getUsuario());
         buscar(sessionUsuario.getUsuario());
     }
 
@@ -110,19 +116,6 @@ public class AdministrarAreas implements Serializable {
         } catch (Exception e) {
         }
         return null;
-    }
-
-    public String abrirBuscarAreas(Usuario usuario) {
-        String navegacion = "";
-        try {
-            buscar(usuario);
-            renderedCrear(usuario);
-            renderedEditar(usuario);
-            renderedSgaWs(usuario);
-            navegacion = "pretty:areas";
-        } catch (Exception e) {
-        }
-        return navegacion;
     }
 
     public String crear(Usuario usuario) {
@@ -173,7 +166,7 @@ public class AdministrarAreas implements Serializable {
             ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
             int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "editar_area");
             if (tienePermiso == 1) {
-                area=areaFacadeLocal.buscarPorId(area.getId());
+                area = areaFacadeLocal.buscarPorId(area.getId());
                 sessionArea.setArea(area);
                 sessionCarrera.setCarreras(sessionArea.getArea().getCarreraList());
                 this.renderedCrearCarrera(usuario);
@@ -410,7 +403,7 @@ public class AdministrarAreas implements Serializable {
             if (a1 == null) {
                 areaFacadeLocal.guardar(a);
                 logFacadeLocal.create(logFacadeLocal.crearLog("Area", a.getId() + "", "CREAR", "|Nombre= " + a.getNombre() + "|Sigla= "
-                        + a.getSigla()+"|"+ipAddress, usuario));
+                        + a.getSigla() + "|" + ipAddress, usuario));
             } else {
                 a1.setNombre(a.getNombre());
                 a1.setSigla(a.getSigla());
@@ -418,7 +411,7 @@ public class AdministrarAreas implements Serializable {
                 a = a1;
                 areaFacadeLocal.actualizar(a);
                 logFacadeLocal.create(logFacadeLocal.crearLog("Area", a.getId() + "", "EDITAR", "|Nombre= " + a.getNombre() + "|Sigla= "
-                        + a.getSigla()+"|"+ipAddress, usuario));
+                        + a.getSigla() + "|" + ipAddress, usuario));
             }
         }
         buscar(usuario);

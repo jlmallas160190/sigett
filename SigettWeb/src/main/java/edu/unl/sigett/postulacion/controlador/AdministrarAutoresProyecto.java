@@ -36,7 +36,7 @@ import edu.unl.sigett.dao.AutorProyectoFacadeLocal;
 import edu.unl.sigett.dao.EstadoAutorFacadeLocal;
 import org.jlmallas.seguridad.dao.UsuarioDao;
 import edu.jlmallas.academico.entity.EstudianteCarrera;
-import edu.jlmallas.academico.service.EstudianteCarreraFacadeLocal;
+import edu.jlmallas.academico.dao.implement.EstudianteCarreraFacadeLocal;
 import edu.unl.sigett.enumeration.EstadoAutorEnum;
 import edu.unl.sigett.enumeration.EstadoProyectoEnum;
 import edu.unl.sigett.dao.UsuarioCarreraDao;

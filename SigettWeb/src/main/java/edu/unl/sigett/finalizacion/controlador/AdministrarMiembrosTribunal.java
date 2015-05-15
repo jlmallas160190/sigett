@@ -47,7 +47,7 @@ import edu.jlmallas.academico.service.CarreraService;
 import edu.unl.sigett.dao.CatalogoOficioFacadeLocal;
 import edu.unl.sigett.dao.ConfiguracionCarreraDao;
 import edu.unl.sigett.dao.ConfiguracionGeneralDao;
-import edu.jlmallas.academico.service.CoordinadorPeriodoFacadeLocal;
+import edu.jlmallas.academico.dao.implement.CoordinadorPeriodoFacadeLocal;
 import edu.jlmallas.academico.dao.DocenteCarreraDao;
 import edu.jlmallas.academico.dao.DocenteDao;
 import edu.unl.sigett.dao.MiembroFacadeLocal;
@@ -56,7 +56,7 @@ import edu.unl.sigett.dao.ProyectoCarreraOfertaFacadeLocal;
 import edu.unl.sigett.dao.ProyectoFacadeLocal;
 import org.jlmallas.seguridad.dao.UsuarioDao;
 import edu.jlmallas.academico.entity.EstudianteCarrera;
-import edu.jlmallas.academico.service.EstudianteCarreraFacadeLocal;
+import edu.jlmallas.academico.dao.implement.EstudianteCarreraFacadeLocal;
 import edu.unl.sigett.comun.controlador.AdministrarNotificaciones;
 import edu.unl.sigett.enumeration.CatalogoOficioEnum;
 import edu.unl.sigett.enumeration.EstadoAutorEnum;
@@ -197,8 +197,8 @@ public class AdministrarMiembrosTribunal implements Serializable {
             Miembro miembro = miembroFacadeLocal.find(miembroId);
             String presidente = "";
             String miembros = "";
-            ConfiguracionCarrera configuracionCarrera = configuracionCarreraFacadeLocal.buscarPorCarreraId(carreraId, "NO");
-            int nOficio = Integer.parseInt(configuracionCarrera.getValor());
+//            ConfiguracionCarrera configuracionCarrera = configuracionCarreraFacadeLocal.buscarPorCarreraId(carreraId, "NO");
+//            int nOficio = Integer.parseInt(configuracionCarrera.getValor());
             Docente docenteMiembroPublica = docenteFacadeLocal.find(miembro.getDocenteId());
             Persona datosMiembroPublica = personaFacadeLocal.find(docenteMiembroPublica.getId());
 
@@ -249,9 +249,9 @@ public class AdministrarMiembrosTribunal implements Serializable {
             datosReporte.put("abreviacion_oficio", resourceBundle.getString("lbl.abreviacion_oficio"));
             datosReporte.put("articulos_sustentacion_publica", resourceBundle.getString("lbl.articulos_sustentacion_publica"));
 
-            reportes.oficioMiembroTribunalSpublica("pdf", fechaFormateada, fechaSustentacion, lugarSustentacion, response, datosReporte,
-                    configuracionCarreraFacadeLocal, configuracionCarrera, oficioCarrera, presidente, miembros, miembroId, oficioCarreraFacadeLocal, catalogoOficioFacadeLocal, carrera,
-                    nOficio, secretario, path, pathSetting);
+//            reportes.oficioMiembroTribunalSpublica("pdf", fechaFormateada, fechaSustentacion, lugarSustentacion, response, datosReporte,
+//                    configuracionCarreraFacadeLocal, configuracionCarrera, oficioCarrera, presidente, miembros, miembroId, oficioCarreraFacadeLocal, catalogoOficioFacadeLocal, carrera,
+//                    nOficio, secretario, path, pathSetting);
         } catch (Exception e) {
         }
     }
@@ -296,8 +296,8 @@ public class AdministrarMiembrosTribunal implements Serializable {
             String presidente = "";
             String miembros = "";
             secretario = "";
-            ConfiguracionCarrera configuracionCarrera = configuracionCarreraFacadeLocal.buscarPorCarreraId(carreraId, "NO");
-            int nOficio = Integer.parseInt(configuracionCarrera.getValor());
+//            ConfiguracionCarrera configuracionCarrera = configuracionCarreraFacadeLocal.buscarPorCarreraId(carreraId, "NO");
+//            int nOficio = Integer.parseInt(configuracionCarrera.getValor());
             Docente docenteMiembro = docenteFacadeLocal.find(miembro.getDocenteId());
             Persona datosMiembro = personaFacadeLocal.find(docenteMiembro.getId());
             for (Miembro m : miembroFacadeLocal.buscarPorTribunal(miembro.getTribunalId().getId())) {
@@ -338,9 +338,9 @@ public class AdministrarMiembrosTribunal implements Serializable {
             datosReporte.put("asunto_designar_miembro_tribunal", resourceBundle.getString("lbl.asunto_designar_miembro_tribunal"));
             datosReporte.put("nota_designar_miembro_tribunal", resourceBundle.getString("lbl.designar_miembro_tribunal"));
 
-            reportes.oficioMiembroTribunalSprivada("docx", fechaFormateada, response, datosReporte, configuracionCarreraFacadeLocal, configuracionCarrera,
-                    oficioCarrera, presidente, miembros, miembroId, oficioCarreraFacadeLocal, catalogoOficioFacadeLocal, carrera, nOficio, secretario,
-                    path, pathSetting);
+//            reportes.oficioMiembroTribunalSprivada("docx", fechaFormateada, response, datosReporte, configuracionCarreraFacadeLocal, configuracionCarrera,
+//                    oficioCarrera, presidente, miembros, miembroId, oficioCarreraFacadeLocal, catalogoOficioFacadeLocal, carrera, nOficio, secretario,
+//                    path, pathSetting);
 
         } catch (Exception e) {
         }

@@ -38,13 +38,17 @@ public class DocenteUsuario implements Serializable {
     @NotNull
     @Column(name = "id")
     private Long id;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "docente_id")
     private Long docenteId;
 
     public DocenteUsuario() {
     }
 
-    public DocenteUsuario(Long id) {
+    public DocenteUsuario(Long id, Long docenteId) {
         this.id = id;
+        this.docenteId = docenteId;
     }
 
     public Long getId() {

@@ -49,13 +49,14 @@ public class DocenteCarrera implements Serializable {
     @Basic(optional = false)
     @Column(name = "es_activo")
     @NotNull
-    private boolean esActivo;
+    private Boolean esActivo;
 
     public DocenteCarrera() {
     }
 
-    public DocenteCarrera(Long id) {
+    public DocenteCarrera(Long id,Boolean esActivo) {
         this.id = id;
+        this.esActivo=esActivo;
     }
 
     public Long getId() {
@@ -82,13 +83,14 @@ public class DocenteCarrera implements Serializable {
         this.carreraId = carreraId;
     }
 
-    public boolean isEsActivo() {
+    public Boolean isEsActivo() {
         return esActivo;
     }
 
-    public void setEsActivo(boolean esActivo) {
+    public void setEsActivo(Boolean esActivo) {
         this.esActivo = esActivo;
     }
+
 
     @Override
     public int hashCode() {

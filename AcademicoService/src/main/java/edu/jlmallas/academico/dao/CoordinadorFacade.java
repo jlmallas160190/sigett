@@ -3,13 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.jlmallas.academico.service;
+package edu.jlmallas.academico.dao;
 
+import edu.jlmallas.academico.dao.implement.CoordinadorFacadeLocal;
 import edu.jlmallas.academico.dao.AbstractDao;
 import edu.jlmallas.academico.entity.Coordinador;
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 
 /**
  *

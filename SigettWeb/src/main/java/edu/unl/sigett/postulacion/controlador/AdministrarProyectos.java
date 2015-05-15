@@ -124,7 +124,7 @@ import edu.unl.sigett.dao.UsuarioCarreraDao;
 import org.jlmallas.seguridad.dao.UsuarioDao;
 import edu.jlmallas.academico.entity.EstudianteCarrera;
 import edu.jlmallas.academico.dao.DocenteDao;
-import edu.jlmallas.academico.service.EstudianteCarreraFacadeLocal;
+import edu.jlmallas.academico.dao.implement.EstudianteCarreraFacadeLocal;
 import edu.unl.sigett.enumeration.EstadoAutorEnum;
 import edu.unl.sigett.enumeration.EstadoDirectorEnum;
 import edu.unl.sigett.enumeration.EstadoProyectoEnum;
@@ -1682,11 +1682,11 @@ public class AdministrarProyectos implements Serializable {
                     if (proyectoCarreraOferta == null) {
                         proyectoCarreraOferta = new ProyectoCarreraOferta();
                         proyectoCarreraOferta.setEsActivo(true);
-                        String valor = configuracionCarreraFacadeLocal.buscarPorCarreraId(c.getId(), "OA").getValor();
+//                        String valor = configuracionCarreraFacadeLocal.buscarPorCarreraId(c.getId(), "OA").getValor();
                         String idOferta = null;
-                        if (valor != null) {
-                            idOferta = (valor);
-                        }
+//                        if (valor != null) {
+//                            idOferta = (valor);
+//                        }
                         OfertaAcademica of = null;
                         if (idOferta != null) {
                             of = ofertaAcademicaFacadeLocal.buscarPorIdSga(idOferta);

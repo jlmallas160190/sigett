@@ -45,7 +45,7 @@ import edu.jlmallas.academico.service.CarreraService;
 import edu.unl.sigett.dao.CatalogoOficioFacadeLocal;
 import edu.unl.sigett.dao.ConfiguracionCarreraDao;
 import edu.unl.sigett.dao.ConfiguracionGeneralDao;
-import edu.jlmallas.academico.service.CoordinadorPeriodoFacadeLocal;
+import edu.jlmallas.academico.dao.implement.CoordinadorPeriodoFacadeLocal;
 import edu.unl.sigett.dao.DirectorProyectoFacadeLocal;
 import org.jlmallas.seguridad.dao.LogDao;
 import edu.unl.sigett.dao.OficioCarreraFacadeLocal;
@@ -56,7 +56,7 @@ import edu.jlmallas.academico.entity.Docente;
 import edu.jlmallas.academico.entity.EstudianteCarrera;
 import edu.jlmallas.academico.dao.DocenteCarreraDao;
 import edu.jlmallas.academico.dao.DocenteDao;
-import edu.jlmallas.academico.service.EstudianteCarreraFacadeLocal;
+import edu.jlmallas.academico.dao.implement.EstudianteCarreraFacadeLocal;
 import edu.unl.sigett.comun.managed.session.SessionOficioCarrera;
 import edu.unl.sigett.enumeration.CatalogoOficioEnum;
 import edu.unl.sigett.enumeration.EstadoAutorEnum;
@@ -298,53 +298,53 @@ public class AdministrarProrrogas implements Serializable {
     }
 
     public void downloadInformeDocx(Usuario user) {
-        Map datosReporte = new HashMap();
-        AdministrarReportes reportes = new AdministrarReportes();
-        FacesContext facesContext = FacesContext.getCurrentInstance();
-        HttpServletRequest request = (HttpServletRequest) facesContext.getExternalContext().getRequest();
-        String path = request.getRealPath("/");
-        String pathSetting = request.getRealPath("/settings.txt");
-        Carrera carrera = carreraFacadeLocal.find(carreraId);
-        ConfiguracionCarrera configuracionCarrera = configuracionCarreraFacadeLocal.buscarPorCarreraId(carreraId, "NO");
-        Prorroga prorroga = prorrogaFacadeLocal.find(prorrogaId);
-        String secretario = "";
-        String objetivos = "";
-
-        for (Actividad objetivo : actividadFacadeLocal.buscarPorProyecto(prorroga.getCronogramaId().getId())) {
-            if (objetivo.getTipoActividadId().getId() == 1) {
-                double valor = (objetivo.getAvance() * objetivo.getPorcentajeDuracion()) / 100;
-                valor = Math.round(valor * 100);
-                valor = valor / 100;
-                objetivos += "" + valor + "% " + objetivo.getNombre() + "\n";
-            }
-        }
-        DirectorProyecto dp = null;
-        for (DirectorProyecto directorProyecto : directorProyectoFacadeLocal.buscarPorProyecto(prorroga.getCronogramaId().getProyecto().getId())) {
-            if (directorProyecto.getEstadoDirectorId().getId() != 2) {
-                dp = directorProyecto;
-                break;
-            }
-        }
-        Docente docenteDirectorInforme = docenteCarreraFacadeLocal.find(dp.getDirectorId().getId()).getDocenteId();
-        Persona datosDocenteDirectorInforme = personaFacadeLocal.find(docenteDirectorInforme.getId());
-
-        CoordinadorPeriodo coordinadorPeriodo = coordinadorPeriodoFacadeLocal.buscarVigente(carrera.getId());
-        Persona personaCoordinador = personaFacadeLocal.find(coordinadorPeriodo.getCoordinadorId().getId());
-        Docente docenteCoordinador = docenteFacadeLocal.find(personaCoordinador.getId());
-        secretario = user.getNombres().toUpperCase() + " " + user.getApellidos().toUpperCase();
-        OficioCarrera oficioCarrera = oficioCarreraFacadeLocal.buscarPorTablaId(prorrogaId, CatalogoOficioEnum.INFORMEDIRECTORPRORROGA.getTipo());
-        Calendar fechaActual = Calendar.getInstance();
-        String fechaFormateada = configuracionGeneralFacadeLocal.dateFormat(fechaActual.getTime());
-        String fechOficioFormat = configuracionGeneralFacadeLocal.dateFormat(oficioCarrera.getFecha());
-        HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
-        datosReporte.put("tituloDocente", docenteDirectorInforme.getTituloDocenteId().getTituloId().getAbreviacion().toUpperCase());
-        datosReporte.put("docente", datosDocenteDirectorInforme.getNombres().toUpperCase() + " " + datosDocenteDirectorInforme.getApellidos().toUpperCase());
-        datosReporte.put("coordinador", personaCoordinador.getNombres().toUpperCase() + " " + personaCoordinador.getApellidos().toUpperCase());
-        datosReporte.put("tituloCoordinador", docenteCoordinador.getTituloDocenteId().getTituloId().getAbreviacion());
-        datosReporte.put("autores", getAutores(autorProyectoFacadeLocal.buscarPorProyecto(prorroga.getCronogramaId().getProyecto().getId())));
-        reportes.informeDirectorProrroga("docx", fechOficioFormat + "", objetivos, prorroga.getCronogramaId().getAvance()
-                + "%", prorroga.getObservacion(), fechaFormateada, response, datosReporte, configuracionCarreraFacadeLocal, configuracionCarrera,
-                oficioCarrera, prorrogaId, oficioCarreraFacadeLocal, catalogoOficioFacadeLocal, carrera, Integer.parseInt(oficioCarrera.getNumeroOficio()), secretario, prorrogaId, path, pathSetting);
+//        Map datosReporte = new HashMap();
+//        AdministrarReportes reportes = new AdministrarReportes();
+//        FacesContext facesContext = FacesContext.getCurrentInstance();
+//        HttpServletRequest request = (HttpServletRequest) facesContext.getExternalContext().getRequest();
+//        String path = request.getRealPath("/");
+//        String pathSetting = request.getRealPath("/settings.txt");
+//        Carrera carrera = carreraFacadeLocal.find(carreraId);
+//        ConfiguracionCarrera configuracionCarrera = configuracionCarreraFacadeLocal.buscarPorCarreraId(carreraId, "NO");
+//        Prorroga prorroga = prorrogaFacadeLocal.find(prorrogaId);
+//        String secretario = "";
+//        String objetivos = "";
+//
+//        for (Actividad objetivo : actividadFacadeLocal.buscarPorProyecto(prorroga.getCronogramaId().getId())) {
+//            if (objetivo.getTipoActividadId().getId() == 1) {
+//                double valor = (objetivo.getAvance() * objetivo.getPorcentajeDuracion()) / 100;
+//                valor = Math.round(valor * 100);
+//                valor = valor / 100;
+//                objetivos += "" + valor + "% " + objetivo.getNombre() + "\n";
+//            }
+//        }
+//        DirectorProyecto dp = null;
+//        for (DirectorProyecto directorProyecto : directorProyectoFacadeLocal.buscarPorProyecto(prorroga.getCronogramaId().getProyecto().getId())) {
+//            if (directorProyecto.getEstadoDirectorId().getId() != 2) {
+//                dp = directorProyecto;
+//                break;
+//            }
+//        }
+//        Docente docenteDirectorInforme = docenteCarreraFacadeLocal.find(dp.getDirectorId().getId()).getDocenteId();
+//        Persona datosDocenteDirectorInforme = personaFacadeLocal.find(docenteDirectorInforme.getId());
+//
+//        CoordinadorPeriodo coordinadorPeriodo = coordinadorPeriodoFacadeLocal.buscarVigente(carrera.getId());
+//        Persona personaCoordinador = personaFacadeLocal.find(coordinadorPeriodo.getCoordinadorId().getId());
+//        Docente docenteCoordinador = docenteFacadeLocal.find(personaCoordinador.getId());
+//        secretario = user.getNombres().toUpperCase() + " " + user.getApellidos().toUpperCase();
+//        OficioCarrera oficioCarrera = oficioCarreraFacadeLocal.buscarPorTablaId(prorrogaId, CatalogoOficioEnum.INFORMEDIRECTORPRORROGA.getTipo());
+//        Calendar fechaActual = Calendar.getInstance();
+//        String fechaFormateada = configuracionGeneralFacadeLocal.dateFormat(fechaActual.getTime());
+//        String fechOficioFormat = configuracionGeneralFacadeLocal.dateFormat(oficioCarrera.getFecha());
+//        HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
+//        datosReporte.put("tituloDocente", docenteDirectorInforme.getTituloDocenteId().getTituloId().getAbreviacion().toUpperCase());
+//        datosReporte.put("docente", datosDocenteDirectorInforme.getNombres().toUpperCase() + " " + datosDocenteDirectorInforme.getApellidos().toUpperCase());
+//        datosReporte.put("coordinador", personaCoordinador.getNombres().toUpperCase() + " " + personaCoordinador.getApellidos().toUpperCase());
+//        datosReporte.put("tituloCoordinador", docenteCoordinador.getTituloDocenteId().getTituloId().getAbreviacion());
+//        datosReporte.put("autores", getAutores(autorProyectoFacadeLocal.buscarPorProyecto(prorroga.getCronogramaId().getProyecto().getId())));
+//        reportes.informeDirectorProrroga("docx", fechOficioFormat + "", objetivos, prorroga.getCronogramaId().getAvance()
+//                + "%", prorroga.getObservacion(), fechaFormateada, response, datosReporte, configuracionCarreraFacadeLocal, configuracionCarrera,
+//                oficioCarrera, prorrogaId, oficioCarreraFacadeLocal, catalogoOficioFacadeLocal, carrera, Integer.parseInt(oficioCarrera.getNumeroOficio()), secretario, prorrogaId, path, pathSetting);
 
     }
 
@@ -399,8 +399,8 @@ public class AdministrarProrrogas implements Serializable {
         Docente docenteCoordinador = docenteFacadeLocal.find(datosCoordinador.getId());
         Calendar fechaActual = Calendar.getInstance();
         String fechaFormateada = configuracionGeneralFacadeLocal.dateFormat(fechaActual.getTime());
-        ConfiguracionCarrera configuracionCarrera = configuracionCarreraFacadeLocal.buscarPorCarreraId(carreraId, "NO");
-        Integer nOficio = Integer.parseInt(configuracionCarrera.getValor());
+//        ConfiguracionCarrera configuracionCarrera = configuracionCarreraFacadeLocal.buscarPorCarreraId(carreraId, "NO");
+//        Integer nOficio = Integer.parseInt(configuracionCarrera.getValor());
         secretario = user.getNombres().toUpperCase() + " " + user.getApellidos().toUpperCase();
         OficioCarrera oficioCarrera = oficioCarreraFacadeLocal.buscarPorTablaId(prorroga.getId(), CatalogoOficioEnum.RESPUESTAPRORROGAAUTOR.getTipo());
         HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
@@ -409,9 +409,9 @@ public class AdministrarProrrogas implements Serializable {
         datosReporte.put("autores", getAutores(autorProyectoFacadeLocal.buscarPorProyecto(prorroga.getCronogramaId().getProyecto().getId())));
         datosReporte.put("abreviacion_oficio", resourceBundle.getString("lbl.abreviacion_oficio"));
 
-        reportes.responseProrrogaAutorProyecto("docx", fechaFormateada, response, datosReporte, configuracionCarreraFacadeLocal, configuracionCarrera,
-                oficioCarrera, prorroga.getId(), oficioCarreraFacadeLocal, catalogoOficioFacadeLocal, carrera, nOficio, secretario,
-                fechaEmision, resolucion, path, pathSetting);
+//        reportes.responseProrrogaAutorProyecto("docx", fechaFormateada, response, datosReporte, configuracionCarreraFacadeLocal, configuracionCarrera,
+//                oficioCarrera, prorroga.getId(), oficioCarreraFacadeLocal, catalogoOficioFacadeLocal, carrera, nOficio, secretario,
+//                fechaEmision, resolucion, path, pathSetting);
     }
 
     public void downloadDocx(Usuario user) {
@@ -438,8 +438,8 @@ public class AdministrarProrrogas implements Serializable {
         CoordinadorPeriodo coordinadorPeriodo = coordinadorPeriodoFacadeLocal.buscarVigente(carrera.getId());
         Persona datosCoordinador = personaFacadeLocal.find(coordinadorPeriodo.getCoordinadorId().getId());
         Docente docenteCoordinador = docenteFacadeLocal.find(datosCoordinador.getId());
-        ConfiguracionCarrera configuracionCarrera = configuracionCarreraFacadeLocal.buscarPorCarreraId(carreraId, "NO");
-        Integer nOficio = Integer.parseInt(configuracionCarrera.getValor());
+//        ConfiguracionCarrera configuracionCarrera = configuracionCarreraFacadeLocal.buscarPorCarreraId(carreraId, "NO");
+//        Integer nOficio = Integer.parseInt(configuracionCarrera.getValor());
         secretario = user.getNombres() + " " + user.getApellidos();
         OficioCarrera oficioCarrera = oficioCarreraFacadeLocal.buscarPorTablaId(prorroga.getId(), CatalogoOficioEnum.PRORROGA.getTipo());
         HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
@@ -454,8 +454,8 @@ public class AdministrarProrrogas implements Serializable {
         datosReporte.put("asunto_prorroga_tt", resourceBundle.getString("lbl.asunto_prorroga_tt"));
         datosReporte.put("nota_prorroga_tt", resourceBundle.getString("nota_prorroga_tt"));
 
-        reportes.oficioDirectorProrroga("docx", fechaFormateada, response, datosReporte, configuracionCarreraFacadeLocal, configuracionCarrera,
-                oficioCarrera, prorroga.getId(), oficioCarreraFacadeLocal, catalogoOficioFacadeLocal, carrera, nOficio, secretario, path, pathSetting);
+//        reportes.oficioDirectorProrroga("docx", fechaFormateada, response, datosReporte, configuracionCarreraFacadeLocal, configuracionCarrera,
+//                oficioCarrera, prorroga.getId(), oficioCarreraFacadeLocal, catalogoOficioFacadeLocal, carrera, nOficio, secretario, path, pathSetting);
     }
 
     public String editar(Prorroga prorroga, Usuario usuario, Proyecto proyecto) {

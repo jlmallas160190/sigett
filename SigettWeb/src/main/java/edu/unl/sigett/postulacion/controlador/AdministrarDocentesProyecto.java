@@ -50,7 +50,7 @@ import edu.jlmallas.academico.service.CarreraService;
 import edu.unl.sigett.dao.CatalogoOficioFacadeLocal;
 import edu.unl.sigett.dao.ConfiguracionCarreraDao;
 import edu.unl.sigett.dao.ConfiguracionGeneralDao;
-import edu.jlmallas.academico.service.CoordinadorPeriodoFacadeLocal;
+import edu.jlmallas.academico.dao.implement.CoordinadorPeriodoFacadeLocal;
 import edu.jlmallas.academico.dao.DocenteCarreraDao;
 import edu.unl.sigett.dao.DocenteProyectoFacadeLocal;
 import org.jlmallas.seguridad.dao.LogDao;
@@ -59,7 +59,7 @@ import edu.unl.sigett.dao.UsuarioCarreraDao;
 import org.jlmallas.seguridad.dao.UsuarioDao;
 import edu.jlmallas.academico.entity.EstudianteCarrera;
 import edu.jlmallas.academico.dao.DocenteDao;
-import edu.jlmallas.academico.service.EstudianteCarreraFacadeLocal;
+import edu.jlmallas.academico.dao.implement.EstudianteCarreraFacadeLocal;
 import edu.unl.sigett.comun.managed.session.SessionOficioCarrera;
 import edu.unl.sigett.enumeration.CatalogoOficioEnum;
 import edu.unl.sigett.enumeration.EstadoAutorEnum;
@@ -324,8 +324,8 @@ public class AdministrarDocentesProyecto implements Serializable {
         String path = request.getRealPath("/");
         String pathSetting = request.getRealPath("/settings.txt");
         Carrera carrera = carreraFacadeLocal.find(carreraId);
-        ConfiguracionCarrera configuracionCarrera = configuracionCarreraFacadeLocal.buscarPorCarreraId(carreraId, "NO");
-        Integer nOficio = Integer.parseInt(configuracionCarrera.getValor());
+//        ConfiguracionCarrera configuracionCarrera = configuracionCarreraFacadeLocal.buscarPorCarreraId(carreraId, "NO");
+//        Integer nOficio = Integer.parseInt(configuracionCarrera.getValor());
         String plazo = configuracionGeneralFacadeLocal.find(3).getValor() + " días laborables";
         DocenteProyecto docenteProyecto = docenteProyectoFacadeLocal.find(docenteProyectoId);
         Docente docente = docenteFacadeLocal.find(docenteProyecto.getDocenteId());
@@ -350,8 +350,8 @@ public class AdministrarDocentesProyecto implements Serializable {
         datosReporte.put("asunto_pertinencia_tt", bundle.getString("lbl.asunto_pertinencia_tt"));
         datosReporte.put("nota_pertinencia_tt", bundle.getString("lbl.nota_pertinencia_tt"));
         datosReporte.put("autores", getAutores(autorProyectoFacadeLocal.buscarPorProyecto(docenteProyecto.getProyectoId().getId())));
-        reportes.oficioDocenteProyecto(response, datosReporte, oficioCarrera, path, pathSetting, "docx", nOficio, carrera, fechaFormateada,
-                plazo, secretario, configuracionCarreraFacadeLocal, configuracionCarrera, docenteProyectoId, oficioCarreraFacadeLocal, catalogoOficioFacadeLocal);
+//        reportes.oficioDocenteProyecto(response, datosReporte, oficioCarrera, path, pathSetting, "docx", nOficio, carrera, fechaFormateada,
+//                plazo, secretario, configuracionCarreraFacadeLocal, configuracionCarrera, docenteProyectoId, oficioCarreraFacadeLocal, catalogoOficioFacadeLocal);
     }
 
     private String getAutores(List<AutorProyecto> autorProyectos) {

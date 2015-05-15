@@ -47,7 +47,7 @@ import edu.unl.sigett.dao.ActaFacadeLocal;
 import edu.unl.sigett.dao.AutorProyectoFacadeLocal;
 import edu.jlmallas.academico.service.CarreraService;
 import edu.jlmallas.academico.dao.DocenteDao;
-import edu.jlmallas.academico.service.EstudianteCarreraFacadeLocal;
+import edu.jlmallas.academico.dao.implement.EstudianteCarreraFacadeLocal;
 import edu.unl.sigett.enumeration.EstadoAutorEnum;
 import edu.unl.sigett.dao.CategoriaActaFacadeLocal;
 import edu.unl.sigett.dao.ConfiguracionCarreraDao;
@@ -234,7 +234,7 @@ public class AdministrarActas implements Serializable {
                 carrera = carreraFacadeLocal.find(carreraId);
             }
             if (carrera != null) {
-                configuracionCarrera = configuracionCarreraFacadeLocal.buscarPorCarreraId(carrera.getId(), "NA");
+//                configuracionCarrera = configuracionCarreraFacadeLocal.buscarPorCarreraId(carrera.getId(), "NA");
                 if (configuracionCarrera != null) {
                     numeroActa = configuracionCarrera.getValor();
                 }

@@ -28,7 +28,9 @@ public interface DocenteUsuarioDao {
 
     List<DocenteUsuario> findRange(int[] range);
 
-    DocenteUsuario buscarPorDocente(Long id);
+//    DocenteUsuario buscarPorDocente(Long id);
+
+    List<DocenteUsuario> buscar(DocenteUsuario docenteUsuario);
 
     int count();
 

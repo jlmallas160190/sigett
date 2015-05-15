@@ -32,6 +32,8 @@ public interface ItemDao {
 
     List<Item> buscarPorCatalogo(String codigoCatalogo);
 
+    List<Item> buscar(Item item);
+
     int count();
 
 }

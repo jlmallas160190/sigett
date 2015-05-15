@@ -9,6 +9,7 @@ import edu.unl.sigett.dao.AbstractDao;
 import edu.unl.sigett.dao.DocenteUsuarioDao;
 import edu.unl.sigett.entity.DocenteUsuario;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.Query;
@@ -24,17 +25,33 @@ public class DocenteUsuarioDaoImplement extends AbstractDao<DocenteUsuario> impl
         super(DocenteUsuario.class);
     }
 
+//    @Override
+//    public DocenteUsuario buscarPorDocente(Long id) {
+//        List<DocenteUsuario> docenteUsuarios = new ArrayList<>();
+//        try {
+//            Query query = em.createQuery("Select d from DocenteUsuario d where " + "d.docenteId=:id");
+//            query.setParameter("id", id);
+//            docenteUsuarios = query.getResultList();
+//            return !docenteUsuarios.isEmpty() ? docenteUsuarios.get(0) : null;
+//        } catch (Exception e) {
+//            System.out.println(e);
+//        }
+//        return null;
+//    }
+
     @Override
-    public DocenteUsuario buscarPorDocente(Long id) {
-        List<DocenteUsuario> docenteUsuarios = new ArrayList<>();
-        try {
-            Query query = em.createQuery("Select d from DocenteUsuario d where " + "d.docenteId.id=:id");
-            query.setParameter("id", id);
-            docenteUsuarios = query.getResultList();
-            return !docenteUsuarios.isEmpty() ? docenteUsuarios.get(0) : null;
-        } catch (Exception e) {
-            System.out.println(e);
+    public List<DocenteUsuario> buscar(DocenteUsuario docenteUsuario) {
+        StringBuilder sql = new StringBuilder();
+        HashMap<String, Object> parametros = new HashMap<>();
+        sql.append("Select d from DocenteUsuario d WHERE 1=1 ");
+        if (docenteUsuario.getDocenteId() != 0) {
+            sql.append(" and d.docenteId=:docenteId");
+            parametros.put("docenteId", docenteUsuario.getDocenteId());
         }
-        return null;
+        final Query q = em.createQuery(sql.toString());
+        for (String key : parametros.keySet()) {
+            q.setParameter(key, parametros.get(key));
+        }
+        return q.getResultList();
     }
 }

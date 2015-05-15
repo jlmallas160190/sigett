@@ -62,14 +62,14 @@ import javax.servlet.http.HttpServletResponse;
 import edu.unl.sigett.dao.AspiranteFacadeLocal;
 import edu.unl.sigett.dao.ConfiguracionCarreraDao;
 import edu.unl.sigett.dao.ConfiguracionGeneralDao;
-import edu.jlmallas.academico.service.EstadoEstudianteCarreraFacadeLocal;
-import edu.jlmallas.academico.service.EstadoMatriculaFacadeLocal;
-import edu.jlmallas.academico.service.EstudianteCarreraFacadeLocal;
-import edu.jlmallas.academico.service.EstudianteFacadeLocal;
+import edu.jlmallas.academico.dao.implement.EstadoEstudianteCarreraFacadeLocal;
+import edu.jlmallas.academico.dao.implement.EstadoMatriculaFacadeLocal;
+import edu.jlmallas.academico.dao.implement.EstudianteCarreraFacadeLocal;
+import edu.jlmallas.academico.dao.implement.EstudianteFacadeLocal;
 import org.jlmallas.seguridad.dao.LogDao;
 import edu.jlmallas.academico.service.OfertaAcademicaService;
 import com.jlmallas.comun.dao.PersonaDao;
-import edu.jlmallas.academico.service.ReporteMatriculaFacadeLocal;
+import edu.jlmallas.academico.dao.implement.ReporteMatriculaFacadeLocal;
 import org.jlmallas.seguridad.dao.UsuarioDao;
 
 /**
@@ -459,61 +459,61 @@ public class AdministrarEstudiantesCarrera implements Serializable {
 
     public void compruebaEsAspiranteApto() {
         boolean esApto = false;
-        String mensaje = "";
-        FacesContext facesContext = FacesContext.getCurrentInstance();
-        ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-        DateResource calculo = new DateResource();
-        if (sessionEstudianteCarrera.getEstudianteCarrera().getCarreraId() != null) {
-            String moduloMaxAprobado = configuracionCarreraFacadeLocal.buscarPorCarreraId(sessionEstudianteCarrera.getEstudianteCarrera().getCarreraId().getId(), "MA").getValor();
-            String moduloEgresado = configuracionCarreraFacadeLocal.buscarPorCarreraId(sessionEstudianteCarrera.getEstudianteCarrera().getCarreraId().getId(), "ME").getValor();
-            int tiempoGracia = Integer.parseInt(configuracionGeneralFacadeLocal.find((int) 21).getValor());
-            ReporteMatricula reporte = obtenerMatriculaUltima(sessionEstudianteCarrera.getEstudianteCarrera());
-            if (reporte != null) {
-                if (Integer.parseInt(reporte.getNumeroModuloMatriculado()) > Integer.parseInt(moduloMaxAprobado)) {
-                    Calendar fechaActual = Calendar.getInstance();
-                    int tiempo = calculo.calculaDuracionEnDias(reporte.getOfertaAcademicaId().getFechaFin(), fechaActual.getTime(), 0);
-                    if (tiempo >= 0) {
-                        if (tiempo <= tiempoGracia) {
-                            esApto = true;
-                        } else {
-                            mensaje = bundle.getString("lbl.msm_tiempo_apto_aspirante");
-                        }
-                    }
-                } else {
-                    mensaje = bundle.getString("lbl.msm_modulo_apto_aspirante");
-                }
-
-                if (Integer.parseInt(reporte.getNumeroModuloMatriculado()) >= Integer.parseInt(moduloEgresado)) {
-                    EstadoEstudianteCarrera estadoEstudianteCarrera = estadoEstudianteCarreraFacadeLocal.find((int) 2);
-                    if (estadoEstudianteCarrera != null) {
-                        sessionEstudianteCarrera.getEstudianteCarrera().setEstadoId(estadoEstudianteCarrera);
-                    }
-                }
-                if (esApto) {
-                    sessionEstudianteCarrera.getAspirante().setEsApto(true);
-                    if (sessionEstudianteCarrera.getAspirante().getId() != null) {
-                        aspiranteFacadeLocal.edit(sessionEstudianteCarrera.getAspirante());
-                        estudianteCarreraFacadeLocal.edit(sessionEstudianteCarrera.getEstudianteCarrera());
-                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_es_apto_aspirante"), "");
-                        FacesContext.getCurrentInstance().addMessage(null, message);
-                    } else {
-                        sessionEstudianteCarrera.getAspirante().setEsApto(false);
-                        if (sessionEstudianteCarrera.getAspirante().getId() != null) {
-                            aspiranteFacadeLocal.edit(sessionEstudianteCarrera.getAspirante());
-                            logFacadeLocal.create(logFacadeLocal.crearLog("Aspirante", sessionEstudianteCarrera.getAspirante().getId() + "", "EDITAR", "NUEVO: |EsApto=" + sessionEstudianteCarrera.getAspirante().getEsApto(), sessionUsuario.getUsuario()));
-                        }
-                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, mensaje, "");
-                        FacesContext.getCurrentInstance().addMessage(null, message);
-                    }
-                } else {
-                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.estudiante") + " " + bundle.getString("lbl.reporte_matriculas"), "");
-                    FacesContext.getCurrentInstance().addMessage(null, message);
-                }
-            } else {
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.estudiante") + " " + bundle.getString("lbl.msm_no_pertenece_carrera"), "");
-                FacesContext.getCurrentInstance().addMessage(null, message);
-            }
-        }
+//        String mensaje = "";
+//        FacesContext facesContext = FacesContext.getCurrentInstance();
+//        ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
+//        DateResource calculo = new DateResource();
+//        if (sessionEstudianteCarrera.getEstudianteCarrera().getCarreraId() != null) {
+//            String moduloMaxAprobado = configuracionCarreraFacadeLocal.buscarPorCarreraId(sessionEstudianteCarrera.getEstudianteCarrera().getCarreraId().getId(), "MA").getValor();
+//            String moduloEgresado = configuracionCarreraFacadeLocal.buscarPorCarreraId(sessionEstudianteCarrera.getEstudianteCarrera().getCarreraId().getId(), "ME").getValor();
+//            int tiempoGracia = Integer.parseInt(configuracionGeneralFacadeLocal.find((int) 21).getValor());
+//            ReporteMatricula reporte = obtenerMatriculaUltima(sessionEstudianteCarrera.getEstudianteCarrera());
+//            if (reporte != null) {
+//                if (Integer.parseInt(reporte.getNumeroModuloMatriculado()) > Integer.parseInt(moduloMaxAprobado)) {
+//                    Calendar fechaActual = Calendar.getInstance();
+//                    int tiempo = calculo.calculaDuracionEnDias(reporte.getOfertaAcademicaId().getFechaFin(), fechaActual.getTime(), 0);
+//                    if (tiempo >= 0) {
+//                        if (tiempo <= tiempoGracia) {
+//                            esApto = true;
+//                        } else {
+//                            mensaje = bundle.getString("lbl.msm_tiempo_apto_aspirante");
+//                        }
+//                    }
+//                } else {
+//                    mensaje = bundle.getString("lbl.msm_modulo_apto_aspirante");
+//                }
+//
+//                if (Integer.parseInt(reporte.getNumeroModuloMatriculado()) >= Integer.parseInt(moduloEgresado)) {
+//                    EstadoEstudianteCarrera estadoEstudianteCarrera = estadoEstudianteCarreraFacadeLocal.find((int) 2);
+//                    if (estadoEstudianteCarrera != null) {
+//                        sessionEstudianteCarrera.getEstudianteCarrera().setEstadoId(estadoEstudianteCarrera);
+//                    }
+//                }
+//                if (esApto) {
+//                    sessionEstudianteCarrera.getAspirante().setEsApto(true);
+//                    if (sessionEstudianteCarrera.getAspirante().getId() != null) {
+//                        aspiranteFacadeLocal.edit(sessionEstudianteCarrera.getAspirante());
+//                        estudianteCarreraFacadeLocal.edit(sessionEstudianteCarrera.getEstudianteCarrera());
+//                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_es_apto_aspirante"), "");
+//                        FacesContext.getCurrentInstance().addMessage(null, message);
+//                    } else {
+//                        sessionEstudianteCarrera.getAspirante().setEsApto(false);
+//                        if (sessionEstudianteCarrera.getAspirante().getId() != null) {
+//                            aspiranteFacadeLocal.edit(sessionEstudianteCarrera.getAspirante());
+//                            logFacadeLocal.create(logFacadeLocal.crearLog("Aspirante", sessionEstudianteCarrera.getAspirante().getId() + "", "EDITAR", "NUEVO: |EsApto=" + sessionEstudianteCarrera.getAspirante().getEsApto(), sessionUsuario.getUsuario()));
+//                        }
+//                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, mensaje, "");
+//                        FacesContext.getCurrentInstance().addMessage(null, message);
+//                    }
+//                } else {
+//                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.estudiante") + " " + bundle.getString("lbl.reporte_matriculas"), "");
+//                    FacesContext.getCurrentInstance().addMessage(null, message);
+//                }
+//            } else {
+//                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.estudiante") + " " + bundle.getString("lbl.msm_no_pertenece_carrera"), "");
+//                FacesContext.getCurrentInstance().addMessage(null, message);
+//            }
+//        }
     }
 
     public void crearPdf(Carrera carrera) throws IOException, DocumentException {

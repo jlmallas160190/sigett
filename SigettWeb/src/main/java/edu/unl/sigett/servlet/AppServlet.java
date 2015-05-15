@@ -48,7 +48,7 @@ import edu.unl.sigett.dao.CategoriaActaFacadeLocal;
 import edu.unl.sigett.dao.ConfiguracionAreaFacadeLocal;
 import edu.unl.sigett.dao.ConfiguracionCarreraDao;
 import edu.unl.sigett.dao.ConfiguracionGeneralDao;
-import edu.jlmallas.academico.service.CoordinadorPeriodoFacadeLocal;
+import edu.jlmallas.academico.dao.implement.CoordinadorPeriodoFacadeLocal;
 import edu.unl.sigett.dao.DirectorProyectoFacadeLocal;
 import edu.unl.sigett.dao.DocenteProyectoFacadeLocal;
 import edu.unl.sigett.dao.DocumentoActividadFacadeLocal;
@@ -62,13 +62,13 @@ import edu.unl.sigett.dao.MiembroFacadeLocal;
 import edu.unl.sigett.dao.OficioCarreraFacadeLocal;
 import edu.unl.sigett.dao.PertinenciaFacadeLocal;
 import edu.unl.sigett.dao.ProrrogaFacadeLocal;
-import edu.jlmallas.academico.service.ReporteMatriculaFacadeLocal;
+import edu.jlmallas.academico.dao.implement.ReporteMatriculaFacadeLocal;
 import org.jlmallas.seguridad.dao.UsuarioDao;
 import edu.jlmallas.academico.entity.Docente;
 import edu.jlmallas.academico.entity.EstudianteCarrera;
 import edu.jlmallas.academico.dao.DocenteCarreraDao;
 import edu.jlmallas.academico.dao.DocenteDao;
-import edu.jlmallas.academico.service.EstudianteCarreraFacadeLocal;
+import edu.jlmallas.academico.dao.implement.EstudianteCarreraFacadeLocal;
 import edu.unl.sigett.enumeration.CargoMiembroEnum;
 import edu.unl.sigett.enumeration.CatalogoOficioEnum;
 import edu.unl.sigett.enumeration.EstadoAutorEnum;
@@ -227,15 +227,19 @@ public class AppServlet extends HttpServlet {
                     if (documentoProyecto == null) {
                         response.sendError(HttpServletResponse.SC_NOT_FOUND); // 404.
                         return;
-                    } else {
-                        response.reset();
-                        response.setContentType("/application/pdf");
-                        response.getOutputStream().write(documentoProyecto.getDocumento());
-                        response.getOutputStream().close();
                     }
+                    response.reset();
+                    response.setContentType("/application/pdf");
+                    response.getOutputStream().write(documentoProyecto.getDocumento());
+                    response.getOutputStream().close();
+
                     break;
                 case "Carrera":
                     if (sessionUsuarioCarrera.getUsuarioCarreraAux().getCarrera() == null) {
+                        response.sendError(HttpServletResponse.SC_NOT_FOUND); // 404.
+                        return;
+                    }
+                    if (sessionUsuarioCarrera.getUsuarioCarreraAux().getCarrera().getLogo() == null) {
                         response.sendError(HttpServletResponse.SC_NOT_FOUND); // 404.
                         return;
                     }
@@ -283,7 +287,7 @@ public class AppServlet extends HttpServlet {
 
                 case "oficioDocenteProyecto":
                     carrera = carreraFacadeLocal.find(Integer.parseInt(carreraId));
-                    configuracionCarrera = configuracionCarreraFacadeLocal.buscarPorCarreraId(Integer.parseInt(carreraId), "NO");
+//                    configuracionCarrera = configuracionCarreraFacadeLocal.buscarPorCarreraId(Integer.parseInt(carreraId), "NO");
                     nOficio = Integer.parseInt(configuracionCarrera.getValor());
                     String plazo = configuracionGeneralFacadeLocal.find(3).getValor() + " días laborables";
                     Long docenteProyectoId = Long.parseLong(entityId);
@@ -314,7 +318,7 @@ public class AppServlet extends HttpServlet {
                     break;
                 case "oficioDirectorProyecto":
                     carrera = carreraFacadeLocal.find(Integer.parseInt(carreraId));
-                    configuracionCarrera = configuracionCarreraFacadeLocal.buscarPorCarreraId(Integer.parseInt(carreraId), "NO");
+//                    configuracionCarrera = configuracionCarreraFacadeLocal.buscarPorCarreraId(Integer.parseInt(carreraId), "NO");
                     nOficio = Integer.parseInt(configuracionCarrera.getValor());
                     Long directorProyectoId = Long.parseLong(entityId);
                     directorProyecto = directorProyectoFacadeLocal.find(directorProyectoId);
@@ -340,7 +344,7 @@ public class AppServlet extends HttpServlet {
                     break;
                 case "oficioMiembroTribunalSprivada":
                     carrera = carreraFacadeLocal.find(Integer.parseInt(carreraId));
-                    configuracionCarrera = configuracionCarreraFacadeLocal.buscarPorCarreraId(Integer.parseInt(carreraId), "NO");
+//                    configuracionCarrera = configuracionCarreraFacadeLocal.buscarPorCarreraId(Integer.parseInt(carreraId), "NO");
                     nOficio = Integer.parseInt(configuracionCarrera.getValor());
                     miembroId = Long.parseLong(entityId);
                     miembro = miembroFacadeLocal.find(miembroId);
@@ -371,7 +375,7 @@ public class AppServlet extends HttpServlet {
                     break;
                 case "oficioMiembroTribunalSpublica":
                     carrera = carreraFacadeLocal.find(Integer.parseInt(carreraId));
-                    configuracionCarrera = configuracionCarreraFacadeLocal.buscarPorCarreraId(Integer.parseInt(carreraId), "NO");
+//                    configuracionCarrera = configuracionCarreraFacadeLocal.buscarPorCarreraId(Integer.parseInt(carreraId), "NO");
                     nOficio = Integer.parseInt(configuracionCarrera.getValor());
                     miembroId = Long.parseLong(entityId);
                     miembro = miembroFacadeLocal.find(miembroId);
@@ -411,7 +415,7 @@ public class AppServlet extends HttpServlet {
                     break;
                 case "oficioDirectorProrroga":
                     carrera = carreraFacadeLocal.find(Integer.parseInt(carreraId));
-                    configuracionCarrera = configuracionCarreraFacadeLocal.buscarPorCarreraId(Integer.parseInt(carreraId), "NO");
+//                    configuracionCarrera = configuracionCarreraFacadeLocal.buscarPorCarreraId(Integer.parseInt(carreraId), "NO");
                     nOficio = Integer.parseInt(configuracionCarrera.getValor());
                     prorrogaId = Long.parseLong(entityId);
                     prorroga = prorrogaFacadeLocal.find(prorrogaId);
@@ -445,7 +449,7 @@ public class AppServlet extends HttpServlet {
                     break;
                 case "informeDirectorProrroga":
                     carrera = carreraFacadeLocal.find(Integer.parseInt(carreraId));
-                    configuracionCarrera = configuracionCarreraFacadeLocal.buscarPorCarreraId(Integer.parseInt(carreraId), "NO");
+//                    configuracionCarrera = configuracionCarreraFacadeLocal.buscarPorCarreraId(Integer.parseInt(carreraId), "NO");
                     prorrogaId = Long.parseLong(entityId);
                     prorroga = prorrogaFacadeLocal.find(prorrogaId);
                     String objetivos = "";
@@ -478,13 +482,13 @@ public class AppServlet extends HttpServlet {
                     datosReporte.put("tituloCoordinador", docenteCoordinador.getTituloDocenteId().getTituloId().getAbreviacion());
                     datosReporte.put("autores", getAutores(autorProyectoFacadeLocal.buscarPorProyecto(prorroga.getCronogramaId().getProyecto().getId())));
 
-                    reportes.informeDirectorProrroga("pdf", fechaOficioFormat + "", objetivos, prorroga.getCronogramaId().getAvance() + "%", prorroga.getObservacion(),
-                            fechaFormateada, response, datosReporte, configuracionCarreraFacadeLocal, configuracionCarrera, oficioCarrera, prorrogaId, oficioCarreraFacadeLocal,
-                            catalogoOficioFacadeLocal, carrera, Integer.parseInt(oficioCarrera.getNumeroOficio()), datosUsuario, prorrogaId, path, pathSetting);
+//                    reportes.informeDirectorProrroga("pdf", fechaOficioFormat + "", objetivos, prorroga.getCronogramaId().getAvance() + "%", prorroga.getObservacion(),
+//                            fechaFormateada, response, datosReporte, configuracionCarreraFacadeLocal, configuracionCarrera, oficioCarrera, prorrogaId, oficioCarreraFacadeLocal,
+//                            catalogoOficioFacadeLocal, carrera, Integer.parseInt(oficioCarrera.getNumeroOficio()), datosUsuario, prorrogaId, path, pathSetting);
                     break;
                 case "informeDocenteProyecto":
                     carrera = carreraFacadeLocal.find(Integer.parseInt(carreraId));
-                    configuracionCarrera = configuracionCarreraFacadeLocal.buscarPorCarreraId(Integer.parseInt(carreraId), "NO");
+//                    configuracionCarrera = configuracionCarreraFacadeLocal.buscarPorCarreraId(Integer.parseInt(carreraId), "NO");
                     Long pertinenciaId = Long.parseLong(entityId);
                     Pertinencia pertinencia = pertinenciaFacadeLocal.find(pertinenciaId);
                     oficioCarrera = oficioCarreraFacadeLocal.buscarPorTablaId(Long.parseLong(entityId), CatalogoOficioEnum.PERTINENCIA.getTipo());
@@ -516,7 +520,7 @@ public class AppServlet extends HttpServlet {
                     prorrogaId = Long.parseLong(entityId);
                     prorroga = prorrogaFacadeLocal.find(prorrogaId);
                     carrera = carreraFacadeLocal.find(Integer.parseInt(carreraId));
-                    configuracionCarrera = configuracionCarreraFacadeLocal.buscarPorCarreraId(Integer.parseInt(carreraId), "NO");
+//                    configuracionCarrera = configuracionCarreraFacadeLocal.buscarPorCarreraId(Integer.parseInt(carreraId), "NO");
                     String fechaEmision = "";
                     if (prorroga.getEsAceptado()) {
                         int tiempo = prorroga.getFecha().getMonth() - prorroga.getFechaInicial().getMonth();

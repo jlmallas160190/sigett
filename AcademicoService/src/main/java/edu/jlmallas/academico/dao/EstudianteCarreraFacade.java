@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.jlmallas.academico.service;
+package edu.jlmallas.academico.dao;
 
+import edu.jlmallas.academico.dao.implement.EstudianteCarreraFacadeLocal;
 import edu.jlmallas.academico.dao.AbstractDao;
 import edu.jlmallas.academico.entity.EstudianteCarrera;
 import java.util.List;

@@ -29,7 +29,7 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author jorge-luis
  */
 @Entity
-@Table(name = "catalogo",schema = "comun")
+@Table(name = "catalogo", schema = "comun")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Catalogo.findAll", query = "SELECT c FROM Catalogo c"),
@@ -59,11 +59,11 @@ public class Catalogo implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "es_activo")
-    private boolean esActivo;
+    private Boolean esActivo;
     @Basic(optional = false)
     @NotNull
     @Column(name = "id_padre")
-    private long idPadre;
+    private Long idPadre;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "catalogoId")
     private List<Item> itemList;
 
@@ -75,7 +75,7 @@ public class Catalogo implements Serializable {
         this.id = id;
     }
 
-    public Catalogo(Long id, String nombre, String codigo, boolean esActivo, long idPadre) {
+    public Catalogo(Long id, String nombre, String codigo, Boolean esActivo, Long idPadre) {
         this.id = id;
         this.nombre = nombre;
         this.codigo = codigo;
@@ -107,19 +107,19 @@ public class Catalogo implements Serializable {
         this.codigo = codigo;
     }
 
-    public boolean isEsActivo() {
+    public Boolean isEsActivo() {
         return esActivo;
     }
 
-    public void setEsActivo(boolean esActivo) {
+    public void setEsActivo(Boolean esActivo) {
         this.esActivo = esActivo;
     }
 
-    public long getIdPadre() {
+    public Long getIdPadre() {
         return idPadre;
     }
 
-    public void setIdPadre(long idPadre) {
+    public void setIdPadre(Long idPadre) {
         this.idPadre = idPadre;
     }
 

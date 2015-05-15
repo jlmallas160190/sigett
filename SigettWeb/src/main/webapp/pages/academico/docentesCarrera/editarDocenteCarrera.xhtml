@@ -36,6 +36,9 @@
                         <ui:include src="botonesEditarDocente.xhtml" />  
                     </f:facet>
                 </p:panel>
+                <f:metadata>
+                    <f:event type="preRenderView" listener="#{administrarDocentesCarrera.initEditar()}"/>
+                </f:metadata>
             </ui:define>
         </ui:composition>
 

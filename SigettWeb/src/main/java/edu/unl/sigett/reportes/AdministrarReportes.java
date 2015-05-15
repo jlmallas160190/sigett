@@ -656,10 +656,10 @@ public class AdministrarReportes implements Serializable {
 
                 }
             }
-            int numeroModulos = Integer.parseInt(configuracionCarreraFacadeLocal.buscarPorCarreraId(carrera.getId(), "ME").getValor());
-            int dur = numeroModulos / 2;
-            duracion = bundle.getString("lbl.con_duracion_acta") + " " + bundle.getString("lbl.de") + " " + dur + " " + bundle.getString("lbl.anios") + ", " + bundle.getString("lbl.equivale_acta") + ""
-                    + " " + numeroModulos + " " + bundle.getString("lbl.modulos");
+//            int numeroModulos = Integer.parseInt(configuracionCarreraFacadeLocal.buscarPorCarreraId(carrera.getId(), "ME").getValor());
+//            int dur = numeroModulos / 2;
+//            duracion = bundle.getString("lbl.con_duracion_acta") + " " + bundle.getString("lbl.de") + " " + dur + " " + bundle.getString("lbl.anios") + ", " + bundle.getString("lbl.equivale_acta") + ""
+//                    + " " + numeroModulos + " " + bundle.getString("lbl.modulos");
 
             if (evaluacionTribunal.getRangoEquivalenciaId().getId() != 4) {
                 declaracion = bundle.getString("lbl.aprobado");

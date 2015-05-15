@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package edu.unl.sigett.entity;
 
 import java.io.Serializable;
@@ -37,6 +36,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "ConfiguracionCarrera.findByObservacion", query = "SELECT c FROM ConfiguracionCarrera c WHERE c.observacion = :observacion"),
     @NamedQuery(name = "ConfiguracionCarrera.findByTipo", query = "SELECT c FROM ConfiguracionCarrera c WHERE c.tipo = :tipo")})
 public class ConfiguracionCarrera implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -56,7 +56,7 @@ public class ConfiguracionCarrera implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "carrera_id")
-    private int carreraId;
+    private Integer carreraId;
     @Size(max = 50)
     @Column(name = "codigo")
     private String codigo;
@@ -76,6 +76,11 @@ public class ConfiguracionCarrera implements Serializable {
 
     public ConfiguracionCarrera(Integer id) {
         this.id = id;
+    }
+
+    public ConfiguracionCarrera(Integer carreraId, String codigo) {
+        this.carreraId = carreraId;
+        this.codigo = codigo;
     }
 
     public ConfiguracionCarrera(Integer id, String nombre, String valor, int carreraId, String observacion, String tipo) {
@@ -111,11 +116,11 @@ public class ConfiguracionCarrera implements Serializable {
         this.valor = valor;
     }
 
-    public int getCarreraId() {
+    public Integer getCarreraId() {
         return carreraId;
     }
 
-    public void setCarreraId(int carreraId) {
+    public void setCarreraId(Integer carreraId) {
         this.carreraId = carreraId;
     }
 
@@ -167,5 +172,5 @@ public class ConfiguracionCarrera implements Serializable {
     public String toString() {
         return "edu.unl.sigett.entity.ConfiguracionCarrera[ id=" + id + " ]";
     }
-    
+
 }

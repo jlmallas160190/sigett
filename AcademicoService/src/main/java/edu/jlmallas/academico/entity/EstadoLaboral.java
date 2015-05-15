@@ -18,6 +18,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -44,6 +45,8 @@ public class EstadoLaboral implements Serializable {
     private Long tipoContratoId;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "estadoLaboralId")
     private List<Docente> docenteList;
+    @Transient
+    private String tipoContrato;
 
     public EstadoLaboral() {
     }
@@ -77,6 +80,14 @@ public class EstadoLaboral implements Serializable {
         this.docenteList = docenteList;
     }
 
+    public String getTipoContrato() {
+        return tipoContrato;
+    }
+
+    public void setTipoContrato(String tipoContrato) {
+        this.tipoContrato = tipoContrato;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -99,7 +110,7 @@ public class EstadoLaboral implements Serializable {
 
     @Override
     public String toString() {
-        return id + "";
+        return tipoContrato;
     }
 
 }

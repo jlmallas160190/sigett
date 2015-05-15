@@ -32,7 +32,7 @@ import javax.inject.Inject;
 import org.primefaces.event.SelectEvent;
 import edu.jlmallas.academico.service.AreaService;
 import edu.jlmallas.academico.service.CarreraService;
-import edu.jlmallas.academico.service.EstudianteCarreraFacadeLocal;
+import edu.jlmallas.academico.dao.implement.EstudianteCarreraFacadeLocal;
 import edu.jlmallas.academico.service.OfertaAcademicaService;
 import edu.unl.sigett.dao.ConfiguracionGeneralDao;
 import edu.unl.sigett.dao.LineaInvestigacionCarreraFacadeLocal;

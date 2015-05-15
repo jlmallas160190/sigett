@@ -47,7 +47,7 @@ import edu.jlmallas.academico.service.CarreraService;
 import edu.unl.sigett.dao.CatalogoOficioFacadeLocal;
 import edu.unl.sigett.dao.ConfiguracionCarreraDao;
 import edu.unl.sigett.dao.ConfiguracionGeneralDao;
-import edu.jlmallas.academico.service.CoordinadorPeriodoFacadeLocal;
+import edu.jlmallas.academico.dao.implement.CoordinadorPeriodoFacadeLocal;
 import edu.unl.sigett.dao.DirectorFacadeLocal;
 import edu.unl.sigett.dao.DirectorProyectoFacadeLocal;
 import edu.unl.sigett.dao.EstadoDirectorFacadeLocal;
@@ -58,7 +58,7 @@ import edu.jlmallas.academico.entity.Docente;
 import edu.jlmallas.academico.entity.DocenteCarrera;
 import edu.jlmallas.academico.entity.EstudianteCarrera;
 import edu.jlmallas.academico.dao.DocenteCarreraDao;
-import edu.jlmallas.academico.service.EstudianteCarreraFacadeLocal;
+import edu.jlmallas.academico.dao.implement.EstudianteCarreraFacadeLocal;
 import edu.unl.sigett.comun.managed.session.SessionOficioCarrera;
 import edu.unl.sigett.enumeration.CatalogoOficioEnum;
 import edu.unl.sigett.enumeration.EstadoAutorEnum;
@@ -343,8 +343,8 @@ public class AdministrarDirectoresProyecto implements Serializable {
         Persona personaDirector = personaFacadeLocal.find(docenteCarrera.getDocenteId().getId());
         CoordinadorPeriodo coordinadorPeriodo = coordinadorPeriodoFacadeLocal.buscarVigente(carrera.getId());
         Persona personaCoordinador = personaFacadeLocal.find(coordinadorPeriodo.getCoordinadorId().getId());
-        ConfiguracionCarrera configuracionCarrera = configuracionCarreraFacadeLocal.buscarPorCarreraId(carreraId, "NO");
-        Integer nOficio = Integer.parseInt(configuracionCarrera.getValor());
+//        ConfiguracionCarrera configuracionCarrera = configuracionCarreraFacadeLocal.buscarPorCarreraId(carreraId, "NO");
+//        Integer nOficio = Integer.parseInt(configuracionCarrera.getValor());
         secretario = user.getNombres().toUpperCase() + " " + user.getApellidos().toUpperCase();
         OficioCarrera oficioCarrera = oficioCarreraFacadeLocal.buscarPorTablaId(dp.getId(), CatalogoOficioEnum.DIRECTORPROYECTO.getTipo());
         HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
@@ -360,7 +360,7 @@ public class AdministrarDirectoresProyecto implements Serializable {
         datosReporte.put("articulos_adjudicacion_tt", resourceBundle.getString("lbl.articulos_pertinencia_tt"));
         datosReporte.put("asunto_adjudicacion_tt", resourceBundle.getString("lbl.asunto_adjudciacion_tt"));
         datosReporte.put("nota_adjudicacion_tt", resourceBundle.getString("lbl.nota_adjudicacion_tt"));
-        reportes.oficioDirectorProyecto(response, datosReporte, fechaFormateada, configuracionCarreraFacadeLocal, configuracionCarrera, "pdf", oficioCarrera, directorProyectoId, oficioCarreraFacadeLocal, catalogoOficioFacadeLocal, carrera, nOficio, secretario, path, pathSetting);
+//        reportes.oficioDirectorProyecto(response, datosReporte, fechaFormateada, configuracionCarreraFacadeLocal, configuracionCarrera, "pdf", oficioCarrera, directorProyectoId, oficioCarreraFacadeLocal, catalogoOficioFacadeLocal, carrera, nOficio, secretario, path, pathSetting);
     }
 
     public String editar(DirectorProyecto directorProyecto, Usuario usuario) {

@@ -25,9 +25,9 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import org.primefaces.context.RequestContext;
-import edu.jlmallas.academico.service.CoordinadorFacadeLocal;
-import edu.jlmallas.academico.service.CoordinadorPeriodoFacadeLocal;
-import edu.jlmallas.academico.service.PeriodoCoordinacionFacadeLocal;
+import edu.jlmallas.academico.dao.implement.CoordinadorFacadeLocal;
+import edu.jlmallas.academico.dao.implement.CoordinadorPeriodoFacadeLocal;
+import edu.jlmallas.academico.dao.implement.PeriodoCoordinacionFacadeLocal;
 import com.jlmallas.comun.dao.PersonaDao;
 import org.jlmallas.seguridad.dao.UsuarioDao;
 

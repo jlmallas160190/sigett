@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package com.jlmallas.comun.dao;
 
 import com.jlmallas.comun.entity.Catalogo;
@@ -15,7 +14,7 @@ import javax.ejb.Local;
  * @author jorge-luis
  */
 @Local
-public interface CatalogoFacadeLocal {
+public interface CatalogoDao {
 
     void create(Catalogo catalogo);
 
@@ -29,6 +28,8 @@ public interface CatalogoFacadeLocal {
 
     List<Catalogo> findRange(int[] range);
 
+    List<Catalogo> buscar(Catalogo catalogo);
+
     int count();
-    
+
 }

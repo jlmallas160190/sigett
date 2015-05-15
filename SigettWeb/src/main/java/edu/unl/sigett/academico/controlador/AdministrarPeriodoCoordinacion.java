@@ -22,7 +22,7 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import org.primefaces.context.RequestContext;
-import edu.jlmallas.academico.service.PeriodoCoordinacionFacadeLocal;
+import edu.jlmallas.academico.dao.implement.PeriodoCoordinacionFacadeLocal;
 import org.jlmallas.seguridad.dao.UsuarioDao;
 
 /**

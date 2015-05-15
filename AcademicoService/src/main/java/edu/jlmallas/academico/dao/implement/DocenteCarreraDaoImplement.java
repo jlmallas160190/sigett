@@ -11,8 +11,6 @@ import edu.jlmallas.academico.entity.DocenteCarrera;
 import java.util.HashMap;
 import java.util.List;
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 /**
@@ -27,10 +25,10 @@ public class DocenteCarreraDaoImplement extends AbstractDao<DocenteCarrera> impl
     }
 
     @Override
-    public List<DocenteCarrera> buscarPorCarrera(DocenteCarrera docenteCarrera) {
+    public List<DocenteCarrera> buscar(DocenteCarrera docenteCarrera) {
         StringBuilder sql = new StringBuilder();
         HashMap<String, Object> parametros = new HashMap<>();
-        sql.append("SELECT d from DocenteCarrera d 1=1 ");
+        sql.append("SELECT d from DocenteCarrera d WHERE 1=1 ");
         if (docenteCarrera.getCarreraId() != null) {
             sql.append(" and d.carreraId=:carreraId ");
             parametros.put("carreraId", docenteCarrera.getCarreraId().getId());

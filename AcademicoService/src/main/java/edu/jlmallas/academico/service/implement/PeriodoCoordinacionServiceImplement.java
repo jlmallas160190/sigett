@@ -7,7 +7,7 @@ package edu.jlmallas.academico.service.implement;
 
 import edu.jlmallas.academico.entity.PeriodoCoordinacion;
 import edu.jlmallas.academico.dao.AbstractDao;
-import edu.jlmallas.academico.service.PeriodoCoordinacionFacadeLocal;
+import edu.jlmallas.academico.dao.implement.PeriodoCoordinacionFacadeLocal;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;

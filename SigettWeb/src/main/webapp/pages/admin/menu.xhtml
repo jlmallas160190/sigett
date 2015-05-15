@@ -13,7 +13,7 @@
         </script>
         <p:menubar>
             <p:submenu icon="ui-icon-document" label="#{msg['lbl.administracion']}" >
-                <p:menuitem value="#{msg['lbl.areas']}" icon="ui-icon-area"  action="#{administrarAreas.abrirBuscarAreas(sessionUsuario.usuario)}"/>
+                <p:menuitem value="#{msg['lbl.areas']}" icon="ui-icon-area"  action="pretty:areas"/>
                 <p:menuitem value="#{msg['lbl.periodosAcademicos']}" icon="ui-icon-calendar" action="#{administrarPeriodosAcademicos.abrirBuscarPeriodosAcademicos(sessionUsuario.usuario)}"/>
             </p:submenu>
             <p:menuitem value="#{msg['lbl.configuraciones']}" icon="ui-icon-wrench"  ajax="false" action="pretty:configuraciones"/>

@@ -28,7 +28,7 @@ public interface DocenteCarreraDao {
 
     List<DocenteCarrera> findRange(int[] range);
 
-    List<DocenteCarrera> buscarPorCarrera(DocenteCarrera docenteCarrera);
+    List<DocenteCarrera> buscar(DocenteCarrera docenteCarrera);
 
     List<DocenteCarrera> buscarPorDocente(Long docenteId);
 

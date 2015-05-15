@@ -68,8 +68,10 @@ public class Item implements Serializable {
         this.id = id;
     }
 
-    public Item(Long id, String codigo, boolean esActivo, Long idPadre) {
+    public Item(Long id, String nombre, String codigo, boolean esActivo, Long idPadre, Catalogo catalogo) {
         this.id = id;
+        this.nombre = nombre;
+        this.catalogoId = catalogo;
         this.codigo = codigo;
         this.esActivo = esActivo;
         this.idPadre = idPadre;

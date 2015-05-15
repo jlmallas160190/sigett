@@ -7,7 +7,6 @@ package edu.unl.sigett.academico.managed.session;
 
 import com.jlmallas.comun.entity.Item;
 import edu.jlmallas.academico.entity.EstadoLaboral;
-import edu.jlmallas.academico.entity.Titulo;
 import edu.jlmallas.academico.entity.TituloDocente;
 import edu.unl.sigett.academico.dto.DocenteCarreraAux;
 import edu.unl.sigett.entity.LineaInvestigacion;
@@ -28,6 +27,7 @@ import org.primefaces.model.DualListModel;
 public class SessionDocenteCarrera implements Serializable {
 
     private DocenteCarreraAux docenteCarreraAux;
+    private DocenteCarreraAux docenteCarreraAuxWS;
     private List<DocenteCarreraAux> docenteCarreraAuxs;
     private String estadoLaboral;
     private String titulo;
@@ -40,13 +40,16 @@ public class SessionDocenteCarrera implements Serializable {
     private List<EstadoLaboral> estadoLaborales;
     private List<TituloDocente> titulos;
     private String key;
+    private String keyWSUnidadesDocenteParalelo;
     private int keyEntero;
+    private int keyEnteroWSUnidadesDocenteParalelo;
     private int i;
     private boolean renderedEditar;
     private boolean renderedNoEditar;
     private boolean renderedCrear;
 
     public SessionDocenteCarrera() {
+        this.docenteCarreraAuxWS=new DocenteCarreraAux();
         this.titulos = new ArrayList<>();
         this.estadoLaborales = new ArrayList<>();
         this.tiposDocumento = new ArrayList<>();
@@ -197,6 +200,30 @@ public class SessionDocenteCarrera implements Serializable {
 
     public void setTitulos(List<TituloDocente> titulos) {
         this.titulos = titulos;
+    }
+
+    public DocenteCarreraAux getDocenteCarreraAuxWS() {
+        return docenteCarreraAuxWS;
+    }
+
+    public void setDocenteCarreraAuxWS(DocenteCarreraAux docenteCarreraAuxWS) {
+        this.docenteCarreraAuxWS = docenteCarreraAuxWS;
+    }
+
+    public int getKeyEnteroWSUnidadesDocenteParalelo() {
+        return keyEnteroWSUnidadesDocenteParalelo;
+    }
+
+    public void setKeyEnteroWSUnidadesDocenteParalelo(int keyEnteroWSUnidadesDocenteParalelo) {
+        this.keyEnteroWSUnidadesDocenteParalelo = keyEnteroWSUnidadesDocenteParalelo;
+    }
+
+    public String getKeyWSUnidadesDocenteParalelo() {
+        return keyWSUnidadesDocenteParalelo;
+    }
+
+    public void setKeyWSUnidadesDocenteParalelo(String keyWSUnidadesDocenteParalelo) {
+        this.keyWSUnidadesDocenteParalelo = keyWSUnidadesDocenteParalelo;
     }
 
 }

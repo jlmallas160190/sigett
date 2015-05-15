@@ -26,7 +26,7 @@ import javax.inject.Named;
 import edu.unl.sigett.dao.ConfiguracionGeneralDao;
 import edu.unl.sigett.dao.EstudianteUsuarioFacadeLocal;
 import org.jlmallas.seguridad.dao.UsuarioDao;
-import edu.jlmallas.academico.service.EstudianteFacadeLocal;
+import edu.jlmallas.academico.dao.implement.EstudianteFacadeLocal;
 
 /**
  *

@@ -22,6 +22,9 @@
                         <ui:include src="botonesTablaArea.xhtml" /> 
                     </f:facet>
                 </p:panel>
+                <f:metadata>
+                    <f:event type="preRenderView" listener="#{administrarAreas.init}"/>
+                </f:metadata>
             </ui:define>
         </ui:composition>
     </body>

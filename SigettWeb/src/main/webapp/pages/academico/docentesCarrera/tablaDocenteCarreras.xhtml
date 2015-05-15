@@ -15,35 +15,37 @@
                 </h:commandLink>
             </f:facet>-->
             <p:column rendered="#{sessionDocenteCarrera.renderedEditar}" 
-                      sortBy="#{sessionDocenteCarrera.docenteCarreraAux.persona.numeroIdentificacion}" 
-                      filterBy="#{sessionDocenteCarrera.docenteCarreraAux.persona.numeroIdentificacion}"
+                      sortBy="#{item.persona.numeroIdentificacion}" 
+                      filterBy="#{item.persona.numeroIdentificacion}"
                       filterMatchMode="contains">
                 <f:facet name="header">
                     <h:outputText value="#{msg['lbl.ci']}"/>
                 </f:facet>
-                <p:commandLink value="#{sessionDocenteCarrera.docenteCarreraAux.persona.numeroIdentificacion}" 
+                <p:commandLink value="#{item.persona.numeroIdentificacion}" 
                                action="#{administrarDocentesCarrera.editar(item)}"/>
             </p:column>
             <p:column rendered="#{sessionDocenteCarrera.renderedNoEditar}" 
-                      sortBy="#{sessionDocenteCarrera.docenteCarreraAux.persona.numeroIdentificacion}"
-                      filterBy="#{sessionDocenteCarrera.docenteCarreraAux.persona.numeroIdentificacion}"
+                      sortBy="#{item.persona.numeroIdentificacion}"
+                      filterBy="#{item.persona.numeroIdentificacion}"
                       filterMatchMode="contains">
                 <f:facet name="header">
                     <h:outputText value="#{msg['lbl.ci']}"/>
                 </f:facet>
-                <h:outputText value="#{sessionDocenteCarrera.docenteCarreraAux.persona.numeroIdentificacion}"/>
+                <h:outputText value="#{item.persona.numeroIdentificacion}"/>
             </p:column>
-            <p:column  sortBy="#{sessionDocenteCarrera.docenteCarreraAux.persona.apellidos}"
-                       filterBy="#{sessionDocenteCarrera.docenteCarreraAux.persona.apellidos}"
+            <p:column  sortBy="#{item.persona.apellidos}"
+                       filterBy="#{item.persona.apellidos}"
                        filterMatchMode="contains">
                 <f:facet name="header">
                     <h:outputText value="#{msg['lbl.docente']}"/>
                 </f:facet>
-                <h:outputText value="#{sessionDocenteCarrera.docenteCarreraAux.persona.nombres}
-                              #{sessionDocenteCarrera.docenteCarreraAux.persona.apellidos}"/>
+                <h:outputText value="#{item.persona.nombres}
+                              #{item.persona.apellidos}"/>
         </p:column>
-        <p:column headerText="#{msg['lbl.email']}">
-            <h:outputText value="#{sessionDocenteCarrera.docenteCarreraAux.persona.email}"/>
+        <p:column headerText="#{msg['lbl.email']}" sortBy="#{item.persona.email}"
+                  filterBy="#{item.persona.email}"
+                       filterMatchMode="contains">
+            <h:outputText value="#{item.persona.email}"/>
         </p:column>
     </p:dataTable>
 </body>

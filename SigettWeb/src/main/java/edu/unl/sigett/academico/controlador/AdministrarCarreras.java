@@ -43,6 +43,7 @@ import org.jlmallas.seguridad.dao.UsuarioDao;
 import edu.unl.sigett.academico.managed.session.SessionArea;
 import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
 import edu.unl.sigett.dao.ConfiguracionGeneralDao;
+import edu.unl.sigett.service.ConfiguracionCarreraService;
 import javax.annotation.PostConstruct;
 
 /**
@@ -86,13 +87,13 @@ public class AdministrarCarreras implements Serializable {
     @EJB
     private UsuarioDao usuarioFacadeLocal;
     @EJB
-    private ConfiguracionCarreraDao configuracionCarreraFacadeLocal;
+    private ConfiguracionCarreraService configuracionCarreraService;
     @EJB
     private ConfiguracionGeneralDao configuracionGeneralFacadeLocal;
 
-    @PostConstruct
     public void init() {
         buscar(sessionUsuario.getUsuario(), sessionArea.getArea());
+
     }
 
     //<editor-fold defaultstate="collapsed" desc="MÉTODOS CRUD">
@@ -167,15 +168,17 @@ public class AdministrarCarreras implements Serializable {
                 int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "crear_carrera");
                 if (tienePermiso == 1) {
                     carreraFacadeLocal.create(carrera);
-                    logFacadeLocal.create(logFacadeLocal.crearLog("Carrera", carrera.getId() + "", "CREAR", "|Nombre=" + carrera.getNombre() + "|IdSga=" + carrera.getIdSga() + "|Área=" + carrera.getAreaId().getId(), usuario));
+                    logFacadeLocal.create(logFacadeLocal.crearLog("Carrera", carrera.getId() + "", "CREAR", "|Nombre=" + carrera.getNombre() + "|IdSga="
+                            + carrera.getIdSga() + "|Área=" + carrera.getAreaId().getId(), usuario));
                     ConfiguracionCarrera configuracionCarrera1 = new ConfiguracionCarrera();
+
                     configuracionCarrera1.setNombre("Número de Módulo Aprobado por el estudiante para ser Apto a realizar un trabajo de titulación");
                     configuracionCarrera1.setCodigo("MA");
-                    configuracionCarrera1.setValor("?");
+                    configuracionCarrera1.setValor("1");
                     configuracionCarrera1.setObservacion("S/N");
                     configuracionCarrera1.setCarreraId(carrera.getId());
                     configuracionCarrera1.setTipo("numerico");
-                    configuracionCarreraFacadeLocal.create(configuracionCarrera1);
+                    configuracionCarreraService.guardar(configuracionCarrera1);
 
                     ConfiguracionCarrera configuracionCarrera3 = new ConfiguracionCarrera();
                     configuracionCarrera3.setNombre("Número de Oficio");
@@ -184,34 +187,34 @@ public class AdministrarCarreras implements Serializable {
                     configuracionCarrera3.setObservacion("Número de Oficio");
                     configuracionCarrera3.setCarreraId(carrera.getId());
                     configuracionCarrera3.setTipo("numerico");
-                    configuracionCarreraFacadeLocal.create(configuracionCarrera3);
+                    configuracionCarreraService.guardar(configuracionCarrera3);
 
                     ConfiguracionCarrera configuracionCarrera2 = new ConfiguracionCarrera();
                     configuracionCarrera2.setNombre("Número de Modulo aprobado para ser egresado");
                     configuracionCarrera2.setCodigo("ME");
-                    configuracionCarrera2.setValor("?");
+                    configuracionCarrera2.setValor("1");
                     configuracionCarrera2.setObservacion("S/N");
                     configuracionCarrera2.setCarreraId(carrera.getId());
                     configuracionCarrera2.setTipo("numerico");
-                    configuracionCarreraFacadeLocal.create(configuracionCarrera2);
+                    configuracionCarreraService.guardar(configuracionCarrera2);
 
                     ConfiguracionCarrera configuracionCarrera = new ConfiguracionCarrera();
                     configuracionCarrera.setNombre("ID de Oferta Academica Actual de la Carrera");
                     configuracionCarrera.setCodigo("OA");
-                    configuracionCarrera.setValor("?");
+                    configuracionCarrera.setValor("0");
                     configuracionCarrera.setObservacion("S/N");
                     configuracionCarrera.setCarreraId(carrera.getId());
                     configuracionCarrera.setTipo("boton");
-                    configuracionCarreraFacadeLocal.create(configuracionCarrera);
+                    configuracionCarreraService.guardar(configuracionCarrera);
 
                     ConfiguracionCarrera configuracionCarrera4 = new ConfiguracionCarrera();
                     configuracionCarrera4.setNombre("Número de Acta de tesis");
                     configuracionCarrera4.setCodigo("NA");
-                    configuracionCarrera4.setValor("?");
+                    configuracionCarrera4.setValor("1");
                     configuracionCarrera4.setObservacion("S/N");
                     configuracionCarrera4.setCarreraId(carrera.getId());
                     configuracionCarrera4.setTipo("numerico");
-                    configuracionCarreraFacadeLocal.create(configuracionCarrera4);
+                    configuracionCarreraService.guardar(configuracionCarrera4);
                     if (param.equalsIgnoreCase("grabar")) {
                         carrera = new Carrera();
                         navegacion = "pretty:editarArea";
@@ -234,37 +237,37 @@ public class AdministrarCarreras implements Serializable {
                 if (tienePermiso == 1) {
                     carreraFacadeLocal.edit(carrera);
                     logFacadeLocal.create(logFacadeLocal.crearLog("Carrera", carrera.getId() + "", "EDITAR", "|Nombre=" + carrera.getNombre() + "|IdSga=" + carrera.getIdSga() + "|Área=" + carrera.getAreaId().getId(), usuario));
-                    if (configuracionCarreraFacadeLocal.buscarPorCarreraId(carrera.getId(), "MA") == null) {
+                    if (configuracionCarreraService.buscarPrimero(new ConfiguracionCarrera(carrera.getId(), "MA")) == null) {
                         ConfiguracionCarrera configuracionCarrera1 = new ConfiguracionCarrera();
                         configuracionCarrera1.setNombre("Número de Módulo Aprobado por el estudiante para ser Apto a realizar un trabajo de titulación");
                         configuracionCarrera1.setCodigo("MA");
-                        configuracionCarrera1.setValor("?");
+                        configuracionCarrera1.setValor("1");
                         configuracionCarrera1.setObservacion("S/N");
                         configuracionCarrera1.setCarreraId(carrera.getId());
                         configuracionCarrera1.setTipo("numerico");
-                        configuracionCarreraFacadeLocal.create(configuracionCarrera1);
+                        configuracionCarreraService.guardar(configuracionCarrera1);
                     }
-                    if (configuracionCarreraFacadeLocal.buscarPorCarreraId(carrera.getId(), "ME") == null) {
+                    if (configuracionCarreraService.buscarPrimero(new ConfiguracionCarrera(carrera.getId(), "ME")) == null) {
                         ConfiguracionCarrera configuracionCarrera2 = new ConfiguracionCarrera();
                         configuracionCarrera2.setNombre("Número de Modulo aprobado para ser egresado");
                         configuracionCarrera2.setCodigo("ME");
-                        configuracionCarrera2.setValor("?");
+                        configuracionCarrera2.setValor("1");
                         configuracionCarrera2.setObservacion("S/N");
                         configuracionCarrera2.setCarreraId(carrera.getId());
                         configuracionCarrera2.setTipo("numerico");
-                        configuracionCarreraFacadeLocal.create(configuracionCarrera2);
+                        configuracionCarreraService.guardar(configuracionCarrera2);
                     }
-                    if (configuracionCarreraFacadeLocal.buscarPorCarreraId(carrera.getId(), "OA") == null) {
+                    if (configuracionCarreraService.buscarPrimero(new ConfiguracionCarrera(carrera.getId(), "OA")) == null) {
                         ConfiguracionCarrera configuracionCarrera = new ConfiguracionCarrera();
                         configuracionCarrera.setNombre("ID de Oferta Academica Actual de la Carrera");
                         configuracionCarrera.setCodigo("OA");
-                        configuracionCarrera.setValor("?");
+                        configuracionCarrera.setValor("1");
                         configuracionCarrera.setObservacion("S/N");
                         configuracionCarrera.setCarreraId(carrera.getId());
                         configuracionCarrera.setTipo("boton");
-                        configuracionCarreraFacadeLocal.create(configuracionCarrera);
+                        configuracionCarreraService.guardar(configuracionCarrera);
                     }
-                    if (configuracionCarreraFacadeLocal.buscarPorCarreraId(carrera.getId(), "NO") == null) {
+                    if (configuracionCarreraService.buscarPrimero(new ConfiguracionCarrera(carrera.getId(), "NO")) == null) {
                         ConfiguracionCarrera configuracionCarrera3 = new ConfiguracionCarrera();
                         configuracionCarrera3.setNombre("Número de Oficio");
                         configuracionCarrera3.setCodigo("NO");
@@ -272,21 +275,20 @@ public class AdministrarCarreras implements Serializable {
                         configuracionCarrera3.setObservacion("Número de Oficio");
                         configuracionCarrera3.setCarreraId(carrera.getId());
                         configuracionCarrera3.setTipo("numerico");
-                        configuracionCarreraFacadeLocal.create(configuracionCarrera3);
+                        configuracionCarreraService.guardar(configuracionCarrera3);
                     }
-                    if (configuracionCarreraFacadeLocal.buscarPorCarreraId(carrera.getId(), "NA") == null) {
+                    if (configuracionCarreraService.buscar(new ConfiguracionCarrera(carrera.getId(), "NA")) == null) {
                         ConfiguracionCarrera configuracionCarrera4 = new ConfiguracionCarrera();
                         configuracionCarrera4.setNombre("Número de Acta de tesis");
                         configuracionCarrera4.setCodigo("NA");
-                        configuracionCarrera4.setValor("?");
+                        configuracionCarrera4.setValor("1");
                         configuracionCarrera4.setObservacion("S/N");
                         configuracionCarrera4.setCarreraId(carrera.getId());
                         configuracionCarrera4.setTipo("numerico");
-                        configuracionCarreraFacadeLocal.create(configuracionCarrera4);
+                        configuracionCarreraService.guardar(configuracionCarrera4);
                     }
 
                     if (param.equalsIgnoreCase("grabar")) {
-                        carrera = new Carrera();
                         navegacion = "pretty:editarArea";
                     } else {
                         if (param.equalsIgnoreCase("grabar-editar")) {
@@ -294,7 +296,6 @@ public class AdministrarCarreras implements Serializable {
                             FacesContext.getCurrentInstance().addMessage(null, message);
                         } else {
                             if (param.equalsIgnoreCase("grabar-crear")) {
-                                carrera = new Carrera();
                             }
                         }
                     }
@@ -405,6 +406,9 @@ public class AdministrarCarreras implements Serializable {
         }
     }
 
+    /**
+     * GRABAR CARRERAS LUEGO DE SINCRONIZAR CON EL SERVICIO WEB
+     */
     public void grabarCarreras() {
         for (Carrera carrera : sessionCarrera.getCarrerasGrabar()) {
             Carrera c = null;
@@ -424,11 +428,11 @@ public class AdministrarCarreras implements Serializable {
                 ConfiguracionCarrera configuracionCarrera1 = new ConfiguracionCarrera();
                 configuracionCarrera1.setNombre("Número de Módulo Aprobado por el estudiante para ser Apto a realizar un trabajo de titulación");
                 configuracionCarrera1.setCodigo("MA");
-                configuracionCarrera1.setValor("?");
+                configuracionCarrera1.setValor("1");
                 configuracionCarrera1.setObservacion("S/N");
                 configuracionCarrera1.setCarreraId(carrera.getId());
                 configuracionCarrera1.setTipo("numerico");
-                configuracionCarreraFacadeLocal.create(configuracionCarrera1);
+                configuracionCarreraService.guardar(configuracionCarrera1);
                 ConfiguracionCarrera configuracionCarrera3 = new ConfiguracionCarrera();
                 configuracionCarrera3.setNombre("Número de Oficio");
                 configuracionCarrera3.setCodigo("NO");
@@ -436,32 +440,32 @@ public class AdministrarCarreras implements Serializable {
                 configuracionCarrera3.setObservacion("Número de Oficio");
                 configuracionCarrera3.setCarreraId(carrera.getId());
                 configuracionCarrera3.setTipo("numerico");
-                configuracionCarreraFacadeLocal.create(configuracionCarrera3);
+                configuracionCarreraService.guardar(configuracionCarrera3);
                 ConfiguracionCarrera configuracionCarrera2 = new ConfiguracionCarrera();
                 configuracionCarrera2.setNombre("Número de Modulo aprobado para ser egresado");
                 configuracionCarrera2.setCodigo("ME");
-                configuracionCarrera2.setValor("?");
+                configuracionCarrera2.setValor("1");
                 configuracionCarrera2.setObservacion("S/N");
                 configuracionCarrera2.setCarreraId(carrera.getId());
                 configuracionCarrera2.setTipo("numerico");
-                configuracionCarreraFacadeLocal.create(configuracionCarrera2);
+                configuracionCarreraService.guardar(configuracionCarrera2);
                 ConfiguracionCarrera configuracionCarrera = new ConfiguracionCarrera();
                 configuracionCarrera.setNombre("ID de Oferta Academica Actual de la Carrera");
                 configuracionCarrera.setCodigo("OA");
-                configuracionCarrera.setValor("?");
+                configuracionCarrera.setValor("1");
                 configuracionCarrera.setObservacion("S/N");
                 configuracionCarrera.setCarreraId(carrera.getId());
                 configuracionCarrera.setTipo("boton");
-                configuracionCarreraFacadeLocal.create(configuracionCarrera);
+                configuracionCarreraService.guardar(configuracionCarrera);
 
                 ConfiguracionCarrera configuracionCarrera4 = new ConfiguracionCarrera();
                 configuracionCarrera4.setNombre("Número de Acta de tesis");
                 configuracionCarrera4.setCodigo("NA");
-                configuracionCarrera4.setValor("?");
+                configuracionCarrera4.setValor("1");
                 configuracionCarrera4.setObservacion("S/N");
                 configuracionCarrera4.setCarreraId(carrera.getId());
                 configuracionCarrera4.setTipo("numerico");
-                configuracionCarreraFacadeLocal.create(configuracionCarrera4);
+                configuracionCarreraService.guardar(configuracionCarrera4);
             } else {
                 if (carrera.isEsEditado()) {
                     c.setNivelId(carrera.getNivelId());
@@ -473,37 +477,37 @@ public class AdministrarCarreras implements Serializable {
                     }
                     carreraFacadeLocal.edit(carrera);
                     carrera.setEsEditado(false);
-                    if (configuracionCarreraFacadeLocal.buscarPorCarreraId(carrera.getId(), "MA") == null) {
+                    if (configuracionCarreraService.buscarPrimero(new ConfiguracionCarrera(carrera.getId(), "MA")) == null) {
                         ConfiguracionCarrera configuracionCarrera1 = new ConfiguracionCarrera();
                         configuracionCarrera1.setNombre("Número de Módulo Aprobado por el estudiante para ser Apto a realizar un trabajo de titulación");
                         configuracionCarrera1.setCodigo("MA");
-                        configuracionCarrera1.setValor("?");
+                        configuracionCarrera1.setValor("1");
                         configuracionCarrera1.setObservacion("S/N");
                         configuracionCarrera1.setCarreraId(carrera.getId());
                         configuracionCarrera1.setTipo("numerico");
-                        configuracionCarreraFacadeLocal.create(configuracionCarrera1);
+                        configuracionCarreraService.guardar(configuracionCarrera1);
                     }
-                    if (configuracionCarreraFacadeLocal.buscarPorCarreraId(carrera.getId(), "ME") == null) {
+                    if (configuracionCarreraService.buscarPrimero(new ConfiguracionCarrera(carrera.getId(), "ME")) == null) {
                         ConfiguracionCarrera configuracionCarrera2 = new ConfiguracionCarrera();
                         configuracionCarrera2.setNombre("Número de Modulo aprobado para ser egresado");
                         configuracionCarrera2.setCodigo("ME");
-                        configuracionCarrera2.setValor("?");
+                        configuracionCarrera2.setValor("1");
                         configuracionCarrera2.setObservacion("S/N");
                         configuracionCarrera2.setCarreraId(carrera.getId());
                         configuracionCarrera2.setTipo("numerico");
-                        configuracionCarreraFacadeLocal.create(configuracionCarrera2);
+                        configuracionCarreraService.guardar(configuracionCarrera2);
                     }
-                    if (configuracionCarreraFacadeLocal.buscarPorCarreraId(carrera.getId(), "OA") == null) {
+                    if (configuracionCarreraService.buscarPrimero(new ConfiguracionCarrera(carrera.getId(), "OA")) == null) {
                         ConfiguracionCarrera configuracionCarrera = new ConfiguracionCarrera();
                         configuracionCarrera.setNombre("ID de Oferta Academica Actual de la Carrera");
                         configuracionCarrera.setCodigo("OA");
-                        configuracionCarrera.setValor("?");
+                        configuracionCarrera.setValor("1");
                         configuracionCarrera.setObservacion("S/N");
                         configuracionCarrera.setTipo("boton");
                         configuracionCarrera.setCarreraId(carrera.getId());
-                        configuracionCarreraFacadeLocal.create(configuracionCarrera);
+                        configuracionCarreraService.guardar(configuracionCarrera);
                     }
-                    if (configuracionCarreraFacadeLocal.buscarPorCarreraId(carrera.getId(), "NO") == null) {
+                    if (configuracionCarreraService.buscarPrimero(new ConfiguracionCarrera(carrera.getId(), "NO")) == null) {
                         ConfiguracionCarrera configuracionCarrera3 = new ConfiguracionCarrera();
                         configuracionCarrera3.setNombre("Número de Oficio");
                         configuracionCarrera3.setCodigo("NO");
@@ -511,18 +515,18 @@ public class AdministrarCarreras implements Serializable {
                         configuracionCarrera3.setObservacion("Número de Oficio");
                         configuracionCarrera3.setCarreraId(carrera.getId());
                         configuracionCarrera3.setTipo("numerico");
-                        configuracionCarreraFacadeLocal.create(configuracionCarrera3);
+                        configuracionCarreraService.guardar(configuracionCarrera3);
                     }
 
-                    if (configuracionCarreraFacadeLocal.buscarPorCarreraId(carrera.getId(), "NA") == null) {
+                    if (configuracionCarreraService.buscarPrimero(new ConfiguracionCarrera(carrera.getId(), "NA")) == null) {
                         ConfiguracionCarrera configuracionCarrera4 = new ConfiguracionCarrera();
                         configuracionCarrera4.setNombre("Número de Acta de tesis");
                         configuracionCarrera4.setCodigo("NA");
-                        configuracionCarrera4.setValor("?");
+                        configuracionCarrera4.setValor("1");
                         configuracionCarrera4.setObservacion("S/N");
                         configuracionCarrera4.setCarreraId(carrera.getId());
                         configuracionCarrera4.setTipo("numerico");
-                        configuracionCarreraFacadeLocal.create(configuracionCarrera4);
+                        configuracionCarreraService.guardar(configuracionCarrera4);
                     }
                 }
             }
@@ -674,7 +678,7 @@ public class AdministrarCarreras implements Serializable {
 //        String serviceUrl = configuracionGeneralFacadeLocal.find((int) 41).getValor();
 //        String passwordService = configuracionGeneralFacadeLocal.find((int) 5).getValor();
 //        String userService = configuracionGeneralFacadeLocal.find((int) 6).getValor();
-//        String ofertaIdActual = configuracionCarreraFacadeLocal.buscarPorCarreraId(c.getId(), "OA").getValor();
+//        String ofertaIdActual = configuracionCarreraService.buscarPrimeroPorCarreraId(c.getId(), "OA").getValor();
 //        try {
 //            String s = serviceUrl + "?id_oferta=" + ofertaIdActual + ";id_carrera=" + c.getIdSga();
 //            String datosJson = conexionServicio.conectar(s, userService, passwordService);

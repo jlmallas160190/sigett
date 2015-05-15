@@ -144,83 +144,83 @@ public class AdministrarUsuarioCarrera implements Serializable {
             System.out.println(e);
         }
     }
-    
-    public String grabarCarrera() {
-        String navegacion = "";
-        try {
-            FacesContext facesContext = FacesContext.getCurrentInstance();
-            ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            String param = (String) facesContext.getExternalContext().getRequestParameterMap().get("1");
-            if (sessionUsuarioCarrera.getUsuarioCarreraAux().getCarrera().getIdSga() == null) {
-                sessionUsuarioCarrera.getUsuarioCarreraAux().getCarrera().setIdSga("");
-            }
-            if (configuracionCarreraDao.buscarPorCarreraId(sessionUsuarioCarrera.getUsuarioCarreraAux().getCarrera()
-                    .getId(), "MA") == null) {
-                ConfiguracionCarrera configuracionCarrera1 = new ConfiguracionCarrera();
-                configuracionCarrera1.setNombre("Número de Módulo Aprobado por el estudiante para ser Apto a realizar un trabajo de titulación");
-                configuracionCarrera1.setCodigo("MA");
-                configuracionCarrera1.setValor("?");
-                configuracionCarrera1.setObservacion("S/N");
-                configuracionCarrera1.setCarreraId(sessionUsuarioCarrera.getUsuarioCarreraAux().getCarrera().getId());
-                configuracionCarrera1.setTipo("numerico");
-                configuracionCarreraDao.create(configuracionCarrera1);
-            }
-            if (configuracionCarreraDao.buscarPorCarreraId(sessionUsuarioCarrera.getUsuarioCarreraAux().getCarrera().getId(), "ME") == null) {
-                ConfiguracionCarrera configuracionCarrera2 = new ConfiguracionCarrera();
-                configuracionCarrera2.setNombre("Número de Modulo aprobado para ser egresado");
-                configuracionCarrera2.setCodigo("ME");
-                configuracionCarrera2.setValor("?");
-                configuracionCarrera2.setObservacion("S/N");
-                configuracionCarrera2.setCarreraId(sessionUsuarioCarrera.getUsuarioCarreraAux().getCarrera().getId());
-                configuracionCarrera2.setTipo("numerico");
-                configuracionCarreraDao.create(configuracionCarrera2);
-            }
-            if (configuracionCarreraDao.buscarPorCarreraId(sessionUsuarioCarrera.getUsuarioCarreraAux().getCarrera().getId(), "OA") == null) {
-                ConfiguracionCarrera configuracionCarrera = new ConfiguracionCarrera();
-                configuracionCarrera.setNombre("ID de Oferta Academica Actual de la Carrera");
-                configuracionCarrera.setCodigo("OA");
-                configuracionCarrera.setValor("?");
-                configuracionCarrera.setObservacion("S/N");
-                configuracionCarrera.setCarreraId(sessionUsuarioCarrera.getUsuarioCarreraAux().getCarrera().getId());
-                configuracionCarrera.setTipo("boton");
-                configuracionCarreraDao.create(configuracionCarrera);
-            }
-            if (configuracionCarreraDao.buscarPorCarreraId(sessionUsuarioCarrera.getUsuarioCarreraAux().getCarrera().getId(), "NO") == null) {
-                ConfiguracionCarrera configuracionCarrera3 = new ConfiguracionCarrera();
-                configuracionCarrera3.setNombre("Número de Oficio");
-                configuracionCarrera3.setCodigo("NO");
-                configuracionCarrera3.setValor("1");
-                configuracionCarrera3.setObservacion("Número de Oficio");
-                configuracionCarrera3.setCarreraId(sessionUsuarioCarrera.getUsuarioCarreraAux().getCarrera().getId());
-                configuracionCarrera3.setTipo("numerico");
-                configuracionCarreraDao.create(configuracionCarrera3);
-            }
-            if (configuracionCarreraDao.buscarPorCarreraId(sessionUsuarioCarrera.getUsuarioCarreraAux().getCarrera().getId(), "NA") == null) {
-                ConfiguracionCarrera configuracionCarrera4 = new ConfiguracionCarrera();
-                configuracionCarrera4.setNombre("Número de Acta de tesis");
-                configuracionCarrera4.setCodigo("NA");
-                configuracionCarrera4.setValor("?");
-                configuracionCarrera4.setObservacion("S/N");
-                configuracionCarrera4.setCarreraId(sessionUsuarioCarrera.getUsuarioCarreraAux().getCarrera().getId());
-                configuracionCarrera4.setTipo("numerico");
-                configuracionCarreraDao.create(configuracionCarrera4);
-            }
-            carreraDao.edit(sessionUsuarioCarrera.getUsuarioCarreraAux().getCarrera());
-            if (param.equalsIgnoreCase("grabar")) {
-                sessionUsuarioCarrera.setUsuarioCarreraAux(new UsuarioCarreraAux(new UsuarioCarrera(), new Usuario(), new Carrera()));
-                return "pretty:editarArea";
-            }
-            
-            if (param.equalsIgnoreCase("grabar-editar")) {
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.carrera") + " " + bundle.getString("lbl.msm_editar"), "");
-                FacesContext.getCurrentInstance().addMessage(null, message);
-            }
-            this.buscar();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return navegacion;
-    }
+//    
+//    public String grabarCarrera() {
+//        String navegacion = "";
+//        try {
+//            FacesContext facesContext = FacesContext.getCurrentInstance();
+//            ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
+//            String param = (String) facesContext.getExternalContext().getRequestParameterMap().get("1");
+//            if (sessionUsuarioCarrera.getUsuarioCarreraAux().getCarrera().getIdSga() == null) {
+//                sessionUsuarioCarrera.getUsuarioCarreraAux().getCarrera().setIdSga("");
+//            }
+//            if (configuracionCarreraDao.buscarPorCarreraId(sessionUsuarioCarrera.getUsuarioCarreraAux().getCarrera()
+//                    .getId(), "MA") == null) {
+//                ConfiguracionCarrera configuracionCarrera1 = new ConfiguracionCarrera();
+//                configuracionCarrera1.setNombre("Número de Módulo Aprobado por el estudiante para ser Apto a realizar un trabajo de titulación");
+//                configuracionCarrera1.setCodigo("MA");
+//                configuracionCarrera1.setValor("?");
+//                configuracionCarrera1.setObservacion("S/N");
+//                configuracionCarrera1.setCarreraId(sessionUsuarioCarrera.getUsuarioCarreraAux().getCarrera().getId());
+//                configuracionCarrera1.setTipo("numerico");
+//                configuracionCarreraDao.create(configuracionCarrera1);
+//            }
+//            if (configuracionCarreraDao.buscarPorCarreraId(sessionUsuarioCarrera.getUsuarioCarreraAux().getCarrera().getId(), "ME") == null) {
+//                ConfiguracionCarrera configuracionCarrera2 = new ConfiguracionCarrera();
+//                configuracionCarrera2.setNombre("Número de Modulo aprobado para ser egresado");
+//                configuracionCarrera2.setCodigo("ME");
+//                configuracionCarrera2.setValor("?");
+//                configuracionCarrera2.setObservacion("S/N");
+//                configuracionCarrera2.setCarreraId(sessionUsuarioCarrera.getUsuarioCarreraAux().getCarrera().getId());
+//                configuracionCarrera2.setTipo("numerico");
+//                configuracionCarreraDao.create(configuracionCarrera2);
+//            }
+//            if (configuracionCarreraDao.buscarPorCarreraId(sessionUsuarioCarrera.getUsuarioCarreraAux().getCarrera().getId(), "OA") == null) {
+//                ConfiguracionCarrera configuracionCarrera = new ConfiguracionCarrera();
+//                configuracionCarrera.setNombre("ID de Oferta Academica Actual de la Carrera");
+//                configuracionCarrera.setCodigo("OA");
+//                configuracionCarrera.setValor("?");
+//                configuracionCarrera.setObservacion("S/N");
+//                configuracionCarrera.setCarreraId(sessionUsuarioCarrera.getUsuarioCarreraAux().getCarrera().getId());
+//                configuracionCarrera.setTipo("boton");
+//                configuracionCarreraDao.create(configuracionCarrera);
+//            }
+//            if (configuracionCarreraDao.buscarPorCarreraId(sessionUsuarioCarrera.getUsuarioCarreraAux().getCarrera().getId(), "NO") == null) {
+//                ConfiguracionCarrera configuracionCarrera3 = new ConfiguracionCarrera();
+//                configuracionCarrera3.setNombre("Número de Oficio");
+//                configuracionCarrera3.setCodigo("NO");
+//                configuracionCarrera3.setValor("1");
+//                configuracionCarrera3.setObservacion("Número de Oficio");
+//                configuracionCarrera3.setCarreraId(sessionUsuarioCarrera.getUsuarioCarreraAux().getCarrera().getId());
+//                configuracionCarrera3.setTipo("numerico");
+//                configuracionCarreraDao.create(configuracionCarrera3);
+//            }
+//            if (configuracionCarreraDao.buscarPorCarreraId(sessionUsuarioCarrera.getUsuarioCarreraAux().getCarrera().getId(), "NA") == null) {
+//                ConfiguracionCarrera configuracionCarrera4 = new ConfiguracionCarrera();
+//                configuracionCarrera4.setNombre("Número de Acta de tesis");
+//                configuracionCarrera4.setCodigo("NA");
+//                configuracionCarrera4.setValor("?");
+//                configuracionCarrera4.setObservacion("S/N");
+//                configuracionCarrera4.setCarreraId(sessionUsuarioCarrera.getUsuarioCarreraAux().getCarrera().getId());
+//                configuracionCarrera4.setTipo("numerico");
+//                configuracionCarreraDao.create(configuracionCarrera4);
+//            }
+//            carreraDao.edit(sessionUsuarioCarrera.getUsuarioCarreraAux().getCarrera());
+//            if (param.equalsIgnoreCase("grabar")) {
+//                sessionUsuarioCarrera.setUsuarioCarreraAux(new UsuarioCarreraAux(new UsuarioCarrera(), new Usuario(), new Carrera()));
+//                return "pretty:editarArea";
+//            }
+//            
+//            if (param.equalsIgnoreCase("grabar-editar")) {
+//                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.carrera") + " " + bundle.getString("lbl.msm_editar"), "");
+//                FacesContext.getCurrentInstance().addMessage(null, message);
+//            }
+//            this.buscar();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return navegacion;
+//    }
     
     public void handleFileUpload(FileUploadEvent event) {
         try {

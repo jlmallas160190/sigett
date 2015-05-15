@@ -41,7 +41,7 @@ import edu.jlmallas.academico.service.CarreraService;
 import edu.unl.sigett.dao.CatalogoOficioFacadeLocal;
 import edu.unl.sigett.dao.ConfiguracionCarreraDao;
 import edu.unl.sigett.dao.ConfiguracionGeneralDao;
-import edu.jlmallas.academico.service.CoordinadorPeriodoFacadeLocal;
+import edu.jlmallas.academico.dao.implement.CoordinadorPeriodoFacadeLocal;
 import edu.unl.sigett.dao.EstadoAutorFacadeLocal;
 import edu.unl.sigett.dao.EstadoProyectoFacadeLocal;
 import org.jlmallas.seguridad.dao.LogDao;
@@ -52,7 +52,7 @@ import org.jlmallas.seguridad.dao.UsuarioDao;
 import edu.jlmallas.academico.entity.Docente;
 import edu.jlmallas.academico.entity.EstudianteCarrera;
 import edu.jlmallas.academico.dao.DocenteDao;
-import edu.jlmallas.academico.service.EstudianteCarreraFacadeLocal;
+import edu.jlmallas.academico.dao.implement.EstudianteCarreraFacadeLocal;
 import edu.unl.sigett.comun.managed.session.SessionOficioCarrera;
 import edu.unl.sigett.enumeration.CatalogoOficioEnum;
 import edu.unl.sigett.enumeration.EstadoAutorEnum;
@@ -329,7 +329,7 @@ public class AdministrarPertinencias implements Serializable {
         AdministrarReportes reportes = new AdministrarReportes();
         Map datosReporte = new HashMap();
         Carrera carrera = carreraFacadeLocal.find(carreraId);
-        ConfiguracionCarrera configuracionCarrera = configuracionCarreraFacadeLocal.buscarPorCarreraId(carreraId, "NO");
+//        ConfiguracionCarrera configuracionCarrera = configuracionCarreraFacadeLocal.buscarPorCarreraId(carreraId, "NO");
         Pertinencia pertinencia = pertinenciaFacadeLocal.find(pertinenciaId);
         Docente docente = docenteFacadeLocal.find(pertinencia.getDocenteProyectoId().getDocenteId());
         Persona datosDocente = personaFacadeLocal.find(docente.getId());
@@ -355,8 +355,8 @@ public class AdministrarPertinencias implements Serializable {
         datosReporte.put("tituloCoordinador", docenteCoordinador.getTituloDocenteId().getTituloId().getAbreviacion());
         datosReporte.put("autores", getAutores(autorProyectoFacadeLocal.buscarPorProyecto(pertinencia.getDocenteProyectoId().getProyectoId().getId())));
 
-        reportes.informeDocenteProyecto("docx", fechaFormateada, fechOficioFormat, pertinencia, response, datosReporte, configuracionCarreraFacadeLocal,
-                configuracionCarrera, oficioCarrera, oficioCarreraFacadeLocal, catalogoOficioFacadeLocal, carrera, Integer.parseInt(oficioCarrera.getNumeroOficio()), request.getRealPath("/"), resolucion);
+//        reportes.informeDocenteProyecto("docx", fechaFormateada, fechOficioFormat, pertinencia, response, datosReporte, configuracionCarreraFacadeLocal,
+//                configuracionCarrera, oficioCarrera, oficioCarreraFacadeLocal, catalogoOficioFacadeLocal, carrera, Integer.parseInt(oficioCarrera.getNumeroOficio()), request.getRealPath("/"), resolucion);
     }
 
     private String getAutores(List<AutorProyecto> autorProyectos) {
