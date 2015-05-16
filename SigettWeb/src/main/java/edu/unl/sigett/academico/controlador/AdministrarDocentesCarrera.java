@@ -106,7 +106,7 @@ import org.jlmallas.seguridad.entity.Usuario;
 @URLMappings(mappings = {
     @URLMapping(
             id = "editarDocenteCarrera",
-            pattern = "/editarDocenteCarrera/#{sessionDocenteCarrera.docenteCarrera.id}",
+            pattern = "/editarDocenteCarrera/#{sessionDocenteCarrera.docenteCarreraAux.docenteCarrera.id}",
             viewId = "/faces/pages/academico/docentesCarrera/editarDocenteCarrera.xhtml"
     ),
     @URLMapping(
@@ -146,7 +146,7 @@ public class AdministrarDocentesCarrera implements Serializable {
     @EJB
     private ConfiguracionDao configuracionDao;
     @EJB
-    private DocenteCarreraDao docenteCarreraFacadeLocal;
+    private DocenteCarreraDao docenteCarreraDao;
     @EJB
     private DocenteDao docenteDao;
     @EJB
@@ -281,18 +281,21 @@ public class AdministrarDocentesCarrera implements Serializable {
             int tienePermiso = usuarioDao.tienePermiso(sessionUsuario.getUsuario(), "editar_docente_carrera");
             if (tienePermiso == 1) {
                 sessionDocenteCarrera.setLineaInvestigacionDocentesRemovidos(new ArrayList<LineaInvestigacionDocente>());
-                sessionDocenteCarrera.setDocenteCarreraAux(new DocenteCarreraAux(docenteCarreraFacadeLocal.find(
-                        docenteCarreraAux.getDocenteCarrera().getId()), personaDao.find(sessionDocenteCarrera.getDocenteCarreraAux().
+                sessionDocenteCarrera.setDocenteCarreraAux(new DocenteCarreraAux(docenteCarreraDao.find(
+                        docenteCarreraAux.getDocenteCarrera().getId()), personaDao.find(docenteCarreraAux.
                                 getDocenteCarrera().getDocenteId().getId()),
-                        directorFacadeLocal.find(sessionDocenteCarrera.getDocenteCarreraAux().getDocenteCarrera().getId())));
-                listadoLineasInvestigacion(sessionDocenteCarrera.getDocenteCarreraAux().getDocenteCarrera().getDocenteId());
-                sessionDocenteCarrera.setEstadoLaboral(sessionDocenteCarrera.getDocenteCarreraAux().
+                        directorFacadeLocal.find(docenteCarreraAux.getDocenteCarrera().getId())));
+                listadoLineasInvestigacion(docenteCarreraAux.getDocenteCarrera().getDocenteId());
+                docenteCarreraAux.getDocenteCarrera().getDocenteId().getEstadoLaboralId().setTipoContrato(
+                        itemService.buscarPorId(docenteCarreraAux.getDocenteCarrera().getDocenteId().
+                                getEstadoLaboralId().getTipoContratoId()).getCodigo());
+                sessionDocenteCarrera.setEstadoLaboral(docenteCarreraAux.
                         getDocenteCarrera().getDocenteId().getEstadoLaboralId().toString());
-                sessionDocenteCarrera.setTitulo(sessionDocenteCarrera.getDocenteCarreraAux().
-                        getDocenteCarrera().getDocenteId().getTituloDocenteId().getTituloId().toString());
-                sessionDocenteCarrera.setTipoDocumento(itemDao.find(sessionDocenteCarrera.getDocenteCarreraAux().getPersona().getTipoDocumentoIdentificacionId()).
+                sessionDocenteCarrera.setTitulo(docenteCarreraAux.
+                        getDocenteCarrera().getDocenteId().getTituloDocenteId().toString());
+                sessionDocenteCarrera.setTipoDocumento(itemDao.find(docenteCarreraAux.getPersona().getTipoDocumentoIdentificacionId()).
                         toString());
-                sessionDocenteCarrera.setGenero(itemDao.find(sessionDocenteCarrera.getDocenteCarreraAux().getPersona().
+                sessionDocenteCarrera.setGenero(itemDao.find(docenteCarreraAux.getPersona().
                         getGeneroId()).
                         toString());
                 navegacion = "pretty:editarDocenteCarrera";
@@ -305,6 +308,7 @@ public class AdministrarDocentesCarrera implements Serializable {
                 }
             }
         } catch (Exception e) {
+            System.out.println(e);
         }
         return navegacion;
     }
@@ -317,7 +321,7 @@ public class AdministrarDocentesCarrera implements Serializable {
             int tienePermiso = usuarioDao.tienePermiso(sessionUsuario.getUsuario(), "buscar_docente_carrera");
             if (tienePermiso == 1) {
                 DocenteCarrera docenteCarreraBuscar = new DocenteCarrera();
-                for (DocenteCarrera docenteCarrera : docenteCarreraFacadeLocal.buscar(
+                for (DocenteCarrera docenteCarrera : docenteCarreraDao.buscar(
                         docenteCarreraBuscar)) {
                     DocenteCarreraAux dca = new DocenteCarreraAux(docenteCarrera, personaDao.find(docenteCarrera.getDocenteId().getId()),
                             directorFacadeLocal.find(docenteCarrera.getId()));
@@ -404,7 +408,7 @@ public class AdministrarDocentesCarrera implements Serializable {
                          */
                         sessionDocenteCarrera.getDocenteCarreraAux().getDirector().setEsActivo(true);
                         sessionDocenteCarrera.getDocenteCarreraAux().getDocenteCarrera().setEsActivo(true);
-                        docenteCarreraFacadeLocal.create(sessionDocenteCarrera.getDocenteCarreraAux().getDocenteCarrera());
+                        docenteCarreraDao.create(sessionDocenteCarrera.getDocenteCarreraAux().getDocenteCarrera());
                         /**
                          * GRABAR DIRECTOR
                          */
@@ -453,7 +457,7 @@ public class AdministrarDocentesCarrera implements Serializable {
                                 + sessionDocenteCarrera.getDocenteCarreraAux().getPersona().getEmail(), sessionUsuario.getUsuario()));
 
                         sessionDocenteCarrera.getDocenteCarreraAux().getDirector().setEsActivo(true);
-                        docenteCarreraFacadeLocal.edit(sessionDocenteCarrera.getDocenteCarreraAux().getDocenteCarrera());
+                        docenteCarreraDao.edit(sessionDocenteCarrera.getDocenteCarreraAux().getDocenteCarrera());
                         grabarLineasInvestigacionDocentes(sessionDocenteCarrera.getDocenteCarreraAux().getDocenteCarrera().getDocenteId());
                         removerDocenteLineasInvestigacion(sessionDocenteCarrera.getDocenteCarreraAux().getDocenteCarrera().getDocenteId());
                         if (param.equalsIgnoreCase("grabar")) {
@@ -912,7 +916,7 @@ public class AdministrarDocentesCarrera implements Serializable {
                         this.grabarUsuarioDocente(sessionDocenteCarrera.getDocenteCarreraAuxWS().getDocenteCarrera().getDocenteId());
                         sessionDocenteCarrera.getDocenteCarreraAuxWS().getDocenteCarrera().setDocenteId(sessionDocenteCarrera.
                                 getDocenteCarreraAuxWS().getDocenteCarrera().getDocenteId());
-                        docenteCarreraFacadeLocal.create(sessionDocenteCarrera.getDocenteCarreraAuxWS().getDocenteCarrera());
+                        docenteCarreraDao.create(sessionDocenteCarrera.getDocenteCarreraAuxWS().getDocenteCarrera());
                         sessionDocenteCarrera.getDocenteCarreraAuxWS().getDirector().
                                 setId(sessionDocenteCarrera.getDocenteCarreraAuxWS().getDocenteCarrera().getId());
                         directorFacadeLocal.create(sessionDocenteCarrera.getDocenteCarreraAuxWS().getDirector());
@@ -1126,7 +1130,7 @@ public class AdministrarDocentesCarrera implements Serializable {
                     return;
                 }
                 if (sessionDocenteCarrera.getKeyEntero() == 4) {
-                    Item item = itemService.buscarPorCatalogoCodigo(CatalogoEnum.TIPOCONTRATO.getTipo(), valor.toString());
+                    Item item = itemService.buscarPorCatalogoCodigo(CatalogoEnum.TIPOCONTRATO.getTipo(), valor.getAsString().toUpperCase().trim());
                     List<EstadoLaboral> estados = new ArrayList<>();
                     EstadoLaboral estadoLaboralEncontrado = null;
                     if (item != null) {
@@ -1136,17 +1140,20 @@ public class AdministrarDocentesCarrera implements Serializable {
                         if (estados != null) {
                             estadoLaboralEncontrado = !estados.isEmpty() ? estados.get(0) : null;
                         }
-                        if (estadoLaboralEncontrado != null) {
-                            docenteCarreraAux.getDocenteCarrera().getDocenteId().
-                                    setEstadoLaboralId(estadoLaboralEncontrado);
-                            sessionDocenteCarrera.setEstadoLaboral(item.toString());
-                            sessionDocenteCarrera.setKeyEntero(sessionDocenteCarrera.getKeyEntero() + 1);
-                            return;
+                        if (estadoLaboralEncontrado == null) {
+                            estadoLaboralEncontrado = new EstadoLaboral();
+                            estadoLaboralEncontrado.setTipoContratoId(item.getId());
+                            estadoLaboralDao.create(estadoLaboralEncontrado);
                         }
+
+                        docenteCarreraAux.getDocenteCarrera().getDocenteId().
+                                setEstadoLaboralId(estadoLaboralEncontrado);
+                        sessionDocenteCarrera.setEstadoLaboral(item.toString());
                         sessionDocenteCarrera.setKeyEntero(sessionDocenteCarrera.getKeyEntero() + 1);
                         return;
                     }
-                    item = new Item(null, valor.getAsString(), valor.getAsString(), true, null, catalogoService.buscarPorCodigo(CatalogoEnum.TIPOCONTRATO.getTipo()));
+                    item = new Item(null, valor.getAsString(), valor.getAsString().toUpperCase(), true, null,
+                            catalogoService.buscarPorCodigo(CatalogoEnum.TIPOCONTRATO.getTipo()));
                     itemDao.create(item);
                     item.setIdPadre(item.getId());
                     itemDao.edit(item);

@@ -61,7 +61,7 @@ public class ItemDaoImplement extends AbstractDao<Item> implements ItemDao {
             parametros.put("catalogo", item.getCatalogoId());
         }
         if (item.getCodigo() != null) {
-            sql.append(" and LOWER(i.codigo)=:LOWER(codigo) ");
+            sql.append(" and i.codigo=:codigo ");
             parametros.put("codigo", item.getCodigo());
         }
         sql.append(" and i.esActivo=TRUE");

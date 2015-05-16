@@ -53,7 +53,7 @@ public class Item implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "es_activo")
-    private boolean esActivo;
+    private Boolean esActivo;
     @Basic(optional = false)
     @Column(name = "id_padre")
     private Long idPadre;
@@ -68,7 +68,7 @@ public class Item implements Serializable {
         this.id = id;
     }
 
-    public Item(Long id, String nombre, String codigo, boolean esActivo, Long idPadre, Catalogo catalogo) {
+    public Item(Long id, String nombre, String codigo, Boolean esActivo, Long idPadre, Catalogo catalogo) {
         this.id = id;
         this.nombre = nombre;
         this.catalogoId = catalogo;
@@ -101,11 +101,11 @@ public class Item implements Serializable {
         this.codigo = codigo;
     }
 
-    public boolean getEsActivo() {
+    public Boolean isEsActivo() {
         return esActivo;
     }
 
-    public void setEsActivo(boolean esActivo) {
+    public void setEsActivo(Boolean esActivo) {
         this.esActivo = esActivo;
     }
 

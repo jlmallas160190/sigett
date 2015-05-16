@@ -7,10 +7,10 @@
 
     <body>
         <h:panelGrid styleClass="panelgrid" rowClasses="rowpanelgrid" columnClasses="col-sm-3,col-sm-7,col-sm-1,col-sm-1" columns="4">
-            <f:facet name="header">
+            <!--<f:facet name="header">
                 <p:graphicImage id="foto" styleClass="img-thumbnail" cache="false"  height="100" width="100" 
-                                value="/AppServlet?id=#{sessionDocenteCarrera.docenteCarreraAux.persona.id}&amp;entity=Persona"/>
-            </f:facet>
+                                value="/AppServlet?id={sessionDocenteCarrera.docenteCarreraAux.persona.id}&amp;entity=Persona"/>
+            </f:facet>-->
             <h:outputLabel value="#{msg['lbl.ci']}:" for="numeroIdentificacion" />
             <p:inputText id="numeroIdentificacion" value="#{sessionDocenteCarrera.docenteCarreraAux.persona.numeroIdentificacion}"
                          title="#{msg['lbl.ci']}"

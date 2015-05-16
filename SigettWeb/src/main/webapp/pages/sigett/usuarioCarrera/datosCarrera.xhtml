@@ -8,7 +8,7 @@
     <body>
         <h:panelGrid styleClass="panelgrid" rowClasses="rowpanelgrid" columnClasses="col-sm-2,col-sm-9,col-sm-1" columns="3">
             <h:outputLabel value="#{msg['lbl.sigla']}:"/>
-            <p:inputText id="sigla"  validatorMessage="#{msg['lbl.formato_invalido']}" 
+            <p:inputText id="sigla" validatorMessage="#{msg['lbl.formato_invalido']}" onkeyup="this.value=this.value.toUpperCase()" 
                          value="#{sessionUsuarioCarrera.usuarioCarreraAux.carrera.sigla}" required="true" >
                 <p:ajax update="msmSigla" event="keyup"/>
                 <p:ajax update="@this" event="change"/>

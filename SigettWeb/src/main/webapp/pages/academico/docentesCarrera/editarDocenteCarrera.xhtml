@@ -9,10 +9,10 @@
     <body>
         <ui:composition template="./../../../template.xhtml">
             <ui:define name="title">#{msg['lbl.editar']} #{msg['lbl.docente']}</ui:define>
-             <ui:define name="top">
+            <ui:define name="top">
                 <ui:include src="./../../inicio/menu.xhtml"/>
             </ui:define>
-             <ui:define name="right">
+            <ui:define name="right">
                 <ui:include src="./../../sigett/usuarioCarrera/menu.xhtml"/>
             </ui:define>
             <ui:define name="content">
@@ -37,7 +37,7 @@
                     </f:facet>
                 </p:panel>
                 <f:metadata>
-                    <f:event type="preRenderView" listener="#{administrarDocentesCarrera.initEditar()}"/>
+                    <f:event type="preRenderView" listener="#{administrarDocentesCarrera.initEditar}"/>
                 </f:metadata>
             </ui:define>
         </ui:composition>
