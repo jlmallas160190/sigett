@@ -44,8 +44,9 @@
             <p:message id="msmApellidos" display="icon" for="apellidos"/>
             <h:outputLabel value="#{msg['lbl.email']}:" for="email" />
             <p:inputText id="email" value="#{sessionDocenteCarrera.docenteCarreraAux.persona.email}" title="#{msg['lbl.email']}" required="true"
-                         requiredMessage="#{msg['lbl.email']} #{msg['lbl.obligatorio']}.">
+                         requiredMessage="#{msg['lbl.email']} #{msg['lbl.obligatorio']}." validatorMessage="correo no válido">
                 <p:ajax event="keyup" update="msmEmail"/>
+                <f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$"/>
                 <p:ajax event="change" update="@this,:contenido:msgs"/>
             </p:inputText>
             <h:inputHidden/>

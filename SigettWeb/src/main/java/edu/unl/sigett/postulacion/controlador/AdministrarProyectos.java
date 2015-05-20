@@ -9,7 +9,6 @@ import com.jlmallas.comun.entity.Persona;
 import com.jlmallas.comun.dao.ItemDao;
 import com.jlmallas.comun.dao.PersonaDao;
 import edu.unl.sigett.academico.controlador.AdministrarEstudiantesCarrera;
-import edu.unl.sigett.academico.controlador.AdministrarEstudiantes;
 import edu.unl.sigett.comun.controlador.AdministrarCatalogoProyectos;
 import edu.unl.sigett.comun.controlador.AdministrarEstadoProyecto;
 import edu.unl.sigett.comun.controlador.AdministrarTipoProyectos;
@@ -58,7 +57,6 @@ import edu.unl.sigett.entity.EstadoProyecto;
 import edu.unl.sigett.entity.Expediente;
 import edu.unl.sigett.entity.LineaInvestigacion;
 import edu.unl.sigett.entity.LineaInvestigacionCarrera;
-import edu.unl.sigett.entity.LineaInvestigacionDocente;
 import edu.unl.sigett.entity.LineaInvestigacionProyecto;
 import edu.jlmallas.academico.entity.OfertaAcademica;
 import edu.unl.sigett.entity.Prorroga;
@@ -111,8 +109,8 @@ import edu.unl.sigett.dao.DocumentoProyectoFacadeLocal;
 import edu.unl.sigett.dao.EstadoAutorFacadeLocal;
 import edu.unl.sigett.dao.EstadoProyectoFacadeLocal;
 import edu.unl.sigett.dao.ExpedienteFacadeLocal;
-import edu.unl.sigett.dao.LineaInvestigacionCarreraFacadeLocal;
-import edu.unl.sigett.dao.LineaInvestigacionFacadeLocal;
+import edu.unl.sigett.dao.LineaInvestigacionCarreraDao;
+import edu.unl.sigett.dao.LineaInvestigacionDao;
 import edu.unl.sigett.dao.LineaInvestigacionProyectoFacadeLocal;
 import org.jlmallas.seguridad.dao.LogDao;
 import edu.jlmallas.academico.service.OfertaAcademicaService;
@@ -124,7 +122,7 @@ import edu.unl.sigett.dao.UsuarioCarreraDao;
 import org.jlmallas.seguridad.dao.UsuarioDao;
 import edu.jlmallas.academico.entity.EstudianteCarrera;
 import edu.jlmallas.academico.dao.DocenteDao;
-import edu.jlmallas.academico.dao.implement.EstudianteCarreraFacadeLocal;
+import edu.jlmallas.academico.dao.EstudianteCarreraDao;
 import edu.unl.sigett.enumeration.EstadoAutorEnum;
 import edu.unl.sigett.enumeration.EstadoDirectorEnum;
 import edu.unl.sigett.enumeration.EstadoProyectoEnum;
@@ -196,8 +194,6 @@ public class AdministrarProyectos implements Serializable {
     @Inject
     private AdministrarCronograma administrarCronograma;
     @Inject
-    private AdministrarEstudiantes administrarEstudiantes;
-    @Inject
     private AdministrarNotificaciones administrarNotificaciones;
     @Inject
     private AdministrarMiembrosTribunal administrarMiembrosTribunal;
@@ -215,13 +211,13 @@ public class AdministrarProyectos implements Serializable {
     @EJB
     private LogDao logFacadeLocal;
     @EJB
-    private LineaInvestigacionFacadeLocal lineaInvestigacionFacadeLocal;
+    private LineaInvestigacionDao lineaInvestigacionFacadeLocal;
     @EJB
     private LineaInvestigacionProyectoFacadeLocal lineaInvestigacionProyectoFacadeLocal;
     @EJB
     private DocumentoProyectoFacadeLocal documentoProyectoFacadeLocal;
     @EJB
-    private LineaInvestigacionCarreraFacadeLocal lineaInvestigacionCarreraFacadeLocal;
+    private LineaInvestigacionCarreraDao lineaInvestigacionCarreraFacadeLocal;
     @EJB
     private DocenteProyectoFacadeLocal docenteProyectoFacadeLocal;
     @EJB
@@ -261,7 +257,7 @@ public class AdministrarProyectos implements Serializable {
     @EJB
     private LineaInvestigacionDocenteDao lineaInvestigacionDocenteFacadeLocal;
     @EJB
-    private EstudianteCarreraFacadeLocal estudianteCarreraFacadeLocal;
+    private EstudianteCarreraDao estudianteCarreraFacadeLocal;
     @EJB
     private PersonaDao personaFacadeLocal;
     @EJB
@@ -388,9 +384,9 @@ public class AdministrarProyectos implements Serializable {
             Carrera carrera = carreraFacadeLocal.find(usuarioCarrera.getCarreraId());
             this.lineaInvestigacionCarreras = new ArrayList<>();
             li = new LineaInvestigacion();
-            for (LineaInvestigacionCarrera li : lineaInvestigacionCarreraFacadeLocal.buscarPorCarrera(carrera.getId())) {
-                lineaInvestigacionCarreras.add(li);
-            }
+//            for (LineaInvestigacionCarrera li : lineaInvestigacionCarreraFacadeLocal.buscarPorCarrera(carrera.getId())) {
+//                lineaInvestigacionCarreras.add(li);
+//            }
 //            buscar(carrera.getNombre(), sessionUsuario.getUsuario());
         } catch (Exception e) {
             System.out.println(e);
@@ -904,7 +900,7 @@ public class AdministrarProyectos implements Serializable {
                     administrarDocentesProyecto.setRenderedDlgEditar(false);
                     /*---------------------------------------------Autores------------------------------------------------------------*/
                     administrarAutoresProyecto.setRenderedDlgEditarAutorProyecto(false);
-                    administrarEstudiantes.setRenderedDlgEditar(false);
+//                    administrarEstudiantes.setRenderedDlgEditar(false);
                     /*----------------------------------------------Tribunales-------------------------------------------------------*/
                     administrarTribunales.setRenderedDlgEditar(false);
                     /*----------------------------------------------Evaluaciones Tribunales-------------------------------------------------------*/
@@ -933,7 +929,7 @@ public class AdministrarProyectos implements Serializable {
                     administrarAutoresProyecto.renderedEliminar(sessionUsuario.getUsuario(), sessionProyecto.getProyecto());
                     administrarAutoresProyecto.renderedSeleccionar(sessionUsuario.getUsuario(), sessionProyecto.getProyecto());
                     administrarAutoresProyecto.setRenderedDlgEditarAutorProyecto(false);
-                    administrarEstudiantes.setRenderedDlgEditar(false);
+//                    administrarEstudiantes.setRenderedDlgEditar(false);
                     /*----------------------------------------------Documentos-------------------------------------------------------*/
                     administrarDocumentosProyecto.setRenderedDlgEditar(false);
                     /*----------------------------------------------Directores-------------------------------------------------------*/
@@ -986,7 +982,7 @@ public class AdministrarProyectos implements Serializable {
                     administrarDirectoresProyecto.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyecto());
                     /*----------------------------------------------Autores-------------------------------------------------------*/
                     administrarAutoresProyecto.setRenderedDlgEditarAutorProyecto(false);
-                    administrarEstudiantes.setRenderedDlgEditar(false);
+//                    administrarEstudiantes.setRenderedDlgEditar(false);
                     /*----------------------------------------------Tribunales-------------------------------------------------------*/
                     administrarTribunales.setRenderedDlgEditar(false);
                     /*----------------------------------------------Evaluaciones Tribunales-------------------------------------------------------*/
@@ -1023,7 +1019,7 @@ public class AdministrarProyectos implements Serializable {
                     administrarDocentesProyecto.setRenderedDlgOficioDocenteProyecto(false);
                     /*----------------------------------------------Autores-------------------------------------------------------*/
                     administrarAutoresProyecto.setRenderedDlgEditarAutorProyecto(false);
-                    administrarEstudiantes.setRenderedDlgEditar(false);
+//                    administrarEstudiantes.setRenderedDlgEditar(false);
                     /*----------------------------------------------Tribunales-------------------------------------------------------*/
                     administrarTribunales.setRenderedDlgEditar(false);
                     /*----------------------------------------------Evaluaciones Tribunales-------------------------------------------------------*/
@@ -1061,7 +1057,7 @@ public class AdministrarProyectos implements Serializable {
                     administrarDocentesProyecto.setRenderedDlgEditar(false);
                     /*----------------------------------------------Autores-------------------------------------------------------*/
                     administrarAutoresProyecto.setRenderedDlgEditarAutorProyecto(false);
-                    administrarEstudiantes.setRenderedDlgEditar(false);
+//                    administrarEstudiantes.setRenderedDlgEditar(false);
                     /*----------------------------------------------Tribunales-------------------------------------------------------*/
                     administrarTribunales.setRenderedDlgEditar(false);
                     /*----------------------------------------------Evaluaciones Tribunales-------------------------------------------------------*/
@@ -1107,7 +1103,7 @@ public class AdministrarProyectos implements Serializable {
                     administrarDocentesProyecto.setRenderedDlgEditar(false);
                     /*----------------------------------------------Autores-------------------------------------------------------*/
                     administrarAutoresProyecto.setRenderedDlgEditarAutorProyecto(false);
-                    administrarEstudiantes.setRenderedDlgEditar(false);
+//                    administrarEstudiantes.setRenderedDlgEditar(false);
                     /*----------------------------------------------Tribunales-------------------------------------------------------*/
                     administrarTribunales.setRenderedDlgEditar(false);
                     /*----------------------------------------------Evaluaciones Tribunales-------------------------------------------------------*/
@@ -1140,7 +1136,7 @@ public class AdministrarProyectos implements Serializable {
                     administrarDocentesProyecto.setRenderedDlgEditar(false);
                     /*----------------------------------------------Autores-------------------------------------------------------*/
                     administrarAutoresProyecto.setRenderedDlgEditarAutorProyecto(false);
-                    administrarEstudiantes.setRenderedDlgEditar(false);
+//                    administrarEstudiantes.setRenderedDlgEditar(false);
                     /*----------------------------------------------Tribunales-------------------------------------------------------*/
                     administrarTribunales.setRenderedDlgEditar(false);
                     /*----------------------------------------------Documentos expediente-------------------------------------------------------*/
@@ -1165,7 +1161,7 @@ public class AdministrarProyectos implements Serializable {
                     administrarDocentesProyecto.setRenderedDlgOficioDocenteProyecto(false);
                     /*----------------------------------------------Autores-------------------------------------------------------*/
                     administrarAutoresProyecto.setRenderedDlgEditarAutorProyecto(false);
-                    administrarEstudiantes.setRenderedDlgEditar(false);
+//                    administrarEstudiantes.setRenderedDlgEditar(false);
                     /*----------------------------------------------Tribunales-------------------------------------------------------*/
                     administrarTribunales.setRenderedDlgEditar(false);
                     /*----------------------------------------------Documentos-------------------------------------------------------*/
@@ -1199,7 +1195,7 @@ public class AdministrarProyectos implements Serializable {
                     administrarDocentesProyecto.setRenderedDlgEditar(false);
                     /*----------------------------------------------Autores-------------------------------------------------------*/
                     administrarAutoresProyecto.setRenderedDlgEditarAutorProyecto(false);
-                    administrarEstudiantes.setRenderedDlgEditar(false);
+//                    administrarEstudiantes.setRenderedDlgEditar(false);
                     /*----------------------------------------------Tribunales-------------------------------------------------------*/
                     administrarTribunales.setRenderedDlgEditar(false);
                     /*----------------------------------------------Evaluaciones Tribunales-------------------------------------------------------*/
@@ -1254,7 +1250,7 @@ public class AdministrarProyectos implements Serializable {
                     administrarDocentesProyecto.setRenderedDlgOficioDocenteProyecto(false);
                     /*----------------------------------------------Autores-------------------------------------------------------*/
                     administrarAutoresProyecto.setRenderedDlgEditarAutorProyecto(false);
-                    administrarEstudiantes.setRenderedDlgEditar(false);
+//                    administrarEstudiantes.setRenderedDlgEditar(false);
                     /*----------------------------------------------Prorrogas-------------------------------------------------------*/
                     administrarProrrogas.setRenderedDlgOficio(false);
                     administrarProrrogas.setRenderedDlgRespuestaAutorProyecto(false);
@@ -1281,7 +1277,7 @@ public class AdministrarProyectos implements Serializable {
                     administrarDocentesProyecto.setRenderedDlgEditar(false);
                     /*----------------------------------------------Autores-------------------------------------------------------*/
                     administrarAutoresProyecto.setRenderedDlgEditarAutorProyecto(false);
-                    administrarEstudiantes.setRenderedDlgEditar(false);
+//                    administrarEstudiantes.setRenderedDlgEditar(false);
                     /*----------------------------------------------Tribunales-------------------------------------------------------*/
                     administrarTribunales.setRenderedDlgEditar(false);
                     /*----------------------------------------------Evaluaciones Tribunales-------------------------------------------------------*/
@@ -1411,10 +1407,10 @@ public class AdministrarProyectos implements Serializable {
                     EstudianteCarrera estudianteCarrera = estudianteCarreraFacadeLocal.find(autorProyecto.getAspiranteId().getId());
                     Persona persona = personaFacadeLocal.find(estudianteCarrera.getEstudianteId().getId());
                     if (contador == 0) {
-                        autores += "" + estudianteCarrera.getEstadoId().getNombre() + " " + persona.getNombres() + " " + persona.getApellidos() + " ";
+//                        autores += "" + estudianteCarrera.getEstadoId().getNombre() + " " + persona.getNombres() + " " + persona.getApellidos() + " ";
                         contador++;
                     } else {
-                        autores += ", " + estudianteCarrera.getEstadoId().getNombre() + " " + persona.getNombres() + " " + persona.getApellidos();
+//                        autores += ", " + estudianteCarrera.getEstadoId().getNombre() + " " + persona.getNombres() + " " + persona.getApellidos();
                         contador++;
                     }
                 }
@@ -2362,17 +2358,17 @@ public class AdministrarProyectos implements Serializable {
                     lineasInvestigacionProyecto.add(lp.getLineaInvestigacionId());
                 }
                 for (UsuarioCarrera usuarioCarrera : usuarioCarreraFacadeLocal.buscarPorUsuario(sessionUsuario.getUsuario().getId())) {
-                    for (LineaInvestigacionCarrera lc : lineaInvestigacionCarreraFacadeLocal.buscarPorCarrera(usuarioCarrera.getCarreraId())) {
-                        if (!lineasInvestigacionProyecto.contains(lc.getLineaInvestigacionId())) {
-                            lineasInvestigacion.add(lc.getLineaInvestigacionId());
-                        }
-                    }
+//                    for (LineaInvestigacionCarrera lc : lineaInvestigacionCarreraFacadeLocal.buscarPorCarrera(usuarioCarrera.getCarreraId())) {
+//                        if (!lineasInvestigacionProyecto.contains(lc.getLineaInvestigacionId())) {
+//                            lineasInvestigacion.add(lc.getLineaInvestigacionId());
+//                        }
+//                    }
                 }
             } else {
                 for (UsuarioCarrera usuarioCarrera : usuarioCarreraFacadeLocal.buscarPorUsuario(sessionUsuario.getUsuario().getId())) {
-                    for (LineaInvestigacionCarrera lc : lineaInvestigacionCarreraFacadeLocal.buscarPorCarrera(usuarioCarrera.getCarreraId())) {
-                        lineasInvestigacion.add(lc.getLineaInvestigacionId());
-                    }
+//                    for (LineaInvestigacionCarrera lc : lineaInvestigacionCarreraFacadeLocal.buscarPorCarrera(usuarioCarrera.getCarreraId())) {
+//                        lineasInvestigacion.add(lc.getLineaInvestigacionId());
+//                    }
                 }
             }
             lineasInvestigacionDualList = new DualListModel<>(lineasInvestigacion, lineasInvestigacionProyecto);

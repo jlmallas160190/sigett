@@ -33,7 +33,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import org.primefaces.event.FileUploadEvent;
 import edu.jlmallas.academico.service.CarreraService;
-import edu.unl.sigett.dao.ConfiguracionCarreraDao;
 import com.jlmallas.soporte.session.ExcepcionFacadeLocal;
 import org.jlmallas.seguridad.dao.LogDao;
 import edu.jlmallas.academico.service.NivelService;
@@ -44,7 +43,6 @@ import edu.unl.sigett.academico.managed.session.SessionArea;
 import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
 import edu.unl.sigett.dao.ConfiguracionGeneralDao;
 import edu.unl.sigett.service.ConfiguracionCarreraService;
-import javax.annotation.PostConstruct;
 
 /**
  *
@@ -669,84 +667,6 @@ public class AdministrarCarreras implements Serializable {
             sessionCarrera.getCarrerasGrabar().add(sessionCarrera.getCarreraWs());
         }
 
-    }
-
-    public void sgaWebServicesParalelosCarrera(Carrera c, String param) {
-//        FacesContext facesContext = FacesContext.getCurrentInstance();
-//        ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-//        ConexionServicio conexionServicio = new ConexionServicio();
-//        String serviceUrl = configuracionGeneralFacadeLocal.find((int) 41).getValor();
-//        String passwordService = configuracionGeneralFacadeLocal.find((int) 5).getValor();
-//        String userService = configuracionGeneralFacadeLocal.find((int) 6).getValor();
-//        String ofertaIdActual = configuracionCarreraService.buscarPrimeroPorCarreraId(c.getId(), "OA").getValor();
-//        try {
-//            String s = serviceUrl + "?id_oferta=" + ofertaIdActual + ";id_carrera=" + c.getIdSga();
-//            String datosJson = conexionServicio.conectar(s, userService, passwordService);
-//            if (!datosJson.equalsIgnoreCase("")) {
-//                JsonParser parser = new JsonParser();
-//                JsonElement datos = parser.parse(datosJson);
-//                recorrerElementosJsonParalelosCarrera(datos, c, param);
-//                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.sincronizado"), "");
-//                FacesContext.getCurrentInstance().addMessage(null, message);
-//            } else {
-//                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.no_sincronizar_web_services"), "");
-//                FacesContext.getCurrentInstance().addMessage(null, message);
-//            }
-//
-//        } catch (Exception e) {
-//            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.permiso_denegado_sincronizar"), "");
-//            FacesContext.getCurrentInstance().addMessage(null, message);
-//        }
-    }
-
-    private void recorrerElementosJsonParalelosCarrera(JsonElement elemento, Carrera c, String param) throws Exception {
-        try {
-//            if (elemento.isJsonObject()) {
-//                JsonObject obj = elemento.getAsJsonObject();
-//                java.util.Set<java.util.Map.Entry<String, JsonElement>> entradas = obj.entrySet();
-//                java.util.Iterator<java.util.Map.Entry<String, JsonElement>> iter = entradas.iterator();
-//                while (iter.hasNext()) {
-//                    java.util.Map.Entry<String, JsonElement> entrada = iter.next();
-//                    keyWsParalelosCarrera = entrada.getKey();
-//                    try {
-//                        String e = new String(entrada.getValue().getAsString().getBytes(), "UTF-8");
-//                        JsonParser jp = new JsonParser();
-//                        JsonElement jsonElement = jp.parse(e);
-//                        recorrerElementosJsonParalelosCarrera(jsonElement, c, param);
-//                        
-//                    } catch (Exception e) {
-//                        recorrerElementosJsonParalelosCarrera(entrada.getValue(), c, param);
-//                    }
-//                    
-//                }
-//                
-//            } else if (elemento.isJsonArray()) {
-//                JsonArray array = elemento.getAsJsonArray();
-//                keyWsParalelosCarreraEntero = 0;
-//                java.util.Iterator<JsonElement> iter = array.iterator();
-//                while (iter.hasNext()) {
-//                    JsonElement entrada = iter.next();
-//                    recorrerElementosJsonParalelosCarrera(entrada, c, param);
-//                }
-//            } else if (elemento.isJsonPrimitive()) {
-//                JsonPrimitive valor = elemento.getAsJsonPrimitive();
-//                if (valor.isNumber()) {
-//                    if (keyWsParalelosCarreraEntero == 0) {
-//                        String paraleloId = valor.getAsInt() + "";
-//                        if (param.equalsIgnoreCase("estudiantes")) {
-//                            administrarEstudiantesCarrera.sgaWebServicesEstadoEstudiantesParalelo(paraleloId, c);
-//                        } else {
-////                            administrarDocentesCarrera.sgaWebServicesUnidadesDocenteParalelo(paraleloId, c);
-//
-//                        }
-//                        keyWsParalelosCarreraEntero++;
-//                    }
-//                }
-//            }
-
-        } catch (Exception e) {
-
-        }
     }
 
     //</editor-fold>

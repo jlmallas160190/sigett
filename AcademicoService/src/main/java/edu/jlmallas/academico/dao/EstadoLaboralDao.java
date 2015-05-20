@@ -28,8 +28,6 @@ public interface EstadoLaboralDao {
 
     List<EstadoLaboral> findRange(int[] range);
 
-    EstadoLaboral buscarPorTipoContratoNombre(String nombre);
-
     List<EstadoLaboral> buscar(EstadoLaboral estadoLaboral);
 
     int count();

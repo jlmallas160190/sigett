@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <body>
+        <h:panelGrid id="datosEstudianteCarrera" styleClass="panelgrid" rowClasses="rowpanelgrid" columnClasses="col-lg-2,col-lg-10" columns="2" >
+            <h:outputLabel value="#{msg['lbl.estado']}:"/>
+            <h:outputText value="#{sessionEstudianteCarrera.estudianteCarreraDTO.estudianteCarrera.estado}"/>
+            <h:outputLabel value="#{msg['lbl.fechaIngreso']}:"/>
+            <h:outputText value="#{sessionEstudianteCarrera.reporteMatriculaUltimo.ofertaAcademicaId.nombre}">
+                <f:convertDateTime pattern="dd/MM/yyyy"/>
+            </h:outputText>
+            <h:outputLabel value="#{msg['lbl.ultimoModuloAprobado']}:"/>
+            <h:outputText value="#{sessionEstudianteCarrera.reporteMatriculaUltimo.numeroModuloMatriculado} 
+                          #{sessionEstudianteCarrera.reporteMatriculaUltimo.paralelo}"/>
+            <h:outputLabel value="#{msg['lbl.fechaCulminación']}:"/>
+            <h:outputText value="#{sessionEstudianteCarrera.reporteMatriculaUltimo.ofertaAcademicaId.fechaFin}">
+                <f:convertDateTime pattern="dd/MM/yyyy"/>
+            </h:outputText>
+            <h:outputLabel id="lbEsApto" rendered="#{sessionEstudianteCarrera.isRenderedEsAptoAspirante}" value="#{msg['lbl.esApto']}:"/>
+            <p:selectBooleanCheckbox id="esApto" rendered="#{sessionEstudianteCarrera.isRenderedEsAptoAspirante}" 
+                                     value="#{sessionEstudianteCarrera.estudianteCarreraDTO.aspirante.esApto}">
+                <p:ajax  listener="#{administrarEstudiantesCarrera.esAptoEstudiante}" update=":contenido:msm"/>
+            </p:selectBooleanCheckbox>
+        </h:panelGrid>
+    </body>
+</html>

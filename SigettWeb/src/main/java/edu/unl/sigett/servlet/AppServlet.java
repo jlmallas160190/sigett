@@ -62,13 +62,13 @@ import edu.unl.sigett.dao.MiembroFacadeLocal;
 import edu.unl.sigett.dao.OficioCarreraFacadeLocal;
 import edu.unl.sigett.dao.PertinenciaFacadeLocal;
 import edu.unl.sigett.dao.ProrrogaFacadeLocal;
-import edu.jlmallas.academico.dao.implement.ReporteMatriculaFacadeLocal;
+import edu.jlmallas.academico.dao.ReporteMatriculaDao;
 import org.jlmallas.seguridad.dao.UsuarioDao;
 import edu.jlmallas.academico.entity.Docente;
 import edu.jlmallas.academico.entity.EstudianteCarrera;
 import edu.jlmallas.academico.dao.DocenteCarreraDao;
 import edu.jlmallas.academico.dao.DocenteDao;
-import edu.jlmallas.academico.dao.implement.EstudianteCarreraFacadeLocal;
+import edu.jlmallas.academico.dao.EstudianteCarreraDao;
 import edu.unl.sigett.enumeration.CargoMiembroEnum;
 import edu.unl.sigett.enumeration.CatalogoOficioEnum;
 import edu.unl.sigett.enumeration.EstadoAutorEnum;
@@ -131,13 +131,13 @@ public class AppServlet extends HttpServlet {
     @EJB
     private EvaluacionTribunalFacadeLocal evaluacionTribunalFacadeLocal;
     @EJB
-    private ReporteMatriculaFacadeLocal reporteMatriculaFacadeLocal;
+    private ReporteMatriculaDao reporteMatriculaFacadeLocal;
     @EJB
     private ConfiguracionAreaFacadeLocal configuracionAreaFacadeLocal;
     @EJB
     private CoordinadorPeriodoFacadeLocal coordinadorPeriodoFacadeLocal;
     @EJB
-    private EstudianteCarreraFacadeLocal estudianteCarreraFacadeLocal;
+    private EstudianteCarreraDao estudianteCarreraFacadeLocal;
     @EJB
     private PersonaDao personaFacadeLocal;
     @EJB
@@ -591,13 +591,13 @@ public class AppServlet extends HttpServlet {
                     String nacionalidadAutor = "";
                     EstudianteCarrera estudianteAutor = estudianteCarreraFacadeLocal.find(ap.getAspiranteId().getId());
                     Persona datosAutorProy = personaFacadeLocal.find(estudianteAutor.getEstudianteId().getId());
-                    autorCargo = datosAutorProy.getNombres().toUpperCase() + " " + datosAutorProy.getApellidos().toUpperCase() + " <br/>" + estudianteAutor.getEstadoId().getNombre();
+//                    autorCargo = datosAutorProy.getNombres().toUpperCase() + " " + datosAutorProy.getApellidos().toUpperCase() + " <br/>" + estudianteAutor.getEstadoId().getNombre();
                     autor = datosAutorProy.getNombres().toUpperCase() + " " + datosAutorProy.getApellidos().toUpperCase();
                     generoAutor = itemFacadeLocal.find(datosAutorProy.getGeneroId()).getNombre().toUpperCase();
                     nacionalidadAutor = datosAutorProy.getNacionalidadId().getNombre().toUpperCase();
                     ciAutor = datosAutorProy.getNumeroIdentificacion();
-                    fechaInicioEstudio = formatoFecha.format(administrarEstudiantesCarrera.obtenerPrimerMatricula(estudianteAutor).getOfertaAcademicaId().getFechaInicio());
-                    fechaFinEstudio = formatoFecha.format(administrarEstudiantesCarrera.obtenerMatriculaUltima(estudianteAutor).getOfertaAcademicaId().getFechaFin());
+//                    fechaInicioEstudio = formatoFecha.format(administrarEstudiantesCarrera.obtenerPrimerMatricula(estudianteAutor).getOfertaAcademicaId().getFechaInicio());
+//                    fechaFinEstudio = formatoFecha.format(administrarEstudiantesCarrera.obtenerMatriculaUltima(estudianteAutor).getOfertaAcademicaId().getFechaFin());
 
                     for (Miembro miembroTribunal : miembroFacadeLocal.buscarPorTribunal(evaluacionTribunal.getTribunalId().getId())) {
                         docente = docenteFacadeLocal.find(miembroTribunal.getDocenteId());
@@ -712,10 +712,10 @@ public class AppServlet extends HttpServlet {
                     EstudianteCarrera estudianteCarrera = estudianteCarreraFacadeLocal.find(autorProyecto.getAspiranteId().getId());
                     datosAutor = personaFacadeLocal.find(estudianteCarrera.getEstudianteId().getId());
                     if (cont == 0) {
-                        datosAutores += "" + estudianteCarrera.getEstadoId().getNombre() + " " + datosAutor.getNombres().toUpperCase() + " " + datosAutor.getApellidos().toUpperCase() + "";
+//                        datosAutores += "" + estudianteCarrera.getEstadoId().getNombre() + " " + datosAutor.getNombres().toUpperCase() + " " + datosAutor.getApellidos().toUpperCase() + "";
                         cont++;
                     } else {
-                        datosAutores += ", " + estudianteCarrera.getEstadoId().getNombre() + " " + datosAutor.getNombres().toUpperCase() + " " + datosAutor.getApellidos().toUpperCase();
+//                        datosAutores += ", " + estudianteCarrera.getEstadoId().getNombre() + " " + datosAutor.getNombres().toUpperCase() + " " + datosAutor.getApellidos().toUpperCase();
                         cont++;
                     }
                 }

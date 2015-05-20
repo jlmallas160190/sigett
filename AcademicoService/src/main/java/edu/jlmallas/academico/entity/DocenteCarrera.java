@@ -54,8 +54,10 @@ public class DocenteCarrera implements Serializable {
     public DocenteCarrera() {
     }
 
-    public DocenteCarrera(Long id,Boolean esActivo) {
+    public DocenteCarrera(Long id,Docente docente,Carrera carrera,Boolean esActivo) {
         this.id = id;
+        this.docenteId=docente;
+        this.carreraId=carrera;
         this.esActivo=esActivo;
     }
 

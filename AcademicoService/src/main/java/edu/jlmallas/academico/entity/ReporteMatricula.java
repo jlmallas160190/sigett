@@ -18,6 +18,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -66,35 +67,33 @@ public class ReporteMatricula implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "es_aprobado")
-    private boolean esAprobado;
+    private Boolean esAprobado;
     @Basic(optional = false)
     @NotNull
     @Column(name = "nota")
-    private double nota;
+    private Double nota;
     @JoinColumn(name = "oferta_academica_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private OfertaAcademica ofertaAcademicaId;
     @JoinColumn(name = "estudiante_carrera_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private EstudianteCarrera estudianteCarreraId;
-    @JoinColumn(name = "estado_matricula_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private EstadoMatricula estadoMatriculaId;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "estado_matricula_id")
+    private Long estadoMatriculaId;
+    @Transient
+    private String estado;
 
     public ReporteMatricula() {
     }
 
-    public ReporteMatricula(Long id) {
-        this.id = id;
+    public ReporteMatricula(Boolean esAprobado) {
+        this.esAprobado = esAprobado;
     }
 
-    public ReporteMatricula(Long id, String moduloMatriculado, String numeroModuloMatriculado, String paralelo, boolean esAprobado, double nota) {
+    public ReporteMatricula(Long id) {
         this.id = id;
-        this.moduloMatriculado = moduloMatriculado;
-        this.numeroModuloMatriculado = numeroModuloMatriculado;
-        this.paralelo = paralelo;
-        this.esAprobado = esAprobado;
-        this.nota = nota;
     }
 
     public Long getId() {
@@ -137,20 +136,28 @@ public class ReporteMatricula implements Serializable {
         this.paralelo = paralelo;
     }
 
-    public boolean getEsAprobado() {
+    public Boolean isEsAprobado() {
         return esAprobado;
     }
 
-    public void setEsAprobado(boolean esAprobado) {
+    public void setEsAprobado(Boolean esAprobado) {
         this.esAprobado = esAprobado;
     }
 
-    public double getNota() {
+    public Double getNota() {
         return nota;
     }
 
-    public void setNota(double nota) {
+    public void setNota(Double nota) {
         this.nota = nota;
+    }
+
+    public Long getEstadoMatriculaId() {
+        return estadoMatriculaId;
+    }
+
+    public void setEstadoMatriculaId(Long estadoMatriculaId) {
+        this.estadoMatriculaId = estadoMatriculaId;
     }
 
     public OfertaAcademica getOfertaAcademicaId() {
@@ -169,12 +176,12 @@ public class ReporteMatricula implements Serializable {
         this.estudianteCarreraId = estudianteCarreraId;
     }
 
-    public EstadoMatricula getEstadoMatriculaId() {
-        return estadoMatriculaId;
+    public String getEstado() {
+        return estado;
     }
 
-    public void setEstadoMatriculaId(EstadoMatricula estadoMatriculaId) {
-        this.estadoMatriculaId = estadoMatriculaId;
+    public void setEstado(String estado) {
+        this.estado = estado;
     }
 
     @Override

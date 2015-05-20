@@ -24,9 +24,9 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import edu.unl.sigett.dao.ConfiguracionGeneralDao;
-import edu.unl.sigett.dao.EstudianteUsuarioFacadeLocal;
+import edu.unl.sigett.dao.EstudianteUsuarioDao;
 import org.jlmallas.seguridad.dao.UsuarioDao;
-import edu.jlmallas.academico.dao.implement.EstudianteFacadeLocal;
+import edu.jlmallas.academico.dao.EstudianteDao;
 
 /**
  *
@@ -46,11 +46,11 @@ public class LoginEstudiante implements Serializable {
     @EJB
     private UsuarioDao usuarioFacadeLocal;
     @EJB
-    private EstudianteUsuarioFacadeLocal estudianteUsuarioFacadeLocal;
+    private EstudianteUsuarioDao estudianteUsuarioFacadeLocal;
     @EJB
     private ConfiguracionGeneralDao configuracionGeneralFacadeLocal;
     @EJB
-    private EstudianteFacadeLocal estudianteFacadeLocal;
+    private EstudianteDao estudianteFacadeLocal;
     @EJB
     private ConfiguracionDao configuracionFacadeLocal;
 

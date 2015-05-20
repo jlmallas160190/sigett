@@ -1,0 +1,50 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <body>
+        <p:dataTable id="tblLI" value="#{sessionLineaInvestigacionCarrera.lineaInvestigacionCarreras}" var="item" rows="20" paginator="true"
+                     rowIndexVar="rowIx"  selectionMode="single" rowKey="#{item.lineaInvestigacionId.nombre}" 
+                     selection="#{sessionLineaInvestigacionCarrera.lineaInvestigacionCarrera}" widgetVar="tblLIFilter"
+                     filteredValue="#{sessionLineaInvestigacionCarrera.filterLineasInvestigacionCarreras}"
+                     rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'even-row' : 'odd-row'}" emptyMessage="#{msg['lbl.table.empty']}">
+            <f:facet name="header">
+                <h:panelGrid styleClass="panelgrid" rowClasses="rowpanelgrid" columns="1">
+                    <p:inputText id="globalFilter" onkeyup="PF('tblLIFilter').filter()" style="width:150px" placeholder="#{msg['lbl.buscar']}"/>
+                </h:panelGrid>
+            </f:facet>
+            <p:column rendered="#{sessionLineaInvestigacionCarrera.renderedEditar}"
+                      filterBy="#{item.lineaInvestigacionId.nombre}"
+                      sortBy="#{item.lineaInvestigacionId.nombre}" >
+                <f:facet name="header">
+                    <h:outputText value="#{msg['lbl.nombre']}"/>
+                </f:facet>
+                <p:commandLink value="#{item.lineaInvestigacionId.nombre}"  action="#{administrarLineasInvestigacionCarrera.editar(item)}"/>
+            </p:column>
+            <p:column rendered="#{!sessionLineaInvestigacionCarrera.renderedEditar}" 
+                      sortBy="#{item.lineaInvestigacionId.nombre}"
+                      filterBy="#{item.lineaInvestigacionId.nombre}">
+                <f:facet name="header">
+                    <h:outputText value="#{msg['lbl.nombre']}"/>
+                </f:facet>
+                <h:outputText value="#{item.lineaInvestigacionId.nombre}"/>
+            </p:column>
+            <p:column 
+                      filterBy="#{item.lineaInvestigacionId.descripcion}"
+                      sortBy="#{item.lineaInvestigacionId.descripcion}" >
+                <f:facet name="header">
+                    <h:outputText value="#{msg['lbl.descripcion']}"/>
+                </f:facet>
+                <h:outputText value="#{item.lineaInvestigacionId.descripcion}"/>
+            </p:column>
+            <p:column rendered="#{sessionLineaInvestigacionCarrera.renderedEliminar}" headerText="#{msg['lbl.eliminar']}">
+                <p:commandButton icon="ui-icon-trash" onclick="if (!confirm('¿#{msg['lbl.confirmarEliminar']}?'))
+                    return false;" update="tblLI" oncomplete="PF('tblLIFilter').filter()"
+                                 action="#{administrarLineasInvestigacionCarrera.eliminar(item.lineaInvestigacionId)}"/>
+            </p:column>
+        </p:dataTable>
+    </body>
+
+</html>

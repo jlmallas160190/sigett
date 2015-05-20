@@ -36,7 +36,7 @@ import org.primefaces.event.TransferEvent;
 import org.primefaces.model.DualListModel;
 import edu.jlmallas.academico.service.CarreraService;
 import edu.unl.sigett.dao.DocenteUsuarioDao;
-import edu.unl.sigett.dao.EstudianteUsuarioFacadeLocal;
+import edu.unl.sigett.dao.EstudianteUsuarioDao;
 import com.jlmallas.soporte.session.ExcepcionFacadeLocal;
 import com.jlmallas.soporte.session.ObjetoFacadeLocal;
 import org.jlmallas.seguridad.dao.PermisoDao;
@@ -115,7 +115,7 @@ public class AdministrarUsuarios implements Serializable {
     @EJB
     private UsuarioDao usuarioDao;
     @EJB
-    private EstudianteUsuarioFacadeLocal estudianteUsuarioFacadeLocal;
+    private EstudianteUsuarioDao estudianteUsuarioFacadeLocal;
     @EJB
     private DocenteUsuarioDao docenteUsuarioFacadeLocal;
     @EJB
@@ -511,47 +511,6 @@ public class AdministrarUsuarios implements Serializable {
         return "";
     }
 
-    public void grabarUsuarioEstudiante(Estudiante estudiante) {
-        try {
-            Usuario usuario = null;
-            Persona personaEstudiante = personaFacadeLocal.find(estudiante.getId());
-            EstudianteUsuario estudianteUsuario1 = estudianteUsuarioFacadeLocal.buscarPorEstudiante(estudiante.getId());
-            if (estudianteUsuario1 != null) {
-                usuario = usuarioDao.find(estudianteUsuario1.getId());
-            }
-            if (usuario == null) {
-                usuario = new Usuario();
-                usuario.setApellidos(personaEstudiante.getApellidos());
-                usuario.setNombres(personaEstudiante.getNombres());
-                usuario.setEmail(personaEstudiante.getEmail());
-                usuario.setEsSuperuser(false);
-                usuario.setEsActivo(true);
-                usuario.setPassword(configuracionFacadeLocal.encriptaClave(personaEstudiante.getNumeroIdentificacion()));
-                usuario.setUsername(personaEstudiante.getNumeroIdentificacion());
-                if (usuarioDao.unicoUsername(usuario.getUsername()) == false) {
-                    usuarioDao.create(usuario);
-                    EstudianteUsuario estudianteUsuario = new EstudianteUsuario();
-                    estudianteUsuario.setEstudianteId(estudiante.getId());
-                    estudianteUsuario.setId(usuario.getId());
-                    estudianteUsuario.setId(usuario.getId());
-                    estudianteUsuarioFacadeLocal.create(estudianteUsuario);
-                    Rol rol = rolDao.find((long) 2);
-                    if (rol != null) {
-                        RolUsuario rolUsuario = new RolUsuario();
-                        rolUsuario.setRolId(rol);
-                        rolUsuario.setUsuarioId(usuario);
-                        rolUsuarioFacadeLocal.create(rolUsuario);
-                    }
-                }
-            } else {
-                if (usuarioDao.unicoUsername(usuario.getUsername()) == false) {
-                    usuario.setPassword(configuracionFacadeLocal.encriptaClave(personaEstudiante.getNumeroIdentificacion()));
-                    usuarioDao.edit(usuario);
-                }
-            }
-        } catch (Exception e) {
-        }
-    }
 
     public boolean contieneCarrera(List<UsuarioCarrera> usuarioCarreras, UsuarioCarrera usuarioCarrera) {
         boolean var = false;

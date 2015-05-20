@@ -27,8 +27,8 @@ import javax.inject.Named;
 import org.primefaces.event.TransferEvent;
 import org.primefaces.model.DualListModel;
 import edu.jlmallas.academico.service.CarreraService;
-import edu.unl.sigett.dao.LineaInvestigacionCarreraFacadeLocal;
-import edu.unl.sigett.dao.LineaInvestigacionFacadeLocal;
+import edu.unl.sigett.dao.LineaInvestigacionCarreraDao;
+import edu.unl.sigett.dao.LineaInvestigacionDao;
 import org.jlmallas.seguridad.dao.LogDao;
 import org.jlmallas.seguridad.dao.UsuarioDao;
 import edu.unl.sigett.dao.UsuarioCarreraDao;
@@ -62,7 +62,7 @@ public class AdministrarLineaInvestigacion implements Serializable {
     @Inject
     private SessionLineaInvestigacion sessionLineaInvestigacion;
     @EJB
-    private LineaInvestigacionFacadeLocal lineaInvestigacionFacadeLocal;
+    private LineaInvestigacionDao lineaInvestigacionFacadeLocal;
     @EJB
     private LogDao logFacadeLocal;
     private DualListModel<Carrera> carrerasDualList;
@@ -70,7 +70,7 @@ public class AdministrarLineaInvestigacion implements Serializable {
     private List<LineaInvestigacionCarrera> licsRemovidos;
     private List<LineaInvestigacionCarrera> lineasInvestigacionCarreraGrabar;
     @EJB
-    private LineaInvestigacionCarreraFacadeLocal lineaInvestigacionCarreraFacadeLocal;
+    private LineaInvestigacionCarreraDao lineaInvestigacionCarreraFacadeLocal;
     @EJB
     private CarreraService carreraFacadeLocal;
     @EJB
@@ -291,49 +291,49 @@ public class AdministrarLineaInvestigacion implements Serializable {
             lics.add(lic);
         }
         for (LineaInvestigacionCarrera lineaInvestigacionCarrera : lics) {
-            if (contieneCarrera(lineaInvestigacionCarreraFacadeLocal.buscarPorLineaInvestigacion(li.getId()), lineaInvestigacionCarrera) == false) {
-                lineaInvestigacionCarreraFacadeLocal.create(lineaInvestigacionCarrera);
-                logFacadeLocal.create(logFacadeLocal.crearLog("LineaInvestigacionCarrera", lineaInvestigacionCarrera.getId() + "", "CREAR", "|Carrera=" + lineaInvestigacionCarrera.getCarreraId() + "|LineaInvestigacion=" + lineaInvestigacionCarrera.getLineaInvestigacionId(), sessionUsuario.getUsuario()));
-            }
+//            if (contieneCarrera(lineaInvestigacionCarreraFacadeLocal.buscarPorLineaInvestigacion(li.getId()), lineaInvestigacionCarrera) == false) {
+//                lineaInvestigacionCarreraFacadeLocal.create(lineaInvestigacionCarrera);
+//                logFacadeLocal.create(logFacadeLocal.crearLog("LineaInvestigacionCarrera", lineaInvestigacionCarrera.getId() + "", "CREAR", "|Carrera=" + lineaInvestigacionCarrera.getCarreraId() + "|LineaInvestigacion=" + lineaInvestigacionCarrera.getLineaInvestigacionId(), sessionUsuario.getUsuario()));
+//            }
         }
     }
 
     public void removerLineasInvestigacionCarreras(LineaInvestigacion li) {
-        if (li.getId() != null) {
-            for (LineaInvestigacionCarrera lic : licsRemovidos) {
-                Long id = devuelveCarreraEliminar(lineaInvestigacionCarreraFacadeLocal.buscarPorLineaInvestigacion(li.getId()), lic);
-                LineaInvestigacionCarrera lineaInvestigacionCarrera = null;
-                lineaInvestigacionCarrera = lineaInvestigacionCarreraFacadeLocal.find(id);
-                if (lineaInvestigacionCarrera != null) {
-                    logFacadeLocal.create(logFacadeLocal.crearLog("LineaInvestigacionCarrera", lineaInvestigacionCarrera.getId() + "", "DELETE", "ELIMINAR: |Carrera=" + lineaInvestigacionCarrera.getCarreraId() + "|LineaInvestigacion=" + lineaInvestigacionCarrera.getLineaInvestigacionId(), sessionUsuario.getUsuario()));
-                    lineaInvestigacionCarreraFacadeLocal.remove(lineaInvestigacionCarrera);
-                }
-            }
-        }
+//        if (li.getId() != null) {
+//            for (LineaInvestigacionCarrera lic : licsRemovidos) {
+//                Long id = devuelveCarreraEliminar(lineaInvestigacionCarreraFacadeLocal.buscarPorLineaInvestigacion(li.getId()), lic);
+//                LineaInvestigacionCarrera lineaInvestigacionCarrera = null;
+//                lineaInvestigacionCarrera = lineaInvestigacionCarreraFacadeLocal.find(id);
+//                if (lineaInvestigacionCarrera != null) {
+//                    logFacadeLocal.create(logFacadeLocal.crearLog("LineaInvestigacionCarrera", lineaInvestigacionCarrera.getId() + "", "DELETE", "ELIMINAR: |Carrera=" + lineaInvestigacionCarrera.getCarreraId() + "|LineaInvestigacion=" + lineaInvestigacionCarrera.getLineaInvestigacionId(), sessionUsuario.getUsuario()));
+//                    lineaInvestigacionCarreraFacadeLocal.remove(lineaInvestigacionCarrera);
+//                }
+//            }
+//        }
     }
 
     public void listadoCarreras(LineaInvestigacion li) {
         List<Carrera> lineasInvestigacionCarreras = new ArrayList<>();
         List<Carrera> carreras = new ArrayList<>();
         try {
-            if (li.getId() != null) {
-                for (LineaInvestigacionCarrera lic : lineaInvestigacionCarreraFacadeLocal.buscarPorLineaInvestigacion(li.getId())) {
-                    Carrera carrera = carreraFacadeLocal.find(lic.getCarreraId());
-                    lineasInvestigacionCarreras.add(carrera);
-                }
-                for (UsuarioCarrera usuarioCarrera : usuarioCarreraFacadeLocal.buscarPorUsuario(sessionUsuario.getUsuario().getId())) {
-                    Carrera carrera = carreraFacadeLocal.find(usuarioCarrera.getCarreraId());
-                    if (!lineasInvestigacionCarreras.contains(carrera)) {
-                        carreras.add(carrera);
-
-                    }
-                }
-            } else {
-                for (UsuarioCarrera usuarioCarrera : usuarioCarreraFacadeLocal.buscarPorUsuario(sessionUsuario.getUsuario().getId())) {
-                    Carrera carrera = carreraFacadeLocal.find(usuarioCarrera.getCarreraId());
-                    carreras.add(carrera);
-                }
-            }
+//            if (li.getId() != null) {
+//                for (LineaInvestigacionCarrera lic : lineaInvestigacionCarreraFacadeLocal.buscarPorLineaInvestigacion(li.getId())) {
+//                    Carrera carrera = carreraFacadeLocal.find(lic.getCarreraId());
+//                    lineasInvestigacionCarreras.add(carrera);
+//                }
+//                for (UsuarioCarrera usuarioCarrera : usuarioCarreraFacadeLocal.buscarPorUsuario(sessionUsuario.getUsuario().getId())) {
+//                    Carrera carrera = carreraFacadeLocal.find(usuarioCarrera.getCarreraId());
+//                    if (!lineasInvestigacionCarreras.contains(carrera)) {
+//                        carreras.add(carrera);
+//
+//                    }
+//                }
+//            } else {
+//                for (UsuarioCarrera usuarioCarrera : usuarioCarreraFacadeLocal.buscarPorUsuario(sessionUsuario.getUsuario().getId())) {
+//                    Carrera carrera = carreraFacadeLocal.find(usuarioCarrera.getCarreraId());
+//                    carreras.add(carrera);
+//                }
+//            }
             carrerasDualList = new DualListModel<>(carreras, lineasInvestigacionCarreras);
         } catch (Exception e) {
             System.out.println(e);

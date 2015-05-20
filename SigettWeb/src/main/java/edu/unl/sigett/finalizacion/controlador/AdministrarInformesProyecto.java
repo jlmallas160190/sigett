@@ -47,7 +47,7 @@ import org.jlmallas.seguridad.dao.UsuarioDao;
 import edu.jlmallas.academico.entity.Docente;
 import edu.jlmallas.academico.entity.EstudianteCarrera;
 import edu.jlmallas.academico.dao.DocenteCarreraDao;
-import edu.jlmallas.academico.dao.implement.EstudianteCarreraFacadeLocal;
+import edu.jlmallas.academico.dao.EstudianteCarreraDao;
 import edu.unl.sigett.enumeration.EstadoAutorEnum;
 import java.util.HashMap;
 import java.util.Map;
@@ -86,7 +86,7 @@ public class AdministrarInformesProyecto implements Serializable {
     @EJB
     private ConfiguracionGeneralDao configuracionGeneralFacadeLocal;
     @EJB
-    private EstudianteCarreraFacadeLocal estudianteCarreraFacadeLocal;
+    private EstudianteCarreraDao estudianteCarreraFacadeLocal;
     @EJB
     private PersonaDao personaFacadeLocal;
     @EJB
@@ -236,10 +236,10 @@ public class AdministrarInformesProyecto implements Serializable {
                     EstudianteCarrera estudianteCarrera = estudianteCarreraFacadeLocal.find(autorProyecto.getAspiranteId().getId());
                     Persona datosAutor = personaFacadeLocal.find(estudianteCarrera.getEstudianteId().getId());
                     if (cont == 0) {
-                        datosAutores += "" + estudianteCarrera.getEstadoId().getNombre() + " " + datosAutor.getNombres().toUpperCase() + " " + datosAutor.getApellidos().toUpperCase() + "";
+//                        datosAutores += "" + estudianteCarrera.getEstadoId().getNombre() + " " + datosAutor.getNombres().toUpperCase() + " " + datosAutor.getApellidos().toUpperCase() + "";
                         cont++;
                     } else {
-                        datosAutores += ", " + estudianteCarrera.getEstadoId().getNombre() + " " + datosAutor.getNombres().toUpperCase() + " " + datosAutor.getApellidos().toUpperCase();
+//                        datosAutores += ", " + estudianteCarrera.getEstadoId().getNombre() + " " + datosAutor.getNombres().toUpperCase() + " " + datosAutor.getApellidos().toUpperCase();
                         cont++;
                     }
                 }

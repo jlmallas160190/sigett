@@ -40,13 +40,13 @@ public class EstudianteUsuario implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "estudiante_id")
-    private long estudianteId;
+    private Long estudianteId;
 
     public EstudianteUsuario() {
     }
 
-    public EstudianteUsuario(Long id) {
-        this.id = id;
+    public EstudianteUsuario(Long estudianteId) {
+        this.estudianteId = estudianteId;
     }
 
     public EstudianteUsuario(Long id, long estudianteId) {
@@ -62,11 +62,11 @@ public class EstudianteUsuario implements Serializable {
         this.id = id;
     }
 
-    public long getEstudianteId() {
+    public Long getEstudianteId() {
         return estudianteId;
     }
 
-    public void setEstudianteId(long estudianteId) {
+    public void setEstudianteId(Long estudianteId) {
         this.estudianteId = estudianteId;
     }
 

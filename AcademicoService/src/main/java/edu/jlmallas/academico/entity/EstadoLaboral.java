@@ -51,8 +51,9 @@ public class EstadoLaboral implements Serializable {
     public EstadoLaboral() {
     }
 
-    public EstadoLaboral(Long id) {
+    public EstadoLaboral(Long id, Long tipoContrato) {
         this.id = id;
+        this.tipoContratoId = tipoContrato;
     }
 
     public Long getId() {

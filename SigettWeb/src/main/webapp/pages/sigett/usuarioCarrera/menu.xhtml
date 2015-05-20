@@ -24,7 +24,7 @@
                 <p:graphicImage width="16" height="16" value="/resources/blacks/16x16/240.png"/>
                 #{msg['lbl.configuracion']}
             </p:commandLink>
-            <p:commandLink styleClass="list-group-item" action="#{administrarLineasInvestigacionCarrera.viewLineasInvestigacionCarrera()}">
+            <p:commandLink styleClass="list-group-item" action="pretty:lineasInvestigacionCarrera">
                 <p:graphicImage width="16" height="16" value="/resources/png/32px/Shape102.png"/>
                 #{msg['lbl.lineasInvestigacion']}
             </p:commandLink>
@@ -32,10 +32,10 @@
                 <p:graphicImage width="16" height="16" value="/resources/png/32px/Shape4.png"/>
                 #{msg['lbl.docentes']}
             </p:commandLink>
-           <!--commandLink styleClass="list-group-item" action="#{administrarEstudiantesCarrera.viewEstudiantesCarrera()}">
+            <p:commandLink styleClass="list-group-item" action="pretty:estudiantesCarrera">
                 <p:graphicImage width="16" height="16" value="/resources/png/32px/Shape198.png"/>
-            #{msg['lbl.estudiantes']}
-        </p:commandLink>-->
+                #{msg['lbl.estudiantes']}
+            </p:commandLink>
         </h:panelGrid>
     </body>
 </html>

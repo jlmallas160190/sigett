@@ -24,8 +24,8 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
-import edu.unl.sigett.dao.LineaInvestigacionCarreraFacadeLocal;
-import edu.unl.sigett.dao.LineaInvestigacionFacadeLocal;
+import edu.unl.sigett.dao.LineaInvestigacionCarreraDao;
+import edu.unl.sigett.dao.LineaInvestigacionDao;
 import org.jlmallas.seguridad.dao.LogDao;
 import org.jlmallas.seguridad.dao.UsuarioDao;
 
@@ -39,43 +39,54 @@ import org.jlmallas.seguridad.dao.UsuarioDao;
     @URLMapping(
             id = "editarLineaInvestigacionCarrera",
             pattern = "/editarLineaInvestigacionCarrera/#{sessionLineaInvestigacionCarrera.lineaInvestigacionCarrera.id}",
-            viewId = "/faces/pages/sigett/editarLineaInvestigacionCarrera.xhtml"
+            viewId = "/faces/pages/sigett/lineasInvestigacionCarrera/editarLineaInvestigacionCarrera.xhtml"
     ),
     @URLMapping(
             id = "crearLineaInvestigacionCarrera",
             pattern = "/crearLineaInvestigacionCarera/",
-            viewId = "/faces/pages/sigett/editarLineaInvestigacionCarrera.xhtml"
+            viewId = "/faces/pages/sigett/lineasInvestigacionCarrera/editarLineaInvestigacionCarrera.xhtml"
     ),
     @URLMapping(
             id = "lineasInvestigacionCarrera",
             pattern = "/lineasInvestigacionCarrera/",
-            viewId = "/faces/pages/sigett/buscarLineasInvestigacionCarrera.xhtml"
+            viewId = "/faces/pages/sigett/lineasInvestigacionCarrera/index.xhtml"
     )})
 public class AdministrarLineasInvestigacionCarrera implements Serializable {
 
+    //<editor-fold defaultstate="collapsed" desc="INYECCIÓN DE MANAGED BEANS">
     @Inject
     private SessionLineaInvestigacionCarrera sessionLineaInvestigacionCarrera;
     @Inject
     private SessionUsuario sessionUsuario;
-    private List<LineaInvestigacionCarrera> lineaInvestigacionCarreras;
+    //</editor-fold>
+    //<editor-fold defaultstate="collapsed" desc="INYECCIÓN DE SERVICIOS">
     @Inject
     private SessionUsuarioCarrera sessionUsuarioCarrera;
     @EJB
     private LogDao logFacadeLocal;
     @EJB
-    private LineaInvestigacionCarreraFacadeLocal lineaInvestigacionCarreraFacadeLocal;
+    private LineaInvestigacionCarreraDao lineaInvestigacionCarreraDao;
     @EJB
     private UsuarioDao usuarioFacadeLocal;
-    private boolean renderedNoEditar;
     @EJB
-    private LineaInvestigacionFacadeLocal lineaInvestigacionFacadeLocal;
-    private String criterio;
-    private boolean renderedBuscar;
+    private LineaInvestigacionDao lineaInvestigacionDao;
+//</editor-fold>
 
     public AdministrarLineasInvestigacionCarrera() {
     }
 
+    public void init() {
+        this.buscar();
+        this.renderedCrear();
+        this.renderedEditar();
+        this.renderedEliminar();
+    }
     //<editor-fold defaultstate="collapsed" desc="MÉTODOS CRUD">
+    /**
+     * CREAR LÍNEA DE INVESTIGACIÓN CARRERA
+     *
+     * @return
+     */
     public String crear() {
         String navegacion = "";
         try {
@@ -83,9 +94,8 @@ public class AdministrarLineasInvestigacionCarrera implements Serializable {
             ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
             int tienePermiso = usuarioFacadeLocal.tienePermiso(sessionUsuario.getUsuario(), "crear_linea_investigacion_carrera");
             if (tienePermiso == 1) {
-                sessionLineaInvestigacionCarrera.setLineaInvestigacionCarrera(new LineaInvestigacionCarrera());
-                sessionLineaInvestigacionCarrera.getLineaInvestigacionCarrera().setLineaInvestigacionId(new LineaInvestigacion());
-//                sessionLineaInvestigacionCarrera.getLineaInvestigacionCarrera().setCarreraId(sessionUsuarioCarrera.getUsuarioCarrera().getCarreraId());
+                sessionLineaInvestigacionCarrera.setLineaInvestigacionCarrera(new LineaInvestigacionCarrera(new LineaInvestigacion(),
+                        sessionUsuarioCarrera.getUsuarioCarreraAux().getCarrera().getId()));
                 navegacion = "pretty:crearLineaInvestigacionCarrera";
             } else {
                 if (tienePermiso == 2) {
@@ -99,11 +109,6 @@ public class AdministrarLineasInvestigacionCarrera implements Serializable {
         } catch (Exception e) {
         }
         return navegacion;
-    }
-
-    public String viewLineasInvestigacionCarrera() {
-        this.lineaInvestigacionCarreras = new ArrayList<>();
-        return "pretty:lineasInvestigacionCarrera";
     }
 
     public String editar(LineaInvestigacionCarrera lineaInvestigacionCarrera) {
@@ -128,14 +133,6 @@ public class AdministrarLineasInvestigacionCarrera implements Serializable {
         return navegacion;
     }
 
-    public boolean disabledEditar(LineaInvestigacionCarrera lc) {
-        boolean var = false;
-        if (lc.getLineaInvestigacionId().getEsActivo() == false) {
-            var = true;
-        }
-        return var;
-    }
-
     public void eliminar(LineaInvestigacion lineaInvestigacion) {
         try {
             FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -144,36 +141,36 @@ public class AdministrarLineasInvestigacionCarrera implements Serializable {
             if (tienePermiso == 1) {
                 if (lineaInvestigacion.getEsActivo()) {
                     lineaInvestigacion.setEsActivo(false);
-                    logFacadeLocal.create(logFacadeLocal.crearLog("LineaInvestigacion", lineaInvestigacion.getId() + "", "DESACTIVAR", "|Nombre= " + lineaInvestigacion.getNombre() + "|Descripción= " + lineaInvestigacion.getDescripcion(), sessionUsuario.getUsuario()));
+                    logFacadeLocal.create(logFacadeLocal.crearLog("LineaInvestigacion", lineaInvestigacion.getId() + "", "DESACTIVAR",
+                            "|Nombre= " + lineaInvestigacion.getNombre() + "|Descripción= " + lineaInvestigacion.getDescripcion(), sessionUsuario.getUsuario()));
                 } else {
                     lineaInvestigacion.setEsActivo(true);
-                    logFacadeLocal.create(logFacadeLocal.crearLog("LineaInvestigacion", lineaInvestigacion.getId() + "", "ACTIVAR", "|Nombre= " + lineaInvestigacion.getNombre() + "|Descripción= " + lineaInvestigacion.getDescripcion(), sessionUsuario.getUsuario()));
+                    logFacadeLocal.create(logFacadeLocal.crearLog("LineaInvestigacion", lineaInvestigacion.getId() + "", "ACTIVAR", "|Nombre= "
+                            + lineaInvestigacion.getNombre() + "|Descripción= " + lineaInvestigacion.getDescripcion(), sessionUsuario.getUsuario()));
                 }
-                lineaInvestigacionFacadeLocal.edit(lineaInvestigacion);
-            } else {
-                if (tienePermiso == 2) {
-                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_eliminar") + ". " + bundle.getString("lbl.msm_consulte"), "");
-                    FacesContext.getCurrentInstance().addMessage(null, message);
+                lineaInvestigacionDao.edit(lineaInvestigacion);
+                return;
+            }
+            if (tienePermiso == 2) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_eliminar") + ". "
+                        + bundle.getString("lbl.msm_consulte"), "");
+                FacesContext.getCurrentInstance().addMessage(null, message);
 
-                }
             }
         } catch (Exception e) {
         }
     }
 
-    public void buscar(String criterio) {
-        this.lineaInvestigacionCarreras = new ArrayList<>();
+    public void buscar() {
+        this.sessionLineaInvestigacionCarrera.getLineaInvestigacionCarreras().clear();
         try {
             FacesContext facesContext = FacesContext.getCurrentInstance();
             ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
 
             int tienePermiso = usuarioFacadeLocal.tienePermiso(sessionUsuario.getUsuario(), "buscar_linea_investigacion_carrera");
             if (tienePermiso == 1) {
-//                for (LineaInvestigacionCarrera lc : lineaInvestigacionCarreraFacadeLocal.buscarPorCarrera(sessionUsuarioCarrera.getUsuarioCarrera().getCarreraId())) {
-//                    if (lc.getLineaInvestigacionId().getNombre().toLowerCase().contains(criterio.toLowerCase())) {
-//                        this.lineaInvestigacionCarreras.add(lc);
-//                    }
-//                }
+                this.sessionLineaInvestigacionCarrera.setLineaInvestigacionCarreras(lineaInvestigacionCarreraDao.buscar(
+                        new LineaInvestigacionCarrera(null, sessionUsuarioCarrera.getUsuarioCarreraAux().getCarrera().getId())));
             } else {
                 if (tienePermiso == 2) {
                     FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_buscar") + ". " + bundle.getString("lbl.msm_consulte"), "");
@@ -182,19 +179,19 @@ public class AdministrarLineasInvestigacionCarrera implements Serializable {
                 }
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
     public List<LineaInvestigacionCarrera> buscarByCarrera(Carrera carrera) {
         try {
-            return lineaInvestigacionCarreraFacadeLocal.buscarPorCarrera(carrera.getId());
+//            return lineaInvestigacionCarreraFacadeLocal.buscarPorCarrera(carrera.getId());
         } catch (Exception e) {
         }
         return null;
     }
 
     public String grabar(LineaInvestigacionCarrera lineaInvestigacionCarrera) {
-        String navegacion = "";
         try {
             FacesContext facesContext = FacesContext.getCurrentInstance();
             ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
@@ -202,59 +199,60 @@ public class AdministrarLineasInvestigacionCarrera implements Serializable {
             if (lineaInvestigacionCarrera.getId() == null) {
                 int tienePermiso = usuarioFacadeLocal.tienePermiso(sessionUsuario.getUsuario(), "crear_linea_investigacion_carrera");
                 if (tienePermiso == 1) {
+                    lineaInvestigacionDao.create(lineaInvestigacionCarrera.getLineaInvestigacionId());
+                    logFacadeLocal.create(logFacadeLocal.crearLog("LineaInvestigacion", lineaInvestigacionCarrera.getLineaInvestigacionId().getId()
+                            + "", "CREAR", "|Nombre= " + lineaInvestigacionCarrera.getLineaInvestigacionId().getDescripcion(),
+                            sessionUsuario.getUsuario()));
+                    lineaInvestigacionCarreraDao.create(lineaInvestigacionCarrera);
+                    logFacadeLocal.create(logFacadeLocal.crearLog("LineaInvestigacionCarrera", lineaInvestigacionCarrera.getId() + "", "CREAR",
+                            "|Carrera=" + lineaInvestigacionCarrera.getCarreraId() + "|LineaInvestigacion="
+                            + lineaInvestigacionCarrera.getLineaInvestigacionId(), sessionUsuario.getUsuario()));
                     if (param.equalsIgnoreCase("grabar")) {
-                        lineaInvestigacionFacadeLocal.create(lineaInvestigacionCarrera.getLineaInvestigacionId());
-                        logFacadeLocal.create(logFacadeLocal.crearLog("LineaInvestigacion", lineaInvestigacionCarrera.getLineaInvestigacionId().getId() + "", "CREAR", "|Nombre= " + lineaInvestigacionCarrera.getLineaInvestigacionId().getDescripcion(), sessionUsuario.getUsuario()));
-                        lineaInvestigacionCarreraFacadeLocal.create(lineaInvestigacionCarrera);
-                        logFacadeLocal.create(logFacadeLocal.crearLog("LineaInvestigacionCarrera", lineaInvestigacionCarrera.getId() + "", "CREAR", "|Carrera=" + lineaInvestigacionCarrera.getCarreraId() + "|LineaInvestigacion=" + lineaInvestigacionCarrera.getLineaInvestigacionId(), sessionUsuario.getUsuario()));
-                        navegacion = "pretty:lineasInvestigacionCarrera";
                         sessionLineaInvestigacionCarrera.setLineaInvestigacionCarrera(new LineaInvestigacionCarrera());
-                    } else {
-                        if (param.equalsIgnoreCase("grabar-editar")) {
-                            lineaInvestigacionFacadeLocal.create(lineaInvestigacionCarrera.getLineaInvestigacionId());
-                            logFacadeLocal.create(logFacadeLocal.crearLog("LineaInvestigacion", lineaInvestigacionCarrera.getLineaInvestigacionId().getId() + "", "CREAR", "|Nombre= " + lineaInvestigacionCarrera.getLineaInvestigacionId().getDescripcion(), sessionUsuario.getUsuario()));
-                            lineaInvestigacionCarreraFacadeLocal.create(lineaInvestigacionCarrera);
-                            logFacadeLocal.create(logFacadeLocal.crearLog("LineaInvestigacionCarrera", lineaInvestigacionCarrera.getId() + "", "CREAR", "|Carrera=" + lineaInvestigacionCarrera.getCarreraId() + "|LineaInvestigacion=" + lineaInvestigacionCarrera.getLineaInvestigacionId(), sessionUsuario.getUsuario()));
-                            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_grabar"), "");
-                            FacesContext.getCurrentInstance().addMessage(null, message);
-                        }
+                        return "pretty:lineasInvestigacionCarrera";
                     }
-                    buscar("");
-                } else {
-                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_crear") + ". " + bundle.getString("lbl.msm_consulte"), "");
-                    FacesContext.getCurrentInstance().addMessage(null, message);
-                }
-            } else {
-                int tienePermiso = usuarioFacadeLocal.tienePermiso(sessionUsuario.getUsuario(), "editar_linea_investigacion_carrera");//guardar Usuario
-                if (tienePermiso == 1) {
-                    if (param.equalsIgnoreCase("grabar")) {
-                        lineaInvestigacionFacadeLocal.edit(lineaInvestigacionCarrera.getLineaInvestigacionId());
-                        logFacadeLocal.create(logFacadeLocal.crearLog("LineaInvestigacion", lineaInvestigacionCarrera.getLineaInvestigacionId().getId() + "", "EDITAR", "|Nombre= " + lineaInvestigacionCarrera.getLineaInvestigacionId().getDescripcion(), sessionUsuario.getUsuario()));
-                        lineaInvestigacionCarreraFacadeLocal.edit(lineaInvestigacionCarrera);
-                        logFacadeLocal.create(logFacadeLocal.crearLog("LineaInvestigacionCarrera", lineaInvestigacionCarrera.getId() + "", "EDITAR", "|Carrera=" + lineaInvestigacionCarrera.getCarreraId() + "|LineaInvestigacion=" + lineaInvestigacionCarrera.getLineaInvestigacionId(), sessionUsuario.getUsuario()));
-                        navegacion = "pretty:lineasInvestigacionCarrera";
-                        sessionLineaInvestigacionCarrera.setLineaInvestigacionCarrera(new LineaInvestigacionCarrera());
-                    } else {
-                        if (param.equalsIgnoreCase("grabar-editar")) {
-                            lineaInvestigacionFacadeLocal.edit(lineaInvestigacionCarrera.getLineaInvestigacionId());
-                            logFacadeLocal.create(logFacadeLocal.crearLog("LineaInvestigacion", lineaInvestigacionCarrera.getLineaInvestigacionId().getId() + "", "EDITAR", "|Nombre= " + lineaInvestigacionCarrera.getLineaInvestigacionId().getDescripcion(), sessionUsuario.getUsuario()));
-                            lineaInvestigacionCarreraFacadeLocal.edit(lineaInvestigacionCarrera);
-                            logFacadeLocal.create(logFacadeLocal.crearLog("LineaInvestigacionCarrera", lineaInvestigacionCarrera.getId() + "", "EDITAR", "|Carrera=" + lineaInvestigacionCarrera.getCarreraId() + "|LineaInvestigacion=" + lineaInvestigacionCarrera.getLineaInvestigacionId(), sessionUsuario.getUsuario()));
-                            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.lineaInvestigacion") + " " + bundle.getString("lbl.msm_editar"), "");
-                            FacesContext.getCurrentInstance().addMessage(null, message);
-                        }
+                    if (param.equalsIgnoreCase("grabar-editar")) {
+                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_grabar"), "");
+                        FacesContext.getCurrentInstance().addMessage(null, message);
+                        return "";
                     }
-                    buscar("");
-                } else {
-                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_editar") + ". " + bundle.getString("lbl.msm_consulte"), "");
-                    FacesContext.getCurrentInstance().addMessage(null, message);
-
+                    return "";
                 }
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_crear") + ". "
+                        + bundle.getString("lbl.msm_consulte"), "");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                buscar();
+                return "";
             }
+            int tienePermiso = usuarioFacadeLocal.tienePermiso(sessionUsuario.getUsuario(), "editar_linea_investigacion_carrera");
+            if (tienePermiso == 1) {
+                lineaInvestigacionDao.edit(lineaInvestigacionCarrera.getLineaInvestigacionId());
+                logFacadeLocal.create(logFacadeLocal.crearLog("LineaInvestigacion", lineaInvestigacionCarrera.getLineaInvestigacionId().getId()
+                        + "", "EDITAR", "|Nombre= " + lineaInvestigacionCarrera.getLineaInvestigacionId().getDescripcion(),
+                        sessionUsuario.getUsuario()));
+                lineaInvestigacionCarreraDao.edit(lineaInvestigacionCarrera);
+                logFacadeLocal.create(logFacadeLocal.crearLog("LineaInvestigacionCarrera", lineaInvestigacionCarrera.getId() + "", "EDITAR",
+                        "|Carrera=" + lineaInvestigacionCarrera.getCarreraId() + "|LineaInvestigacion="
+                        + lineaInvestigacionCarrera.getLineaInvestigacionId(), sessionUsuario.getUsuario()));
+                if (param.equalsIgnoreCase("grabar")) {
+                    sessionLineaInvestigacionCarrera.setLineaInvestigacionCarrera(new LineaInvestigacionCarrera());
+                    return "pretty:lineasInvestigacionCarrera";
+                }
+                if (param.equalsIgnoreCase("grabar-editar")) {
+                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.lineaInvestigacion") + " " + bundle.getString("lbl.msm_editar"), "");
+                    FacesContext.getCurrentInstance().addMessage(null, message);
+                    return "";
+                }
+                return "";
+            }
+            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_editar") + ". "
+                    + bundle.getString("lbl.msm_consulte"), "");
+            FacesContext.getCurrentInstance().addMessage(null, message);
+            buscar();
         } catch (Exception e) {
             System.out.println(e);
         }
-        return navegacion;
+        return "";
     }
 //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="MÉTODOS RENDERED">
@@ -262,52 +260,41 @@ public class AdministrarLineasInvestigacionCarrera implements Serializable {
     public void renderedBuscar(Usuario usuario) {
         int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "buscar_docente");
         if (tienePermiso == 1) {
-            renderedBuscar = true;
+            sessionLineaInvestigacionCarrera.setRenderedBuscar(true);
         } else {
-            renderedBuscar = false;
+            sessionLineaInvestigacionCarrera.setRenderedBuscar(false);
         }
     }
 
-    public boolean renderedEditar() {
-        boolean var = false;
+    public void renderedEditar() {
         int tienePermiso = usuarioFacadeLocal.tienePermiso(sessionUsuario.getUsuario(), "editar_linea_investigacion_carrera");
         if (tienePermiso == 1) {
-            var = true;
-            renderedNoEditar = false;
+            sessionLineaInvestigacionCarrera.setRenderedEditar(true);
         } else {
-            renderedNoEditar = true;
+            sessionLineaInvestigacionCarrera.setRenderedEditar(false);
         }
-        return var;
     }
 
-    public boolean renderedEliminar() {
-        boolean var = false;
+    public void renderedEliminar() {
         int tienePermiso = usuarioFacadeLocal.tienePermiso(sessionUsuario.getUsuario(), "eliminar_linea_investigacion_carrera");
         if (tienePermiso == 1) {
-            var = true;
+            sessionLineaInvestigacionCarrera.setRenderedEliminar(true);
+        } else {
+            sessionLineaInvestigacionCarrera.setRenderedEliminar(false);
         }
-        return var;
     }
 
-    public boolean renderedCrear() {
-        boolean var = false;
+    public void renderedCrear() {
         int tienePermiso = usuarioFacadeLocal.tienePermiso(sessionUsuario.getUsuario(), "crear_linea_investigacion_carrera");
         if (tienePermiso == 1) {
-            var = true;
+            sessionLineaInvestigacionCarrera.setRenderedCrear(true);
+        } else {
+            sessionLineaInvestigacionCarrera.setRenderedCrear(false);
         }
-        return var;
     }
 
 //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="SET Y GET">
-    public boolean isRenderedBuscar() {
-        return renderedBuscar;
-    }
-
-    public void setRenderedBuscar(boolean renderedBuscar) {
-        this.renderedBuscar = renderedBuscar;
-    }
-
     public SessionLineaInvestigacionCarrera getSessionLineaInvestigacionCarrera() {
         return sessionLineaInvestigacionCarrera;
     }
@@ -324,36 +311,12 @@ public class AdministrarLineasInvestigacionCarrera implements Serializable {
         this.sessionUsuario = sessionUsuario;
     }
 
-    public List<LineaInvestigacionCarrera> getLineaInvestigacionCarreras() {
-        return lineaInvestigacionCarreras;
-    }
-
-    public void setLineaInvestigacionCarreras(List<LineaInvestigacionCarrera> lineaInvestigacionCarreras) {
-        this.lineaInvestigacionCarreras = lineaInvestigacionCarreras;
-    }
-
     public SessionUsuarioCarrera getSessionUsuarioCarrera() {
         return sessionUsuarioCarrera;
     }
 
     public void setSessionUsuarioCarrera(SessionUsuarioCarrera sessionUsuarioCarrera) {
         this.sessionUsuarioCarrera = sessionUsuarioCarrera;
-    }
-
-    public boolean isRenderedNoEditar() {
-        return renderedNoEditar;
-    }
-
-    public void setRenderedNoEditar(boolean renderedNoEditar) {
-        this.renderedNoEditar = renderedNoEditar;
-    }
-
-    public String getCriterio() {
-        return criterio;
-    }
-
-    public void setCriterio(String criterio) {
-        this.criterio = criterio;
     }
 //</editor-fold>
 }

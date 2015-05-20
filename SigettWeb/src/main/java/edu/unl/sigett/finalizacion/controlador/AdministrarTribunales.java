@@ -35,7 +35,7 @@ import edu.unl.sigett.dao.TribunalFacadeLocal;
 import org.jlmallas.seguridad.dao.UsuarioDao;
 import edu.jlmallas.academico.entity.EstudianteCarrera;
 import edu.jlmallas.academico.enumeration.EstadoEstudianteCarreraEnum;
-import edu.jlmallas.academico.dao.implement.EstudianteCarreraFacadeLocal;
+import edu.jlmallas.academico.dao.EstudianteCarreraDao;
 
 /**
  *
@@ -74,7 +74,7 @@ public class AdministrarTribunales implements Serializable {
     @EJB
     private MiembroFacadeLocal miembroFacadeLocal;
     @EJB
-    private EstudianteCarreraFacadeLocal estudianteCarreraFacadeLocal;
+    private EstudianteCarreraDao estudianteCarreraFacadeLocal;
     private List<Tribunal> tribunales;
     private List<Tribunal> tribunalesPorDocente;
     
@@ -332,14 +332,14 @@ public class AdministrarTribunales implements Serializable {
         try {
             for (AutorProyecto autorProyecto : autorProyectoFacadeLocal.buscarPorProyecto(proyecto.getId())) {
                 EstudianteCarrera estudianteCarrera = estudianteCarreraFacadeLocal.find(autorProyecto.getAspiranteId().getId());
-                if (autorProyecto.getEstadoAutorId().getId() != 10) {
-                    if (estudianteCarrera.getEstadoId().getCodigo().equalsIgnoreCase(EstadoEstudianteCarreraEnum.EGRESADO.getTipo())) {
-                        var = true;
-                    } else {
-                        var = false;
-                        break;
-                    }
-                }
+//                if (autorProyecto.getEstadoAutorId().getId() != 10) {
+//                    if (estudianteCarrera.getEstadoId().getCodigo().equalsIgnoreCase(EstadoEstudianteCarreraEnum.EGRESADO.getTipo())) {
+//                        var = true;
+//                    } else {
+//                        var = false;
+//                        break;
+//                    }
+//                }
             }
         } catch (Exception e) {
         }

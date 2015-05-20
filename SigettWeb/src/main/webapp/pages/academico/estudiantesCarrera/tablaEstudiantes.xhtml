@@ -1,0 +1,53 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+        <p:dataTable id="tblEstudiantes" value="#{sessionEstudianteCarrera.estudiantesCarreraDTO}" var="item" rows="20" paginator="true"
+                     rowIndexVar="rowIx"  rowKey="#{item.estudianteCarrera.id}" selectionMode="single" widgetVar="tblEstudiantesFilter"
+                     selection="#{sessionEstudianteCarrera.estudianteCarreraDTO}" filteredValue="#{sessionEstudianteCarrera.filterEstudiantesCarreraDTO}"
+                     rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'even-row' : 'odd-row'}" emptyMessage="#{msg['lbl.table.empty']}">
+            <f:facet name="header">
+                <h:panelGrid styleClass="panelgrid" rowClasses="rowpanelgrid" columns="1">
+                    <p:inputText id="globalFilter" onkeyup="PF('tblEstudiantesFilter').filter()" style="width:150px" placeholder="#{msg['lbl.buscar']}"/>
+                </h:panelGrid>
+            </f:facet>
+            <p:column rendered="#{sessionEstudianteCarrera.renderedEditar}" 
+                      sortBy="#{item.persona.numeroIdentificacion}" 
+                      filterBy="#{item.persona.numeroIdentificacion}"
+                      filterMatchMode="contains">
+                <f:facet name="header">
+                    <h:outputText value="#{msg['lbl.ci']}"/>
+                </f:facet>
+                <p:commandLink update="tblEstudiantes" value="#{item.persona.numeroIdentificacion}" 
+                               action="#{administrarEstudiantesCarrera.editar(item)}"/>
+            </p:column>
+            <p:column rendered="#{!sessionEstudianteCarrera.renderedEditar}" 
+                      sortBy="#{item.persona.numeroIdentificacion}"
+                      filterBy="#{item.persona.numeroIdentificacion}"
+                      filterMatchMode="contains">
+                <f:facet name="header">
+                    <h:outputText value="#{msg['lbl.ci']}"/>
+                </f:facet>
+                <h:outputText value="#{item.persona.numeroIdentificacion}"/>
+            </p:column>
+            <p:column  sortBy="#{item.persona.nombres} #{item.persona.apellidos}"
+                       filterBy="#{item.persona.nombres} #{item.persona.apellidos}"
+                       filterMatchMode="contains">
+                <f:facet name="header">
+                    <h:outputText value="#{msg['lbl.docente']}"/>
+                </f:facet>
+                <h:outputText value="#{item.persona.nombres}
+                              #{item.persona.apellidos}"/>
+            </p:column>
+            <p:column headerText="#{msg['lbl.email']}" sortBy="#{item.persona.email}"
+                      filterBy="#{item.persona.email}"
+                      filterMatchMode="contains">
+                <h:outputText value="#{item.persona.email}"/>
+            </p:column>
+        </p:dataTable>
+    </body>
+</html>

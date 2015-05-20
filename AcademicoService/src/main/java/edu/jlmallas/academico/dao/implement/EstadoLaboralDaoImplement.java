@@ -26,20 +26,6 @@ public class EstadoLaboralDaoImplement extends AbstractDao<EstadoLaboral> implem
     }
 
     @Override
-    public EstadoLaboral buscarPorTipoContratoNombre(String nombre) {
-        List<EstadoLaboral> estados = new ArrayList<>();
-        try {
-            Query query = em.createQuery("SELECT e FROM EstadoLaboral e WHERE" + " (LOWER(e.tipoContratoId.nombre) =LOWER(:nombre))");
-            query.setParameter("nombre", nombre);
-            estados = query.getResultList();
-            return !estados.isEmpty() ? estados.get(0) : null;
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-        return null;
-    }
-
-    @Override
     public List<EstadoLaboral> buscar(EstadoLaboral estadoLaboral) {
         StringBuilder sql = new StringBuilder();
         HashMap<String, Object> parametros = new HashMap<>();

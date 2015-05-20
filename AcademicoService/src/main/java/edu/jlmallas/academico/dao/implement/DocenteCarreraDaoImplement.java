@@ -31,11 +31,11 @@ public class DocenteCarreraDaoImplement extends AbstractDao<DocenteCarrera> impl
         sql.append("SELECT d from DocenteCarrera d WHERE 1=1 ");
         if (docenteCarrera.getCarreraId() != null) {
             sql.append(" and d.carreraId=:carreraId ");
-            parametros.put("carreraId", docenteCarrera.getCarreraId().getId());
+            parametros.put("carreraId", docenteCarrera.getCarreraId());
         }
         if (docenteCarrera.getDocenteId() != null) {
             sql.append(" and d.docenteId=:docenteId");
-            parametros.put("docenteId", docenteCarrera.getDocenteId().getId());
+            parametros.put("docenteId", docenteCarrera.getDocenteId());
         }
         final Query q = em.createQuery(sql.toString());
         for (String key : parametros.keySet()) {

@@ -18,7 +18,6 @@ import edu.unl.sigett.entity.CatalogoEvaluacion;
 import edu.unl.sigett.entity.CatalogoEvento;
 import edu.jlmallas.academico.entity.Docente;
 import edu.unl.sigett.entity.EstadoAutor;
-import edu.jlmallas.academico.entity.EstadoEstudianteCarrera;
 import edu.unl.sigett.entity.EstadoProyecto;
 import edu.unl.sigett.entity.EvaluacionTribunal;
 import edu.unl.sigett.entity.Evento;
@@ -55,9 +54,8 @@ import edu.unl.sigett.dao.CatalogoEvaluacionFacadeLocal;
 import edu.unl.sigett.dao.CatalogoEventoFacadeLocal;
 import edu.unl.sigett.dao.ConfiguracionGeneralDao;
 import edu.unl.sigett.dao.EstadoAutorFacadeLocal;
-import edu.jlmallas.academico.dao.implement.EstadoEstudianteCarreraFacadeLocal;
 import edu.unl.sigett.dao.EstadoProyectoFacadeLocal;
-import edu.jlmallas.academico.dao.implement.EstudianteCarreraFacadeLocal;
+import edu.jlmallas.academico.dao.EstudianteCarreraDao;
 import edu.unl.sigett.dao.EvaluacionTribunalFacadeLocal;
 import edu.unl.sigett.dao.EventoFacadeLocal;
 import edu.unl.sigett.dao.MiembroFacadeLocal;
@@ -124,9 +122,7 @@ public class AdministrarEvaluacionesTribunal implements Serializable {
     @EJB
     private AutorProyectoFacadeLocal autorProyectoFacadeLocal;
     @EJB
-    private EstadoEstudianteCarreraFacadeLocal estadoEstudianteCarreraFacadeLocal;
-    @EJB
-    private EstudianteCarreraFacadeLocal estudianteCarreraFacadeLocal;
+    private EstudianteCarreraDao estudianteCarreraFacadeLocal;
     @EJB
     private CatalogoEventoFacadeLocal catalogoEventoFacadeLocal;
     @EJB
@@ -264,27 +260,27 @@ public class AdministrarEvaluacionesTribunal implements Serializable {
         return var;
     }
 
-    public void actualizaEstadoAutores(EvaluacionTribunal evaluacionTribunal, EstadoAutor estadoAutor, EstadoEstudianteCarrera estadoEstudianteCarrera) {
-        try {
-            for (AutorProyecto autorProyecto : autorProyectoFacadeLocal.buscarPorProyecto(evaluacionTribunal.getTribunalId().getProyectoId().getId())) {
-                EstudianteCarrera estudianteCarrera = estudianteCarreraFacadeLocal.find(autorProyecto.getAspiranteId().getId());
-                if (!autorProyecto.getEstadoAutorId().getCodigo().equalsIgnoreCase(EstadoAutorEnum.ABANDONADO.getTipo())) {
-                    autorProyecto.setEstadoAutorId(estadoAutor);
-                    autorProyectoFacadeLocal.edit(autorProyecto);
-                    estudianteCarrera.setEstadoId(estadoEstudianteCarrera);
-                    estudianteCarreraFacadeLocal.edit(estudianteCarrera);
-                }
-            }
-        } catch (Exception e) {
-        }
-    }
+//    public void actualizaEstadoAutores(EvaluacionTribunal evaluacionTribunal, EstadoAutor estadoAutor, EstadoEstudianteCarrera estadoEstudianteCarrera) {
+//        try {
+//            for (AutorProyecto autorProyecto : autorProyectoFacadeLocal.buscarPorProyecto(evaluacionTribunal.getTribunalId().getProyectoId().getId())) {
+//                EstudianteCarrera estudianteCarrera = estudianteCarreraFacadeLocal.find(autorProyecto.getAspiranteId().getId());
+//                if (!autorProyecto.getEstadoAutorId().getCodigo().equalsIgnoreCase(EstadoAutorEnum.ABANDONADO.getTipo())) {
+//                    autorProyecto.setEstadoAutorId(estadoAutor);
+//                    autorProyectoFacadeLocal.edit(autorProyecto);
+//                    estudianteCarrera.setEstadoId(estadoEstudianteCarrera);
+//                    estudianteCarreraFacadeLocal.edit(estudianteCarrera);
+//                }
+//            }
+//        } catch (Exception e) {
+//        }
+//    }
 
     public void grabar(EvaluacionTribunal evaluacionTribunal, Tribunal tribunal, Proyecto proyecto, Usuario usuario) {
         try {
             CatalogoEvento catalogoEvento = catalogoEventoFacadeLocal.buscarPorCodigo(CatalogoEventoEnum.SUSTENTACION.getTipo());
             Evento evento = null;
             EstadoProyecto estadoProyecto = null;
-            EstadoEstudianteCarrera estadoEstudianteCarrera = null;
+//            EstadoEstudianteCarrera estadoEstudianteCarrera = null;
             FacesContext facesContext = FacesContext.getCurrentInstance();
             String param = (String) facesContext.getExternalContext().getRequestParameterMap().get("1");
             ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
@@ -371,18 +367,18 @@ public class AdministrarEvaluacionesTribunal implements Serializable {
                                             /*APROBADA*/
                                             estadoProyecto = estadoProyectoFacadeLocal.buscarPorCodigo(EstadoProyectoEnum.SUSTENTACIONPUBLICA.getTipo());
                                             estadoAutor = estadoAutorFacadeLocal.buscarPorCodigo(EstadoAutorEnum.SUSTENTACIONPUBLICA.getTipo());
-                                            estadoEstudianteCarrera = estadoEstudianteCarreraFacadeLocal.buscarPorCodigo(EstadoEstudianteCarreraEnum.EGRESADO.getTipo());
+//                                            estadoEstudianteCarrera = estadoEstudianteCarreraFacadeLocal.buscarPorCodigo(EstadoEstudianteCarreraEnum.EGRESADO.getTipo());
                                         } else {
                                             if (permitirCrearOtraSustentacion(evaluacionTribunal)) {
                                                 /*RECUPERACIÓN*/
                                                 estadoProyecto = estadoProyectoFacadeLocal.buscarPorCodigo(EstadoProyectoEnum.RECUPERACIONPUBLICA.getTipo());
                                                 estadoAutor = estadoAutorFacadeLocal.buscarPorCodigo(EstadoAutorEnum.RECUPERACIONPUBLICA.getTipo());
-                                                estadoEstudianteCarrera = estadoEstudianteCarreraFacadeLocal.buscarPorCodigo(EstadoEstudianteCarreraEnum.EGRESADO.getTipo());
+//                                                estadoEstudianteCarrera = estadoEstudianteCarreraFacadeLocal.buscarPorCodigo(EstadoEstudianteCarreraEnum.EGRESADO.getTipo());
                                             } else {
                                                 /*REPROBADO*/
                                                 estadoProyecto = estadoProyectoFacadeLocal.buscarPorCodigo(EstadoProyectoEnum.REPROBADO.getTipo());
                                                 estadoAutor = estadoAutorFacadeLocal.buscarPorCodigo(EstadoAutorEnum.REPROBADO.getTipo());
-                                                estadoEstudianteCarrera = estadoEstudianteCarreraFacadeLocal.find(EstadoEstudianteCarreraEnum.EGRESADO.getTipo());
+//                                                estadoEstudianteCarrera = estadoEstudianteCarreraFacadeLocal.find(EstadoEstudianteCarreraEnum.EGRESADO.getTipo());
                                             }
                                         }
                                     } else {
@@ -392,18 +388,18 @@ public class AdministrarEvaluacionesTribunal implements Serializable {
                                                 /*APROBADA*/
                                                 estadoProyecto = estadoProyectoFacadeLocal.buscarPorCodigo(EstadoProyectoEnum.APROBADO.getTipo());
                                                 estadoAutor = estadoAutorFacadeLocal.buscarPorCodigo(EstadoAutorEnum.APROBADO.getTipo());
-                                                estadoEstudianteCarrera = estadoEstudianteCarreraFacadeLocal.find(3);
+//                                                estadoEstudianteCarrera = estadoEstudianteCarreraFacadeLocal.find(3);
                                             } else {
                                                 if (permitirCrearOtraSustentacion(evaluacionTribunal)) {
                                                     /*RECUPERACIÓN PRIVADA*/
                                                     estadoProyecto = estadoProyectoFacadeLocal.buscarPorCodigo(EstadoProyectoEnum.RECUPERACIONPRIVADA.getTipo());
                                                     estadoAutor = estadoAutorFacadeLocal.buscarPorCodigo(EstadoAutorEnum.RECUPERACIONPRIVADA.getTipo());
-                                                    estadoEstudianteCarrera = estadoEstudianteCarreraFacadeLocal.find(2);
+//                                                    estadoEstudianteCarrera = estadoEstudianteCarreraFacadeLocal.find(2);
                                                 } else {
                                                     /*REPROBADO*/
                                                     estadoProyecto = estadoProyectoFacadeLocal.buscarPorCodigo(EstadoProyectoEnum.REPROBADO.getTipo());
                                                     estadoAutor = estadoAutorFacadeLocal.buscarPorCodigo(EstadoProyectoEnum.REPROBADO.getTipo());
-                                                    estadoEstudianteCarrera = estadoEstudianteCarreraFacadeLocal.find(2);
+//                                                    estadoEstudianteCarrera = estadoEstudianteCarreraFacadeLocal.find(2);
                                                 }
                                             }
                                         }
@@ -415,16 +411,16 @@ public class AdministrarEvaluacionesTribunal implements Serializable {
                                             if (evaluacionTribunal.getRangoEquivalenciaId().getId() != 4) {
                                                 estadoProyecto = estadoProyectoFacadeLocal.buscarPorCodigo(EstadoProyectoEnum.APROBADO.getTipo());
                                                 estadoAutor = estadoAutorFacadeLocal.buscarPorCodigo(EstadoProyectoEnum.APROBADO.getTipo());
-                                                estadoEstudianteCarrera = estadoEstudianteCarreraFacadeLocal.find(3);
+//                                                estadoEstudianteCarrera = estadoEstudianteCarreraFacadeLocal.find(3);
                                             } else {
                                                 if (permitirCrearOtraSustentacion(evaluacionTribunal)) {
                                                     estadoProyecto = estadoProyectoFacadeLocal.buscarPorCodigo(EstadoProyectoEnum.RECUPERACIONPUBLICA.getTipo());
                                                     estadoAutor = estadoAutorFacadeLocal.buscarPorCodigo(EstadoAutorEnum.RECUPERACIONPUBLICA.getTipo());
-                                                    estadoEstudianteCarrera = estadoEstudianteCarreraFacadeLocal.find(2);
+//                                                    estadoEstudianteCarrera = estadoEstudianteCarreraFacadeLocal.find(2);
                                                 } else {
                                                     estadoProyecto = estadoProyectoFacadeLocal.buscarPorCodigo(EstadoProyectoEnum.REPROBADO.getTipo());
                                                     estadoAutor = estadoAutorFacadeLocal.buscarPorCodigo(EstadoAutorEnum.REPROBADO.getTipo());
-                                                    estadoEstudianteCarrera = estadoEstudianteCarreraFacadeLocal.buscarPorCodigo(EstadoEstudianteCarreraEnum.EGRESADO.getTipo());
+//                                                    estadoEstudianteCarrera = estadoEstudianteCarreraFacadeLocal.buscarPorCodigo(EstadoEstudianteCarreraEnum.EGRESADO.getTipo());
                                                 }
                                             }
                                         } else {
@@ -432,16 +428,16 @@ public class AdministrarEvaluacionesTribunal implements Serializable {
                                                 if (evaluacionTribunal.getRangoEquivalenciaId().getId() != 4) {
                                                     estadoProyecto = estadoProyectoFacadeLocal.buscarPorCodigo(EstadoProyectoEnum.APROBADO.getTipo());
                                                     estadoAutor = estadoAutorFacadeLocal.buscarPorCodigo(EstadoAutorEnum.APROBADO.getTipo());
-                                                    estadoEstudianteCarrera = estadoEstudianteCarreraFacadeLocal.find(EstadoEstudianteCarreraEnum.TITULADO.getTipo());
+//                                                    estadoEstudianteCarrera = estadoEstudianteCarreraFacadeLocal.find(EstadoEstudianteCarreraEnum.TITULADO.getTipo());
                                                 } else {
                                                     if (permitirCrearOtraSustentacion(evaluacionTribunal)) {
                                                         estadoProyecto = estadoProyectoFacadeLocal.buscarPorCodigo(EstadoProyectoEnum.RECUPERACIONPUBLICA.getTipo());
                                                         estadoAutor = estadoAutorFacadeLocal.buscarPorCodigo(EstadoAutorEnum.RECUPERACIONPUBLICA.getTipo());
-                                                        estadoEstudianteCarrera = estadoEstudianteCarreraFacadeLocal.find(EstadoEstudianteCarreraEnum.EGRESADO.getTipo());
+//                                                        estadoEstudianteCarrera = estadoEstudianteCarreraFacadeLocal.find(EstadoEstudianteCarreraEnum.EGRESADO.getTipo());
                                                     } else {
                                                         estadoProyecto = estadoProyectoFacadeLocal.buscarPorCodigo(EstadoProyectoEnum.REPROBADO.getTipo());
                                                         estadoAutor = estadoAutorFacadeLocal.buscarPorCodigo(EstadoProyectoEnum.REPROBADO.getTipo());
-                                                        estadoEstudianteCarrera = estadoEstudianteCarreraFacadeLocal.find(EstadoEstudianteCarreraEnum.EGRESADO.getTipo());
+//                                                        estadoEstudianteCarrera = estadoEstudianteCarreraFacadeLocal.find(EstadoEstudianteCarreraEnum.EGRESADO.getTipo());
                                                     }
                                                 }
                                             }
@@ -450,7 +446,7 @@ public class AdministrarEvaluacionesTribunal implements Serializable {
                                 }
                                 tribunal.getProyectoId().setEstadoProyectoId(estadoProyecto);
                                 proyectoFacadeLocal.edit(tribunal.getProyectoId());
-                                actualizaEstadoAutores(evaluacionTribunal, estadoAutor, estadoEstudianteCarrera);
+//                                actualizaEstadoAutores(evaluacionTribunal, estadoAutor, estadoEstudianteCarrera);
                             }
                             listadoSustentacionesPorUsuarioCarrera(usuario, tribunal.getProyectoId());
                             if (param != null) {

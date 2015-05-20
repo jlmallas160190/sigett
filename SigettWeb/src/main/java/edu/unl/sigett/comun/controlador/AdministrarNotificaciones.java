@@ -11,7 +11,7 @@ import com.jlmallas.comun.dao.PersonaDao;
 import edu.jlmallas.academico.entity.DocenteCarrera;
 import edu.jlmallas.academico.entity.EstudianteCarrera;
 import edu.jlmallas.academico.dao.DocenteCarreraDao;
-import edu.jlmallas.academico.dao.implement.EstudianteCarreraFacadeLocal;
+import edu.jlmallas.academico.dao.EstudianteCarreraDao;
 import edu.unl.sigett.adjudicacion.session.SessionDirectorProyecto;
 import edu.unl.sigett.entity.AutorProyecto;
 import edu.unl.sigett.entity.Cronograma;
@@ -57,7 +57,7 @@ public class AdministrarNotificaciones implements Serializable {
     @EJB
     private DocenteCarreraDao docenteCarreraFacadeLocal;
     @EJB
-    private EstudianteCarreraFacadeLocal estudianteCarreraFacadeLocal;
+    private EstudianteCarreraDao estudianteCarreraFacadeLocal;
 
     public AdministrarNotificaciones() {
 

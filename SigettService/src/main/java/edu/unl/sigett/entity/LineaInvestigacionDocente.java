@@ -6,7 +6,6 @@
 package edu.unl.sigett.entity;
 
 import java.io.Serializable;
-import java.math.BigInteger;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -48,8 +47,9 @@ public class LineaInvestigacionDocente implements Serializable {
     public LineaInvestigacionDocente() {
     }
 
-    public LineaInvestigacionDocente(Long id) {
-        this.id = id;
+    public LineaInvestigacionDocente(Long docenteId, LineaInvestigacion lineaInvestigacion) {
+        this.docenteId = docenteId;
+        this.lineaInvestigacionId = lineaInvestigacion;
     }
 
     public Long getId() {

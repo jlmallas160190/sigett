@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package edu.jlmallas.academico.entity;
 
 import java.io.Serializable;
@@ -22,6 +21,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -38,6 +38,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "EstudianteCarrera.findById", query = "SELECT e FROM EstudianteCarrera e WHERE e.id = :id"),
     @NamedQuery(name = "EstudianteCarrera.findByEsActivo", query = "SELECT e FROM EstudianteCarrera e WHERE e.esActivo = :esActivo")})
 public class EstudianteCarrera implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,29 +48,32 @@ public class EstudianteCarrera implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "es_activo")
-    private boolean esActivo;
+    private Boolean esActivo;
     @JoinColumn(name = "estudiante_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Estudiante estudianteId;
-    @JoinColumn(name = "estado_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private EstadoEstudianteCarrera estadoId;
+    @Basic(optional = false)
+    @Column(name = "estado_id")
+    private Long estadoId;
     @JoinColumn(name = "carrera_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Carrera carreraId;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "estudianteCarreraId")
     private List<ReporteMatricula> reporteMatriculaList;
+    @Transient
+    private String estado;
 
     public EstudianteCarrera() {
-        this.reporteMatriculaList= new ArrayList<>();
+        this.reporteMatriculaList = new ArrayList<>();
     }
 
     public EstudianteCarrera(Long id) {
         this.id = id;
     }
 
-    public EstudianteCarrera(Long id, boolean esActivo) {
-        this.id = id;
+    public EstudianteCarrera(Carrera carrera, Estudiante estudiante, Boolean esActivo) {
+        this.carreraId = carrera;
+        this.estudianteId = estudiante;
         this.esActivo = esActivo;
     }
 
@@ -81,11 +85,11 @@ public class EstudianteCarrera implements Serializable {
         this.id = id;
     }
 
-    public boolean getEsActivo() {
+    public Boolean isEsActivo() {
         return esActivo;
     }
 
-    public void setEsActivo(boolean esActivo) {
+    public void setEsActivo(Boolean esActivo) {
         this.esActivo = esActivo;
     }
 
@@ -97,11 +101,11 @@ public class EstudianteCarrera implements Serializable {
         this.estudianteId = estudianteId;
     }
 
-    public EstadoEstudianteCarrera getEstadoId() {
+    public Long getEstadoId() {
         return estadoId;
     }
 
-    public void setEstadoId(EstadoEstudianteCarrera estadoId) {
+    public void setEstadoId(Long estadoId) {
         this.estadoId = estadoId;
     }
 
@@ -142,9 +146,17 @@ public class EstudianteCarrera implements Serializable {
         return true;
     }
 
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
+
     @Override
     public String toString() {
         return "edu.jlmallas.academico.entity.EstudianteCarrera[ id=" + id + " ]";
     }
-    
+
 }

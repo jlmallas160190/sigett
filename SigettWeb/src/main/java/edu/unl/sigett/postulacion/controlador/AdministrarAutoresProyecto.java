@@ -31,12 +31,12 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.TabChangeEvent;
-import edu.unl.sigett.dao.AspiranteFacadeLocal;
+import edu.unl.sigett.dao.AspiranteDao;
 import edu.unl.sigett.dao.AutorProyectoFacadeLocal;
 import edu.unl.sigett.dao.EstadoAutorFacadeLocal;
 import org.jlmallas.seguridad.dao.UsuarioDao;
 import edu.jlmallas.academico.entity.EstudianteCarrera;
-import edu.jlmallas.academico.dao.implement.EstudianteCarreraFacadeLocal;
+import edu.jlmallas.academico.dao.EstudianteCarreraDao;
 import edu.unl.sigett.enumeration.EstadoAutorEnum;
 import edu.unl.sigett.enumeration.EstadoProyectoEnum;
 import edu.unl.sigett.dao.UsuarioCarreraDao;
@@ -66,7 +66,7 @@ public class AdministrarAutoresProyecto implements Serializable {
     private MessageView view;
 
     @EJB
-    private AspiranteFacadeLocal aspiranteFacadeLocal;
+    private AspiranteDao aspiranteFacadeLocal;
     @EJB
     private EstadoAutorFacadeLocal estadoAutorFacadeLocal;
     @EJB
@@ -74,7 +74,7 @@ public class AdministrarAutoresProyecto implements Serializable {
     @EJB
     private AutorProyectoFacadeLocal autorProyectoFacadeLocal;
     @EJB
-    private EstudianteCarreraFacadeLocal estudianteCarreraFacadeLocal;
+    private EstudianteCarreraDao estudianteCarreraFacadeLocal;
     @EJB
     private PersonaDao personaFacadeLocal;
     @EJB
@@ -382,14 +382,14 @@ public class AdministrarAutoresProyecto implements Serializable {
                 int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "buscar_aspirante");
                 if (tienePermiso == 1) {
                     for (UsuarioCarrera usuarioCarrera : usuarioCarreraFacadeLocal.buscarPorUsuario(usuario.getId())) {
-                        for (Aspirante aspirante : aspiranteFacadeLocal.buscarPorCarrera(usuarioCarrera.getCarreraId())) {
-                            EstudianteCarrera estudianteCarrera = estudianteCarreraFacadeLocal.find(aspirante.getId());
-                            Persona personaEstudiante = personaFacadeLocal.find(estudianteCarrera.getId());
-                            if (personaEstudiante.getApellidos().toUpperCase().contains(criterio.toUpperCase()) || personaEstudiante.getNombres().toUpperCase().contains(criterio.toUpperCase())
-                                    || personaEstudiante.getNumeroIdentificacion().contains(criterio)) {
-                                aspirantes.add(aspirante);
-                            }
-                        }
+//                        for (Aspirante aspirante : aspiranteFacadeLocal.buscarPorCarrera(usuarioCarrera.getCarreraId())) {
+//                            EstudianteCarrera estudianteCarrera = estudianteCarreraFacadeLocal.find(aspirante.getId());
+//                            Persona personaEstudiante = personaFacadeLocal.find(estudianteCarrera.getId());
+//                            if (personaEstudiante.getApellidos().toUpperCase().contains(criterio.toUpperCase()) || personaEstudiante.getNombres().toUpperCase().contains(criterio.toUpperCase())
+//                                    || personaEstudiante.getNumeroIdentificacion().contains(criterio)) {
+//                                aspirantes.add(aspirante);
+//                            }
+//                        }
                     }
                 } else {
                     FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_buscar") + ". " + bundle.getString("lbl.msm_consulte"), "");

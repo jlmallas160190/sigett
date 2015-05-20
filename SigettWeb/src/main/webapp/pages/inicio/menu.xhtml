@@ -5,7 +5,11 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core">
 
     <body>
-        <!--<p:poll update="menuBar" listeneradministrarUsuarios.actualizaRendered(sessionUsuario.usuario)}" interval="#{administrarConfiguraciones.intervaloActualizaciones()}"/>-->
+        <script>
+            function regresar() {
+                window.history.back();
+            }
+        </script>
         <p:menubar id="menuBar">   
             <p:menuitem icon="ui-icon-home" action="pretty:principal" value="#{msg['lbl.inicio']}"/>
             <p:submenu icon="ui-icon-tt" label="#{msg['lbl.administrar']} #{msg['lbl.proyectos']}">

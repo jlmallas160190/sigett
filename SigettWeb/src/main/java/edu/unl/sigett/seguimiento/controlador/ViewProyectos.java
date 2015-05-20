@@ -32,10 +32,10 @@ import javax.inject.Inject;
 import org.primefaces.event.SelectEvent;
 import edu.jlmallas.academico.service.AreaService;
 import edu.jlmallas.academico.service.CarreraService;
-import edu.jlmallas.academico.dao.implement.EstudianteCarreraFacadeLocal;
+import edu.jlmallas.academico.dao.EstudianteCarreraDao;
 import edu.jlmallas.academico.service.OfertaAcademicaService;
 import edu.unl.sigett.dao.ConfiguracionGeneralDao;
-import edu.unl.sigett.dao.LineaInvestigacionCarreraFacadeLocal;
+import edu.unl.sigett.dao.LineaInvestigacionCarreraDao;
 import edu.unl.sigett.dao.ProyectoCarreraOfertaFacadeLocal;
 import edu.unl.sigett.dao.ProyectoFacadeLocal;
 import java.util.HashMap;
@@ -90,13 +90,13 @@ public class ViewProyectos implements Serializable {
     @EJB
     private OfertaAcademicaService ofertaAcademicaFacadeLocal;
     @EJB
-    private EstudianteCarreraFacadeLocal estudianteCarreraFacadeLocal;
+    private EstudianteCarreraDao estudianteCarreraFacadeLocal;
     @EJB
     private PersonaDao personaFacadeLocal;
     @EJB
     private ConfiguracionGeneralDao configuracionGeneralFacadeLocal;
     @EJB
-    private LineaInvestigacionCarreraFacadeLocal lineaInvestigacionCarreraFacadeLocal;
+    private LineaInvestigacionCarreraDao lineaInvestigacionCarreraFacadeLocal;
     @EJB
     private ProyectoCarreraOfertaFacadeLocal proyectoCarreraOfertaFacadeLocal;
 
@@ -233,11 +233,11 @@ public class ViewProyectos implements Serializable {
             this.lineaInvestigacionCarreras = new ArrayList<>();
             this.carrera = carrera;
             li = new LineaInvestigacion();
-            for (LineaInvestigacionCarrera li : lineaInvestigacionCarreraFacadeLocal.buscarPorCarrera(carrera.getId())) {
-                if (li.getLineaInvestigacionId().getNombre().toLowerCase().contains(criterio.toLowerCase())) {
-                    lineaInvestigacionCarreras.add(li);
-                }
-            }
+//            for (LineaInvestigacionCarrera li : lineaInvestigacionCarreraFacadeLocal.buscarPorCarrera(carrera.getId())) {
+//                if (li.getLineaInvestigacionId().getNombre().toLowerCase().contains(criterio.toLowerCase())) {
+//                    lineaInvestigacionCarreras.add(li);
+//                }
+//            }
 //            buscar(carrera, li, periodoAcademico, filtro, categoria, estado, selectByPeriodo, selectByLineaInvestigacion, true);
         } catch (Exception e) {
             System.out.println(e);
@@ -249,15 +249,15 @@ public class ViewProyectos implements Serializable {
             this.lineaInvestigacionCarreras = new ArrayList<>();
             carrera = ((Carrera) event.getObject());
             li = new LineaInvestigacion();
-            for (LineaInvestigacionCarrera li : lineaInvestigacionCarreraFacadeLocal.buscarPorCarrera(carrera.getId())) {
-                if (criterioLi != null) {
-                    if (li.getLineaInvestigacionId().getNombre().toLowerCase().contains(criterioLi.toLowerCase())) {
-                        lineaInvestigacionCarreras.add(li);
-                    }
-                } else {
-                    lineaInvestigacionCarreras.add(li);
-                }
-            }
+//            for (LineaInvestigacionCarrera li : lineaInvestigacionCarreraFacadeLocal.buscarPorCarrera(carrera.getId())) {
+//                if (criterioLi != null) {
+//                    if (li.getLineaInvestigacionId().getNombre().toLowerCase().contains(criterioLi.toLowerCase())) {
+//                        lineaInvestigacionCarreras.add(li);
+//                    }
+//                } else {
+//                    lineaInvestigacionCarreras.add(li);
+//                }
+//            }
             buscarWebSemantica(carrera.getNombre());
         } catch (Exception e) {
             System.out.println(e);

@@ -52,7 +52,7 @@ import org.jlmallas.seguridad.dao.UsuarioDao;
 import edu.jlmallas.academico.entity.Docente;
 import edu.jlmallas.academico.entity.EstudianteCarrera;
 import edu.jlmallas.academico.dao.DocenteDao;
-import edu.jlmallas.academico.dao.implement.EstudianteCarreraFacadeLocal;
+import edu.jlmallas.academico.dao.EstudianteCarreraDao;
 import edu.unl.sigett.comun.managed.session.SessionOficioCarrera;
 import edu.unl.sigett.enumeration.CatalogoOficioEnum;
 import edu.unl.sigett.enumeration.EstadoAutorEnum;
@@ -121,7 +121,7 @@ public class AdministrarPertinencias implements Serializable {
     @EJB
     private DocenteDao docenteFacadeLocal;
     @EJB
-    private EstudianteCarreraFacadeLocal estudianteCarreraFacadeLocal;
+    private EstudianteCarreraDao estudianteCarreraFacadeLocal;
 
     public AdministrarPertinencias() {
         this.renderedDlgEditar = false;
@@ -368,10 +368,10 @@ public class AdministrarPertinencias implements Serializable {
                     EstudianteCarrera estudianteCarrera = estudianteCarreraFacadeLocal.find(autorProyecto.getAspiranteId().getId());
                     Persona datosAutor = personaFacadeLocal.find(estudianteCarrera.getEstudianteId().getId());
                     if (cont == 0) {
-                        datosAutores += "" + estudianteCarrera.getEstadoId().getNombre() + " " + datosAutor.getNombres().toUpperCase() + " " + datosAutor.getApellidos().toUpperCase() + "";
+//                        datosAutores += "" + estudianteCarrera.getEstadoId().getNombre() + " " + datosAutor.getNombres().toUpperCase() + " " + datosAutor.getApellidos().toUpperCase() + "";
                         cont++;
                     } else {
-                        datosAutores += ", " + estudianteCarrera.getEstadoId().getNombre() + " " + datosAutor.getNombres().toUpperCase() + " " + datosAutor.getApellidos().toUpperCase();
+//                        datosAutores += ", " + estudianteCarrera.getEstadoId().getNombre() + " " + datosAutor.getNombres().toUpperCase() + " " + datosAutor.getApellidos().toUpperCase();
                         cont++;
                     }
                 }

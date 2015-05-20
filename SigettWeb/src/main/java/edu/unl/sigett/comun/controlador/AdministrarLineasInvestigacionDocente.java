@@ -21,9 +21,9 @@ import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import org.primefaces.event.TransferEvent;
 import org.primefaces.model.DualListModel;
-import edu.unl.sigett.dao.LineaInvestigacionCarreraFacadeLocal;
+import edu.unl.sigett.dao.LineaInvestigacionCarreraDao;
 import edu.unl.sigett.dao.LineaInvestigacionDocenteDao;
-import edu.unl.sigett.dao.LineaInvestigacionFacadeLocal;
+import edu.unl.sigett.dao.LineaInvestigacionDao;
 import org.jlmallas.seguridad.dao.LogDao;
 
 /**
@@ -36,11 +36,11 @@ public class AdministrarLineasInvestigacionDocente implements Serializable {
 
     private DualListModel<LineaInvestigacion> lineasInvestigacionDualList;
     @EJB
-    private LineaInvestigacionCarreraFacadeLocal lineaInvestigacionCarreraFacadeLocal;
+    private LineaInvestigacionCarreraDao lineaInvestigacionCarreraFacadeLocal;
     @EJB
     private LineaInvestigacionDocenteDao lineaInvestigacionDocenteFacadeLocal;
     @EJB
-    private LineaInvestigacionFacadeLocal lineaInvestigacionFacadeLocal;
+    private LineaInvestigacionDao lineaInvestigacionFacadeLocal;
     @EJB
     private LogDao logFacadeLocal;
     private List<LineaInvestigacionDocente> lineaInvestigacionDocentesRemovidos;
@@ -146,7 +146,7 @@ public class AdministrarLineasInvestigacionDocente implements Serializable {
 //                }
                 for (DocenteCarrera docenteCarrera : docente.getDocenteCarreraList()) {
                     List<LineaInvestigacionCarrera> lics = new ArrayList<>();
-                    lics = lineaInvestigacionCarreraFacadeLocal.buscarPorCarrera(docenteCarrera.getCarreraId().getId());
+//                    lics = lineaInvestigacionCarreraFacadeLocal.buscarPorCarrera(docenteCarrera.getCarreraId().getId());
                     for (LineaInvestigacionCarrera lic : lics) {
                         if (!lineaInvestigacionDocentes.contains(lic.getLineaInvestigacionId())) {
                             lineaInvestigaciones.add(lic.getLineaInvestigacionId());
@@ -156,7 +156,7 @@ public class AdministrarLineasInvestigacionDocente implements Serializable {
             } else {
                 for (DocenteCarrera docenteCarrera : docente.getDocenteCarreraList()) {
                     List<LineaInvestigacionCarrera> lics = new ArrayList<>();
-                    lics = lineaInvestigacionCarreraFacadeLocal.buscarPorCarrera(docenteCarrera.getCarreraId().getId());
+//                    lics = lineaInvestigacionCarreraFacadeLocal.buscarPorCarrera(docenteCarrera.getCarreraId().getId());
                     for (LineaInvestigacionCarrera lic : lics) {
                         lineaInvestigaciones.add(lic.getLineaInvestigacionId());
                     }

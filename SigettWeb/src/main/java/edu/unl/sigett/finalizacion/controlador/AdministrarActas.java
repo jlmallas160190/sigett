@@ -47,7 +47,7 @@ import edu.unl.sigett.dao.ActaFacadeLocal;
 import edu.unl.sigett.dao.AutorProyectoFacadeLocal;
 import edu.jlmallas.academico.service.CarreraService;
 import edu.jlmallas.academico.dao.DocenteDao;
-import edu.jlmallas.academico.dao.implement.EstudianteCarreraFacadeLocal;
+import edu.jlmallas.academico.dao.EstudianteCarreraDao;
 import edu.unl.sigett.enumeration.EstadoAutorEnum;
 import edu.unl.sigett.dao.CategoriaActaFacadeLocal;
 import edu.unl.sigett.dao.ConfiguracionCarreraDao;
@@ -77,7 +77,7 @@ public class AdministrarActas implements Serializable {
     @EJB
     private CarreraService carreraFacadeLocal;
     @EJB
-    private EstudianteCarreraFacadeLocal estudianteCarreraFacadeLocal;
+    private EstudianteCarreraDao estudianteCarreraFacadeLocal;
     @EJB
     private PersonaDao personaFacadeLocal;
     @EJB
@@ -287,15 +287,15 @@ public class AdministrarActas implements Serializable {
                 for (AutorProyecto autorProyecto : proyecto.getAutorProyectoList()) {
                     if (!autorProyecto.getEstadoAutorId().getCodigo().equalsIgnoreCase(EstadoAutorEnum.ABANDONADO.getTipo())) {
                         EstudianteCarrera ec = estudianteCarreraFacadeLocal.find(autorProyecto.getAspiranteId().getId());
-                        Persona datosAutor = personaFacadeLocal.find(ec.getEstadoId().getId());
-                        autoresTabla.add(datosAutor.getNombres().toUpperCase() + " " + datosAutor.getApellidos().toUpperCase());
-                        if (contador == 0) {
-                            autores += "" + datosAutor.getNombres().toUpperCase() + " " + datosAutor.getApellidos().toUpperCase();
-                            contador++;
-                        } else {
-                            autores += ", " + datosAutor.getNombres().toUpperCase() + " " + datosAutor.getApellidos().toUpperCase();
-                            contador++;
-                        }
+//                        Persona datosAutor = personaFacadeLocal.find(ec.getEstadoId().getId());
+//                        autoresTabla.add(datosAutor.getNombres().toUpperCase() + " " + datosAutor.getApellidos().toUpperCase());
+//                        if (contador == 0) {
+//                            autores += "" + datosAutor.getNombres().toUpperCase() + " " + datosAutor.getApellidos().toUpperCase();
+//                            contador++;
+//                        } else {
+//                            autores += ", " + datosAutor.getNombres().toUpperCase() + " " + datosAutor.getApellidos().toUpperCase();
+//                            contador++;
+//                        }
                     }
                 }
             }

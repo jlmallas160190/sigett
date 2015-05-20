@@ -8,7 +8,8 @@
             <p:commandButton value="#{msg['lbl.crear']}" rendered="#{sessionDocenteCarrera.renderedCrear}"
                              icon="ui-icon-newwin" action="#{administrarDocentesCarrera.crear()}"/>
             <p:commandButton value="#{msg['lbl.sincronizar']}" rendered="#{sessionDocenteCarrera.renderedCrear}" 
-                             icon="ui-icon-refresh" update="@form" onstart="PF('dlgLoading').show();" oncomplete="PF('dlgLoading').hide()" 
+                             icon="ui-icon-refresh" update="@form" onstart="PF('dlgLoading').show();"
+                             oncomplete="PF('dlgLoading').hide(),PF('tblDocentesFilter').filter()" 
                              action="#{administrarDocentesCarrera.sgaWebServicesPorCarrera(sessionUsuarioCarrera.usuarioCarreraAux.carrera)}" />
         </h:panelGrid>  
     </body>

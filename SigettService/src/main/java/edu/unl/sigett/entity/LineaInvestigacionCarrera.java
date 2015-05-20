@@ -50,8 +50,9 @@ public class LineaInvestigacionCarrera implements Serializable {
     public LineaInvestigacionCarrera() {
     }
 
-    public LineaInvestigacionCarrera(Long id) {
-        this.id = id;
+    public LineaInvestigacionCarrera(LineaInvestigacion li,Integer carrera) {
+        this.lineaInvestigacionId=li;
+        this.carreraId=carrera;
     }
 
     public LineaInvestigacionCarrera(Long id, int carreraId) {
