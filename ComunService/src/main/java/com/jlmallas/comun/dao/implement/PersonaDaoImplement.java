@@ -9,6 +9,7 @@ import com.jlmallas.comun.entity.Persona;
 import com.jlmallas.comun.dao.AbstractDao;
 import com.jlmallas.comun.dao.PersonaDao;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.Query;
@@ -35,11 +36,7 @@ public class PersonaDaoImplement extends AbstractDao<Persona> implements Persona
         if (p != null) {
             if (per != null) {
                 if (per.getId() != null) {
-                    if (p == per) {
-                        var = true;
-                    } else {
-                        var = false;
-                    }
+                    var = p == per;
                 } else {
                     var = false;
                 }
@@ -61,5 +58,29 @@ public class PersonaDaoImplement extends AbstractDao<Persona> implements Persona
         } catch (Exception e) {
         }
         return null;
+    }
+
+    @Override
+    public List<Persona> buscar(Persona persona) {
+        StringBuilder sql = new StringBuilder();
+        HashMap<String, Object> parametros = new HashMap<>();
+        sql.append("SELECT p FROM Persona p WHERE 1=1 ");
+        if (persona.getNumeroIdentificacion() != null) {
+            sql.append(" and p.numeroIdentificacion like concat('%',:numeroIdentificacion,'%') ");
+            parametros.put("numeroIdentificacion", persona.getNumeroIdentificacion());
+        }
+        if (persona.getNombres() != null) {
+            sql.append(" and p.nombres like concat('%',:nombres,'%')");
+            parametros.put("nombres", persona.getNombres());
+        }
+        if (persona.getApellidos() != null) {
+            sql.append(" and p.apellidos like concat('%',:apellidos,'%') ");
+            parametros.put("apellidos", persona.getApellidos());
+        }
+        final Query q = em.createQuery(sql.toString());
+        for (String key : parametros.keySet()) {
+            q.setParameter(key, parametros.get(key));
+        }
+        return q.getResultList();
     }
 }

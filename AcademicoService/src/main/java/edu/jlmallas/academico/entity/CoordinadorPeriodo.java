@@ -44,7 +44,7 @@ public class CoordinadorPeriodo implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "es_vigente")
-    private boolean esVigente;
+    private Boolean esVigente;
     @JoinColumn(name = "periodo_id", referencedColumnName = "id")
     @ManyToOne
     private PeriodoCoordinacion periodoId;
@@ -53,16 +53,12 @@ public class CoordinadorPeriodo implements Serializable {
     private Coordinador coordinadorId;
 
     public CoordinadorPeriodo() {
-        this.esVigente = true;
     }
 
-    public CoordinadorPeriodo(Long id) {
-        this.id = id;
-    }
-
-    public CoordinadorPeriodo(Long id, boolean esVigente) {
-        this.id = id;
+    public CoordinadorPeriodo(Boolean esVigente, Coordinador coordinador, PeriodoCoordinacion periodoCoordinacion) {
         this.esVigente = esVigente;
+        this.periodoId = periodoCoordinacion;
+        this.coordinadorId = coordinador;
     }
 
     public Long getId() {
@@ -73,11 +69,11 @@ public class CoordinadorPeriodo implements Serializable {
         this.id = id;
     }
 
-    public boolean getEsVigente() {
+    public Boolean getEsVigente() {
         return esVigente;
     }
 
-    public void setEsVigente(boolean esVigente) {
+    public void setEsVigente(Boolean esVigente) {
         this.esVigente = esVigente;
     }
 

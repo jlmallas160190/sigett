@@ -48,7 +48,7 @@ import edu.unl.sigett.dao.CategoriaActaFacadeLocal;
 import edu.unl.sigett.dao.ConfiguracionAreaFacadeLocal;
 import edu.unl.sigett.dao.ConfiguracionCarreraDao;
 import edu.unl.sigett.dao.ConfiguracionGeneralDao;
-import edu.jlmallas.academico.dao.implement.CoordinadorPeriodoFacadeLocal;
+import edu.jlmallas.academico.dao.CoordinadorPeriodoDao;
 import edu.unl.sigett.dao.DirectorProyectoFacadeLocal;
 import edu.unl.sigett.dao.DocenteProyectoFacadeLocal;
 import edu.unl.sigett.dao.DocumentoActividadFacadeLocal;
@@ -135,7 +135,7 @@ public class AppServlet extends HttpServlet {
     @EJB
     private ConfiguracionAreaFacadeLocal configuracionAreaFacadeLocal;
     @EJB
-    private CoordinadorPeriodoFacadeLocal coordinadorPeriodoFacadeLocal;
+    private CoordinadorPeriodoDao coordinadorPeriodoFacadeLocal;
     @EJB
     private EstudianteCarreraDao estudianteCarreraFacadeLocal;
     @EJB
@@ -235,17 +235,17 @@ public class AppServlet extends HttpServlet {
 
                     break;
                 case "Carrera":
-                    if (sessionUsuarioCarrera.getUsuarioCarreraAux().getCarrera() == null) {
+                    if (sessionUsuarioCarrera.getUsuarioCarreraDTO().getCarrera() == null) {
                         response.sendError(HttpServletResponse.SC_NOT_FOUND); // 404.
                         return;
                     }
-                    if (sessionUsuarioCarrera.getUsuarioCarreraAux().getCarrera().getLogo() == null) {
+                    if (sessionUsuarioCarrera.getUsuarioCarreraDTO().getCarrera().getLogo() == null) {
                         response.sendError(HttpServletResponse.SC_NOT_FOUND); // 404.
                         return;
                     }
                     response.reset();
                     response.setContentType("/image/png");
-                    response.getOutputStream().write(sessionUsuarioCarrera.getUsuarioCarreraAux().getCarrera().getLogo());
+                    response.getOutputStream().write(sessionUsuarioCarrera.getUsuarioCarreraDTO().getCarrera().getLogo());
                     response.getOutputStream().close();
                     break;
                 case "DocumentoActividad":
@@ -294,7 +294,7 @@ public class AppServlet extends HttpServlet {
                     DocenteProyecto docenteProyecto = docenteProyectoFacadeLocal.find(docenteProyectoId);
                     docente = docenteFacadeLocal.find(docenteProyecto.getDocenteId());
                     datosDocente = personaFacadeLocal.find(docente.getId());
-                    coordinadorPeriodo = coordinadorPeriodoFacadeLocal.buscarVigente(carrera.getId());
+//                    coordinadorPeriodo = coordinadorPeriodoFacadeLocal.buscarVigente(carrera.getId());
                     datosCoordinador = personaFacadeLocal.find(coordinadorPeriodo.getCoordinadorId().getId());
                     docenteCoordinador = docenteFacadeLocal.find(datosCoordinador.getId());
                     usuario = usuarioFacadeLocal.find(Long.parseLong(usuarioId));
@@ -324,7 +324,7 @@ public class AppServlet extends HttpServlet {
                     directorProyecto = directorProyectoFacadeLocal.find(directorProyectoId);
                     docente = docenteCarreraFacadeLocal.find(directorProyecto.getDirectorId().getId()).getDocenteId();
                     datosDirector = personaFacadeLocal.find(docente.getId());
-                    coordinadorPeriodo = coordinadorPeriodoFacadeLocal.buscarVigente(carrera.getId());
+//                    coordinadorPeriodo = coordinadorPeriodoFacadeLocal.buscarVigente(carrera.getId());
                     usuario = usuarioFacadeLocal.find(Long.parseLong(usuarioId));
                     datosUsuario = usuario.getNombres().toUpperCase() + " " + usuario.getApellidos().toUpperCase();
                     oficioCarrera = oficioCarreraFacadeLocal.buscarPorTablaId(Long.parseLong(entityId), CatalogoOficioEnum.DIRECTORPROYECTO.getTipo());
@@ -351,7 +351,7 @@ public class AppServlet extends HttpServlet {
                     Docente docenteMiembro = docenteFacadeLocal.find(miembro.getDocenteId());
                     Persona datosMiembro = personaFacadeLocal.find(docenteMiembro.getId());
                     getMiembros(miembroFacadeLocal.buscarPorTribunal(miembro.getTribunalId().getId()));
-                    coordinadorPeriodo = coordinadorPeriodoFacadeLocal.buscarVigente(carrera.getId());
+//                    coordinadorPeriodo = coordinadorPeriodoFacadeLocal.buscarVigente(carrera.getId());
                     datosCoordinador = personaFacadeLocal.find(coordinadorPeriodo.getCoordinadorId().getId());
                     docenteCoordinador = docenteFacadeLocal.find(datosCoordinador.getId());
                     usuario = usuarioFacadeLocal.find(Long.parseLong(usuarioId));
@@ -392,7 +392,7 @@ public class AppServlet extends HttpServlet {
                                     + " a efecto para que se cumpla por un espacio  máximo de " + tiempo + " hora(s) con la sustentación pública.";
                         }
                     }
-                    coordinadorPeriodo = coordinadorPeriodoFacadeLocal.buscarVigente(carrera.getId());
+//                    coordinadorPeriodo = coordinadorPeriodoFacadeLocal.buscarVigente(carrera.getId());
                     datosCoordinador = personaFacadeLocal.find(coordinadorPeriodo.getCoordinadorId().getId());
                     docenteCoordinador = docenteFacadeLocal.find(datosCoordinador.getId());
                     usuario = usuarioFacadeLocal.find(Long.parseLong(usuarioId));
@@ -428,7 +428,7 @@ public class AppServlet extends HttpServlet {
                     }
                     Docente docenteDirectorProyecto = docenteCarreraFacadeLocal.find(this.directorProyecto.getDirectorId().getId()).getDocenteId();
                     Persona datosDocenteDirector = personaFacadeLocal.find(docenteDirectorProyecto.getId());
-                    coordinadorPeriodo = coordinadorPeriodoFacadeLocal.buscarVigente(carrera.getId());
+//                    coordinadorPeriodo = coordinadorPeriodoFacadeLocal.buscarVigente(carrera.getId());
                     datosCoordinador = personaFacadeLocal.find(coordinadorPeriodo.getCoordinadorId().getId());
                     docenteCoordinador = docenteFacadeLocal.find(datosCoordinador.getId());
                     usuario = usuarioFacadeLocal.find(Long.parseLong(usuarioId));
@@ -469,7 +469,7 @@ public class AppServlet extends HttpServlet {
                     }
                     Docente docenteDirectorInforme = docenteCarreraFacadeLocal.find(this.directorProyecto.getDirectorId().getId()).getDocenteId();
                     Persona datosDocenteDirectorInforme = personaFacadeLocal.find(docenteDirectorInforme.getId());
-                    coordinadorPeriodo = coordinadorPeriodoFacadeLocal.buscarVigente(carrera.getId());
+//                    coordinadorPeriodo = coordinadorPeriodoFacadeLocal.buscarVigente(carrera.getId());
                     datosCoordinador = personaFacadeLocal.find(coordinadorPeriodo.getCoordinadorId().getId());
                     docenteCoordinador = docenteFacadeLocal.find(datosCoordinador.getId());
                     usuario = usuarioFacadeLocal.find(Long.parseLong(usuarioId));
@@ -498,7 +498,7 @@ public class AppServlet extends HttpServlet {
                     }
                     docente = docenteFacadeLocal.find(pertinencia.getDocenteProyectoId().getDocenteId());
                     datosDocente = personaFacadeLocal.find(docente.getId());
-                    coordinadorPeriodo = coordinadorPeriodoFacadeLocal.buscarVigente(carrera.getId());
+//                    coordinadorPeriodo = coordinadorPeriodoFacadeLocal.buscarVigente(carrera.getId());
                     datosCoordinador = personaFacadeLocal.find(coordinadorPeriodo.getCoordinadorId().getId());
                     docenteCoordinador = docenteFacadeLocal.find(datosCoordinador.getId());
                     if (pertinencia.getEsAceptado()) {
@@ -531,7 +531,7 @@ public class AppServlet extends HttpServlet {
                         resolucion = "<b>no acepta la prorroga<b>";
                     }
 
-                    coordinadorPeriodo = coordinadorPeriodoFacadeLocal.buscarVigente(carrera.getId());
+//                    coordinadorPeriodo = coordinadorPeriodoFacadeLocal.buscarVigente(carrera.getId());
                     datosCoordinador = personaFacadeLocal.find(coordinadorPeriodo.getCoordinadorId().getId());
                     docenteCoordinador = docenteFacadeLocal.find(datosCoordinador.getId());
                     usuario = usuarioFacadeLocal.find(Long.parseLong(usuarioId));

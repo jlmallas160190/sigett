@@ -47,7 +47,7 @@ import edu.jlmallas.academico.service.CarreraService;
 import edu.unl.sigett.dao.CatalogoOficioFacadeLocal;
 import edu.unl.sigett.dao.ConfiguracionCarreraDao;
 import edu.unl.sigett.dao.ConfiguracionGeneralDao;
-import edu.jlmallas.academico.dao.implement.CoordinadorPeriodoFacadeLocal;
+import edu.jlmallas.academico.dao.CoordinadorPeriodoDao;
 import edu.unl.sigett.dao.DirectorFacadeLocal;
 import edu.unl.sigett.dao.DirectorProyectoFacadeLocal;
 import edu.unl.sigett.dao.EstadoDirectorFacadeLocal;
@@ -109,7 +109,7 @@ public class AdministrarDirectoresProyecto implements Serializable {
     @EJB
     private LineaInvestigacionDocenteDao lineaInvestigacionDocenteFacadeLocal;
     @EJB
-    private CoordinadorPeriodoFacadeLocal coordinadorPeriodoFacadeLocal;
+    private CoordinadorPeriodoDao coordinadorPeriodoFacadeLocal;
     @EJB
     private EstudianteCarreraDao estudianteCarreraFacadeLocal;
     @EJB
@@ -341,8 +341,8 @@ public class AdministrarDirectoresProyecto implements Serializable {
         DirectorProyecto dp = directorProyectoFacadeLocal.find(directorProyectoId);
         DocenteCarrera docenteCarrera = docenteCarreraFacadeLocal.find(dp.getDirectorId().getId());
         Persona personaDirector = personaFacadeLocal.find(docenteCarrera.getDocenteId().getId());
-        CoordinadorPeriodo coordinadorPeriodo = coordinadorPeriodoFacadeLocal.buscarVigente(carrera.getId());
-        Persona personaCoordinador = personaFacadeLocal.find(coordinadorPeriodo.getCoordinadorId().getId());
+//        CoordinadorPeriodo coordinadorPeriodo = coordinadorPeriodoFacadeLocal.buscarVigente(carrera.getId());
+//        Persona personaCoordinador = personaFacadeLocal.find(coordinadorPeriodo.getCoordinadorId().getId());
 //        ConfiguracionCarrera configuracionCarrera = configuracionCarreraFacadeLocal.buscarPorCarreraId(carreraId, "NO");
 //        Integer nOficio = Integer.parseInt(configuracionCarrera.getValor());
         secretario = user.getNombres().toUpperCase() + " " + user.getApellidos().toUpperCase();
@@ -351,7 +351,7 @@ public class AdministrarDirectoresProyecto implements Serializable {
         Calendar fechaActual = Calendar.getInstance();
         String fechaFormateada = configuracionGeneralFacadeLocal.dateFormat(fechaActual.getTime());
         datosReporte.put("docente", personaDirector.getNombres().toUpperCase() + " " + personaDirector.getApellidos().toUpperCase());
-        datosReporte.put("coordinador", personaCoordinador.getNombres().toUpperCase() + " " + personaCoordinador.getApellidos().toUpperCase());
+//        datosReporte.put("coordinador", personaCoordinador.getNombres().toUpperCase() + " " + personaCoordinador.getApellidos().toUpperCase());
         datosReporte.put("temaProyecto", directorProyecto.getProyectoId().getTemaActual());
         datosReporte.put("tituloDocente", docenteCarrera.getDocenteId().getTituloDocenteId().getTituloId().getAbreviacion().toUpperCase());
         datosReporte.put("tituloCoordinador", docenteCarrera.getDocenteId().getTituloDocenteId().getTituloId().getAbreviacion());

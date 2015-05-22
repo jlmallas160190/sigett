@@ -50,7 +50,7 @@ import edu.jlmallas.academico.service.CarreraService;
 import edu.unl.sigett.dao.CatalogoOficioFacadeLocal;
 import edu.unl.sigett.dao.ConfiguracionCarreraDao;
 import edu.unl.sigett.dao.ConfiguracionGeneralDao;
-import edu.jlmallas.academico.dao.implement.CoordinadorPeriodoFacadeLocal;
+import edu.jlmallas.academico.dao.CoordinadorPeriodoDao;
 import edu.jlmallas.academico.dao.DocenteCarreraDao;
 import edu.unl.sigett.dao.DocenteProyectoFacadeLocal;
 import org.jlmallas.seguridad.dao.LogDao;
@@ -135,7 +135,7 @@ public class AdministrarDocentesProyecto implements Serializable {
     @EJB
     private UsuarioCarreraDao usuarioCarreraFacadeLocal;
     @EJB
-    private CoordinadorPeriodoFacadeLocal coordinadorPeriodoFacadeLocal;
+    private CoordinadorPeriodoDao coordinadorPeriodoFacadeLocal;
     @EJB
     private PersonaDao personaFacadeLocal;
     @EJB
@@ -332,7 +332,7 @@ public class AdministrarDocentesProyecto implements Serializable {
         Persona datosDocente = personaFacadeLocal.find(docente.getId());
         String secretario = "";
         CoordinadorPeriodo coordinadorPeriodo = null;
-        coordinadorPeriodo = coordinadorPeriodoFacadeLocal.buscarVigente(carrera.getId());
+//        coordinadorPeriodo = coordinadorPeriodoFacadeLocal.buscarVigente(carrera.getId());
         Persona datosCoordinador = personaFacadeLocal.find(coordinadorPeriodo.getCoordinadorId().getId());
         Docente docenteCoordinador = docenteFacadeLocal.find(datosCoordinador.getId());
         secretario = user.getNombres().toUpperCase() + " " + user.getApellidos().toUpperCase();

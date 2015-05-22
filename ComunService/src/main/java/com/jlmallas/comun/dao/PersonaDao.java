@@ -32,6 +32,8 @@ public interface PersonaDao {
 
     boolean esUnico(String numeroIdentificacion, Long id);
 
+    List<Persona> buscar(Persona persona);
+
     int count();
 
 }

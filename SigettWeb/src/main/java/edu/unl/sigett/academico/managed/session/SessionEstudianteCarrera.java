@@ -40,7 +40,7 @@ public class SessionEstudianteCarrera implements Serializable {
     private int keyEnteroMatricula;
     private boolean renderedEditar;
     private boolean renderedCrear;
-    private boolean renderedInformacionEstudio;
+    private Boolean renderedInformacionEstudio;
     private Boolean renderedEsAptoAspirante;
     private int keyEnteroRm;
     private int keyEnteroEstadoEstudiantesParelelo;
@@ -147,21 +147,24 @@ public class SessionEstudianteCarrera implements Serializable {
         this.renderedCrear = renderedCrear;
     }
 
-    public boolean isRenderedInformacionEstudio() {
+    public Boolean getRenderedInformacionEstudio() {
         return renderedInformacionEstudio;
     }
 
-    public void setRenderedInformacionEstudio(boolean renderedInformacionEstudio) {
+    public void setRenderedInformacionEstudio(Boolean renderedInformacionEstudio) {
         this.renderedInformacionEstudio = renderedInformacionEstudio;
     }
 
-    public Boolean isRenderedEsAptoAspirante() {
+
+    public Boolean getRenderedEsAptoAspirante() {
         return renderedEsAptoAspirante;
     }
 
     public void setRenderedEsAptoAspirante(Boolean renderedEsAptoAspirante) {
         this.renderedEsAptoAspirante = renderedEsAptoAspirante;
     }
+
+   
 
     public int getKeyEnteroRm() {
         return keyEnteroRm;

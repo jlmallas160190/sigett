@@ -61,7 +61,7 @@ public class PeriodoCoordinacion implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "es_activo")
-    private boolean esActivo;
+    private Boolean esActivo;
     @OneToMany(mappedBy = "periodoId")
     private List<CoordinadorPeriodo> coordinadorPeriodoList;
     @JoinColumn(name = "carrera_id", referencedColumnName = "id")
@@ -76,10 +76,8 @@ public class PeriodoCoordinacion implements Serializable {
         this.id = id;
     }
 
-    public PeriodoCoordinacion(Long id, Date fechaInicio, Date fechaFin, boolean esActivo) {
-        this.id = id;
-        this.fechaInicio = fechaInicio;
-        this.fechaFin = fechaFin;
+    public PeriodoCoordinacion(Carrera carrera,Boolean esActivo) {
+        this.carreraId=carrera;
         this.esActivo = esActivo;
     }
 
@@ -107,11 +105,11 @@ public class PeriodoCoordinacion implements Serializable {
         this.fechaFin = fechaFin;
     }
 
-    public boolean getEsActivo() {
+    public Boolean getEsActivo() {
         return esActivo;
     }
 
-    public void setEsActivo(boolean esActivo) {
+    public void setEsActivo(Boolean esActivo) {
         this.esActivo = esActivo;
     }
 

@@ -45,10 +45,14 @@ public class Estudiante implements Serializable {
     @Basic(optional = false)
     @Column(name = "es_activo")
     @NotNull
-    private boolean esActivo;
+    private Boolean esActivo;
 
     public Estudiante() {
         this.estudianteCarreraList = new ArrayList<>();
+    }
+
+    public Estudiante(Boolean esActivo) {
+        this.esActivo = esActivo;
     }
 
     public Estudiante(Long id) {
@@ -72,13 +76,14 @@ public class Estudiante implements Serializable {
         this.estudianteCarreraList = estudianteCarreraList;
     }
 
-    public boolean isEsActivo() {
+    public Boolean isEsActivo() {
         return esActivo;
     }
 
-    public void setEsActivo(boolean esActivo) {
+    public void setEsActivo(Boolean esActivo) {
         this.esActivo = esActivo;
     }
+
 
     @Override
     public int hashCode() {

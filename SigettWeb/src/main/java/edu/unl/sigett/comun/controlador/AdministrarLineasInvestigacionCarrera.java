@@ -95,7 +95,7 @@ public class AdministrarLineasInvestigacionCarrera implements Serializable {
             int tienePermiso = usuarioFacadeLocal.tienePermiso(sessionUsuario.getUsuario(), "crear_linea_investigacion_carrera");
             if (tienePermiso == 1) {
                 sessionLineaInvestigacionCarrera.setLineaInvestigacionCarrera(new LineaInvestigacionCarrera(new LineaInvestigacion(),
-                        sessionUsuarioCarrera.getUsuarioCarreraAux().getCarrera().getId()));
+                        sessionUsuarioCarrera.getUsuarioCarreraDTO().getCarrera().getId()));
                 navegacion = "pretty:crearLineaInvestigacionCarrera";
             } else {
                 if (tienePermiso == 2) {
@@ -170,7 +170,7 @@ public class AdministrarLineasInvestigacionCarrera implements Serializable {
             int tienePermiso = usuarioFacadeLocal.tienePermiso(sessionUsuario.getUsuario(), "buscar_linea_investigacion_carrera");
             if (tienePermiso == 1) {
                 this.sessionLineaInvestigacionCarrera.setLineaInvestigacionCarreras(lineaInvestigacionCarreraDao.buscar(
-                        new LineaInvestigacionCarrera(null, sessionUsuarioCarrera.getUsuarioCarreraAux().getCarrera().getId())));
+                        new LineaInvestigacionCarrera(null, sessionUsuarioCarrera.getUsuarioCarreraDTO().getCarrera().getId())));
             } else {
                 if (tienePermiso == 2) {
                     FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_buscar") + ". " + bundle.getString("lbl.msm_consulte"), "");

@@ -12,7 +12,7 @@
                                 value="/AppServlet?id={sessionDocenteCarrera.docenteCarreraAux.persona.id}&amp;entity=Persona"/>
             </f:facet>-->
             <h:outputLabel value="#{msg['lbl.ci']}:" for="numeroIdentificacion" />
-            <p:inputText id="numeroIdentificacion" value="#{sessionDocenteCarrera.docenteCarreraAux.persona.numeroIdentificacion}"
+            <p:inputText id="numeroIdentificacion" value="#{sessionDocenteCarrera.docenteCarreraDTO.persona.numeroIdentificacion}"
                          title="#{msg['lbl.ci']}"
                          required="true" 
                          requiredMessage="#{msg['lbl.ci']} #{msg['lbl.obligatorio']}.">
@@ -26,7 +26,7 @@
             </p:fragment>
             <p:message id="msmNumeroIdentificacion" display="icon" for="numeroIdentificacion"/>
             <h:outputLabel value="#{msg['lbl.nombres']}:" for="nombres" />
-            <p:inputText id="nombres" value="#{sessionDocenteCarrera.docenteCarreraAux.persona.nombres}" title="#{msg['lbl.nombres']}" required="true" 
+            <p:inputText id="nombres" value="#{sessionDocenteCarrera.docenteCarreraDTO.persona.nombres}" title="#{msg['lbl.nombres']}" required="true" 
                          requiredMessage="#{msg['lbl.nombres']} #{msg['lbl.obligatorio']}.">
                 <p:ajax event="keyup" update="msmNombres"/>
                 <p:ajax event="change" update="@this,:contenido:msgs"/>
@@ -34,7 +34,7 @@
             <h:inputHidden/>
             <p:message id="msmNombres" display="icon" for="nombres"/>
             <h:outputLabel value="#{msg['lbl.apellidos']}:" for="apellidos" />
-            <p:inputText id="apellidos" value="#{sessionDocenteCarrera.docenteCarreraAux.persona.apellidos}" title="#{msg['lbl.apellidos']}" 
+            <p:inputText id="apellidos" value="#{sessionDocenteCarrera.docenteCarreraDTO.persona.apellidos}" title="#{msg['lbl.apellidos']}" 
                          required="true" 
                          requiredMessage="#{msg['lbl.apellidos']} #{msg['lbl.obligatorio']}.">
                 <p:ajax event="keyup" update="msmApellidos"/>
@@ -43,7 +43,7 @@
             <h:inputHidden/>
             <p:message id="msmApellidos" display="icon" for="apellidos"/>
             <h:outputLabel value="#{msg['lbl.email']}:" for="email" />
-            <p:inputText id="email" value="#{sessionDocenteCarrera.docenteCarreraAux.persona.email}" title="#{msg['lbl.email']}" required="true"
+            <p:inputText id="email" value="#{sessionDocenteCarrera.docenteCarreraDTO.persona.email}" title="#{msg['lbl.email']}" required="true"
                          requiredMessage="#{msg['lbl.email']} #{msg['lbl.obligatorio']}." validatorMessage="correo no válido">
                 <p:ajax event="keyup" update="msmEmail"/>
                 <f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$"/>
@@ -53,7 +53,7 @@
             <p:message id="msmEmail" display="icon" for="email"/>
             <h:outputLabel value="#{msg['lbl.fechaNacimiento']}:" for="fechaNacimiento" />
             <p:calendar id="fechaNacimiento" yearRange="c-100:c+20" navigator="true" locale="es" pattern="dd/MM/yyyy" 
-                        value="#{sessionDocenteCarrera.docenteCarreraAux.persona.fechaNacimiento}" title="#{msg['lbl.fechaNacimiento']}" 
+                        value="#{sessionDocenteCarrera.docenteCarreraDTO.persona.fechaNacimiento}" title="#{msg['lbl.fechaNacimiento']}" 
                         required="true" requiredMessage="#{msg['lbl.fechaNacimiento']} #{msg['lbl.obligatorio']}.">
                 <p:ajax event="dateSelect" update="msmFechaNacimiento"/>
                 <p:ajax event="change" update="@this,:contenido:msgs"/>

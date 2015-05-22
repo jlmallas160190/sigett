@@ -32,17 +32,7 @@
                                     <ui:include src="detalleMatriculas.xhtml"/> 
                                 </p:overlayPanel>
                                 <f:facet name="footer">
-                                    <h:panelGrid columns="3">
-                                        <p:commandButton  icon="ui-icon-info" value="#{msg['lbl.matriculas']}" id="detalleMatriculas"/>
-                                        <p:commandButton onstart="PF('dlgLoading').show();" oncomplete="PF('dlgLoading').hide()" update="tblReporteMatriculas,:contenido:msm"
-                                                         value="#{msg['lbl.sincronizar']} SGA" 
-                                                         action="#{administrarEstudiantesCarrera.sgaWebServicesEstudianteMatriculas()}"
-                                                         icon="ui-icon-refresh"/>
-                                        <p:commandButton icon="ui-icon-comprobar" value="#{msg['lbl.comprobar']}" process="@this" 
-                                                         onstart="PF('dlgLoading').show();" 
-                                                         oncomplete="PF('dlgLoading').hide()" update="datosEstudianteCarrera,esApto,:contenido:msm" 
-                                                         action="#{administrarEstudiantesCarrera.compruebaEsAspiranteApto()}"/>
-                                    </h:panelGrid>
+                                    <ui:include src="botonesInformacionEstudio.xhtml"/> 
                                 </f:facet>
                             </p:panel>
                         </p:tab>

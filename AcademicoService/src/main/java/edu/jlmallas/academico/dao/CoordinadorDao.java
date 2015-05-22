@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.jlmallas.academico.dao.implement;
+package edu.jlmallas.academico.dao;
 
 import edu.jlmallas.academico.entity.Coordinador;
 import java.util.List;
@@ -14,7 +14,7 @@ import javax.ejb.Local;
  * @author JorgeLuis
  */
 @Local
-public interface CoordinadorFacadeLocal {
+public interface CoordinadorDao {
 
     void create(Coordinador coordinador);
 

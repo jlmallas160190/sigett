@@ -12,8 +12,6 @@ import edu.jlmallas.academico.entity.Carrera;
 import edu.jlmallas.academico.entity.PeriodoCoordinacion;
 import org.jlmallas.seguridad.entity.Usuario;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
@@ -22,7 +20,9 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import org.primefaces.context.RequestContext;
-import edu.jlmallas.academico.dao.implement.PeriodoCoordinacionFacadeLocal;
+import edu.jlmallas.academico.dao.PeriodoCoordinacionDao;
+import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
+import edu.unl.sigett.seguridad.managed.session.SessionUsuarioCarrera;
 import org.jlmallas.seguridad.dao.UsuarioDao;
 
 /**
@@ -35,53 +35,55 @@ import org.jlmallas.seguridad.dao.UsuarioDao;
     @URLMapping(
             id = "editarPeriodoCoordinacion",
             pattern = "/editarPeriodoCoordinacion/#{sessionPeriodoCoordinacion.periodoCoordinacion.id}",
-            viewId = "/faces/pages/academico/editarPeriodoCoordinacion.xhtml"
+            viewId = "/faces/pages/academico/periodosCoordinacion/editarPeriodoCoordinacion.xhtml"
     ),
     @URLMapping(
             id = "crearPeriodoCoordinacion",
             pattern = "/crearPeriodoCoordinacion/",
-            viewId = "/faces/pages/academico/editarPeriodoCoordinacion.xhtml"
+            viewId = "/faces/pages/academico/periodosCoordinacion/editarPeriodoCoordinacion.xhtml"
     ),
     @URLMapping(
             id = "periodosCoordinacion",
             pattern = "/periodosCoordinacion/",
-            viewId = "/faces/pages/academico/buscarPeriodosCoordinacion.xhtml"
+            viewId = "/faces/pages/academico/periodosCoordinacion/index.xhtml"
     )})
 public class AdministrarPeriodoCoordinacion implements Serializable {
 
+    //<editor-fold defaultstate="collapsed" desc="MANAGE BEANS"> 
     @Inject
     private SessionPeriodoCoordinacion sessionPeriodoCoordinacion;
+    @Inject
+    private SessionUsuarioCarrera sessionUsuarioCarrera;
+    @Inject
+    private SessionUsuario sessionUsuario;
+    //</editor-fold>
+    //<editor-fold defaultstate="collapsed" desc="SERVICIOS"> 
     @EJB
     private UsuarioDao usuarioFacadeLocal;
-    private List<PeriodoCoordinacion> periodosCoordinacion;
     @EJB
-    private PeriodoCoordinacionFacadeLocal periodoCoordinacionFacadeLocal;
-    private boolean renderedCrear;
-    private boolean renderedEditar;
-    private boolean renderedNoEditar;
-    private boolean renderedEliminar;
+    private PeriodoCoordinacionDao periodoCoordinacionDao;
+    //</editor-fold>
 
     public AdministrarPeriodoCoordinacion() {
     }
-    //<editor-fold defaultstate="collapsed" desc="MÉTODOS CRUD"> 
 
-    public String navegarListado(Usuario usuario, Carrera carrera) {
-        buscarPorCarrera(usuario, carrera);
-        renderedCrear(usuario);
-        renderedEditar(usuario);
-        renderedEliminar(usuario);
-        return "pretty:periodosCoordinacion";
+    public void init() {
+        this.buscar();
+        this.renderedCrear(sessionUsuario.getUsuario());
+        this.renderedEditar(sessionUsuario.getUsuario());
+        this.renderedEliminar(sessionUsuario.getUsuario());
     }
 
+    //<editor-fold defaultstate="collapsed" desc="MÉTODOS CRUD"> 
     public String crear(Usuario usuario, Carrera carrera) {
         String navegacion = "";
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
         String param = (String) facesContext.getExternalContext().getRequestParameterMap().get("1");
         try {
-            int tienePermiso =  usuarioFacadeLocal.tienePermiso(usuario, "crear_periodo_coordinacion");
+            int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "crear_periodo_coordinacion");
             if (tienePermiso == 1) {
-                sessionPeriodoCoordinacion.setPeriodoCoordinacion(new PeriodoCoordinacion());
+                sessionPeriodoCoordinacion.setPeriodoCoordinacion(new PeriodoCoordinacion(carrera, Boolean.TRUE));
                 sessionPeriodoCoordinacion.getPeriodoCoordinacion().setCarreraId(carrera);
                 if (param.equalsIgnoreCase("crear")) {
                     navegacion = "pretty:crearPeriodoCoordinacion";
@@ -99,7 +101,7 @@ public class AdministrarPeriodoCoordinacion implements Serializable {
         return navegacion;
     }
 
-    public String editar(PeriodoCoordinacion periodoCoordinacion, Usuario usuario, Carrera carrera) {
+    public String editar(PeriodoCoordinacion periodoCoordinacion, Usuario usuario) {
         String navegacion = "";
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
@@ -108,7 +110,6 @@ public class AdministrarPeriodoCoordinacion implements Serializable {
             int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "editar_periodo_coordinacion");
             if (tienePermiso == 1) {
                 sessionPeriodoCoordinacion.setPeriodoCoordinacion(periodoCoordinacion);
-                sessionPeriodoCoordinacion.getPeriodoCoordinacion().setCarreraId(carrera);
                 if (param.equalsIgnoreCase("editar")) {
                     navegacion = "pretty:editarPeriodoCoordinacion";
                 } else {
@@ -125,14 +126,17 @@ public class AdministrarPeriodoCoordinacion implements Serializable {
         return navegacion;
     }
 
-    public void buscarPorCarrera(Usuario usuario, Carrera carrera) {
-        this.periodosCoordinacion = new ArrayList<>();
+    public void buscar() {
+        this.sessionPeriodoCoordinacion.getPeriodosCoordinacion().clear();
+        this.sessionPeriodoCoordinacion.getFilterPeriodosCoordinacion().clear();
         try {
             FacesContext facesContext = FacesContext.getCurrentInstance();
             ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "buscar_periodo_coordinacion");
+            int tienePermiso = usuarioFacadeLocal.tienePermiso(sessionUsuario.getUsuario(), "buscar_periodo_coordinacion");
             if (tienePermiso == 1) {
-                periodosCoordinacion = periodoCoordinacionFacadeLocal.buscarPorCarrera(carrera.getId());
+                sessionPeriodoCoordinacion.setPeriodosCoordinacion(periodoCoordinacionDao.buscar(new PeriodoCoordinacion(
+                        sessionUsuarioCarrera.getUsuarioCarreraDTO().getCarrera(), Boolean.TRUE)));
+                sessionPeriodoCoordinacion.setFilterPeriodosCoordinacion(sessionPeriodoCoordinacion.getPeriodosCoordinacion());
             } else {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_buscar") + ". " + bundle.getString("lbl.msm_consulte"), "");
                 FacesContext.getCurrentInstance().addMessage(null, message);
@@ -141,24 +145,30 @@ public class AdministrarPeriodoCoordinacion implements Serializable {
         }
     }
 
-    public List<PeriodoCoordinacion> buscarActivos() {
-        try {
-            return periodoCoordinacionFacadeLocal.buscarActivos();
-        } catch (Exception e) {
-        }
-        return null;
-    }
-
-    public String grabar(PeriodoCoordinacion periodoCoordinacion, Usuario usuario, Carrera carrera) {
+//    public List<PeriodoCoordinacion> buscarActivos() {
+//        try {
+//            return periodoCoordinacionDao.buscarActivos();
+//        } catch (Exception e) {
+//        }
+//        return null;
+//    }
+    /**
+     * GRABAR PERIODO DE COORDINACIÓN
+     *
+     * @param periodoCoordinacion
+     * @param usuario
+     * @return
+     */
+    public String grabar(PeriodoCoordinacion periodoCoordinacion, Usuario usuario) {
         String navegacion = "";
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
         String param = (String) facesContext.getExternalContext().getRequestParameterMap().get("1");
         try {
             if (periodoCoordinacion.getId() == null) {
-                int tienePermiso  = usuarioFacadeLocal.tienePermiso(usuario, "crear_periodo_coordinacion");
+                int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "crear_periodo_coordinacion");
                 if (tienePermiso == 1) {
-                    periodoCoordinacionFacadeLocal.create(periodoCoordinacion);
+                    periodoCoordinacionDao.create(periodoCoordinacion);
                     if (param.equalsIgnoreCase("grabar")) {
                         sessionPeriodoCoordinacion.setPeriodoCoordinacion(new PeriodoCoordinacion());
                         navegacion = "pretty:periodosCoordinacion";
@@ -168,7 +178,6 @@ public class AdministrarPeriodoCoordinacion implements Serializable {
                             FacesContext.getCurrentInstance().addMessage(null, message);
                         }
                     }
-                    buscarPorCarrera(usuario, carrera);
                 } else {
                     FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_crear") + ". " + bundle.getString("lbl.msm_consulte"), "");
                     FacesContext.getCurrentInstance().addMessage(null, message);
@@ -176,7 +185,7 @@ public class AdministrarPeriodoCoordinacion implements Serializable {
             } else {
                 int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "editar_periodo_coordinacion");
                 if (tienePermiso == 1) {
-                    periodoCoordinacionFacadeLocal.edit(periodoCoordinacion);
+                    periodoCoordinacionDao.edit(periodoCoordinacion);
                     if (param.equalsIgnoreCase("grabar")) {
                         sessionPeriodoCoordinacion.setPeriodoCoordinacion(new PeriodoCoordinacion());
                         navegacion = "buscarPeriodosCoordinacion";
@@ -186,7 +195,6 @@ public class AdministrarPeriodoCoordinacion implements Serializable {
                             FacesContext.getCurrentInstance().addMessage(null, message);
                         }
                     }
-                    buscarPorCarrera(usuario, carrera);
                 } else {
                     FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_editar") + ". " + bundle.getString("lbl.msm_consulte"), "");
                     FacesContext.getCurrentInstance().addMessage(null, message);
@@ -203,9 +211,9 @@ public class AdministrarPeriodoCoordinacion implements Serializable {
         try {
             int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "crear_periodo_coordinacion");
             if (tienePermiso == 1) {
-                renderedCrear = true;
+                sessionPeriodoCoordinacion.setRenderedCrear(Boolean.TRUE);
             } else {
-                renderedCrear = false;
+                sessionPeriodoCoordinacion.setRenderedCrear(Boolean.FALSE);
             }
         } catch (Exception e) {
         }
@@ -215,11 +223,9 @@ public class AdministrarPeriodoCoordinacion implements Serializable {
         try {
             int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "editar_periodo_coordinacion");
             if (tienePermiso == 1) {
-                renderedEditar = true;
-                renderedNoEditar = false;
+                sessionPeriodoCoordinacion.setRenderedEditar(Boolean.TRUE);
             } else {
-                renderedNoEditar = true;
-                renderedEditar = false;
+                sessionPeriodoCoordinacion.setRenderedEditar(Boolean.FALSE);
             }
         } catch (Exception e) {
         }
@@ -228,10 +234,9 @@ public class AdministrarPeriodoCoordinacion implements Serializable {
     public void renderedEliminar(Usuario usuario) {
         try {
             int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "eliminar_periodo_coordinacion");
+            sessionPeriodoCoordinacion.setRenderedEliminar(Boolean.FALSE);
             if (tienePermiso == 1) {
-                renderedEliminar = true;
-            } else {
-                renderedEliminar = false;
+                sessionPeriodoCoordinacion.setRenderedEliminar(Boolean.TRUE);
             }
         } catch (Exception e) {
         }
@@ -245,46 +250,6 @@ public class AdministrarPeriodoCoordinacion implements Serializable {
 
     public void setSessionPeriodoCoordinacion(SessionPeriodoCoordinacion sessionPeriodoCoordinacion) {
         this.sessionPeriodoCoordinacion = sessionPeriodoCoordinacion;
-    }
-
-    public List<PeriodoCoordinacion> getPeriodosCoordinacion() {
-        return periodosCoordinacion;
-    }
-
-    public void setPeriodosCoordinacion(List<PeriodoCoordinacion> periodosCoordinacion) {
-        this.periodosCoordinacion = periodosCoordinacion;
-    }
-
-    public boolean isRenderedCrear() {
-        return renderedCrear;
-    }
-
-    public void setRenderedCrear(boolean renderedCrear) {
-        this.renderedCrear = renderedCrear;
-    }
-
-    public boolean isRenderedEditar() {
-        return renderedEditar;
-    }
-
-    public void setRenderedEditar(boolean renderedEditar) {
-        this.renderedEditar = renderedEditar;
-    }
-
-    public boolean isRenderedNoEditar() {
-        return renderedNoEditar;
-    }
-
-    public void setRenderedNoEditar(boolean renderedNoEditar) {
-        this.renderedNoEditar = renderedNoEditar;
-    }
-
-    public boolean isRenderedEliminar() {
-        return renderedEliminar;
-    }
-
-    public void setRenderedEliminar(boolean renderedEliminar) {
-        this.renderedEliminar = renderedEliminar;
     }
 //</editor-fold>
 }

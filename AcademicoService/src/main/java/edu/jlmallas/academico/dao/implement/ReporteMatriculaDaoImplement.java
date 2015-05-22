@@ -42,7 +42,7 @@ public class ReporteMatriculaDaoImplement extends AbstractDao<ReporteMatricula> 
     @Override
     public List<ReporteMatricula> buscarPorEstudianteCarrera(Long estudianteCarreraId) {
         try {
-            Query query = em.createQuery("SELECT rm  from ReporteMatricula rm WHERE " + "(rm.estudianteCarrera.id=:id)");
+            Query query = em.createQuery("SELECT rm  from ReporteMatricula rm WHERE " + "(rm.estudianteCarreraId.id=:id)");
             query.setParameter("id", estudianteCarreraId);
             return query.getResultList();
         } catch (Exception e) {

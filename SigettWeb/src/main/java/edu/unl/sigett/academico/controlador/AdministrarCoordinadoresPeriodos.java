@@ -8,14 +8,12 @@ package edu.unl.sigett.academico.controlador;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 import com.ocpsoft.pretty.faces.annotation.URLMappings;
 import edu.unl.sigett.comun.managed.session.SessionCoordinadorPeriodo;
-import edu.jlmallas.academico.entity.Carrera;
 import edu.jlmallas.academico.entity.Coordinador;
 import edu.jlmallas.academico.entity.CoordinadorPeriodo;
 import edu.jlmallas.academico.entity.PeriodoCoordinacion;
 import com.jlmallas.comun.entity.Persona;
 import org.jlmallas.seguridad.entity.Usuario;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import javax.ejb.EJB;
@@ -25,10 +23,20 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import org.primefaces.context.RequestContext;
-import edu.jlmallas.academico.dao.implement.CoordinadorFacadeLocal;
-import edu.jlmallas.academico.dao.implement.CoordinadorPeriodoFacadeLocal;
-import edu.jlmallas.academico.dao.implement.PeriodoCoordinacionFacadeLocal;
+import edu.jlmallas.academico.dao.CoordinadorDao;
+import edu.jlmallas.academico.dao.PeriodoCoordinacionDao;
 import com.jlmallas.comun.dao.PersonaDao;
+import edu.jlmallas.academico.dao.DocenteCarreraDao;
+import edu.jlmallas.academico.dao.DocenteDao;
+import edu.jlmallas.academico.entity.Docente;
+import edu.jlmallas.academico.entity.DocenteCarrera;
+import edu.jlmallas.academico.service.CoordinadorPeriodoService;
+import edu.unl.sigett.academico.converter.DocenteCarreraDTOConverter;
+import edu.unl.sigett.academico.dto.CoordinadorPeriodoDTO;
+import edu.unl.sigett.academico.dto.DocenteCarreraDTO;
+import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
+import edu.unl.sigett.seguridad.managed.session.SessionUsuarioCarrera;
+import java.util.ArrayList;
 import org.jlmallas.seguridad.dao.UsuarioDao;
 
 /**
@@ -40,54 +48,62 @@ import org.jlmallas.seguridad.dao.UsuarioDao;
 @URLMappings(mappings = {
     @URLMapping(
             id = "editarCoordinador",
-            pattern = "/editarCoordinador/#{sessionCoordinadorPeriodo.coordinadorPeriodo.id}",
-            viewId = "/faces/pages/academico/editarCoordinadorPeriodo.xhtml"
+            pattern = "/editarCoordinador/#{sessionCoordinadorPeriodo.coordinadorPeriodoDTO.coordinadorPeriodo.id}",
+            viewId = "/faces/pages/academico/coordinadores/editarCoordinadorPeriodo.xhtml"
     ),
     @URLMapping(
             id = "crearCoordinador",
             pattern = "/crearCoordinador/",
-            viewId = "/faces/pages/academico/editarCoordinadorPeriodo.xhtml"
+            viewId = "/faces/pages/academico/coordinadores/editarCoordinadorPeriodo.xhtml"
     ),
     @URLMapping(
             id = "coordinadores",
             pattern = "/coordinadores/",
-            viewId = "/faces/pages/academico/buscarCoordinadoresPeriodos.xhtml"
+            viewId = "/faces/pages/academico/coordinadores/index.xhtml"
     )})
 public class AdministrarCoordinadoresPeriodos implements Serializable {
-    
+
+    //<editor-fold defaultstate="collapsed" desc="MANAGED BEANS">
     @Inject
     private SessionCoordinadorPeriodo sessionCoordinadorPeriodo;
-    private String criterio;
+    @Inject
+    private SessionUsuarioCarrera sessionUsuarioCarrera;
+    @Inject
+    private SessionUsuario sessionUsuario;
+    //</editor-fold>
+    //<editor-fold defaultstate="collapsed" desc="SERVICIOS">
     @EJB
-    private CoordinadorPeriodoFacadeLocal coordinadorPeriodoFacadeLocal;
+    private CoordinadorPeriodoService coordinadorPeriodoService;
     @EJB
-    private CoordinadorFacadeLocal coordinadorFacadeLocal;
+    private CoordinadorDao coordinadorDao;
     @EJB
-    private PersonaDao personaFacadeLocal;
+    private DocenteCarreraDao docenteCarreraDao;
     @EJB
     private UsuarioDao usuarioFacadeLocal;
-    private List<CoordinadorPeriodo> coordinadorPeriodos;
-    private String numeroIdentificacion;
-    private boolean renderedCrear;
-    private boolean renderedEditar;
-    private boolean renderedNoEditar;
-    private boolean renderedEliminar;
-    private String periodoCoordinacion;
     @EJB
-    private PeriodoCoordinacionFacadeLocal periodoCoordinacionFacadeLocal;
-    
+    private PeriodoCoordinacionDao periodoCoordinacionDao;
+    @EJB
+    private PersonaDao personaDao;
+    @EJB
+    private DocenteDao docenteDao;
+    //</editor-fold>
+
     public AdministrarCoordinadoresPeriodos() {
     }
 
-    //<editor-fold defaultstate="collapsed" desc="MÉTODOS CRUD">
-    public String navegarListado(Usuario usuario, Carrera carrera) {
-        buscarPorCarrera("", usuario, carrera);
-        renderedCrear(usuario);
-        renderedEditar(usuario);
-        renderedEliminar(usuario);
-        return "pretty:coordinadores";
+    public void init() {
+        this.buscar();
+        this.renderedCrear(sessionUsuario.getUsuario());
+        this.renderedEditar(sessionUsuario.getUsuario());
+        this.renderedEliminar(sessionUsuario.getUsuario());
+
     }
-    
+
+    public void initEditar() {
+        this.listadoPeriodos();
+    }
+
+    //<editor-fold defaultstate="collapsed" desc="MÉTODOS CRUD">
     public String crear(Usuario usuario) {
         String navegacion = "";
         FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -96,9 +112,8 @@ public class AdministrarCoordinadoresPeriodos implements Serializable {
         try {
             int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "crear_coordinador_periodo_coordinacion");
             if (tienePermiso == 1) {
-                sessionCoordinadorPeriodo.setCoordinadorPeriodo(new CoordinadorPeriodo());
-                sessionCoordinadorPeriodo.getCoordinadorPeriodo().setCoordinadorId(new Coordinador());
-                sessionCoordinadorPeriodo.setPersona(new Persona());
+                sessionCoordinadorPeriodo.setCoordinadorPeriodoDTO(new CoordinadorPeriodoDTO(new CoordinadorPeriodo(
+                        Boolean.FALSE, new Coordinador(Boolean.TRUE), null), new Persona()));
                 if (param.equalsIgnoreCase("crear")) {
                     navegacion = "pretty:crearCoordinador";
                 } else {
@@ -114,14 +129,8 @@ public class AdministrarCoordinadoresPeriodos implements Serializable {
         }
         return navegacion;
     }
-    public Persona getPersona(CoordinadorPeriodo coordinadorPeriodo){
-        try {
-            return personaFacadeLocal.find(coordinadorPeriodo.getCoordinadorId().getId());
-        } catch (Exception e) {
-        }
-        return null;
-    }
-    public String editar(Usuario usuario, CoordinadorPeriodo coordinadorPeriodo) {
+
+    public String editar(Usuario usuario, CoordinadorPeriodoDTO coordinadorPeriodo) {
         String navegacion = "";
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
@@ -129,167 +138,248 @@ public class AdministrarCoordinadoresPeriodos implements Serializable {
         try {
             int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "editar_coordinador_periodo_coordinacion");
             if (tienePermiso == 1) {
-                sessionCoordinadorPeriodo.setCoordinadorPeriodo(coordinadorPeriodo);
-                sessionCoordinadorPeriodo.setPersona(personaFacadeLocal.find(coordinadorPeriodo.getCoordinadorId().getId()));
+                sessionCoordinadorPeriodo.setCoordinadorPeriodoDTO(coordinadorPeriodo);
                 if (param.equalsIgnoreCase("editar")) {
                     navegacion = "pretty:editarCoordinador";
                 }
             } else {
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_editar") + ". " + bundle.getString("lbl.msm_consulte"), "");
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_editar") + ". "
+                        + bundle.getString("lbl.msm_consulte"), "");
                 FacesContext.getCurrentInstance().addMessage(null, message);
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
         return navegacion;
     }
-    
-    public void buscarPorCarrera(String criterio, Usuario usuario, Carrera carrera) {
-        this.coordinadorPeriodos = new ArrayList<>();
+
+    /**
+     * BUSCAR DOCENTES CARRERA PARA SELECCIONARLO COMO COORDINADOR DE CARRERA
+     *
+     * @param query
+     * @return
+     */
+    public List<DocenteCarreraDTO> completarDocentesCarrera(final String query) {
+        List<DocenteCarreraDTO> results = new ArrayList<>();
+        List<DocenteCarrera> docentesCarrera = new ArrayList<>();
+        List<Docente> docentes = new ArrayList<>();
+        List<Persona> personas = new ArrayList<>();
+        if (!"".equals(query.trim())) {
+            personas = personaDao.buscar(new Persona(null, query.trim(),null, null, null, null));
+            if (personas == null) {
+                return new ArrayList<>();
+            }
+            for (Persona persona : personas) {
+                Docente docente = docenteDao.find(persona.getId());
+                if (docente == null) {
+                    continue;
+                }
+                docentes.add(docente);
+            }
+
+            for (Docente docente : docentes) {
+                List<DocenteCarrera> docenteCarreras = docenteCarreraDao.buscar(new DocenteCarrera(null, docente,
+                        sessionUsuarioCarrera.getUsuarioCarreraDTO().getCarrera(), Boolean.TRUE));
+                if (docenteCarreras == null) {
+                    continue;
+                }
+                DocenteCarrera docenteCarrera = !docenteCarreras.isEmpty() ? docenteCarreras.get(0) : null;
+                docentesCarrera.add(docenteCarrera);
+            }
+        }
+
+        for (DocenteCarrera dc : docentesCarrera) {
+            results.add(new DocenteCarreraDTO(dc, personaDao.find(dc.getDocenteId().getId()), null));
+        }
+        DocenteCarreraDTOConverter.setDocenteCarreraDTOs(results);
+        return results;
+    }
+
+    /**
+     * BUSCAR COORDINADORES
+     */
+    public void buscar() {
+        this.sessionCoordinadorPeriodo.getCoordinadorPeriodos().clear();
+        this.sessionCoordinadorPeriodo.getFilterCoordinadorPeriodos().clear();
         try {
             FacesContext facesContext = FacesContext.getCurrentInstance();
             ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "buscar_coordinador_periodo_coordinacion");
+            int tienePermiso = usuarioFacadeLocal.tienePermiso(sessionUsuario.getUsuario(), "buscar_coordinador_periodo_coordinacion");
             if (tienePermiso == 1) {
-                for (CoordinadorPeriodo coordinadorPeriodo : coordinadorPeriodoFacadeLocal.buscarPorCarrera(carrera.getId())) {
-                    Persona persona = personaFacadeLocal.find(coordinadorPeriodo.getCoordinadorId().getId());
-                    if (persona.getApellidos().toLowerCase().contains(criterio.toLowerCase())
-                            || persona.getNombres().toLowerCase().contains(criterio.toLowerCase())
-                            || persona.getNumeroIdentificacion().toLowerCase().contains(criterio.toLowerCase())) {
-                        coordinadorPeriodos.add(coordinadorPeriodo);
-                    }
+                List<CoordinadorPeriodo> coordinadorPeriodos = coordinadorPeriodoService.buscar(new CoordinadorPeriodo(
+                            null, null, new PeriodoCoordinacion(sessionUsuarioCarrera.getUsuarioCarreraDTO().getCarrera(), null)));
+                if (coordinadorPeriodos == null) {
+                    return;
                 }
-                renderedEditar(usuario);
-                renderedEliminar(usuario);
+                for (CoordinadorPeriodo coordinadorPeriodo : coordinadorPeriodos) {
+                    CoordinadorPeriodoDTO coordinadorPeriodoDTO = new CoordinadorPeriodoDTO(coordinadorPeriodo,
+                            personaDao.find(coordinadorPeriodo.getCoordinadorId().getId()));
+                    sessionCoordinadorPeriodo.getCoordinadorPeriodos().add(coordinadorPeriodoDTO);
+                }
+                this.sessionCoordinadorPeriodo.setFilterCoordinadorPeriodos(sessionCoordinadorPeriodo.getCoordinadorPeriodos());
             } else {
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_buscar") + ". " + bundle.getString("lbl.msm_consulte"), "");
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_buscar") + ". "
+                        + bundle.getString("lbl.msm_consulte"), "");
                 FacesContext.getCurrentInstance().addMessage(null, message);
             }
         } catch (Exception e) {
         }
     }
-    
-    public void encargarCoordinacion(CoordinadorPeriodo coordinadorPeriodo, Usuario usuario, Carrera carrera) {
+
+    public void listadoPeriodos() {
+        sessionCoordinadorPeriodo.getCoordinadorPeriodos().clear();
+        List<PeriodoCoordinacion> periodoCoordinacions = periodoCoordinacionDao.buscar(new PeriodoCoordinacion(
+                sessionUsuarioCarrera.getUsuarioCarreraDTO().getCarrera(), Boolean.TRUE));
+        if (periodoCoordinacions == null) {
+            return;
+        }
+        sessionCoordinadorPeriodo.setPeriodosCoordinacion(periodoCoordinacions);
+    }
+
+    /**
+     * ENCARGAR COORDINACIÓN
+     *
+     * @param coordinadorPeriodoDTO
+     * @param usuario
+     */
+    public void encargarCoordinacion(CoordinadorPeriodoDTO coordinadorPeriodoDTO, Usuario usuario) {
         try {
             int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "editar_coordinador_periodo_coordinacion");
             if (tienePermiso == 1) {
-                if (coordinadorPeriodo.getId() != null) {
-                    if (coordinadorPeriodo.getEsVigente()) {
-                        for (CoordinadorPeriodo c : coordinadorPeriodoFacadeLocal.buscarPorCarrera(carrera.getId())) {
-                            if (c.getId() != coordinadorPeriodo.getId()) {
-                                c.setEsVigente(false);
-                                coordinadorPeriodoFacadeLocal.edit(c);
+                if (coordinadorPeriodoDTO.getCoordinadorPeriodo().getId() != null) {
+                    if (coordinadorPeriodoDTO.getCoordinadorPeriodo().getEsVigente()) {
+                        List<CoordinadorPeriodo> coordinadorPeriodos = coordinadorPeriodoService.buscar(new CoordinadorPeriodo(
+                                Boolean.TRUE, null, new PeriodoCoordinacion(sessionUsuarioCarrera.getUsuarioCarreraDTO().getCarrera(), null)));
+                        for (CoordinadorPeriodo c : coordinadorPeriodos) {
+                            if (!c.equals(coordinadorPeriodoDTO.getCoordinadorPeriodo())) {
+                                c.setEsVigente(Boolean.FALSE);
+                                coordinadorPeriodoService.editar(c);
                             }
                         }
                     }
-                    coordinadorPeriodoFacadeLocal.edit(coordinadorPeriodo);
-                    buscarPorCarrera("", usuario, carrera);
+                    coordinadorPeriodoService.editar(coordinadorPeriodoDTO.getCoordinadorPeriodo());
                 }
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
-        
+
     }
-    
-    public String grabar(Usuario usuario, Carrera carrera) {
-        String navegacion = "";
+
+    public String grabar(Usuario usuario) {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
         String param = (String) facesContext.getExternalContext().getRequestParameterMap().get("1");
-        int pos = periodoCoordinacion.indexOf(":");
-        PeriodoCoordinacion pc = periodoCoordinacionFacadeLocal.find(Long.parseLong(periodoCoordinacion.substring(0, pos)));
+        int pos = sessionCoordinadorPeriodo.getPeriodoCoordinacion().indexOf(":");
+        PeriodoCoordinacion pc = periodoCoordinacionDao.find(Long.parseLong(sessionCoordinadorPeriodo.getPeriodoCoordinacion().substring(0, pos)));
         if (pc != null) {
-            sessionCoordinadorPeriodo.getCoordinadorPeriodo().setPeriodoId(pc);
+            sessionCoordinadorPeriodo.getCoordinadorPeriodoDTO().getCoordinadorPeriodo().setPeriodoId(pc);
         }
         try {
-            if (sessionCoordinadorPeriodo.getCoordinadorPeriodo().getId() == null) {
+            if (sessionCoordinadorPeriodo.getCoordinadorPeriodoDTO().getCoordinadorPeriodo().getId() == null) {
                 int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "crear_coordinador_periodo_coordinacion");
                 if (tienePermiso == 1) {
-                    if (sessionCoordinadorPeriodo.getPersona() != null) {
-                        sessionCoordinadorPeriodo.getCoordinadorPeriodo().getCoordinadorId().setId(sessionCoordinadorPeriodo.getPersona().getId());
-                        coordinadorFacadeLocal.create(sessionCoordinadorPeriodo.getCoordinadorPeriodo().getCoordinadorId());
-                        coordinadorPeriodoFacadeLocal.create(sessionCoordinadorPeriodo.getCoordinadorPeriodo());
+                    if (sessionCoordinadorPeriodo.getCoordinadorPeriodoDTO().getPersona() != null) {
+                        sessionCoordinadorPeriodo.getCoordinadorPeriodoDTO().getCoordinadorPeriodo().getCoordinadorId().setId(
+                                sessionCoordinadorPeriodo.getCoordinadorPeriodoDTO().getPersona().getId());
+                        coordinadorDao.create(sessionCoordinadorPeriodo.getCoordinadorPeriodoDTO().getCoordinadorPeriodo().getCoordinadorId());
+                        coordinadorPeriodoService.guardar(sessionCoordinadorPeriodo.getCoordinadorPeriodoDTO().getCoordinadorPeriodo());
                         if (param.equalsIgnoreCase("grabar")) {
-                            sessionCoordinadorPeriodo.setCoordinadorPeriodo(new CoordinadorPeriodo());
-                            navegacion = "pretty:coordinadores";
-                        } else {
-                            if (param.equalsIgnoreCase("grabar-editar")) {
-                                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.coordinador") + " " + bundle.getString("lbl.msm_grabar"), "");
-                                FacesContext.getCurrentInstance().addMessage(null, message);
-                            }
+                            sessionCoordinadorPeriodo.setCoordinadorPeriodoDTO(new CoordinadorPeriodoDTO());
+                            return "pretty:coordinadores";
                         }
-                        buscarPorCarrera(criterio, usuario, carrera);
+                        if (param.equalsIgnoreCase("grabar-editar")) {
+                            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.coordinador") + " "
+                                    + bundle.getString("lbl.msm_grabar"), "");
+                            FacesContext.getCurrentInstance().addMessage(null, message);
+                            return "";
+                        }
                     } else {
                         FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.coordinador") + " " + bundle.getString("lbl.no_encontrado"), "");
                         FacesContext.getCurrentInstance().addMessage(null, message);
                     }
-                } else {
-                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_crear") + ". " + bundle.getString("lbl.msm_consulte"), "");
-                    FacesContext.getCurrentInstance().addMessage(null, message);
+                    return "";
                 }
-            } else {
-                int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "editar_coordinador_periodo_coordinacion");
-                if (tienePermiso == 1) {
-                    if (sessionCoordinadorPeriodo.getPersona() != null) {
-                        coordinadorFacadeLocal.edit(sessionCoordinadorPeriodo.getCoordinadorPeriodo().getCoordinadorId());
-                        coordinadorPeriodoFacadeLocal.edit(sessionCoordinadorPeriodo.getCoordinadorPeriodo());
-                        if (param.equalsIgnoreCase("grabar")) {
-                            sessionCoordinadorPeriodo.setCoordinadorPeriodo(new CoordinadorPeriodo());
-                            navegacion = "pretty:coordinadores";
-                        } else {
-                            if (param.equalsIgnoreCase("grabar-editar")) {
-                                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.coordinador") + " " + bundle.getString("lbl.msm_editar"), "");
-                                FacesContext.getCurrentInstance().addMessage(null, message);
-                            }
-                        }
-                        buscarPorCarrera(criterio, usuario, carrera);
-                    } else {
-                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.coordinador") + ". " + bundle.getString("lbl.no_encontrado"), "");
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_crear") + ". " + bundle.getString("lbl.msm_consulte"), "");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+
+                return "";
+            }
+
+            int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "editar_coordinador_periodo_coordinacion");
+            if (tienePermiso == 1) {
+                if (sessionCoordinadorPeriodo.getCoordinadorPeriodoDTO().getPersona() != null) {
+                    coordinadorDao.edit(sessionCoordinadorPeriodo.getCoordinadorPeriodoDTO().getCoordinadorPeriodo().getCoordinadorId());
+                    coordinadorPeriodoService.editar(sessionCoordinadorPeriodo.getCoordinadorPeriodoDTO().getCoordinadorPeriodo());
+                    if (param.equalsIgnoreCase("grabar")) {
+                        sessionCoordinadorPeriodo.setCoordinadorPeriodoDTO(new CoordinadorPeriodoDTO());
+                        return "pretty:coordinadores";
+                    }
+                    if (param.equalsIgnoreCase("grabar-editar")) {
+                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.coordinador") + " "
+                                + bundle.getString("lbl.msm_editar"), "");
                         FacesContext.getCurrentInstance().addMessage(null, message);
+                        return "";
                     }
                 } else {
-                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_editar") + ". " + bundle.getString("lbl.msm_consulte"), "");
+                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.coordinador") + ". " + bundle.getString("lbl.no_encontrado"), "");
                     FacesContext.getCurrentInstance().addMessage(null, message);
                 }
+                return "";
             }
+            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_editar") + ". " + bundle.getString("lbl.msm_consulte"), "");
+            FacesContext.getCurrentInstance().addMessage(null, message);
+
         } catch (Exception e) {
             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_FATAL, e.getMessage(), "");
             FacesContext.getCurrentInstance().addMessage(null, message);
         }
-        return navegacion;
+        return "";
     }
-    
-    public void remover(CoordinadorPeriodo coordinadorPeriodo, Usuario usuario, Carrera carrera) {
+
+    /**
+     * REMOVER
+     *
+     * @param coordinadorPeriodoDTO
+     * @param usuario
+     */
+    public void remover(CoordinadorPeriodoDTO coordinadorPeriodoDTO, Usuario usuario) {
         try {
             FacesContext facesContext = FacesContext.getCurrentInstance();
             ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
             int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "eliminar_coordinador_periodo_coordinacion");
             if (tienePermiso == 1) {
-                coordinadorPeriodoFacadeLocal.remove(coordinadorPeriodo);
-                buscarPorCarrera(criterio, usuario, carrera);
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.coordinador") + " " + bundle.getString("lbl.msm_eliminar"), "");
+                coordinadorPeriodoService.eliminar(coordinadorPeriodoDTO.getCoordinadorPeriodo());
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.coordinador") + " "
+                        + bundle.getString("lbl.msm_eliminar"), "");
                 FacesContext.getCurrentInstance().addMessage(null, message);
             } else {
                 if (tienePermiso == 2) {
-                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_eliminar") + ". " + bundle.getString("lbl.msm_consulte"), "");
+                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_eliminar") + ". "
+                            + bundle.getString("lbl.msm_consulte"), "");
                     FacesContext.getCurrentInstance().addMessage(null, message);
                 }
             }
         } catch (Exception e) {
         }
     }
-    
-    public void agregarCoordinador(String numeroIdentificacion) {
+
+    /**
+     * AGREGAR COORDINADOR
+     *
+     */
+    public void agregarCoordinador() {
         try {
             FacesContext facesContext = FacesContext.getCurrentInstance();
             ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            Persona p = personaFacadeLocal.buscarPorNumeroIdentificacion(numeroIdentificacion);
-            if (p != null) {
-                sessionCoordinadorPeriodo.setPersona(p);
-            } else {
-                sessionCoordinadorPeriodo.setPersona(new Persona());
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.docente") + " " + bundle.getString("lbl.no_encontrado"), "");
-                FacesContext.getCurrentInstance().addMessage(null, message);
+            if (sessionCoordinadorPeriodo.getDocenteCarreraDTOSeleccionado().getPersona() != null) {
+                sessionCoordinadorPeriodo.getCoordinadorPeriodoDTO().setPersona(sessionCoordinadorPeriodo.getDocenteCarreraDTOSeleccionado().getPersona());
+                return;
             }
+            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.docente") + " "
+                    + bundle.getString("lbl.no_encontrado"), "");
+            FacesContext.getCurrentInstance().addMessage(null, message);
+
         } catch (Exception e) {
         }
     }
@@ -299,36 +389,31 @@ public class AdministrarCoordinadoresPeriodos implements Serializable {
     public void renderedCrear(Usuario usuario) {
         try {
             int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "crear_coordinador_periodo_coordinacion");
+            sessionCoordinadorPeriodo.setRenderedCrear(Boolean.FALSE);
             if (tienePermiso == 1) {
-                renderedCrear = true;
-            } else {
-                renderedCrear = false;
+                sessionCoordinadorPeriodo.setRenderedCrear(Boolean.TRUE);
             }
         } catch (Exception e) {
         }
     }
-    
+
     public void renderedEditar(Usuario usuario) {
         try {
             int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "editar_coordinador_periodo_coordinacion");
+            sessionCoordinadorPeriodo.setRenderedEditar(Boolean.FALSE);
             if (tienePermiso == 1) {
-                renderedEditar = true;
-                renderedNoEditar = false;
-            } else {
-                renderedNoEditar = true;
-                renderedEditar = false;
+                sessionCoordinadorPeriodo.setRenderedEditar(Boolean.TRUE);
             }
         } catch (Exception e) {
         }
     }
-    
+
     public void renderedEliminar(Usuario usuario) {
         try {
             int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "eliminar_coordinador_periodo_coordinacion");
+            sessionCoordinadorPeriodo.setRenderedEliminar(Boolean.FALSE);
             if (tienePermiso == 1) {
-                renderedEliminar = true;
-            } else {
-                renderedEliminar = false;
+                sessionCoordinadorPeriodo.setRenderedEliminar(Boolean.TRUE);
             }
         } catch (Exception e) {
         }
@@ -339,73 +424,10 @@ public class AdministrarCoordinadoresPeriodos implements Serializable {
     public SessionCoordinadorPeriodo getSessionCoordinadorPeriodo() {
         return sessionCoordinadorPeriodo;
     }
-    
+
     public void setSessionCoordinadorPeriodo(SessionCoordinadorPeriodo sessionCoordinadorPeriodo) {
         this.sessionCoordinadorPeriodo = sessionCoordinadorPeriodo;
     }
-    
-    public String getCriterio() {
-        return criterio;
-    }
-    
-    public void setCriterio(String criterio) {
-        this.criterio = criterio;
-    }
-    
-    public List<CoordinadorPeriodo> getCoordinadorPeriodos() {
-        return coordinadorPeriodos;
-    }
-    
-    public void setCoordinadorPeriodos(List<CoordinadorPeriodo> coordinadorPeriodos) {
-        this.coordinadorPeriodos = coordinadorPeriodos;
-    }
-    
-    public String getNumeroIdentificacion() {
-        return numeroIdentificacion;
-    }
-    
-    public void setNumeroIdentificacion(String numeroIdentificacion) {
-        this.numeroIdentificacion = numeroIdentificacion;
-    }
-    
-    public boolean isRenderedCrear() {
-        return renderedCrear;
-    }
-    
-    public void setRenderedCrear(boolean renderedCrear) {
-        this.renderedCrear = renderedCrear;
-    }
-    
-    public boolean isRenderedEditar() {
-        return renderedEditar;
-    }
-    
-    public void setRenderedEditar(boolean renderedEditar) {
-        this.renderedEditar = renderedEditar;
-    }
-    
-    public boolean isRenderedNoEditar() {
-        return renderedNoEditar;
-    }
-    
-    public void setRenderedNoEditar(boolean renderedNoEditar) {
-        this.renderedNoEditar = renderedNoEditar;
-    }
-    
-    public boolean isRenderedEliminar() {
-        return renderedEliminar;
-    }
-    
-    public void setRenderedEliminar(boolean renderedEliminar) {
-        this.renderedEliminar = renderedEliminar;
-    }
-    
-    public String getPeriodoCoordinacion() {
-        return periodoCoordinacion;
-    }
-    
-    public void setPeriodoCoordinacion(String periodoCoordinacion) {
-        this.periodoCoordinacion = periodoCoordinacion;
-    }
+
 //</editor-fold>
 }

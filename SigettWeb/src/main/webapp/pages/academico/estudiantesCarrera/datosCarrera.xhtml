@@ -20,8 +20,8 @@
             <h:outputText value="#{sessionEstudianteCarrera.reporteMatriculaUltimo.ofertaAcademicaId.fechaFin}">
                 <f:convertDateTime pattern="dd/MM/yyyy"/>
             </h:outputText>
-            <h:outputLabel id="lbEsApto" rendered="#{sessionEstudianteCarrera.isRenderedEsAptoAspirante}" value="#{msg['lbl.esApto']}:"/>
-            <p:selectBooleanCheckbox id="esApto" rendered="#{sessionEstudianteCarrera.isRenderedEsAptoAspirante}" 
+            <h:outputLabel id="lbEsApto" rendered="#{sessionEstudianteCarrera.renderedEsAptoAspirante}" value="#{msg['lbl.esApto']}:"/>
+            <p:selectBooleanCheckbox id="esApto" rendered="#{sessionEstudianteCarrera.renderedEsAptoAspirante}" 
                                      value="#{sessionEstudianteCarrera.estudianteCarreraDTO.aspirante.esApto}">
                 <p:ajax  listener="#{administrarEstudiantesCarrera.esAptoEstudiante}" update=":contenido:msm"/>
             </p:selectBooleanCheckbox>

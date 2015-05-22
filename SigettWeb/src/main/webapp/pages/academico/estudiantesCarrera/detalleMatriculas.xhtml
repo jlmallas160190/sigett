@@ -5,7 +5,7 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
     <body>
-        <p:dataTable id="tblReporteMatriculas" resizableColumns="true" 
+        <p:dataTable id="tblReporteMatriculas" 
                      value="#{sessionEstudianteCarrera.reporteMatriculas}"
                      var="rm" rows="5" paginator="true" rowIndexVar="rowIx" rowKey="#{rm.matriculaId}" 
                      selection="#{rm}" selectionMode="single" rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'even-row' : 'odd-row'}"
@@ -46,7 +46,9 @@
                 <f:facet name="header">
                     <h:outputText value="#{msg['lbl.periodoAcademico']}"/>
                 </f:facet>
-                <h:outputText value="#{rm.ofertaAcademicaId.fechaInicio}- #{rm.ofertaAcademicaId.fechaFin}"/>
+                <h:outputText value="#{rm.ofertaAcademicaId.fechaInicio}- #{rm.ofertaAcademicaId.fechaFin}">
+                <f:convertDateTime pattern="EEEEE dd MMMMM yyyy"/>
+                </h:outputText>
             </p:column>
             <p:column>
                 <f:facet name="header">

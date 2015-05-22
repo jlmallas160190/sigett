@@ -10,13 +10,11 @@
                 #{msg['lbl.inicio']}
             </p:commandLink>
             <p:commandLink styleClass="list-group-item" 
-                           action="#{administrarPeriodoCoordinacion.navegarListado
-                                     (sessionUsuario.usuario, sessionUsuarioCarrera.usuarioCarreraAux.carrera)}">
+                           action="pretty:periodosCoordinacion">
                 <p:graphicImage width="16" height="16" value="/resources/png/32px/Shape178.png"/>
                 #{msg['lbl.periodosCoordinacion']}
             </p:commandLink>
-            <p:commandLink styleClass="list-group-item" action="#{administrarCoordinadoresPeriodos.navegarListado(sessionUsuario.usuario, 
-                                                                  sessionUsuarioCarrera.usuarioCarreraAux.carrera)}">
+            <p:commandLink styleClass="list-group-item" action="pretty:coordinadores">
                 <p:graphicImage width="16" height="16" value="/resources/png/32px/Shape147.png"/>
                 #{msg['lbl.coordinadores']}
             </p:commandLink>

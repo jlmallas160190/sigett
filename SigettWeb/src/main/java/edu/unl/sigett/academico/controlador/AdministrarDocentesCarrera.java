@@ -103,7 +103,7 @@ import org.jlmallas.seguridad.entity.Usuario;
 @URLMappings(mappings = {
     @URLMapping(
             id = "editarDocenteCarrera",
-            pattern = "/editarDocenteCarrera/#{sessionDocenteCarrera.docenteCarreraAux.docenteCarrera.id}",
+            pattern = "/editarDocenteCarrera/#{sessionDocenteCarrera.docenteCarreraDTO.docenteCarrera.id}",
             viewId = "/faces/pages/academico/docentesCarrera/editarDocenteCarrera.xhtml"
     ),
     @URLMapping(
@@ -245,7 +245,7 @@ public class AdministrarDocentesCarrera implements Serializable {
             ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
             int tienePermiso = usuarioDao.tienePermiso(sessionUsuario.getUsuario(), "crear_docente_carrera");
             if (tienePermiso == 1) {
-                sessionDocenteCarrera.setDocenteCarreraAux(new DocenteCarreraDTO(new DocenteCarrera(null, new Docente(), new Carrera(), Boolean.TRUE),
+                sessionDocenteCarrera.setDocenteCarreraDTO(new DocenteCarreraDTO(new DocenteCarrera(null, new Docente(), new Carrera(), Boolean.TRUE),
                         new Persona(), new Director(null, Boolean.TRUE)));
                 sessionDocenteCarrera.setEstadoLaboral("");
                 sessionDocenteCarrera.setTipoDocumento("");
@@ -282,7 +282,7 @@ public class AdministrarDocentesCarrera implements Serializable {
             int tienePermiso = usuarioDao.tienePermiso(sessionUsuario.getUsuario(), "editar_docente_carrera");
             if (tienePermiso == 1) {
                 sessionDocenteCarrera.setLineaInvestigacionDocentesRemovidos(new ArrayList<LineaInvestigacionDocente>());
-                sessionDocenteCarrera.setDocenteCarreraAux(new DocenteCarreraDTO(docenteCarreraDao.find(
+                sessionDocenteCarrera.setDocenteCarreraDTO(new DocenteCarreraDTO(docenteCarreraDao.find(
                         docenteCarreraAux.getDocenteCarrera().getId()), personaDao.find(docenteCarreraAux.
                                 getDocenteCarrera().getDocenteId().getId()),
                         directorFacadeLocal.find(docenteCarreraAux.getDocenteCarrera().getId())));
@@ -315,19 +315,24 @@ public class AdministrarDocentesCarrera implements Serializable {
     }
 
     public void buscar() {
-        this.sessionDocenteCarrera.getDocenteCarreraAuxs().clear();
+        this.sessionDocenteCarrera.getDocenteCarreraDTOs().clear();
+        this.sessionDocenteCarrera.getFilterDocenteCarrerasDTO().clear();
         try {
             FacesContext facesContext = FacesContext.getCurrentInstance();
             ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
             int tienePermiso = usuarioDao.tienePermiso(sessionUsuario.getUsuario(), "buscar_docente_carrera");
             if (tienePermiso == 1) {
-                DocenteCarrera docenteCarreraBuscar = new DocenteCarrera();
-                for (DocenteCarrera docenteCarrera : docenteCarreraDao.buscar(
-                        docenteCarreraBuscar)) {
+                List<DocenteCarrera> docenteCarreras = docenteCarreraDao.buscar(new DocenteCarrera(null, null, sessionUsuarioCarrera.getUsuarioCarreraDTO().getCarrera(),
+                        Boolean.FALSE));
+                if (docenteCarreras == null) {
+                    return;
+                }
+                for (DocenteCarrera docenteCarrera : docenteCarreras) {
                     DocenteCarreraDTO dca = new DocenteCarreraDTO(docenteCarrera, personaDao.find(docenteCarrera.getDocenteId().getId()),
                             directorFacadeLocal.find(docenteCarrera.getId()));
-                    this.sessionDocenteCarrera.getDocenteCarreraAuxs().add(dca);
+                    this.sessionDocenteCarrera.getDocenteCarreraDTOs().add(dca);
                 }
+                sessionDocenteCarrera.getFilterDocenteCarrerasDTO().addAll(sessionDocenteCarrera.getDocenteCarreraDTOs());
             } else {
                 if (tienePermiso == 2) {
                     MessageView messageView = new MessageView();
@@ -351,7 +356,7 @@ public class AdministrarDocentesCarrera implements Serializable {
              */
             Item g = itemDao.buscarPorCodigo(CatalogoEnum.GENERO.getTipo(), sessionDocenteCarrera.getGenero());
             if (g != null) {
-                sessionDocenteCarrera.getDocenteCarreraAux().getPersona().
+                sessionDocenteCarrera.getDocenteCarreraDTO().getPersona().
                         setGeneroId(g.getId());
             }
             /**
@@ -359,7 +364,7 @@ public class AdministrarDocentesCarrera implements Serializable {
              */
             Item tdi = itemDao.buscarPorCodigo(CatalogoEnum.TIPODOCUMENTOIDENTIFICACION.getTipo(), sessionDocenteCarrera.getTipoDocumento());
             if (tdi != null) {
-                sessionDocenteCarrera.getDocenteCarreraAux().getPersona().
+                sessionDocenteCarrera.getDocenteCarreraDTO().getPersona().
                         setTipoDocumentoIdentificacionId(tdi.getId());
             }
             /**
@@ -368,7 +373,7 @@ public class AdministrarDocentesCarrera implements Serializable {
             EstadoLaboral el = estadoLaboralService.buscarPorTipoContrato(new EstadoLaboral(null, itemService.
                     buscarPorCatalogoCodigo(CatalogoEnum.TIPOCONTRATO.getTipo(), sessionDocenteCarrera.getEstadoLaboral().toUpperCase()).getId()));
             if (el != null) {
-                sessionDocenteCarrera.getDocenteCarreraAux().getDocenteCarrera().getDocenteId().
+                sessionDocenteCarrera.getDocenteCarreraDTO().getDocenteCarrera().getDocenteId().
                         setEstadoLaboralId(el);
             }
             /**
@@ -377,56 +382,56 @@ public class AdministrarDocentesCarrera implements Serializable {
             int posTitulo = sessionDocenteCarrera.getTitulo().indexOf(":");
             TituloDocente td = tituloDocenteFacadeLocal.find(Long.parseLong(sessionDocenteCarrera.getTitulo().substring(0, posTitulo)));
             if (td != null) {
-                sessionDocenteCarrera.getDocenteCarreraAux().getDocenteCarrera().getDocenteId().setTituloDocenteId(td);
+                sessionDocenteCarrera.getDocenteCarreraDTO().getDocenteCarrera().getDocenteId().setTituloDocenteId(td);
             }
 
-            if (sessionDocenteCarrera.getDocenteCarreraAux().
+            if (sessionDocenteCarrera.getDocenteCarreraDTO().
                     getDocenteCarrera().getId() == null) {
                 int tienePermiso = usuarioDao.tienePermiso(sessionUsuario.getUsuario(), "crear_docente_carrera");
                 if (tienePermiso == 1) {
-                    if (personaDao.esUnico(sessionDocenteCarrera.getDocenteCarreraAux().getPersona().getNumeroIdentificacion(),
-                            sessionDocenteCarrera.getDocenteCarreraAux().getPersona().getId())) {
+                    if (personaDao.esUnico(sessionDocenteCarrera.getDocenteCarreraDTO().getPersona().getNumeroIdentificacion(),
+                            sessionDocenteCarrera.getDocenteCarreraDTO().getPersona().getId())) {
                         /**
                          * GRABAR PERSONA
                          */
-                        personaDao.create(sessionDocenteCarrera.getDocenteCarreraAux().getPersona());
-                        sessionDocenteCarrera.getDocenteCarreraAux().getDocenteCarrera().getDocenteId().
-                                setId(sessionDocenteCarrera.getDocenteCarreraAux().getPersona().getId());
+                        personaDao.create(sessionDocenteCarrera.getDocenteCarreraDTO().getPersona());
+                        sessionDocenteCarrera.getDocenteCarreraDTO().getDocenteCarrera().getDocenteId().
+                                setId(sessionDocenteCarrera.getDocenteCarreraDTO().getPersona().getId());
                         /**
                          * GRABAR DOCENTE
                          */
-                        docenteDao.create(sessionDocenteCarrera.getDocenteCarreraAux().getDocenteCarrera().getDocenteId());
+                        docenteDao.create(sessionDocenteCarrera.getDocenteCarreraDTO().getDocenteCarrera().getDocenteId());
                         /**
                          * GRABAR LOG
                          */
-                        logFacadeLocal.create(logFacadeLocal.crearLog("Docente", sessionDocenteCarrera.getDocenteCarreraAux().getDocenteCarrera().getDocenteId().getId() + "",
-                                "CREAR", "|Nombres= " + sessionDocenteCarrera.getDocenteCarreraAux().getPersona().getNombres() + "|Apellidos= "
-                                + sessionDocenteCarrera.getDocenteCarreraAux().getPersona().getApellidos()
-                                + "|Cédula= " + sessionDocenteCarrera.getDocenteCarreraAux().getPersona().getNumeroIdentificacion() + "|Email= "
-                                + sessionDocenteCarrera.getDocenteCarreraAux().getPersona().getEmail(), sessionUsuario.getUsuario()));
+                        logFacadeLocal.create(logFacadeLocal.crearLog("Docente", sessionDocenteCarrera.getDocenteCarreraDTO().getDocenteCarrera().getDocenteId().getId() + "",
+                                "CREAR", "|Nombres= " + sessionDocenteCarrera.getDocenteCarreraDTO().getPersona().getNombres() + "|Apellidos= "
+                                + sessionDocenteCarrera.getDocenteCarreraDTO().getPersona().getApellidos()
+                                + "|Cédula= " + sessionDocenteCarrera.getDocenteCarreraDTO().getPersona().getNumeroIdentificacion() + "|Email= "
+                                + sessionDocenteCarrera.getDocenteCarreraDTO().getPersona().getEmail(), sessionUsuario.getUsuario()));
 
                         /**
                          * GRABAR DOCENTE CARRERA
                          */
-                        sessionDocenteCarrera.getDocenteCarreraAux().getDocenteCarrera().setCarreraId(sessionUsuarioCarrera.getUsuarioCarreraAux().getCarrera());
-                        docenteCarreraDao.create(sessionDocenteCarrera.getDocenteCarreraAux().getDocenteCarrera());
+                        sessionDocenteCarrera.getDocenteCarreraDTO().getDocenteCarrera().setCarreraId(sessionUsuarioCarrera.getUsuarioCarreraDTO().getCarrera());
+                        docenteCarreraDao.create(sessionDocenteCarrera.getDocenteCarreraDTO().getDocenteCarrera());
                         /**
                          * GRABAR DIRECTOR
                          */
-                        sessionDocenteCarrera.getDocenteCarreraAux().getDirector().setId(sessionDocenteCarrera.getDocenteCarreraAux()
+                        sessionDocenteCarrera.getDocenteCarreraDTO().getDirector().setId(sessionDocenteCarrera.getDocenteCarreraDTO()
                                 .getDocenteCarrera().getId());
-                        directorFacadeLocal.create(sessionDocenteCarrera.getDocenteCarreraAux().getDirector());
+                        directorFacadeLocal.create(sessionDocenteCarrera.getDocenteCarreraDTO().getDirector());
                         /**
                          * GRABAR USSUARIO
                          */
-                        this.grabarUsuarioDocente(sessionDocenteCarrera.getDocenteCarreraAux().getDocenteCarrera().getDocenteId());
+                        this.grabarUsuarioDocente(sessionDocenteCarrera.getDocenteCarreraDTO().getDocenteCarrera().getDocenteId());
                         /**
                          * GRABAR LINEAS DE INVESTIGACION
                          */
-                        grabarLineasInvestigacionDocentes(sessionDocenteCarrera.getDocenteCarreraAux().getDocenteCarrera().getDocenteId());
+                        grabarLineasInvestigacionDocentes(sessionDocenteCarrera.getDocenteCarreraDTO().getDocenteCarrera().getDocenteId());
                         if (param.equalsIgnoreCase("grabar")) {
                             navegacion = "pretty:docentesCarrera";
-                            sessionDocenteCarrera.setDocenteCarreraAux(new DocenteCarreraDTO(new DocenteCarrera(), new Persona(), new Director()));
+                            sessionDocenteCarrera.setDocenteCarreraDTO(new DocenteCarreraDTO(new DocenteCarrera(), new Persona(), new Director()));
                         } else {
                             if (param.equalsIgnoreCase("grabar-editar")) {
                                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.docente") + " " + bundle.getString("lbl.msm_grabar"), "");
@@ -445,25 +450,24 @@ public class AdministrarDocentesCarrera implements Serializable {
             } else {
                 int tienePermiso = usuarioDao.tienePermiso(sessionUsuario.getUsuario(), "editar_docente_carrera");
                 if (tienePermiso == 1) {
-                    if (personaDao.esUnico(sessionDocenteCarrera.getDocenteCarreraAux().getPersona().getNumeroIdentificacion(),
-                            sessionDocenteCarrera.getDocenteCarreraAux().getPersona().getId())) {
-                        personaDao.edit(sessionDocenteCarrera.getDocenteCarreraAux().getPersona());
-                        sessionDocenteCarrera.getDocenteCarreraAux().getDocenteCarrera().getDocenteId().setId(sessionDocenteCarrera.
-                                getDocenteCarreraAux().getPersona().getId());
-                        docenteDao.edit(sessionDocenteCarrera.getDocenteCarreraAux().getDocenteCarrera().getDocenteId());
-                        logFacadeLocal.create(logFacadeLocal.crearLog("Docente", sessionDocenteCarrera.getDocenteCarreraAux().getDocenteCarrera().getDocenteId().getId() + "",
-                                "CREAR", "|Nombres= " + sessionDocenteCarrera.getDocenteCarreraAux().getPersona().getNombres() + "|Apellidos= "
-                                + sessionDocenteCarrera.getDocenteCarreraAux().getPersona().getApellidos()
-                                + "|Cédula= " + sessionDocenteCarrera.getDocenteCarreraAux().getPersona().getNumeroIdentificacion() + "|Email= "
-                                + sessionDocenteCarrera.getDocenteCarreraAux().getPersona().getEmail(), sessionUsuario.getUsuario()));
+                    if (personaDao.esUnico(sessionDocenteCarrera.getDocenteCarreraDTO().getPersona().getNumeroIdentificacion(),
+                            sessionDocenteCarrera.getDocenteCarreraDTO().getPersona().getId())) {
+                        personaDao.edit(sessionDocenteCarrera.getDocenteCarreraDTO().getPersona());
+                        sessionDocenteCarrera.getDocenteCarreraDTO().getDocenteCarrera().getDocenteId().setId(sessionDocenteCarrera.getDocenteCarreraDTO().getPersona().getId());
+                        docenteDao.edit(sessionDocenteCarrera.getDocenteCarreraDTO().getDocenteCarrera().getDocenteId());
+                        logFacadeLocal.create(logFacadeLocal.crearLog("Docente", sessionDocenteCarrera.getDocenteCarreraDTO().getDocenteCarrera().getDocenteId().getId() + "",
+                                "CREAR", "|Nombres= " + sessionDocenteCarrera.getDocenteCarreraDTO().getPersona().getNombres() + "|Apellidos= "
+                                + sessionDocenteCarrera.getDocenteCarreraDTO().getPersona().getApellidos()
+                                + "|Cédula= " + sessionDocenteCarrera.getDocenteCarreraDTO().getPersona().getNumeroIdentificacion() + "|Email= "
+                                + sessionDocenteCarrera.getDocenteCarreraDTO().getPersona().getEmail(), sessionUsuario.getUsuario()));
 
-                        sessionDocenteCarrera.getDocenteCarreraAux().getDirector().setEsActivo(true);
-                        docenteCarreraDao.edit(sessionDocenteCarrera.getDocenteCarreraAux().getDocenteCarrera());
-                        grabarLineasInvestigacionDocentes(sessionDocenteCarrera.getDocenteCarreraAux().getDocenteCarrera().getDocenteId());
-                        removerDocenteLineasInvestigacion(sessionDocenteCarrera.getDocenteCarreraAux().getDocenteCarrera().getDocenteId());
+                        sessionDocenteCarrera.getDocenteCarreraDTO().getDirector().setEsActivo(true);
+                        docenteCarreraDao.edit(sessionDocenteCarrera.getDocenteCarreraDTO().getDocenteCarrera());
+                        grabarLineasInvestigacionDocentes(sessionDocenteCarrera.getDocenteCarreraDTO().getDocenteCarrera().getDocenteId());
+                        removerDocenteLineasInvestigacion(sessionDocenteCarrera.getDocenteCarreraDTO().getDocenteCarrera().getDocenteId());
                         if (param.equalsIgnoreCase("grabar")) {
                             navegacion = "pretty:docentesCarrera";
-                            sessionDocenteCarrera.setDocenteCarreraAux(new DocenteCarreraDTO(new DocenteCarrera(), new Persona(), new Director()));
+                            sessionDocenteCarrera.setDocenteCarreraDTO(new DocenteCarreraDTO(new DocenteCarrera(), new Persona(), new Director()));
                         } else {
                             if (param.equalsIgnoreCase("grabar-editar")) {
                                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.docente") + " " + bundle.getString("lbl.msm_editar"), "");
@@ -502,7 +506,7 @@ public class AdministrarDocentesCarrera implements Serializable {
                 lineaInvestigacionDocentes = lineaInvestigacionService.buscarPorDocente(new LineaInvestigacionDocente(docente.getId(), null));
             }
             sessionDocenteCarrera.setLineasInvestigacionDualList(new DualListModel<>(lineaInvestigacionService.
-                    buscarDiferenciaDocenteCarrera(new LineaInvestigacionCarrera(null, sessionUsuarioCarrera.getUsuarioCarreraAux().getCarrera().getId()),
+                    buscarDiferenciaDocenteCarrera(new LineaInvestigacionCarrera(null, sessionUsuarioCarrera.getUsuarioCarreraDTO().getCarrera().getId()),
                             new LineaInvestigacionDocente(docente.getId(), null)), lineaInvestigacionDocentes));
         } catch (Exception e) {
             System.out.println(e);
@@ -1027,7 +1031,7 @@ public class AdministrarDocentesCarrera implements Serializable {
         if (usuarioDao.tienePermiso(sessionUsuario.getUsuario(), "sga_ws_datos_docente") == 1) {
             try {
                 String serviceUrl = configuracionGeneralDao.find((int) 26).getValor();
-                String s = serviceUrl + "?cedula=" + sessionDocenteCarrera.getDocenteCarreraAux().
+                String s = serviceUrl + "?cedula=" + sessionDocenteCarrera.getDocenteCarreraDTO().
                         getPersona().getNumeroIdentificacion();
                 SeguridadHttp seguridad = new SeguridadHttp(configuracionGeneralDao.find((int) 5).getValor(),
                         s, configuracionGeneralDao.find((int) 6).getValor());
@@ -1036,7 +1040,7 @@ public class AdministrarDocentesCarrera implements Serializable {
                 if (!datosJson.equalsIgnoreCase("")) {
                     JsonParser parser = new JsonParser();
                     JsonElement datos = parser.parse(datosJson);
-                    parserDocenteJson(datos, sessionDocenteCarrera.getDocenteCarreraAux());
+                    parserDocenteJson(datos, sessionDocenteCarrera.getDocenteCarreraDTO());
                     messageView.message(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.sincronizado"), "");
                 }
             } catch (Exception e) {
@@ -1169,6 +1173,7 @@ public class AdministrarDocentesCarrera implements Serializable {
                         return;
                     }
                     docenteCarreraAux.getPersona().setEmail(valor.getAsString());
+                    sessionDocenteCarrera.setKeyEntero(sessionDocenteCarrera.getKeyEntero() + 1);
                     return;
                 }
                 sessionDocenteCarrera.setKeyEntero(sessionDocenteCarrera.getKeyEntero() + 1);

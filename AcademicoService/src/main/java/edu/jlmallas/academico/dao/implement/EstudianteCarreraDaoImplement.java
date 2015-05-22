@@ -37,9 +37,9 @@ public class EstudianteCarreraDaoImplement extends AbstractDao<EstudianteCarrera
             sql.append(" and ec.estudianteId=:estudianteId");
             parametros.put("estudianteId", estudianteCarrera.getEstudianteId());
         }
-        if (estudianteCarrera.isEsActivo()) {
+        if (estudianteCarrera.getEsActivo()!=null) {
             sql.append(" and ec.esActivo=:activo");
-            parametros.put("activo", estudianteCarrera.isEsActivo());
+            parametros.put("activo", estudianteCarrera.getEsActivo());
         }
         final Query q = em.createQuery(sql.toString());
         for (String key : parametros.keySet()) {

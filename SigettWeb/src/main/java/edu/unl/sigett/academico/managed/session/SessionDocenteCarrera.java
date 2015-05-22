@@ -26,10 +26,10 @@ import org.primefaces.model.DualListModel;
 @SessionScoped
 public class SessionDocenteCarrera implements Serializable {
 
-    private DocenteCarreraDTO docenteCarreraAux;
+    private DocenteCarreraDTO docenteCarreraDTO;
     private DocenteCarreraDTO docenteCarrerDTOWS;
-    private List<DocenteCarreraDTO> docenteCarreraAuxs;
-    private List<DocenteCarreraDTO> filterDocenteCarreraAuxs;
+    private List<DocenteCarreraDTO> docenteCarreraDTOs;
+    private List<DocenteCarreraDTO> filterDocenteCarrerasDTO;
     private String estadoLaboral;
     private String titulo;
     private String tipoDocumento;
@@ -50,30 +50,30 @@ public class SessionDocenteCarrera implements Serializable {
     private boolean renderedCrear;
 
     public SessionDocenteCarrera() {
-        this.filterDocenteCarreraAuxs = new ArrayList<>();
+        this.filterDocenteCarrerasDTO = new ArrayList<>();
         this.docenteCarrerDTOWS = new DocenteCarreraDTO();
         this.titulos = new ArrayList<>();
         this.estadoLaborales = new ArrayList<>();
         this.tiposDocumento = new ArrayList<>();
         this.generos = new ArrayList<>();
-        this.docenteCarreraAux = new DocenteCarreraDTO();
-        this.docenteCarreraAuxs = new ArrayList<>();
+        this.docenteCarreraDTO = new DocenteCarreraDTO();
+        this.docenteCarreraDTOs = new ArrayList<>();
     }
 
-    public DocenteCarreraDTO getDocenteCarreraAux() {
-        return docenteCarreraAux;
+    public DocenteCarreraDTO getDocenteCarreraDTO() {
+        return docenteCarreraDTO;
     }
 
-    public void setDocenteCarreraAux(DocenteCarreraDTO docenteCarreraAux) {
-        this.docenteCarreraAux = docenteCarreraAux;
+    public void setDocenteCarreraDTO(DocenteCarreraDTO docenteCarreraDTO) {
+        this.docenteCarreraDTO = docenteCarreraDTO;
     }
 
-    public List<DocenteCarreraDTO> getDocenteCarreraAuxs() {
-        return docenteCarreraAuxs;
+    public List<DocenteCarreraDTO> getDocenteCarreraDTOs() {
+        return docenteCarreraDTOs;
     }
 
-    public void setDocenteCarreraAuxs(List<DocenteCarreraDTO> docenteCarreraAuxs) {
-        this.docenteCarreraAuxs = docenteCarreraAuxs;
+    public void setDocenteCarreraDTOs(List<DocenteCarreraDTO> docenteCarreraDTOs) {
+        this.docenteCarreraDTOs = docenteCarreraDTOs;
     }
 
     public String getEstadoLaboral() {
@@ -228,12 +228,12 @@ public class SessionDocenteCarrera implements Serializable {
         this.keyWSUnidadesDocenteParalelo = keyWSUnidadesDocenteParalelo;
     }
 
-    public List<DocenteCarreraDTO> getFilterDocenteCarreraAuxs() {
-        return filterDocenteCarreraAuxs;
+    public List<DocenteCarreraDTO> getFilterDocenteCarrerasDTO() {
+        return filterDocenteCarrerasDTO;
     }
 
-    public void setFilterDocenteCarreraAuxs(List<DocenteCarreraDTO> filterDocenteCarreraAuxs) {
-        this.filterDocenteCarreraAuxs = filterDocenteCarreraAuxs;
+    public void setFilterDocenteCarrerasDTO(List<DocenteCarreraDTO> filterDocenteCarrerasDTO) {
+        this.filterDocenteCarrerasDTO = filterDocenteCarrerasDTO;
     }
 
 }

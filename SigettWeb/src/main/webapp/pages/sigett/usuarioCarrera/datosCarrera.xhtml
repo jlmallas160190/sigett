@@ -9,33 +9,33 @@
         <h:panelGrid styleClass="panelgrid" rowClasses="rowpanelgrid" columnClasses="col-sm-2,col-sm-9,col-sm-1" columns="3">
             <h:outputLabel value="#{msg['lbl.sigla']}:"/>
             <p:inputText id="sigla" validatorMessage="#{msg['lbl.formato_invalido']}" onkeyup="this.value=this.value.toUpperCase()" 
-                         value="#{sessionUsuarioCarrera.usuarioCarreraAux.carrera.sigla}" required="true" >
+                         value="#{sessionUsuarioCarrera.usuarioCarreraDTO.carrera.sigla}" required="true" >
                 <p:ajax update="msmSigla" event="keyup"/>
                 <p:ajax update="@this" event="change"/>
                 <f:validateRegex pattern="^[A-Za-z]{1,20}$"/>
             </p:inputText>
             <p:message for="sigla" id="msmSigla"/>
             <h:outputLabel value="#{msg['lbl.nombre']}:"/>
-            <h:outputLabel value="#{sessionUsuarioCarrera.usuarioCarreraAux.carrera.nombre}"/>
+            <h:outputLabel value="#{sessionUsuarioCarrera.usuarioCarreraDTO.carrera.nombre}"/>
             <h:inputHidden/>
             <h:outputLabel value="Id Sga:"  />
-            <h:outputLabel value="#{sessionUsuarioCarrera.usuarioCarreraAux.carrera.idSga}" />
+            <h:outputLabel value="#{sessionUsuarioCarrera.usuarioCarreraDTO.carrera.idSga}" />
             <h:inputHidden/>
             <h:outputLabel value="#{msg['lbl.area']}:"  />
-            <h:outputLabel value="#{sessionUsuarioCarrera.usuarioCarreraAux.carrera.areaId.nombre}" />
+            <h:outputLabel value="#{sessionUsuarioCarrera.usuarioCarreraDTO.carrera.areaId.nombre}" />
             <h:inputHidden/>
             <h:outputLabel value="#{msg['lbl.nivel']}:"  />
-            <h:outputLabel value="#{sessionUsuarioCarrera.usuarioCarreraAux.carrera.nivelId.nombre}" />
+            <h:outputLabel value="#{sessionUsuarioCarrera.usuarioCarreraDTO.carrera.nivelId.nombre}" />
             <h:inputHidden/> 
             <h:outputLabel value="#{msg['lbl.lugar']}:"  />
             <p:inputText id="lugar" onkeyup="this.value=this.value.toUpperCase()" 
-                         value="#{sessionUsuarioCarrera.usuarioCarreraAux.carrera.lugar}" required="true" >
+                         value="#{sessionUsuarioCarrera.usuarioCarreraDTO.carrera.lugar}" required="true" >
                 <p:ajax update="msmLugar" event="keyup"/>
                 <p:ajax update="@this" event="change"/>
             </p:inputText>
             <p:message for="lugar" id="msmLugar"/>
             <h:outputLabel value="#{msg['lbl.titulo']}:"  />
-            <p:inputText id="titulo" onkeyup="this.value=this.value.toUpperCase()" value="#{sessionUsuarioCarrera.usuarioCarreraAux.carrera.nombreTitulo}" required="true" >
+            <p:inputText id="titulo" onkeyup="this.value=this.value.toUpperCase()" value="#{sessionUsuarioCarrera.usuarioCarreraDTO.carrera.nombreTitulo}" required="true" >
                 <p:ajax update="msmTitulo" event="keyup"/>
                 <p:ajax update="@this" event="change"/>
             </p:inputText>

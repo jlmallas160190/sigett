@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.jlmallas.academico.dao.implement;
+package edu.jlmallas.academico.dao;
 
 import edu.jlmallas.academico.entity.CoordinadorPeriodo;
 import java.util.List;
@@ -14,7 +14,7 @@ import javax.ejb.Local;
  * @author JorgeLuis
  */
 @Local
-public interface CoordinadorPeriodoFacadeLocal {
+public interface CoordinadorPeriodoDao {
 
     void create(CoordinadorPeriodo coordinadorPeriodo);
 
@@ -28,9 +28,10 @@ public interface CoordinadorPeriodoFacadeLocal {
 
     List<CoordinadorPeriodo> findRange(int[] range);
 
-    List<CoordinadorPeriodo> buscarPorCarrera(Integer carreraId);
-
-    CoordinadorPeriodo buscarVigente(Integer carreraId);
+//    List<CoordinadorPeriodo> buscarPorCarrera(Integer carreraId);
+//
+//    CoordinadorPeriodo buscarVigente(Integer carreraId);
+    List<CoordinadorPeriodo> buscar(CoordinadorPeriodo coordinadorPeriodo);
 
     int count();
 

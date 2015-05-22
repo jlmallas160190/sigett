@@ -34,14 +34,13 @@
                 </f:facet>
                 <h:outputText value="#{item.persona.numeroIdentificacion}"/>
             </p:column>
-            <p:column  sortBy="#{item.persona.nombres} #{item.persona.apellidos}"
+            <p:column  sortBy="#{item.persona.apellidos}"
                        filterBy="#{item.persona.nombres} #{item.persona.apellidos}"
                        filterMatchMode="contains">
                 <f:facet name="header">
-                    <h:outputText value="#{msg['lbl.docente']}"/>
+                    <h:outputText value="#{msg['lbl.estudiante']}"/>
                 </f:facet>
-                <h:outputText value="#{item.persona.nombres}
-                              #{item.persona.apellidos}"/>
+                <h:outputText value="#{item.persona.apellidos} #{item.persona.nombres}"/>
             </p:column>
             <p:column headerText="#{msg['lbl.email']}" sortBy="#{item.persona.email}"
                       filterBy="#{item.persona.email}"

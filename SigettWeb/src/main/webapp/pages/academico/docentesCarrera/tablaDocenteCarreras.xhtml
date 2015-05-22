@@ -5,9 +5,9 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
     <body>
-        <p:dataTable id="tblDocentes" value="#{sessionDocenteCarrera.docenteCarreraAuxs}" var="item" rows="20" paginator="true"
+        <p:dataTable id="tblDocentes" value="#{sessionDocenteCarrera.docenteCarreraDTOs}" var="item" rows="20" paginator="true"
                      rowIndexVar="rowIx"  rowKey="#{item.docenteCarrera.id}" selectionMode="single" widgetVar="tblDocentesFilter"
-                     selection="#{sessionDocenteCarrera.docenteCarreraAux}" filteredValue="#{sessionDocenteCarrera.filterDocenteCarreraAuxs}"
+                     selection="#{sessionDocenteCarrera.docenteCarreraDTO}" filteredValue="#{sessionDocenteCarrera.filterDocenteCarrerasDTO}"
                      rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'even-row' : 'odd-row'}" emptyMessage="#{msg['lbl.table.empty']}">
             <f:facet name="header">
                 <h:panelGrid styleClass="panelgrid" rowClasses="rowpanelgrid" columns="1">

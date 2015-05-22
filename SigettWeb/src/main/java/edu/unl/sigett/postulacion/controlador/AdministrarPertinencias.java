@@ -41,7 +41,7 @@ import edu.jlmallas.academico.service.CarreraService;
 import edu.unl.sigett.dao.CatalogoOficioFacadeLocal;
 import edu.unl.sigett.dao.ConfiguracionCarreraDao;
 import edu.unl.sigett.dao.ConfiguracionGeneralDao;
-import edu.jlmallas.academico.dao.implement.CoordinadorPeriodoFacadeLocal;
+import edu.jlmallas.academico.dao.CoordinadorPeriodoDao;
 import edu.unl.sigett.dao.EstadoAutorFacadeLocal;
 import edu.unl.sigett.dao.EstadoProyectoFacadeLocal;
 import org.jlmallas.seguridad.dao.LogDao;
@@ -94,7 +94,7 @@ public class AdministrarPertinencias implements Serializable {
     @EJB
     UsuarioDao usuarioFacadeLocal;
     @EJB
-    private CoordinadorPeriodoFacadeLocal coordinadorPeriodoFacadeLocal;
+    private CoordinadorPeriodoDao coordinadorPeriodoFacadeLocal;
 
     private List<Pertinencia> pertinencias;
     private boolean renderedNoEditar;
@@ -338,10 +338,10 @@ public class AdministrarPertinencias implements Serializable {
         String fechaFormateada = configuracionGeneralFacadeLocal.dateFormat(fechaActual.getTime());
         String fechOficioFormat = configuracionGeneralFacadeLocal.dateFormat(oficioCarrera.getFecha());
         HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
-        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        CoordinadorPeriodo coordinadorPeriodo = coordinadorPeriodoFacadeLocal.buscarVigente(carrera.getId());
-        Persona datosCoordinador = personaFacadeLocal.find(coordinadorPeriodo.getCoordinadorId().getId());
-        Docente docenteCoordinador = docenteFacadeLocal.find(datosCoordinador.getId());
+//        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+//        CoordinadorPeriodo coordinadorPeriodo = coordinadorPeriodoFacadeLocal.buscarVigente(carrera.getId());
+//        Persona datosCoordinador = personaFacadeLocal.find(coordinadorPeriodo.getCoordinadorId().getId());
+//        Docente docenteCoordinador = docenteFacadeLocal.find(datosCoordinador.getId());
         String resolucion = "";
         if (pertinencia.getEsAceptado()) {
             resolucion = "Por consiguiente <b>SE OTORGA LA PERTINENCIA</b>  para el desarrollo de este proyecto.";
@@ -349,10 +349,10 @@ public class AdministrarPertinencias implements Serializable {
             resolucion = "Por consiguiente <b> NO SE OTORGA LA PERTINENCIA</b>  para el desarrollo de este proyecto.";
         }
         datosReporte.put("docente", datosDocente.getNombres().toUpperCase() + " " + datosDocente.getApellidos().toUpperCase());
-        datosReporte.put("coordinador", datosCoordinador.getNombres().toUpperCase() + " " + datosCoordinador.getApellidos().toUpperCase());
+//        datosReporte.put("coordinador", datosCoordinador.getNombres().toUpperCase() + " " + datosCoordinador.getApellidos().toUpperCase());
         datosReporte.put("temaProyecto", pertinencia.getDocenteProyectoId().getProyectoId().getTemaActual());
         datosReporte.put("tituloDocente", docente.getTituloDocenteId().getTituloId().getAbreviacion().toUpperCase());
-        datosReporte.put("tituloCoordinador", docenteCoordinador.getTituloDocenteId().getTituloId().getAbreviacion());
+//        datosReporte.put("tituloCoordinador", docenteCoordinador.getTituloDocenteId().getTituloId().getAbreviacion());
         datosReporte.put("autores", getAutores(autorProyectoFacadeLocal.buscarPorProyecto(pertinencia.getDocenteProyectoId().getProyectoId().getId())));
 
 //        reportes.informeDocenteProyecto("docx", fechaFormateada, fechOficioFormat, pertinencia, response, datosReporte, configuracionCarreraFacadeLocal,

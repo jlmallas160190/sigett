@@ -109,7 +109,7 @@ public class AdministrarConfiguracionCarrera implements Serializable {
     public void buscar() {
         sessionConfiguracionCarrera.getConfiguracionCarreras().clear();
         ConfiguracionCarrera configuracionCarreraBuscar = new ConfiguracionCarrera();
-        configuracionCarreraBuscar.setCarreraId(sessionUsuarioCarrera.getUsuarioCarreraAux().getCarrera().getId());
+        configuracionCarreraBuscar.setCarreraId(sessionUsuarioCarrera.getUsuarioCarreraDTO().getCarrera().getId());
         List<ConfiguracionCarrera> configuracionCarreras = configuracionCarreraService.buscar(configuracionCarreraBuscar);
         if (configuracionCarreras == null) {
             return;
@@ -218,7 +218,7 @@ public class AdministrarConfiguracionCarrera implements Serializable {
             ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
             if (configuracionCarrera.getId() != null) {
                 for (OfertaAcademica ofertaAcademica : ofertaAcademicaFacadeLocal.buscarPorPeriodoActual()) {
-                    sgaWebServicesModulosCarrera(sessionUsuarioCarrera.getUsuarioCarreraAux().getCarrera(), ofertaAcademica);
+                    sgaWebServicesModulosCarrera(sessionUsuarioCarrera.getUsuarioCarreraDTO().getCarrera(), ofertaAcademica);
                     if (sessionConfiguracionCarrera.isTieneModulos()) {
                         configuracionCarrera.setValor(ofertaAcademica.getIdSga() + "");
                         configuracionCarrera.setObservacion(ofertaAcademica.getNombre());

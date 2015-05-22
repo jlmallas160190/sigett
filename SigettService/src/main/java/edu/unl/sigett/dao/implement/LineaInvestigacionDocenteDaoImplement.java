@@ -41,9 +41,9 @@ public class LineaInvestigacionDocenteDaoImplement extends AbstractDao<LineaInve
     public List<LineaInvestigacionDocente> buscar(LineaInvestigacionDocente lid) {
         StringBuilder sql = new StringBuilder();
         HashMap<String, Object> parametros = new HashMap<>();
-        sql.append("SELECT ld FROM LineaInvestigacionDocente ld where 1=1 ");
+        sql.append("SELECT ld FROM LineaInvestigacionDocente ld where ");
         if (lid.getDocenteId() != null) {
-            sql.append(" and ld.docenteId=:docenteId ");
+            sql.append(" ld.docenteId=:docenteId ");
             parametros.put("docenteId", lid.getDocenteId());
         }
         sql.append(" order by ld.lineaInvestigacionId.nombre ");

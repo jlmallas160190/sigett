@@ -42,19 +42,14 @@ public class Coordinador implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "es_activo")
-    private boolean esActivo;
+    private Boolean esActivo;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "coordinadorId")
     private List<CoordinadorPeriodo> coordinadorPeriodoList;
 
     public Coordinador() {
     }
 
-    public Coordinador(Long id) {
-        this.id = id;
-    }
-
-    public Coordinador(Long id, boolean esActivo) {
-        this.id = id;
+    public Coordinador(Boolean esActivo) {
         this.esActivo = esActivo;
     }
 
@@ -66,11 +61,11 @@ public class Coordinador implements Serializable {
         this.id = id;
     }
 
-    public boolean getEsActivo() {
+    public Boolean getEsActivo() {
         return esActivo;
     }
 
-    public void setEsActivo(boolean esActivo) {
+    public void setEsActivo(Boolean esActivo) {
         this.esActivo = esActivo;
     }
 

@@ -10,7 +10,7 @@
             <p:commandButton value="#{msg['lbl.sincronizar']}" rendered="#{sessionEstudianteCarrera.renderedCrear}" 
                              icon="ui-icon-refresh" update="@form" onstart="PF('dlgLoading').show();"
                              oncomplete="PF('dlgLoading').hide(),PF('tblEstudiantesFilter').filter()" 
-                             action="#{administrarEstudiantesCarrera.sgaWebServicesParalelosCarrera(sessionUsuarioCarrera.usuarioCarreraAux.carrera)}" />
+                             action="#{administrarEstudiantesCarrera.sgaWebServicesParalelosCarrera(sessionUsuarioCarrera.usuarioCarreraDTO.carrera)}" />
         </h:panelGrid>  
     </body>
 

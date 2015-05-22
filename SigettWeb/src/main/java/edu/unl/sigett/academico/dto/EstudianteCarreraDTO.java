@@ -8,12 +8,13 @@ package edu.unl.sigett.academico.dto;
 import com.jlmallas.comun.entity.Persona;
 import edu.jlmallas.academico.entity.EstudianteCarrera;
 import edu.unl.sigett.entity.Aspirante;
+import java.io.Serializable;
 
 /**
  *
  * @author jorge-luis
  */
-public class EstudianteCarreraDTO {
+public class EstudianteCarreraDTO implements Serializable{
 
     private EstudianteCarrera estudianteCarrera;
     private Persona persona;

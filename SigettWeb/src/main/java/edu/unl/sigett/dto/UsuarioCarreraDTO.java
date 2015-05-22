@@ -13,19 +13,19 @@ import org.jlmallas.seguridad.entity.Usuario;
  *
  * @author jorge-luis
  */
-public class UsuarioCarreraAux {
+public class UsuarioCarreraDTO {
 
     private UsuarioCarrera usuarioCarrera;
     private Usuario usuario;
     private Carrera carrera;
 
-    public UsuarioCarreraAux(UsuarioCarrera usuarioCarrera, Usuario usuario, Carrera carrera) {
+    public UsuarioCarreraDTO(UsuarioCarrera usuarioCarrera, Usuario usuario, Carrera carrera) {
         this.usuarioCarrera = usuarioCarrera;
         this.usuario = usuario;
         this.carrera = carrera;
     }
 
-    public UsuarioCarreraAux() {
+    public UsuarioCarreraDTO() {
     }
 
     public UsuarioCarrera getUsuarioCarrera() {

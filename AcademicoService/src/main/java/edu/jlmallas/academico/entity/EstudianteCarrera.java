@@ -31,7 +31,7 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author jorge-luis
  */
 @Entity
-@Table(name = "estudiante_carrera")
+@Table(name = "estudiante_carrera",schema = "academico")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "EstudianteCarrera.findAll", query = "SELECT e FROM EstudianteCarrera e"),
@@ -71,8 +71,9 @@ public class EstudianteCarrera implements Serializable {
         this.id = id;
     }
 
-    public EstudianteCarrera(Carrera carrera, Estudiante estudiante, Boolean esActivo) {
+    public EstudianteCarrera(Carrera carrera, Estudiante estudiante, Boolean esActivo,Long estadoId) {
         this.carreraId = carrera;
+        this.estadoId=estadoId;
         this.estudianteId = estudiante;
         this.esActivo = esActivo;
     }
@@ -85,7 +86,7 @@ public class EstudianteCarrera implements Serializable {
         this.id = id;
     }
 
-    public Boolean isEsActivo() {
+    public Boolean getEsActivo() {
         return esActivo;
     }
 

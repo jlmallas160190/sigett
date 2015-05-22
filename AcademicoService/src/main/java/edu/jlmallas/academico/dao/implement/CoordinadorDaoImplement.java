@@ -3,10 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.jlmallas.academico.dao;
+package edu.jlmallas.academico.dao.implement;
 
-import edu.jlmallas.academico.dao.implement.CoordinadorFacadeLocal;
 import edu.jlmallas.academico.dao.AbstractDao;
+import edu.jlmallas.academico.dao.AbstractDao;
+import edu.jlmallas.academico.dao.CoordinadorDao;
 import edu.jlmallas.academico.entity.Coordinador;
 import javax.ejb.Stateless;
 
@@ -15,9 +16,9 @@ import javax.ejb.Stateless;
  * @author JorgeLuis
  */
 @Stateless
-public class CoordinadorFacade extends AbstractDao<Coordinador> implements CoordinadorFacadeLocal {
+public class CoordinadorDaoImplement extends AbstractDao<Coordinador> implements CoordinadorDao {
 
-    public CoordinadorFacade() {
+    public CoordinadorDaoImplement() {
         super(Coordinador.class);
     }
 

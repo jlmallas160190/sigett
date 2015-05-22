@@ -5,7 +5,7 @@
  */
 package edu.unl.sigett.seguridad.managed.session;
 
-import edu.unl.sigett.dto.UsuarioCarreraAux;
+import edu.unl.sigett.dto.UsuarioCarreraDTO;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,32 +20,34 @@ import javax.inject.Named;
 @SessionScoped
 public class SessionUsuarioCarrera implements Serializable {
 
-    private UsuarioCarreraAux usuarioCarreraAux;
-    private List<UsuarioCarreraAux> usuarioCarrerasAuxs;
+    private UsuarioCarreraDTO usuarioCarreraDTO;
+    private List<UsuarioCarreraDTO> usuarioCarrerasDTOS;
+    private List<UsuarioCarreraDTO> filterUsuarioCarrerasDTO;
     private boolean renderedNoEditar;
     private boolean renderedBuscar;
     private boolean renderedEditar;
     private boolean renderedCrear;
 
     public SessionUsuarioCarrera() {
-        this.usuarioCarrerasAuxs = new ArrayList<>();
-        this.usuarioCarreraAux = new UsuarioCarreraAux();
+        this.filterUsuarioCarrerasDTO=new ArrayList<>();
+        this.usuarioCarrerasDTOS = new ArrayList<>();
+        this.usuarioCarreraDTO = new UsuarioCarreraDTO();
     }
 
-    public UsuarioCarreraAux getUsuarioCarreraAux() {
-        return usuarioCarreraAux;
+    public UsuarioCarreraDTO getUsuarioCarreraDTO() {
+        return usuarioCarreraDTO;
     }
 
-    public void setUsuarioCarreraAux(UsuarioCarreraAux usuarioCarreraAux) {
-        this.usuarioCarreraAux = usuarioCarreraAux;
+    public void setUsuarioCarreraDTO(UsuarioCarreraDTO usuarioCarreraAux) {
+        this.usuarioCarreraDTO = usuarioCarreraAux;
     }
 
-    public List<UsuarioCarreraAux> getUsuarioCarrerasAuxs() {
-        return usuarioCarrerasAuxs;
+    public List<UsuarioCarreraDTO> getUsuarioCarrerasDTOS() {
+        return usuarioCarrerasDTOS;
     }
 
-    public void setUsuarioCarrerasAuxs(List<UsuarioCarreraAux> usuarioCarrerasAuxs) {
-        this.usuarioCarrerasAuxs = usuarioCarrerasAuxs;
+    public void setUsuarioCarrerasDTOS(List<UsuarioCarreraDTO> usuarioCarrerasDTOS) {
+        this.usuarioCarrerasDTOS = usuarioCarrerasDTOS;
     }
 
     public boolean isRenderedNoEditar() {
@@ -78,6 +80,14 @@ public class SessionUsuarioCarrera implements Serializable {
 
     public void setRenderedCrear(boolean renderedCrear) {
         this.renderedCrear = renderedCrear;
+    }
+
+    public List<UsuarioCarreraDTO> getFilterUsuarioCarrerasDTO() {
+        return filterUsuarioCarrerasDTO;
+    }
+
+    public void setFilterUsuarioCarrerasDTO(List<UsuarioCarreraDTO> filterUsuarioCarrerasDTO) {
+        this.filterUsuarioCarrerasDTO = filterUsuarioCarrerasDTO;
     }
 
 }

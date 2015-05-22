@@ -1,15 +1,13 @@
-<?xml version='1.0' encoding='UTF-8' ?>
+<?xml version='1.0' encoding='UTF-8' ?> 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:p="http://primefaces.org/ui"
-      xml:lang="es" lang="es">
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
 
     <body>
-
         <ui:composition template="./../../../template.xhtml">
-            <ui:define name="title">#{msg['lbl.periodoCoordinacion']}</ui:define>
+            <ui:define name="title">#{msg['lbl.coordinadores']}</ui:define>
             <ui:define name="top">
                 <ui:include src="./../../inicio/menu.xhtml"/>
             </ui:define>
@@ -18,13 +16,17 @@
             </ui:define>
             <ui:define name="content">
                 <p:messages id="msm"/>
-                <p:panel header="#{msg['lbl.datos']}">
-                    <ui:include src="datosPeriodo.xhtml"/>  
+                <p:panel header="#{msg['lbl.coordinadores']}">
+                    <ui:include src="tablaCoordinadores.xhtml"/> 
                     <f:facet name="footer">
-                        <ui:include src="botonesEditarPeriodo.xhtml"/>
+                        <ui:include src="botonesTablaCoordinadores.xhtml"/>  
                     </f:facet>
                 </p:panel>
+                <f:metadata>
+                    <f:event type="preRenderView" listener="#{administrarCoordinadoresPeriodos.init()}"/>
+                </f:metadata>
             </ui:define>
         </ui:composition>
     </body>
+
 </html>

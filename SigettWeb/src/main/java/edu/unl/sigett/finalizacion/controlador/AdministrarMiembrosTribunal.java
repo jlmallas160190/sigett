@@ -47,7 +47,7 @@ import edu.jlmallas.academico.service.CarreraService;
 import edu.unl.sigett.dao.CatalogoOficioFacadeLocal;
 import edu.unl.sigett.dao.ConfiguracionCarreraDao;
 import edu.unl.sigett.dao.ConfiguracionGeneralDao;
-import edu.jlmallas.academico.dao.implement.CoordinadorPeriodoFacadeLocal;
+import edu.jlmallas.academico.dao.CoordinadorPeriodoDao;
 import edu.jlmallas.academico.dao.DocenteCarreraDao;
 import edu.jlmallas.academico.dao.DocenteDao;
 import edu.unl.sigett.dao.MiembroFacadeLocal;
@@ -108,7 +108,7 @@ public class AdministrarMiembrosTribunal implements Serializable {
     @EJB
     private ProyectoFacadeLocal proyectoFacadeLocal;
     @EJB
-    private CoordinadorPeriodoFacadeLocal coordinadorPeriodoFacadeLocal;
+    private CoordinadorPeriodoDao coordinadorPeriodoFacadeLocal;
     @EJB
     private EstudianteCarreraDao estudianteCarreraFacadeLocal;
     @EJB
@@ -230,9 +230,9 @@ public class AdministrarMiembrosTribunal implements Serializable {
                             + " a efecto para que se cumpla por un espacio  máximo de " + tiempo + " hora(s) con la sustentación pública.";
                 }
             }
-            CoordinadorPeriodo coordinadorPeriodo = coordinadorPeriodoFacadeLocal.buscarVigente(carrera.getId());
-            Persona datosCoordinador = personaFacadeLocal.find(coordinadorPeriodo.getCoordinadorId().getId());
-            Docente docenteCoordinador = docenteFacadeLocal.find(datosCoordinador.getId());
+//            CoordinadorPeriodo coordinadorPeriodo = coordinadorPeriodoFacadeLocal.buscarVigente(carrera.getId());
+//            Persona datosCoordinador = personaFacadeLocal.find(coordinadorPeriodo.getCoordinadorId().getId());
+//            Docente docenteCoordinador = docenteFacadeLocal.find(datosCoordinador.getId());
             secretario = user.getNombres().toUpperCase() + " " + user.getApellidos().toUpperCase();
             OficioCarrera oficioCarrera = oficioCarreraFacadeLocal.buscarPorTablaId(miembroId, CatalogoOficioEnum.MIEMBROTRIBUNALPUBLICA.getTipo());
             HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
@@ -240,11 +240,11 @@ public class AdministrarMiembrosTribunal implements Serializable {
             String fechaFormateada = configuracionGeneralFacadeLocal.dateFormat(fechaActual.getTime());
 
             datosReporte.put("miembro", datosMiembroPublica.getNombres().toUpperCase() + " " + datosMiembroPublica.getApellidos().toUpperCase());
-            datosReporte.put("coordinador", datosCoordinador.getNombres().toUpperCase() + " " + datosCoordinador.getApellidos().toUpperCase());
+//            datosReporte.put("coordinador", datosCoordinador.getNombres().toUpperCase() + " " + datosCoordinador.getApellidos().toUpperCase());
             datosReporte.put("temaProyecto", miembro.getTribunalId().getProyectoId().getTemaActual());
             datosReporte.put("cargoMiembro", miembro.getCargoId().getNombre().toUpperCase());
             datosReporte.put("tituloMiembro", docenteMiembroPublica.getTituloDocenteId().getTituloId().getAbreviacion().toUpperCase());
-            datosReporte.put("tituloCoordinador", docenteCoordinador.getTituloDocenteId().getTituloId().getAbreviacion());
+//            datosReporte.put("tituloCoordinador", docenteCoordinador.getTituloDocenteId().getTituloId().getAbreviacion());
             datosReporte.put("autores", getAutores(autorProyectoFacadeLocal.buscarPorProyecto(miembro.getTribunalId().getProyectoId().getId())));
             datosReporte.put("abreviacion_oficio", resourceBundle.getString("lbl.abreviacion_oficio"));
             datosReporte.put("articulos_sustentacion_publica", resourceBundle.getString("lbl.articulos_sustentacion_publica"));
@@ -318,20 +318,20 @@ public class AdministrarMiembrosTribunal implements Serializable {
                     }
                 }
             }
-            CoordinadorPeriodo coordinadorPeriodo = coordinadorPeriodoFacadeLocal.buscarVigente(carrera.getId());
-            Persona datosCoordinador = personaFacadeLocal.find(coordinadorPeriodo.getCoordinadorId().getId());
-            Docente docenteCoordinador = docenteFacadeLocal.find(datosCoordinador.getId());
+//            CoordinadorPeriodo coordinadorPeriodo = coordinadorPeriodoFacadeLocal.buscarVigente(carrera.getId());
+//            Persona datosCoordinador = personaFacadeLocal.find(coordinadorPeriodo.getCoordinadorId().getId());
+//            Docente docenteCoordinador = docenteFacadeLocal.find(datosCoordinador.getId());
             secretario = user.getNombres().toUpperCase() + " " + user.getApellidos().toUpperCase();
             OficioCarrera oficioCarrera = oficioCarreraFacadeLocal.buscarPorTablaId(miembroId, CatalogoOficioEnum.MIEMBROTRIBUNALPRIVADA.getTipo());
             HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
             Calendar fechaActual = Calendar.getInstance();
             String fechaFormateada = configuracionGeneralFacadeLocal.dateFormat(fechaActual.getTime());
             datosReporte.put("miembro", datosMiembro.getNombres().toUpperCase() + " " + datosMiembro.getApellidos().toUpperCase());
-            datosReporte.put("coordinador", datosCoordinador.getNombres().toUpperCase() + " " + datosCoordinador.getApellidos().toUpperCase());
+//            datosReporte.put("coordinador", datosCoordinador.getNombres().toUpperCase() + " " + datosCoordinador.getApellidos().toUpperCase());
             datosReporte.put("temaProyecto", miembro.getTribunalId().getProyectoId().getTemaActual());
             datosReporte.put("tituloMiembro", docenteMiembro.getTituloDocenteId().getTituloId().getAbreviacion().toUpperCase());
             datosReporte.put("cargoMiembro", miembro.getCargoId().getNombre().toUpperCase());
-            datosReporte.put("tituloCoordinador", docenteCoordinador.getTituloDocenteId().getTituloId().getAbreviacion());
+//            datosReporte.put("tituloCoordinador", docenteCoordinador.getTituloDocenteId().getTituloId().getAbreviacion());
             datosReporte.put("autores", getAutores(autorProyectoFacadeLocal.buscarPorProyecto(miembro.getTribunalId().getProyectoId().getId())));
             datosReporte.put("abreviacion_oficio", resourceBundle.getString("lbl.abreviacion_oficio"));
             datosReporte.put("articulos_designar_miembro_tribunal", resourceBundle.getString("lbl.articulos_designar_miembro_tribunal"));
@@ -341,7 +341,6 @@ public class AdministrarMiembrosTribunal implements Serializable {
 //            reportes.oficioMiembroTribunalSprivada("docx", fechaFormateada, response, datosReporte, configuracionCarreraFacadeLocal, configuracionCarrera,
 //                    oficioCarrera, presidente, miembros, miembroId, oficioCarreraFacadeLocal, catalogoOficioFacadeLocal, carrera, nOficio, secretario,
 //                    path, pathSetting);
-
         } catch (Exception e) {
         }
     }

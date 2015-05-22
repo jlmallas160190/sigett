@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+    <body>
+        <h:panelGrid columns="3">
+            <p:commandButton  icon="ui-icon-info" value="#{msg['lbl.matriculas']}" id="detalleMatriculas"/>
+            <p:commandButton onstart="PF('dlgLoading').show();" oncomplete="PF('dlgLoading').hide()" update="tblReporteMatriculas,:contenido:msm"
+                             value="#{msg['lbl.sincronizar']} SGA" 
+                             action="#{administrarEstudiantesCarrera.sgaWebServicesEstudianteMatriculas()}"
+                             icon="ui-icon-refresh"/>
+            <p:commandButton icon="ui-icon-comprobar" value="#{msg['lbl.comprobar']}" process="@this" 
+                             onstart="PF('dlgLoading').show();" 
+                             oncomplete="PF('dlgLoading').hide()" update="datosEstudianteCarrera,esApto,:contenido:msm" 
+                             action="#{administrarEstudiantesCarrera.compruebaEsAspiranteApto()}"/>
+        </h:panelGrid>
+    </body>
+
+</html>
