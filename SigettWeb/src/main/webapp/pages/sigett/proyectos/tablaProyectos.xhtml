@@ -1,0 +1,76 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+        <p:dataTable id="tblProyectos" value="#{sessionProyecto.proyectos}" var="item" rows="20" paginator="true" rowExpandMode="single"
+                     filteredValue="#{sessionProyecto.filterProyectos}" widgetVar="tblProyectosFilter"
+                     draggableColumns="true" rowsPerPageTemplate="5,10,15,20,25,30,35,40,45,50" emptyMessage="#{msg['lbl.table.empty']}" 
+                     rowIndexVar="rowIx" rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'even-row' : 'odd-row'}" 
+                     rowKey="#{item.id}" selection="#{sessionProyecto.proyecto}" selectionMode="single">
+            <!--<f:facet name="header">
+                <h:commandLink action="{administrarProyectos.crearPDF()}">
+                    <p:graphicImage name="./img/pdf.png" />
+                </h:commandLink>
+                <p:commandButton id="toggler" type="button" value="Columns" style="float:right" icon="ui-icon-calculator" />
+                <p:columnToggler datasource="tblProyectos" trigger="toggler" />
+            </f:facet>-->
+             <f:facet name="header">
+                <h:panelGrid styleClass="panelgrid" rowClasses="rowpanelgrid" columns="1">
+                    <p:inputText id="globalFilter" onkeyup="PF('tblProyectosFilter').filter()" style="width:150px" placeholder="#{msg['lbl.buscar']}"/>
+                </h:panelGrid>
+            </f:facet>
+            <p:column sortBy="#{item.fechaCreated}">
+                <f:facet name="header">
+                    <h:outputText value="#{msg['lbl.creacion']}"/>
+                </f:facet>
+                <h:outputText value="#{administrarConfiguraciones.timestamp(item.fechaCreated)}" />
+            </p:column>
+            <p:column  rendered="#{sessionProyecto.renderedEditar}" 
+                       filterBy="#{item.temaActual}"
+                       sortBy="#{item.temaActual}" >
+                <f:facet name="header">
+                    <h:outputText value="#{msg['lbl.tema']}"/>
+                </f:facet>
+                <p:commandLink  value="#{item.temaActual}" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" 
+                                action="#{administrarProyectos.editar(item)}"/>
+            </p:column>
+            <p:column  rendered="#{!sessionProyecto.renderedEditar}" 
+                       filterBy="#{item.temaActual}"
+                       sortBy="#{item.temaActual}" >
+                <f:facet name="header">
+                    <h:outputText value="#{msg['lbl.tema']}"/>
+                </f:facet>
+                <h:outputText value="#{item.temaActual}"/>
+            </p:column>
+            <p:column  filterBy="#{item.autores}" sortBy="#{item.autores}">
+                <f:facet name="header">
+                    <h:outputText value="#{msg['lbl.autores']}"/>
+                </f:facet>
+                <h:outputText value="#{item.autores}"/>
+            </p:column>
+            <p:column filterBy="#{item.tipo}" sortBy="#{item.tipo}">
+                <f:facet name="header">
+                    <h:outputText value="#{msg['lbl.tipo']}"/>
+                </f:facet>
+                <h:outputText value="#{item.tipo}"/>
+            </p:column>
+            <p:column sortBy="#{item.catalogo}" filterBy="#{item.catalogo}">
+                <f:facet name="header">
+                    <h:outputText value="#{msg['lbl.categoria']}"/>
+                </f:facet>
+                <h:outputText value="#{item.catalogo}"/>
+            </p:column>
+            <p:column sortBy="#{item.estado}" filterBy="#{item.estado}">
+                <f:facet name="header">
+                    <h:outputText value="#{msg['lbl.estado']}"/>
+                </f:facet>
+                <h:outputText value="#{item.estado}"/>
+            </p:column>
+        </p:dataTable>
+    </body>
+
+</html>

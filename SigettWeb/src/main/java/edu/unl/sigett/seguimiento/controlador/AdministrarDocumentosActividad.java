@@ -5,7 +5,7 @@
  */
 package edu.unl.sigett.seguimiento.controlador;
 
-import edu.unl.sigett.postulacion.managed.session.SessionProyecto;
+import edu.unl.sigett.proyecto.managed.session.SessionProyecto;
 import edu.unl.sigett.seguimiento.session.SessionActividad;
 import edu.unl.sigett.seguimiento.session.SessionDocumentoActividad;
 import edu.unl.sigett.seguimiento.session.SessionProyectosAutor;
@@ -82,22 +82,22 @@ public class AdministrarDocumentosActividad implements Serializable {
     public String crear(Usuario usuario, Actividad actividad, Proyecto proyecto) {
         String navegacion = "";
         try {
-            FacesContext facesContext = FacesContext.getCurrentInstance();
-            ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            if (proyecto.getEstadoProyectoId().getId() == 2 || proyecto.getEstadoProyectoId().getId() == 3) {
-                int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "crear_documento_actividad");
-                if (tienePermiso == 1) {
-                    sessionDocumentoActividad.setDocumentoActividad(new DocumentoActividad());
-                    sessionDocumentoActividad.getDocumentoActividad().setActividadId(actividad);
-                    RequestContext.getCurrentInstance().execute("PF('dlgEditarDocumentoActividad').show()");
-                } else {
-                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_crear") + ". " + bundle.getString("lbl.msm_consulte"), "");
-                    FacesContext.getCurrentInstance().addMessage(null, message);
-                }
-            } else {
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_crear") + ". " + bundle.getString("lbl.msm_consulte"), "");
-                FacesContext.getCurrentInstance().addMessage(null, message);
-            }
+//            FacesContext facesContext = FacesContext.getCurrentInstance();
+//            ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
+//            if (proyecto.getEstadoProyectoId().getId() == 2 || proyecto.getEstadoProyectoId().getId() == 3) {
+//                int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "crear_documento_actividad");
+//                if (tienePermiso == 1) {
+//                    sessionDocumentoActividad.setDocumentoActividad(new DocumentoActividad());
+//                    sessionDocumentoActividad.getDocumentoActividad().setActividadId(actividad);
+//                    RequestContext.getCurrentInstance().execute("PF('dlgEditarDocumentoActividad').show()");
+//                } else {
+//                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_crear") + ". " + bundle.getString("lbl.msm_consulte"), "");
+//                    FacesContext.getCurrentInstance().addMessage(null, message);
+//                }
+//            } else {
+//                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_crear") + ". " + bundle.getString("lbl.msm_consulte"), "");
+//                FacesContext.getCurrentInstance().addMessage(null, message);
+//            }
         } catch (Exception e) {
         }
         return navegacion;
@@ -159,22 +159,22 @@ public class AdministrarDocumentosActividad implements Serializable {
     public String editar(DocumentoActividad documentoActividad, Usuario usuario, Actividad actividad, Proyecto proyecto) {
         String navegacion = "";
         try {
-            FacesContext facesContext = FacesContext.getCurrentInstance();
-            ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            if (proyecto.getEstadoProyectoId().getId() == 2 || proyecto.getEstadoProyectoId().getId() == 3) {
-                int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "editar_documento_actividad");
-                if (tienePermiso == 1) {
-                    sessionDocumentoActividad.setDocumentoActividad(documentoActividad);
-                    sessionDocumentoActividad.getDocumentoActividad().setActividadId(actividad);
-                    RequestContext.getCurrentInstance().execute("PF('dlgEditarDocumentoActividad').show()");
-                } else {
-                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_editar") + ". " + bundle.getString("lbl.msm_consulte"), "");
-                    FacesContext.getCurrentInstance().addMessage(null, message);
-                }
-            } else {
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_editar") + ". " + bundle.getString("lbl.msm_consulte"), "");
-                FacesContext.getCurrentInstance().addMessage(null, message);
-            }
+//            FacesContext facesContext = FacesContext.getCurrentInstance();
+//            ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
+//            if (proyecto.getEstadoProyectoId().getId() == 2 || proyecto.getEstadoProyectoId().getId() == 3) {
+//                int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "editar_documento_actividad");
+//                if (tienePermiso == 1) {
+//                    sessionDocumentoActividad.setDocumentoActividad(documentoActividad);
+//                    sessionDocumentoActividad.getDocumentoActividad().setActividadId(actividad);
+//                    RequestContext.getCurrentInstance().execute("PF('dlgEditarDocumentoActividad').show()");
+//                } else {
+//                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_editar") + ". " + bundle.getString("lbl.msm_consulte"), "");
+//                    FacesContext.getCurrentInstance().addMessage(null, message);
+//                }
+//            } else {
+//                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_editar") + ". " + bundle.getString("lbl.msm_consulte"), "");
+//                FacesContext.getCurrentInstance().addMessage(null, message);
+//            }
         } catch (Exception e) {
         }
         return navegacion;
@@ -227,70 +227,70 @@ public class AdministrarDocumentosActividad implements Serializable {
 
     public void remover(DocumentoActividad documentoActividad, Usuario usuario, Proyecto proyecto) {
         try {
-            FacesContext facesContext = FacesContext.getCurrentInstance();
-            ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            if (proyecto.getEstadoProyectoId().getId() == 2 || proyecto.getEstadoProyectoId().getId() == 3) {
-                int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "eliminar_documento_actividad");
-                if (tienePermiso == 1) {
-                    if (documentoActividad.getId() != null) {
-                        logFacadeLocal.create(logFacadeLocal.crearLog("DocumentoActividad", documentoActividad.getId() + "", "ELIMINAR", "|Tipo Archivo= " + documentoActividad.getTipoArchivo() + "|Tamanio= " + documentoActividad.getTamanio() + "|Actividad= " + documentoActividad.getActividadId(), usuario));
-                        documentoActividadFacadeLocal.remove(documentoActividad);
-                        buscar(documentoActividad.getActividadId(), usuario);
-                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.documento") + " " + bundle.getString("lbl.msm_eliminar"), "");
-                        FacesContext.getCurrentInstance().addMessage(null, message);
-                    }
-                }
-            } else {
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.documento") + " " + bundle.getString("lbl.msm_eliminar"), "");
-                FacesContext.getCurrentInstance().addMessage(null, message);
-            }
+//            FacesContext facesContext = FacesContext.getCurrentInstance();
+//            ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
+//            if (proyecto.getEstadoProyectoId().getId() == 2 || proyecto.getEstadoProyectoId().getId() == 3) {
+//                int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "eliminar_documento_actividad");
+//                if (tienePermiso == 1) {
+//                    if (documentoActividad.getId() != null) {
+//                        logFacadeLocal.create(logFacadeLocal.crearLog("DocumentoActividad", documentoActividad.getId() + "", "ELIMINAR", "|Tipo Archivo= " + documentoActividad.getTipoArchivo() + "|Tamanio= " + documentoActividad.getTamanio() + "|Actividad= " + documentoActividad.getActividadId(), usuario));
+//                        documentoActividadFacadeLocal.remove(documentoActividad);
+//                        buscar(documentoActividad.getActividadId(), usuario);
+//                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.documento") + " " + bundle.getString("lbl.msm_eliminar"), "");
+//                        FacesContext.getCurrentInstance().addMessage(null, message);
+//                    }
+//                }
+//            } else {
+//                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.documento") + " " + bundle.getString("lbl.msm_eliminar"), "");
+//                FacesContext.getCurrentInstance().addMessage(null, message);
+//            }
         } catch (Exception e) {
         }
     }
 
     public void grabar(DocumentoActividad documentoActividad, Usuario usuario, Proyecto proyecto) {
         try {
-            FacesContext facesContext = FacesContext.getCurrentInstance();
-            ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            if (documentoActividad.getId() == null) {
-                if (proyecto.getEstadoProyectoId().getId() == 2 || proyecto.getEstadoProyectoId().getId() == 3) {
-                    int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "crear_documento_actividad");
-                    if (tienePermiso == 1) {
-                        documentoActividadFacadeLocal.create(documentoActividad);
-                        logFacadeLocal.create(logFacadeLocal.crearLog("DocumentoActividad", documentoActividad.getId() + "", "CREAR", "|Tipo Archivo= " + documentoActividad.getTipoArchivo() + "|Tamanio= " + documentoActividad.getTamanio() + "|Actividad= " + documentoActividad.getActividadId(), usuario));
-                        RequestContext.getCurrentInstance().execute("PF('dlgEditarDocumentoActividad').hide()");
-                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.documento") + " " + bundle.getString("lbl.msm_grabar"), "");
-                        FacesContext.getCurrentInstance().addMessage(null, message);
-                        buscar(documentoActividad.getActividadId(), usuario);
-                        sessionDocumentoActividad.setDocumentoActividad(new DocumentoActividad());
-                    } else {
-                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_crear") + ". " + bundle.getString("lbl.msm_consulte"), "");
-                        FacesContext.getCurrentInstance().addMessage(null, message);
-                    }
-                } else {
-                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_crear") + ". " + bundle.getString("lbl.msm_consulte"), "");
-                    FacesContext.getCurrentInstance().addMessage(null, message);
-                }
-            } else {
-                if (proyecto.getEstadoProyectoId().getId() == 2 || proyecto.getEstadoProyectoId().getId() == 3) {
-                    int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "editar_documento_actividad");
-                    if (tienePermiso == 1) {
-                        documentoActividadFacadeLocal.edit(documentoActividad);
-                        logFacadeLocal.create(logFacadeLocal.crearLog("DocumentoActividad", documentoActividad.getId() + "", "EDITAR", "|Tipo Archivo= " + documentoActividad.getTipoArchivo() + "|Tamanio= " + documentoActividad.getTamanio() + "|Actividad= " + documentoActividad.getActividadId(), usuario));
-                        RequestContext.getCurrentInstance().execute("PF('dlgEditarDocumentoActividad').hide()");
-                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.documento") + " " + bundle.getString("lbl.msm_editar"), "");
-                        FacesContext.getCurrentInstance().addMessage(null, message);
-                        buscar(documentoActividad.getActividadId(), usuario);
-                        sessionDocumentoActividad.setDocumentoActividad(new DocumentoActividad());
-                    } else {
-                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_editar") + ". " + bundle.getString("lbl.msm_consulte"), "");
-                        FacesContext.getCurrentInstance().addMessage(null, message);
-                    }
-                } else {
-                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_editar") + ". " + bundle.getString("lbl.msm_consulte"), "");
-                    FacesContext.getCurrentInstance().addMessage(null, message);
-                }
-            }
+//            FacesContext facesContext = FacesContext.getCurrentInstance();
+//            ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
+//            if (documentoActividad.getId() == null) {
+//                if (proyecto.getEstadoProyectoId().getId() == 2 || proyecto.getEstadoProyectoId().getId() == 3) {
+//                    int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "crear_documento_actividad");
+//                    if (tienePermiso == 1) {
+//                        documentoActividadFacadeLocal.create(documentoActividad);
+//                        logFacadeLocal.create(logFacadeLocal.crearLog("DocumentoActividad", documentoActividad.getId() + "", "CREAR", "|Tipo Archivo= " + documentoActividad.getTipoArchivo() + "|Tamanio= " + documentoActividad.getTamanio() + "|Actividad= " + documentoActividad.getActividadId(), usuario));
+//                        RequestContext.getCurrentInstance().execute("PF('dlgEditarDocumentoActividad').hide()");
+//                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.documento") + " " + bundle.getString("lbl.msm_grabar"), "");
+//                        FacesContext.getCurrentInstance().addMessage(null, message);
+//                        buscar(documentoActividad.getActividadId(), usuario);
+//                        sessionDocumentoActividad.setDocumentoActividad(new DocumentoActividad());
+//                    } else {
+//                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_crear") + ". " + bundle.getString("lbl.msm_consulte"), "");
+//                        FacesContext.getCurrentInstance().addMessage(null, message);
+//                    }
+//                } else {
+//                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_crear") + ". " + bundle.getString("lbl.msm_consulte"), "");
+//                    FacesContext.getCurrentInstance().addMessage(null, message);
+//                }
+//            } else {
+//                if (proyecto.getEstadoProyectoId().getId() == 2 || proyecto.getEstadoProyectoId().getId() == 3) {
+//                    int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "editar_documento_actividad");
+//                    if (tienePermiso == 1) {
+//                        documentoActividadFacadeLocal.edit(documentoActividad);
+//                        logFacadeLocal.create(logFacadeLocal.crearLog("DocumentoActividad", documentoActividad.getId() + "", "EDITAR", "|Tipo Archivo= " + documentoActividad.getTipoArchivo() + "|Tamanio= " + documentoActividad.getTamanio() + "|Actividad= " + documentoActividad.getActividadId(), usuario));
+//                        RequestContext.getCurrentInstance().execute("PF('dlgEditarDocumentoActividad').hide()");
+//                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.documento") + " " + bundle.getString("lbl.msm_editar"), "");
+//                        FacesContext.getCurrentInstance().addMessage(null, message);
+//                        buscar(documentoActividad.getActividadId(), usuario);
+//                        sessionDocumentoActividad.setDocumentoActividad(new DocumentoActividad());
+//                    } else {
+//                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_editar") + ". " + bundle.getString("lbl.msm_consulte"), "");
+//                        FacesContext.getCurrentInstance().addMessage(null, message);
+//                    }
+//                } else {
+//                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_editar") + ". " + bundle.getString("lbl.msm_consulte"), "");
+//                    FacesContext.getCurrentInstance().addMessage(null, message);
+//                }
+//            }
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -298,26 +298,26 @@ public class AdministrarDocumentosActividad implements Serializable {
 
     public void seleccionarDocumento(DocumentoActividad documentoActividad, Usuario usuario, Proyecto proyecto) {
         try {
-            FacesContext facesContext = FacesContext.getCurrentInstance();
-            ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            if (proyecto.getEstadoProyectoId().getId() == 2 || proyecto.getEstadoProyectoId().getId() == 3) {
-                int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "select_documento_actividad");
-                if (tienePermiso == 1) {
-                    actualizaEstadoDocumentos(sessionActividad.getActividad(), documentoActividad);
-                    documentoActividad.setEsActual(true);
-                    documentoActividadFacadeLocal.edit(documentoActividad);
-                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.documento") + " " + bundle.getString("lbl.msm_editar"), "");
-                    FacesContext.getCurrentInstance().addMessage(null, message);
-                } else {
-                    if (tienePermiso == 2) {
-                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_select"), "");
-                        FacesContext.getCurrentInstance().addMessage(null, message);
-                    }
-                }
-            } else {
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_select"), "");
-                FacesContext.getCurrentInstance().addMessage(null, message);
-            }
+//            FacesContext facesContext = FacesContext.getCurrentInstance();
+//            ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
+//            if (proyecto.getEstadoProyectoId().getId() == 2 || proyecto.getEstadoProyectoId().getId() == 3) {
+//                int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "select_documento_actividad");
+//                if (tienePermiso == 1) {
+//                    actualizaEstadoDocumentos(sessionActividad.getActividad(), documentoActividad);
+//                    documentoActividad.setEsActual(true);
+//                    documentoActividadFacadeLocal.edit(documentoActividad);
+//                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.documento") + " " + bundle.getString("lbl.msm_editar"), "");
+//                    FacesContext.getCurrentInstance().addMessage(null, message);
+//                } else {
+//                    if (tienePermiso == 2) {
+//                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_select"), "");
+//                        FacesContext.getCurrentInstance().addMessage(null, message);
+//                    }
+//                }
+//            } else {
+//                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_select"), "");
+//                FacesContext.getCurrentInstance().addMessage(null, message);
+//            }
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -342,58 +342,58 @@ public class AdministrarDocumentosActividad implements Serializable {
     }
 
     public void renderedCrear(Usuario usuario, Proyecto proyecto) {
-        if (proyecto.getEstadoProyectoId().getId() == 2 || proyecto.getEstadoProyectoId().getId() == 3) {
-            int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "crear_documento_actividad");
-            if (tienePermiso == 1) {
-                renderedCrear = true;
-            } else {
-                renderedCrear = false;
-            }
-        } else {
-            renderedCrear = false;
-        }
+//        if (proyecto.getEstadoProyectoId().getId() == 2 || proyecto.getEstadoProyectoId().getId() == 3) {
+//            int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "crear_documento_actividad");
+//            if (tienePermiso == 1) {
+//                renderedCrear = true;
+//            } else {
+//                renderedCrear = false;
+//            }
+//        } else {
+//            renderedCrear = false;
+//        }
     }
 
     public void renderedEditar(Usuario usuario, Proyecto proyecto) {
-        if (proyecto.getEstadoProyectoId().getId() == 2 || proyecto.getEstadoProyectoId().getId() == 3) {
-            int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "editar_documento_actividad");
-            if (tienePermiso == 1) {
-                renderedEditar = true;
-                renderedNoEditar = false;
-            } else {
-                renderedEditar = false;
-                renderedNoEditar = true;
-            }
-        } else {
-            renderedEditar = false;
-            renderedNoEditar = true;
-        }
+//        if (proyecto.getEstadoProyectoId().getId() == 2 || proyecto.getEstadoProyectoId().getId() == 3) {
+//            int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "editar_documento_actividad");
+//            if (tienePermiso == 1) {
+//                renderedEditar = true;
+//                renderedNoEditar = false;
+//            } else {
+//                renderedEditar = false;
+//                renderedNoEditar = true;
+//            }
+//        } else {
+//            renderedEditar = false;
+//            renderedNoEditar = true;
+//        }
     }
 
     public void renderedEliminar(Usuario usuario, Proyecto proyecto) {
-        if (proyecto.getEstadoProyectoId().getId() == 2 || proyecto.getEstadoProyectoId().getId() == 3) {
-            int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "eliminar_documento_actividad");
-            if (tienePermiso == 1) {
-                renderedEliminar = true;
-            } else {
-                renderedEliminar = false;
-            }
-        } else {
-            renderedEliminar = false;
-        }
+//        if (proyecto.getEstadoProyectoId().getId() == 2 || proyecto.getEstadoProyectoId().getId() == 3) {
+//            int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "eliminar_documento_actividad");
+//            if (tienePermiso == 1) {
+//                renderedEliminar = true;
+//            } else {
+//                renderedEliminar = false;
+//            }
+//        } else {
+//            renderedEliminar = false;
+//        }
     }
 
     public void renderedSeleccionar(Usuario usuario, Proyecto proyecto) {
-        if (proyecto.getEstadoProyectoId().getId() == 2 || proyecto.getEstadoProyectoId().getId() == 3) {
-            int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "select_documento_actividad");
-            if (tienePermiso == 1) {
-                renderedSeleccionar = true;
-            } else {
-                renderedSeleccionar = false;
-            }
-        } else {
-            renderedSeleccionar = false;
-        }
+//        if (proyecto.getEstadoProyectoId().getId() == 2 || proyecto.getEstadoProyectoId().getId() == 3) {
+//            int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "select_documento_actividad");
+//            if (tienePermiso == 1) {
+//                renderedSeleccionar = true;
+//            } else {
+//                renderedSeleccionar = false;
+//            }
+//        } else {
+//            renderedSeleccionar = false;
+//        }
     }
 
 //</editor-fold>

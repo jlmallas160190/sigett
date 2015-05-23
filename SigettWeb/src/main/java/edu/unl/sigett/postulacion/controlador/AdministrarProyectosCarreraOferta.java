@@ -5,6 +5,7 @@
  */
 package edu.unl.sigett.postulacion.controlador;
 
+import edu.unl.sigett.autor.controlador.AdministrarAutoresProyecto;
 import edu.unl.sigett.comun.controlador.AdministrarLineasInvestigacionCarrera;
 import edu.unl.sigett.adjudicacion.controlador.AdministrarDirectoresProyecto;
 import edu.unl.sigett.postulacion.managed.session.SessionConsultarProyecto;
@@ -25,7 +26,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import edu.jlmallas.academico.service.AreaService;
 import edu.jlmallas.academico.service.OfertaAcademicaService;
-import edu.unl.sigett.dao.ProyectoFacadeLocal;
+import edu.unl.sigett.dao.ProyectoDao;
 
 /**
  *
@@ -53,7 +54,7 @@ public class AdministrarProyectosCarreraOferta implements Serializable {
     private String estado;
     private String byArea;
     @EJB
-    private ProyectoFacadeLocal proyectoFacadeLocal;
+    private ProyectoDao proyectoFacadeLocal;
     @EJB
     private AreaService areaFacadeLocal;
     private List<Carrera> carreras;
@@ -86,7 +87,7 @@ public class AdministrarProyectosCarreraOferta implements Serializable {
         String navegacion = "";
         try {
             sessionConsultarProyecto.setProyecto(proyecto);
-            administrarAutoresProyecto.listadoAutores("", proyecto);
+//            administrarAutoresProyecto.listadoAutores("", proyecto);
             administrarDirectoresProyecto.historialDirectoresProyecto("", proyecto);
             navegacion = "verProyecto?faces-redirect=true";
         } catch (Exception e) {

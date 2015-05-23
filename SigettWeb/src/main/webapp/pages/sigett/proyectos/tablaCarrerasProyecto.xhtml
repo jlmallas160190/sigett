@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+    <body>
+        <p:dataGrid rendered="#{!sessionProyecto.renderedEditarDatosProyecto}" value="#{sessionProyecto.carrerasProyecto}"
+                    var="carrera" columns="1" rows="10" paginator="true" paginatorPosition="bottom"
+                    paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} "
+                    emptyMessage="#{msg['lbl.table.empty']}">
+            <h:panelGrid style="background: #fff" styleClass="panelgrid" columns="2" columnClasses="col-sm-1,col-sm-11" rowClasses="rowpanelgrid">
+                <p:outputLabel value="#{carrera.nombre}"/>
+            </h:panelGrid>
+        </p:dataGrid>   
+    </body>
+
+</html>

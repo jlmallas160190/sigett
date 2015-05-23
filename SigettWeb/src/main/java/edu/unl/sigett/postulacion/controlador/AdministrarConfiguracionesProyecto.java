@@ -6,7 +6,7 @@
 package edu.unl.sigett.postulacion.controlador;
 
 import edu.unl.sigett.comun.controlador.AdministrarCatalogoDuracion;
-import edu.unl.sigett.postulacion.managed.session.SessionProyecto;
+import edu.unl.sigett.proyecto.managed.session.SessionProyecto;
 import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
 import edu.unl.sigett.entity.ConfiguracionProyecto;
 import edu.unl.sigett.entity.Proyecto;
@@ -53,79 +53,7 @@ public class AdministrarConfiguracionesProyecto implements Serializable {
     }
 
     //<editor-fold defaultstate="collapsed" desc="MÉTODOS CRUD">
-    public String editar(ConfiguracionProyecto configuracionProyecto, Usuario usuario, Proyecto proyecto) {
-        String navegacion = "";
-        try {
-            FacesContext facesContext = FacesContext.getCurrentInstance();
-            ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            if (proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.PERTINENTE.getTipo())) {
-                int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "editar_configuracion_proyecto");
-                if (tienePermiso == 1) {
-                    configuracionProyecto.setEsEditado(true);
-                    if (configuracionProyecto.getCodigo().equalsIgnoreCase("DS")) {
-                        if (Integer.parseInt(configuracionProyecto.getValor()) <= 7 && Integer.parseInt(configuracionProyecto.getValor()) > 0) {
-                        } else {
-                            configuracionProyecto.setValor("7");
-                        }
-                    } else {
-                        if (configuracionProyecto.getCodigo().equalsIgnoreCase("HD")) {
-                            if (Integer.parseInt(configuracionProyecto.getValor()) <= 24 && Integer.parseInt(configuracionProyecto.getValor()) > 0) {
-                            } else {
-                                configuracionProyecto.setValor("24");
-                            }
-                        } else {
-                            if (configuracionProyecto.getCodigo().equalsIgnoreCase("CD")) {
-                                configuracionProyecto.setValor(administrarCatalogoDuracion.seleccionaCatalogoDuracion().getId() + "");
-                            }
-                        }
-                    }
-                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_editar"), "");
-                    FacesContext.getCurrentInstance().addMessage(null, message);
-                } else {
-                    if (tienePermiso == 2) {
-                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_editar") + ". " + bundle.getString("lbl.msm_consulte"), "");
-                        FacesContext.getCurrentInstance().addMessage(null, message);
-                    }
-                }
-            } else {
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_editar") + ". " + bundle.getString("lbl.msm_consulte"), "");
-                FacesContext.getCurrentInstance().addMessage(null, message);
-            }
-        } catch (Exception e) {
-            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_FATAL, e.getMessage(), "");
-            FacesContext.getCurrentInstance().addMessage(null, message);
-        }
-        return navegacion;
-    }
 
-    public void agregarConfiguracionesProyecto(Proyecto proyecto) {
-        if (proyecto.getConfiguracionProyectoList().isEmpty()) {
-            ConfiguracionProyecto cf = new ConfiguracionProyecto();
-            cf.setNombre("Días de trabajo a la semana");
-            cf.setCodigo("DS");
-            cf.setValor("7");
-            cf.setEsEditado(true);
-            cf.setTipo("numerico");
-            proyecto.getConfiguracionProyectoList().add(cf);
-            cf.setProyectoId(proyecto);
-            ConfiguracionProyecto cf1 = new ConfiguracionProyecto();
-            cf1.setNombre("Horas díarias de trabajo");
-            cf1.setCodigo("HD");
-            cf1.setValor("8");
-            cf1.setTipo("numerico");
-            cf1.setEsEditado(true);
-            cf1.setProyectoId(proyecto);
-            proyecto.getConfiguracionProyectoList().add(cf1);
-            ConfiguracionProyecto cf2 = new ConfiguracionProyecto();
-            cf2.setNombre("Catalogo duración actual");
-            cf2.setCodigo("CD");
-            cf2.setTipo("combo");
-            cf2.setValor("1");
-            cf2.setEsEditado(true);
-            cf2.setProyectoId(proyecto);
-            proyecto.getConfiguracionProyectoList().add(cf2);
-        }
-    }
 
     public void buscar(String criterio, Proyecto proyecto) {
         this.configuracionProyectos = new ArrayList<>();
@@ -148,19 +76,19 @@ public class AdministrarConfiguracionesProyecto implements Serializable {
 //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="MÉTODOS RENDERED">
     public void renderedEditar(Usuario usuario, Proyecto proyecto) {
-        if (proyecto.getEstadoProyectoId().getId() == 2) {
-            int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "editar_configuracion_proyecto");
-            if (tienePermiso == 1) {
-                renderedEditar = true;
-                renderedNoEditar = false;
-            } else {
-                renderedNoEditar = true;
-                renderedEditar = false;
-            }
-        } else {
-            renderedNoEditar = true;
-            renderedEditar = false;
-        }
+//        if (proyecto.getEstadoProyectoId().getId() == 2) {
+//            int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "editar_configuracion_proyecto");
+//            if (tienePermiso == 1) {
+//                renderedEditar = true;
+//                renderedNoEditar = false;
+//            } else {
+//                renderedNoEditar = true;
+//                renderedEditar = false;
+//            }
+//        } else {
+//            renderedNoEditar = true;
+//            renderedEditar = false;
+//        }
     }
 
     public void renderedBuscar(Usuario usuario) {

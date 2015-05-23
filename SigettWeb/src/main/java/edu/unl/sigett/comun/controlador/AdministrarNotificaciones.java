@@ -29,7 +29,7 @@ import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
-import edu.unl.sigett.dao.AutorProyectoFacadeLocal;
+import edu.unl.sigett.dao.AutorProyectoDao;
 import edu.unl.sigett.dao.ConfiguracionGeneralDao;
 import edu.unl.sigett.dao.DirectorProyectoFacadeLocal;
 import javax.inject.Inject;
@@ -51,7 +51,7 @@ public class AdministrarNotificaciones implements Serializable {
     @EJB
     private DirectorProyectoFacadeLocal directorProyectoFacadeLocal;
     @EJB
-    private AutorProyectoFacadeLocal autorProyectoFacadeLocal;
+    private AutorProyectoDao autorProyectoFacadeLocal;
     @EJB
     private PersonaDao personaFacadeLocal;
     @EJB
@@ -198,15 +198,15 @@ public class AdministrarNotificaciones implements Serializable {
             String puerto = configuracionGeneralFacadeLocal.find((int) 31).getValor();
             String smtp = configuracionGeneralFacadeLocal.find((int) 30).getValor();
             for (AutorProyecto autorProyecto : autorProyectoFacadeLocal.buscarPorProyecto(cronograma.getProyecto().getId())) {
-                if (!autorProyecto.getEstadoAutorId().getCodigo().equalsIgnoreCase(EstadoAutorEnum.ABANDONADO.getTipo())) {
-                     EstudianteCarrera estudianteCarrera = estudianteCarreraFacadeLocal.find(autorProyecto.getAspiranteId().getId());
-                Persona persona = personaFacadeLocal.find(estudianteCarrera.getEstudianteId().getId());
-               
-                    mail.enviarNotificacionCorreo(smtp, puerto, usrCorreo, passwordCorreo, bundle.getString("lbl.actividad") + " " + bundle.getString("lbl.revisada"), bundle.getString("lbl.estimado") + " " + persona.getNombres() + " "
-                            + " " + persona.getApellidos() + bundle.getString("lbl.msm_revision_actividad") + " "
-                            + "" + autorProyecto.getProyectoId().getTemaActual(),persona.getEmail(),persona.getNombres() + " " +
-                                   persona.getApellidos());
-                }
+//                if (!autorProyecto.getEstadoAutorId().getCodigo().equalsIgnoreCase(EstadoAutorEnum.ABANDONADO.getTipo())) {
+//                     EstudianteCarrera estudianteCarrera = estudianteCarreraFacadeLocal.find(autorProyecto.getAspiranteId().getId());
+//                Persona persona = personaFacadeLocal.find(estudianteCarrera.getEstudianteId().getId());
+//               
+//                    mail.enviarNotificacionCorreo(smtp, puerto, usrCorreo, passwordCorreo, bundle.getString("lbl.actividad") + " " + bundle.getString("lbl.revisada"), bundle.getString("lbl.estimado") + " " + persona.getNombres() + " "
+//                            + " " + persona.getApellidos() + bundle.getString("lbl.msm_revision_actividad") + " "
+//                            + "" + autorProyecto.getProyectoId().getTemaActual(),persona.getEmail(),persona.getNombres() + " " +
+//                                   persona.getApellidos());
+//                }
             }
         } catch (Exception e) {
         }

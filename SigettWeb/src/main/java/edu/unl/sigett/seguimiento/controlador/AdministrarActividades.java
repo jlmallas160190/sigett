@@ -9,7 +9,7 @@ import org.jlmallas.api.date.DateResource;
 import com.jlmallas.comun.entity.Persona;
 import com.jlmallas.comun.dao.PersonaDao;
 import edu.unl.sigett.postulacion.controlador.AdministrarCronograma;
-import edu.unl.sigett.postulacion.managed.session.SessionProyecto;
+import edu.unl.sigett.proyecto.managed.session.SessionProyecto;
 import edu.unl.sigett.seguimiento.session.SessionActividad;
 import edu.unl.sigett.seguimiento.session.SessionProyectosAutor;
 import edu.unl.sigett.seguimiento.session.SessionProyectosDirector;
@@ -22,7 +22,6 @@ import edu.unl.sigett.entity.ConfiguracionProyecto;
 import edu.unl.sigett.entity.Cronograma;
 import edu.jlmallas.academico.entity.Docente;
 import edu.unl.sigett.entity.EstadoActividad;
-import edu.unl.sigett.entity.EstadoProyecto;
 import edu.jlmallas.academico.entity.Estudiante;
 import edu.unl.sigett.entity.Evento;
 import edu.unl.sigett.entity.Proyecto;
@@ -61,7 +60,7 @@ import edu.unl.sigett.dao.CatalogoEventoFacadeLocal;
 import edu.unl.sigett.dao.EstadoActividadFacadeLocal;
 import edu.unl.sigett.dao.EventoFacadeLocal;
 import org.jlmallas.seguridad.dao.LogDao;
-import edu.unl.sigett.dao.ProyectoFacadeLocal;
+import edu.unl.sigett.dao.ProyectoDao;
 import edu.unl.sigett.dao.TipoActividadFacadeLocal;
 import org.jlmallas.seguridad.dao.UsuarioDao;
 import edu.unl.sigett.enumeration.EstadoProyectoEnum;
@@ -106,7 +105,7 @@ public class AdministrarActividades implements Serializable {
     @EJB
     private UsuarioDao usuarioFacadeLocal;
     @EJB
-    private ProyectoFacadeLocal proyectoFacadeLocal;
+    private ProyectoDao proyectoFacadeLocal;
     @EJB
     private EventoFacadeLocal eventoFacadeLocal;
     @EJB
@@ -336,52 +335,52 @@ public class AdministrarActividades implements Serializable {
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
         String param = (String) facesContext.getExternalContext().getRequestParameterMap().get("1");
         try {
-            if (proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.PERTINENTE.getTipo())
-                    || proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.PERTINENTE.getTipo())) {
-                int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "crear_actividad");
-                if (tienePermiso == 1) {
-                    sessionActividad.setActividad(new Actividad());
-                    sessionActividad.getActividad().setLugarRevision("S/N");
-                    sessionActividad.getActividad().setActividadId(actividad.getId());
-                    sessionActividad.getActividad().setTienePadre(true);
-                    fechaFinActividadPadre = actividad.getFechaCulminacion();
-                    fechaInicioActividadPadre = actividad.getFechaInicio();
-                    fechaInicioLimit = actividad.getFechaInicio();
-                    fechaFinLimit = actividad.getFechaCulminacion();
-                    TipoActividad tipoActividad = tipoActividadFacadeLocal.find(2);
-                    if (tipoActividad != null) {
-                        sessionActividad.getActividad().setTipoActividadId(tipoActividad);
-                    }
-                    administrarDocumentosActividad.renderedCrear(usuario, proyecto);
-                    administrarDocumentosActividad.renderedEditar(usuario, proyecto);
-                    administrarDocumentosActividad.renderedSeleccionar(usuario, proyecto);
-                    administrarDocumentosActividad.renderedEliminar(usuario, proyecto);
-                    administrarDocumentosActividad.buscar(sessionActividad.getActividad(), usuario);
-                    administrarDocumentosActividad.renderedBuscar(usuario, sessionActividad.getActividad());
-                    administrarRevisiones.buscarPorAutor("", sessionActividad.getActividad(), usuario);
-
-                    if (param.equalsIgnoreCase("crear")) {
-                        navegacion = "editarActividad?faces-redirect=true";
-                    } else {
-                        if (param.equalsIgnoreCase("crear-dlg")) {
-                            renderedDlgEditar = true;
-                            RequestContext.getCurrentInstance().execute("PF('dlgEditarActividad').show()");
-                        }
-                    }
-                } else {
-                    if (tienePermiso == 2) {
-                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_crear") + ". " + bundle.getString("lbl.msm_consulte"), "");
-                        FacesContext.getCurrentInstance().addMessage(null, message);
-                    } else {
-                        if (param.equalsIgnoreCase("crear")) {
-                            navegacion = "login?faces-redirect=true";
-                        }
-                    }
-                }
-            } else {
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_crear") + ". " + bundle.getString("lbl.msm_consulte"), "");
-                FacesContext.getCurrentInstance().addMessage(null, message);
-            }
+//            if (proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.PERTINENTE.getTipo())
+//                    || proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.PERTINENTE.getTipo())) {
+//                int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "crear_actividad");
+//                if (tienePermiso == 1) {
+//                    sessionActividad.setActividad(new Actividad());
+//                    sessionActividad.getActividad().setLugarRevision("S/N");
+//                    sessionActividad.getActividad().setActividadId(actividad.getId());
+//                    sessionActividad.getActividad().setTienePadre(true);
+//                    fechaFinActividadPadre = actividad.getFechaCulminacion();
+//                    fechaInicioActividadPadre = actividad.getFechaInicio();
+//                    fechaInicioLimit = actividad.getFechaInicio();
+//                    fechaFinLimit = actividad.getFechaCulminacion();
+//                    TipoActividad tipoActividad = tipoActividadFacadeLocal.find(2);
+//                    if (tipoActividad != null) {
+//                        sessionActividad.getActividad().setTipoActividadId(tipoActividad);
+//                    }
+//                    administrarDocumentosActividad.renderedCrear(usuario, proyecto);
+//                    administrarDocumentosActividad.renderedEditar(usuario, proyecto);
+//                    administrarDocumentosActividad.renderedSeleccionar(usuario, proyecto);
+//                    administrarDocumentosActividad.renderedEliminar(usuario, proyecto);
+//                    administrarDocumentosActividad.buscar(sessionActividad.getActividad(), usuario);
+//                    administrarDocumentosActividad.renderedBuscar(usuario, sessionActividad.getActividad());
+//                    administrarRevisiones.buscarPorAutor("", sessionActividad.getActividad(), usuario);
+//
+//                    if (param.equalsIgnoreCase("crear")) {
+//                        navegacion = "editarActividad?faces-redirect=true";
+//                    } else {
+//                        if (param.equalsIgnoreCase("crear-dlg")) {
+//                            renderedDlgEditar = true;
+//                            RequestContext.getCurrentInstance().execute("PF('dlgEditarActividad').show()");
+//                        }
+//                    }
+//                } else {
+//                    if (tienePermiso == 2) {
+//                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_crear") + ". " + bundle.getString("lbl.msm_consulte"), "");
+//                        FacesContext.getCurrentInstance().addMessage(null, message);
+//                    } else {
+//                        if (param.equalsIgnoreCase("crear")) {
+//                            navegacion = "login?faces-redirect=true";
+//                        }
+//                    }
+//                }
+//            } else {
+//                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_crear") + ". " + bundle.getString("lbl.msm_consulte"), "");
+//                FacesContext.getCurrentInstance().addMessage(null, message);
+//            }
         } catch (Exception e) {
         }
         return navegacion;
@@ -393,56 +392,56 @@ public class AdministrarActividades implements Serializable {
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
         String param = (String) facesContext.getExternalContext().getRequestParameterMap().get("1");
         try {
-            proyecto = proyectoFacadeLocal.find(proyecto.getId());
-            if (proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.PERTINENTE.getTipo())
-                    || proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.SEGUIMIENTO.getTipo())) {
-                int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "editar_actividad");
-                if (tienePermiso == 1) {
-                    sessionActividad.setActividad(new Actividad());
-                    sessionActividad.getActividad().setLugarRevision("S/N");
-                    sessionActividad.getActividad().setCronogramaId(proyecto.getCronograma());
-                    sessionActividad.getActividad().setFaltante(100);
-                    sessionActividad.getActividad().setAvance(0.0);
-                    estadoEsSeleccionado = false;
-                    fechaFinActividadPadre = null;
-                    fechaInicioActividadPadre = null;
-                    fechaInicioLimit = proyecto.getCronograma().getFechaInicio();
-                    fechaFinLimit = proyecto.getCronograma().getFechaFin();
-                    TipoActividad tipoActividad = tipoActividadFacadeLocal.find(1);
-                    if (tipoActividad != null) {
-                        sessionActividad.getActividad().setTipoActividadId(tipoActividad);
-                    }
-                    administrarDocumentosActividad.renderedCrear(usuario, proyecto);
-                    administrarDocumentosActividad.renderedEditar(usuario, proyecto);
-                    administrarDocumentosActividad.renderedSeleccionar(usuario, proyecto);
-                    administrarDocumentosActividad.renderedEliminar(usuario, proyecto);
-                    administrarDocumentosActividad.buscar(sessionActividad.getActividad(), usuario);
-                    administrarDocumentosActividad.renderedBuscar(usuario, sessionActividad.getActividad());
-
-                    administrarRevisiones.buscarPorAutor("", sessionActividad.getActividad(), usuario);
-
-                    if (param.equalsIgnoreCase("crear")) {
-                        navegacion = "pretty:editarActividad";
-                    } else {
-                        if (param.equalsIgnoreCase("crear-dlg")) {
-                            renderedDlgEditar = true;
-                            RequestContext.getCurrentInstance().execute("PF('dlgEditarActividad').show()");
-                        }
-                    }
-                } else {
-                    if (tienePermiso == 2) {
-                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_crear") + ". " + bundle.getString("lbl.msm_consulte"), "");
-                        FacesContext.getCurrentInstance().addMessage(null, message);
-                    } else {
-                        if (param.equalsIgnoreCase("crear")) {
-                            navegacion = "pretty:login";
-                        }
-                    }
-                }
-            } else {
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_crear") + ". " + bundle.getString("lbl.msm_consulte"), "");
-                FacesContext.getCurrentInstance().addMessage(null, message);
-            }
+//            proyecto = proyectoFacadeLocal.find(proyecto.getId());
+//            if (proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.PERTINENTE.getTipo())
+//                    || proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.SEGUIMIENTO.getTipo())) {
+//                int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "editar_actividad");
+//                if (tienePermiso == 1) {
+//                    sessionActividad.setActividad(new Actividad());
+//                    sessionActividad.getActividad().setLugarRevision("S/N");
+//                    sessionActividad.getActividad().setCronogramaId(proyecto.getCronograma());
+//                    sessionActividad.getActividad().setFaltante(100);
+//                    sessionActividad.getActividad().setAvance(0.0);
+//                    estadoEsSeleccionado = false;
+//                    fechaFinActividadPadre = null;
+//                    fechaInicioActividadPadre = null;
+//                    fechaInicioLimit = proyecto.getCronograma().getFechaInicio();
+//                    fechaFinLimit = proyecto.getCronograma().getFechaFin();
+//                    TipoActividad tipoActividad = tipoActividadFacadeLocal.find(1);
+//                    if (tipoActividad != null) {
+//                        sessionActividad.getActividad().setTipoActividadId(tipoActividad);
+//                    }
+//                    administrarDocumentosActividad.renderedCrear(usuario, proyecto);
+//                    administrarDocumentosActividad.renderedEditar(usuario, proyecto);
+//                    administrarDocumentosActividad.renderedSeleccionar(usuario, proyecto);
+//                    administrarDocumentosActividad.renderedEliminar(usuario, proyecto);
+//                    administrarDocumentosActividad.buscar(sessionActividad.getActividad(), usuario);
+//                    administrarDocumentosActividad.renderedBuscar(usuario, sessionActividad.getActividad());
+//
+//                    administrarRevisiones.buscarPorAutor("", sessionActividad.getActividad(), usuario);
+//
+//                    if (param.equalsIgnoreCase("crear")) {
+//                        navegacion = "pretty:editarActividad";
+//                    } else {
+//                        if (param.equalsIgnoreCase("crear-dlg")) {
+//                            renderedDlgEditar = true;
+//                            RequestContext.getCurrentInstance().execute("PF('dlgEditarActividad').show()");
+//                        }
+//                    }
+//                } else {
+//                    if (tienePermiso == 2) {
+//                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_crear") + ". " + bundle.getString("lbl.msm_consulte"), "");
+//                        FacesContext.getCurrentInstance().addMessage(null, message);
+//                    } else {
+//                        if (param.equalsIgnoreCase("crear")) {
+//                            navegacion = "pretty:login";
+//                        }
+//                    }
+//                }
+//            } else {
+//                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_crear") + ". " + bundle.getString("lbl.msm_consulte"), "");
+//                FacesContext.getCurrentInstance().addMessage(null, message);
+//            }
         } catch (Exception e) {
         }
         return navegacion;
@@ -454,58 +453,58 @@ public class AdministrarActividades implements Serializable {
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
         String param = (String) facesContext.getExternalContext().getRequestParameterMap().get("1");
         try {
-            proyecto = proyectoFacadeLocal.find(proyecto.getId());
-            if (proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.PERTINENTE.getTipo())
-                    || proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.SEGUIMIENTO.getTipo())) {
-                int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "editar_actividad");
-                if (tienePermiso == 1) {
-                    sessionActividad.setActividad(actividad);
-                    tipoActividad = actividad.getTipoActividadId().toString();
-                    estadoActividad = actividad.getEstadoActividadId().toString();
-                    estadoEsSeleccionado = false;
-                    if (actividad.getId() != actividad.getActividadId()) {
-                        actividad.setTienePadre(true);
-                        Actividad actividadPadre = actividadFacadeLocal.find((actividad.getActividadId()));
-                        fechaFinActividadPadre = actividadPadre.getFechaCulminacion();
-                        fechaInicioActividadPadre = actividadPadre.getFechaInicio();
-                        fechaInicioLimit = actividadPadre.getFechaInicio();
-                        fechaFinLimit = actividadPadre.getFechaCulminacion();
-                    } else {
-                        fechaInicioLimit = proyecto.getCronograma().getFechaInicio();
-                        fechaFinLimit = proyecto.getCronograma().getFechaFin();
-                        fechaFinActividadPadre = null;
-                        fechaInicioActividadPadre = null;
-                    }
-                    administrarDocumentosActividad.renderedCrear(usuario, proyecto);
-                    administrarDocumentosActividad.renderedBuscar(usuario, actividad);
-                    administrarDocumentosActividad.renderedEditar(usuario, proyecto);
-                    administrarDocumentosActividad.renderedSeleccionar(usuario, proyecto);
-                    administrarDocumentosActividad.renderedEliminar(usuario, proyecto);
-                    administrarDocumentosActividad.buscar(sessionActividad.getActividad(), usuario);
-
-                    administrarRevisiones.buscarPorAutor("", sessionActividad.getActividad(), usuario);
-                    if (param.equalsIgnoreCase("editar")) {
-                        navegacion = "editarActividad?faces-redirect=true";
-                    } else {
-                        if (param.equalsIgnoreCase("editar-dlg")) {
-                            renderedDlgEditar = true;
-                            RequestContext.getCurrentInstance().execute("PF('dlgEditarActividad').show()");
-                        }
-                    }
-                } else {
-                    if (tienePermiso == 2) {
-                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_editar") + ". " + bundle.getString("lbl.msm_consulte"), "");
-                        FacesContext.getCurrentInstance().addMessage(null, message);
-                    } else {
-                        if (param.equalsIgnoreCase("crear")) {
-                            navegacion = "pretty:login";
-                        }
-                    }
-                }
-            } else {
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_editar") + ". " + bundle.getString("lbl.msm_consulte"), "");
-                FacesContext.getCurrentInstance().addMessage(null, message);
-            }
+//            proyecto = proyectoFacadeLocal.find(proyecto.getId());
+//            if (proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.PERTINENTE.getTipo())
+//                    || proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.SEGUIMIENTO.getTipo())) {
+//                int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "editar_actividad");
+//                if (tienePermiso == 1) {
+//                    sessionActividad.setActividad(actividad);
+//                    tipoActividad = actividad.getTipoActividadId().toString();
+//                    estadoActividad = actividad.getEstadoActividadId().toString();
+//                    estadoEsSeleccionado = false;
+//                    if (actividad.getId() != actividad.getActividadId()) {
+//                        actividad.setTienePadre(true);
+//                        Actividad actividadPadre = actividadFacadeLocal.find((actividad.getActividadId()));
+//                        fechaFinActividadPadre = actividadPadre.getFechaCulminacion();
+//                        fechaInicioActividadPadre = actividadPadre.getFechaInicio();
+//                        fechaInicioLimit = actividadPadre.getFechaInicio();
+//                        fechaFinLimit = actividadPadre.getFechaCulminacion();
+//                    } else {
+//                        fechaInicioLimit = proyecto.getCronograma().getFechaInicio();
+//                        fechaFinLimit = proyecto.getCronograma().getFechaFin();
+//                        fechaFinActividadPadre = null;
+//                        fechaInicioActividadPadre = null;
+//                    }
+//                    administrarDocumentosActividad.renderedCrear(usuario, proyecto);
+//                    administrarDocumentosActividad.renderedBuscar(usuario, actividad);
+//                    administrarDocumentosActividad.renderedEditar(usuario, proyecto);
+//                    administrarDocumentosActividad.renderedSeleccionar(usuario, proyecto);
+//                    administrarDocumentosActividad.renderedEliminar(usuario, proyecto);
+//                    administrarDocumentosActividad.buscar(sessionActividad.getActividad(), usuario);
+//
+//                    administrarRevisiones.buscarPorAutor("", sessionActividad.getActividad(), usuario);
+//                    if (param.equalsIgnoreCase("editar")) {
+//                        navegacion = "editarActividad?faces-redirect=true";
+//                    } else {
+//                        if (param.equalsIgnoreCase("editar-dlg")) {
+//                            renderedDlgEditar = true;
+//                            RequestContext.getCurrentInstance().execute("PF('dlgEditarActividad').show()");
+//                        }
+//                    }
+//                } else {
+//                    if (tienePermiso == 2) {
+//                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_editar") + ". " + bundle.getString("lbl.msm_consulte"), "");
+//                        FacesContext.getCurrentInstance().addMessage(null, message);
+//                    } else {
+//                        if (param.equalsIgnoreCase("crear")) {
+//                            navegacion = "pretty:login";
+//                        }
+//                    }
+//                }
+//            } else {
+//                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_editar") + ". " + bundle.getString("lbl.msm_consulte"), "");
+//                FacesContext.getCurrentInstance().addMessage(null, message);
+//            }
         } catch (Exception e) {
         }
         return navegacion;
@@ -645,121 +644,121 @@ public class AdministrarActividades implements Serializable {
         String param = (String) facesContext.getExternalContext().getRequestParameterMap().get("1");
         String param2 = (String) facesContext.getExternalContext().getRequestParameterMap().get("2");
         try {
-            CatalogoEvento catalogoEvento = catalogoEventoFacadeLocal.find(1);
-            Evento evento = null;
-            actividad.setEsActivo(true);
-            obtenerEstadoActividad(actividad, param);
-            if (actividad.getDuracion() > 0) {
-                if (actividad.getId() == null) {
-                    if (cronograma.getProyecto().getEstadoProyectoId().getId() == 2 || cronograma.getProyecto().getEstadoProyectoId().getId() == 3) {
-                        int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "crear_actividad");
-                        if (tienePermiso == 1) {
-                            actividad.setFechaInicioRevision(actividad.getFechaCulminacion());
-                            Calendar ffr = Calendar.getInstance();
-                            ffr.setTime(actividad.getFechaInicioRevision());
-                            ffr.add(Calendar.HOUR_OF_DAY, 1);
-                            actividad.setFechaFinRevision(ffr.getTime());
-                            actividadFacadeLocal.create(actividad);
-                            evento = new Evento(null, actividad.getNombre(), actividad.getFechaInicioRevision(), actividad.getFechaFinRevision(), actividad.getId() + "");
-                            evento.setCatalogoEventoId(catalogoEvento);
-                            eventoFacadeLocal.create(evento);
-                            administrarDocumentosActividad.renderedBuscar(usuario, actividad);
-                            if (actividad.getActividadId() == null) {
-                                actividad.setActividadId(actividad.getId());
-                                actividadFacadeLocal.edit(actividad);
-                            }
-                            actualizarPorcentajesDuracionActividades(actividad, actividadFacadeLocal.buscarPorProyecto(cronograma.getId()));
-                            calculosActividadObjetivo(actividad);
-                            administrarCronograma.calculaAvanceFaltanteCronograma(cronograma, actividadFacadeLocal.buscarPorProyecto(cronograma.getId()), usuario);
-                            logFacadeLocal.create(logFacadeLocal.crearLog("Actividad", actividad.getId() + "", "CREAR", "|Nombre= " + actividad.getNombre() + "|EsActivo= " + actividad.getCronogramaId().getId() + "|Tipo= " + actividad.getTipoActividadId().getId() + "|ActividadId= " + actividad.getActividadId() + "|Estado=" + actividad.getEstadoActividadId().getId(), usuario));
-                            if (param2.equalsIgnoreCase("estudiante")) {
-                                buscarPorAutorProyecto("", usuario, cronograma);
-                            } else {
-                                buscarPorCronograma("", cronograma, usuario);
-                            }
-                            if (param.equalsIgnoreCase("grabar")) {
-                                sessionActividad.setActividad(new Actividad());
-                            } else {
-                                if (param.equalsIgnoreCase("grabar-editar")) {
-                                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_grabar"), "");
-                                    FacesContext.getCurrentInstance().addMessage(null, message);
-                                } else {
-                                    if (param.equalsIgnoreCase("grabar-editar-dlg")) {
-                                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_grabar"), "");
-                                        FacesContext.getCurrentInstance().addMessage(null, message);
-                                    } else {
-                                        if (param.equalsIgnoreCase("grabar-dlg")) {
-                                            RequestContext.getCurrentInstance().execute("PF('dlgEditarActividad').hide()");
-                                            sessionActividad.setActividad(new Actividad());
-                                            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_grabar"), "");
-                                            FacesContext.getCurrentInstance().addMessage(null, message);
-                                        }
-                                    }
-                                }
-                            }
-                        } else {
-                            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_crear") + ". " + bundle.getString("lbl.msm_consulte"), "");
-                            FacesContext.getCurrentInstance().addMessage(null, message);
-                        }
-                    } else {
-                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_crear") + ". " + bundle.getString("lbl.msm_consulte"), "");
-                        FacesContext.getCurrentInstance().addMessage(null, message);
-                    }
-                } else {
-                    int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "editar_actividad");
-                    if (tienePermiso == 1) {
-                        actividadFacadeLocal.edit(actividad);
-                        evento = eventoFacadeLocal.buscarPorCategoriaEvento(catalogoEvento.getId(), actividad.getId() + "");
-                        if (evento == null) {
-                            evento = new Evento(null, actividad.getNombre(), actividad.getFechaInicioRevision(), actividad.getFechaFinRevision(), actividad.getId() + "");
-                            evento.setCatalogoEventoId(catalogoEvento);
-                            eventoFacadeLocal.create(evento);
-                        } else {
-                            evento.setTitulo(actividad.getNombre());
-                            evento.setFechaInicio(actividad.getFechaInicioRevision());
-                            evento.setFechaFin(actividad.getFechaFinRevision());
-                            eventoFacadeLocal.edit(evento);
-                        }
-                        actualizarPorcentajesDuracionActividades(actividad, actividadFacadeLocal.buscarPorProyecto(cronograma.getId()));
-                        calculosActividadObjetivo(actividad);
-                        administrarCronograma.calculaAvanceFaltanteCronograma(cronograma, actividadFacadeLocal.buscarPorProyecto(cronograma.getId()), usuario);
-                        administrarDocumentosActividad.renderedBuscar(usuario, actividad);
-                        logFacadeLocal.create(logFacadeLocal.crearLog("Actividad", actividad.getId() + "", "EDITAR", "|Nombre= " + actividad.getNombre() + "|EsActivo= " + actividad.getCronogramaId().getId() + "|Tipo= " + actividad.getTipoActividadId().getId() + "|ActividadId= " + actividad.getActividadId() + "|Estado=" + actividad.getEstadoActividadId().getId(), usuario));
-                        if (param2.equalsIgnoreCase("estudiante")) {
-                            buscarPorAutorProyecto(criterioPorAutorProyecto, usuario, cronograma);
-                        } else {
-                            buscarPorCronograma(criterio, cronograma, usuario);
-                        }
-                        if (param.equalsIgnoreCase("grabar")) {
-                            sessionActividad.setActividad(new Actividad());
-                        } else {
-                            if (param.equalsIgnoreCase("grabar-editar")) {
-                                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_editar"), "");
-                                FacesContext.getCurrentInstance().addMessage(null, message);
-                            } else {
-                                if (param.equalsIgnoreCase("grabar-editar-dlg")) {
-                                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_editar"), "");
-                                    FacesContext.getCurrentInstance().addMessage(null, message);
-                                } else {
-                                    if (param.equalsIgnoreCase("grabar-dlg")) {
-                                        RequestContext.getCurrentInstance().execute("PF('dlgEditarActividad').hide()");
-                                        sessionActividad.setActividad(new Actividad());
-                                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_editar"), "");
-                                        FacesContext.getCurrentInstance().addMessage(null, message);
-
-                                    }
-                                }
-                            }
-                        }
-                    } else {
-                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_editar") + ". " + bundle.getString("lbl.msm_consulte"), "");
-                        FacesContext.getCurrentInstance().addMessage(null, message);
-                    }
-                }
-            } else {
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_fechas_cronograma_invalidas"), "");
-                FacesContext.getCurrentInstance().addMessage(null, message);
-            }
+//            CatalogoEvento catalogoEvento = catalogoEventoFacadeLocal.find(1);
+//            Evento evento = null;
+//            actividad.setEsActivo(true);
+//            obtenerEstadoActividad(actividad, param);
+//            if (actividad.getDuracion() > 0) {
+//                if (actividad.getId() == null) {
+//                    if (cronograma.getProyecto().getEstadoProyectoId().getId() == 2 || cronograma.getProyecto().getEstadoProyectoId().getId() == 3) {
+//                        int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "crear_actividad");
+//                        if (tienePermiso == 1) {
+//                            actividad.setFechaInicioRevision(actividad.getFechaCulminacion());
+//                            Calendar ffr = Calendar.getInstance();
+//                            ffr.setTime(actividad.getFechaInicioRevision());
+//                            ffr.add(Calendar.HOUR_OF_DAY, 1);
+//                            actividad.setFechaFinRevision(ffr.getTime());
+//                            actividadFacadeLocal.create(actividad);
+//                            evento = new Evento(null, actividad.getNombre(), actividad.getFechaInicioRevision(), actividad.getFechaFinRevision(), actividad.getId() + "");
+//                            evento.setCatalogoEventoId(catalogoEvento);
+//                            eventoFacadeLocal.create(evento);
+//                            administrarDocumentosActividad.renderedBuscar(usuario, actividad);
+//                            if (actividad.getActividadId() == null) {
+//                                actividad.setActividadId(actividad.getId());
+//                                actividadFacadeLocal.edit(actividad);
+//                            }
+//                            actualizarPorcentajesDuracionActividades(actividad, actividadFacadeLocal.buscarPorProyecto(cronograma.getId()));
+//                            calculosActividadObjetivo(actividad);
+//                            administrarCronograma.calculaAvanceFaltanteCronograma(cronograma, actividadFacadeLocal.buscarPorProyecto(cronograma.getId()), usuario);
+//                            logFacadeLocal.create(logFacadeLocal.crearLog("Actividad", actividad.getId() + "", "CREAR", "|Nombre= " + actividad.getNombre() + "|EsActivo= " + actividad.getCronogramaId().getId() + "|Tipo= " + actividad.getTipoActividadId().getId() + "|ActividadId= " + actividad.getActividadId() + "|Estado=" + actividad.getEstadoActividadId().getId(), usuario));
+//                            if (param2.equalsIgnoreCase("estudiante")) {
+//                                buscarPorAutorProyecto("", usuario, cronograma);
+//                            } else {
+//                                buscarPorCronograma("", cronograma, usuario);
+//                            }
+//                            if (param.equalsIgnoreCase("grabar")) {
+//                                sessionActividad.setActividad(new Actividad());
+//                            } else {
+//                                if (param.equalsIgnoreCase("grabar-editar")) {
+//                                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_grabar"), "");
+//                                    FacesContext.getCurrentInstance().addMessage(null, message);
+//                                } else {
+//                                    if (param.equalsIgnoreCase("grabar-editar-dlg")) {
+//                                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_grabar"), "");
+//                                        FacesContext.getCurrentInstance().addMessage(null, message);
+//                                    } else {
+//                                        if (param.equalsIgnoreCase("grabar-dlg")) {
+//                                            RequestContext.getCurrentInstance().execute("PF('dlgEditarActividad').hide()");
+//                                            sessionActividad.setActividad(new Actividad());
+//                                            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_grabar"), "");
+//                                            FacesContext.getCurrentInstance().addMessage(null, message);
+//                                        }
+//                                    }
+//                                }
+//                            }
+//                        } else {
+//                            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_crear") + ". " + bundle.getString("lbl.msm_consulte"), "");
+//                            FacesContext.getCurrentInstance().addMessage(null, message);
+//                        }
+//                    } else {
+//                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_crear") + ". " + bundle.getString("lbl.msm_consulte"), "");
+//                        FacesContext.getCurrentInstance().addMessage(null, message);
+//                    }
+//                } else {
+//                    int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "editar_actividad");
+//                    if (tienePermiso == 1) {
+//                        actividadFacadeLocal.edit(actividad);
+//                        evento = eventoFacadeLocal.buscarPorCategoriaEvento(catalogoEvento.getId(), actividad.getId() + "");
+//                        if (evento == null) {
+//                            evento = new Evento(null, actividad.getNombre(), actividad.getFechaInicioRevision(), actividad.getFechaFinRevision(), actividad.getId() + "");
+//                            evento.setCatalogoEventoId(catalogoEvento);
+//                            eventoFacadeLocal.create(evento);
+//                        } else {
+//                            evento.setTitulo(actividad.getNombre());
+//                            evento.setFechaInicio(actividad.getFechaInicioRevision());
+//                            evento.setFechaFin(actividad.getFechaFinRevision());
+//                            eventoFacadeLocal.edit(evento);
+//                        }
+//                        actualizarPorcentajesDuracionActividades(actividad, actividadFacadeLocal.buscarPorProyecto(cronograma.getId()));
+//                        calculosActividadObjetivo(actividad);
+//                        administrarCronograma.calculaAvanceFaltanteCronograma(cronograma, actividadFacadeLocal.buscarPorProyecto(cronograma.getId()), usuario);
+//                        administrarDocumentosActividad.renderedBuscar(usuario, actividad);
+//                        logFacadeLocal.create(logFacadeLocal.crearLog("Actividad", actividad.getId() + "", "EDITAR", "|Nombre= " + actividad.getNombre() + "|EsActivo= " + actividad.getCronogramaId().getId() + "|Tipo= " + actividad.getTipoActividadId().getId() + "|ActividadId= " + actividad.getActividadId() + "|Estado=" + actividad.getEstadoActividadId().getId(), usuario));
+//                        if (param2.equalsIgnoreCase("estudiante")) {
+//                            buscarPorAutorProyecto(criterioPorAutorProyecto, usuario, cronograma);
+//                        } else {
+//                            buscarPorCronograma(criterio, cronograma, usuario);
+//                        }
+//                        if (param.equalsIgnoreCase("grabar")) {
+//                            sessionActividad.setActividad(new Actividad());
+//                        } else {
+//                            if (param.equalsIgnoreCase("grabar-editar")) {
+//                                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_editar"), "");
+//                                FacesContext.getCurrentInstance().addMessage(null, message);
+//                            } else {
+//                                if (param.equalsIgnoreCase("grabar-editar-dlg")) {
+//                                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_editar"), "");
+//                                    FacesContext.getCurrentInstance().addMessage(null, message);
+//                                } else {
+//                                    if (param.equalsIgnoreCase("grabar-dlg")) {
+//                                        RequestContext.getCurrentInstance().execute("PF('dlgEditarActividad').hide()");
+//                                        sessionActividad.setActividad(new Actividad());
+//                                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_editar"), "");
+//                                        FacesContext.getCurrentInstance().addMessage(null, message);
+//
+//                                    }
+//                                }
+//                            }
+//                        }
+//                    } else {
+//                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_editar") + ". " + bundle.getString("lbl.msm_consulte"), "");
+//                        FacesContext.getCurrentInstance().addMessage(null, message);
+//                    }
+//                }
+//            } else {
+//                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_fechas_cronograma_invalidas"), "");
+//                FacesContext.getCurrentInstance().addMessage(null, message);
+//            }
 
         } catch (Exception e) {
             System.out.println(e);
@@ -778,41 +777,41 @@ public class AdministrarActividades implements Serializable {
     public void buscarPorAutorProyecto(String criterio, Usuario usuario, Cronograma cronograma) {
         actividadesPorAutor = new ArrayList<>();
         try {
-            FacesContext facesContext = FacesContext.getCurrentInstance();
-            ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            if (cronograma.getProyecto().getEstadoProyectoId().getId() == 2 || cronograma.getProyecto().getEstadoProyectoId().getId() == 3) {
-                int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "buscar_actividad");
-                if (tienePermiso == 1) {
-                    for (Actividad actividad : actividadFacadeLocal.buscarPorProyecto(cronograma.getId())) {
-                        if (actividad.getNombre().toUpperCase().contains(criterio.toUpperCase())) {
-                            actividadesPorAutor.add(actividad);
-                        }
-                    }
-                    rootPorAutorProyecto = new DefaultTreeNode("Root", null);
-                    for (Actividad actividad : actividadesPorAutor) {
-                        TreeNode node = null;
-                        if (actividad.getActividadId() == actividad.getId()) {
-                            node = new DefaultTreeNode(actividad, rootPorAutorProyecto);
-                        }
-                    }
-                    for (Actividad actividad : actividadesPorAutor) {
-                        for (TreeNode nodoPadre : rootPorAutorProyecto.getChildren()) {
-                            if (actividad.getActividadId() != actividad.getId()) {
-                                Actividad actividadPadre = (Actividad) nodoPadre.getData();
-                                if (actividadPadre.getId() == actividad.getActividadId()) {
-                                    nodoPadre.getChildren().add(new DefaultTreeNode(actividad));
-                                }
-                            }
-                        }
-                    }
-                } else {
-                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_buscar") + ". " + bundle.getString("lbl.msm_consulte"), "");
-                    FacesContext.getCurrentInstance().addMessage(null, message);
-                }
-            } else {
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_buscar") + ". " + bundle.getString("lbl.msm_consulte"), "");
-                FacesContext.getCurrentInstance().addMessage(null, message);
-            }
+//            FacesContext facesContext = FacesContext.getCurrentInstance();
+//            ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
+//            if (cronograma.getProyecto().getEstadoProyectoId().getId() == 2 || cronograma.getProyecto().getEstadoProyectoId().getId() == 3) {
+//                int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "buscar_actividad");
+//                if (tienePermiso == 1) {
+//                    for (Actividad actividad : actividadFacadeLocal.buscarPorProyecto(cronograma.getId())) {
+//                        if (actividad.getNombre().toUpperCase().contains(criterio.toUpperCase())) {
+//                            actividadesPorAutor.add(actividad);
+//                        }
+//                    }
+//                    rootPorAutorProyecto = new DefaultTreeNode("Root", null);
+//                    for (Actividad actividad : actividadesPorAutor) {
+//                        TreeNode node = null;
+//                        if (actividad.getActividadId() == actividad.getId()) {
+//                            node = new DefaultTreeNode(actividad, rootPorAutorProyecto);
+//                        }
+//                    }
+//                    for (Actividad actividad : actividadesPorAutor) {
+//                        for (TreeNode nodoPadre : rootPorAutorProyecto.getChildren()) {
+//                            if (actividad.getActividadId() != actividad.getId()) {
+//                                Actividad actividadPadre = (Actividad) nodoPadre.getData();
+//                                if (actividadPadre.getId() == actividad.getActividadId()) {
+//                                    nodoPadre.getChildren().add(new DefaultTreeNode(actividad));
+//                                }
+//                            }
+//                        }
+//                    }
+//                } else {
+//                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_buscar") + ". " + bundle.getString("lbl.msm_consulte"), "");
+//                    FacesContext.getCurrentInstance().addMessage(null, message);
+//                }
+//            } else {
+//                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_buscar") + ". " + bundle.getString("lbl.msm_consulte"), "");
+//                FacesContext.getCurrentInstance().addMessage(null, message);
+//            }
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -911,38 +910,38 @@ public class AdministrarActividades implements Serializable {
     }
 
     public void subirNivel(Actividad actividad, Usuario usuario, Cronograma cronograma) {
-        FacesContext facesContext = FacesContext.getCurrentInstance();
-        ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-        String param = (String) facesContext.getExternalContext().getRequestParameterMap().get("1");
-        if (cronograma.getProyecto().getEstadoProyectoId().getId() == 2 || cronograma.getProyecto().getEstadoProyectoId().getId() == 3) {
-            int padreEncontrado = 0;
-            Actividad actividadAux = actividad;
-            while (padreEncontrado == 0) {
-                Actividad actividadPadre = actividadFacadeLocal.find(actividadAux.getActividadId());
-                if (actividadPadre != null) {
-                    if (actividadPadre.getId() == actividadPadre.getActividadId()) {
-                        actividad.setActividadId(actividadAux.getId());
-                        padreEncontrado = 1;
-                    } else {
-                        actividadAux = actividadPadre;
-                    }
-                }
-            }
-            calculaPorcentajeDuracion(actividad);
-            actividadFacadeLocal.edit(actividad);
-            calculosActividadObjetivo(actividad);
-            if (param.equalsIgnoreCase("autor")) {
-                buscarPorAutorProyecto(criterioPorAutorProyecto, usuario, cronograma);
-                logFacadeLocal.create(logFacadeLocal.crearLog("Actividad", actividad.getId() + "", "EDITAR", "|Nombre= " + actividad.getNombre() + "|EsActivo= " + actividad.getCronogramaId().getId() + "|Tipo= " + actividad.getTipoActividadId().getId() + "|ActividadId= " + actividad.getActividadId(), usuario));
-            } else {
-                buscarPorCronograma(criterio, cronograma, usuario);
-                logFacadeLocal.create(logFacadeLocal.crearLog("Actividad", actividad.getId() + "", "EDITAR", "|Nombre= " + actividad.getNombre() + "|EsActivo= " + actividad.getCronogramaId().getId() + "|Tipo= " + actividad.getTipoActividadId().getId() + "|ActividadId= " + actividad.getActividadId(), usuario));
-            }
-            actualizarPorcentajesDuracionActividades(actividad, actividades);
-        } else {
-            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_buscar") + ". " + bundle.getString("lbl.msm_consulte"), "");
-            FacesContext.getCurrentInstance().addMessage(null, message);
-        }
+//        FacesContext facesContext = FacesContext.getCurrentInstance();
+//        ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
+//        String param = (String) facesContext.getExternalContext().getRequestParameterMap().get("1");
+//        if (cronograma.getProyecto().getEstadoProyectoId().getId() == 2 || cronograma.getProyecto().getEstadoProyectoId().getId() == 3) {
+//            int padreEncontrado = 0;
+//            Actividad actividadAux = actividad;
+//            while (padreEncontrado == 0) {
+//                Actividad actividadPadre = actividadFacadeLocal.find(actividadAux.getActividadId());
+//                if (actividadPadre != null) {
+//                    if (actividadPadre.getId() == actividadPadre.getActividadId()) {
+//                        actividad.setActividadId(actividadAux.getId());
+//                        padreEncontrado = 1;
+//                    } else {
+//                        actividadAux = actividadPadre;
+//                    }
+//                }
+//            }
+//            calculaPorcentajeDuracion(actividad);
+//            actividadFacadeLocal.edit(actividad);
+//            calculosActividadObjetivo(actividad);
+//            if (param.equalsIgnoreCase("autor")) {
+//                buscarPorAutorProyecto(criterioPorAutorProyecto, usuario, cronograma);
+//                logFacadeLocal.create(logFacadeLocal.crearLog("Actividad", actividad.getId() + "", "EDITAR", "|Nombre= " + actividad.getNombre() + "|EsActivo= " + actividad.getCronogramaId().getId() + "|Tipo= " + actividad.getTipoActividadId().getId() + "|ActividadId= " + actividad.getActividadId(), usuario));
+//            } else {
+//                buscarPorCronograma(criterio, cronograma, usuario);
+//                logFacadeLocal.create(logFacadeLocal.crearLog("Actividad", actividad.getId() + "", "EDITAR", "|Nombre= " + actividad.getNombre() + "|EsActivo= " + actividad.getCronogramaId().getId() + "|Tipo= " + actividad.getTipoActividadId().getId() + "|ActividadId= " + actividad.getActividadId(), usuario));
+//            }
+//            actualizarPorcentajesDuracionActividades(actividad, actividades);
+//        } else {
+//            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_buscar") + ". " + bundle.getString("lbl.msm_consulte"), "");
+//            FacesContext.getCurrentInstance().addMessage(null, message);
+//        }
     }
 
     public void bajarNivel(Actividad actividad) {
@@ -1092,49 +1091,49 @@ public class AdministrarActividades implements Serializable {
     //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="MÉTODOS RENDERED">
     public void renderedCrear(Usuario usuario, Proyecto proyecto) {
-        if (proyecto.getEstadoProyectoId().getId() == 2 || proyecto.getEstadoProyectoId().getId() == 3) {
-            int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "crear_actividad");
-            if (tienePermiso == 1) {
-                renderedCrearPorAutorProyecto = true;
-                renderedCrear = true;
-            } else {
-                renderedCrearPorAutorProyecto = false;
-                renderedCrear = false;
-            }
-        } else {
-            renderedCrearPorAutorProyecto = false;
-            renderedCrear = false;
-        }
+//        if (proyecto.getEstadoProyectoId().getId() == 2 || proyecto.getEstadoProyectoId().getId() == 3) {
+//            int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "crear_actividad");
+//            if (tienePermiso == 1) {
+//                renderedCrearPorAutorProyecto = true;
+//                renderedCrear = true;
+//            } else {
+//                renderedCrearPorAutorProyecto = false;
+//                renderedCrear = false;
+//            }
+//        } else {
+//            renderedCrearPorAutorProyecto = false;
+//            renderedCrear = false;
+//        }
     }
 
     public boolean renderedCrearSubActividad(Actividad actividad, Proyecto proyecto) {
         boolean var = false;
-        if (proyecto.getEstadoProyectoId().getId() == 2 || proyecto.getEstadoProyectoId().getId() == 3) {
-            if (actividad.getId() == actividad.getActividadId()) {
-                var = true;
-            }
-        }
+//        if (proyecto.getEstadoProyectoId().getId() == 2 || proyecto.getEstadoProyectoId().getId() == 3) {
+//            if (actividad.getId() == actividad.getActividadId()) {
+//                var = true;
+//            }
+//        }
         return var;
     }
 
     public boolean renderedEliminarSubActividad(Actividad actividad, Proyecto proyecto) {
         boolean var = false;
-        if (proyecto.getEstadoProyectoId().getId() == 2 || proyecto.getEstadoProyectoId().getId() == 3) {
-            if (actividad.getId() == actividad.getActividadId()) {
-                var = true;
-            }
-        }
+//        if (proyecto.getEstadoProyectoId().getId() == 2 || proyecto.getEstadoProyectoId().getId() == 3) {
+//            if (actividad.getId() == actividad.getActividadId()) {
+//                var = true;
+//            }
+//        }
         return var;
     }
 
     public boolean renderedEliminar(Actividad actividad, Usuario usuario, Proyecto proyecto) {
         boolean var = false;
-        if (proyecto.getEstadoProyectoId().getId() == 2 || proyecto.getEstadoProyectoId().getId() == 3) {
-            int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "eliminar_actividad");
-            if (tienePermiso == 1 && actividad.getEsActivo()) {
-                var = true;
-            }
-        }
+//        if (proyecto.getEstadoProyectoId().getId() == 2 || proyecto.getEstadoProyectoId().getId() == 3) {
+//            int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "eliminar_actividad");
+//            if (tienePermiso == 1 && actividad.getEsActivo()) {
+//                var = true;
+//            }
+//        }
         return var;
     }
 
@@ -1161,41 +1160,41 @@ public class AdministrarActividades implements Serializable {
     }
 
     public void renderedEditar(Usuario usuario, Proyecto proyecto) {
-        if (proyecto.getEstadoProyectoId().getId() == 2 || proyecto.getEstadoProyectoId().getId() == 3) {
-            int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "editar_actividad");
-            if (tienePermiso == 1) {
-                renderedEditar = true;
-                renderedEditarPorAutorProyecto = true;
-                renderedNoEditar = false;
-                renderedNoEditarPorAutorProyecto = false;
-                noEditado = false;
-            } else {
-                renderedEditar = false;
-                noEditado = true;
-                renderedNoEditarPorAutorProyecto = false;
-                renderedEditarPorAutorProyecto = true;
-                renderedNoEditar = true;
-            }
-        } else {
-            renderedEditar = false;
-            noEditado = true;
-            renderedNoEditarPorAutorProyecto = false;
-            renderedEditarPorAutorProyecto = true;
-            renderedNoEditar = true;
-        }
+//        if (proyecto.getEstadoProyectoId().getId() == 2 || proyecto.getEstadoProyectoId().getId() == 3) {
+//            int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "editar_actividad");
+//            if (tienePermiso == 1) {
+//                renderedEditar = true;
+//                renderedEditarPorAutorProyecto = true;
+//                renderedNoEditar = false;
+//                renderedNoEditarPorAutorProyecto = false;
+//                noEditado = false;
+//            } else {
+//                renderedEditar = false;
+//                noEditado = true;
+//                renderedNoEditarPorAutorProyecto = false;
+//                renderedEditarPorAutorProyecto = true;
+//                renderedNoEditar = true;
+//            }
+//        } else {
+//            renderedEditar = false;
+//            noEditado = true;
+//            renderedNoEditarPorAutorProyecto = false;
+//            renderedEditarPorAutorProyecto = true;
+//            renderedNoEditar = true;
+//        }
     }
 
     public void renderedBuscar(Usuario usuario, Proyecto proyecto) {
-        if (proyecto.getEstadoProyectoId().getId() == 2 || proyecto.getEstadoProyectoId().getId() == 3) {
-            int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "buscar_actividad");
-            if (tienePermiso == 1) {
-                renderedBuscar = true;
-            } else {
-                renderedBuscar = false;
-            }
-        } else {
-            renderedBuscar = false;
-        }
+//        if (proyecto.getEstadoProyectoId().getId() == 2 || proyecto.getEstadoProyectoId().getId() == 3) {
+//            int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "buscar_actividad");
+//            if (tienePermiso == 1) {
+//                renderedBuscar = true;
+//            } else {
+//                renderedBuscar = false;
+//            }
+//        } else {
+//            renderedBuscar = false;
+//        }
     }
 
     public boolean renderedHabilitar(Actividad actividad, Usuario usuario) {

@@ -9,7 +9,6 @@ import edu.unl.sigett.adjudicacion.session.SessionDirectorProyecto;
 import edu.unl.sigett.adjudicacion.session.SessionRenunciaDirector;
 import edu.unl.sigett.entity.DirectorProyecto;
 import edu.unl.sigett.entity.EstadoDirector;
-import edu.unl.sigett.entity.EstadoProyecto;
 import edu.unl.sigett.entity.Proyecto;
 import edu.unl.sigett.entity.RenunciaDirector;
 import org.jlmallas.seguridad.entity.Usuario;
@@ -25,8 +24,7 @@ import javax.inject.Named;
 import org.primefaces.context.RequestContext;
 import edu.unl.sigett.dao.DirectorProyectoFacadeLocal;
 import edu.unl.sigett.dao.EstadoDirectorFacadeLocal;
-import edu.unl.sigett.dao.EstadoProyectoFacadeLocal;
-import edu.unl.sigett.dao.ProyectoFacadeLocal;
+import edu.unl.sigett.dao.ProyectoDao;
 import edu.unl.sigett.dao.RenunciaDirectorFacadeLocal;
 import edu.unl.sigett.dao.RenunciaFacadeLocal;
 import org.jlmallas.seguridad.dao.UsuarioDao;
@@ -55,9 +53,7 @@ public class AdministrarRenunciasDirector implements Serializable {
     @EJB
     private DirectorProyectoFacadeLocal directorProyectoFacadeLocal;
     @EJB
-    private EstadoProyectoFacadeLocal estadoProyectoFacadeLocal;
-    @EJB
-    private ProyectoFacadeLocal proyectoFacadeLocal;
+    private ProyectoDao proyectoFacadeLocal;
     @EJB
     private UsuarioDao usuarioFacadeLocal;
 
@@ -99,55 +95,55 @@ public class AdministrarRenunciasDirector implements Serializable {
     public String grabar(RenunciaDirector renunciaDirector, Usuario usuario, Proyecto proyecto, DirectorProyecto directorProyecto) {
         String navegacion = "";
         try {
-            FacesContext facesContext = FacesContext.getCurrentInstance();
-            ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            String param = (String) facesContext.getExternalContext().getRequestParameterMap().get("1");
-            EstadoDirector estadoDirector = estadoDirectorFacadeLocal.find((int) 2);
-            directorProyecto.setFechaCulminacion(renunciaDirector.getRenuncia().getFecha());
-            directorProyecto.setEstadoDirectorId(estadoDirector);
-            renunciaDirector.setDirectorProyectoId(directorProyecto);
-            if (renunciaDirector.getId() == null) {
-                int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "crear_renuncia_director");
-                if (tienePermiso == 1) {
-                    renunciaFacadeLocal.create(renunciaDirector.getRenuncia());
-                    renunciaDirector.setId(renunciaDirector.getRenuncia().getId());
-                    renunciaDirectorFacadeLocal.create(renunciaDirector);
-                    directorProyectoFacadeLocal.edit(directorProyecto);
-                    if (param.equalsIgnoreCase("grabar-dlg")) {
-                        RequestContext.getCurrentInstance().execute("PF('dlgEditarRenunciaDirectorProyecto').hide()");
-                    }
-                } else {
-                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_crear") + ". " + bundle.getString("lbl.msm_consulte"), "");
-                    FacesContext.getCurrentInstance().addMessage(null, message);
-                }
-            } else {
-                int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "editar_renuncia_director");
-                if (tienePermiso == 1) {
-                    renunciaFacadeLocal.edit(renunciaDirector.getRenuncia());
-                    renunciaDirectorFacadeLocal.edit(renunciaDirector);
-                    directorProyectoFacadeLocal.edit(directorProyecto);
-                    if (param.equalsIgnoreCase("grabar-dlg")) {
-                        RequestContext.getCurrentInstance().execute("PF('dlgEditarRenunciaDirectorProyecto').hide()");
-                    }
-                } else {
-                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_editar") + ". " + bundle.getString("lbl.msm_consulte"), "");
-                    FacesContext.getCurrentInstance().addMessage(null, message);
-                }
-            }
-            buscar(directorProyecto, usuario);
-            administrarDirectoresProyecto.buscar("", usuario, proyecto);
-            administrarDirectoresProyecto.renderedBuscarDirectorDisponible(usuario, proyecto);
-            administrarDirectoresProyecto.renderedSortearDirectorProyecto(usuario, proyecto);
-            administrarDirectoresProyecto.renderedSeleccionar(usuario, proyecto);
-            if (directorProyectoFacadeLocal.buscarPorProyecto(proyecto.getId()).isEmpty()) {
-                EstadoProyecto ep = estadoProyectoFacadeLocal.find((int) 2);
-                if (ep != null) {
-                    proyecto.setEstadoProyectoId(ep);
-                    if (proyecto.getId() != null) {
-                        proyectoFacadeLocal.edit(proyecto);
-                    }
-                }
-            }
+//            FacesContext facesContext = FacesContext.getCurrentInstance();
+//            ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
+//            String param = (String) facesContext.getExternalContext().getRequestParameterMap().get("1");
+//            EstadoDirector estadoDirector = estadoDirectorFacadeLocal.find((int) 2);
+//            directorProyecto.setFechaCulminacion(renunciaDirector.getRenuncia().getFecha());
+//            directorProyecto.setEstadoDirectorId(estadoDirector);
+//            renunciaDirector.setDirectorProyectoId(directorProyecto);
+//            if (renunciaDirector.getId() == null) {
+//                int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "crear_renuncia_director");
+//                if (tienePermiso == 1) {
+//                    renunciaFacadeLocal.create(renunciaDirector.getRenuncia());
+//                    renunciaDirector.setId(renunciaDirector.getRenuncia().getId());
+//                    renunciaDirectorFacadeLocal.create(renunciaDirector);
+//                    directorProyectoFacadeLocal.edit(directorProyecto);
+//                    if (param.equalsIgnoreCase("grabar-dlg")) {
+//                        RequestContext.getCurrentInstance().execute("PF('dlgEditarRenunciaDirectorProyecto').hide()");
+//                    }
+//                } else {
+//                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_crear") + ". " + bundle.getString("lbl.msm_consulte"), "");
+//                    FacesContext.getCurrentInstance().addMessage(null, message);
+//                }
+//            } else {
+//                int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "editar_renuncia_director");
+//                if (tienePermiso == 1) {
+//                    renunciaFacadeLocal.edit(renunciaDirector.getRenuncia());
+//                    renunciaDirectorFacadeLocal.edit(renunciaDirector);
+//                    directorProyectoFacadeLocal.edit(directorProyecto);
+//                    if (param.equalsIgnoreCase("grabar-dlg")) {
+//                        RequestContext.getCurrentInstance().execute("PF('dlgEditarRenunciaDirectorProyecto').hide()");
+//                    }
+//                } else {
+//                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_editar") + ". " + bundle.getString("lbl.msm_consulte"), "");
+//                    FacesContext.getCurrentInstance().addMessage(null, message);
+//                }
+//            }
+//            buscar(directorProyecto, usuario);
+//            administrarDirectoresProyecto.buscar("", usuario, proyecto);
+//            administrarDirectoresProyecto.renderedBuscarDirectorDisponible(usuario, proyecto);
+//            administrarDirectoresProyecto.renderedSortearDirectorProyecto(usuario, proyecto);
+//            administrarDirectoresProyecto.renderedSeleccionar(usuario, proyecto);
+//            if (directorProyectoFacadeLocal.buscarPorProyecto(proyecto.getId()).isEmpty()) {
+//                EstadoProyecto ep = estadoProyectoFacadeLocal.find((int) 2);
+//                if (ep != null) {
+//                    proyecto.setEstadoProyectoId(ep);
+//                    if (proyecto.getId() != null) {
+//                        proyectoFacadeLocal.edit(proyecto);
+//                    }
+//                }
+//            }
         } catch (Exception e) {
             System.out.println(e);
         }

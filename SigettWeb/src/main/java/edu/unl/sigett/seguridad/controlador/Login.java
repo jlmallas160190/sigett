@@ -8,7 +8,7 @@ package edu.unl.sigett.seguridad.controlador;
 import com.jlmallas.comun.dao.ConfiguracionDao;
 import edu.unl.sigett.comun.controlador.AdministrarConfiguraciones;
 import edu.unl.sigett.postulacion.controlador.AdministrarDocentesProyecto;
-import edu.unl.sigett.postulacion.controlador.AdministrarProyectos;
+import edu.unl.sigett.proyecto.AdministrarProyectos;
 import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
 import org.jlmallas.seguridad.entity.RolUsuario;
 import org.jlmallas.seguridad.entity.Usuario;

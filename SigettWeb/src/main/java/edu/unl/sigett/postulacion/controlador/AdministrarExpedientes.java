@@ -5,7 +5,7 @@
  */
 package edu.unl.sigett.postulacion.controlador;
 
-import edu.unl.sigett.postulacion.managed.session.SessionAutorProyecto;
+import edu.unl.sigett.autor.manged.session.SessionAutorProyecto;
 import edu.unl.sigett.comun.managed.session.SessionExpediente;
 import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
 import edu.unl.sigett.entity.AutorProyecto;

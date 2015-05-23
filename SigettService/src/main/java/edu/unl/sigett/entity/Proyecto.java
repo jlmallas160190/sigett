@@ -16,8 +16,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.NamedStoredProcedureQueries;
@@ -29,6 +27,7 @@ import javax.persistence.StoredProcedureParameter;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -41,34 +40,6 @@ import javax.xml.bind.annotation.XmlTransient;
 @Entity
 @Table(name = "proyecto")
 @XmlRootElement
-@NamedStoredProcedureQueries({
-
-   
-    @NamedStoredProcedureQuery(
-            name = "proyectoByPeriodo",
-            resultClasses = Proyecto.class,
-            procedureName = "stored_procedure_proyectos_by_periodo",
-            parameters = {
-                @StoredProcedureParameter(mode = IN, name = "per_id", type = Integer.class)
-            }
-    ),
-    @NamedStoredProcedureQuery(
-            name = "proyectosPorCulminar",
-            resultClasses = Proyecto.class,
-            procedureName = "sp_proyectos_por_culminar",
-            parameters = {
-                @StoredProcedureParameter(mode = IN, name = "carreraId", type = Integer.class)
-            }
-    ),
-    @NamedStoredProcedureQuery(
-            name = "proyectosCaducados",
-            resultClasses = Proyecto.class,
-            procedureName = "sp_proyectos_caducados",
-            parameters = {
-                @StoredProcedureParameter(mode = IN, name = "carreraId", type = Integer.class)
-            }
-    )
-})
 @NamedQueries({
     @NamedQuery(name = "Proyecto.findAll", query = "SELECT p FROM Proyecto p"),
     @NamedQuery(name = "Proyecto.findById", query = "SELECT p FROM Proyecto p WHERE p.id = :id"),
@@ -116,21 +87,32 @@ public class Proyecto implements Serializable {
     private List<AutorProyecto> autorProyectoList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "proyectoId")
     private List<DocumentoProyecto> documentoProyectoList;
-    @JoinColumn(name = "tipo_proyecto_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private TipoProyecto tipoProyectoId;
-    @JoinColumn(name = "estado_proyecto_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private EstadoProyecto estadoProyectoId;
-    @JoinColumn(name = "catalogo_proyecto_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private CatalogoProyecto catalogoProyectoId;
+    @Column(name = "tipo_proyecto_id")
+    @NotNull
+    private Long tipoProyectoId;
+    @Column(name = "estado_proyecto_id")
+    @NotNull
+    private Long estadoProyectoId;
+    @Column(name = "catalogo_proyecto_id")
+    @NotNull
+    private Long catalogoProyectoId;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "proyectoId")
     private List<DocenteProyecto> docenteProyectoList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "proyectoId")
     private List<ProyectoCarreraOferta> proyectoCarreraOfertaList;
+    @Transient
+    private String estado;
+    @Transient
+    private String tipo;
+    @Transient
+    private String catalogo;
+    @Transient
+    private String autores;
 
     public Proyecto() {
+        this.tipo = "";
+        this.estado = "";
+        this.catalogo = "";
         this.temaProyectoList = new ArrayList<>();
         this.documentoProyectoList = new ArrayList<>();
         this.cronograma = new Cronograma();
@@ -149,8 +131,10 @@ public class Proyecto implements Serializable {
         this.id = id;
     }
 
-    public Proyecto(Long id, String descripcion, Date fechaCreated, String temaActual) {
-        this.id = id;
+    public Proyecto(Long estado, Long catalogo, Long tipo, String descripcion, Date fechaCreated, String temaActual) {
+        this.estadoProyectoId = estado;
+        this.tipoProyectoId = tipo;
+        this.catalogoProyectoId = catalogo;
         this.descripcion = descripcion;
         this.fechaCreated = fechaCreated;
         this.temaActual = temaActual;
@@ -268,27 +252,27 @@ public class Proyecto implements Serializable {
         this.documentoProyectoList = documentoProyectoList;
     }
 
-    public TipoProyecto getTipoProyectoId() {
+    public Long getTipoProyectoId() {
         return tipoProyectoId;
     }
 
-    public void setTipoProyectoId(TipoProyecto tipoProyectoId) {
+    public void setTipoProyectoId(Long tipoProyectoId) {
         this.tipoProyectoId = tipoProyectoId;
     }
 
-    public EstadoProyecto getEstadoProyectoId() {
+    public Long getEstadoProyectoId() {
         return estadoProyectoId;
     }
 
-    public void setEstadoProyectoId(EstadoProyecto estadoProyectoId) {
+    public void setEstadoProyectoId(Long estadoProyectoId) {
         this.estadoProyectoId = estadoProyectoId;
     }
 
-    public CatalogoProyecto getCatalogoProyectoId() {
+    public Long getCatalogoProyectoId() {
         return catalogoProyectoId;
     }
 
-    public void setCatalogoProyectoId(CatalogoProyecto catalogoProyectoId) {
+    public void setCatalogoProyectoId(Long catalogoProyectoId) {
         this.catalogoProyectoId = catalogoProyectoId;
     }
 
@@ -308,6 +292,38 @@ public class Proyecto implements Serializable {
 
     public void setProyectoCarreraOfertaList(List<ProyectoCarreraOferta> proyectoCarreraOfertaList) {
         this.proyectoCarreraOfertaList = proyectoCarreraOfertaList;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
+
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
+
+    public String getCatalogo() {
+        return catalogo;
+    }
+
+    public void setCatalogo(String catalogo) {
+        this.catalogo = catalogo;
+    }
+
+    public String getAutores() {
+        return autores;
+    }
+
+    public void setAutores(String autores) {
+        this.autores = autores;
     }
 
     @Override

@@ -62,9 +62,8 @@ public class AutorProyecto implements Serializable {
     @JoinColumn(name = "proyecto_id", referencedColumnName = "id")
     @ManyToOne
     private Proyecto proyectoId;
-    @JoinColumn(name = "estado_autor_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private EstadoAutor estadoAutorId;
+    @Column(name = "estado_autor_id")
+    private Long estadoAutorId;
     @JoinColumn(name = "aspirante_id", referencedColumnName = "id")
     @ManyToOne
     private Aspirante aspiranteId;
@@ -73,7 +72,7 @@ public class AutorProyecto implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "autorProyectoId")
     private List<Expediente> expedienteList;
     @Transient
-    private boolean esEditado;
+    private Boolean esEditado;
 
     public AutorProyecto() {
         this.esEditado = false;
@@ -85,8 +84,10 @@ public class AutorProyecto implements Serializable {
         this.id = id;
     }
 
-    public AutorProyecto(Long id, Date fechaInicio, Date fechaCulminacion) {
-        this.id = id;
+    public AutorProyecto(Proyecto proyecto, Aspirante aspirante,Long estado, Date fechaInicio, Date fechaCulminacion) {
+        this.proyectoId = proyecto;
+        this.estadoAutorId=estado;
+        this.aspiranteId = aspirante;
         this.fechaInicio = fechaInicio;
         this.fechaCulminacion = fechaCulminacion;
     }
@@ -123,11 +124,11 @@ public class AutorProyecto implements Serializable {
         this.proyectoId = proyectoId;
     }
 
-    public EstadoAutor getEstadoAutorId() {
+    public Long getEstadoAutorId() {
         return estadoAutorId;
     }
 
-    public void setEstadoAutorId(EstadoAutor estadoAutorId) {
+    public void setEstadoAutorId(Long estadoAutorId) {
         this.estadoAutorId = estadoAutorId;
     }
 
@@ -157,11 +158,11 @@ public class AutorProyecto implements Serializable {
         this.expedienteList = expedienteList;
     }
 
-    public boolean isEsEditado() {
+    public Boolean getEsEditado() {
         return esEditado;
     }
 
-    public void setEsEditado(boolean esEditado) {
+    public void setEsEditado(Boolean esEditado) {
         this.esEditado = esEditado;
     }
 

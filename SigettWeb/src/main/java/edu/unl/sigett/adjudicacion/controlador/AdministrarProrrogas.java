@@ -9,7 +9,7 @@ import org.jlmallas.api.date.DateResource;
 import com.jlmallas.comun.entity.Persona;
 import com.jlmallas.comun.dao.PersonaDao;
 import edu.unl.sigett.adjudicacion.session.SessionProrroga;
-import edu.unl.sigett.postulacion.managed.session.SessionProyecto;
+import edu.unl.sigett.proyecto.managed.session.SessionProyecto;
 import edu.unl.sigett.reportes.AdministrarReportes;
 import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
 import edu.unl.sigett.entity.Actividad;
@@ -40,7 +40,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.primefaces.context.RequestContext;
 import edu.unl.sigett.dao.ActividadFacadeLocal;
-import edu.unl.sigett.dao.AutorProyectoFacadeLocal;
+import edu.unl.sigett.dao.AutorProyectoDao;
 import edu.jlmallas.academico.service.CarreraService;
 import edu.unl.sigett.dao.CatalogoOficioFacadeLocal;
 import edu.unl.sigett.dao.ConfiguracionCarreraDao;
@@ -50,7 +50,7 @@ import edu.unl.sigett.dao.DirectorProyectoFacadeLocal;
 import org.jlmallas.seguridad.dao.LogDao;
 import edu.unl.sigett.dao.OficioCarreraFacadeLocal;
 import edu.unl.sigett.dao.ProrrogaFacadeLocal;
-import edu.unl.sigett.dao.ProyectoFacadeLocal;
+import edu.unl.sigett.dao.ProyectoDao;
 import org.jlmallas.seguridad.dao.UsuarioDao;
 import edu.jlmallas.academico.entity.Docente;
 import edu.jlmallas.academico.entity.EstudianteCarrera;
@@ -86,7 +86,7 @@ public class AdministrarProrrogas implements Serializable {
     @EJB
     private CarreraService carreraFacadeLocal;
     @EJB
-    private AutorProyectoFacadeLocal autorProyectoFacadeLocal;
+    private AutorProyectoDao autorProyectoFacadeLocal;
     @EJB
     private ConfiguracionCarreraDao configuracionCarreraFacadeLocal;
     @EJB
@@ -98,7 +98,7 @@ public class AdministrarProrrogas implements Serializable {
     @EJB
     private UsuarioDao usuarioFacadeLocal;
     @EJB
-    private ProyectoFacadeLocal proyectoFacadeLocal;
+    private ProyectoDao proyectoFacadeLocal;
     @EJB
     private ProrrogaFacadeLocal prorrogaFacadeLocal;
     @EJB
@@ -141,17 +141,17 @@ public class AdministrarProrrogas implements Serializable {
     //<editor-fold defaultstate="collapsed" desc="MÉTODOS RENDERED">
     public void renderedBuscar(Usuario usuario, Proyecto proyecto) {
         if (proyecto.getEstadoProyectoId() != null) {
-            if (!proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.INICIO.getTipo())
-                    && !proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.PERTINENTE.getTipo())) {
-                int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "buscar_prorroga");
-                if (tienePermiso == 1) {
-                    renderedBuscar = true;
-                } else {
-                    renderedBuscar = false;
-                }
-            } else {
-                renderedBuscar = false;
-            }
+//            if (!proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.INICIO.getTipo())
+//                    && !proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.PERTINENTE.getTipo())) {
+//                int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "buscar_prorroga");
+//                if (tienePermiso == 1) {
+//                    renderedBuscar = true;
+//                } else {
+//                    renderedBuscar = false;
+//                }
+//            } else {
+//                renderedBuscar = false;
+//            }
         }
     }
 
@@ -172,19 +172,19 @@ public class AdministrarProrrogas implements Serializable {
             if (proyecto.getId() != null) {
                 proyecto = proyectoFacadeLocal.find(proyecto.getId());
             }
-            if (proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.PERTINENTE.getTipo())) {
-                int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "editar_prorroga");
-                if (tienePermiso == 1) {
-                    renderedEditar = true;
-                    renderedNoEditar = false;
-                } else {
-                    renderedEditar = false;
-                    renderedNoEditar = true;
-                }
-            } else {
-                renderedEditar = false;
-                renderedNoEditar = true;
-            }
+//            if (proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.PERTINENTE.getTipo())) {
+//                int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "editar_prorroga");
+//                if (tienePermiso == 1) {
+//                    renderedEditar = true;
+//                    renderedNoEditar = false;
+//                } else {
+//                    renderedEditar = false;
+//                    renderedNoEditar = true;
+//                }
+//            } else {
+//                renderedEditar = false;
+//                renderedNoEditar = true;
+//            }
         } catch (Exception e) {
         }
     }
@@ -195,17 +195,17 @@ public class AdministrarProrrogas implements Serializable {
             if (proyecto.getId() != null) {
                 proyecto = proyectoFacadeLocal.find(proyecto.getId());
             }
-            if (proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.SEGUIMIENTO.getTipo())
-                    && fechaActual.getTime().after(proyecto.getCronograma().getFechaProrroga())) {
-                int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "crear_prorroga");
-                if (tienePermiso == 1) {
-                    renderedCrear = true;
-                } else {
-                    renderedCrear = false;
-                }
-            } else {
-                renderedCrear = false;
-            }
+//            if (proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.SEGUIMIENTO.getTipo())
+//                    && fechaActual.getTime().after(proyecto.getCronograma().getFechaProrroga())) {
+//                int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "crear_prorroga");
+//                if (tienePermiso == 1) {
+//                    renderedCrear = true;
+//                } else {
+//                    renderedCrear = false;
+//                }
+//            } else {
+//                renderedCrear = false;
+//            }
         } catch (Exception e) {
         }
     }
@@ -215,16 +215,16 @@ public class AdministrarProrrogas implements Serializable {
             if (proyecto.getId() != null) {
                 proyecto = proyectoFacadeLocal.find(proyecto.getId());
             }
-            if (proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.SEGUIMIENTO.getTipo())) {
-                int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "eliminar_prorroga");
-                if (tienePermiso == 1) {
-                    renderedEliminar = true;
-                } else {
-                    renderedEliminar = false;
-                }
-            } else {
-                renderedEliminar = false;
-            }
+//            if (proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.SEGUIMIENTO.getTipo())) {
+//                int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "eliminar_prorroga");
+//                if (tienePermiso == 1) {
+//                    renderedEliminar = true;
+//                } else {
+//                    renderedEliminar = false;
+//                }
+//            } else {
+//                renderedEliminar = false;
+//            }
         } catch (Exception e) {
         }
     }
@@ -234,16 +234,16 @@ public class AdministrarProrrogas implements Serializable {
             if (proyecto.getId() != null) {
                 proyecto = proyectoFacadeLocal.find(proyecto.getId());
             }
-            if (proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.SEGUIMIENTO.getTipo())) {
-                int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "aceptar_prorroga");
-                if (tienePermiso == 1) {
-                    renderedAceptarProrroga = true;
-                } else {
-                    renderedAceptarProrroga = false;
-                }
-            } else {
-                renderedAceptarProrroga = false;
-            }
+//            if (proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.SEGUIMIENTO.getTipo())) {
+//                int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "aceptar_prorroga");
+//                if (tienePermiso == 1) {
+//                    renderedAceptarProrroga = true;
+//                } else {
+//                    renderedAceptarProrroga = false;
+//                }
+//            } else {
+//                renderedAceptarProrroga = false;
+//            }
         } catch (Exception e) {
         }
     }
@@ -353,17 +353,17 @@ public class AdministrarProrrogas implements Serializable {
         int cont = 0;
         try {
             for (AutorProyecto autorProyecto : autorProyectos) {
-                if (!autorProyecto.getEstadoAutorId().getCodigo().equalsIgnoreCase(EstadoAutorEnum.ABANDONADO.getTipo())) {
-                    EstudianteCarrera estudianteCarrera = estudianteCarreraFacadeLocal.find(autorProyecto.getAspiranteId().getId());
-                    Persona personaAutor = personaFacadeLocal.find(estudianteCarrera.getEstudianteId().getId());
-                    if (cont == 0) {
-//                        datosAutores += "" + estudianteCarrera.getEstadoId().getNombre() + " " + personaAutor.getNombres().toUpperCase() + " " + personaAutor.getApellidos().toUpperCase() + "";
-                        cont++;
-                    } else {
-//                        datosAutores += ", " + estudianteCarrera.getEstadoId().getNombre() + " " + personaAutor.getNombres().toUpperCase() + " " + personaAutor.getApellidos().toUpperCase();
-                        cont++;
-                    }
-                }
+//                if (!autorProyecto.getEstadoAutorId().getCodigo().equalsIgnoreCase(EstadoAutorEnum.ABANDONADO.getTipo())) {
+//                    EstudianteCarrera estudianteCarrera = estudianteCarreraFacadeLocal.find(autorProyecto.getAspiranteId().getId());
+//                    Persona personaAutor = personaFacadeLocal.find(estudianteCarrera.getEstudianteId().getId());
+//                    if (cont == 0) {
+////                        datosAutores += "" + estudianteCarrera.getEstadoId().getNombre() + " " + personaAutor.getNombres().toUpperCase() + " " + personaAutor.getApellidos().toUpperCase() + "";
+//                        cont++;
+//                    } else {
+////                        datosAutores += ", " + estudianteCarrera.getEstadoId().getNombre() + " " + personaAutor.getNombres().toUpperCase() + " " + personaAutor.getApellidos().toUpperCase();
+//                        cont++;
+//                    }
+//                }
             }
 
         } catch (Exception e) {
@@ -464,25 +464,25 @@ public class AdministrarProrrogas implements Serializable {
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
         String param = (String) facesContext.getExternalContext().getRequestParameterMap().get("1");
         try {
-            if (proyecto.getId() != null) {
-                proyecto = proyectoFacadeLocal.find(proyecto.getId());
-            }
-            if (proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.SEGUIMIENTO.getTipo())) {
-                int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "editar_prorroga");
-                if (tienePermiso == 1) {
-                    if (param.equalsIgnoreCase("editar-dlg")) {
-                        sessionProrroga.setProrroga(prorroga);
-                        this.renderedDlgEditar = true;
-                        RequestContext.getCurrentInstance().execute("PF('dlgEditarProrroga').show()");
-                    }
-                } else {
-                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_editar") + ". " + bundle.getString("lbl.msm_consulte"), "");
-                    FacesContext.getCurrentInstance().addMessage(null, message);
-                }
-            } else {
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_editar" + ". " + bundle.getString("lbl.msm_consulte")), "");
-                FacesContext.getCurrentInstance().addMessage(null, message);
-            }
+//            if (proyecto.getId() != null) {
+//                proyecto = proyectoFacadeLocal.find(proyecto.getId());
+//            }
+//            if (proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.SEGUIMIENTO.getTipo())) {
+//                int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "editar_prorroga");
+//                if (tienePermiso == 1) {
+//                    if (param.equalsIgnoreCase("editar-dlg")) {
+//                        sessionProrroga.setProrroga(prorroga);
+//                        this.renderedDlgEditar = true;
+//                        RequestContext.getCurrentInstance().execute("PF('dlgEditarProrroga').show()");
+//                    }
+//                } else {
+//                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_editar") + ". " + bundle.getString("lbl.msm_consulte"), "");
+//                    FacesContext.getCurrentInstance().addMessage(null, message);
+//                }
+//            } else {
+//                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_editar" + ". " + bundle.getString("lbl.msm_consulte")), "");
+//                FacesContext.getCurrentInstance().addMessage(null, message);
+//            }
         } catch (Exception e) {
         }
         return navegacion;
@@ -527,28 +527,28 @@ public class AdministrarProrrogas implements Serializable {
     public String crear(Usuario usuario, Proyecto proyecto) {
         String navegacion = "";
         try {
-            FacesContext facesContext = FacesContext.getCurrentInstance();
-            ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            Calendar fechaActual = Calendar.getInstance();
-            if (proyecto.getId() != null) {
-                proyecto = proyectoFacadeLocal.find(proyecto.getId());
-            }
-            if (proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.SEGUIMIENTO.getTipo())
-                    && fechaActual.getTime().after(proyecto.getCronograma().getFechaProrroga())) {
-                int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "crear_prorroga");
-                if (tienePermiso == 1) {
-                    sessionProrroga.setProrroga(new Prorroga());
-                    sessionProrroga.getProrroga().setEsAceptado(false);
-                    this.renderedDlgEditar = true;
-                    RequestContext.getCurrentInstance().execute("PF('dlgEditarProrroga').show()");
-                } else {
-                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_crear" + ". " + bundle.getString("lbl.msm_consulte")), "");
-                    FacesContext.getCurrentInstance().addMessage(null, message);
-                }
-            } else {
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_crear" + ". " + bundle.getString("lbl.msm_consulte")), "");
-                FacesContext.getCurrentInstance().addMessage(null, message);
-            }
+//            FacesContext facesContext = FacesContext.getCurrentInstance();
+//            ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
+//            Calendar fechaActual = Calendar.getInstance();
+//            if (proyecto.getId() != null) {
+//                proyecto = proyectoFacadeLocal.find(proyecto.getId());
+//            }
+//            if (proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.SEGUIMIENTO.getTipo())
+//                    && fechaActual.getTime().after(proyecto.getCronograma().getFechaProrroga())) {
+//                int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "crear_prorroga");
+//                if (tienePermiso == 1) {
+//                    sessionProrroga.setProrroga(new Prorroga());
+//                    sessionProrroga.getProrroga().setEsAceptado(false);
+//                    this.renderedDlgEditar = true;
+//                    RequestContext.getCurrentInstance().execute("PF('dlgEditarProrroga').show()");
+//                } else {
+//                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_crear" + ". " + bundle.getString("lbl.msm_consulte")), "");
+//                    FacesContext.getCurrentInstance().addMessage(null, message);
+//                }
+//            } else {
+//                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_crear" + ". " + bundle.getString("lbl.msm_consulte")), "");
+//                FacesContext.getCurrentInstance().addMessage(null, message);
+//            }
         } catch (Exception e) {
         }
         return navegacion;
@@ -579,118 +579,118 @@ public class AdministrarProrrogas implements Serializable {
     public String grabar(Prorroga prorroga, Proyecto proyecto, Usuario usuario) {
         String navegacion = "";
         try {
-            FacesContext facesContext = FacesContext.getCurrentInstance();
-            String param = (String) facesContext.getExternalContext().getRequestParameterMap().get("1");
-            ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            Calendar fechaActual = Calendar.getInstance();
-            if (proyecto.getId() != null) {
-                proyecto = proyectoFacadeLocal.find(proyecto.getId());
-            }
-
-            double var = Double.parseDouble(configuracionGeneralFacadeLocal.find((int) 22).getValor());
-            int varMaxProrroga = Integer.parseInt(configuracionGeneralFacadeLocal.find((int) 23).getValor());
-            double var1 = (var / ((1 / (double) varMaxProrroga) * 100));
-            double duracionDias = 0;
-            double horasTrabajo = 0;
-            DateResource calculo = new DateResource();
-            if (prorroga.getId() == null) {
-                if (proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.SEGUIMIENTO.getTipo())
-                        && fechaActual.getTime().after(proyecto.getCronograma().getFechaProrroga())) {
-                    int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "crear_prorroga");
-                    if (tienePermiso == 1) {
-                        if (proyecto.getCronograma().getFechaFin() != null && proyecto.getCronograma().getFechaProrroga() != null) {
-                            if (proyecto.getCronograma().getFechaProrroga().before(prorroga.getFecha()) || proyecto.getCronograma().getFechaProrroga().equals(prorroga.getFecha())) {
-                                duracionDias = calculo.calculaDuracionEnDias(proyecto.getCronograma().getFechaInicio(), prorroga.getFecha(), 7 - calcularDiasSemanaTrabajo(proyecto));
-                                horasTrabajo = duracionDias * calculaHorasTrabajoProrroga(proyecto);
-                                if (horasTrabajo <= (var + var1)) {
-                                    prorroga.setFechaInicial(proyecto.getCronograma().getFechaProrroga());
-                                    prorroga.setCronogramaId(proyecto.getCronograma());
-                                    prorroga.setEsActivo(true);
-                                    if (prorroga.getEsAceptado()) {
-                                        proyecto.getCronograma().setFechaProrroga(prorroga.getFecha());
-                                        proyectoFacadeLocal.edit(proyecto);
-                                    }
-                                    prorrogaFacadeLocal.create(prorroga);
-                                    logFacadeLocal.create(logFacadeLocal.crearLog("Prorroga", prorroga.getId() + "", "CREAR", "|Fecha de Prórroga= " + prorroga.getFecha() + "|Motivo= " + prorroga.getMotivo() + "|Cronograma= " + prorroga.getCronogramaId().getId(), usuario));
-                                    buscar(proyecto.getCronograma(), usuario, criterio);
-                                    if (param.equalsIgnoreCase("grabar")) {
-                                        RequestContext.getCurrentInstance().execute("PF('dlgEditarProrroga').hide()");
-                                        sessionProrroga.setProrroga(new Prorroga());
-                                    } else {
-                                        if (param.equalsIgnoreCase("grabar-editar")) {
-                                            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_grabar") + ".", "");
-                                            FacesContext.getCurrentInstance().addMessage(null, message);
-                                        }
-                                    }
-                                } else {
-                                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_fechas_cronograma_limit") + ".", "");
-                                    FacesContext.getCurrentInstance().addMessage(null, message);
-                                }
-                            } else {
-                                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_fechas_cronograma_limit") + ".", "");
-                                FacesContext.getCurrentInstance().addMessage(null, message);
-                                prorroga.setFecha(null);
-                            }
-                        } else {
-                            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_fechas_cronograma_invalidas") + ".", "");
-                            FacesContext.getCurrentInstance().addMessage(null, message);
-                        }
-                    }
-                } else {
-                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_crear") + ". " + bundle.getString("lbl.msm_consulte"), "");
-                    FacesContext.getCurrentInstance().addMessage(null, message);
-                }
-            } else {
-                int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "editar_prorroga");
-                if (tienePermiso == 1) {
-                    if (proyecto.getCronograma().getFechaFin() != null && proyecto.getCronograma().getFechaProrroga() != null) {
-                        if (proyecto.getCronograma().getFechaProrroga().before(prorroga.getFecha()) || proyecto.getCronograma().getFechaProrroga().equals(prorroga.getFecha())) {
-                            duracionDias = calculo.calculaDuracionEnDias(proyecto.getCronograma().getFechaInicio(), prorroga.getFecha(), 7 - calcularDiasSemanaTrabajo(proyecto));
-                            horasTrabajo = duracionDias * calculaHorasTrabajoProrroga(proyecto);
-                            if (horasTrabajo <= (var + var1)) {
-                                Prorroga prorrogaUltima = new Prorroga();
-                                prorrogaUltima = obtenerUltimaProrroga(prorrogaFacadeLocal.buscarPorProyecto(proyecto.getCronograma().getId()), prorroga);
-                                if (prorrogaUltima != null) {
-                                    prorroga.setFechaInicial(prorrogaUltima.getFecha());
-                                } else {
-                                    prorroga.setFechaInicial(proyecto.getCronograma().getFechaFin());
-                                }
-                                prorroga.setCronogramaId(proyecto.getCronograma());
-                                prorroga.setEsActivo(true);
-                                if (prorroga.getEsAceptado()) {
-                                    proyecto.getCronograma().setFechaProrroga(prorroga.getFecha());
-                                    proyectoFacadeLocal.edit(proyecto);
-                                } else {
-                                    proyecto.getCronograma().setFechaProrroga(prorroga.getFechaInicial());
-                                    proyectoFacadeLocal.edit(proyecto);
-                                }
-                                prorrogaFacadeLocal.edit(prorroga);
-                                logFacadeLocal.create(logFacadeLocal.crearLog("Prorroga", prorroga.getId() + "", "CREAR", "|Fecha de Prórroga= " + prorroga.getFecha() + "|Motivo= " + prorroga.getMotivo() + "|Cronograma= " + prorroga.getCronogramaId().getId(), usuario));
-                                buscar(proyecto.getCronograma(), usuario, criterio);
-                                if (param.equalsIgnoreCase("grabar")) {
-                                    RequestContext.getCurrentInstance().execute("PF('dlgEditarProrroga').hide()");
-                                    sessionProrroga.setProrroga(new Prorroga());
-                                } else {
-                                    if (param.equalsIgnoreCase("grabar-editar")) {
-                                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_editar") + ".", "");
-                                        FacesContext.getCurrentInstance().addMessage(null, message);
-                                    }
-                                }
-                            } else {
-                                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_fechas_cronograma_limit") + ".", "");
-                                FacesContext.getCurrentInstance().addMessage(null, message);
-                            }
-                        } else {
-                            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_fechas_cronograma_limit") + ".", "");
-                            FacesContext.getCurrentInstance().addMessage(null, message);
-                            prorroga.setFecha(null);
-                        }
-                    } else {
-                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_fechas_cronograma_invalidas") + ".", "");
-                        FacesContext.getCurrentInstance().addMessage(null, message);
-                    }
-                }
-            }
+//            FacesContext facesContext = FacesContext.getCurrentInstance();
+//            String param = (String) facesContext.getExternalContext().getRequestParameterMap().get("1");
+//            ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
+//            Calendar fechaActual = Calendar.getInstance();
+//            if (proyecto.getId() != null) {
+//                proyecto = proyectoFacadeLocal.find(proyecto.getId());
+//            }
+//
+//            double var = Double.parseDouble(configuracionGeneralFacadeLocal.find((int) 22).getValor());
+//            int varMaxProrroga = Integer.parseInt(configuracionGeneralFacadeLocal.find((int) 23).getValor());
+//            double var1 = (var / ((1 / (double) varMaxProrroga) * 100));
+//            double duracionDias = 0;
+//            double horasTrabajo = 0;
+//            DateResource calculo = new DateResource();
+//            if (prorroga.getId() == null) {
+//                if (proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.SEGUIMIENTO.getTipo())
+//                        && fechaActual.getTime().after(proyecto.getCronograma().getFechaProrroga())) {
+//                    int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "crear_prorroga");
+//                    if (tienePermiso == 1) {
+//                        if (proyecto.getCronograma().getFechaFin() != null && proyecto.getCronograma().getFechaProrroga() != null) {
+//                            if (proyecto.getCronograma().getFechaProrroga().before(prorroga.getFecha()) || proyecto.getCronograma().getFechaProrroga().equals(prorroga.getFecha())) {
+//                                duracionDias = calculo.calculaDuracionEnDias(proyecto.getCronograma().getFechaInicio(), prorroga.getFecha(), 7 - calcularDiasSemanaTrabajo(proyecto));
+//                                horasTrabajo = duracionDias * calculaHorasTrabajoProrroga(proyecto);
+//                                if (horasTrabajo <= (var + var1)) {
+//                                    prorroga.setFechaInicial(proyecto.getCronograma().getFechaProrroga());
+//                                    prorroga.setCronogramaId(proyecto.getCronograma());
+//                                    prorroga.setEsActivo(true);
+//                                    if (prorroga.getEsAceptado()) {
+//                                        proyecto.getCronograma().setFechaProrroga(prorroga.getFecha());
+//                                        proyectoFacadeLocal.edit(proyecto);
+//                                    }
+//                                    prorrogaFacadeLocal.create(prorroga);
+//                                    logFacadeLocal.create(logFacadeLocal.crearLog("Prorroga", prorroga.getId() + "", "CREAR", "|Fecha de Prórroga= " + prorroga.getFecha() + "|Motivo= " + prorroga.getMotivo() + "|Cronograma= " + prorroga.getCronogramaId().getId(), usuario));
+//                                    buscar(proyecto.getCronograma(), usuario, criterio);
+//                                    if (param.equalsIgnoreCase("grabar")) {
+//                                        RequestContext.getCurrentInstance().execute("PF('dlgEditarProrroga').hide()");
+//                                        sessionProrroga.setProrroga(new Prorroga());
+//                                    } else {
+//                                        if (param.equalsIgnoreCase("grabar-editar")) {
+//                                            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_grabar") + ".", "");
+//                                            FacesContext.getCurrentInstance().addMessage(null, message);
+//                                        }
+//                                    }
+//                                } else {
+//                                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_fechas_cronograma_limit") + ".", "");
+//                                    FacesContext.getCurrentInstance().addMessage(null, message);
+//                                }
+//                            } else {
+//                                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_fechas_cronograma_limit") + ".", "");
+//                                FacesContext.getCurrentInstance().addMessage(null, message);
+//                                prorroga.setFecha(null);
+//                            }
+//                        } else {
+//                            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_fechas_cronograma_invalidas") + ".", "");
+//                            FacesContext.getCurrentInstance().addMessage(null, message);
+//                        }
+//                    }
+//                } else {
+//                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_crear") + ". " + bundle.getString("lbl.msm_consulte"), "");
+//                    FacesContext.getCurrentInstance().addMessage(null, message);
+//                }
+//            } else {
+//                int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "editar_prorroga");
+//                if (tienePermiso == 1) {
+//                    if (proyecto.getCronograma().getFechaFin() != null && proyecto.getCronograma().getFechaProrroga() != null) {
+//                        if (proyecto.getCronograma().getFechaProrroga().before(prorroga.getFecha()) || proyecto.getCronograma().getFechaProrroga().equals(prorroga.getFecha())) {
+//                            duracionDias = calculo.calculaDuracionEnDias(proyecto.getCronograma().getFechaInicio(), prorroga.getFecha(), 7 - calcularDiasSemanaTrabajo(proyecto));
+//                            horasTrabajo = duracionDias * calculaHorasTrabajoProrroga(proyecto);
+//                            if (horasTrabajo <= (var + var1)) {
+//                                Prorroga prorrogaUltima = new Prorroga();
+//                                prorrogaUltima = obtenerUltimaProrroga(prorrogaFacadeLocal.buscarPorProyecto(proyecto.getCronograma().getId()), prorroga);
+//                                if (prorrogaUltima != null) {
+//                                    prorroga.setFechaInicial(prorrogaUltima.getFecha());
+//                                } else {
+//                                    prorroga.setFechaInicial(proyecto.getCronograma().getFechaFin());
+//                                }
+//                                prorroga.setCronogramaId(proyecto.getCronograma());
+//                                prorroga.setEsActivo(true);
+//                                if (prorroga.getEsAceptado()) {
+//                                    proyecto.getCronograma().setFechaProrroga(prorroga.getFecha());
+//                                    proyectoFacadeLocal.edit(proyecto);
+//                                } else {
+//                                    proyecto.getCronograma().setFechaProrroga(prorroga.getFechaInicial());
+//                                    proyectoFacadeLocal.edit(proyecto);
+//                                }
+//                                prorrogaFacadeLocal.edit(prorroga);
+//                                logFacadeLocal.create(logFacadeLocal.crearLog("Prorroga", prorroga.getId() + "", "CREAR", "|Fecha de Prórroga= " + prorroga.getFecha() + "|Motivo= " + prorroga.getMotivo() + "|Cronograma= " + prorroga.getCronogramaId().getId(), usuario));
+//                                buscar(proyecto.getCronograma(), usuario, criterio);
+//                                if (param.equalsIgnoreCase("grabar")) {
+//                                    RequestContext.getCurrentInstance().execute("PF('dlgEditarProrroga').hide()");
+//                                    sessionProrroga.setProrroga(new Prorroga());
+//                                } else {
+//                                    if (param.equalsIgnoreCase("grabar-editar")) {
+//                                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_editar") + ".", "");
+//                                        FacesContext.getCurrentInstance().addMessage(null, message);
+//                                    }
+//                                }
+//                            } else {
+//                                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_fechas_cronograma_limit") + ".", "");
+//                                FacesContext.getCurrentInstance().addMessage(null, message);
+//                            }
+//                        } else {
+//                            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_fechas_cronograma_limit") + ".", "");
+//                            FacesContext.getCurrentInstance().addMessage(null, message);
+//                            prorroga.setFecha(null);
+//                        }
+//                    } else {
+//                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_fechas_cronograma_invalidas") + ".", "");
+//                        FacesContext.getCurrentInstance().addMessage(null, message);
+//                    }
+//                }
+//            }
 
         } catch (Exception e) {
             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_FATAL, e.getMessage(), "");
@@ -713,38 +713,38 @@ public class AdministrarProrrogas implements Serializable {
 
     public void remover(Prorroga prorroga, Proyecto proyecto, Usuario usuario) {
         try {
-            if (proyecto.getId() != null) {
-                proyecto = proyectoFacadeLocal.find(proyecto.getId());
-            }
-            FacesContext facesContext = FacesContext.getCurrentInstance();
-            ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            if (proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.SEGUIMIENTO.getTipo())) {
-                int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "eliminar_prorroga");
-                if (tienePermiso == 1) {
-                    Prorroga prorrogaUltima = new Prorroga();
-                    prorrogaUltima = obtenerUltimaProrroga(prorrogaFacadeLocal.buscarPorProyecto(proyecto.getCronograma().getId()), prorroga);
-                    if (prorroga.getId() != null) {
-                        prorroga.setEsActivo(false);
-                        if (prorrogaUltima == null) {
-                            proyecto.getCronograma().setFechaProrroga(proyecto.getCronograma().getFechaFin());
-                            proyectoFacadeLocal.edit(proyecto);
-                        } else {
-                            proyecto.getCronograma().setFechaProrroga(prorrogaUltima.getFechaInicial());
-                            proyectoFacadeLocal.edit(proyecto);
-                        }
-                        prorrogaFacadeLocal.edit(prorroga);
-                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_eliminar"), "");
-                        FacesContext.getCurrentInstance().addMessage(null, message);
-                        buscar(proyecto.getCronograma(), usuario, criterio);
-                    }
-                } else {
-                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_eliminar") + ". " + bundle.getString("lbl.msm_consulte"), "");
-                    FacesContext.getCurrentInstance().addMessage(null, message);
-                }
-            } else {
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_eliminar") + ". " + bundle.getString("lbl.msm_consulte"), "");
-                FacesContext.getCurrentInstance().addMessage(null, message);
-            }
+//            if (proyecto.getId() != null) {
+//                proyecto = proyectoFacadeLocal.find(proyecto.getId());
+//            }
+//            FacesContext facesContext = FacesContext.getCurrentInstance();
+//            ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
+//            if (proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.SEGUIMIENTO.getTipo())) {
+//                int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "eliminar_prorroga");
+//                if (tienePermiso == 1) {
+//                    Prorroga prorrogaUltima = new Prorroga();
+//                    prorrogaUltima = obtenerUltimaProrroga(prorrogaFacadeLocal.buscarPorProyecto(proyecto.getCronograma().getId()), prorroga);
+//                    if (prorroga.getId() != null) {
+//                        prorroga.setEsActivo(false);
+//                        if (prorrogaUltima == null) {
+//                            proyecto.getCronograma().setFechaProrroga(proyecto.getCronograma().getFechaFin());
+//                            proyectoFacadeLocal.edit(proyecto);
+//                        } else {
+//                            proyecto.getCronograma().setFechaProrroga(prorrogaUltima.getFechaInicial());
+//                            proyectoFacadeLocal.edit(proyecto);
+//                        }
+//                        prorrogaFacadeLocal.edit(prorroga);
+//                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_eliminar"), "");
+//                        FacesContext.getCurrentInstance().addMessage(null, message);
+//                        buscar(proyecto.getCronograma(), usuario, criterio);
+//                    }
+//                } else {
+//                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_eliminar") + ". " + bundle.getString("lbl.msm_consulte"), "");
+//                    FacesContext.getCurrentInstance().addMessage(null, message);
+//                }
+//            } else {
+//                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_eliminar") + ". " + bundle.getString("lbl.msm_consulte"), "");
+//                FacesContext.getCurrentInstance().addMessage(null, message);
+//            }
         } catch (Exception e) {
             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_FATAL, e.getMessage(), "");
             FacesContext.getCurrentInstance().addMessage(null, message);

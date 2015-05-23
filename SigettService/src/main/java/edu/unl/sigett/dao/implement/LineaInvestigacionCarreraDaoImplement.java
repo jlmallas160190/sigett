@@ -45,6 +45,5 @@ public class LineaInvestigacionCarreraDaoImplement extends AbstractDao<LineaInve
             q.setParameter(key, parametros.get(key));
         }
         return q.getResultList();
-
     }
 }

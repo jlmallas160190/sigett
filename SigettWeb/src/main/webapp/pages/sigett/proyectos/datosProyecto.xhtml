@@ -1,0 +1,83 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <body>
+        <h:panelGrid id="datosProyecto" styleClass="panelgrid" rowClasses="rowpanelgrid" columnClasses="col-sm-3,col-sm-8,col-sm-1" columns="3">
+            <h:outputLabel value="#{msg['lbl.tema']}:" for="tema" />
+            <p:inputTextarea id="tema" required="true" rendered="#{sessionProyecto.renderedEditarDatosProyecto}" 
+                             requiredMessage="#{msg['lbl.tema']} #{msg['lbl.obligatorio']}" value="#{sessionTemaProyecto.temaProyecto.temaId.nombre}">
+                <p:ajax event="keyup" update="@this"/>
+                <p:ajax event="change" update="msmTema"/>
+            </p:inputTextarea>
+            <h:outputText rendered="#{!sessionProyecto.renderedEditarDatosProyecto}" value="#{sessionProyecto.temaProyecto.temaId.nombre}"/>
+            <p:message id="msmTema" display="icon" for="tema"/>
+            <h:outputLabel  value="#{msg['lbl.fecha']} #{msg['lbl.inicio']}"/>
+            <p:calendar id="fechaInicio" navigator="true" pattern="dd/MM/yyyy"  rendered="#{sessionProyecto.renderedEditarCronograma}"  
+                        locale="es" placeholder="#{msg['lbl.fecha']} #{msg['lbl.inicio']}" required="true" 
+                        requiredMessage="#{msg['lbl.fecha']} #{msg['lbl.inicio']} #{msg['lbl.obligatorio']}" 
+                        title="#{msg['lbl.fecha']} #{msg['lbl.inicio']}" value="#{sessionProyecto.proyecto.cronograma.fechaInicio}">
+                <p:ajax event="dateSelect" update="msmFechaInicio" listener="#{administrarCronograma.setFechaInicio(sessionProyecto.proyecto.cronograma)}"/>
+                <f:param  name="2" value="agregar-cronograma"/>
+                <p:ajax event="dateSelect" update="fechaInicio,fechaProrroga,duracion,:contenido:msm,:contenido:tabViewDatosProyecto:tblDirectores,
+                        :contenido:tabViewDatosProyecto:tblAutores" 
+                        listener="#{administrarCronograma.editarCronograma(sessionProyecto.proyecto.cronograma)}"/>         
+            </p:calendar>
+            <h:outputText rendered="#{!sessionProyecto.renderedEditarCronograma}" value="#{sessionProyecto.proyecto.cronograma.fechaInicio}">
+                <f:convertDateTime pattern="EEEEE dd MMMMM yyyy"/>
+            </h:outputText>
+            <p:message id="msmFechaInicio" display="icon" for="fechaInicio"/>
+            <h:outputLabel value="#{msg['lbl.fechaCulminación']}"/>
+            <p:calendar  pattern="dd/MM/yyyy" navigator="true" rendered="#{sessionProyecto.renderedEditarCronograma}" 
+                         id="fechaFin" locale="es"   placeholder="#{msg['lbl.fechaCulminación']}" title="#{msg['lbl.fechaCulminación']}" 
+                         required="true" requiredMessage="#{msg['lbl.fechaCulminación']} #{msg['lbl.obligatorio']}" 
+                         value="#{sessionProyecto.proyecto.cronograma.fechaFin}">
+                <f:param  name="2" value="agregar-cronograma"/>
+                <p:ajax event="dateSelect" update=":contenido:msm,fechaInicio,fechaFin,fechaProrroga,duracion,,:contenido:msm,
+                        :contenido:tabViewDatosProyecto:tblDirectores,:contenido:tabViewDatosProyecto:tblAutores" onstart="PF('dlgLoading').show()"
+                        oncomplete="PF('dlgLoading').hide()" listener="#{administrarCronograma.editarCronograma(sessionProyecto.proyecto.cronograma)}"/> 
+            </p:calendar>
+            <h:outputText value="#{sessionProyecto.proyecto.cronograma.fechaFin}" rendered="#{!sessionProyecto.renderedEditarCronograma}">
+                <f:convertDateTime pattern="EEEEE dd MMMMM yyyy"/>
+            </h:outputText>
+            <p:message id="msmFechaFin" display="icon" for="fechaFin"/>
+            <h:outputLabel rendered="#{administrarProrrogas.tieneProrroga}" value="#{msg['lbl.fecha']} #{msg['lbl.prorroga']}"/>
+            <h:outputText id="fechaProrroga" rendered="#{administrarProrrogas.tieneProrroga}" value="#{sessionProyecto.proyecto.cronograma.fechaProrroga}">
+                <f:convertDateTime pattern="EEEEE dd MMMMM yyyy"/>
+            </h:outputText>
+            <!--<p:message  id="msmFechaProrroga" rendered="{administrarProrrogas.tieneProrroga}" display="icon" for="fechaProrroga"/>-->
+            <h:outputLabel value="#{msg['lbl.tipo']}:" />
+            <p:selectOneMenu id="tipoProyecto" rendered="#{sessionProyecto.renderedEditarDatosProyecto}"
+                             value="#{sessionProyecto.tipo}"  requiredMessage="#{msg['lbl.tipo']} #{msg['lbl.obligatorio']}.">
+                <f:selectItems value="#{sessionProyecto.tipos}"/>
+                <!--<p:ajax event="change" listener="{sessionProyecto.tipos}" update="tipoProyecto,:contenido:msm"/>-->
+            </p:selectOneMenu>
+            <h:outputText rendered="#{!sessionProyecto.renderedEditarDatosProyecto}" value="#{sessionProyecto.tipo}"/>
+            <h:inputHidden/>
+            <h:outputLabel value="#{msg['lbl.categoria']}:" for="catProyecto"/>
+            <p:selectOneMenu id="catProyecto" rendered="#{administrarProyectos.renderedEditarDatosProyecto}" 
+                             value="#{sessionProyecto.catalogo}"  requiredMessage="#{msg['lbl.categoria']} #{msg['lbl.obligatorio']}.">
+                <f:selectItems value="#{sessionProyecto.categorias}"/>
+               <!-- <p:ajax event="change" listener="{administrarProyectos.seleccionarCatalogoProyecto(sessionProyecto.proyecto)}" update="catProyecto,:contenido:msm"/>-->
+            </p:selectOneMenu>
+            <h:outputText value="#{sessionProyecto.catalogo}" rendered="#{!sessionProyecto.renderedEditarDatosProyecto}"/>
+            <h:inputHidden/>
+            <h:outputLabel value="#{msg['lbl.duracion']}:"/>
+            <h:outputLabel id="duracion" styleClass="informacion" 
+                           value="#{sessionProyecto.proyecto.cronograma.duracion}"/>
+            <p:commandButton icon="ui-icon-clock"  update=":dlgDuraciones,:duracionesCronograma:tblDuraciones" onstart="PF('dlgLoading').show()" 
+                             oncomplete="PF('dlgLoading').hide()" 
+                             action="#{administrarCronograma.abrirDialogoDuraciones(sessionProyecto.proyecto.cronograma)}" />
+            <h:outputLabel value="#{msg['lbl.avance']}:"/>
+            <p:progressBar id="avance"  labelTemplate="#{sessionProyecto.proyecto.cronograma.avance}%" 
+                           value="#{sessionProyecto.proyecto.cronograma.avance}"/>
+            <h:inputHidden/>
+            <h:outputLabel value="#{msg['lbl.faltante']}:"/>
+            <p:progressBar id="faltante" labelTemplate="#{sessionProyecto.proyecto.cronograma.faltante}%"
+                           value="#{sessionProyecto.proyecto.cronograma.faltante}"/>
+        </h:panelGrid>
+    </body>
+
+</html>

@@ -8,7 +8,7 @@ package edu.unl.sigett.finalizacion.controlador;
 import com.jlmallas.comun.entity.Persona;
 import com.jlmallas.comun.dao.PersonaDao;
 import edu.unl.sigett.finalizacion.managed.session.SessionMiembro;
-import edu.unl.sigett.postulacion.managed.session.SessionProyecto;
+import edu.unl.sigett.proyecto.managed.session.SessionProyecto;
 import edu.unl.sigett.reportes.AdministrarReportes;
 import edu.unl.sigett.entity.AutorProyecto;
 import edu.unl.sigett.entity.CargoMiembro;
@@ -18,8 +18,6 @@ import edu.unl.sigett.entity.ConfiguracionCarrera;
 import edu.jlmallas.academico.entity.CoordinadorPeriodo;
 import edu.jlmallas.academico.entity.Docente;
 import edu.jlmallas.academico.entity.DocenteCarrera;
-import edu.unl.sigett.entity.EstadoAutor;
-import edu.unl.sigett.entity.EstadoProyecto;
 import edu.unl.sigett.entity.EvaluacionTribunal;
 import edu.unl.sigett.entity.Miembro;
 import edu.unl.sigett.entity.OficioCarrera;
@@ -41,7 +39,7 @@ import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.primefaces.context.RequestContext;
-import edu.unl.sigett.dao.AutorProyectoFacadeLocal;
+import edu.unl.sigett.dao.AutorProyectoDao;
 import edu.unl.sigett.dao.CargoMiembroFacadeLocal;
 import edu.jlmallas.academico.service.CarreraService;
 import edu.unl.sigett.dao.CatalogoOficioFacadeLocal;
@@ -52,8 +50,8 @@ import edu.jlmallas.academico.dao.DocenteCarreraDao;
 import edu.jlmallas.academico.dao.DocenteDao;
 import edu.unl.sigett.dao.MiembroFacadeLocal;
 import edu.unl.sigett.dao.OficioCarreraFacadeLocal;
-import edu.unl.sigett.dao.ProyectoCarreraOfertaFacadeLocal;
-import edu.unl.sigett.dao.ProyectoFacadeLocal;
+import edu.unl.sigett.dao.ProyectoOfertaCarreraDao;
+import edu.unl.sigett.dao.ProyectoDao;
 import org.jlmallas.seguridad.dao.UsuarioDao;
 import edu.jlmallas.academico.entity.EstudianteCarrera;
 import edu.jlmallas.academico.dao.EstudianteCarreraDao;
@@ -88,13 +86,13 @@ public class AdministrarMiembrosTribunal implements Serializable {
     @EJB
     private DocenteCarreraDao docenteCarreraFacadeLocal;
     @EJB
-    private ProyectoCarreraOfertaFacadeLocal proyectoCarreraOfertaFacadeLocal;
+    private ProyectoOfertaCarreraDao proyectoCarreraOfertaFacadeLocal;
     @EJB
     private CargoMiembroFacadeLocal cargoMiembroFacadeLocal;
     @EJB
     private DocenteDao docenteFacadeLocal;
     @EJB
-    private AutorProyectoFacadeLocal autorProyectoFacadeLocal;
+    private AutorProyectoDao autorProyectoFacadeLocal;
     @EJB
     private ConfiguracionCarreraDao configuracionCarreraFacadeLocal;
     @EJB
@@ -106,7 +104,7 @@ public class AdministrarMiembrosTribunal implements Serializable {
     @EJB
     private MiembroFacadeLocal miembroFacadeLocal;
     @EJB
-    private ProyectoFacadeLocal proyectoFacadeLocal;
+    private ProyectoDao proyectoFacadeLocal;
     @EJB
     private CoordinadorPeriodoDao coordinadorPeriodoFacadeLocal;
     @EJB
@@ -141,43 +139,43 @@ public class AdministrarMiembrosTribunal implements Serializable {
     //<editor-fold defaultstate="collapsed" desc="MÉTODOS CRUD">
     public void imprimirOficioMiembroTribunal(Miembro miembro, Tribunal tribunal, Proyecto proyecto, Usuario usuario) {
         try {
-            FacesContext facesContext = FacesContext.getCurrentInstance();
-            ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            if (miembro.getId() != null) {
-                int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "imprimir_miembro_tribunal");
-                if (tienePermiso == 1) {
-                    miembroId = miembro.getId();
-                    for (ProyectoCarreraOferta pco : proyecto.getProyectoCarreraOfertaList()) {
-                        if (pco.getEsActivo()) {
-                            carreraId = pco.getCarreraId();
-                            break;
-                        }
-                    }
-                    if (proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.SUSTENTACIONPRIVADA.getTipo())
-                            || proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.RECUPERACIONPRIVADA.getTipo())) {
-                        renderedDlgOficio = true;
-                        RequestContext.getCurrentInstance().execute("PF('dlgOficioMiembroTribunalSprivada').show()");
-                    } else {
-                        if (proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.SUSTENTACIONPUBLICA.getTipo())
-                                || proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.RECUPERACIONPUBLICA.getTipo())) {
-                            if (administrarEvaluacionesTribunal.existeSustentacionPublica(tribunal)) {
-                                renderedDlgOficio = true;
-                                RequestContext.getCurrentInstance().execute("PF('dlgOficioMiembroTribunalSpublica').show()");
-                            } else {
-                                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.no_existe_sp") + ". " + bundle.getString("lbl.msm_consulte"), "");
-                                FacesContext.getCurrentInstance().addMessage(null, message);
-                            }
-                        }
-                    }
-                } else {
-                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_imprimir") + ". " + bundle.getString("lbl.msm_consulte"), "");
-                    FacesContext.getCurrentInstance().addMessage(null, message);
-                }
-
-            } else {
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_imprimir") + ". " + bundle.getString("lbl.msm_consulte"), "");
-                FacesContext.getCurrentInstance().addMessage(null, message);
-            }
+//            FacesContext facesContext = FacesContext.getCurrentInstance();
+//            ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
+//            if (miembro.getId() != null) {
+//                int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "imprimir_miembro_tribunal");
+//                if (tienePermiso == 1) {
+//                    miembroId = miembro.getId();
+//                    for (ProyectoCarreraOferta pco : proyecto.getProyectoCarreraOfertaList()) {
+//                        if (pco.getEsActivo()) {
+//                            carreraId = pco.getCarreraId();
+//                            break;
+//                        }
+//                    }
+//                    if (proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.SUSTENTACIONPRIVADA.getTipo())
+//                            || proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.RECUPERACIONPRIVADA.getTipo())) {
+//                        renderedDlgOficio = true;
+//                        RequestContext.getCurrentInstance().execute("PF('dlgOficioMiembroTribunalSprivada').show()");
+//                    } else {
+//                        if (proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.SUSTENTACIONPUBLICA.getTipo())
+//                                || proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.RECUPERACIONPUBLICA.getTipo())) {
+//                            if (administrarEvaluacionesTribunal.existeSustentacionPublica(tribunal)) {
+//                                renderedDlgOficio = true;
+//                                RequestContext.getCurrentInstance().execute("PF('dlgOficioMiembroTribunalSpublica').show()");
+//                            } else {
+//                                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.no_existe_sp") + ". " + bundle.getString("lbl.msm_consulte"), "");
+//                                FacesContext.getCurrentInstance().addMessage(null, message);
+//                            }
+//                        }
+//                    }
+//                } else {
+//                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_imprimir") + ". " + bundle.getString("lbl.msm_consulte"), "");
+//                    FacesContext.getCurrentInstance().addMessage(null, message);
+//                }
+//
+//            } else {
+//                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_imprimir") + ". " + bundle.getString("lbl.msm_consulte"), "");
+//                FacesContext.getCurrentInstance().addMessage(null, message);
+//            }
         } catch (Exception e) {
         }
     }
@@ -261,17 +259,17 @@ public class AdministrarMiembrosTribunal implements Serializable {
         int cont = 0;
         try {
             for (AutorProyecto autorProyecto : autorProyectos) {
-                if (!autorProyecto.getEstadoAutorId().getCodigo().equalsIgnoreCase(EstadoAutorEnum.ABANDONADO.getTipo())) {
-                    EstudianteCarrera estudianteCarrera = estudianteCarreraFacadeLocal.find(autorProyecto.getAspiranteId().getId());
-                    Persona datosAutor = personaFacadeLocal.find(estudianteCarrera.getEstudianteId().getId());
-                    if (cont == 0) {
-//                        datosAutores += "" + estudianteCarrera.getEstadoId().getNombre() + " " + datosAutor.getNombres().toUpperCase() + " " + datosAutor.getApellidos().toUpperCase() + "";
-                        cont++;
-                    } else {
-//                        datosAutores += ", " + estudianteCarrera.getEstadoId().getNombre() + " " + datosAutor.getNombres().toUpperCase() + " " + datosAutor.getApellidos().toUpperCase();
-                        cont++;
-                    }
-                }
+//                if (!autorProyecto.getEstadoAutorId().getCodigo().equalsIgnoreCase(EstadoAutorEnum.ABANDONADO.getTipo())) {
+//                    EstudianteCarrera estudianteCarrera = estudianteCarreraFacadeLocal.find(autorProyecto.getAspiranteId().getId());
+//                    Persona datosAutor = personaFacadeLocal.find(estudianteCarrera.getEstudianteId().getId());
+//                    if (cont == 0) {
+////                        datosAutores += "" + estudianteCarrera.getEstadoId().getNombre() + " " + datosAutor.getNombres().toUpperCase() + " " + datosAutor.getApellidos().toUpperCase() + "";
+//                        cont++;
+//                    } else {
+////                        datosAutores += ", " + estudianteCarrera.getEstadoId().getNombre() + " " + datosAutor.getNombres().toUpperCase() + " " + datosAutor.getApellidos().toUpperCase();
+//                        cont++;
+//                    }
+//                }
             }
 
         } catch (Exception e) {
@@ -351,36 +349,36 @@ public class AdministrarMiembrosTribunal implements Serializable {
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
         String param = (String) facesContext.getExternalContext().getRequestParameterMap().get("1");
         try {
-            if (proyecto.getId() != null) {
-                proyecto = proyectoFacadeLocal.find(proyecto.getId());
-                sessionProyecto.setProyecto(proyecto);
-            }
-            if (proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.SUSTENTACIONPRIVADA.getTipo())
-                    || proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.RECUPERACIONPRIVADA.getTipo())
-                    || proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.SUSTENTACIONPUBLICA.getTipo())
-                    || proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.RECUPERACIONPUBLICA.getTipo())) {
-                int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "crear_miembro_tribunal");
-                if (tienePermiso == 1) {
-                    sessionMiembro.setMiembro(new Miembro());
-                    sessionMiembro.setPersona(new Persona());
-                    sessionMiembro.getMiembro().setTribunalId(tribunal);
-                    sessionMiembro.getMiembro().setEsActivo(true);
-                    if (param.equals("crear")) {
-                        navegacion = "editarMiembro?faces-redirect=true";
-                    } else {
-                        if (param.equals("crear-dlg")) {
-                            renderedDlgEditar = true;
-                            RequestContext.getCurrentInstance().execute("PF('dlgEditarMiembro').show()");
-                        }
-                    }
-                } else {
-                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_crear") + ". " + bundle.getString("lbl.msm_consulte"), "");
-                    FacesContext.getCurrentInstance().addMessage(null, message);
-                }
-            } else {
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_crear") + ". " + bundle.getString("lbl.msm_consulte"), "");
-                FacesContext.getCurrentInstance().addMessage(null, message);
-            }
+//            if (proyecto.getId() != null) {
+//                proyecto = proyectoFacadeLocal.find(proyecto.getId());
+//                sessionProyecto.setProyecto(proyecto);
+//            }
+//            if (proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.SUSTENTACIONPRIVADA.getTipo())
+//                    || proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.RECUPERACIONPRIVADA.getTipo())
+//                    || proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.SUSTENTACIONPUBLICA.getTipo())
+//                    || proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.RECUPERACIONPUBLICA.getTipo())) {
+//                int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "crear_miembro_tribunal");
+//                if (tienePermiso == 1) {
+//                    sessionMiembro.setMiembro(new Miembro());
+//                    sessionMiembro.setPersona(new Persona());
+//                    sessionMiembro.getMiembro().setTribunalId(tribunal);
+//                    sessionMiembro.getMiembro().setEsActivo(true);
+//                    if (param.equals("crear")) {
+//                        navegacion = "editarMiembro?faces-redirect=true";
+//                    } else {
+//                        if (param.equals("crear-dlg")) {
+//                            renderedDlgEditar = true;
+//                            RequestContext.getCurrentInstance().execute("PF('dlgEditarMiembro').show()");
+//                        }
+//                    }
+//                } else {
+//                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_crear") + ". " + bundle.getString("lbl.msm_consulte"), "");
+//                    FacesContext.getCurrentInstance().addMessage(null, message);
+//                }
+//            } else {
+//                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_crear") + ". " + bundle.getString("lbl.msm_consulte"), "");
+//                FacesContext.getCurrentInstance().addMessage(null, message);
+//            }
         } catch (Exception e) {
         }
         return navegacion;
@@ -401,35 +399,35 @@ public class AdministrarMiembrosTribunal implements Serializable {
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
         String param = (String) facesContext.getExternalContext().getRequestParameterMap().get("1");
         try {
-            if (proyecto.getId() != null) {
-                proyecto = proyectoFacadeLocal.find(proyecto.getId());
-                sessionProyecto.setProyecto(proyecto);
-            }
-            if (proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.SUSTENTACIONPRIVADA.getTipo())
-                    || proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.RECUPERACIONPRIVADA.getTipo())
-                    || proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.SUSTENTACIONPUBLICA.getTipo())
-                    || proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.RECUPERACIONPUBLICA.getTipo())) {
-                int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "editar_miembro_tribunal");
-                if (tienePermiso == 1) {
-                    sessionMiembro.setMiembro(miembro);
-                    sessionMiembro.setPersona(personaFacadeLocal.find(miembro.getDocenteId()));
-                    cargo = miembro.getCargoId().toString();
-                    if (param.equals("editar")) {
-                        navegacion = "editarMiembro?faces-redirect=true";
-                    } else {
-                        if (param.equals("editar-dlg")) {
-                            renderedDlgEditar = true;
-                            RequestContext.getCurrentInstance().execute("PF('dlgEditarMiembro').show()");
-                        }
-                    }
-                } else {
-                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_editar") + ". " + bundle.getString("lbl.msm_consulte"), "");
-                    FacesContext.getCurrentInstance().addMessage(null, message);
-                }
-            } else {
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_editar") + ". " + bundle.getString("lbl.msm_consulte"), "");
-                FacesContext.getCurrentInstance().addMessage(null, message);
-            }
+//            if (proyecto.getId() != null) {
+//                proyecto = proyectoFacadeLocal.find(proyecto.getId());
+//                sessionProyecto.setProyecto(proyecto);
+//            }
+//            if (proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.SUSTENTACIONPRIVADA.getTipo())
+//                    || proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.RECUPERACIONPRIVADA.getTipo())
+//                    || proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.SUSTENTACIONPUBLICA.getTipo())
+//                    || proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.RECUPERACIONPUBLICA.getTipo())) {
+//                int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "editar_miembro_tribunal");
+//                if (tienePermiso == 1) {
+//                    sessionMiembro.setMiembro(miembro);
+//                    sessionMiembro.setPersona(personaFacadeLocal.find(miembro.getDocenteId()));
+//                    cargo = miembro.getCargoId().toString();
+//                    if (param.equals("editar")) {
+//                        navegacion = "editarMiembro?faces-redirect=true";
+//                    } else {
+//                        if (param.equals("editar-dlg")) {
+//                            renderedDlgEditar = true;
+//                            RequestContext.getCurrentInstance().execute("PF('dlgEditarMiembro').show()");
+//                        }
+//                    }
+//                } else {
+//                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_editar") + ". " + bundle.getString("lbl.msm_consulte"), "");
+//                    FacesContext.getCurrentInstance().addMessage(null, message);
+//                }
+//            } else {
+//                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_editar") + ". " + bundle.getString("lbl.msm_consulte"), "");
+//                FacesContext.getCurrentInstance().addMessage(null, message);
+//            }
         } catch (Exception e) {
         }
         return navegacion;
@@ -470,85 +468,85 @@ public class AdministrarMiembrosTribunal implements Serializable {
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
         String param = (String) facesContext.getExternalContext().getRequestParameterMap().get("1");
         try {
-            if (miembro.getDocenteId() != null) {
-                int pos = cargo.indexOf(":");
-                CargoMiembro cm = cargoMiembroFacadeLocal.find(Integer.parseInt(cargo.substring(0, pos)));
-                if (cm != null) {
-                    miembro.setCargoId(cm);
-                }
-                if (existeMiembro(tribunal, usuario, tribunal.getProyectoId()) == false) {
-                    if (existePresidente(miembro, tribunal) == false) {
-                        if (miembro.getId() == null) {
-                            if (proyecto.getId() != null) {
-                                proyecto = proyectoFacadeLocal.find(proyecto.getId());
-                                sessionProyecto.setProyecto(proyecto);
-                            }
-                            if (proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.SUSTENTACIONPRIVADA.getTipo())
-                                    || proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.RECUPERACIONPRIVADA.getTipo())
-                                    || proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.SUSTENTACIONPUBLICA.getTipo())
-                                    || proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.RECUPERACIONPUBLICA.getTipo())) {
-                                int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "crear_miembro_tribunal");
-                                if (tienePermiso == 1) {
-                                    miembro.setTribunalId(tribunal);
-                                    miembroFacadeLocal.create(miembro);
-                                    administrarNotificaciones.notificarAsignacionMiembroTribunal();
-                                    buscar(tribunal, usuario, "");
-                                    if (param.equalsIgnoreCase("grabar-dlg")) {
-                                        RequestContext.getCurrentInstance().execute("PF('dlgEditarMiembro').hide()");
-                                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_grabar"), "");
-                                        FacesContext.getCurrentInstance().addMessage(null, message);
-                                        sessionMiembro.setMiembro(new Miembro());
-                                        sessionMiembro.setPersona(new Persona());
-                                    }
-                                } else {
-                                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_crear") + ". " + bundle.getString("lbl.msm_consulte"), "");
-                                    FacesContext.getCurrentInstance().addMessage(null, message);
-                                }
-                            } else {
-                                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_crear") + ". " + bundle.getString("lbl.msm_consulte"), "");
-                                FacesContext.getCurrentInstance().addMessage(null, message);
-                            }
-                        } else {
-                            if (proyecto.getId() != null) {
-                                proyecto = proyectoFacadeLocal.find(proyecto.getId());
-                                sessionProyecto.setProyecto(proyecto);
-                            }
-                            if (proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.SUSTENTACIONPRIVADA.getTipo())
-                                    || proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.RECUPERACIONPRIVADA.getTipo())
-                                    || proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.SUSTENTACIONPUBLICA.getTipo())
-                                    || proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.RECUPERACIONPUBLICA.getTipo())) {
-                                int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "crear_miembro_tribunal");
-                                if (tienePermiso == 1) {
-                                    miembro.setTribunalId(tribunal);
-                                    miembroFacadeLocal.edit(miembro);
-                                    buscar(tribunal, usuario, "");
-                                    if (param.equalsIgnoreCase("grabar-dlg")) {
-                                        RequestContext.getCurrentInstance().execute("PF('dlgEditarMiembro').hide()");
-                                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_editar"), "");
-                                        FacesContext.getCurrentInstance().addMessage(null, message);
-                                        sessionMiembro.setMiembro(new Miembro());
-                                    }
-                                } else {
-                                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_editar") + ". " + bundle.getString("lbl.msm_consulte"), "");
-                                    FacesContext.getCurrentInstance().addMessage(null, message);
-                                }
-                            } else {
-                                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_editar") + ". " + bundle.getString("lbl.msm_consulte"), "");
-                                FacesContext.getCurrentInstance().addMessage(null, message);
-                            }
-                        }
-                    } else {
-                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_existe") + " " + bundle.getString("lbl.presidente"), "");
-                        FacesContext.getCurrentInstance().addMessage(null, message);
-                    }
-                } else {
-                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("llbl.miembro") + "" + bundle.getString("lbl.miembro_encontrado"), "");
-                    FacesContext.getCurrentInstance().addMessage(null, message);
-                }
-            } else {
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.no_select") + " " + bundle.getString("lbl.docente"), "");
-                FacesContext.getCurrentInstance().addMessage(null, message);
-            }
+//            if (miembro.getDocenteId() != null) {
+//                int pos = cargo.indexOf(":");
+//                CargoMiembro cm = cargoMiembroFacadeLocal.find(Integer.parseInt(cargo.substring(0, pos)));
+//                if (cm != null) {
+//                    miembro.setCargoId(cm);
+//                }
+//                if (existeMiembro(tribunal, usuario, tribunal.getProyectoId()) == false) {
+//                    if (existePresidente(miembro, tribunal) == false) {
+//                        if (miembro.getId() == null) {
+//                            if (proyecto.getId() != null) {
+//                                proyecto = proyectoFacadeLocal.find(proyecto.getId());
+//                                sessionProyecto.setProyecto(proyecto);
+//                            }
+//                            if (proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.SUSTENTACIONPRIVADA.getTipo())
+//                                    || proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.RECUPERACIONPRIVADA.getTipo())
+//                                    || proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.SUSTENTACIONPUBLICA.getTipo())
+//                                    || proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.RECUPERACIONPUBLICA.getTipo())) {
+//                                int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "crear_miembro_tribunal");
+//                                if (tienePermiso == 1) {
+//                                    miembro.setTribunalId(tribunal);
+//                                    miembroFacadeLocal.create(miembro);
+//                                    administrarNotificaciones.notificarAsignacionMiembroTribunal();
+//                                    buscar(tribunal, usuario, "");
+//                                    if (param.equalsIgnoreCase("grabar-dlg")) {
+//                                        RequestContext.getCurrentInstance().execute("PF('dlgEditarMiembro').hide()");
+//                                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_grabar"), "");
+//                                        FacesContext.getCurrentInstance().addMessage(null, message);
+//                                        sessionMiembro.setMiembro(new Miembro());
+//                                        sessionMiembro.setPersona(new Persona());
+//                                    }
+//                                } else {
+//                                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_crear") + ". " + bundle.getString("lbl.msm_consulte"), "");
+//                                    FacesContext.getCurrentInstance().addMessage(null, message);
+//                                }
+//                            } else {
+//                                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_crear") + ". " + bundle.getString("lbl.msm_consulte"), "");
+//                                FacesContext.getCurrentInstance().addMessage(null, message);
+//                            }
+//                        } else {
+//                            if (proyecto.getId() != null) {
+//                                proyecto = proyectoFacadeLocal.find(proyecto.getId());
+//                                sessionProyecto.setProyecto(proyecto);
+//                            }
+//                            if (proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.SUSTENTACIONPRIVADA.getTipo())
+//                                    || proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.RECUPERACIONPRIVADA.getTipo())
+//                                    || proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.SUSTENTACIONPUBLICA.getTipo())
+//                                    || proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.RECUPERACIONPUBLICA.getTipo())) {
+//                                int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "crear_miembro_tribunal");
+//                                if (tienePermiso == 1) {
+//                                    miembro.setTribunalId(tribunal);
+//                                    miembroFacadeLocal.edit(miembro);
+//                                    buscar(tribunal, usuario, "");
+//                                    if (param.equalsIgnoreCase("grabar-dlg")) {
+//                                        RequestContext.getCurrentInstance().execute("PF('dlgEditarMiembro').hide()");
+//                                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_editar"), "");
+//                                        FacesContext.getCurrentInstance().addMessage(null, message);
+//                                        sessionMiembro.setMiembro(new Miembro());
+//                                    }
+//                                } else {
+//                                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_editar") + ". " + bundle.getString("lbl.msm_consulte"), "");
+//                                    FacesContext.getCurrentInstance().addMessage(null, message);
+//                                }
+//                            } else {
+//                                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_editar") + ". " + bundle.getString("lbl.msm_consulte"), "");
+//                                FacesContext.getCurrentInstance().addMessage(null, message);
+//                            }
+//                        }
+//                    } else {
+//                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_existe") + " " + bundle.getString("lbl.presidente"), "");
+//                        FacesContext.getCurrentInstance().addMessage(null, message);
+//                    }
+//                } else {
+//                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("llbl.miembro") + "" + bundle.getString("lbl.miembro_encontrado"), "");
+//                    FacesContext.getCurrentInstance().addMessage(null, message);
+//                }
+//            } else {
+//                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.no_select") + " " + bundle.getString("lbl.docente"), "");
+//                FacesContext.getCurrentInstance().addMessage(null, message);
+//            }
         } catch (Exception e) {
         }
         return navegacion;
@@ -713,28 +711,28 @@ public class AdministrarMiembrosTribunal implements Serializable {
 
     public void remover(Miembro miembro, Tribunal tribunal, Proyecto proyecto, Usuario usuario) {
         try {
-            FacesContext facesContext = FacesContext.getCurrentInstance();
-            ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            if (proyecto.getId() != null) {
-                proyecto = proyectoFacadeLocal.find(proyecto.getId());
-                sessionProyecto.setProyecto(proyecto);
-            }
-            if (proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.SUSTENTACIONPRIVADA.getTipo())
-                    || proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.RECUPERACIONPRIVADA.getTipo())
-                    || proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.SUSTENTACIONPUBLICA.getTipo())
-                    || proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.RECUPERACIONPUBLICA.getTipo())) {
-                int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "eliminar_miembro_tribunal");
-                if (tienePermiso == 1) {
-                    miembro.setEsActivo(false);
-                    miembroFacadeLocal.edit(miembro);
-                    buscar(tribunal, usuario, criterio);
-                } else {
-                    if (tienePermiso == 2) {
-                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_eliminar") + ". " + bundle.getString("lbl.msm_consulte"), "");
-                        FacesContext.getCurrentInstance().addMessage(null, message);
-                    }
-                }
-            }
+//            FacesContext facesContext = FacesContext.getCurrentInstance();
+//            ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
+//            if (proyecto.getId() != null) {
+//                proyecto = proyectoFacadeLocal.find(proyecto.getId());
+//                sessionProyecto.setProyecto(proyecto);
+//            }
+//            if (proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.SUSTENTACIONPRIVADA.getTipo())
+//                    || proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.RECUPERACIONPRIVADA.getTipo())
+//                    || proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.SUSTENTACIONPUBLICA.getTipo())
+//                    || proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.RECUPERACIONPUBLICA.getTipo())) {
+//                int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "eliminar_miembro_tribunal");
+//                if (tienePermiso == 1) {
+//                    miembro.setEsActivo(false);
+//                    miembroFacadeLocal.edit(miembro);
+//                    buscar(tribunal, usuario, criterio);
+//                } else {
+//                    if (tienePermiso == 2) {
+//                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_eliminar") + ". " + bundle.getString("lbl.msm_consulte"), "");
+//                        FacesContext.getCurrentInstance().addMessage(null, message);
+//                    }
+//                }
+//            }
         } catch (Exception e) {
         }
     }
@@ -743,52 +741,52 @@ public class AdministrarMiembrosTribunal implements Serializable {
 
     public void renderedImprimirOficio(Usuario usuario, Proyecto proyecto) {
         try {
-            int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "imprimir_miembro_tribunal");
-            if (tienePermiso == 1) {
-                if (proyecto.getId() != null) {
-                    proyecto = proyectoFacadeLocal.find(proyecto.getId());
-                }
-                if (proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.SUSTENTACIONPRIVADA.getTipo())
-                        || proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.RECUPERACIONPRIVADA.getTipo())
-                        || proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.SUSTENTACIONPUBLICA.getTipo())
-                        || proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.RECUPERACIONPUBLICA.getTipo())) {
-                    renderedImprimirOficioSustentacionPrivada = true;
-                    renderedImprimirOficioSustentacionPublica = false;
-                } else {
-                    if (proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.SUSTENTACIONPRIVADA.getTipo())
-                            || proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.RECUPERACIONPRIVADA.getTipo())
-                            || proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.SUSTENTACIONPUBLICA.getTipo())
-                            || proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.RECUPERACIONPUBLICA.getTipo())) {
-                        renderedImprimirOficioSustentacionPublica = true;
-                        renderedImprimirOficioSustentacionPrivada = false;
-                    } else {
-                        renderedImprimirOficioSustentacionPublica = false;
-                        renderedImprimirOficioSustentacionPrivada = false;
-                    }
-                }
-            }
+//            int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "imprimir_miembro_tribunal");
+//            if (tienePermiso == 1) {
+//                if (proyecto.getId() != null) {
+//                    proyecto = proyectoFacadeLocal.find(proyecto.getId());
+//                }
+//                if (proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.SUSTENTACIONPRIVADA.getTipo())
+//                        || proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.RECUPERACIONPRIVADA.getTipo())
+//                        || proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.SUSTENTACIONPUBLICA.getTipo())
+//                        || proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.RECUPERACIONPUBLICA.getTipo())) {
+//                    renderedImprimirOficioSustentacionPrivada = true;
+//                    renderedImprimirOficioSustentacionPublica = false;
+//                } else {
+//                    if (proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.SUSTENTACIONPRIVADA.getTipo())
+//                            || proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.RECUPERACIONPRIVADA.getTipo())
+//                            || proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.SUSTENTACIONPUBLICA.getTipo())
+//                            || proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.RECUPERACIONPUBLICA.getTipo())) {
+//                        renderedImprimirOficioSustentacionPublica = true;
+//                        renderedImprimirOficioSustentacionPrivada = false;
+//                    } else {
+//                        renderedImprimirOficioSustentacionPublica = false;
+//                        renderedImprimirOficioSustentacionPrivada = false;
+//                    }
+//                }
+//            }
         } catch (Exception e) {
         }
     }
 
     public void renderedCrear(Usuario usuario, Proyecto proyecto) {
         try {
-            if (proyecto.getId() != null) {
-                proyecto = proyectoFacadeLocal.find(proyecto.getId());
-            }
-            if (proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.SUSTENTACIONPRIVADA.getTipo())
-                    || proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.RECUPERACIONPRIVADA.getTipo())
-                    || proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.SUSTENTACIONPUBLICA.getTipo())
-                    || proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.RECUPERACIONPUBLICA.getTipo())) {
-                int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "crear_miembro_tribunal");
-                if (tienePermiso == 1) {
-                    renderedCrear = true;
-                } else {
-                    renderedCrear = false;
-                }
-            } else {
-                renderedCrear = false;
-            }
+//            if (proyecto.getId() != null) {
+//                proyecto = proyectoFacadeLocal.find(proyecto.getId());
+//            }
+//            if (proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.SUSTENTACIONPRIVADA.getTipo())
+//                    || proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.RECUPERACIONPRIVADA.getTipo())
+//                    || proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.SUSTENTACIONPUBLICA.getTipo())
+//                    || proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.RECUPERACIONPUBLICA.getTipo())) {
+//                int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "crear_miembro_tribunal");
+//                if (tienePermiso == 1) {
+//                    renderedCrear = true;
+//                } else {
+//                    renderedCrear = false;
+//                }
+//            } else {
+//                renderedCrear = false;
+//            }
         } catch (Exception e) {
         }
 
@@ -805,25 +803,25 @@ public class AdministrarMiembrosTribunal implements Serializable {
 
     public void renderedEditar(Usuario usuario, Proyecto proyecto) {
         try {
-            if (proyecto.getId() != null) {
-                proyecto = proyectoFacadeLocal.find(proyecto.getId());
-            }
-            if (proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.SUSTENTACIONPRIVADA.getTipo())
-                    || proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.RECUPERACIONPRIVADA.getTipo())
-                    || proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.SUSTENTACIONPUBLICA.getTipo())
-                    || proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.RECUPERACIONPUBLICA.getTipo())) {
-                int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "editar_miembro_tribunal");
-                if (tienePermiso == 1) {
-                    renderedEditar = true;
-                    renderedNoEditar = false;
-                } else {
-                    renderedNoEditar = true;
-                    renderedEditar = false;
-                }
-            } else {
-                renderedNoEditar = true;
-                renderedEditar = false;
-            }
+//            if (proyecto.getId() != null) {
+//                proyecto = proyectoFacadeLocal.find(proyecto.getId());
+//            }
+//            if (proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.SUSTENTACIONPRIVADA.getTipo())
+//                    || proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.RECUPERACIONPRIVADA.getTipo())
+//                    || proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.SUSTENTACIONPUBLICA.getTipo())
+//                    || proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.RECUPERACIONPUBLICA.getTipo())) {
+//                int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "editar_miembro_tribunal");
+//                if (tienePermiso == 1) {
+//                    renderedEditar = true;
+//                    renderedNoEditar = false;
+//                } else {
+//                    renderedNoEditar = true;
+//                    renderedEditar = false;
+//                }
+//            } else {
+//                renderedNoEditar = true;
+//                renderedEditar = false;
+//            }
         } catch (Exception e) {
         }
 
@@ -831,22 +829,22 @@ public class AdministrarMiembrosTribunal implements Serializable {
 
     public void renderedEliminar(Usuario usuario, Proyecto proyecto) {
         try {
-            if (proyecto.getId() != null) {
-                proyecto = proyectoFacadeLocal.find(proyecto.getId());
-            }
-            if (proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.SUSTENTACIONPRIVADA.getTipo())
-                    || proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.RECUPERACIONPRIVADA.getTipo())
-                    || proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.SUSTENTACIONPUBLICA.getTipo())
-                    || proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.RECUPERACIONPUBLICA.getTipo())) {
-                int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "eliminar_miembro_tribunal");
-                if (tienePermiso == 1) {
-                    renderedEliminar = true;
-                } else {
-                    renderedEliminar = false;
-                }
-            } else {
-                renderedEliminar = false;
-            }
+//            if (proyecto.getId() != null) {
+//                proyecto = proyectoFacadeLocal.find(proyecto.getId());
+//            }
+//            if (proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.SUSTENTACIONPRIVADA.getTipo())
+//                    || proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.RECUPERACIONPRIVADA.getTipo())
+//                    || proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.SUSTENTACIONPUBLICA.getTipo())
+//                    || proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.RECUPERACIONPUBLICA.getTipo())) {
+//                int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "eliminar_miembro_tribunal");
+//                if (tienePermiso == 1) {
+//                    renderedEliminar = true;
+//                } else {
+//                    renderedEliminar = false;
+//                }
+//            } else {
+//                renderedEliminar = false;
+//            }
         } catch (Exception e) {
         }
 

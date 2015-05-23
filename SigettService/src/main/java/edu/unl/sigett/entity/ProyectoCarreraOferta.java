@@ -52,7 +52,7 @@ public class ProyectoCarreraOferta implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "es_activo")
-    private boolean esActivo;
+    private Boolean esActivo;
     @JoinColumn(name = "proyecto_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Proyecto proyectoId;
@@ -60,15 +60,10 @@ public class ProyectoCarreraOferta implements Serializable {
     public ProyectoCarreraOferta() {
     }
 
-    public ProyectoCarreraOferta(Long id) {
-        this.id = id;
-    }
-
-    public ProyectoCarreraOferta(Long id, Long ofertaAcademicaId, int carreraId, boolean esActivo) {
-        this.id = id;
-        this.ofertaAcademicaId = ofertaAcademicaId;
-        this.carreraId = carreraId;
-        this.esActivo = esActivo;
+    public ProyectoCarreraOferta(Proyecto proyecto, Integer carrreraId, Long ofertaId) {
+        this.proyectoId = proyecto;
+        this.carreraId = carrreraId;
+        this.ofertaAcademicaId = ofertaId;
     }
 
     public Long getId() {
@@ -87,7 +82,6 @@ public class ProyectoCarreraOferta implements Serializable {
         this.ofertaAcademicaId = ofertaAcademicaId;
     }
 
-
     public Integer getCarreraId() {
         return carreraId;
     }
@@ -96,11 +90,11 @@ public class ProyectoCarreraOferta implements Serializable {
         this.carreraId = carreraId;
     }
 
-    public boolean getEsActivo() {
+    public Boolean getEsActivo() {
         return esActivo;
     }
 
-    public void setEsActivo(boolean esActivo) {
+    public void setEsActivo(Boolean esActivo) {
         this.esActivo = esActivo;
     }
 

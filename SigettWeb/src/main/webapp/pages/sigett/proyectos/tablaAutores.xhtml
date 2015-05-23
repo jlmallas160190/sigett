@@ -1,0 +1,52 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <body>
+        <p:dataTable id="tblAutores" value="#{sessionProyecto.autoresProyectoDTO}" var="item" rows="20" paginator="true"
+                     rowIndexVar="rowIx" rowKey="#{item.autorProyecto.aspiranteId}" selectionMode="single" selection="#{ap}" editable="true" 
+                     editMode="cell" filteredValue="#{sessionProyecto.filterAutoresProyectoDTO}" widgetVar="tblAPFilter"
+                     rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'even-row' : 'odd-row'}" emptyMessage="#{msg['lbl.table.empty']}">
+            <p:column  sortBy="#{item.persona.apellidos}" 
+                       filterBy="#{item.persona.apellidos} #{item.persona.nombres}"
+                       filterMatchMode="contains">
+                <f:facet name="header">
+                    <h:outputText value="#{msg['lbl.autor']}"/>
+                </f:facet>
+                <p:commandLink  onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" 
+                                value="#{item.persona.apellidos} #{item.persona.nombres}" 
+                                update=":editarAutor,:contenido:msm,:dlgEditarAutorProyecto" action="#{administrarProyectoS.editar(ap)}" />
+            </p:column>
+
+            <p:column>
+                <f:facet name="header">
+                    <h:outputText value="#{msg['lbl.fecha']} #{msg['lbl.inicio']}"/>
+                </f:facet>
+                <h:outputText value="#{item.autorProyecto.fechaInicio}">
+                    <f:convertDateTime pattern="EEEEE dd MMMMM yyyy"/>
+                </h:outputText>
+            </p:column>
+            <p:column>
+                <f:facet name="header">
+                    <h:outputText value="#{msg['lbl.fecha']} #{msg['lbl.inicio']}"/>
+                </f:facet>
+                <h:outputText value="#{item.autorProyecto.fechaCulminacion}">
+                    <f:convertDateTime pattern="EEEEE dd MMMMM yyyy"/>
+                </h:outputText>
+            </p:column>
+            <p:column rendered="#{sessionProyecto.renderedEditarDatosProyecto}">
+                <f:facet name="header">
+                    <h:outputText value="#{msg['lbl.eliminar']}"/>
+                </f:facet> 
+                <p:commandButton icon="ui-icon-trash" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" 
+                                 update=":contenido:tabViewDatosProyecto:tblAutores,:contenido:msm"  
+                                 onclick="if (!confirm('¿#{msg['lbl.confirmarEliminar']}?'))
+                                             return false;" 
+                                 action="#{administrarAutoresProyecto.removerAutor(ap, sessionProyecto.proyecto, sessionUsuario.usuario)}"/>
+            </p:column>
+        </p:dataTable>
+    </body>
+
+</html>

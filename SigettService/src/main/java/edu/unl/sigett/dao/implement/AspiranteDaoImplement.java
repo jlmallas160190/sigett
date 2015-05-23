@@ -24,30 +24,6 @@ public class AspiranteDaoImplement extends AbstractDao<Aspirante> implements Asp
         super(Aspirante.class);
     }
 
-//    @Override
-//    public List<Aspirante> aptos(Integer carreraId) {
-//        try {
-//            Query query = em.createQuery("SELECT a from Aspirante a WHERE" + " (a.esApto=TRUE AND a.estudianteCarrera.carreraId.id=:id)");
-//            query.setParameter("id", carreraId);
-//            return query.getResultList();
-//        } catch (Exception e) {
-//            System.out.println(e);
-//        }
-//        return null;
-//    }
-//
-//    @Override
-//    public List<Aspirante> buscarPorCarrera(Integer carreraId) {
-//        try {
-//            Query query = em.createQuery("SELECT a from  Aspirante a WHERE " + " (a.estudianteCarrera.carreraId.id=:id AND a.estudianteCarrera.esActivo=TRUE AND a.estudianteCarrera.estadoEstudianteCarrera.id != 3)");
-//            query.setParameter("id", carreraId);
-//            return query.getResultList();
-//        } catch (Exception e) {
-//            System.out.println(e);
-//        }
-//        return null;
-//    }
-
     @Override
     public List<Aspirante> buscar(Aspirante aspirante) {
         StringBuilder sql = new StringBuilder();

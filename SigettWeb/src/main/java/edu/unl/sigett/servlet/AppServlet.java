@@ -41,7 +41,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import edu.unl.sigett.dao.ActaFacadeLocal;
 import edu.unl.sigett.dao.ActividadFacadeLocal;
-import edu.unl.sigett.dao.AutorProyectoFacadeLocal;
+import edu.unl.sigett.dao.AutorProyectoDao;
 import edu.jlmallas.academico.service.CarreraService;
 import edu.unl.sigett.dao.CatalogoOficioFacadeLocal;
 import edu.unl.sigett.dao.CategoriaActaFacadeLocal;
@@ -109,7 +109,7 @@ public class AppServlet extends HttpServlet {
     @EJB
     private DocumentoExpedienteFacadeLocal documentoExpedienteFacadeLocal;
     @EJB
-    private AutorProyectoFacadeLocal autorProyectoFacadeLocal;
+    private AutorProyectoDao autorProyectoFacadeLocal;
     @EJB
     private ConfiguracionCarreraDao configuracionCarreraFacadeLocal;
     @EJB
@@ -708,17 +708,17 @@ public class AppServlet extends HttpServlet {
         int cont = 0;
         try {
             for (AutorProyecto autorProyecto : autorProyectos) {
-                if (!autorProyecto.getEstadoAutorId().getCodigo().equalsIgnoreCase(EstadoAutorEnum.ABANDONADO.getTipo())) {
-                    EstudianteCarrera estudianteCarrera = estudianteCarreraFacadeLocal.find(autorProyecto.getAspiranteId().getId());
-                    datosAutor = personaFacadeLocal.find(estudianteCarrera.getEstudianteId().getId());
-                    if (cont == 0) {
-//                        datosAutores += "" + estudianteCarrera.getEstadoId().getNombre() + " " + datosAutor.getNombres().toUpperCase() + " " + datosAutor.getApellidos().toUpperCase() + "";
-                        cont++;
-                    } else {
-//                        datosAutores += ", " + estudianteCarrera.getEstadoId().getNombre() + " " + datosAutor.getNombres().toUpperCase() + " " + datosAutor.getApellidos().toUpperCase();
-                        cont++;
-                    }
-                }
+//                if (!autorProyecto.getEstadoAutorId().getCodigo().equalsIgnoreCase(EstadoAutorEnum.ABANDONADO.getTipo())) {
+//                    EstudianteCarrera estudianteCarrera = estudianteCarreraFacadeLocal.find(autorProyecto.getAspiranteId().getId());
+//                    datosAutor = personaFacadeLocal.find(estudianteCarrera.getEstudianteId().getId());
+//                    if (cont == 0) {
+////                        datosAutores += "" + estudianteCarrera.getEstadoId().getNombre() + " " + datosAutor.getNombres().toUpperCase() + " " + datosAutor.getApellidos().toUpperCase() + "";
+//                        cont++;
+//                    } else {
+////                        datosAutores += ", " + estudianteCarrera.getEstadoId().getNombre() + " " + datosAutor.getNombres().toUpperCase() + " " + datosAutor.getApellidos().toUpperCase();
+//                        cont++;
+//                    }
+//                }
             }
 
         } catch (Exception e) {

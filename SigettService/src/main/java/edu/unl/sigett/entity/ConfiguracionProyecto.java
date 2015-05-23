@@ -66,18 +66,12 @@ public class ConfiguracionProyecto implements Serializable {
     @JoinColumn(name = "proyecto_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Proyecto proyectoId;
-    private boolean esEditado;
 
     public ConfiguracionProyecto() {
-        this.esEditado = false;
     }
 
-    public ConfiguracionProyecto(Integer id) {
-        this.id = id;
-    }
-
-    public ConfiguracionProyecto(Integer id, String nombre, String valor, String codigo, String tipo) {
-        this.id = id;
+    public ConfiguracionProyecto(Proyecto proyecto, String nombre, String valor, String codigo, String tipo) {
+        this.proyectoId = proyecto;
         this.nombre = nombre;
         this.valor = valor;
         this.codigo = codigo;
@@ -130,14 +124,6 @@ public class ConfiguracionProyecto implements Serializable {
 
     public void setProyectoId(Proyecto proyectoId) {
         this.proyectoId = proyectoId;
-    }
-
-    public boolean isEsEditado() {
-        return esEditado;
-    }
-
-    public void setEsEditado(boolean esEditado) {
-        this.esEditado = esEditado;
     }
 
     @Override

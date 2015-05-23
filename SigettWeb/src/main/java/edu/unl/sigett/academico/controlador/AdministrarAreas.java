@@ -39,7 +39,7 @@ import com.jlmallas.soporte.session.ProyectoSoftwareFacadeLocal;
 import org.jlmallas.seguridad.dao.UsuarioDao;
 import edu.unl.sigett.academico.managed.session.SessionCarrera;
 import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
-import edu.unl.sigett.dao.ProyectoCarreraOfertaFacadeLocal;
+import edu.unl.sigett.dao.ProyectoOfertaCarreraDao;
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 
@@ -91,7 +91,7 @@ public class AdministrarAreas implements Serializable {
     @EJB
     private UsuarioDao usuarioFacadeLocal;
     @EJB
-    private ProyectoCarreraOfertaFacadeLocal proyectoCarreraOfertaFacadeLocal;
+    private ProyectoOfertaCarreraDao proyectoCarreraOfertaFacadeLocal;
 //</editor-fold>
     private List<Area> directorioAreas;
 

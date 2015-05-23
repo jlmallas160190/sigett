@@ -46,13 +46,14 @@ public class LineaInvestigacionCarrera implements Serializable {
     @JoinColumn(name = "linea_investigacion_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private LineaInvestigacion lineaInvestigacionId;
+    private Integer count;
 
     public LineaInvestigacionCarrera() {
     }
 
-    public LineaInvestigacionCarrera(LineaInvestigacion li,Integer carrera) {
-        this.lineaInvestigacionId=li;
-        this.carreraId=carrera;
+    public LineaInvestigacionCarrera(LineaInvestigacion li, Integer carrera) {
+        this.lineaInvestigacionId = li;
+        this.carreraId = carrera;
     }
 
     public LineaInvestigacionCarrera(Long id, int carreraId) {
@@ -82,6 +83,14 @@ public class LineaInvestigacionCarrera implements Serializable {
 
     public void setLineaInvestigacionId(LineaInvestigacion lineaInvestigacionId) {
         this.lineaInvestigacionId = lineaInvestigacionId;
+    }
+
+    public Integer getCount() {
+        return count;
+    }
+
+    public void setCount(Integer count) {
+        this.count = count;
     }
 
     @Override

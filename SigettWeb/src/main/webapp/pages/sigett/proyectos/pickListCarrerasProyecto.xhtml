@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+        <p:pickList id="carreras" rendered="#{sessionProyecto.renderedEditarDatosProyecto}" 
+                    value="#{sessionProyecto.carrerasDualList}" var="items" itemLabel="#{items}" itemValue="#{items}" 
+                    showSourceControls="true" showTargetControls="true" showCheckbox="true"
+                    showSourceFilter="true" showTargetFilter="true" filterMatchMode="contains"  >
+            <f:facet name="sourceCaption">#{msg['lbl.carreras']} #{msg['lbl.disponibles']}</f:facet>
+            <f:facet name="targetCaption">#{msg['lbl.carreras']} #{msg['lbl.seleccionadas']}</f:facet>
+            <p:ajax event="transfer" listener="#{administrarProyectos.transferProyectoCarrera}"></p:ajax>
+        </p:pickList>
+    </body>
+
+</html>

@@ -9,7 +9,7 @@ import com.jlmallas.comun.dao.PersonaDao;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 import com.ocpsoft.pretty.faces.annotation.URLMappings;
 import edu.unl.sigett.adjudicacion.controlador.AdministrarDirectoresProyecto;
-import edu.unl.sigett.postulacion.controlador.AdministrarAutoresProyecto;
+import edu.unl.sigett.autor.controlador.AdministrarAutoresProyecto;
 import edu.unl.sigett.postulacion.managed.session.SessionConsultarProyecto;
 import edu.jlmallas.academico.entity.Area;
 import edu.unl.sigett.entity.AutorProyecto;
@@ -36,8 +36,8 @@ import edu.jlmallas.academico.dao.EstudianteCarreraDao;
 import edu.jlmallas.academico.service.OfertaAcademicaService;
 import edu.unl.sigett.dao.ConfiguracionGeneralDao;
 import edu.unl.sigett.dao.LineaInvestigacionCarreraDao;
-import edu.unl.sigett.dao.ProyectoCarreraOfertaFacadeLocal;
-import edu.unl.sigett.dao.ProyectoFacadeLocal;
+import edu.unl.sigett.dao.ProyectoOfertaCarreraDao;
+import edu.unl.sigett.dao.ProyectoDao;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -86,7 +86,7 @@ public class ViewProyectos implements Serializable {
     @EJB
     private AreaService areaFacadeLocal;
     @EJB
-    private ProyectoFacadeLocal proyectoFacadeLocal;
+    private ProyectoDao proyectoFacadeLocal;
     @EJB
     private OfertaAcademicaService ofertaAcademicaFacadeLocal;
     @EJB
@@ -98,7 +98,7 @@ public class ViewProyectos implements Serializable {
     @EJB
     private LineaInvestigacionCarreraDao lineaInvestigacionCarreraFacadeLocal;
     @EJB
-    private ProyectoCarreraOfertaFacadeLocal proyectoCarreraOfertaFacadeLocal;
+    private ProyectoOfertaCarreraDao proyectoCarreraOfertaFacadeLocal;
 
     private String criterioLi;
     private String criterioCarrera;
@@ -203,7 +203,7 @@ public class ViewProyectos implements Serializable {
         String navegacion = "";
         try {
             sessionConsultarProyecto.setProyecto(proyecto);
-            autoresProyecto.listadoAutores("", proyecto);
+//            autoresProyecto.listadoAutores("", proyecto);
             directoresProyecto.historialDirectoresProyecto("", proyecto);
             navegacion = "pretty:viewProject";
         } catch (Exception e) {
@@ -264,340 +264,6 @@ public class ViewProyectos implements Serializable {
         }
     }
 
-//    public void buscar(Carrera carrera, LineaInvestigacion lineaInvestigacion, PeriodoAcademico periodo, String criterio, String categoria, String estado,
-//            boolean selectPeriodo, boolean selectLi, boolean selectCarrera) {
-//        try {
-//            this.proyectos = new ArrayList<>();
-//            int posEstado = estado.indexOf(":");
-//            int posCat = categoria.indexOf(":");
-//            Integer catId = 0;
-//            Integer estadoId = 0;
-//            if (posCat > 0) {
-//                catId = Integer.parseInt(categoria.substring(0, posCat));
-//            }
-//            if (posEstado > 0) {
-//                estadoId = Integer.parseInt(estado.substring(0, posEstado));
-//            }
-//
-//            if (estadoId != 0 && catId != 0 && selectPeriodo && selectLi && selectCarrera) {
-//                for (Proyecto proyecto : proyectoFacadeLocal.buscarByCatPeriodoLiCarreraEstado(catId, periodo.getId(), lineaInvestigacion.getId(), carrera.getId(), estadoId)) {
-//                    if (!proyectos.contains(proyecto)) {
-//                        if (proyecto.getTemaActual().toLowerCase().contains(criterio.toLowerCase())) {
-//                            proyectos.add(proyecto);
-//                        }
-//                    }
-//                }
-//            } else {
-//                if (catId != 0 && selectPeriodo && selectCarrera && selectLi) {
-//                    for (Proyecto proyecto : proyectoFacadeLocal.buscarByCatPeriodoCarreraLi(catId, periodo.getId(), lineaInvestigacion.getId(), carrera.getId())) {
-//                        if (!proyectos.contains(proyecto)) {
-//                            if (proyecto.getTemaActual().toLowerCase().contains(criterio.toLowerCase())) {
-//                                proyectos.add(proyecto);
-//                            }
-//                        }
-//                    }
-//                } else {
-//                    if (catId != 0 && selectPeriodo && selectCarrera && estadoId != 0) {
-//                        for (Proyecto proyecto : proyectoFacadeLocal.buscarByCatPeriodoCarreraEstado(catId, periodo.getId(), carrera.getId(), estadoId)) {
-//                            if (!proyectos.contains(proyecto)) {
-//                                if (proyecto.getTemaActual().toLowerCase().contains(criterio.toLowerCase())) {
-//                                    proyectos.add(proyecto);
-//                                }
-//                            }
-//                        }
-//                    } else {
-//                        if (catId != 0 && selectPeriodo && selectLi && estadoId != 0) {
-//                            for (Proyecto proyecto : proyectoFacadeLocal.buscarByCatPeriodoLiEstado(catId, periodo.getId(), lineaInvestigacion.getId(), estadoId)) {
-//                                if (!proyectos.contains(proyecto)) {
-//                                    if (proyecto.getTemaActual().toLowerCase().contains(criterio.toLowerCase())) {
-//                                        proyectos.add(proyecto);
-//                                    }
-//                                }
-//                            }
-//                        } else {
-//                            if (catId != 0 && selectCarrera && selectLi && estadoId != 0) {
-//                                for (Proyecto proyecto : proyectoFacadeLocal.buscarByCatCarreraLiEstado(catId, carrera.getId(), lineaInvestigacion.getId(), estadoId)) {
-//                                    if (!proyectos.contains(proyecto)) {
-//                                        if (proyecto.getTemaActual().toLowerCase().contains(criterio.toLowerCase())) {
-//                                            proyectos.add(proyecto);
-//                                        }
-//                                    }
-//                                }
-//                            } else {
-//                                if (selectPeriodo && selectCarrera && selectLi && estadoId != 0) {
-//                                    for (Proyecto proyecto : proyectoFacadeLocal.buscarByPeriodoCarreraLiEstado(periodo.getId(), carrera.getId(), lineaInvestigacion.getId(), estadoId)) {
-//                                        if (!proyectos.contains(proyecto)) {
-//                                            if (proyecto.getTemaActual().toLowerCase().contains(criterio.toLowerCase())) {
-//                                                proyectos.add(proyecto);
-//                                            }
-//                                        }
-//                                    }
-//                                } else {
-//                                    if (selectCarrera && selectLi && estadoId != 0) {
-//                                        for (Proyecto proyecto : proyectoFacadeLocal.buscarByCarreraLineaEstado(carrera.getId(), lineaInvestigacion.getId(), estadoId)) {
-//                                            if (!proyectos.contains(proyecto)) {
-//                                                if (proyecto.getTemaActual().toLowerCase().contains(criterio.toLowerCase())) {
-//                                                    proyectos.add(proyecto);
-//                                                }
-//                                            }
-//                                        }
-//                                    } else {
-//                                        if (selectPeriodo && selectLi && estadoId != 0) {
-//                                            for (Proyecto proyecto : proyectoFacadeLocal.buscarByPeriodoLiEstado(periodo.getId(), lineaInvestigacion.getId(), estadoId)) {
-//                                                if (!proyectos.contains(proyecto)) {
-//                                                    if (proyecto.getTemaActual().toLowerCase().contains(criterio.toLowerCase())) {
-//                                                        proyectos.add(proyecto);
-//                                                    }
-//                                                }
-//                                            }
-//                                        } else {
-//                                            if (selectPeriodo && selectCarrera && estadoId != 0) {
-//                                                for (Proyecto proyecto : proyectoFacadeLocal.buscarByPeriodoCarreraEstado(periodo.getId(), carrera.getId(), estadoId)) {
-//                                                    if (!proyectos.contains(proyecto)) {
-//                                                        if (proyecto.getTemaActual().toLowerCase().contains(criterio.toLowerCase())) {
-//                                                            proyectos.add(proyecto);
-//                                                        }
-//                                                    }
-//                                                }
-//                                            } else {
-//                                                if (selectPeriodo && selectCarrera && selectLi) {
-//                                                    for (Proyecto proyecto : proyectoFacadeLocal.buscarByPeriodoCarreraLi(periodo.getId(), carrera.getId(), lineaInvestigacion.getId())) {
-//                                                        if (!proyectos.contains(proyecto)) {
-//                                                            if (proyecto.getTemaActual().toLowerCase().contains(criterio.toLowerCase())) {
-//                                                                proyectos.add(proyecto);
-//                                                            }
-//                                                        }
-//                                                    }
-//                                                } else {
-//                                                    if (catId != 0 && selectLi && estadoId != 0) {
-//                                                        for (Proyecto proyecto : proyectoFacadeLocal.buscarByCatLiEstado(catId, lineaInvestigacion.getId(), estadoId)) {
-//                                                            if (!proyectos.contains(proyecto)) {
-//                                                                if (proyecto.getTemaActual().toLowerCase().contains(criterio.toLowerCase())) {
-//                                                                    proyectos.add(proyecto);
-//                                                                }
-//                                                            }
-//                                                        }
-//                                                    } else {
-//                                                        if (catId != 0 && selectCarrera && estadoId != 0) {
-//                                                            for (Proyecto proyecto : proyectoFacadeLocal.buscarByCatCarreraEstado(catId, carrera.getId(), estadoId)) {
-//                                                                if (!proyectos.contains(proyecto)) {
-//                                                                    if (proyecto.getTemaActual().toLowerCase().contains(criterio.toLowerCase())) {
-//                                                                        proyectos.add(proyecto);
-//                                                                    }
-//                                                                }
-//                                                            }
-//                                                        } else {
-//                                                            if (catId != 0 && selectCarrera && selectLi) {
-//                                                                for (Proyecto proyecto : proyectoFacadeLocal.buscarByCatCarreraLi(catId, carrera.getId(), lineaInvestigacion.getId())) {
-//                                                                    if (!proyectos.contains(proyecto)) {
-//                                                                        if (proyecto.getTemaActual().toLowerCase().contains(criterio.toLowerCase())) {
-//                                                                            proyectos.add(proyecto);
-//                                                                        }
-//                                                                    }
-//                                                                }
-//                                                            } else {
-//                                                                if (catId != 0 && selectPeriodo && estadoId != 0) {
-//                                                                    for (Proyecto proyecto : proyectoFacadeLocal.buscarByCatPeriodoEstado(catId, periodo.getId(), estadoId)) {
-//                                                                        if (!proyectos.contains(proyecto)) {
-//                                                                            if (proyecto.getTemaActual().toLowerCase().contains(criterio.toLowerCase())) {
-//                                                                                proyectos.add(proyecto);
-//                                                                            }
-//                                                                        }
-//                                                                    }
-//                                                                } else {
-//                                                                    if (catId != 0 && selectPeriodo && selectCarrera) {
-//                                                                        for (Proyecto proyecto : proyectoFacadeLocal.buscarByCatPeriodoCarrera(catId, periodo.getId(), carrera.getId())) {
-//                                                                            if (!proyectos.contains(proyecto)) {
-//                                                                                if (proyecto.getTemaActual().toLowerCase().contains(criterio.toLowerCase())) {
-//                                                                                    proyectos.add(proyecto);
-//                                                                                }
-//                                                                            }
-//                                                                        }
-//                                                                    } else {
-//                                                                        if (catId != 0 && selectPeriodo && selectLi) {
-//                                                                            for (Proyecto proyecto : proyectoFacadeLocal.buscarByCatPeriodoLi(catId, periodo.getId(), lineaInvestigacion.getId())) {
-//                                                                                if (!proyectos.contains(proyecto)) {
-//                                                                                    if (proyecto.getTemaActual().toLowerCase().contains(criterio.toLowerCase())) {
-//                                                                                        proyectos.add(proyecto);
-//                                                                                    }
-//                                                                                }
-//                                                                            }
-//                                                                        } else {
-//                                                                            if (selectLi && estadoId != 0) {
-//                                                                                for (Proyecto proyecto : proyectoFacadeLocal.buscarByLiEstado(lineaInvestigacion.getId(), estadoId)) {
-//                                                                                    if (!proyectos.contains(proyecto)) {
-//                                                                                        if (proyecto.getTemaActual().toLowerCase().contains(criterio.toLowerCase())) {
-//                                                                                            proyectos.add(proyecto);
-//                                                                                        }
-//                                                                                    }
-//                                                                                }
-//                                                                            } else {
-//                                                                                if (selectCarrera && estadoId != 0) {
-//                                                                                    for (Proyecto proyecto : proyectoFacadeLocal.buscarByCarreraEstado(carrera.getId(), estadoId)) {
-//                                                                                        if (!proyectos.contains(proyecto)) {
-//                                                                                            if (proyecto.getTemaActual().toLowerCase().contains(criterio.toLowerCase())) {
-//                                                                                                proyectos.add(proyecto);
-//                                                                                            }
-//                                                                                        }
-//                                                                                    }
-//                                                                                } else {
-//                                                                                    if (selectCarrera && selectLi) {
-//                                                                                        for (Proyecto proyecto : proyectoFacadeLocal.buscarByCarreraLi(carrera.getId(), lineaInvestigacion.getId())) {
-//                                                                                            if (!proyectos.contains(proyecto)) {
-//                                                                                                if (proyecto.getTemaActual().toLowerCase().contains(criterio.toLowerCase())) {
-//                                                                                                    proyectos.add(proyecto);
-//                                                                                                }
-//                                                                                            }
-//                                                                                        }
-//                                                                                    } else {
-//                                                                                        if (selectPeriodo && estadoId != 0) {
-//                                                                                            for (Proyecto proyecto : proyectoFacadeLocal.buscarByPeriodoEstado(periodo.getId(), estadoId)) {
-//                                                                                                if (!proyectos.contains(proyecto)) {
-//                                                                                                    if (proyecto.getTemaActual().toLowerCase().contains(criterio.toLowerCase())) {
-//                                                                                                        proyectos.add(proyecto);
-//                                                                                                    }
-//                                                                                                }
-//                                                                                            }
-//                                                                                        } else {
-//                                                                                            if (selectPeriodo && catId != 0) {
-//                                                                                                for (Proyecto proyecto : proyectoFacadeLocal.buscarByCatPeriodo(catId, periodo.getId())) {
-//                                                                                                    if (!proyectos.contains(proyecto)) {
-//                                                                                                        if (proyecto.getTemaActual().toLowerCase().contains(criterio.toLowerCase())) {
-//                                                                                                            proyectos.add(proyecto);
-//                                                                                                        }
-//                                                                                                    }
-//                                                                                                }
-//                                                                                            } else {
-//                                                                                                if (selectPeriodo && selectLi) {
-//                                                                                                    for (Proyecto proyecto : proyectoFacadeLocal.buscarByPeriodoLi(periodo.getId(), lineaInvestigacion.getId())) {
-//                                                                                                        if (!proyectos.contains(proyecto)) {
-//                                                                                                            if (proyecto.getTemaActual().toLowerCase().contains(criterio.toLowerCase())) {
-//                                                                                                                proyectos.add(proyecto);
-//                                                                                                            }
-//                                                                                                        }
-//                                                                                                    }
-//                                                                                                } else {
-//                                                                                                    if (selectPeriodo && selectCarrera) {
-//                                                                                                        for (Proyecto proyecto : proyectoFacadeLocal.buscarByPeriodoCarrera(periodo.getId(), carrera.getId())) {
-//                                                                                                            if (!proyectos.contains(proyecto)) {
-//                                                                                                                if (proyecto.getTemaActual().toLowerCase().contains(criterio.toLowerCase())) {
-//                                                                                                                    proyectos.add(proyecto);
-//                                                                                                                }
-//                                                                                                            }
-//                                                                                                        }
-//                                                                                                    } else {
-//                                                                                                        if (catId != 0 && estadoId != 0) {
-//                                                                                                            for (Proyecto proyecto : proyectoFacadeLocal.buscarByCatEstado(catId, estadoId)) {
-//                                                                                                                if (!proyectos.contains(proyecto)) {
-//                                                                                                                    if (proyecto.getTemaActual().toLowerCase().contains(criterio.toLowerCase())) {
-//                                                                                                                        proyectos.add(proyecto);
-//                                                                                                                    }
-//                                                                                                                }
-//                                                                                                            }
-//                                                                                                        } else {
-//                                                                                                            if (catId != 0 && selectLi) {
-//                                                                                                                for (Proyecto proyecto : proyectoFacadeLocal.buscarByCatLi(catId, lineaInvestigacion.getId())) {
-//                                                                                                                    if (!proyectos.contains(proyecto)) {
-//                                                                                                                        if (proyecto.getTemaActual().toLowerCase().contains(criterio.toLowerCase())) {
-//                                                                                                                            proyectos.add(proyecto);
-//                                                                                                                        }
-//                                                                                                                    }
-//                                                                                                                }
-//                                                                                                            } else {
-//                                                                                                                if (catId != 0 && selectCarrera) {
-//                                                                                                                    for (Proyecto proyecto : proyectoFacadeLocal.buscarByCatCarrera(catId, carrera.getId())) {
-//                                                                                                                        if (!proyectos.contains(proyecto)) {
-//                                                                                                                            if (proyecto.getTemaActual().toLowerCase().contains(criterio.toLowerCase())) {
-//                                                                                                                                proyectos.add(proyecto);
-//                                                                                                                            }
-//                                                                                                                        }
-//                                                                                                                    }
-//                                                                                                                } else {
-//                                                                                                                    if (selectPeriodo) {
-//                                                                                                                        for (Proyecto proyecto : proyectoFacadeLocal.buscarByPeriodo(periodo.getId())) {
-//                                                                                                                            if (!proyectos.contains(proyecto)) {
-//                                                                                                                                if (proyecto.getTemaActual().toLowerCase().contains(criterio.toLowerCase())) {
-//                                                                                                                                    proyectos.add(proyecto);
-//                                                                                                                                }
-//                                                                                                                            }
-//                                                                                                                        }
-//                                                                                                                    } else {
-//                                                                                                                        if (selectLi) {
-//                                                                                                                            for (Proyecto proyecto : proyectoFacadeLocal.buscarByLi(lineaInvestigacion.getId())) {
-//                                                                                                                                if (!proyectos.contains(proyecto)) {
-//                                                                                                                                    if (proyecto.getTemaActual().toLowerCase().contains(criterio.toLowerCase())) {
-//                                                                                                                                        proyectos.add(proyecto);
-//                                                                                                                                    }
-//                                                                                                                                }
-//                                                                                                                            }
-//                                                                                                                        } else {
-//                                                                                                                            if (selectCarrera) {
-//                                                                                                                                for (Proyecto proyecto : proyectoFacadeLocal.buscarByCarrera(carrera.getId())) {
-//                                                                                                                                    if (!proyectos.contains(proyecto)) {
-//                                                                                                                                        if (proyecto.getTemaActual().toLowerCase().contains(criterio.toLowerCase())) {
-//                                                                                                                                            proyectos.add(proyecto);
-//                                                                                                                                        }
-//                                                                                                                                    }
-//                                                                                                                                }
-//                                                                                                                            } else {
-//                                                                                                                                if (catId != 0) {
-//                                                                                                                                    for (Proyecto proyecto : proyectoFacadeLocal.buscarByCategoria(catId)) {
-//                                                                                                                                        if (!proyectos.contains(proyecto)) {
-//                                                                                                                                            if (proyecto.getTemaActual().toLowerCase().contains(criterio.toLowerCase())) {
-//                                                                                                                                                proyectos.add(proyecto);
-//                                                                                                                                            }
-//                                                                                                                                        }
-//                                                                                                                                    }
-//                                                                                                                                } else {
-//                                                                                                                                    if (estadoId != 0) {
-//                                                                                                                                        for (Proyecto proyecto : proyectoFacadeLocal.buscarByEstado(estadoId)) {
-//                                                                                                                                            if (!proyectos.contains(proyecto)) {
-//                                                                                                                                                if (proyecto.getTemaActual().toLowerCase().contains(criterio.toLowerCase())) {
-//                                                                                                                                                    proyectos.add(proyecto);
-//                                                                                                                                                }
-//                                                                                                                                            }
-//                                                                                                                                        }
-//                                                                                                                                    } else {
-//                                                                                                                                        for (Proyecto p : proyectoFacadeLocal.findAll()) {
-//                                                                                                                                            if (p.getTemaActual().toLowerCase().contains(criterio.toLowerCase())) {
-//                                                                                                                                                proyectos.add(p);
-//                                                                                                                                            }
-//                                                                                                                                        }
-//                                                                                                                                    }
-//                                                                                                                                }
-//                                                                                                                            }
-//                                                                                                                        }
-//                                                                                                                    }
-//                                                                                                                }
-//                                                                                                            }
-//                                                                                                        }
-//                                                                                                    }
-//                                                                                                }
-//                                                                                            }
-//                                                                                        }
-//                                                                                    }
-//                                                                                }
-//                                                                            }
-//                                                                        }
-//                                                                    }
-//                                                                }
-//                                                            }
-//                                                        }
-//                                                    }
-//                                                }
-//                                            }
-//                                        }
-//                                    }
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        } catch (Exception e) {
-//            System.out.println(e);
-//        }
-//    }
 
     public void buscarWebSemantica(String filtro) {
         try {

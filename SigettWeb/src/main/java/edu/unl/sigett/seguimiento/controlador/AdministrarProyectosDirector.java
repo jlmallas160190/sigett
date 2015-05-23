@@ -11,7 +11,7 @@ import com.ocpsoft.pretty.faces.annotation.URLMapping;
 import com.ocpsoft.pretty.faces.annotation.URLMappings;
 import edu.unl.sigett.adjudicacion.controlador.AdministrarProrrogas;
 import edu.unl.sigett.finalizacion.controlador.AdministrarInformesProyecto;
-import edu.unl.sigett.postulacion.controlador.AdministrarAutoresProyecto;
+import edu.unl.sigett.autor.controlador.AdministrarAutoresProyecto;
 import edu.unl.sigett.postulacion.controlador.AdministrarCronograma;
 import edu.unl.sigett.seguimiento.session.SessionProyectosDirector;
 import edu.unl.sigett.comun.controlador.AdministrarConfiguraciones;
@@ -38,7 +38,7 @@ import org.primefaces.event.TabChangeEvent;
 import edu.unl.sigett.dao.ActividadFacadeLocal;
 import edu.unl.sigett.dao.ConfiguracionGeneralDao;
 import edu.unl.sigett.dao.DirectorProyectoFacadeLocal;
-import edu.unl.sigett.dao.ProyectoCarreraOfertaFacadeLocal;
+import edu.unl.sigett.dao.ProyectoOfertaCarreraDao;
 import org.jlmallas.seguridad.dao.UsuarioDao;
 import edu.jlmallas.academico.service.OfertaAcademicaService;
 import java.util.HashMap;
@@ -93,7 +93,7 @@ public class AdministrarProyectosDirector implements Serializable {
     @EJB
     private ConfiguracionGeneralDao configuracionGeneralFacadeLocal;
     @EJB
-    private ProyectoCarreraOfertaFacadeLocal proyectoCarreraOfertaFacadeLocal;
+    private ProyectoOfertaCarreraDao proyectoCarreraOfertaFacadeLocal;
     @EJB
     private OfertaAcademicaService ofertaAcademicaFacadeLocal;
     @EJB

@@ -28,7 +28,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import org.primefaces.event.TabChangeEvent;
 import edu.unl.sigett.dao.ActividadFacadeLocal;
-import edu.unl.sigett.dao.AutorProyectoFacadeLocal;
+import edu.unl.sigett.dao.AutorProyectoDao;
 import org.jlmallas.seguridad.dao.UsuarioDao;
 
 /**
@@ -69,7 +69,7 @@ public class AdministrarProyectosAutor implements Serializable {
     private AdministrarCronograma administrarCronograma;
 
     @EJB
-    private AutorProyectoFacadeLocal autorProyectoFacadeLocal;
+    private AutorProyectoDao autorProyectoFacadeLocal;
     @EJB
     private UsuarioDao usuarioFacadeLocal;
     @EJB
@@ -94,11 +94,11 @@ public class AdministrarProyectosAutor implements Serializable {
             int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "buscar_autor_proyecto");
             if (tienePermiso == 1) {
                 for (AutorProyecto autorProyecto : autorProyectoFacadeLocal.buscarPorEstudiante(estudiante.getId())) {
-                    if (autorProyecto.getEstadoAutorId().getId() != 4) {
-                        if (autorProyecto.getProyectoId().getTemaActual().toLowerCase().contains(criterio.toLowerCase())) {
-                            autorProyectos.add(autorProyecto);
-                        }
-                    }
+//                    if (autorProyecto.getEstadoAutorId().getId() != 4) {
+//                        if (autorProyecto.getProyectoId().getTemaActual().toLowerCase().contains(criterio.toLowerCase())) {
+//                            autorProyectos.add(autorProyecto);
+//                        }
+//                    }
                 }
             } else {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_buscar") + ". " + bundle.getString("lbl.msm_consulte"), "");

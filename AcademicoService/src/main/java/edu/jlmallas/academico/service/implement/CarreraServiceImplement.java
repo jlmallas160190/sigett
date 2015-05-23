@@ -5,7 +5,6 @@
  */
 package edu.jlmallas.academico.service.implement;
 
-import edu.jlmallas.academico.dao.AbstractDao;
 import edu.jlmallas.academico.dao.CarreraDao;
 import edu.jlmallas.academico.entity.Carrera;
 import edu.jlmallas.academico.service.CarreraService;
@@ -13,9 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
+import javax.smartcardio.Card;
 
 /**
  *
@@ -70,6 +67,23 @@ public class CarreraServiceImplement implements CarreraService {
     @Override
     public int count() {
         return carreraDao.count();
+    }
+
+    @Override
+    public List<Carrera> diferenciaProyectoCarrera(List<Carrera> usuarioCarreras, List<Carrera> proyectosCarreras) {
+        List<Carrera> carreras = new ArrayList<>();
+        if (usuarioCarreras.isEmpty()) {
+            return usuarioCarreras;
+        }
+        if (proyectosCarreras.isEmpty()) {
+            return usuarioCarreras;
+        }
+        for (Carrera carrera : usuarioCarreras) {
+            if (!proyectosCarreras.contains(carrera)) {
+                carreras.add(carrera);
+            }
+        }
+        return carreras;
     }
 
 }

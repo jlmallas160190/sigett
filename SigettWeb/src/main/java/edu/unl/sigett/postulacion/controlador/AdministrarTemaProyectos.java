@@ -5,8 +5,7 @@
  */
 package edu.unl.sigett.postulacion.controlador;
 
-import edu.unl.sigett.entity.EstadoProyecto;
-import edu.unl.sigett.postulacion.managed.session.SessionProyecto;
+import edu.unl.sigett.proyecto.managed.session.SessionProyecto;
 import edu.unl.sigett.postulacion.managed.session.SessionTemaProyecto;
 import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
 import edu.unl.sigett.entity.Proyecto;
@@ -22,8 +21,8 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
-import edu.unl.sigett.dao.ProyectoFacadeLocal;
-import edu.unl.sigett.dao.TemaProyectoFacadeLocal;
+import edu.unl.sigett.dao.ProyectoDao;
+import edu.unl.sigett.dao.TemaProyectoDao;
 import org.jlmallas.seguridad.dao.UsuarioDao;
 import edu.unl.sigett.enumeration.EstadoProyectoEnum;
 
@@ -42,11 +41,11 @@ public class AdministrarTemaProyectos implements Serializable {
     @Inject
     private SessionProyecto sessionProyecto;
     @EJB
-    private TemaProyectoFacadeLocal temaProyectoFacadeLocal;
+    private TemaProyectoDao temaProyectoFacadeLocal;
     @EJB
     private UsuarioDao usuarioFacadeLocal;
     @EJB
-    private ProyectoFacadeLocal proyectoFacadeLocal;
+    private ProyectoDao proyectoFacadeLocal;
     
     private String criterio;
     private boolean renderedNoEditar;
@@ -105,21 +104,21 @@ public class AdministrarTemaProyectos implements Serializable {
     public String grabar(TemaProyecto temaProyecto) {
         String navegacion = "";
         try {
-            Proyecto p = proyectoFacadeLocal.find(temaProyecto.getProyectoId().getId());
-            if (p.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.INICIO.getTipo())) {
-                temaProyecto.getTemaId().setDescripcion(temaProyecto.getTemaId().getNombre());
-                temaProyecto.setEsActual(true);
-                if (temaProyecto.getId() == null) {
-                    temaProyectoFacadeLocal.create(temaProyecto);
-                } else {
-                    temaProyectoFacadeLocal.edit(temaProyecto);
-                    if (temaProyecto.getProyectoId() != null) {
-                        temaProyecto.getProyectoId().setTemaActual(temaProyecto.getTemaId().getNombre());
-                        proyectoFacadeLocal.edit(temaProyecto.getProyectoId());
-                    }
-                }
-            }
-            buscar(sessionProyecto.getProyecto(), criterio);
+//            Proyecto p = proyectoFacadeLocal.find(temaProyecto.getProyectoId().getId());
+//            if (p.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.INICIO.getTipo())) {
+//                temaProyecto.getTemaId().setDescripcion(temaProyecto.getTemaId().getNombre());
+//                temaProyecto.setEsActual(true);
+//                if (temaProyecto.getId() == null) {
+//                    temaProyectoFacadeLocal.create(temaProyecto);
+//                } else {
+//                    temaProyectoFacadeLocal.edit(temaProyecto);
+//                    if (temaProyecto.getProyectoId() != null) {
+//                        temaProyecto.getProyectoId().setTemaActual(temaProyecto.getTemaId().getNombre());
+//                        proyectoFacadeLocal.edit(temaProyecto.getProyectoId());
+//                    }
+//                }
+//            }
+//            buscar(sessionProyecto.getProyecto(), criterio);
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -258,16 +257,16 @@ public class AdministrarTemaProyectos implements Serializable {
     }
 
     /**
-     * @return the temaProyectoFacadeLocal
+     * @return the temaProyectoDao
      */
-    public TemaProyectoFacadeLocal getTemaProyectoFacadeLocal() {
+    public TemaProyectoDao getTemaProyectoFacadeLocal() {
         return temaProyectoFacadeLocal;
     }
 
     /**
-     * @param temaProyectoFacadeLocal the temaProyectoFacadeLocal to set
+     * @param temaProyectoFacadeLocal the temaProyectoDao to set
      */
-    public void setTemaProyectoFacadeLocal(TemaProyectoFacadeLocal temaProyectoFacadeLocal) {
+    public void setTemaProyectoFacadeLocal(TemaProyectoDao temaProyectoFacadeLocal) {
         this.temaProyectoFacadeLocal = temaProyectoFacadeLocal;
     }
 

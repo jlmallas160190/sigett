@@ -28,7 +28,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.TabChangeEvent;
-import edu.unl.sigett.dao.AutorProyectoFacadeLocal;
+import edu.unl.sigett.dao.AutorProyectoDao;
 import org.jlmallas.seguridad.dao.LogDao;
 import edu.unl.sigett.dao.MiembroFacadeLocal;
 import edu.unl.sigett.dao.TribunalFacadeLocal;
@@ -51,7 +51,7 @@ import edu.jlmallas.academico.dao.EstudianteCarreraDao;
     )
 })
 public class AdministrarTribunales implements Serializable {
-    
+
     @Inject
     private SessionTribunal sessionTribunal;
     @Inject
@@ -62,7 +62,7 @@ public class AdministrarTribunales implements Serializable {
     private SessionUsuario sessionUsuario;
     @Inject
     private AdministrarActas administrarActas;
-    
+
     @EJB
     private TribunalFacadeLocal tribunalFacadeLocal;
     @EJB
@@ -70,14 +70,14 @@ public class AdministrarTribunales implements Serializable {
     @EJB
     private LogDao logFacadeLocal;
     @EJB
-    private AutorProyectoFacadeLocal autorProyectoFacadeLocal;
+    private AutorProyectoDao autorProyectoFacadeLocal;
     @EJB
     private MiembroFacadeLocal miembroFacadeLocal;
     @EJB
     private EstudianteCarreraDao estudianteCarreraFacadeLocal;
     private List<Tribunal> tribunales;
     private List<Tribunal> tribunalesPorDocente;
-    
+
     private boolean renderedEditar;
     private boolean renderedDlgEditar;
     private boolean renderedNoEditar;
@@ -87,35 +87,35 @@ public class AdministrarTribunales implements Serializable {
     private boolean renderedBuscar;
     private boolean renderedTribunal;
     private boolean renderedViewTribunal;
-    
+
     private String criterioPorDocente;
-    
+
     public AdministrarTribunales() {
     }
 
     //<editor-fold defaultstate="collapsed" desc="MÉTODOS RENDERED">
     public void renderedCrear(Usuario usuario, Proyecto proyecto) {
-        FacesContext facesContext = FacesContext.getCurrentInstance();
-        ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-        if (comprobarAutoresAptosSustentacion(proyecto)) {
-            if (proyecto.getEstadoProyectoId().getId() == 4 || proyecto.getEstadoProyectoId().getId() == 5 || proyecto.getEstadoProyectoId().getId() == 6 || proyecto.getEstadoProyectoId().getId() == 7) {
-                int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "crear_tribunal");
-                if (tienePermiso == 1) {
-                    renderedCrear = true;
-                } else {
-                    renderedCrear = false;
-                }
-            } else {
-                renderedCrear = false;
-            }
-        } else {
-            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.autor_no_apto") + ". " + bundle.getString("lbl.msm_consulte"), "");
-            FacesContext.getCurrentInstance().addMessage(null, message);
-            renderedCrear = false;
-        }
-        
+//        FacesContext facesContext = FacesContext.getCurrentInstance();
+//        ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
+//        if (comprobarAutoresAptosSustentacion(proyecto)) {
+//            if (proyecto.getEstadoProyectoId().getId() == 4 || proyecto.getEstadoProyectoId().getId() == 5 || proyecto.getEstadoProyectoId().getId() == 6 || proyecto.getEstadoProyectoId().getId() == 7) {
+//                int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "crear_tribunal");
+//                if (tienePermiso == 1) {
+//                    renderedCrear = true;
+//                } else {
+//                    renderedCrear = false;
+//                }
+//            } else {
+//                renderedCrear = false;
+//            }
+//        } else {
+//            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.autor_no_apto") + ". " + bundle.getString("lbl.msm_consulte"), "");
+//            FacesContext.getCurrentInstance().addMessage(null, message);
+//            renderedCrear = false;
+//        }
+
     }
-    
+
     public boolean comprobarTribunalesActivos(Proyecto proyecto) {
         boolean var = false;
         try {
@@ -129,204 +129,204 @@ public class AdministrarTribunales implements Serializable {
         }
         return var;
     }
-    
+
     public void renderedBuscar(Usuario usuario, Proyecto proyecto) {
-        if (proyecto.getEstadoProyectoId().getId() == 4 || proyecto.getEstadoProyectoId().getId() == 5 || proyecto.getEstadoProyectoId().getId() == 6 || proyecto.getEstadoProyectoId().getId() == 7 || proyecto.getEstadoProyectoId().getId() == 8 || proyecto.getEstadoProyectoId().getId() == 9) {
-            int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "buscar_tribunal");
-            if (tienePermiso == 1) {
-                renderedBuscar = true;
-            } else {
-                renderedBuscar = false;
-            }
-        } else {
-            renderedBuscar = false;
-        }
+//        if (proyecto.getEstadoProyectoId().getId() == 4 || proyecto.getEstadoProyectoId().getId() == 5 || proyecto.getEstadoProyectoId().getId() == 6 || proyecto.getEstadoProyectoId().getId() == 7 || proyecto.getEstadoProyectoId().getId() == 8 || proyecto.getEstadoProyectoId().getId() == 9) {
+//            int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "buscar_tribunal");
+//            if (tienePermiso == 1) {
+//                renderedBuscar = true;
+//            } else {
+//                renderedBuscar = false;
+//            }
+//        } else {
+//            renderedBuscar = false;
+//        }
     }
-    
+
     public void renderedEditar(Usuario usuario, Proyecto proyecto) {
-        if (proyecto.getEstadoProyectoId().getId() == 4 || proyecto.getEstadoProyectoId().getId() == 5 || proyecto.getEstadoProyectoId().getId() == 6 || proyecto.getEstadoProyectoId().getId() == 7) {
-            int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "editar_tribunal");
-            if (tienePermiso == 1) {
-                renderedEditar = true;
-                renderedNoEditar = false;
-            } else {
-                renderedNoEditar = true;
-                renderedEditar = false;
-            }
-        } else {
-            renderedNoEditar = true;
-            renderedEditar = false;
-        }
+//        if (proyecto.getEstadoProyectoId().getId() == 4 || proyecto.getEstadoProyectoId().getId() == 5 || proyecto.getEstadoProyectoId().getId() == 6 || proyecto.getEstadoProyectoId().getId() == 7) {
+//            int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "editar_tribunal");
+//            if (tienePermiso == 1) {
+//                renderedEditar = true;
+//                renderedNoEditar = false;
+//            } else {
+//                renderedNoEditar = true;
+//                renderedEditar = false;
+//            }
+//        } else {
+//            renderedNoEditar = true;
+//            renderedEditar = false;
+//        }
     }
-    
+
     public void renderedEliminar(Usuario usuario, Proyecto proyecto) {
-        if (proyecto.getEstadoProyectoId().getId() == 4 || proyecto.getEstadoProyectoId().getId() == 5 || proyecto.getEstadoProyectoId().getId() == 6 || proyecto.getEstadoProyectoId().getId() == 7) {
-            int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "eliminar_tribunal");
-            if (tienePermiso == 1) {
-                renderedEliminar = true;
-            } else {
-                renderedEliminar = false;
-            }
-        } else {
-            renderedEliminar = false;
-        }
+//        if (proyecto.getEstadoProyectoId().getId() == 4 || proyecto.getEstadoProyectoId().getId() == 5 || proyecto.getEstadoProyectoId().getId() == 6 || proyecto.getEstadoProyectoId().getId() == 7) {
+//            int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "eliminar_tribunal");
+//            if (tienePermiso == 1) {
+//                renderedEliminar = true;
+//            } else {
+//                renderedEliminar = false;
+//            }
+//        } else {
+//            renderedEliminar = false;
+//        }
     }
 //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="MÉTODOS CRUD">
 
     public String crear(Usuario usuario, Proyecto proyecto) {
         String navegacion = "";
-        FacesContext facesContext = FacesContext.getCurrentInstance();
-        ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-        String param = (String) facesContext.getExternalContext().getRequestParameterMap().get("1");
-        try {
-            if (comprobarAutoresAptosSustentacion(proyecto)) {
-                if (comprobarTribunalesActivos(proyecto) == false) {
-                    if (proyecto.getEstadoProyectoId().getId() == 4 || proyecto.getEstadoProyectoId().getId() == 5 || proyecto.getEstadoProyectoId().getId() == 6 || proyecto.getEstadoProyectoId().getId() == 7) {
-                        int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "crear_tribunal");
-                        if (tienePermiso == 1) {
-                            sessionTribunal.setTribunal(new Tribunal());
-                            sessionTribunal.getTribunal().setProyectoId(proyecto);
-                            if (param.equals("crear-dlg")) {
-                                renderedDlgEditar = true;
-                                RequestContext.getCurrentInstance().execute("PF('dlgEditarTribunal').show()");
-                            }
-                        } else {
-                            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_crear") + ". " + bundle.getString("lbl.msm_consulte"), "");
-                            FacesContext.getCurrentInstance().addMessage(null, message);
-                        }
-                    } else {
-                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_crear") + ". " + bundle.getString("lbl.msm_consulte"), "");
-                        FacesContext.getCurrentInstance().addMessage(null, message);
-                    }
-                } else {
-                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_crear") + ". " + bundle.getString("lbl.msm_consulte"), "");
-                    FacesContext.getCurrentInstance().addMessage(null, message);
-                }
-            } else {
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.autor_no_apto") + ". " + bundle.getString("lbl.msm_consulte"), "");
-                FacesContext.getCurrentInstance().addMessage(null, message);
-            }
-        } catch (Exception e) {
-        }
+//        FacesContext facesContext = FacesContext.getCurrentInstance();
+//        ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
+//        String param = (String) facesContext.getExternalContext().getRequestParameterMap().get("1");
+//        try {
+//            if (comprobarAutoresAptosSustentacion(proyecto)) {
+//                if (comprobarTribunalesActivos(proyecto) == false) {
+//                    if (proyecto.getEstadoProyectoId().getId() == 4 || proyecto.getEstadoProyectoId().getId() == 5 || proyecto.getEstadoProyectoId().getId() == 6 || proyecto.getEstadoProyectoId().getId() == 7) {
+//                        int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "crear_tribunal");
+//                        if (tienePermiso == 1) {
+//                            sessionTribunal.setTribunal(new Tribunal());
+//                            sessionTribunal.getTribunal().setProyectoId(proyecto);
+//                            if (param.equals("crear-dlg")) {
+//                                renderedDlgEditar = true;
+//                                RequestContext.getCurrentInstance().execute("PF('dlgEditarTribunal').show()");
+//                            }
+//                        } else {
+//                            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_crear") + ". " + bundle.getString("lbl.msm_consulte"), "");
+//                            FacesContext.getCurrentInstance().addMessage(null, message);
+//                        }
+//                    } else {
+//                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_crear") + ". " + bundle.getString("lbl.msm_consulte"), "");
+//                        FacesContext.getCurrentInstance().addMessage(null, message);
+//                    }
+//                } else {
+//                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_crear") + ". " + bundle.getString("lbl.msm_consulte"), "");
+//                    FacesContext.getCurrentInstance().addMessage(null, message);
+//                }
+//            } else {
+//                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.autor_no_apto") + ". " + bundle.getString("lbl.msm_consulte"), "");
+//                FacesContext.getCurrentInstance().addMessage(null, message);
+//            }
+//        } catch (Exception e) {
+//        }
         return navegacion;
     }
-    
+
     public String editar(Usuario usuario, Tribunal tribunal, Proyecto proyecto) {
         String navegacion = "";
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
         String param = (String) facesContext.getExternalContext().getRequestParameterMap().get("1");
         try {
-            if (comprobarAutoresAptosSustentacion(proyecto)) {
-                if (proyecto.getEstadoProyectoId().getId() == 4 || proyecto.getEstadoProyectoId().getId() == 5 || proyecto.getEstadoProyectoId().getId() == 6 || proyecto.getEstadoProyectoId().getId() == 7) {
-                    int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "editar_tribunal");
-                    if (tienePermiso == 1) {
-                        sessionTribunal.setTribunal(tribunal);
-                        administrarMiembrosTribunal.buscar(sessionTribunal.getTribunal(), usuario, "");
-                        if (param.equals("editar-dlg")) {
-                            renderedDlgEditar = true;
-                            RequestContext.getCurrentInstance().execute("PF('dlgEditarTribunal').show()");
-                        }
-                    } else {
-                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_editar") + ". " + bundle.getString("lbl.msm_consulte"), "");
-                        FacesContext.getCurrentInstance().addMessage(null, message);
-                    }
-                } else {
-                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_editar") + ". " + bundle.getString("lbl.msm_consulte"), "");
-                    FacesContext.getCurrentInstance().addMessage(null, message);
-                }
-            } else {
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.autor_no_apto") + ". " + bundle.getString("lbl.msm_consulte"), "");
-                FacesContext.getCurrentInstance().addMessage(null, message);
-            }
+//            if (comprobarAutoresAptosSustentacion(proyecto)) {
+//                if (proyecto.getEstadoProyectoId().getId() == 4 || proyecto.getEstadoProyectoId().getId() == 5 || proyecto.getEstadoProyectoId().getId() == 6 || proyecto.getEstadoProyectoId().getId() == 7) {
+//                    int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "editar_tribunal");
+//                    if (tienePermiso == 1) {
+//                        sessionTribunal.setTribunal(tribunal);
+//                        administrarMiembrosTribunal.buscar(sessionTribunal.getTribunal(), usuario, "");
+//                        if (param.equals("editar-dlg")) {
+//                            renderedDlgEditar = true;
+//                            RequestContext.getCurrentInstance().execute("PF('dlgEditarTribunal').show()");
+//                        }
+//                    } else {
+//                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_editar") + ". " + bundle.getString("lbl.msm_consulte"), "");
+//                        FacesContext.getCurrentInstance().addMessage(null, message);
+//                    }
+//                } else {
+//                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_editar") + ". " + bundle.getString("lbl.msm_consulte"), "");
+//                    FacesContext.getCurrentInstance().addMessage(null, message);
+//                }
+//            } else {
+//                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.autor_no_apto") + ". " + bundle.getString("lbl.msm_consulte"), "");
+//                FacesContext.getCurrentInstance().addMessage(null, message);
+//            }
         } catch (Exception e) {
         }
         return navegacion;
     }
-    
+
     public String grabar(Tribunal tribunal, Proyecto proyecto, Usuario usuario) {
         String navegacion = "";
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
         String param = (String) facesContext.getExternalContext().getRequestParameterMap().get("1");
         try {
-            if (comprobarAutoresAptosSustentacion(proyecto)) {
-                tribunal.setProyectoId(proyecto);
-                List<EvaluacionTribunal> evaluacionTribunals = new ArrayList<>();
-                evaluacionTribunals.addAll(tribunal.getEvaluacionTribunalList());
-                tribunal.setEvaluacionTribunalList(new ArrayList<EvaluacionTribunal>());
-                List<Miembro> miembros = new ArrayList<>();
-                miembros.addAll(tribunal.getMiembroList());
-                tribunal.setMiembroList(new ArrayList<Miembro>());
-                if (tribunal.getId() == null) {
-                    if (proyecto.getEstadoProyectoId().getId() == 4 || proyecto.getEstadoProyectoId().getId() == 5 || proyecto.getEstadoProyectoId().getId() == 6 || proyecto.getEstadoProyectoId().getId() == 7) {
-                        int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "crear_tribunal");
-                        if (tienePermiso == 1) {
-                            tribunalFacadeLocal.create(tribunal);
-                            tribunal.setEvaluacionTribunalList(evaluacionTribunals);
-                            tribunal.setMiembroList(miembros);
-                            renderedCrear(usuario, proyecto);
-                            logFacadeLocal.create(logFacadeLocal.crearLog("Tribunal", tribunal.getId() + "", "CREAR", "|Descripcion " + tribunal.getDescripcion() + "|Es Activo= " + tribunal.getEsActivo() + "|Proyecto= " + tribunal.getProyectoId().getId(), usuario));
-                            if (param.equalsIgnoreCase("grabar-dlg")) {
-                                RequestContext.getCurrentInstance().execute("PF('dlgEditarTribunal').hide()");
-                                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_grabar"), "");
-                                FacesContext.getCurrentInstance().addMessage(null, message);
-                                sessionTribunal.setTribunal(new Tribunal());
-                            } else {
-                                if (param.equalsIgnoreCase("grabar-editar-dlg")) {
-                                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_grabar"), "");
-                                    FacesContext.getCurrentInstance().addMessage(null, message);
-                                }
-                            }
-                            buscar(proyecto, usuario);
-                        } else {
-                            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_crear") + ". " + bundle.getString("lbl.msm_consulte"), "");
-                            FacesContext.getCurrentInstance().addMessage(null, message);
-                        }
-                    } else {
-                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_crear") + ". " + bundle.getString("lbl.msm_consulte"), "");
-                        FacesContext.getCurrentInstance().addMessage(null, message);
-                    }
-                } else {
-                    if (proyecto.getEstadoProyectoId().getId() == 4 || proyecto.getEstadoProyectoId().getId() == 5 || proyecto.getEstadoProyectoId().getId() == 6 || proyecto.getEstadoProyectoId().getId() == 7) {
-                        int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "editar_tribunal");
-                        if (tienePermiso == 1) {
-                            tribunalFacadeLocal.edit(tribunal);
-                            tribunal.setEvaluacionTribunalList(evaluacionTribunals);
-                            tribunal.setMiembroList(miembros);
-                            logFacadeLocal.create(logFacadeLocal.crearLog("Tribunal", tribunal.getId() + "", "EDITAR", "|Descripcion " + tribunal.getDescripcion() + "|Es Activo= " + tribunal.getEsActivo() + "|Proyecto= " + tribunal.getProyectoId().getId(), usuario));
-                            if (param.equalsIgnoreCase("grabar-dlg")) {
-                                RequestContext.getCurrentInstance().execute("PF('dlgEditarTribunal').hide()");
-                                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_editar"), "");
-                                FacesContext.getCurrentInstance().addMessage(null, message);
-                                sessionTribunal.setTribunal(new Tribunal());
-                            } else {
-                                if (param.equalsIgnoreCase("grabar-editar-dlg")) {
-                                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_editar"), "");
-                                    FacesContext.getCurrentInstance().addMessage(null, message);
-                                }
-                            }
-                            buscar(proyecto, usuario);
-                        } else {
-                            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_crear") + ". " + bundle.getString("lbl.msm_consulte"), "");
-                            FacesContext.getCurrentInstance().addMessage(null, message);
-                        }
-                    } else {
-                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_crear") + ". " + bundle.getString("lbl.msm_consulte"), "");
-                        FacesContext.getCurrentInstance().addMessage(null, message);
-                    }
-                }
-            } else {
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.autor_no_apto") + ". " + bundle.getString("lbl.msm_consulte"), "");
-                FacesContext.getCurrentInstance().addMessage(null, message);
-            }
+//            if (comprobarAutoresAptosSustentacion(proyecto)) {
+//                tribunal.setProyectoId(proyecto);
+//                List<EvaluacionTribunal> evaluacionTribunals = new ArrayList<>();
+//                evaluacionTribunals.addAll(tribunal.getEvaluacionTribunalList());
+//                tribunal.setEvaluacionTribunalList(new ArrayList<EvaluacionTribunal>());
+//                List<Miembro> miembros = new ArrayList<>();
+//                miembros.addAll(tribunal.getMiembroList());
+//                tribunal.setMiembroList(new ArrayList<Miembro>());
+//                if (tribunal.getId() == null) {
+//                    if (proyecto.getEstadoProyectoId().getId() == 4 || proyecto.getEstadoProyectoId().getId() == 5 || proyecto.getEstadoProyectoId().getId() == 6 || proyecto.getEstadoProyectoId().getId() == 7) {
+//                        int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "crear_tribunal");
+//                        if (tienePermiso == 1) {
+//                            tribunalFacadeLocal.create(tribunal);
+//                            tribunal.setEvaluacionTribunalList(evaluacionTribunals);
+//                            tribunal.setMiembroList(miembros);
+//                            renderedCrear(usuario, proyecto);
+//                            logFacadeLocal.create(logFacadeLocal.crearLog("Tribunal", tribunal.getId() + "", "CREAR", "|Descripcion " + tribunal.getDescripcion() + "|Es Activo= " + tribunal.getEsActivo() + "|Proyecto= " + tribunal.getProyectoId().getId(), usuario));
+//                            if (param.equalsIgnoreCase("grabar-dlg")) {
+//                                RequestContext.getCurrentInstance().execute("PF('dlgEditarTribunal').hide()");
+//                                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_grabar"), "");
+//                                FacesContext.getCurrentInstance().addMessage(null, message);
+//                                sessionTribunal.setTribunal(new Tribunal());
+//                            } else {
+//                                if (param.equalsIgnoreCase("grabar-editar-dlg")) {
+//                                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_grabar"), "");
+//                                    FacesContext.getCurrentInstance().addMessage(null, message);
+//                                }
+//                            }
+//                            buscar(proyecto, usuario);
+//                        } else {
+//                            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_crear") + ". " + bundle.getString("lbl.msm_consulte"), "");
+//                            FacesContext.getCurrentInstance().addMessage(null, message);
+//                        }
+//                    } else {
+//                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_crear") + ". " + bundle.getString("lbl.msm_consulte"), "");
+//                        FacesContext.getCurrentInstance().addMessage(null, message);
+//                    }
+//                } else {
+//                    if (proyecto.getEstadoProyectoId().getId() == 4 || proyecto.getEstadoProyectoId().getId() == 5 || proyecto.getEstadoProyectoId().getId() == 6 || proyecto.getEstadoProyectoId().getId() == 7) {
+//                        int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "editar_tribunal");
+//                        if (tienePermiso == 1) {
+//                            tribunalFacadeLocal.edit(tribunal);
+//                            tribunal.setEvaluacionTribunalList(evaluacionTribunals);
+//                            tribunal.setMiembroList(miembros);
+//                            logFacadeLocal.create(logFacadeLocal.crearLog("Tribunal", tribunal.getId() + "", "EDITAR", "|Descripcion " + tribunal.getDescripcion() + "|Es Activo= " + tribunal.getEsActivo() + "|Proyecto= " + tribunal.getProyectoId().getId(), usuario));
+//                            if (param.equalsIgnoreCase("grabar-dlg")) {
+//                                RequestContext.getCurrentInstance().execute("PF('dlgEditarTribunal').hide()");
+//                                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_editar"), "");
+//                                FacesContext.getCurrentInstance().addMessage(null, message);
+//                                sessionTribunal.setTribunal(new Tribunal());
+//                            } else {
+//                                if (param.equalsIgnoreCase("grabar-editar-dlg")) {
+//                                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_editar"), "");
+//                                    FacesContext.getCurrentInstance().addMessage(null, message);
+//                                }
+//                            }
+//                            buscar(proyecto, usuario);
+//                        } else {
+//                            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_crear") + ". " + bundle.getString("lbl.msm_consulte"), "");
+//                            FacesContext.getCurrentInstance().addMessage(null, message);
+//                        }
+//                    } else {
+//                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_crear") + ". " + bundle.getString("lbl.msm_consulte"), "");
+//                        FacesContext.getCurrentInstance().addMessage(null, message);
+//                    }
+//                }
+//            } else {
+//                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.autor_no_apto") + ". " + bundle.getString("lbl.msm_consulte"), "");
+//                FacesContext.getCurrentInstance().addMessage(null, message);
+//            }
         } catch (Exception e) {
             System.out.println(e);
         }
         return navegacion;
     }
-    
+
     public boolean comprobarAutoresAptosSustentacion(Proyecto proyecto) {
         boolean var = false;
         try {
@@ -345,29 +345,29 @@ public class AdministrarTribunales implements Serializable {
         }
         return var;
     }
-    
+
     public void remover(Tribunal tribunal, Usuario usuario, Proyecto proyecto) {
         try {
-            FacesContext facesContext = FacesContext.getCurrentInstance();
-            ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            if (proyecto.getEstadoProyectoId().getId() == 4 || proyecto.getEstadoProyectoId().getId() == 5 || proyecto.getEstadoProyectoId().getId() == 6 || proyecto.getEstadoProyectoId().getId() == 7) {
-                int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "eliminar_tribunal");
-                if (tienePermiso == 1) {
-                    tribunal.setEsActivo(false);
-                    tribunalFacadeLocal.edit(tribunal);
-                    logFacadeLocal.create(logFacadeLocal.crearLog("Tribunal", tribunal.getId() + "", "EDITAR", "|Descripcion " + tribunal.getDescripcion() + "|Es Activo= " + tribunal.getEsActivo() + "|Proyecto= " + tribunal.getProyectoId().getId(), usuario));
-                    buscar(proyecto, usuario);
-                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_eliminar"), "");
-                    FacesContext.getCurrentInstance().addMessage(null, message);
-                }
-            } else {
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_eliminar") + ". " + bundle.getString("lbl.msm_consulte"), "");
-                FacesContext.getCurrentInstance().addMessage(null, message);
-            }
+//            FacesContext facesContext = FacesContext.getCurrentInstance();
+//            ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
+//            if (proyecto.getEstadoProyectoId().getId() == 4 || proyecto.getEstadoProyectoId().getId() == 5 || proyecto.getEstadoProyectoId().getId() == 6 || proyecto.getEstadoProyectoId().getId() == 7) {
+//                int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "eliminar_tribunal");
+//                if (tienePermiso == 1) {
+//                    tribunal.setEsActivo(false);
+//                    tribunalFacadeLocal.edit(tribunal);
+//                    logFacadeLocal.create(logFacadeLocal.crearLog("Tribunal", tribunal.getId() + "", "EDITAR", "|Descripcion " + tribunal.getDescripcion() + "|Es Activo= " + tribunal.getEsActivo() + "|Proyecto= " + tribunal.getProyectoId().getId(), usuario));
+//                    buscar(proyecto, usuario);
+//                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_eliminar"), "");
+//                    FacesContext.getCurrentInstance().addMessage(null, message);
+//                }
+//            } else {
+//                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_eliminar") + ". " + bundle.getString("lbl.msm_consulte"), "");
+//                FacesContext.getCurrentInstance().addMessage(null, message);
+//            }
         } catch (Exception e) {
         }
     }
-    
+
     public void buscarPorDocente(Long docenteId, String criterio) {
         try {
             tribunalesPorDocente = new ArrayList<>();
@@ -379,7 +379,7 @@ public class AdministrarTribunales implements Serializable {
         } catch (Exception e) {
         }
     }
-    
+
     public String viewBuscarTribunalesDocente(Docente docente) {
         String navegacion = "";
         try {
@@ -390,33 +390,33 @@ public class AdministrarTribunales implements Serializable {
         }
         return navegacion;
     }
-    
+
     public void buscar(Proyecto proyecto, Usuario usuario) {
         try {
-            FacesContext facesContext = FacesContext.getCurrentInstance();
-            ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            if (proyecto.getEstadoProyectoId().getId() == 4 || proyecto.getEstadoProyectoId().getId() == 5 || proyecto.getEstadoProyectoId().getId() == 6 || proyecto.getEstadoProyectoId().getId() == 7 || proyecto.getEstadoProyectoId().getId() == 8 || proyecto.getEstadoProyectoId().getId() == 9) {
-                this.tribunales = new ArrayList<>();
-                int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "buscar_tribunal");
-                if (tienePermiso == 1) {
-                    tribunales = tribunalFacadeLocal.buscarPorProyecto(proyecto.getId());
-                    for (Tribunal tr : tribunales) {
-                        administrarMiembrosTribunal.buscar(tr, usuario, "");
-                        administrarEvaluacionesTribunal.buscar(tr, usuario);
-                    }
-                    administrarEvaluacionesTribunal.listadoSustentacionesPorUsuarioCarrera(sessionUsuario.getUsuario(), proyecto);
-                } else {
-                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_buscar") + ". " + bundle.getString("lbl.msm_consulte"), "");
-                    FacesContext.getCurrentInstance().addMessage(null, message);
-                }
-            } else {
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_buscar") + ". " + bundle.getString("lbl.msm_consulte"), "");
-                FacesContext.getCurrentInstance().addMessage(null, message);
-            }
+//            FacesContext facesContext = FacesContext.getCurrentInstance();
+//            ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
+//            if (proyecto.getEstadoProyectoId().getId() == 4 || proyecto.getEstadoProyectoId().getId() == 5 || proyecto.getEstadoProyectoId().getId() == 6 || proyecto.getEstadoProyectoId().getId() == 7 || proyecto.getEstadoProyectoId().getId() == 8 || proyecto.getEstadoProyectoId().getId() == 9) {
+//                this.tribunales = new ArrayList<>();
+//                int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "buscar_tribunal");
+//                if (tienePermiso == 1) {
+//                    tribunales = tribunalFacadeLocal.buscarPorProyecto(proyecto.getId());
+//                    for (Tribunal tr : tribunales) {
+//                        administrarMiembrosTribunal.buscar(tr, usuario, "");
+//                        administrarEvaluacionesTribunal.buscar(tr, usuario);
+//                    }
+//                    administrarEvaluacionesTribunal.listadoSustentacionesPorUsuarioCarrera(sessionUsuario.getUsuario(), proyecto);
+//                } else {
+//                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_buscar") + ". " + bundle.getString("lbl.msm_consulte"), "");
+//                    FacesContext.getCurrentInstance().addMessage(null, message);
+//                }
+//            } else {
+//                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_buscar") + ". " + bundle.getString("lbl.msm_consulte"), "");
+//                FacesContext.getCurrentInstance().addMessage(null, message);
+//            }
         } catch (Exception e) {
         }
     }
-    
+
     public void onTabChange(TabChangeEvent event) {
         if (event.getTab().getId().equals("tabEvaluaciones")) {
             administrarEvaluacionesTribunal.renderedCrear(sessionUsuario.getUsuario());
@@ -448,127 +448,127 @@ public class AdministrarTribunales implements Serializable {
     public String getCriterioPorDocente() {
         return criterioPorDocente;
     }
-    
+
     public void setCriterioPorDocente(String criterioPorDocente) {
         this.criterioPorDocente = criterioPorDocente;
     }
-    
+
     public List<Tribunal> getTribunalesPorDocente() {
         return tribunalesPorDocente;
     }
-    
+
     public void setTribunalesPorDocente(List<Tribunal> tribunalesPorDocente) {
         this.tribunalesPorDocente = tribunalesPorDocente;
     }
-    
+
     public boolean isRenderedViewTribunal() {
         return renderedViewTribunal;
     }
-    
+
     public void setRenderedViewTribunal(boolean renderedViewTribunal) {
         this.renderedViewTribunal = renderedViewTribunal;
     }
-    
+
     public SessionTribunal getSessionTribunal() {
         return sessionTribunal;
     }
-    
+
     public void setSessionTribunal(SessionTribunal sessionTribunal) {
         this.sessionTribunal = sessionTribunal;
     }
-    
+
     public boolean isRenderedNoEditar() {
         return renderedNoEditar;
     }
-    
+
     public void setRenderedNoEditar(boolean renderedNoEditar) {
         this.renderedNoEditar = renderedNoEditar;
     }
-    
+
     public boolean isRenderedEliminar() {
         return renderedEliminar;
     }
-    
+
     public void setRenderedEliminar(boolean renderedEliminar) {
         this.renderedEliminar = renderedEliminar;
     }
-    
+
     public boolean isRenderedCrear() {
         return renderedCrear;
     }
-    
+
     public void setRenderedCrear(boolean renderedCrear) {
         this.renderedCrear = renderedCrear;
     }
-    
+
     public List<Tribunal> getTribunales() {
         return tribunales;
     }
-    
+
     public void setTribunales(List<Tribunal> tribunales) {
         this.tribunales = tribunales;
     }
-    
+
     public boolean isRenderedEditar() {
         return renderedEditar;
     }
-    
+
     public void setRenderedEditar(boolean renderedEditar) {
         this.renderedEditar = renderedEditar;
     }
-    
+
     public boolean isRenderedBuscar() {
         return renderedBuscar;
     }
-    
+
     public void setRenderedBuscar(boolean renderedBuscar) {
         this.renderedBuscar = renderedBuscar;
     }
-    
+
     public boolean isRenderedDlgEditar() {
         return renderedDlgEditar;
     }
-    
+
     public void setRenderedDlgEditar(boolean renderedDlgEditar) {
         this.renderedDlgEditar = renderedDlgEditar;
     }
-    
+
     public boolean isRenderedTribunal() {
         return renderedTribunal;
     }
-    
+
     public void setRenderedTribunal(boolean renderedTribunal) {
         this.renderedTribunal = renderedTribunal;
     }
-    
+
     public AdministrarEvaluacionesTribunal getAdministrarEvaluacionesTribunal() {
         return administrarEvaluacionesTribunal;
     }
-    
+
     public void setAdministrarEvaluacionesTribunal(AdministrarEvaluacionesTribunal administrarEvaluacionesTribunal) {
         this.administrarEvaluacionesTribunal = administrarEvaluacionesTribunal;
     }
-    
+
     public SessionUsuario getSessionUsuario() {
         return sessionUsuario;
     }
-    
+
     public void setSessionUsuario(SessionUsuario sessionUsuario) {
         this.sessionUsuario = sessionUsuario;
     }
-    
+
     public AdministrarMiembrosTribunal getAdministrarMiembrosTribunal() {
         return administrarMiembrosTribunal;
     }
-    
+
     public void setAdministrarMiembrosTribunal(AdministrarMiembrosTribunal administrarMiembrosTribunal) {
         this.administrarMiembrosTribunal = administrarMiembrosTribunal;
     }
-    
+
     public boolean isRenderedConsultaTribunal() {
         return renderedConsultaTribunal;
     }
-    
+
     public void setRenderedConsultaTribunal(boolean renderedConsultaTribunal) {
         this.renderedConsultaTribunal = renderedConsultaTribunal;
     }

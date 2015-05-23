@@ -6,7 +6,6 @@
 package edu.unl.sigett.adjudicacion.controlador;
 
 import edu.unl.sigett.entity.AutorProyecto;
-import edu.unl.sigett.entity.EstadoAutor;
 import edu.unl.sigett.entity.Proyecto;
 import edu.unl.sigett.entity.RenunciaAutor;
 import org.jlmallas.seguridad.entity.Usuario;
@@ -19,13 +18,12 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import org.primefaces.context.RequestContext;
-import edu.unl.sigett.dao.AutorProyectoFacadeLocal;
-import edu.unl.sigett.dao.EstadoAutorFacadeLocal;
+import edu.unl.sigett.dao.AutorProyectoDao;
 import edu.unl.sigett.dao.RenunciaAutorFacadeLocal;
 import edu.unl.sigett.dao.RenunciaFacadeLocal;
 import org.jlmallas.seguridad.dao.UsuarioDao;
 import edu.unl.sigett.adjudicacion.session.SessionRenunciaAutor;
-import edu.unl.sigett.postulacion.managed.session.SessionAutorProyecto;
+import edu.unl.sigett.autor.manged.session.SessionAutorProyecto;
 import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
 
 /**
@@ -40,8 +38,6 @@ public class AdministrarRenunciasAutor implements Serializable {
     private SessionUsuario sessionUsuario;
     @Inject
     private SessionRenunciaAutor sessionRenunciaAutor;
-    @EJB
-    private EstadoAutorFacadeLocal estadoAutorFacadeLocal;
     @Inject
     private SessionAutorProyecto sessionAutorProyecto;
     private List<RenunciaAutor> renunciaAutors;
@@ -52,7 +48,7 @@ public class AdministrarRenunciasAutor implements Serializable {
     @EJB
     private UsuarioDao usuarioFacadeLocal;
     @EJB
-    private AutorProyectoFacadeLocal autorProyectoFacadeLocal;
+    private AutorProyectoDao autorProyectoFacadeLocal;
 
     public AdministrarRenunciasAutor() {
     }
@@ -91,41 +87,41 @@ public class AdministrarRenunciasAutor implements Serializable {
     public String grabar(RenunciaAutor renunciaAutor, Usuario usuario, Proyecto proyecto, AutorProyecto autorProyecto) {
         String navegacion = "";
         try {
-            FacesContext facesContext = FacesContext.getCurrentInstance();
-            String param = (String) facesContext.getExternalContext().getRequestParameterMap().get("1");
-            EstadoAutor estadoAutor = estadoAutorFacadeLocal.find((int) 10);
-            renunciaAutor.setEsEditado(true);
-            autorProyecto.setFechaCulminacion(renunciaAutor.getRenuncia().getFecha());
-            autorProyecto.setEstadoAutorId(estadoAutor);
-            renunciaAutor.setAutorProyectoId(autorProyecto);
-            if (renunciaAutor.getId() == null) {
-                int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "crear_renuncia_autor");
-                if (tienePermiso == 1) {
-                    renunciaFacadeLocal.create(renunciaAutor.getRenuncia());
-                    renunciaAutor.setId(renunciaAutor.getRenuncia().getId());
-                    renunciaAutorFacadeLocal.create(renunciaAutor);
-                    autorProyectoFacadeLocal.edit(autorProyecto);
-                    if (param.equalsIgnoreCase("grabar-dlg")) {
-                        RequestContext.getCurrentInstance().execute("PF('dlgEditarRenunciaAutorProyecto').hide()");
-                    }
-                } else {
-                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "No tiene permisos para crear Renuncia. Consulte con el administrador del Sistema.", "");
-                    FacesContext.getCurrentInstance().addMessage(null, message);
-                }
-            } else {
-                int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "editar_renuncia_director");
-                if (tienePermiso == 1) {
-                    renunciaFacadeLocal.edit(renunciaAutor.getRenuncia());
-                    renunciaAutorFacadeLocal.edit(renunciaAutor);
-                    autorProyectoFacadeLocal.edit(autorProyecto);
-                    if (param.equalsIgnoreCase("grabar-dlg")) {
-                        RequestContext.getCurrentInstance().execute("PF('dlgEditarRenunciaDirectorProyecto').hide()");
-                    }
-                } else {
-                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "No tiene permisos para editar Renuncia. Consulte con el administrador del Sistema.", "");
-                    FacesContext.getCurrentInstance().addMessage(null, message);
-                }
-            }
+//            FacesContext facesContext = FacesContext.getCurrentInstance();
+//            String param = (String) facesContext.getExternalContext().getRequestParameterMap().get("1");
+//            EstadoAutor estadoAutor = estadoAutorFacadeLocal.find((int) 10);
+//            renunciaAutor.setEsEditado(true);
+//            autorProyecto.setFechaCulminacion(renunciaAutor.getRenuncia().getFecha());
+//            autorProyecto.setEstadoAutorId(estadoAutor);
+//            renunciaAutor.setAutorProyectoId(autorProyecto);
+//            if (renunciaAutor.getId() == null) {
+//                int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "crear_renuncia_autor");
+//                if (tienePermiso == 1) {
+//                    renunciaFacadeLocal.create(renunciaAutor.getRenuncia());
+//                    renunciaAutor.setId(renunciaAutor.getRenuncia().getId());
+//                    renunciaAutorFacadeLocal.create(renunciaAutor);
+//                    autorProyectoFacadeLocal.edit(autorProyecto);
+//                    if (param.equalsIgnoreCase("grabar-dlg")) {
+//                        RequestContext.getCurrentInstance().execute("PF('dlgEditarRenunciaAutorProyecto').hide()");
+//                    }
+//                } else {
+//                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "No tiene permisos para crear Renuncia. Consulte con el administrador del Sistema.", "");
+//                    FacesContext.getCurrentInstance().addMessage(null, message);
+//                }
+//            } else {
+//                int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "editar_renuncia_director");
+//                if (tienePermiso == 1) {
+//                    renunciaFacadeLocal.edit(renunciaAutor.getRenuncia());
+//                    renunciaAutorFacadeLocal.edit(renunciaAutor);
+//                    autorProyectoFacadeLocal.edit(autorProyecto);
+//                    if (param.equalsIgnoreCase("grabar-dlg")) {
+//                        RequestContext.getCurrentInstance().execute("PF('dlgEditarRenunciaDirectorProyecto').hide()");
+//                    }
+//                } else {
+//                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "No tiene permisos para editar Renuncia. Consulte con el administrador del Sistema.", "");
+//                    FacesContext.getCurrentInstance().addMessage(null, message);
+//                }
+//            }
         } catch (Exception e) {
         }
         return navegacion;
@@ -133,19 +129,19 @@ public class AdministrarRenunciasAutor implements Serializable {
 
     public void eliminar(RenunciaAutor renunciaAutor, AutorProyecto autorProyecto, Usuario usuario) {
         try {
-            int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "eliminar_renuncia_autor");
-            EstadoAutor estadoAutor = estadoAutorFacadeLocal.find(3);
-            if (tienePermiso == 1) {
-                renunciaAutorFacadeLocal.remove(renunciaAutor);
-                renunciaFacadeLocal.remove(renunciaAutor.getRenuncia());
-                if (renunciaAutorFacadeLocal.buscarPorAutorProyecto(autorProyecto.getId()).isEmpty()) {
-                    autorProyecto.setEstadoAutorId(estadoAutor);
-                    autorProyectoFacadeLocal.edit(autorProyecto);
-                }
-            } else {
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "No tiene permisos para eliminar Renuncia. Consulte con el administrador del Sistema.", "");
-                FacesContext.getCurrentInstance().addMessage(null, message);
-            }
+//            int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "eliminar_renuncia_autor");
+//            EstadoAutor estadoAutor = estadoAutorFacadeLocal.find(3);
+//            if (tienePermiso == 1) {
+//                renunciaAutorFacadeLocal.remove(renunciaAutor);
+//                renunciaFacadeLocal.remove(renunciaAutor.getRenuncia());
+//                if (renunciaAutorFacadeLocal.buscarPorAutorProyecto(autorProyecto.getId()).isEmpty()) {
+//                    autorProyecto.setEstadoAutorId(estadoAutor);
+//                    autorProyectoFacadeLocal.edit(autorProyecto);
+//                }
+//            } else {
+//                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "No tiene permisos para eliminar Renuncia. Consulte con el administrador del Sistema.", "");
+//                FacesContext.getCurrentInstance().addMessage(null, message);
+//            }
 
         } catch (Exception e) {
         }
@@ -167,14 +163,6 @@ public class AdministrarRenunciasAutor implements Serializable {
 
     public void setSessionRenunciaAutor(SessionRenunciaAutor sessionRenunciaAutor) {
         this.sessionRenunciaAutor = sessionRenunciaAutor;
-    }
-
-    public EstadoAutorFacadeLocal getEstadoAutorFacadeLocal() {
-        return estadoAutorFacadeLocal;
-    }
-
-    public void setEstadoAutorFacadeLocal(EstadoAutorFacadeLocal estadoAutorFacadeLocal) {
-        this.estadoAutorFacadeLocal = estadoAutorFacadeLocal;
     }
 
     public SessionAutorProyecto getSessionAutorProyecto() {

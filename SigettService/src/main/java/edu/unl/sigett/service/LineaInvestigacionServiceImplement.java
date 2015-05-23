@@ -7,9 +7,11 @@ package edu.unl.sigett.service;
 
 import edu.unl.sigett.dao.LineaInvestigacionCarreraDao;
 import edu.unl.sigett.dao.LineaInvestigacionDocenteDao;
+import edu.unl.sigett.dao.LineaInvestigacionProyectoDao;
 import edu.unl.sigett.entity.LineaInvestigacion;
 import edu.unl.sigett.entity.LineaInvestigacionCarrera;
 import edu.unl.sigett.entity.LineaInvestigacionDocente;
+import edu.unl.sigett.entity.LineaInvestigacionProyecto;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
@@ -26,6 +28,8 @@ public class LineaInvestigacionServiceImplement implements LineaInvestigacionSer
     private LineaInvestigacionCarreraDao lineaInvestigacionCarreraDao;
     @EJB
     private LineaInvestigacionDocenteDao lineaInvestigacionDocenteDao;
+    @EJB
+    private LineaInvestigacionProyectoDao lineaInvestigacionProyectoDao;
 
     @Override
     public List<LineaInvestigacion> buscarPorCarrera(LineaInvestigacionCarrera lineaInvestigacionCarrera) {
@@ -73,6 +77,23 @@ public class LineaInvestigacionServiceImplement implements LineaInvestigacionSer
         }
         for (LineaInvestigacion lic : lineasInvestigacionesCarreras) {
             if (!lineaInvestigacionDocentes.contains(lic)) {
+                lineaInvestigacions.add(lic);
+            }
+        }
+        return lineaInvestigacions;
+    }
+
+    @Override
+    public List<LineaInvestigacion> diferenciaCarreraProyecto(List<LineaInvestigacion> lics, List<LineaInvestigacion> lips) {
+        List<LineaInvestigacion> lineaInvestigacions = new ArrayList<>();
+        if(lics.isEmpty()){
+            return lics;
+        }
+        if (!lips.isEmpty()) {
+            return lics;
+        }
+        for (LineaInvestigacion lic : lics) {
+            if (!lips.contains(lic)) {
                 lineaInvestigacions.add(lic);
             }
         }

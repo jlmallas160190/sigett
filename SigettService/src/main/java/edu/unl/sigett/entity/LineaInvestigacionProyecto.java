@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package edu.unl.sigett.entity;
 
 import java.io.Serializable;
@@ -18,6 +17,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -31,6 +31,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "LineaInvestigacionProyecto.findAll", query = "SELECT l FROM LineaInvestigacionProyecto l"),
     @NamedQuery(name = "LineaInvestigacionProyecto.findById", query = "SELECT l FROM LineaInvestigacionProyecto l WHERE l.id = :id")})
 public class LineaInvestigacionProyecto implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,12 +44,16 @@ public class LineaInvestigacionProyecto implements Serializable {
     @JoinColumn(name = "linea_investigacion_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private LineaInvestigacion lineaInvestigacionId;
+    @Transient
+    private Integer count;
 
     public LineaInvestigacionProyecto() {
     }
 
-    public LineaInvestigacionProyecto(Long id) {
-        this.id = id;
+    public LineaInvestigacionProyecto(Proyecto proyecto,LineaInvestigacion li,Integer count) {
+        this.proyectoId=proyecto;
+        this.count=count;
+        this.lineaInvestigacionId=li;
     }
 
     public Long getId() {
@@ -75,6 +80,14 @@ public class LineaInvestigacionProyecto implements Serializable {
         this.lineaInvestigacionId = lineaInvestigacionId;
     }
 
+    public Integer getCount() {
+        return count;
+    }
+
+    public void setCount(Integer count) {
+        this.count = count;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -99,5 +112,5 @@ public class LineaInvestigacionProyecto implements Serializable {
     public String toString() {
         return "edu.unl.sigett.entity.LineaInvestigacionProyecto[ id=" + id + " ]";
     }
-    
+
 }

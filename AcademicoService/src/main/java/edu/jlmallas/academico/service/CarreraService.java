@@ -32,6 +32,8 @@ public interface CarreraService {
 
     List<Carrera> findRange(int[] range);
 
+    List<Carrera> diferenciaProyectoCarrera(final List<Carrera> usuarioCarreras, final List<Carrera> proyectosCarreras);
+
     int count();
 
 }

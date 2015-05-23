@@ -43,7 +43,7 @@ public class TemaProyecto implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "es_actual")
-    private boolean esActual;
+    private Boolean esActual;
     @JoinColumn(name = "tema_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Tema temaId;
@@ -57,12 +57,9 @@ public class TemaProyecto implements Serializable {
         this.esRemovido = false;
     }
 
-    public TemaProyecto(Long id) {
-        this.id = id;
-    }
-
-    public TemaProyecto(Long id, boolean esActual) {
-        this.id = id;
+    public TemaProyecto(Proyecto proyecto, Tema tema, Boolean esActual) {
+        this.proyectoId = proyecto;
+        this.temaId = tema;
         this.esActual = esActual;
     }
 
@@ -74,11 +71,11 @@ public class TemaProyecto implements Serializable {
         this.id = id;
     }
 
-    public boolean getEsActual() {
+    public Boolean getEsActual() {
         return esActual;
     }
 
-    public void setEsActual(boolean esActual) {
+    public void setEsActual(Boolean esActual) {
         this.esActual = esActual;
     }
 

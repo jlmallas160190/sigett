@@ -25,4 +25,6 @@ public interface LineaInvestigacionService {
     List<LineaInvestigacion> buscarDiferenciaDocenteCarrera(final LineaInvestigacionCarrera lineaInvestigacionCarrera,
             final LineaInvestigacionDocente lineaInvestigacionDocente);
 
+    List<LineaInvestigacion> diferenciaCarreraProyecto(List<LineaInvestigacion> lics, List<LineaInvestigacion> lips);
+
 }

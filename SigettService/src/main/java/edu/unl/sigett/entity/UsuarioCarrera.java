@@ -54,8 +54,8 @@ public class UsuarioCarrera implements Serializable {
         this.id = id;
     }
 
-    public UsuarioCarrera(Long id, int carreraId) {
-        this.id = id;
+    public UsuarioCarrera(Long usuarioId, Integer carreraId) {
+        this.usuarioId=usuarioId;
         this.carreraId = carreraId;
     }
 
