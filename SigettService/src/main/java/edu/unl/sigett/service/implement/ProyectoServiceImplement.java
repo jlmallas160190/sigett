@@ -56,9 +56,9 @@ public class ProyectoServiceImplement implements ProyectoService {
     public List<Proyecto> buscar(final ProyectoDTO proyectoDTO) {
         List<Proyecto> proyectos = new ArrayList<>();
         List<ProyectoCarreraOferta> pcos = proyectoOfertaCarreraDao.buscar(
-                proyectoDTO.getProyectoCarreraOferta() != null ? proyectoDTO.getProyectoCarreraOferta() : null);
+                proyectoDTO.getProyectoCarreraOferta() != null ? proyectoDTO.getProyectoCarreraOferta() : new ProyectoCarreraOferta());
         List<LineaInvestigacionProyecto> lips = lineaInvestigacionProyectoDao.buscar(
-                proyectoDTO.getLineaInvestigacionProyecto() != null ? proyectoDTO.getLineaInvestigacionProyecto() : null);
+                proyectoDTO.getLineaInvestigacionProyecto() != null ? proyectoDTO.getLineaInvestigacionProyecto() :new LineaInvestigacionProyecto());
         if (pcos == null) {
             return proyectos;
         }

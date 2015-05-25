@@ -157,7 +157,6 @@ public class AdministrarUsuarioCarrera implements Serializable {
     /**
      * GRABAR CARRERA
      *
-     * @return
      */
     public void grabarCarrera() {
         try {
@@ -243,5 +242,6 @@ public class AdministrarUsuarioCarrera implements Serializable {
             e.printStackTrace();
         }
     }
+
     //</editor-fold>
 }

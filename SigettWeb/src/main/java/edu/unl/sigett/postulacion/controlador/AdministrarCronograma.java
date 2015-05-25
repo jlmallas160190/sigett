@@ -25,7 +25,7 @@ import edu.unl.sigett.dao.ConfiguracionGeneralDao;
 import edu.unl.sigett.dao.CronogramaFacadeLocal;
 import edu.unl.sigett.dao.ProyectoDao;
 import edu.unl.sigett.enumeration.EstadoProyectoEnum;
-import edu.unl.sigett.proyecto.managed.session.SessionProyecto;
+import edu.unl.sigett.proyecto.SessionProyecto;
 import javax.inject.Inject;
 
 /**
@@ -61,23 +61,7 @@ public class AdministrarCronograma implements Serializable {
         }
     }
 
-    /**
-     * RENDERIZAR DATOS DE CRONOGRAMA SOLO CUANDO EL PROYECTO ESTÉ EN
-     * PERTINENCIA
-     *
-     * @param proyecto
-     */
-    public void renderedCronograma(Proyecto proyecto) {
-        try {
-            sessionProyecto.setRenderedEditarCronograma(Boolean.FALSE);
-            Item item = itemService.buscarPorId(sessionProyecto.getProyecto().getEstadoProyectoId() != null
-                    ? sessionProyecto.getProyecto().getEstadoProyectoId() : null);
-            if (item.getCodigo().equalsIgnoreCase(EstadoProyectoEnum.PERTINENTE.getTipo())) {
-                sessionProyecto.setRenderedEditarCronograma(Boolean.TRUE);
-            }
-        } catch (Exception e) {
-        }
-    }
+   
 
     public void abrirDialogoDuraciones(Cronograma cronograma) {
         try {

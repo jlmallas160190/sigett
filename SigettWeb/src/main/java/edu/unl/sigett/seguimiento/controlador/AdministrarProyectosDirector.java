@@ -11,7 +11,7 @@ import com.ocpsoft.pretty.faces.annotation.URLMapping;
 import com.ocpsoft.pretty.faces.annotation.URLMappings;
 import edu.unl.sigett.adjudicacion.controlador.AdministrarProrrogas;
 import edu.unl.sigett.finalizacion.controlador.AdministrarInformesProyecto;
-import edu.unl.sigett.autor.controlador.AdministrarAutoresProyecto;
+import edu.unl.sigett.postulacion.controlador.AutorProyectoPostulacionController;
 import edu.unl.sigett.postulacion.controlador.AdministrarCronograma;
 import edu.unl.sigett.seguimiento.session.SessionProyectosDirector;
 import edu.unl.sigett.comun.controlador.AdministrarConfiguraciones;
@@ -70,7 +70,7 @@ public class AdministrarProyectosDirector implements Serializable {
     @Inject
     private SessionDocenteUsuario sessionDocenteUsuario;
     @Inject
-    private AdministrarAutoresProyecto administrarAutoresProyecto;
+    private AutorProyectoPostulacionController administrarAutoresProyecto;
     @Inject
     private AdministrarActividades administrarActividades;
     @Inject
@@ -388,11 +388,11 @@ public class AdministrarProyectosDirector implements Serializable {
         this.renderedNoEditar = renderedNoEditar;
     }
 
-    public AdministrarAutoresProyecto getAdministrarAutoresProyecto() {
+    public AutorProyectoPostulacionController getAdministrarAutoresProyecto() {
         return administrarAutoresProyecto;
     }
 
-    public void setAdministrarAutoresProyecto(AdministrarAutoresProyecto administrarAutoresProyecto) {
+    public void setAdministrarAutoresProyecto(AutorProyectoPostulacionController administrarAutoresProyecto) {
         this.administrarAutoresProyecto = administrarAutoresProyecto;
     }
 

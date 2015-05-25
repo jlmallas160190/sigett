@@ -17,13 +17,12 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
-import org.primefaces.context.RequestContext;
 import edu.unl.sigett.dao.AutorProyectoDao;
 import edu.unl.sigett.dao.RenunciaAutorFacadeLocal;
 import edu.unl.sigett.dao.RenunciaFacadeLocal;
 import org.jlmallas.seguridad.dao.UsuarioDao;
 import edu.unl.sigett.adjudicacion.session.SessionRenunciaAutor;
-import edu.unl.sigett.autor.manged.session.SessionAutorProyecto;
+import edu.unl.sigett.autor.SessionAutorProyecto;
 import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
 
 /**

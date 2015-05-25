@@ -8,6 +8,7 @@ package edu.unl.sigett.dao.implement;
 import edu.unl.sigett.dao.AbstractDao;
 import edu.unl.sigett.dao.TemaProyectoDao;
 import edu.unl.sigett.entity.TemaProyecto;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -40,18 +41,25 @@ public class TemaProyectoDaoImplement extends AbstractDao<TemaProyecto> implemen
     public List<TemaProyecto> buscar(TemaProyecto temaProyecto) {
         StringBuilder sql = new StringBuilder();
         HashMap<String, Object> parametros = new HashMap<>();
-        sql.append("SELECT t FROM TemaProyecto t where");
+        Boolean existeFiltro = Boolean.FALSE;
+        sql.append("SELECT t FROM TemaProyecto t where 1=1");
         if (temaProyecto.getProyectoId() != null) {
-            sql.append(" t.proyectoId=:proyectoId ");
+            sql.append(" and t.proyectoId=:proyectoId ");
             parametros.put("proyectoId", temaProyecto.getProyectoId());
+            existeFiltro = Boolean.TRUE;
         }
         if (temaProyecto.getEsActual() != null) {
-            sql.append(" and t.actual=:actual ");
+            sql.append(" and t.esActual=:actual ");
             parametros.put("actual", temaProyecto.getEsActual());
+            existeFiltro = Boolean.TRUE;
         }
         if (temaProyecto.getTemaId() != null) {
             sql.append(" and t.tema=:tema ");
             parametros.put("tema", temaProyecto.getTemaId());
+            existeFiltro = Boolean.TRUE;
+        }
+        if (!existeFiltro) {
+            return new ArrayList<>();
         }
         final Query q = em.createQuery(sql.toString());
         for (String key : parametros.keySet()) {

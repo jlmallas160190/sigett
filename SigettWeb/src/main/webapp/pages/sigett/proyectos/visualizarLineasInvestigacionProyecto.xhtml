@@ -5,8 +5,8 @@
       xmlns:p="http://primefaces.org/ui">
 
     <body>
-        <p:dataGrid rendered="#{!sessionProyecto.renderedEditarDatosProyecto}" 
-                    value="#{sessionProyecto.proyecto.lineaInvestigacionProyectoList}"
+        <p:dataGrid rendered="#{!sessionProyecto.renderedInicio}" 
+                    value="#{sessionProyecto.proyectoSeleccionado.lineaInvestigacionProyectoList}"
                     var="lp" columns="1" rows="10" paginator="true" paginatorPosition="bottom"
                     paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} "
                     emptyMessage="#{msg['lbl.table.empty']}">

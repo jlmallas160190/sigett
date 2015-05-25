@@ -5,7 +5,7 @@
       xmlns:p="http://primefaces.org/ui">
 
     <body>
-        <p:dataGrid rendered="#{!sessionProyecto.renderedEditarDatosProyecto}" value="#{sessionProyecto.carrerasProyecto}"
+        <p:dataGrid rendered="#{!sessionProyecto.renderedInicio}sessionProyectoPostulacionionProyecto.carrerasProyecto}"
                     var="carrera" columns="1" rows="10" paginator="true" paginatorPosition="bottom"
                     paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} "
                     emptyMessage="#{msg['lbl.table.empty']}">

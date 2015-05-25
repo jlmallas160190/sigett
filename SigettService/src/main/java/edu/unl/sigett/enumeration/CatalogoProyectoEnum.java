@@ -11,7 +11,7 @@ package edu.unl.sigett.enumeration;
  */
 public enum CatalogoProyectoEnum {
 
-    PROYECTOINVESTIGACION("TRABAJO_TITULACION");
+    PROYECTOINVESTIGACION("PROYECTO_INVESTIGACION");
     String tipo;
 
     private CatalogoProyectoEnum(String tipo) {

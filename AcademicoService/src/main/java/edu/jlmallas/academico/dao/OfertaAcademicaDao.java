@@ -35,4 +35,6 @@ public interface OfertaAcademicaDao {
     OfertaAcademica ultimaOfertaPorFechaYPeriodoLectivo(Integer periodoId);
 
     OfertaAcademica primerOfertaPorFechaYPeriodoLectivo(Integer periodoId);
+
+    List<OfertaAcademica> buscar(final OfertaAcademica ofertaAcademica);
 }

@@ -36,7 +36,6 @@ import edu.unl.sigett.finalizacion.controlador.AdministrarActas;
 import edu.unl.sigett.finalizacion.controlador.AdministrarEvaluacionesTribunal;
 import edu.unl.sigett.finalizacion.controlador.AdministrarMiembrosTribunal;
 import edu.unl.sigett.finalizacion.controlador.AdministrarTribunales;
-import edu.unl.sigett.proyecto.managed.session.SessionProyecto;
 import edu.unl.sigett.reportes.AdministrarReportes;
 import edu.unl.sigett.seguimiento.controlador.AdministrarActividades;
 import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
@@ -123,14 +122,13 @@ import edu.unl.sigett.dao.LineaInvestigacionDocenteDao;
 import edu.unl.sigett.dto.ProyectoDTO;
 import edu.unl.sigett.entity.Tema;
 import edu.unl.sigett.enumeration.ConfiguracionProyectoEnum;
-import edu.unl.sigett.autor.controlador.AdministrarAutoresProyecto;
+import edu.unl.sigett.postulacion.controlador.AutorProyectoPostulacionController;
 import edu.unl.sigett.autor.dto.AutorProyectoDTO;
 import edu.unl.sigett.postulacion.controlador.AdministrarConfiguracionesProyecto;
 import edu.unl.sigett.postulacion.controlador.AdministrarCronograma;
 import edu.unl.sigett.postulacion.controlador.AdministrarDocentesProyecto;
 import edu.unl.sigett.postulacion.controlador.AdministrarDocumentosExpediente;
 import edu.unl.sigett.postulacion.controlador.AdministrarDocumentosProyecto;
-import edu.unl.sigett.postulacion.controlador.AdministrarTemaProyectos;
 import edu.unl.sigett.service.AutorProyectoService;
 import edu.unl.sigett.service.LineaInvestigacionProyectoService;
 import edu.unl.sigett.service.LineaInvestigacionService;
@@ -144,36 +142,17 @@ import edu.unl.sigett.util.MessageView;
  */
 @Named
 @SessionScoped
-@URLMappings(mappings = {
-    @URLMapping(
-            id = "editarProyecto",
-            pattern = "/editarProyecto/#{sessionProyecto.proyecto.id}",
-            viewId = "/faces/pages/sigett/proyectos/editarProyecto.xhtml"
-    ),
-    @URLMapping(
-            id = "crearProyecto",
-            pattern = "/crearProyecto/",
-            viewId = "/faces/pages/sigett/proyectos/editarProyecto.xhtml"
-    ),
-    @URLMapping(
-            id = "proyectos",
-            pattern = "/proyectos/",
-            viewId = "/faces/pages/sigett/proyectos/index.xhtml"
-    )
-})
-public class AdministrarProyectos implements Serializable {
+ class AdministrarProyectos implements Serializable {
 
     //<editor-fold defaultstate="collapsed" desc="MANAGED BEANS">
     @Inject
     private SessionUsuario sessionUsuario;
     @Inject
-    private SessionProyecto sessionProyecto;
+    SessionProyecto sessionProyecto;
     @Inject
     private SessionPeriodoAcademico sessionPeriodoAcademico;
     @Inject
     private AdministrarProrrogas administrarProrrogas;
-    @Inject
-    private AdministrarTemaProyectos administrarTemaProyectos;
     @Inject
     private AdministrarConfiguracionesProyecto administrarConfiguracionesProyecto;
     @Inject
@@ -183,7 +162,7 @@ public class AdministrarProyectos implements Serializable {
     @Inject
     private AdministrarDirectoresProyecto administrarDirectoresProyecto;
     @Inject
-    private AdministrarAutoresProyecto administrarAutoresProyecto;
+    AutorProyectoPostulacionController administrarAutoresProyecto;
     @Inject
     private AdministrarDocumentosProyecto administrarDocumentosProyecto;
     @Inject
@@ -306,17 +285,17 @@ public class AdministrarProyectos implements Serializable {
     }
 
     public void init() {
-        this.buscar();
+//        this.buscar();
         this.listadoCarreras();
-        this.listadoOfertasAcademicas();
+//        this.listadoOfertasAcademicas();
         this.renderedCrear();
         this.renderedEditar();
     }
 
     public void initEditar() {
-        this.buscarAutores(sessionProyecto.getProyecto());
-        pickListLineasInvestigacionProyecto(sessionProyecto.getProyecto());
-        pickListCarreras(sessionProyecto.getProyecto());
+        this.buscarAutores(sessionProyecto.getProyectoSeleccionado());
+//        pickListLineasInvestigacionProyecto(sessionProyecto.getProyectoSeleccionado());
+        pickListCarreras(sessionProyecto.getProyectoSeleccionado());
         this.listadoConfiguracionesProyecto();
         this.agregarConfiguracionesProyecto();
         this.editarTema();
@@ -334,25 +313,25 @@ public class AdministrarProyectos implements Serializable {
             int tienePermiso = usuarioDao.tienePermiso(sessionUsuario.getUsuario(), "crear_proyecto");
             if (tienePermiso == 1) {
                 Calendar fechaActual = Calendar.getInstance();
-                sessionProyecto.setProyecto(new Proyecto(Long.MIN_VALUE, Long.MIN_VALUE, Long.MIN_VALUE, "NINGUNA", fechaActual.getTime(), ""));
-                sessionProyecto.getProyecto().getCronograma().setProyecto(sessionProyecto.getProyecto());
-                sessionProyecto.getProyecto().getCronograma().setFechaInicio(fechaActual.getTime());
-                sessionProyecto.getProyecto().getCronograma().setFechaFin(fechaActual.getTime());
-                sessionProyecto.getProyecto().getCronograma().setFechaProrroga(fechaActual.getTime());
-                sessionProyecto.getProyecto().getCronograma().setDuracion(0.0);
+                sessionProyecto.setProyectoSeleccionado(new Proyecto(Long.MIN_VALUE, Long.MIN_VALUE, Long.MIN_VALUE, "NINGUNA", fechaActual.getTime(), ""));
+                sessionProyecto.getProyectoSeleccionado().getCronograma().setProyecto(sessionProyecto.getProyectoSeleccionado());
+                sessionProyecto.getProyectoSeleccionado().getCronograma().setFechaInicio(fechaActual.getTime());
+                sessionProyecto.getProyectoSeleccionado().getCronograma().setFechaFin(fechaActual.getTime());
+                sessionProyecto.getProyectoSeleccionado().getCronograma().setFechaProrroga(fechaActual.getTime());
+                sessionProyecto.getProyectoSeleccionado().getCronograma().setDuracion(0.0);
                 /*----------------------------------RENDERED-----------------------------------------------------*/
 //                administrarTipoProyectos.renderedCrear();
                 administrarAutoresProyecto.renderedBuscar(sessionUsuario.getUsuario());
-                administrarActividades.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyecto());
-                administrarDirectoresProyecto.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyecto());
+                administrarActividades.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
+                administrarDirectoresProyecto.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
                 administrarDocumentosProyecto.renderedBuscar(sessionUsuario.getUsuario());
-                administrarProrrogas.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyecto());
-                administrarTemaProyectos.renderedBuscar(sessionUsuario.getUsuario());
-                administrarTribunales.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyecto());
+                administrarProrrogas.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
+//                administrarTemaProyectos.renderedBuscar(sessionUsuario.getUsuario());
+                administrarTribunales.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
                 administrarDocentesProyecto.renderedBuscar(sessionUsuario.getUsuario());
                 administrarConfiguracionesProyecto.renderedBuscar(sessionUsuario.getUsuario());
-                administrarCronograma.renderedCronograma(sessionProyecto.getProyecto());
-                administrarProrrogas.tieneProrroga(sessionProyecto.getProyecto());
+//                administrarCronograma.renderedCronograma(sessionProyecto.getProyectoSeleccionado());
+                administrarProrrogas.tieneProrroga(sessionProyecto.getProyectoSeleccionado());
                 /*LISTADOS*/
                 this.lineaInvestigacionProyectosRemovidos = new ArrayList<>();
                 this.lineaInvestigacionProyectosAgregados = new ArrayList<>();
@@ -407,7 +386,7 @@ public class AdministrarProyectos implements Serializable {
                 }
             }
             sessionProyecto.setFilterLineaInvestigacionProyecto(sessionProyecto.getLineasInvestigacionProyecto());
-            buscar();
+//            buscar();
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -415,12 +394,12 @@ public class AdministrarProyectos implements Serializable {
 
     public void seleccionarOfertaAcademica(SelectEvent event) {
         sessionProyecto.setOfertaAcademicaSeleccionada((OfertaAcademica) event.getObject());
-        buscar();
+//        buscar();
     }
 
     public void seleccionarLineaInvestigacion(SelectEvent event) {
         sessionProyecto.setLineaInvestigacionProyectoSeleccionada((LineaInvestigacionProyecto) event.getObject());
-        buscar();
+//        buscar();
     }
 
     public void abandonar(Proyecto proyecto, Usuario usuario) {
@@ -464,12 +443,12 @@ public class AdministrarProyectos implements Serializable {
                 if (proyecto.getId() != null) {
                     proyecto = proyectoDao.find(proyecto.getId());
                 }
-                sessionProyecto.setProyecto(proyecto);
+                sessionProyecto.setProyectoSeleccionado(proyecto);
                 tipoProyecto = proyecto.getTipoProyectoId().toString();
                 estadoProyecto = proyecto.getEstadoProyectoId().toString();
                 catalogoProyecto = proyecto.getCatalogoProyectoId().toString();
-                sessionProyecto.getProyecto().setCronograma(cronogramaFacadeLocal.find(sessionProyecto.getProyecto().getId()));
-                pickListLineasInvestigacionProyecto(proyecto);
+                sessionProyecto.getProyectoSeleccionado().setCronograma(cronogramaFacadeLocal.find(sessionProyecto.getProyectoSeleccionado().getId()));
+//                pickListLineasInvestigacionProyecto(proyecto);
                 obtenerLineasInvestigacionProyecto(proyecto);
 //                listadoDocentes(proyecto);
                 pickListCarreras(proyecto);
@@ -483,35 +462,35 @@ public class AdministrarProyectos implements Serializable {
                 temas.addAll(temaProyectoDao.buscarPorProyecto(proyecto.getId()));
                 if (temas != null) {
                     if (!temas.isEmpty()) {
-                        administrarTemaProyectos.editar(temas.get(0), sessionUsuario.getUsuario());
+//                        administrarTemaProyectos.editar(temas.get(0), sessionUsuario.getUsuario());
                     } else {
-                        administrarTemaProyectos.crear(sessionUsuario.getUsuario());
+//                        administrarTemaProyectos.crear(sessionUsuario.getUsuario());
                     }
                 } else {
-                    administrarTemaProyectos.crear(sessionUsuario.getUsuario());
+//                    administrarTemaProyectos.crear(sessionUsuario.getUsuario());
                 }
                 /*Refrescar Documentos Proyecto*/
-                sessionProyecto.getProyecto().setDocumentoProyectoList(new ArrayList<DocumentoProyecto>());
-                sessionProyecto.getProyecto().getDocumentoProyectoList().addAll(documentoProyectoFacadeLocal.buscarPorProyecto(proyecto.getId()));
+                sessionProyecto.getProyectoSeleccionado().setDocumentoProyectoList(new ArrayList<DocumentoProyecto>());
+                sessionProyecto.getProyectoSeleccionado().getDocumentoProyectoList().addAll(documentoProyectoFacadeLocal.buscarPorProyecto(proyecto.getId()));
                 /*Refrescar Docentes Proyecto*/
-                sessionProyecto.getProyecto().setDocenteProyectoList(new ArrayList<DocenteProyecto>());
-                sessionProyecto.getProyecto().getDocenteProyectoList().addAll(docenteProyectoFacadeLocal.buscarPorProyecto(proyecto.getId()));
+                sessionProyecto.getProyectoSeleccionado().setDocenteProyectoList(new ArrayList<DocenteProyecto>());
+                sessionProyecto.getProyectoSeleccionado().getDocenteProyectoList().addAll(docenteProyectoFacadeLocal.buscarPorProyecto(proyecto.getId()));
                 /*Refrescar Directores Proyecto*/
-                sessionProyecto.getProyecto().setDirectorProyectoList(new ArrayList<DirectorProyecto>());
-                sessionProyecto.getProyecto().getDirectorProyectoList().addAll(directorProyectoFacadeLocal.buscarPorProyecto(proyecto.getId()));
+                sessionProyecto.getProyectoSeleccionado().setDirectorProyectoList(new ArrayList<DirectorProyecto>());
+                sessionProyecto.getProyectoSeleccionado().getDirectorProyectoList().addAll(directorProyectoFacadeLocal.buscarPorProyecto(proyecto.getId()));
                 /*Refrescar Autores Proyecto*/
-                sessionProyecto.getProyecto().setAutorProyectoList(new ArrayList<AutorProyecto>());
-                sessionProyecto.getProyecto().getAutorProyectoList().addAll(autorProyectoFacadeLocal.buscarPorProyecto(proyecto.getId()));
+                sessionProyecto.getProyectoSeleccionado().setAutorProyectoList(new ArrayList<AutorProyecto>());
+                sessionProyecto.getProyectoSeleccionado().getAutorProyectoList().addAll(autorProyectoFacadeLocal.buscarPorProyecto(proyecto.getId()));
                 /*New Prorrogas*/
-                sessionProyecto.getProyecto().getCronograma().setProrrogaList(new ArrayList<Prorroga>());
+                sessionProyecto.getProyectoSeleccionado().getCronograma().setProrrogaList(new ArrayList<Prorroga>());
                 /*---------------------------------------------------RENDERED--------------------------------------------------------*/
                 administrarDirectoresProyecto.renderedBuscar(sessionUsuario.getUsuario(), proyecto);
                 administrarAutoresProyecto.renderedBuscar(sessionUsuario.getUsuario());
                 administrarDocumentosProyecto.renderedBuscar(sessionUsuario.getUsuario());
                 administrarProrrogas.renderedBuscar(sessionUsuario.getUsuario(), proyecto);
-                administrarTribunales.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyecto());
+                administrarTribunales.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
                 administrarDocentesProyecto.renderedBuscar(sessionUsuario.getUsuario());
-                administrarCronograma.renderedCronograma(sessionProyecto.getProyecto());
+//                administrarCronograma.renderedCronograma(sessionProyecto.getProyectoSeleccionado());
                 administrarConfiguracionesProyecto.renderedBuscar(sessionUsuario.getUsuario());
                 administrarProrrogas.tieneProrroga(proyecto);
                 renderedCaducado(proyecto);
@@ -640,7 +619,7 @@ public class AdministrarProyectos implements Serializable {
             LineaInvestigacion li = lineaInvestigacionFacadeLocal.find(id);
             LineaInvestigacionProyecto lp = new LineaInvestigacionProyecto();
             lp.setLineaInvestigacionId(li);
-            lp.setProyectoId(sessionProyecto.getProyecto());
+            lp.setProyectoId(sessionProyecto.getProyectoSeleccionado());
             lips.add(lp);
         }
         if (proyecto.getId() != null) {
@@ -769,23 +748,23 @@ public class AdministrarProyectos implements Serializable {
                     lineaInvestigacionProyectosAgregados.remove(lp);
                     lineaInvestigacionProyectosRemovidos.add(lp);
                     int pos = 0;
-                    for (LineaInvestigacionProyecto lip : sessionProyecto.getProyecto().getLineaInvestigacionProyectoList()) {
+                    for (LineaInvestigacionProyecto lip : sessionProyecto.getProyectoSeleccionado().getLineaInvestigacionProyectoList()) {
                         if (!lip.getLineaInvestigacionId().equals(lp.getLineaInvestigacionId())) {
                             pos++;
                         } else {
                             break;
                         }
                     }
-                    sessionProyecto.getProyecto().getLineaInvestigacionProyectoList().remove(pos);
+                    sessionProyecto.getProyectoSeleccionado().getLineaInvestigacionProyectoList().remove(pos);
                     lineaInvestigacions.remove(pos);
 //                    listadoDocentes(sessionProyecto.getProyecto());
 
                 } else {
                     if (event.isAdd()) {
-                        if (contieneLineaInvestigacion(sessionProyecto.getProyecto().getLineaInvestigacionProyectoList(), lp)) {
+                        if (contieneLineaInvestigacion(sessionProyecto.getProyectoSeleccionado().getLineaInvestigacionProyectoList(), lp)) {
                             lineaInvestigacionProyectosRemovidos.remove(lp);
                         }
-                        sessionProyecto.getProyecto().getLineaInvestigacionProyectoList().add(lp);
+                        sessionProyecto.getProyectoSeleccionado().getLineaInvestigacionProyectoList().add(lp);
                         lineaInvestigacions.add(lp.getLineaInvestigacionId());
                         lineaInvestigacionProyectosAgregados.add(lp);
 //                        listadoDocentes(sessionProyecto.getProyecto());
@@ -799,19 +778,19 @@ public class AdministrarProyectos implements Serializable {
     }
 
     public void onTabChange(TabChangeEvent event) {
-        if (sessionProyecto.getProyecto() != null) {
+        if (sessionProyecto.getProyectoSeleccionado() != null) {
             switch (event.getTab().getId()) {
                 case "tabPropiedades":
                     /*-----------------------Configuraciones Proyecto----------------------------------------------------*/
-                    administrarConfiguracionesProyecto.buscar(administrarConfiguracionesProyecto.getCriterio(), sessionProyecto.getProyecto());
-                    administrarConfiguracionesProyecto.renderedEditar(sessionUsuario.getUsuario(), sessionProyecto.getProyecto());
+                    administrarConfiguracionesProyecto.buscar(administrarConfiguracionesProyecto.getCriterio(), sessionProyecto.getProyectoSeleccionado());
+                    administrarConfiguracionesProyecto.renderedEditar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
                     /*----------------------------------------------Documentos Proyecto-------------------------------------------------------*/
                     administrarDocumentosProyecto.setRenderedDlgEditar(false);
                     /*----------------------------------------------Directores-------------------------------------------------------*/
                     administrarDirectoresProyecto.setRenderedDlgBuscarDirectoresDisponibles(false);
                     administrarDirectoresProyecto.setRenderedDlgOficio(false);
                     administrarDirectoresProyecto.setRenderedDlgEditar(false);
-                    administrarDirectoresProyecto.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyecto());
+                    administrarDirectoresProyecto.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
                     /*------------------------------------------------------Docentes Proyecto----------------------------------------------*/
                     administrarDocentesProyecto.setRenderedDlgBuscarDocentesDisponibles(false);
                     administrarDocentesProyecto.setRenderedDlgOficioDocenteProyecto(false);
@@ -831,21 +810,21 @@ public class AdministrarProyectos implements Serializable {
                     administrarProrrogas.setRenderedDlgOficio(false);
                     administrarProrrogas.setRenderedDlgEditar(false);
                     administrarProrrogas.setRenderedDlgRespuestaAutorProyecto(false);
-                    administrarProrrogas.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyecto());
+                    administrarProrrogas.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
                     /*----------------------------------------------Actividades-------------------------------------------------------*/
                     administrarActividades.setRenderedDlgEditar(false);
-                    administrarActividades.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyecto());
+                    administrarActividades.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
                     /*-----------------------------------Documentos Expediente-------------------------------------------------------------*/
                     administrarDocumentosExpediente.setRenderedDlgEditar(false);
                     break;
                 case "tabAutores":
                     /*------------------------------------------Autores------------------------------------------------------------------------------*/
 //                    administrarAutoresProyecto.buscar("", sessionProyecto.getProyecto(), sessionUsuario.getUsuario());
-                    administrarAutoresProyecto.renderedBuscarAspirantes(sessionUsuario.getUsuario(), sessionProyecto.getProyecto());
+                    administrarAutoresProyecto.renderedBuscarAspirantes(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
                     administrarAutoresProyecto.renderedCrear(sessionUsuario.getUsuario());
                     administrarAutoresProyecto.renderedEditar(sessionUsuario.getUsuario());
-                    administrarAutoresProyecto.renderedEliminar(sessionUsuario.getUsuario(), sessionProyecto.getProyecto());
-                    administrarAutoresProyecto.renderedSeleccionar(sessionUsuario.getUsuario(), sessionProyecto.getProyecto());
+                    administrarAutoresProyecto.renderedEliminar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
+                    administrarAutoresProyecto.renderedSeleccionar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
                     administrarAutoresProyecto.setRenderedDlgEditarAutorProyecto(false);
 //                    administrarEstudiantes.setRenderedDlgEditar(false);
                     /*----------------------------------------------Documentos-------------------------------------------------------*/
@@ -854,7 +833,7 @@ public class AdministrarProyectos implements Serializable {
                     administrarDirectoresProyecto.setRenderedDlgBuscarDirectoresDisponibles(false);
                     administrarDirectoresProyecto.setRenderedDlgOficio(false);
                     administrarDirectoresProyecto.setRenderedDlgEditar(false);
-                    administrarDirectoresProyecto.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyecto());
+                    administrarDirectoresProyecto.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
                     /*------------------------------------------------------Docentes Proyecto----------------------------------------------*/
                     administrarDocentesProyecto.setRenderedDlgBuscarDocentesDisponibles(false);
                     administrarDocentesProyecto.setRenderedDlgOficioDocenteProyecto(false);
@@ -870,22 +849,22 @@ public class AdministrarProyectos implements Serializable {
                     administrarProrrogas.setRenderedDlgOficio(false);
                     administrarProrrogas.setRenderedDlgEditar(false);
                     administrarProrrogas.setRenderedDlgRespuestaAutorProyecto(false);
-                    administrarProrrogas.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyecto());
+                    administrarProrrogas.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
                     /*----------------------------------------------Actividades-------------------------------------------------------*/
                     administrarActividades.setRenderedDlgEditar(false);
-                    administrarActividades.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyecto());
+                    administrarActividades.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
                     /*------------------------------------------------------Documentos Expediente----------------------------------------------*/
                     administrarDocumentosExpediente.setRenderedDlgEditar(false);
                     break;
                 case "tabDocentesProyecto":
                     /*------------------------------DOCENTES---------------------------------------------------*/
-                    administrarDocentesProyecto.buscar("", sessionUsuario.getUsuario(), sessionProyecto.getProyecto());
+                    administrarDocentesProyecto.buscar("", sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
                     administrarDocentesProyecto.renderedBuscar(sessionUsuario.getUsuario());
                     administrarDocentesProyecto.renderedEditar(sessionUsuario.getUsuario());
-                    administrarDocentesProyecto.renderedBuscarEspecialista(sessionUsuario.getUsuario(), sessionProyecto.getProyecto());
-                    administrarDocentesProyecto.renderedEliminar(sessionUsuario.getUsuario(), sessionProyecto.getProyecto());
-                    administrarDocentesProyecto.renderedSeleccionarDocenteEspecialista(sessionUsuario.getUsuario(), sessionProyecto.getProyecto());
-                    administrarDocentesProyecto.renderedSortearDocente(sessionUsuario.getUsuario(), sessionProyecto.getProyecto());
+                    administrarDocentesProyecto.renderedBuscarEspecialista(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
+                    administrarDocentesProyecto.renderedEliminar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
+                    administrarDocentesProyecto.renderedSeleccionarDocenteEspecialista(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
+                    administrarDocentesProyecto.renderedSortearDocente(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
                     administrarDocentesProyecto.setRenderedDlgBuscarDocentesDisponibles(false);
                     administrarDocentesProyecto.setRenderedDlgOficioDocenteProyecto(false);
                     administrarDocentesProyecto.setRenderedDlgEditar(false);
@@ -897,7 +876,7 @@ public class AdministrarProyectos implements Serializable {
                     administrarDirectoresProyecto.setRenderedDlgBuscarDirectoresDisponibles(false);
                     administrarDirectoresProyecto.setRenderedDlgOficio(false);
                     administrarDirectoresProyecto.setRenderedDlgEditar(false);
-                    administrarDirectoresProyecto.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyecto());
+                    administrarDirectoresProyecto.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
                     /*----------------------------------------------Autores-------------------------------------------------------*/
                     administrarAutoresProyecto.setRenderedDlgEditarAutorProyecto(false);
 //                    administrarEstudiantes.setRenderedDlgEditar(false);
@@ -913,16 +892,16 @@ public class AdministrarProyectos implements Serializable {
                     administrarProrrogas.setRenderedDlgOficio(false);
                     administrarProrrogas.setRenderedDlgEditar(false);
                     administrarProrrogas.setRenderedDlgRespuestaAutorProyecto(false);
-                    administrarProrrogas.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyecto());
+                    administrarProrrogas.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
                     /*----------------------------------------------Actividades-------------------------------------------------------*/
                     administrarActividades.setRenderedDlgEditar(false);
-                    administrarActividades.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyecto());
+                    administrarActividades.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
                     /*------------------------------------------------------Documentos Expediente----------------------------------------------*/
                     administrarDocumentosExpediente.setRenderedDlgEditar(false);
                     break;
                 case "tabDocumentosProyecto":
                     /*----------------------------------------------Documentos-------------------------------------------------------*/
-                    administrarDocumentosProyecto.buscar(sessionProyecto.getProyecto());
+                    administrarDocumentosProyecto.buscar(sessionProyecto.getProyectoSeleccionado());
                     administrarDocumentosProyecto.renderedCrear(sessionUsuario.getUsuario());
                     administrarDocumentosProyecto.renderedEditar(sessionUsuario.getUsuario());
                     administrarDocumentosProyecto.renderedEliminar(sessionUsuario.getUsuario());
@@ -931,7 +910,7 @@ public class AdministrarProyectos implements Serializable {
                     administrarDirectoresProyecto.setRenderedDlgBuscarDirectoresDisponibles(false);
                     administrarDirectoresProyecto.setRenderedDlgOficio(false);
                     administrarDirectoresProyecto.setRenderedDlgEditar(false);
-                    administrarDirectoresProyecto.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyecto());
+                    administrarDirectoresProyecto.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
                     /*----------------------------------------------Docentes-------------------------------------------------------*/
                     administrarDocentesProyecto.setRenderedDlgBuscarDocentesDisponibles(false);
                     administrarDocentesProyecto.setRenderedDlgOficioDocenteProyecto(false);
@@ -948,21 +927,21 @@ public class AdministrarProyectos implements Serializable {
                     administrarMiembrosTribunal.setRenderedDlgOficio(false);
                     /*----------------------------------------------Actividades-------------------------------------------------------*/
                     administrarActividades.setRenderedDlgEditar(false);
-                    administrarActividades.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyecto());
+                    administrarActividades.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
                     /*-----------------------------------------METODOS PRORROGAS-------------------------------------------------*/
                     administrarProrrogas.setRenderedDlgOficio(false);
                     administrarProrrogas.setRenderedDlgEditar(false);
                     administrarProrrogas.setRenderedDlgRespuestaAutorProyecto(false);
-                    administrarProrrogas.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyecto());
+                    administrarProrrogas.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
                     break;
                 case "tabDirectoresProyecto":
                     /*----------------------------------------------Directores-------------------------------------------------------*/
-                    administrarDirectoresProyecto.buscar("", sessionUsuario.getUsuario(), sessionProyecto.getProyecto());
-                    administrarDirectoresProyecto.renderedBuscarDirectorDisponible(sessionUsuario.getUsuario(), sessionProyecto.getProyecto());
+                    administrarDirectoresProyecto.buscar("", sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
+                    administrarDirectoresProyecto.renderedBuscarDirectorDisponible(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
                     administrarDirectoresProyecto.renderedEditar(sessionUsuario.getUsuario());
-                    administrarDirectoresProyecto.renderedEliminar(sessionUsuario.getUsuario(), sessionProyecto.getProyecto());
-                    administrarDirectoresProyecto.renderedSeleccionar(sessionUsuario.getUsuario(), sessionProyecto.getProyecto());
-                    administrarDirectoresProyecto.renderedSortearDirectorProyecto(sessionUsuario.getUsuario(), sessionProyecto.getProyecto());
+                    administrarDirectoresProyecto.renderedEliminar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
+                    administrarDirectoresProyecto.renderedSeleccionar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
+                    administrarDirectoresProyecto.renderedSortearDirectorProyecto(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
                     administrarDirectoresProyecto.setRenderedDlgBuscarDirectoresDisponibles(false);
                     administrarDirectoresProyecto.setRenderedDlgOficio(false);
                     administrarDirectoresProyecto.setRenderedDlgEditar(false);
@@ -990,19 +969,19 @@ public class AdministrarProyectos implements Serializable {
                     administrarProrrogas.setRenderedDlgOficio(false);
                     administrarProrrogas.setRenderedDlgEditar(false);
                     administrarProrrogas.setRenderedDlgRespuestaAutorProyecto(false);
-                    administrarProrrogas.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyecto());
+                    administrarProrrogas.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
                     /*----------------------------------------------Actividades-------------------------------------------------------*/
                     administrarActividades.setRenderedDlgEditar(false);
-                    administrarActividades.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyecto());
+                    administrarActividades.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
                     break;
                 case "tabProrrogas":
                     /*-------------------------------------------------MÉTODOS PRÓRROGAS---------------------------------------------------------*/
-                    administrarProrrogas.buscar(sessionProyecto.getProyecto().getCronograma(), sessionUsuario.getUsuario(), "");
-                    administrarProrrogas.renderedCrear(sessionUsuario.getUsuario(), sessionProyecto.getProyecto());
-                    administrarProrrogas.renderedEditar(sessionUsuario.getUsuario(), sessionProyecto.getProyecto());
-                    administrarProrrogas.renderedEliminar(sessionUsuario.getUsuario(), sessionProyecto.getProyecto());
+                    administrarProrrogas.buscar(sessionProyecto.getProyectoSeleccionado().getCronograma(), sessionUsuario.getUsuario(), "");
+                    administrarProrrogas.renderedCrear(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
+                    administrarProrrogas.renderedEditar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
+                    administrarProrrogas.renderedEliminar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
                     administrarProrrogas.renderedImprimirOficio(sessionUsuario.getUsuario());
-                    administrarProrrogas.renderedAceptar(sessionUsuario.getUsuario(), sessionProyecto.getProyecto());
+                    administrarProrrogas.renderedAceptar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
                     administrarProrrogas.setRenderedDlgOficio(false);
                     administrarProrrogas.setRenderedDlgEditar(false);
                     administrarProrrogas.setRenderedDlgRespuestaAutorProyecto(false);
@@ -1012,7 +991,7 @@ public class AdministrarProyectos implements Serializable {
                     administrarDirectoresProyecto.setRenderedDlgBuscarDirectoresDisponibles(false);
                     administrarDirectoresProyecto.setRenderedDlgOficio(false);
                     administrarDirectoresProyecto.setRenderedDlgEditar(false);
-                    administrarDirectoresProyecto.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyecto());
+                    administrarDirectoresProyecto.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
                     /*----------------------------------------------Documentos Expediente-------------------------------------------------------*/
                     administrarDocumentosExpediente.setRenderedDlgEditar(false);
                     /*----------------------------------------------Docentes Proyecto-------------------------------------------------------*/
@@ -1032,13 +1011,13 @@ public class AdministrarProyectos implements Serializable {
                     administrarMiembrosTribunal.setRenderedDlgOficio(false);
                     /*----------------------------------------------Actividades-------------------------------------------------------*/
                     administrarActividades.setRenderedDlgEditar(false);
-                    administrarActividades.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyecto());
+                    administrarActividades.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
                     break;
                 case "tabActividades":
                     /*----------------------------------------------Actividades-------------------------------------------------------*/
-                    administrarActividades.buscarPorCronograma(administrarActividades.getCriterio(), sessionProyecto.getProyecto().getCronograma(), sessionUsuario.getUsuario());
-                    administrarActividades.renderedCrear(sessionUsuario.getUsuario(), sessionProyecto.getProyecto());
-                    administrarActividades.renderedEditar(sessionUsuario.getUsuario(), sessionProyecto.getProyecto());
+                    administrarActividades.buscarPorCronograma(administrarActividades.getCriterio(), sessionProyecto.getProyectoSeleccionado().getCronograma(), sessionUsuario.getUsuario());
+                    administrarActividades.renderedCrear(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
+                    administrarActividades.renderedEditar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
                     administrarActividades.renderedCrearSubActividad(null, null);
                     administrarActividades.setRenderedDlgEditar(false);
                     /*----------------------------------------------Documentos-------------------------------------------------------*/
@@ -1047,7 +1026,7 @@ public class AdministrarProyectos implements Serializable {
                     administrarDirectoresProyecto.setRenderedDlgBuscarDirectoresDisponibles(false);
                     administrarDirectoresProyecto.setRenderedDlgOficio(false);
                     administrarDirectoresProyecto.setRenderedDlgEditar(false);
-                    administrarDirectoresProyecto.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyecto());
+                    administrarDirectoresProyecto.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
                     /*----------------------------------------------Docentes-------------------------------------------------------*/
                     administrarDocentesProyecto.setRenderedDlgBuscarDocentesDisponibles(false);
                     administrarDocentesProyecto.setRenderedDlgOficioDocenteProyecto(false);
@@ -1063,17 +1042,17 @@ public class AdministrarProyectos implements Serializable {
                     administrarProrrogas.setRenderedDlgOficio(false);
                     administrarProrrogas.setRenderedDlgEditar(false);
                     administrarProrrogas.setRenderedDlgRespuestaAutorProyecto(false);
-                    administrarProrrogas.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyecto());
+                    administrarProrrogas.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
                     break;
 
                 case "tabHistorialDirectores":
                     /*----------------------------------------------Directores-------------------------------------------------------*/
-                    administrarDirectoresProyecto.historialDirectoresProyecto(administrarDirectoresProyecto.getCriterioHistorialDirectorProyecto(), sessionProyecto.getProyecto());
+                    administrarDirectoresProyecto.historialDirectoresProyecto(administrarDirectoresProyecto.getCriterioHistorialDirectorProyecto(), sessionProyecto.getProyectoSeleccionado());
                     administrarDirectoresProyecto.setRenderedDlgBuscarDirectoresDisponibles(false);
                     administrarDirectoresProyecto.setRenderedDlgOficio(false);
                     administrarDirectoresProyecto.setRenderedDlgEditar(false);
                     administrarDirectoresProyecto.renderedImprimirOficio(sessionUsuario.getUsuario());
-                    administrarDirectoresProyecto.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyecto());
+                    administrarDirectoresProyecto.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
                     /*----------------------------------------------Docentes-------------------------------------------------------*/
                     administrarDocentesProyecto.setRenderedDlgBuscarDocentesDisponibles(false);
                     administrarDocentesProyecto.setRenderedDlgOficioDocenteProyecto(false);
@@ -1086,27 +1065,27 @@ public class AdministrarProyectos implements Serializable {
                     administrarDocumentosProyecto.setRenderedDlgEditar(false);
                     /*----------------------------------------------Actividades-------------------------------------------------------*/
                     administrarActividades.setRenderedDlgEditar(false);
-                    administrarActividades.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyecto());
+                    administrarActividades.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
                     /*----------------------------------------------Prorrogas-------------------------------------------------------*/
                     administrarProrrogas.setRenderedDlgOficio(false);
                     administrarProrrogas.setRenderedDlgEditar(false);
                     administrarProrrogas.setRenderedDlgRespuestaAutorProyecto(false);
-                    administrarProrrogas.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyecto());
+                    administrarProrrogas.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
                     /*----------------------------------------------Documentos expediente-------------------------------------------------------*/
                     administrarDocumentosExpediente.setRenderedDlgEditar(false);
                 case "tabDatosInicio":
                     /*----------------------------------------------Datos Proyectos-------------------------------------------------------*/
 //                    renderedEditarDatosProyecto(sessionProyecto.getProyecto());
                     /*----------------------------------------------Cronograma-------------------------------------------------------*/
-                    administrarCronograma.renderedCronograma(sessionProyecto.getProyecto());
-                    administrarCronograma.editarCronograma(sessionProyecto.getProyecto().getCronograma());
+//                    administrarCronograma.renderedCronograma(sessionProyecto.getProyectoSeleccionado());
+                    administrarCronograma.editarCronograma(sessionProyecto.getProyectoSeleccionado().getCronograma());
                     /*----------------------------------------------Documentos-------------------------------------------------------*/
                     administrarDocumentosProyecto.setRenderedDlgEditar(false);
                     /*----------------------------------------------Directores-------------------------------------------------------*/
                     administrarDirectoresProyecto.setRenderedDlgBuscarDirectoresDisponibles(false);
                     administrarDirectoresProyecto.setRenderedDlgOficio(false);
                     administrarDirectoresProyecto.setRenderedDlgEditar(false);
-                    administrarDirectoresProyecto.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyecto());
+                    administrarDirectoresProyecto.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
                     /*----------------------------------------------Docentes-------------------------------------------------------*/
                     administrarDocentesProyecto.setRenderedDlgBuscarDocentesDisponibles(false);
                     administrarDocentesProyecto.setRenderedDlgOficioDocenteProyecto(false);
@@ -1126,33 +1105,33 @@ public class AdministrarProyectos implements Serializable {
                     administrarDocumentosExpediente.setRenderedDlgEditar(false);
                     /*----------------------------------------------Prorrogas-------------------------------------------------------*/
                     administrarProrrogas.setRenderedDlgOficio(false);
-                    administrarProrrogas.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyecto());
+                    administrarProrrogas.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
                     administrarProrrogas.setRenderedDlgEditar(false);
                     administrarProrrogas.setRenderedDlgRespuestaAutorProyecto(false);
-                    administrarProrrogas.tieneProrroga(sessionProyecto.getProyecto());
+                    administrarProrrogas.tieneProrroga(sessionProyecto.getProyectoSeleccionado());
                     /*----------------------------------------------Actividades-------------------------------------------------------*/
                     administrarActividades.setRenderedDlgEditar(false);
-                    administrarActividades.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyecto());
+                    administrarActividades.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
                     break;
                 case "tabTribunales":
                     /*----------------------------------------------Tribunales-------------------------------------------------------*/
-                    administrarTribunales.buscar(sessionProyecto.getProyecto(), sessionUsuario.getUsuario());
-                    administrarTribunales.renderedCrear(sessionUsuario.getUsuario(), sessionProyecto.getProyecto());
-                    administrarTribunales.renderedEditar(sessionUsuario.getUsuario(), sessionProyecto.getProyecto());
-                    administrarTribunales.renderedEliminar(sessionUsuario.getUsuario(), sessionProyecto.getProyecto());
+                    administrarTribunales.buscar(sessionProyecto.getProyectoSeleccionado(), sessionUsuario.getUsuario());
+                    administrarTribunales.renderedCrear(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
+                    administrarTribunales.renderedEditar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
+                    administrarTribunales.renderedEliminar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
                     administrarTribunales.setRenderedDlgEditar(false);
                     /*----------------------------------------------Evaluaciones Tribunales-------------------------------------------------------*/
                     administrarEvaluacionesTribunal.setRenderedDlgEditar(false);
                     administrarEvaluacionesTribunal.renderedEditar(sessionUsuario.getUsuario());
                     administrarEvaluacionesTribunal.renderedEliminar(sessionUsuario.getUsuario());
-                    administrarEvaluacionesTribunal.renderedCalificar(sessionUsuario.getUsuario(), sessionProyecto.getProyecto());
-                    administrarEvaluacionesTribunal.listadoSustentacionesPorUsuarioCarrera(sessionUsuario.getUsuario(), sessionProyecto.getProyecto());
+                    administrarEvaluacionesTribunal.renderedCalificar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
+                    administrarEvaluacionesTribunal.listadoSustentacionesPorUsuarioCarrera(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
                     administrarActas.setRenderedDlgActaGrado(false);
                     /*----------------------------------------------Miembros Tribunales-------------------------------------------------------*/
-                    administrarMiembrosTribunal.renderedCrear(sessionUsuario.getUsuario(), sessionProyecto.getProyecto());
-                    administrarMiembrosTribunal.renderedEditar(sessionUsuario.getUsuario(), sessionProyecto.getProyecto());
-                    administrarMiembrosTribunal.renderedImprimirOficio(sessionUsuario.getUsuario(), sessionProyecto.getProyecto());
-                    administrarMiembrosTribunal.renderedEliminar(sessionUsuario.getUsuario(), sessionProyecto.getProyecto());
+                    administrarMiembrosTribunal.renderedCrear(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
+                    administrarMiembrosTribunal.renderedEditar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
+                    administrarMiembrosTribunal.renderedImprimirOficio(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
+                    administrarMiembrosTribunal.renderedEliminar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
                     administrarMiembrosTribunal.setRenderedDlgEditar(false);
                     administrarMiembrosTribunal.setRenderedDlgDocentesDisponibles(false);
                     administrarMiembrosTribunal.setRenderedDlgOficio(false);
@@ -1162,7 +1141,7 @@ public class AdministrarProyectos implements Serializable {
                     administrarDirectoresProyecto.setRenderedDlgBuscarDirectoresDisponibles(false);
                     administrarDirectoresProyecto.setRenderedDlgOficio(false);
                     administrarDirectoresProyecto.setRenderedDlgEditar(false);
-                    administrarDirectoresProyecto.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyecto());
+                    administrarDirectoresProyecto.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
                     /*----------------------------------------------Docentes-------------------------------------------------------*/
                     administrarDocentesProyecto.setRenderedDlgBuscarDocentesDisponibles(false);
                     administrarDocentesProyecto.setRenderedDlgOficioDocenteProyecto(false);
@@ -1173,22 +1152,22 @@ public class AdministrarProyectos implements Serializable {
                     administrarProrrogas.setRenderedDlgOficio(false);
                     administrarProrrogas.setRenderedDlgRespuestaAutorProyecto(false);
                     administrarProrrogas.setRenderedDlgEditar(false);
-                    administrarProrrogas.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyecto());
+                    administrarProrrogas.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
                     /*----------------------------------------------Docuementos Expediente-------------------------------------------------------*/
                     administrarDocumentosExpediente.setRenderedDlgEditar(false);
                     /*----------------------------------------------Actividades-------------------------------------------------------*/
                     administrarActividades.setRenderedDlgEditar(false);
-                    administrarActividades.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyecto());
+                    administrarActividades.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
                     break;
                 case "tabLineasInvestigacion":
-                    pickListLineasInvestigacionProyecto(sessionProyecto.getProyecto());
+//                    pickListLineasInvestigacionProyecto(sessionProyecto.getProyectoSeleccionado());
                     /*----------------------------------------------Documentos-------------------------------------------------------*/
                     administrarDocumentosProyecto.setRenderedDlgEditar(false);
                     /*----------------------------------------------Directores-------------------------------------------------------*/
                     administrarDirectoresProyecto.setRenderedDlgBuscarDirectoresDisponibles(false);
                     administrarDirectoresProyecto.setRenderedDlgOficio(false);
                     administrarDirectoresProyecto.setRenderedDlgEditar(false);
-                    administrarDirectoresProyecto.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyecto());
+                    administrarDirectoresProyecto.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
                     /*----------------------------------------------Docentes-------------------------------------------------------*/
                     administrarDocentesProyecto.setRenderedDlgBuscarDocentesDisponibles(false);
                     administrarDocentesProyecto.setRenderedDlgOficioDocenteProyecto(false);
@@ -1208,7 +1187,7 @@ public class AdministrarProyectos implements Serializable {
                     administrarDocumentosExpediente.setRenderedDlgEditar(false);
                     /*----------------------------------------------Prorrogas-------------------------------------------------------*/
                     administrarProrrogas.setRenderedDlgOficio(false);
-                    administrarProrrogas.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyecto());
+                    administrarProrrogas.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
                     administrarProrrogas.setRenderedDlgEditar(false);
                     administrarProrrogas.setRenderedDlgRespuestaAutorProyecto(false);
 
@@ -1362,7 +1341,7 @@ public class AdministrarProyectos implements Serializable {
                             cronogramaFacadeLocal.create(cronograma);
                             proyecto.setCronograma(cronograma);
                             /*Grabar Tema Proyecto*/
-                            administrarTemaProyectos.grabar(temaProyecto);
+//                            administrarTemaProyectos.grabar(temaProyecto);
                             /*web semantica*/
 //                            grabarIndividuoProyecto(proyecto);
                             /*GRABAR DOCUMENTOS PROYECTO*/
@@ -1389,14 +1368,14 @@ public class AdministrarProyectos implements Serializable {
                                     + "CatalogoProyecto= " + proyecto.getCatalogoProyectoId() + "|Estado= " + proyecto.getEstadoProyectoId(), sessionUsuario.getUsuario()));
 
                             if (param.equalsIgnoreCase("guardar")) {
-                                sessionProyecto.setProyecto(new Proyecto());
+                                sessionProyecto.setProyectoSeleccionado(new Proyecto());
                                 navegacion = "pretty:proyectos";
                             } else {
                                 if (param.equalsIgnoreCase("guardar-editar")) {
                                     FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.proyecto") + " " + bundle.getString("lbl.msm_grabar"), "");
                                     FacesContext.getCurrentInstance().addMessage(null, message);
                                 } else {
-                                    sessionProyecto.setProyecto(new Proyecto());
+                                    sessionProyecto.setProyectoSeleccionado(new Proyecto());
                                     FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.proyecto") + " " + bundle.getString("lbl.msm_grabar"), "");
                                     FacesContext.getCurrentInstance().addMessage(null, message);
                                 }
@@ -1422,7 +1401,7 @@ public class AdministrarProyectos implements Serializable {
 //                            }
                             proyecto.setCronograma(cr);
                             /*Editar Tema Proyecto*/
-                            administrarTemaProyectos.grabar(temaProyecto);
+//                            administrarTemaProyectos.grabar(temaProyecto);
                             /*Web Semantica*/
 //                            grabarIndividuoProyecto(proyecto);
                             /*GRABAR-ELIMINAR DOCUMENTOS PROYECTO*/
@@ -1454,16 +1433,16 @@ public class AdministrarProyectos implements Serializable {
                                     + "CatalogoProyecto= " + proyecto.getCatalogoProyectoId() + "|Estado= " + proyecto.getEstadoProyectoId(), sessionUsuario.getUsuario()));
 
                             if (param.equalsIgnoreCase("guardar")) {
-                                sessionProyecto.setProyecto(new Proyecto());
+                                sessionProyecto.setProyectoSeleccionado(new Proyecto());
                                 navegacion = "pretty:proyectos";
                             } else {
                                 if (param.equalsIgnoreCase("guardar-editar")) {
                                     FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.proyecto") + " " + bundle.getString("lbl.msm_editar"), "");
                                     FacesContext.getCurrentInstance().addMessage(null, message);
-                                    sessionProyecto.getProyecto().setDocumentoProyectoList(documentoProyectos);
+                                    sessionProyecto.getProyectoSeleccionado().setDocumentoProyectoList(documentoProyectos);
 
                                 } else {
-                                    sessionProyecto.setProyecto(new Proyecto());
+                                    sessionProyecto.setProyectoSeleccionado(new Proyecto());
                                     FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.proyecto") + " " + bundle.getString("lbl.msm_editar"), "");
                                     FacesContext.getCurrentInstance().addMessage(null, message);
                                 }
@@ -1497,7 +1476,7 @@ public class AdministrarProyectos implements Serializable {
         try {
             if (proyecto.getId() != null) {
                 proyecto = proyectoDao.find(proyecto.getId());
-                sessionProyecto.setProyecto(proyecto);
+                sessionProyecto.setProyectoSeleccionado(proyecto);
             }
 //            if (proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.INICIO.getTipo())) {
 //                for (LineaInvestigacionProyecto lineaInvestigacionProyecto : lineaInvestigacionProyectosAgregados) {
@@ -1521,7 +1500,7 @@ public class AdministrarProyectos implements Serializable {
         try {
             if (proyecto.getId() != null) {
                 proyecto = proyectoDao.find(proyecto.getId());
-                sessionProyecto.setProyecto(proyecto);
+                sessionProyecto.setProyectoSeleccionado(proyecto);
             }
 //            if (proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.INICIO.getTipo())) {
 //                for (ProyectoCarreraOferta proyectoCarreraOferta : proyectoCarreraOfertasAgregados) {
@@ -1570,7 +1549,7 @@ public class AdministrarProyectos implements Serializable {
     public void grabarDocenteProyecto(Proyecto proyecto, List<DocenteProyecto> docenteProyectos, List<AutorProyecto> autorProyectos) {
         if (proyecto.getId() != null) {
             proyecto = proyectoDao.find(proyecto.getId());
-            sessionProyecto.setProyecto(proyecto);
+            sessionProyecto.setProyectoSeleccionado(proyecto);
         }
 //        if (proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.INICIO.getTipo())) {
 //            String tiempoMaxPertinencia = configuracionGeneralFacadeLocal.find((int) 3).getValor();
@@ -1608,7 +1587,7 @@ public class AdministrarProyectos implements Serializable {
         try {
             if (proyecto.getId() != null) {
                 proyecto = proyectoDao.find(proyecto.getId());
-                sessionProyecto.setProyecto(proyecto);
+                sessionProyecto.setProyectoSeleccionado(proyecto);
             }
 //            if (proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.PERTINENTE.getTipo())) {
 //                Map<String, String> map = new HashMap<String, String>();
@@ -1657,7 +1636,7 @@ public class AdministrarProyectos implements Serializable {
         try {
             if (proyecto.getId() != null) {
                 proyecto = proyectoDao.find(proyecto.getId());
-                sessionProyecto.setProyecto(proyecto);
+                sessionProyecto.setProyectoSeleccionado(proyecto);
             }
 //            if (proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.INICIO.getTipo())) {
 //                for (AutorProyecto autorProyecto : autorProyectos) {
@@ -1734,9 +1713,9 @@ public class AdministrarProyectos implements Serializable {
      * PERMITIR RENDERIZAR DATOS DE PROYECTO SI EL PROYECTO ESTA EN INICIO
      */
     public void renderedEditarDatosProyecto() {
-        sessionProyecto.setRenderedEditarDatosProyecto(Boolean.FALSE);
-        Item item = itemService.buscarPorId(sessionProyecto.getProyecto().getEstadoProyectoId() != null
-                ? sessionProyecto.getProyecto().getEstadoProyectoId() : null);
+        sessionProyecto.setRenderedInicio(Boolean.FALSE);
+        Item item = itemService.buscarPorId(sessionProyecto.getProyectoSeleccionado().getEstadoProyectoId() != null
+                ? sessionProyecto.getProyectoSeleccionado().getEstadoProyectoId() : null);
         if (item == null) {
             return;
         }
@@ -2043,33 +2022,32 @@ public class AdministrarProyectos implements Serializable {
      *
      * @param proyecto
      */
-    public void pickListLineasInvestigacionProyecto(Proyecto proyecto) {
-        this.sessionProyecto.getLineasInvestigacionDualList().getSource().clear();
-        this.sessionProyecto.getLineasInvestigacionDualList().getTarget().clear();
-        List<LineaInvestigacion> lineasInvestigacionProyecto = new ArrayList<>();
-        List<LineaInvestigacion> lineasInvestigacionCarrera = new ArrayList<>();
-        try {
-            lineasInvestigacionProyecto = lineaInvestigacionProyectoService.buscarLineaInvestigacion(
-                    new LineaInvestigacionProyecto(proyecto.getId() != null ? proyecto : null, null, null));
-
-            for (Carrera carrera : sessionProyecto.getCarreras()) {
-                List<LineaInvestigacion> lics = lineaInvestigacionService.buscarPorCarrera(new LineaInvestigacionCarrera(null, carrera.getId()));
-                if (lics == null) {
-                    continue;
-                }
-                for (LineaInvestigacion lic : lics) {
-                    if (!lineasInvestigacionCarrera.contains(lic)) {
-                        lineasInvestigacionCarrera.add(lic);
-                    }
-                }
-            }
-            sessionProyecto.setLineasInvestigacionDualList(new DualListModel<>(lineaInvestigacionService.diferenciaCarreraProyecto(
-                    lineasInvestigacionCarrera, lineasInvestigacionProyecto), lineasInvestigacionProyecto));
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-    }
-
+//    public void pickListLineasInvestigacionProyecto(Proyecto proyecto) {
+//        this.sessionProyecto.getLineasInvestigacionDualList().getSource().clear();
+//        this.sessionProyecto.getLineasInvestigacionDualList().getTarget().clear();
+//        List<LineaInvestigacion> lineasInvestigacionProyecto = new ArrayList<>();
+//        List<LineaInvestigacion> lineasInvestigacionCarrera = new ArrayList<>();
+//        try {
+//            lineasInvestigacionProyecto = lineaInvestigacionProyectoService.buscarLineaInvestigacion(
+//                    new LineaInvestigacionProyecto(proyecto.getId() != null ? proyecto : null, null, null));
+//
+//            for (Carrera carrera : sessionProyecto.getCarreras()) {
+//                List<LineaInvestigacion> lics = lineaInvestigacionService.buscarPorCarrera(new LineaInvestigacionCarrera(null, carrera.getId()));
+//                if (lics == null) {
+//                    continue;
+//                }
+//                for (LineaInvestigacion lic : lics) {
+//                    if (!lineasInvestigacionCarrera.contains(lic)) {
+//                        lineasInvestigacionCarrera.add(lic);
+//                    }
+//                }
+//            }
+//            sessionProyecto.setLineasInvestigacionDualList(new DualListModel<>(lineaInvestigacionService.diferenciaCarreraProyecto(
+//                    lineasInvestigacionCarrera, lineasInvestigacionProyecto), lineasInvestigacionProyecto));
+//        } catch (Exception e) {
+//            System.out.println(e);
+//        }
+//    }
     /**
      * CARRERAS QUE PERTENECEN AL PROYECTO SELECCIONADO Y A LAS CARRERAS DEL
      * USUARIO PARA VISUALIZARLO EN UN PICKLIST
@@ -2082,15 +2060,15 @@ public class AdministrarProyectos implements Serializable {
         List<Carrera> carrerasProyecto = new ArrayList<>();
         List<Carrera> usuarioCarreras = new ArrayList<>();
         try {
-            List<ProyectoCarreraOferta> lips = proyectoCarreraOfertaService.buscar(new ProyectoCarreraOferta(proyecto, null, null));
-            if (lips != null) {
-                for (ProyectoCarreraOferta pco : lips) {
-                    Carrera c = carreraService.find(pco.getCarreraId());
-                    if (!carrerasProyecto.contains(c)) {
-                        carrerasProyecto.add(c);
-                    }
-                }
-            }
+//            List<ProyectoCarreraOferta> lips = proyectoCarreraOfertaService.buscar(new ProyectoCarreraOferta(proyecto, null, null));
+//            if (lips != null) {
+//                for (ProyectoCarreraOferta pco : lips) {
+//                    Carrera c = carreraService.find(pco.getCarreraId());
+//                    if (!carrerasProyecto.contains(c)) {
+//                        carrerasProyecto.add(c);
+//                    }
+//                }
+//            }
 
             for (Carrera carrera : sessionProyecto.getCarreras()) {
                 if (!usuarioCarreras.contains(carrera)) {
@@ -2111,58 +2089,56 @@ public class AdministrarProyectos implements Serializable {
     /**
      * BUSCAR PROYECTOS POR CARRERA, OFERTA y Linea de Investigacion
      */
-    public void buscar() {
-        sessionProyecto.getProyectos().clear();
-        sessionProyecto.getFilterProyectos().clear();
-        try {
-            List<Proyecto> proyectosEncontrados = proyectoService.buscar(
-                    new ProyectoDTO(new Proyecto(sessionProyecto.getEstadoSeleccionado().getId(), null, null, null, null, null),
-                            new ProyectoCarreraOferta(null, sessionProyecto.getCarreraSeleccionada().getId() != null
-                                    ? sessionProyecto.getCarreraSeleccionada().getId() : null,
-                                    sessionProyecto.getOfertaAcademicaSeleccionada().getId() != null
-                                    ? sessionProyecto.getOfertaAcademicaSeleccionada().getId() : null),
-                            sessionProyecto.getLineaInvestigacionProyectoSeleccionada()));
-
-            if (proyectosEncontrados == null) {
-                return;
-            }
-            for (Proyecto proyecto : proyectosEncontrados) {
-                proyecto.setEstado(itemService.buscarPorId(proyecto.getEstadoProyectoId()).toString());
-                proyecto.setCatalogo(itemService.buscarPorId(proyecto.getCatalogoProyectoId()).toString());
-                proyecto.setTipo(itemService.buscarPorId(proyecto.getTipoProyectoId()).toString());
-                proyecto.setAutores(autores(proyecto));
-                if (!this.sessionProyecto.getProyectos().contains(proyecto)) {
-                    this.sessionProyecto.getProyectos().add(proyecto);
-                }
-            }
-            sessionProyecto.setFilterProyectos(sessionProyecto.getProyectos());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
+//    public void buscar() {
+//        sessionProyecto.getProyectos().clear();
+//        sessionProyecto.getFilterProyectos().clear();
+//        try {
+//            List<Proyecto> proyectosEncontrados = proyectoService.buscar(
+//                    new ProyectoDTO(new Proyecto(sessionProyecto.getEstadoSeleccionado().getId(), null, null, null, null, null),
+//                            new ProyectoCarreraOferta(null, sessionProyecto.getCarreraSeleccionada().getId() != null
+//                                    ? sessionProyecto.getCarreraSeleccionada().getId() : null,
+//                                    sessionProyecto.getOfertaAcademicaSeleccionada().getId() != null
+//                                    ? sessionProyecto.getOfertaAcademicaSeleccionada().getId() : null),
+//                            sessionProyecto.getLineaInvestigacionProyectoSeleccionada()));
+//
+//            if (proyectosEncontrados == null) {
+//                return;
+//            }
+//            for (Proyecto proyecto : proyectosEncontrados) {
+//                proyecto.setEstado(itemService.buscarPorId(proyecto.getEstadoProyectoId()).toString());
+//                proyecto.setCatalogo(itemService.buscarPorId(proyecto.getCatalogoProyectoId()).toString());
+//                proyecto.setTipo(itemService.buscarPorId(proyecto.getTipoProyectoId()).toString());
+//                proyecto.setAutores(autores(proyecto));
+//                if (!this.sessionProyecto.getProyectos().contains(proyecto)) {
+//                    this.sessionProyecto.getProyectos().add(proyecto);
+//                }
+//            }
+//            sessionProyecto.setFilterProyectos(sessionProyecto.getProyectos());
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
     /**
      * BUSCAR OFERTAS ACADEMICAS DE LA CARRERAS ADMINISTRADAS POR EL USUARIO
      */
-    public void listadoOfertasAcademicas() {
-        this.sessionProyecto.getOfertaAcademicas().clear();
-        this.sessionProyecto.getFilterOfertaAcademicas().clear();
-        try {
-            for (UsuarioCarrera usuarioCarrera : usuarioCarreraDao.buscar(new UsuarioCarrera(sessionUsuario.getUsuario().getId(), null))) {
-                for (ProyectoCarreraOferta pco : proyectoCarreraOfertaService.buscar(
-                        new ProyectoCarreraOferta(null, usuarioCarrera.getCarreraId(), null))) {
-                    OfertaAcademica ofertaAcademica = ofertaAcademicaService.find(pco.getOfertaAcademicaId());
-                    if (!this.sessionProyecto.getOfertaAcademicas().contains(ofertaAcademica)) {
-                        this.sessionProyecto.getOfertaAcademicas().add(ofertaAcademica);
-                    }
-                }
-            }
-            sessionProyecto.setFilterOfertaAcademicas(this.sessionProyecto.getOfertaAcademicas());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
+//    public void listadoOfertasAcademicas() {
+//        this.sessionProyecto.getOfertaAcademicas().clear();
+//        this.sessionProyecto.getFilterOfertaAcademicas().clear();
+//        try {
+//            for (UsuarioCarrera usuarioCarrera : usuarioCarreraDao.buscar(new UsuarioCarrera(sessionUsuario.getUsuario().getId(), null))) {
+//                for (ProyectoCarreraOferta pco : proyectoCarreraOfertaService.buscar(
+//                        new ProyectoCarreraOferta(null, usuarioCarrera.getCarreraId(), null))) {
+//                    OfertaAcademica ofertaAcademica = ofertaAcademicaService.find(pco.getOfertaAcademicaId());
+//                    if (!this.sessionProyecto.getOfertaAcademicas().contains(ofertaAcademica)) {
+//                        this.sessionProyecto.getOfertaAcademicas().add(ofertaAcademica);
+//                    }
+//                }
+//            }
+//            sessionProyecto.setFilterOfertaAcademicas(this.sessionProyecto.getOfertaAcademicas());
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
     public void listadoCategorias() {
         sessionProyecto.getCategorias().clear();
         sessionProyecto.setCategorias(itemService.buscarPorCatalogo(CatalogoEnum.CATALOGOPROYECTO.getTipo()));
@@ -2366,10 +2342,10 @@ public class AdministrarProyectos implements Serializable {
     //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="TEMAS PROYECTO">
     private void editarTema() {
-        TemaProyecto temaProyecto = temaProyectoDao.buscar(new TemaProyecto(sessionProyecto.getProyecto().getId() != null
-                ? sessionProyecto.getProyecto() : null, null, Boolean.TRUE)).get(0);
+        TemaProyecto temaProyecto = temaProyectoDao.buscar(new TemaProyecto(sessionProyecto.getProyectoSeleccionado().getId() != null
+                ? sessionProyecto.getProyectoSeleccionado() : null, null, Boolean.TRUE)).get(0);
         if (temaProyecto == null) {
-            sessionProyecto.setTemaProyecto(new TemaProyecto(sessionProyecto.getProyecto(), new Tema(), Boolean.TRUE));
+            sessionProyecto.setTemaProyecto(new TemaProyecto(sessionProyecto.getProyectoSeleccionado(), new Tema(), Boolean.TRUE));
             return;
         }
         sessionProyecto.setTemaProyecto(temaProyecto);
@@ -2380,7 +2356,7 @@ public class AdministrarProyectos implements Serializable {
     private void listadoConfiguracionesProyecto() {
         this.sessionProyecto.getConfiguracionProyectos().clear();
         this.sessionProyecto.setConfiguracionProyectos(this.configuracionProyectoDao.buscar(
-                new ConfiguracionProyecto(sessionProyecto.getProyecto(), null, null, null, null)));
+                new ConfiguracionProyecto(sessionProyecto.getProyectoSeleccionado(), null, null, null, null)));
     }
 
     /**
@@ -2389,7 +2365,7 @@ public class AdministrarProyectos implements Serializable {
      */
     public void agregarConfiguracionesProyecto() {
         List<ConfiguracionProyecto> configuracionProyectos = configuracionProyectoDao.buscar(
-                new ConfiguracionProyecto(sessionProyecto.getProyecto(), null, null, null, null));
+                new ConfiguracionProyecto(sessionProyecto.getProyectoSeleccionado(), null, null, null, null));
         if (configuracionProyectos != null) {
             return;
         }
@@ -2397,15 +2373,15 @@ public class AdministrarProyectos implements Serializable {
             return;
         }
         ConfiguracionProyecto configuracionProyectoDS = new ConfiguracionProyecto(
-                sessionProyecto.getProyecto(), ConfiguracionProyectoEnum.DIASSEMANA.getTipo(), "7",
+                sessionProyecto.getProyectoSeleccionado(), ConfiguracionProyectoEnum.DIASSEMANA.getTipo(), "7",
                 ConfiguracionProyectoEnum.DIASSEMANA.getTipo(), TipoValorEnum.NUMERICO.getTipo());
         sessionProyecto.getConfiguracionProyectos().add(configuracionProyectoDS);
         ConfiguracionProyecto configuracionProyectoHD = new ConfiguracionProyecto(
-                sessionProyecto.getProyecto(), ConfiguracionProyectoEnum.HORASDIARIAS.getTipo(), "8",
+                sessionProyecto.getProyectoSeleccionado(), ConfiguracionProyectoEnum.HORASDIARIAS.getTipo(), "8",
                 ConfiguracionProyectoEnum.HORASDIARIAS.getTipo(), TipoValorEnum.NUMERICO.getTipo());
         sessionProyecto.getConfiguracionProyectos().add(configuracionProyectoHD);
         ConfiguracionProyecto configuracionProyectoCD = new ConfiguracionProyecto(
-                sessionProyecto.getProyecto(), ConfiguracionProyectoEnum.CATALOGODURACION.getTipo(), "1",
+                sessionProyecto.getProyectoSeleccionado(), ConfiguracionProyectoEnum.CATALOGODURACION.getTipo(), "1",
                 ConfiguracionProyectoEnum.CATALOGODURACION.getTipo(), TipoValorEnum.SELECCIONMULTIPLE.getTipo());
         sessionProyecto.getConfiguracionProyectos().add(configuracionProyectoCD);
     }
@@ -2433,7 +2409,8 @@ public class AdministrarProyectos implements Serializable {
     //<editor-fold defaultstate="collapsed" desc="AUTORES PROYECTO">
     /**
      * EDITAR AUTORES DE PROYECTO
-     * @param autorProyectoDTO 
+     *
+     * @param autorProyectoDTO
      */
     public void editar(AutorProyectoDTO autorProyectoDTO) {
         try {
@@ -2455,7 +2432,8 @@ public class AdministrarProyectos implements Serializable {
             System.out.println(e);
         }
     }
-     /**
+
+    /**
      * BUSCAR AUTORES POR PROYECTO
      *
      * @param proyecto
@@ -2584,17 +2562,7 @@ public class AdministrarProyectos implements Serializable {
         return sessionUsuario;
     }
 
-    public void setSessionUsuario(SessionUsuario sessionUsuario) {
-        this.sessionUsuario = sessionUsuario;
-    }
-
-    public SessionProyecto getSessionProyecto() {
-        return sessionProyecto;
-    }
-
-    public void setSessionProyecto(SessionProyecto sessionProyecto) {
-        this.sessionProyecto = sessionProyecto;
-    }
+    
 
     public String getTipoProyecto() {
         return tipoProyecto;
@@ -2684,13 +2652,6 @@ public class AdministrarProyectos implements Serializable {
         this.proyectosPorWS = proyectosPorWS;
     }
 
-    public AdministrarTemaProyectos getAdministrarTemaProyectos() {
-        return administrarTemaProyectos;
-    }
-
-    public void setAdministrarTemaProyectos(AdministrarTemaProyectos administrarTemaProyectos) {
-        this.administrarTemaProyectos = administrarTemaProyectos;
-    }
 
     public AdministrarConfiguracionesProyecto getAdministrarConfiguracionesProyecto() {
         return administrarConfiguracionesProyecto;
@@ -2704,17 +2665,7 @@ public class AdministrarProyectos implements Serializable {
         return administrarCatalogoDuracion;
     }
 
-    public void setAdministrarCatalogoDuracion(AdministrarCatalogoDuracion administrarCatalogoDuracion) {
-        this.administrarCatalogoDuracion = administrarCatalogoDuracion;
-    }
-
-    public AdministrarAutoresProyecto getAdministrarAutoresProyecto() {
-        return administrarAutoresProyecto;
-    }
-
-    public void setAdministrarAutoresProyecto(AdministrarAutoresProyecto administrarAutoresProyecto) {
-        this.administrarAutoresProyecto = administrarAutoresProyecto;
-    }
+  
 
     public AdministrarDocentesProyecto getAdministrarDocentesProyecto() {
         return administrarDocentesProyecto;

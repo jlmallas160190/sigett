@@ -10,15 +10,15 @@
                      filteredValue="#{sessionProyecto.filterProyectos}" widgetVar="tblProyectosFilter"
                      draggableColumns="true" rowsPerPageTemplate="5,10,15,20,25,30,35,40,45,50" emptyMessage="#{msg['lbl.table.empty']}" 
                      rowIndexVar="rowIx" rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'even-row' : 'odd-row'}" 
-                     rowKey="#{item.id}" selection="#{sessionProyecto.proyecto}" selectionMode="single">
-            <!--<f:facet name="header">
-                <h:commandLink action="{administrarProyectos.crearPDF()}">
-                    <p:graphicImage name="./img/pdf.png" />
-                </h:commandLink>
-                <p:commandButton id="toggler" type="button" value="Columns" style="float:right" icon="ui-icon-calculator" />
-                <p:columnToggler datasource="tblProyectos" trigger="toggler" />
-            </f:facet>-->
-             <f:facet name="header">
+                     rowKey="#{sessionProyecto.proyectoSeleccionado}" selectionMode="single">
+            <!-- <f:facet name="header">
+                 <h:commandLink action="{administrarProyectos.crearPDF()}">
+                     <p:graphicImage name="./img/pdf.png" />
+                 </h:commandLink>
+                 <p:commandButton id="toggler" type="button" value="Columns" style="float:right" icon="ui-icon-calculator" />
+                 <p:columnToggler datasource="tblProyectos" trigger="toggler" />
+             </f:facet>-->
+            <f:facet name="header">
                 <h:panelGrid styleClass="panelgrid" rowClasses="rowpanelgrid" columns="1">
                     <p:inputText id="globalFilter" onkeyup="PF('tblProyectosFilter').filter()" style="width:150px" placeholder="#{msg['lbl.buscar']}"/>
                 </h:panelGrid>
@@ -27,7 +27,7 @@
                 <f:facet name="header">
                     <h:outputText value="#{msg['lbl.creacion']}"/>
                 </f:facet>
-                <h:outputText value="#{administrarConfiguraciones.timestamp(item.fechaCreated)}" />
+                <h:outputText value="#{item.fechaCreated}" />
             </p:column>
             <p:column  rendered="#{sessionProyecto.renderedEditar}" 
                        filterBy="#{item.temaActual}"

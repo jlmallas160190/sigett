@@ -5,7 +5,6 @@
  */
 package edu.unl.sigett.postulacion.controlador;
 
-import edu.unl.sigett.autor.controlador.AdministrarAutoresProyecto;
 import edu.unl.sigett.comun.controlador.AdministrarLineasInvestigacionCarrera;
 import edu.unl.sigett.adjudicacion.controlador.AdministrarDirectoresProyecto;
 import edu.unl.sigett.postulacion.managed.session.SessionConsultarProyecto;
@@ -62,7 +61,7 @@ public class AdministrarProyectosCarreraOferta implements Serializable {
     @Inject
     private SessionConsultarProyecto sessionConsultarProyecto;
     @Inject
-    private AdministrarAutoresProyecto administrarAutoresProyecto;
+    private AutorProyectoPostulacionController administrarAutoresProyecto;
     @Inject
     private AdministrarDirectoresProyecto administrarDirectoresProyecto;
     @Inject

@@ -6,7 +6,7 @@
 package edu.unl.sigett.postulacion.controlador;
 
 import edu.unl.sigett.comun.controlador.AdministrarCatalogoDuracion;
-import edu.unl.sigett.proyecto.managed.session.SessionProyecto;
+import edu.unl.sigett.proyecto.SessionProyecto;
 import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
 import edu.unl.sigett.entity.ConfiguracionProyecto;
 import edu.unl.sigett.entity.Proyecto;

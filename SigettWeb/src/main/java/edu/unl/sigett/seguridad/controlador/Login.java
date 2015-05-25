@@ -6,9 +6,7 @@
 package edu.unl.sigett.seguridad.controlador;
 
 import com.jlmallas.comun.dao.ConfiguracionDao;
-import edu.unl.sigett.comun.controlador.AdministrarConfiguraciones;
 import edu.unl.sigett.postulacion.controlador.AdministrarDocentesProyecto;
-import edu.unl.sigett.proyecto.AdministrarProyectos;
 import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
 import org.jlmallas.seguridad.entity.RolUsuario;
 import org.jlmallas.seguridad.entity.Usuario;
@@ -34,8 +32,6 @@ public class Login implements Serializable {
     private SessionUsuario sessionUsuario;
     @Inject
     private AdministrarDocentesProyecto administrarDocentesProyecto;
-    @Inject
-    private AdministrarProyectos administrarProyectos;
     @EJB
     private UsuarioDao usuarioFacadeLocal;
     @EJB
@@ -86,13 +82,13 @@ public class Login implements Serializable {
                             break;
                         }
                     }
-                    administrarDocentesProyecto.docenteProyectosSinPertinencia(sessionUsuario.getUsuario());
-                    administrarProyectos.buscarProyectosInicio(sessionUsuario.getUsuario());
-                    administrarProyectos.buscarProyectosAdjudicaciónDirector(sessionUsuario.getUsuario());
-                    administrarProyectos.buscarProyectosPorCulminar(sessionUsuario.getUsuario());
-                    administrarProyectos.buscarProyectosCaducados(sessionUsuario.getUsuario());
-                    administrarProyectos.buscarProyectosEnSustentacionPrivada(sessionUsuario.getUsuario());
-                    administrarProyectos.buscarProyectosEnSustentacionPublica(sessionUsuario.getUsuario());
+//                    administrarDocentesProyecto.docenteProyectosSinPertinencia(sessionUsuario.getUsuario());
+//                    administrarProyectos.buscarProyectosInicio(sessionUsuario.getUsuario());
+//                    administrarProyectos.buscarProyectosAdjudicaciónDirector(sessionUsuario.getUsuario());
+//                    administrarProyectos.buscarProyectosPorCulminar(sessionUsuario.getUsuario());
+//                    administrarProyectos.buscarProyectosCaducados(sessionUsuario.getUsuario());
+//                    administrarProyectos.buscarProyectosEnSustentacionPrivada(sessionUsuario.getUsuario());
+//                    administrarProyectos.buscarProyectosEnSustentacionPublica(sessionUsuario.getUsuario());
                     navegacion = "pretty:principal";
                 } else {
                     FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_user_no_active") + ". " + bundle.getString("lbl.msm_consulte"), "");

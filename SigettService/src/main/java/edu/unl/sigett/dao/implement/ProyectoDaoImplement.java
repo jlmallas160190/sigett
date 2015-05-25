@@ -14,7 +14,6 @@ import java.util.HashMap;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.Query;
-import javax.persistence.StoredProcedureQuery;
 
 /**
  *
@@ -53,9 +52,9 @@ public class ProyectoDaoImplement extends AbstractDao<Proyecto> implements Proye
     @Override
     public List<Proyecto> buscarByEstado(Integer estadoId) {
         try {
-            Query query = em.createQuery("SELECT p FROM Proyecto p where " + " (p.estadoProyectoId.id=:id)");
-            query.setParameter("id", estadoId);
-            return query.getResultList();
+//            Query query = em.createQuery("SELECT p FROM Proyecto p where " + " (p.estadoProyectoId.id=:id)");
+//            query.setParameter("id", estadoId);
+//            return query.getResultList();
         } catch (Exception e) {
         }
         return null;
@@ -64,15 +63,15 @@ public class ProyectoDaoImplement extends AbstractDao<Proyecto> implements Proye
     @Override
     public List<Proyecto> buscarByCarrera(Integer carreraId) {
         List<Proyecto> proyectos = new ArrayList<>();
-        StoredProcedureQuery storedProcedureQuery = em.createNamedStoredProcedureQuery("proyectoByCarrera");
-        storedProcedureQuery.setParameter("car_id", carreraId);
-        storedProcedureQuery.execute();
-        List<Proyecto> result = (List<Proyecto>) storedProcedureQuery.getResultList();
-        for (Proyecto p : result) {
-            if (!proyectos.contains(p)) {
-                proyectos.add(p);
-            }
-        }
+//        StoredProcedureQuery storedProcedureQuery = em.createNamedStoredProcedureQuery("proyectoByCarrera");
+//        storedProcedureQuery.setParameter("car_id", carreraId);
+//        storedProcedureQuery.execute();
+//        List<Proyecto> result = (List<Proyecto>) storedProcedureQuery.getResultList();
+//        for (Proyecto p : result) {
+//            if (!proyectos.contains(p)) {
+//                proyectos.add(p);
+//            }
+//        }
         return proyectos;
     }
 
@@ -80,15 +79,15 @@ public class ProyectoDaoImplement extends AbstractDao<Proyecto> implements Proye
     public List<Proyecto> buscarByLi(Long liId) {
         try {
             List<Proyecto> proyectos = new ArrayList<>();
-            StoredProcedureQuery storedProcedureQuery = em.createNamedStoredProcedureQuery("proyectoByLi");
-            storedProcedureQuery.setParameter("li_id", liId);
-            storedProcedureQuery.execute();
-            List<Proyecto> result = (List<Proyecto>) storedProcedureQuery.getResultList();
-            for (Proyecto p : result) {
-                if (!proyectos.contains(p)) {
-                    proyectos.add(p);
-                }
-            }
+//            StoredProcedureQuery storedProcedureQuery = em.createNamedStoredProcedureQuery("proyectoByLi");
+//            storedProcedureQuery.setParameter("li_id", liId);
+//            storedProcedureQuery.execute();
+//            List<Proyecto> result = (List<Proyecto>) storedProcedureQuery.getResultList();
+//            for (Proyecto p : result) {
+//                if (!proyectos.contains(p)) {
+//                    proyectos.add(p);
+//                }
+//            }
             return proyectos;
         } catch (Exception e) {
             System.out.println(e);
@@ -100,15 +99,15 @@ public class ProyectoDaoImplement extends AbstractDao<Proyecto> implements Proye
     public List<Proyecto> buscarByPeriodo(Integer periodoId) {
         try {
             List<Proyecto> proyectos = new ArrayList<>();
-            StoredProcedureQuery storedProcedureQuery = em.createNamedStoredProcedureQuery("proyectoByPeriodo");
-            storedProcedureQuery.setParameter("per_id", periodoId);
-            storedProcedureQuery.execute();
-            List<Proyecto> result = (List<Proyecto>) storedProcedureQuery.getResultList();
-            for (Proyecto p : result) {
-                if (!proyectos.contains(p)) {
-                    proyectos.add(p);
-                }
-            }
+//            StoredProcedureQuery storedProcedureQuery = em.createNamedStoredProcedureQuery("proyectoByPeriodo");
+//            storedProcedureQuery.setParameter("per_id", periodoId);
+//            storedProcedureQuery.execute();
+//            List<Proyecto> result = (List<Proyecto>) storedProcedureQuery.getResultList();
+//            for (Proyecto p : result) {
+//                if (!proyectos.contains(p)) {
+//                    proyectos.add(p);
+//                }
+//            }
             return proyectos;
         } catch (Exception e) {
             System.out.println(e);
@@ -121,14 +120,14 @@ public class ProyectoDaoImplement extends AbstractDao<Proyecto> implements Proye
         try {
             List<ProyectoCarreraOferta> proyectoCarreraOfertas = new ArrayList<>();
             List<Proyecto> proyectos = new ArrayList<>();
-            Query query = em.createQuery("SELECT pc FROM ProyectoCarreraOferta pc where " + " (pc.proyectoId.estadoProyectoId.codigo=:codigo and pc.carreraId=:carreraId)");
-            query.setParameter("codigo", codigoEstado);
-            query.setParameter("carreraId", carreraId);
-            proyectoCarreraOfertas = query.getResultList();
-            for (ProyectoCarreraOferta pco : proyectoCarreraOfertas) {
-                proyectos.add(pco.getProyectoId());
-            }
-            return proyectos;
+//            Query query = em.createQuery("SELECT pc FROM ProyectoCarreraOferta pc where " + " (pc.proyectoId.estadoProyectoId.codigo=:codigo and pc.carreraId=:carreraId)");
+//            query.setParameter("codigo", codigoEstado);
+//            query.setParameter("carreraId", carreraId);
+//            proyectoCarreraOfertas = query.getResultList();
+//            for (ProyectoCarreraOferta pco : proyectoCarreraOfertas) {
+//                proyectos.add(pco.getProyectoId());
+//            }
+//            return proyectos;
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -138,11 +137,11 @@ public class ProyectoDaoImplement extends AbstractDao<Proyecto> implements Proye
     @Override
     public List<Proyecto> buscarPorCulminar(Integer carreraId) {
         try {
-            StoredProcedureQuery storedProcedureQuery = em.createNamedStoredProcedureQuery("proyectosPorCulminar");
-            storedProcedureQuery.setParameter("carreraId", carreraId);
-            storedProcedureQuery.execute();
-            List<Proyecto> result = (List<Proyecto>) storedProcedureQuery.getResultList();
-            return result;
+//            StoredProcedureQuery storedProcedureQuery = em.createNamedStoredProcedureQuery("proyectosPorCulminar");
+//            storedProcedureQuery.setParameter("carreraId", carreraId);
+//            storedProcedureQuery.execute();
+//            List<Proyecto> result = (List<Proyecto>) storedProcedureQuery.getResultList();
+//            return result;
         } catch (Exception e) {
         }
         return null;
@@ -150,11 +149,11 @@ public class ProyectoDaoImplement extends AbstractDao<Proyecto> implements Proye
 
     public List<Proyecto> buscarCaducados(Integer carreraId) {
         try {
-            StoredProcedureQuery storedProcedureQuery = em.createNamedStoredProcedureQuery("proyectosCaducados");
-            storedProcedureQuery.setParameter("carreraId", carreraId);
-            storedProcedureQuery.execute();
-            List<Proyecto> result = (List<Proyecto>) storedProcedureQuery.getResultList();
-            return result;
+//            StoredProcedureQuery storedProcedureQuery = em.createNamedStoredProcedureQuery("proyectosCaducados");
+//            storedProcedureQuery.setParameter("carreraId", carreraId);
+//            storedProcedureQuery.execute();
+//            List<Proyecto> result = (List<Proyecto>) storedProcedureQuery.getResultList();
+//            return result;
         } catch (Exception e) {
         }
         return null;

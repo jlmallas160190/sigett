@@ -5,7 +5,7 @@
  */
 package edu.unl.sigett.seguimiento.controlador;
 
-import edu.unl.sigett.proyecto.managed.session.SessionProyecto;
+import edu.unl.sigett.proyecto.SessionProyecto;
 import edu.unl.sigett.seguimiento.session.SessionActividad;
 import edu.unl.sigett.seguimiento.session.SessionDocumentoActividad;
 import edu.unl.sigett.seguimiento.session.SessionProyectosAutor;
@@ -189,7 +189,7 @@ public class AdministrarDocumentosActividad implements Serializable {
             Proyecto p = null;
             if (param.equalsIgnoreCase("usuario")) {
                 usuario = sessionUsuario.getUsuario();
-                p = sessionProyecto.getProyecto();
+                p = sessionProyecto.getProyectoSeleccionado();
             } else {
                 if (param.equalsIgnoreCase("autor")) {
                     usuario = sessionEstudianteUsuario.getUsuario();

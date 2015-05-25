@@ -8,6 +8,7 @@ package edu.unl.sigett.dao.implement;
 import edu.unl.sigett.dao.AbstractDao;
 import edu.unl.sigett.dao.LineaInvestigacionCarreraDao;
 import edu.unl.sigett.entity.LineaInvestigacionCarrera;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -24,19 +25,24 @@ public class LineaInvestigacionCarreraDaoImplement extends AbstractDao<LineaInve
         super(LineaInvestigacionCarrera.class);
     }
 
-
     @Override
     public List<LineaInvestigacionCarrera> buscar(LineaInvestigacionCarrera lic) {
         StringBuilder sql = new StringBuilder();
         HashMap<String, Object> parametros = new HashMap<>();
-        sql.append("SELECT lc FROM  LineaInvestigacionCarrera lc where ");
+        Boolean existeFiltro = Boolean.FALSE;
+        sql.append("SELECT lc FROM  LineaInvestigacionCarrera lc where 1=1");
         if (lic.getLineaInvestigacionId() != null) {
-            sql.append(" lc.lineaInvestigacionId=:lineaInvestigacion");
+            sql.append(" and lc.lineaInvestigacionId=:lineaInvestigacion");
             parametros.put("lineaInvestigacion", lic.getLineaInvestigacionId());
+            existeFiltro = Boolean.TRUE;
         }
         if (lic.getCarreraId() != null) {
             sql.append(" and lc.carreraId=:carreraId");
             parametros.put("carreraId", lic.getCarreraId());
+            existeFiltro = Boolean.TRUE;
+        }
+        if (!existeFiltro) {
+            return new ArrayList<>();
         }
         sql.append(" and lc.lineaInvestigacionId.esActivo=TRUE ");
         sql.append(" order by lc.lineaInvestigacionId.nombre ");

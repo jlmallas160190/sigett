@@ -5,6 +5,8 @@
  */
 package edu.unl.sigett.seguridad.managed.session;
 
+import edu.unl.sigett.academico.dto.DocenteCarreraDTO;
+import edu.unl.sigett.academico.dto.EstudianteCarreraDTO;
 import edu.unl.sigett.dto.UsuarioCarreraDTO;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -21,15 +23,17 @@ import javax.inject.Named;
 public class SessionUsuarioCarrera implements Serializable {
 
     private UsuarioCarreraDTO usuarioCarreraDTO;
+
     private List<UsuarioCarreraDTO> usuarioCarrerasDTOS;
     private List<UsuarioCarreraDTO> filterUsuarioCarrerasDTO;
+
     private boolean renderedNoEditar;
     private boolean renderedBuscar;
     private boolean renderedEditar;
     private boolean renderedCrear;
 
     public SessionUsuarioCarrera() {
-        this.filterUsuarioCarrerasDTO=new ArrayList<>();
+        this.filterUsuarioCarrerasDTO = new ArrayList<>();
         this.usuarioCarrerasDTOS = new ArrayList<>();
         this.usuarioCarreraDTO = new UsuarioCarreraDTO();
     }
@@ -50,7 +54,7 @@ public class SessionUsuarioCarrera implements Serializable {
         this.usuarioCarrerasDTOS = usuarioCarrerasDTOS;
     }
 
-    public boolean isRenderedNoEditar() {
+    public boolean getRenderedNoEditar() {
         return renderedNoEditar;
     }
 
@@ -58,7 +62,7 @@ public class SessionUsuarioCarrera implements Serializable {
         this.renderedNoEditar = renderedNoEditar;
     }
 
-    public boolean isRenderedBuscar() {
+    public boolean getRenderedBuscar() {
         return renderedBuscar;
     }
 
@@ -74,7 +78,7 @@ public class SessionUsuarioCarrera implements Serializable {
         this.renderedEditar = renderedEditar;
     }
 
-    public boolean isRenderedCrear() {
+    public boolean getRenderedCrear() {
         return renderedCrear;
     }
 

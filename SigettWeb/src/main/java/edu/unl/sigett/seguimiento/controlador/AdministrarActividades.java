@@ -9,7 +9,7 @@ import org.jlmallas.api.date.DateResource;
 import com.jlmallas.comun.entity.Persona;
 import com.jlmallas.comun.dao.PersonaDao;
 import edu.unl.sigett.postulacion.controlador.AdministrarCronograma;
-import edu.unl.sigett.proyecto.managed.session.SessionProyecto;
+import edu.unl.sigett.proyecto.SessionProyecto;
 import edu.unl.sigett.seguimiento.session.SessionActividad;
 import edu.unl.sigett.seguimiento.session.SessionProyectosAutor;
 import edu.unl.sigett.seguimiento.session.SessionProyectosDirector;
@@ -157,10 +157,10 @@ public class AdministrarActividades implements Serializable {
     public void onTabChange(TabChangeEvent event) {
         switch (event.getTab().getId()) {
             case "tabDocumentos-usuario":
-                administrarDocumentosActividad.renderedCrear(sessionUsuario.getUsuario(), sessionProyecto.getProyecto());
-                administrarDocumentosActividad.renderedEditar(sessionUsuario.getUsuario(), sessionProyecto.getProyecto());
-                administrarDocumentosActividad.renderedSeleccionar(sessionUsuario.getUsuario(), sessionProyecto.getProyecto());
-                administrarDocumentosActividad.renderedEliminar(sessionUsuario.getUsuario(), sessionProyecto.getProyecto());
+                administrarDocumentosActividad.renderedCrear(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
+                administrarDocumentosActividad.renderedEditar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
+                administrarDocumentosActividad.renderedSeleccionar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
+                administrarDocumentosActividad.renderedEliminar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
                 administrarDocumentosActividad.buscar(sessionActividad.getActividad(), sessionUsuario.getUsuario());
                 break;
             case "tabDocumentos-autor":

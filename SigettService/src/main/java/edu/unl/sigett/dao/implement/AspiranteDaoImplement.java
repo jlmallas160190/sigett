@@ -29,8 +29,12 @@ public class AspiranteDaoImplement extends AbstractDao<Aspirante> implements Asp
         StringBuilder sql = new StringBuilder();
         HashMap<String, Object> parametros = new HashMap<>();
         sql.append("SELECT a from  Aspirante a WHERE 1=1 ");
-        if (aspirante.getEsApto()) {
-            sql.append(" and a.esActivo=:apto ");
+        if (aspirante.getId() != null) {
+            sql.append(" and a.id=:id ");
+            parametros.put("id", aspirante.getId());
+        }
+        if (aspirante.getEsApto()!=null) {
+            sql.append(" and a.esApto=:apto ");
             parametros.put("apto", aspirante.getEsApto());
         }
         final Query q = em.createQuery(sql.toString());

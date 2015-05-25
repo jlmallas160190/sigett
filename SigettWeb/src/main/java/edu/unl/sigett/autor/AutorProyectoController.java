@@ -1,0 +1,358 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package edu.unl.sigett.autor;
+
+import com.jlmallas.comun.dao.PersonaDao;
+import com.jlmallas.comun.entity.Item;
+import com.jlmallas.comun.enumeration.CatalogoEnum;
+import com.jlmallas.comun.service.ItemService;
+import edu.jlmallas.academico.dao.EstudianteCarreraDao;
+import edu.jlmallas.academico.entity.Carrera;
+import edu.jlmallas.academico.entity.EstudianteCarrera;
+import edu.unl.sigett.autor.dto.AspiranteDTO;
+import edu.unl.sigett.autor.dto.AutorProyectoDTO;
+import edu.unl.sigett.entity.Aspirante;
+import edu.unl.sigett.entity.AutorProyecto;
+import edu.unl.sigett.enumeration.EstadoAutorEnum;
+import edu.unl.sigett.enumeration.EstadoProyectoEnum;
+import edu.unl.sigett.enumeration.TipoProyectoEnum;
+import edu.unl.sigett.proyecto.SessionProyecto;
+import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
+import edu.unl.sigett.service.AspiranteService;
+import edu.unl.sigett.service.AutorProyectoService;
+import edu.unl.sigett.util.MessageView;
+import javax.inject.Named;
+import javax.enterprise.context.SessionScoped;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.ResourceBundle;
+import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
+import javax.inject.Inject;
+import javax.persistence.PostLoad;
+import org.jlmallas.seguridad.dao.UsuarioDao;
+import org.primefaces.context.RequestContext;
+
+/**
+ *
+ * @author jorge-luis
+ */
+@Named(value = "autorProyectoController")
+@SessionScoped
+public class AutorProyectoController implements Serializable {
+
+    //<editor-fold defaultstate="collapsed" desc="MANAGED BEANS">
+    @Inject
+    private SessionProyecto sessionProyecto;
+    @Inject
+    private SessionUsuario sessionUsuario;
+    @Inject
+    private SessionAutorProyecto sessionAutorProyecto;
+//</editor-fold>
+    //<editor-fold defaultstate="collapsed" desc="SERVICIOS">
+    @EJB
+    private AutorProyectoService autorProyectoService;
+    @EJB
+    private EstudianteCarreraDao estudianteCarreraDao;
+    @EJB
+    private PersonaDao personaDao;
+    @EJB
+    private UsuarioDao usuarioDao;
+    @EJB
+    private ItemService itemService;
+    @EJB
+    private AspiranteService aspiranteService;
+    //</editor-fold>
+    private MessageView messageView;
+
+    public AutorProyectoController() {
+    }
+
+
+    public void initPostulacion() {
+        this.messageView = new MessageView();
+        this.buscar();
+        this.renderedBuscarAspirantes();
+        this.renderedSeleccionar();
+        this.buscarAspirantes();
+    }
+    //<editor-fold defaultstate="collapsed" desc="POSTULACION">
+    /**
+     * BUSCAR AUTORES DEL PROYECTO SELECCIONADO
+     *
+     */
+    private void buscar() {
+        sessionProyecto.getAutoresProyectoDTO().clear();
+        sessionProyecto.getFilterAutoresProyectoDTO().clear();
+        try {
+            Item estado = itemService.buscarPorCatalogoCodigo(CatalogoEnum.ESTADOAUTOR.getTipo(), EstadoAutorEnum.RENUNCIADO.getTipo());
+            List<AutorProyecto> autorProyectos = autorProyectoService.buscar(new AutorProyecto(
+                    sessionProyecto.getProyectoSeleccionado().getId() != null ? sessionProyecto.getProyectoSeleccionado() : null, null, estado.getId(),
+                    null, null));
+            if (autorProyectos == null) {
+                return;
+            }
+
+            for (AutorProyecto autorProyecto : autorProyectos) {
+                AutorProyectoDTO autorProyectoDTO = new AutorProyectoDTO(autorProyecto, autorProyecto.getAspiranteId(),
+                        estudianteCarreraDao.find(autorProyecto.getAspiranteId().getId()), null);
+                autorProyectoDTO.setPersona(personaDao.find(autorProyectoDTO.getEstudianteCarrera().getEstudianteId().getId()));
+                if (!sessionProyecto.getAutoresProyectoDTO().contains(autorProyectoDTO)) {
+                    sessionProyecto.getAutoresProyectoDTO().add(autorProyectoDTO);
+                }
+            }
+            /**
+             * NUEVOS
+             */
+            for(AutorProyectoDTO autorProyectoDTO:sessionProyecto.getAutoresProyectoDTONuevos()){
+                sessionProyecto.getAutoresProyectoDTO().add(autorProyectoDTO);
+            }
+            sessionProyecto.setFilterAutoresProyectoDTO(sessionProyecto.getAutoresProyectoDTO());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * QUITAR AUTOR DE UN PROYECTO
+     *
+     * @param autorProyectoDTO
+     */
+    public void remover(AutorProyectoDTO autorProyectoDTO) {
+        try {
+            FacesContext facesContext = FacesContext.getCurrentInstance();
+            ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
+            int tienePermiso = usuarioDao.tienePermiso(sessionUsuario.getUsuario(), "eliminar_autor_proyecto");
+            if (tienePermiso == 1) {
+                if (autorProyectoDTO.getAutorProyecto().getId() != null) {
+                    Item item = itemService.buscarPorId(sessionProyecto.getProyectoSeleccionado().getEstadoProyectoId());
+                    Item estadoRenunciado = itemService.buscarPorCatalogoCodigo(CatalogoEnum.ESTADOAUTOR.getTipo(), EstadoAutorEnum.RENUNCIADO.getTipo());
+                    if (item.getCodigo().equals(EstadoProyectoEnum.INICIO.getTipo())) {
+                        autorProyectoDTO.getAutorProyecto().setEstadoAutorId(estadoRenunciado.getId());
+                        this.buscar();
+                        messageView.message(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_eliminar") + ". ", "");
+                        return;
+                    }
+                    return;
+                }
+                sessionProyecto.getAutoresProyectoDTONuevos().remove(autorProyectoDTO);
+                this.buscar();
+                messageView.message(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_eliminar"), "");
+                return;
+            }
+            messageView.message(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_eliminar") + ". "
+                    + bundle.getString("lbl.msm_consulte"), "");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * BUSCAR ASPIRANTES APTOS PARA ASIGNARLO COMO AUTOR DE TRABAJO DE
+     * TITULACION
+     */
+    public void buscarAspirantes() {
+        sessionAutorProyecto.getAspirantesDTO().clear();
+        sessionAutorProyecto.getFilterAspirantesDTO().clear();
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
+        try {
+            int tienePermiso = usuarioDao.tienePermiso(sessionUsuario.getUsuario(), "buscar_aspirante");
+            if (tienePermiso == 1) {
+                for (Carrera carrera : sessionProyecto.getCarreras()) {
+                    List<EstudianteCarrera> estudianteCarreras = estudianteCarreraDao.buscar(new EstudianteCarrera(carrera, null, null, null));
+                    if (estudianteCarreras.isEmpty()) {
+                        continue;
+                    }
+                    for (EstudianteCarrera estudianteCarrera : estudianteCarreras) {
+                        Item item = itemService.buscarPorId(estudianteCarrera.getEstadoId());
+                        estudianteCarrera.setEstado(item.getNombre());
+                        List<Aspirante> aspirantes = aspiranteService.buscar(new Aspirante(estudianteCarrera.getId(), null));
+                        if (aspirantes == null) {
+                            continue;
+                        }
+                        if (aspirantes.isEmpty()) {
+                            continue;
+                        }
+                        AspiranteDTO aspiranteDTO = new AspiranteDTO(aspirantes.get(0),
+                                estudianteCarrera, personaDao.find(estudianteCarrera.getEstudianteId().getId()));
+                        sessionAutorProyecto.getAspirantesDTO().add(aspiranteDTO);
+                    }
+                }
+                sessionAutorProyecto.setFilterAspirantesDTO(sessionAutorProyecto.getAspirantesDTO());
+            } else {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_buscar") + ". "
+                        + bundle.getString("lbl.msm_consulte"), "");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+            }
+        } catch (Exception e) {
+            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_FATAL, e.getMessage(), "");
+            FacesContext.getCurrentInstance().addMessage(null, message);
+        }
+    }
+
+    /**
+     * PERMITE AUTOCOMPLETAR ASPIRANTES APTOS PARA DESARROLLO DE TRABAJOS DE
+     * TITULACION
+     *
+     * @param query
+     * @return
+     */
+    public List<AspiranteDTO> completarAspirantes(final String query) {
+        List<AspiranteDTO> results = new ArrayList<>();
+        if (!"".equals(query.trim())) {
+            for (AspiranteDTO aspiranteDTO : sessionAutorProyecto.getAspirantesDTO()) {
+                if (query.trim().toLowerCase().contains(aspiranteDTO.getPersona().getApellidos().toLowerCase())
+                        || query.trim().toLowerCase().contains(aspiranteDTO.getPersona().getNombres().toLowerCase())
+                        || query.trim().toLowerCase().contains(aspiranteDTO.getPersona().getNumeroIdentificacion().toLowerCase())) {
+                    results.add(aspiranteDTO);
+                }
+            }
+        }
+        AspiranteDTOConverter.setAspirantesDTO(results);
+        return results;
+    }
+
+    /**
+     * AGREGAR ASPIRANTE COMO AUTOR DE PROYECTO SELECCIONADO
+     *
+     * @param aspiranteDTO
+     */
+    public void agregar(AspiranteDTO aspiranteDTO) {
+        Calendar fecha = Calendar.getInstance();
+        try {
+            FacesContext facesContext = FacesContext.getCurrentInstance();
+            ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
+            Item item = itemService.buscarPorId(sessionProyecto.getProyectoSeleccionado().getEstadoProyectoId());
+            if (!item.getCodigo().equalsIgnoreCase(EstadoProyectoEnum.INICIO.getTipo())) {
+                return;
+            }
+            int tienePermiso = usuarioDao.tienePermiso(sessionUsuario.getUsuario(), "select_autor_proyecto");
+            if (tienePermiso != 1) {
+                messageView.message(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_crear") + ". "
+                        + bundle.getString("lbl.msm_consulte"), "");
+                return;
+            }
+            if (aspiranteDTO.getAspirante().getId() != null) {
+                aspiranteDTO.setAspirante(aspiranteService.buscarPorId(aspiranteDTO.getAspirante().getId()));
+            }
+            if (sessionProyecto.getTipoSeleccionado() == null) {
+                messageView.message(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl_no_select") + " "
+                        + bundle.getString("lbl.tipo_proyecto"), "");
+                return;
+            }
+            if (!aspiranteDTO.getAspirante().getEsApto()
+                    && sessionProyecto.getTipoSeleccionado().getCodigo().equals(TipoProyectoEnum.TRABAJOTITULACION.getTipo())) {
+                messageView.message(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.aspirante") + " "
+                        + bundle.getString("lbl.msm_no_es_apto_tt"), "");
+                return;
+            }
+            if (tieneAsignadoTrabajoTitulacion(aspiranteDTO.getAspirante())) {
+                messageView.message(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.aspirante") + " "
+                        + bundle.getString("lbl.msm_tiene_autor_proyecto"), "");
+                return;
+            }
+            AutorProyecto autorProyecto = new AutorProyecto(sessionProyecto.getProyectoSeleccionado(), aspiranteDTO.getAspirante(),
+                    itemService.buscarPorCatalogoCodigo(CatalogoEnum.ESTADOAUTOR.getTipo(), EstadoAutorEnum.DESARROLLO.getTipo()).getId(),
+                    fecha.getTime(), null);
+            if (sessionProyecto.getCronograma().getFechaProrroga() != null) {
+                autorProyecto.setFechaCulminacion(sessionProyecto.getCronograma().getFechaProrroga());
+            } else {
+                autorProyecto.setFechaCulminacion(sessionProyecto.getCronograma().getFechaProrroga());
+            }
+            AutorProyectoDTO autorProyectoDTO = new AutorProyectoDTO(
+                    autorProyecto, aspiranteDTO.getAspirante(), estudianteCarreraDao.find(
+                            aspiranteDTO.getAspirante().getId()), null);
+            autorProyectoDTO.setPersona(personaDao.find(autorProyectoDTO.getEstudianteCarrera().getEstudianteId().getId()));
+            AutorProyectoDTO ap = contieneAutorProyecto(autorProyectoDTO);
+            if (ap == null) {
+                sessionProyecto.getAutoresProyectoDTONuevos().add(autorProyectoDTO);
+                messageView.message(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.autor") + " "
+                        + bundle.getString("lbl.msm_agregar"), "");
+                RequestContext.getCurrentInstance().execute("PF('dlgBuscarAspirantes').hide()");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * PERMITE DETERMINAR SI EL ASPIRANTE SELECCIONADO YA PERTENEC COMO AUTOR
+     * DEL PROYECTO SELECCIONADO
+     *
+     * @param autorProyecto
+     * @return
+     */
+    private AutorProyectoDTO contieneAutorProyecto(AutorProyectoDTO autorProyecto) {
+        AutorProyectoDTO ap = null;
+        try {
+            for (AutorProyectoDTO autor : sessionProyecto.getAutoresProyectoDTO()) {
+                if (autorProyecto.getAspirante().equals(autor.getAspirante())) {
+                    ap = autor;
+                    break;
+                }
+            }
+        } catch (Exception e) {
+        }
+        return ap;
+    }
+
+    /**
+     * DETERMINAR SI ASPIRANTE ESTÁ ASIGNADO EN OTRO TRABAJO DE TITULACIÓN
+     *
+     * @param aspirante
+     * @return
+     */
+    private boolean tieneAsignadoTrabajoTitulacion(Aspirante aspirante) {
+        boolean var = false;
+        for (AutorProyecto autorProyecto : aspirante.getAutorProyectoList()) {
+            Item tipo = itemService.buscarPorId(autorProyecto.getProyectoId().getTipoProyectoId());
+            Item estadoAutor = itemService.buscarPorId(autorProyecto.getEstadoAutorId());
+            Item estadoProyecto = itemService.buscarPorId(autorProyecto.getProyectoId().getEstadoProyectoId());
+            if (tipo.getCodigo().equals(TipoProyectoEnum.TRABAJOTITULACION.getTipo())
+                    && !estadoAutor.getCodigo().equalsIgnoreCase(EstadoAutorEnum.RENUNCIADO.getTipo())
+                    && !estadoProyecto.getCodigo().equalsIgnoreCase(EstadoProyectoEnum.ABANDONADO.getTipo())
+                    || (!estadoProyecto.getCodigo().equalsIgnoreCase(EstadoProyectoEnum.REPROBADO.getTipo()))) {
+                var = true;
+                break;
+            }
+        }
+        return var;
+    }
+
+    //</editor-fold>
+    //<editor-fold defaultstate="collapsed" desc="RENDERED">
+    public void renderedBuscarAspirantes() {
+        try {
+            sessionAutorProyecto.setRenderedBuscarAspirantes(Boolean.FALSE);
+            Item item = itemService.buscarPorId(sessionProyecto.getProyectoSeleccionado().getEstadoProyectoId());
+            if (item.getCodigo().equalsIgnoreCase(EstadoProyectoEnum.INICIO.getTipo())) {
+                int tienePermiso = usuarioDao.tienePermiso(sessionUsuario.getUsuario(), "buscar_aspirante");
+                if (tienePermiso == 1) {
+                    sessionAutorProyecto.setRenderedBuscarAspirantes(Boolean.TRUE);
+                }
+            }
+        } catch (Exception e) {
+        }
+    }
+
+    public void renderedSeleccionar() {
+        sessionAutorProyecto.setRenderedSeleccionar(Boolean.FALSE);
+        Item item = itemService.buscarPorId(sessionProyecto.getProyectoSeleccionado().getEstadoProyectoId());
+        if (item.getCodigo().equalsIgnoreCase(EstadoProyectoEnum.INICIO.getTipo())) {
+            int tienePermiso = usuarioDao.tienePermiso(sessionUsuario.getUsuario(), "select_autor_proyecto");
+            if (tienePermiso == 1) {
+                sessionAutorProyecto.setRenderedSeleccionar(Boolean.TRUE);
+            }
+        }
+    }
+    //</editor-fold>
+}

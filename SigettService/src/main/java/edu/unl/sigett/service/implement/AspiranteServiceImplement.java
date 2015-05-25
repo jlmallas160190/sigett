@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.unl.sigett.dao.implement;
+package edu.unl.sigett.service.implement;
 
 import edu.unl.sigett.service.AspiranteService;
 import edu.unl.sigett.dao.AspiranteDao;

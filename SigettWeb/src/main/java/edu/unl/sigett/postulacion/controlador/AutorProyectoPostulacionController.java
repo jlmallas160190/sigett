@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.unl.sigett.autor.controlador;
+package edu.unl.sigett.postulacion.controlador;
 
 import com.jlmallas.comun.dao.PersonaDao;
 import edu.unl.sigett.adjudicacion.session.SessionRenunciaAutor;
-import edu.unl.sigett.autor.manged.session.SessionAutorProyecto;
-import edu.unl.sigett.proyecto.managed.session.SessionProyecto;
+import edu.unl.sigett.autor.SessionAutorProyecto;
+import edu.unl.sigett.proyecto.SessionProyecto;
 import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
 import edu.unl.sigett.entity.Aspirante;
 import edu.unl.sigett.entity.AutorProyecto;
@@ -44,7 +44,7 @@ import edu.unl.sigett.util.MessageView;
  */
 @Named
 @SessionScoped
-public class AdministrarAutoresProyecto implements Serializable {
+public class AutorProyectoPostulacionController implements Serializable {
     //<editor-fold defaultstate="collapsed" desc="MANAGED BEANS">
 
     @Inject
@@ -99,38 +99,11 @@ public class AdministrarAutoresProyecto implements Serializable {
     private String criterioBusquedaAutor;
     private String criterioBusquedaAspirante;
 
-    public AdministrarAutoresProyecto() {
+    public AutorProyectoPostulacionController() {
         this.renderedDlgEditarAutorProyecto = false;
     }
 
     //<editor-fold defaultstate="collapsed" desc="MÉTODOS CRUD">
-
-
-   
-
-//    public void buscar(String criterio, Proyecto proyecto, Usuario usuario) {
-//        int tienePermiso = usuarioDao.tienePermiso(usuario, "buscar_autor_proyecto");
-//        FacesContext facesContext = FacesContext.getCurrentInstance();
-//        ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-//        if (tienePermiso == 1) {
-//            autorProyectos = new ArrayList<>();
-//            try {
-//                for (AutorProyecto autorProyecto : proyecto.getAutorProyectoList()) {
-////                    if (!autorProyecto.getEstadoAutorId().getCodigo().equalsIgnoreCase(EstadoAutorEnum.ABANDONADO.getTipo())) {
-//////                        if (autorProyecto.getAspiranteId().getEstudianteCarrera().getEstudianteId().getPersona().getApellidos().toUpperCase().contains(criterio.toUpperCase())
-//////                                || autorProyecto.getAspiranteId().getEstudianteCarrera().getEstudianteId().getPersona().getNombres().toUpperCase().contains(criterio.toUpperCase())
-//////                                || autorProyecto.getAspiranteId().getEstudianteCarrera().getEstudianteId().getPersona().getNumeroIdentificacion().contains(criterio)) {
-////                        autorProyectos.add(autorProyecto);
-//////                        }
-////                    }
-//                }
-//
-//            } catch (Exception e) {
-//            }
-//        } else {
-//            view.message(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_buscar") + ". " + bundle.getString("lbl.msm_consulte"), "");
-//        }
-//    }
 
     public List<AutorProyecto> autoresProyecto(Proyecto proyecto) {
         try {

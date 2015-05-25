@@ -10,7 +10,7 @@ import com.jlmallas.comun.dao.PersonaDao;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 import com.ocpsoft.pretty.faces.annotation.URLMappings;
 import edu.unl.sigett.finalizacion.managed.session.SessionEvaluacionTribunal;
-import edu.unl.sigett.proyecto.managed.session.SessionProyecto;
+import edu.unl.sigett.proyecto.SessionProyecto;
 import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
 import edu.unl.sigett.entity.AutorProyecto;
 import edu.unl.sigett.entity.CalificacionMiembro;
@@ -712,7 +712,7 @@ public class AdministrarEvaluacionesTribunal implements Serializable {
     public void onEventCrear(SelectEvent selectEvent) {
         try {
             ScheduleEvent event = new DefaultScheduleEvent("", (Date) selectEvent.getObject(), (Date) selectEvent.getObject());
-            crear(sessionUsuario.getUsuario(), event.getStartDate(), sessionProyecto.getProyecto());
+            crear(sessionUsuario.getUsuario(), event.getStartDate(), sessionProyecto.getProyectoSeleccionado());
         } catch (Exception e) {
         }
     }
@@ -727,15 +727,15 @@ public class AdministrarEvaluacionesTribunal implements Serializable {
             ev.setFechaFin(event.getEndDate());
             ev.setFechaPlazo(event.getEndDate());
             if (ev.getEsAptoCalificar() == false) {
-                if (existeMiembroOtraSustentacion(ev, sessionUsuario.getUsuario(), sessionProyecto.getProyecto()) == false) {
-                    grabar(ev, ev.getTribunalId(), sessionProyecto.getProyecto(), sessionUsuario.getUsuario());
+                if (existeMiembroOtraSustentacion(ev, sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado()) == false) {
+                    grabar(ev, ev.getTribunalId(), sessionProyecto.getProyectoSeleccionado(), sessionUsuario.getUsuario());
                 } else {
-                    listadoSustentacionesPorUsuarioCarrera(sessionUsuario.getUsuario(), sessionProyecto.getProyecto());
+                    listadoSustentacionesPorUsuarioCarrera(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
                     FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, docenteEncontrado.toString() + " " + bundle.getString("lbl.miembro_encontrado"), "");
                     FacesContext.getCurrentInstance().addMessage(null, message);
                 }
             } else {
-                listadoSustentacionesPorUsuarioCarrera(sessionUsuario.getUsuario(), sessionProyecto.getProyecto());
+                listadoSustentacionesPorUsuarioCarrera(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_editar") + ". " + bundle.getString("lbl.msm_consulte"), "");
                 FacesContext.getCurrentInstance().addMessage(null, message);
             }
@@ -753,15 +753,15 @@ public class AdministrarEvaluacionesTribunal implements Serializable {
         ev.setFechaFin(event.getEndDate());
         ev.setFechaPlazo(event.getEndDate());
         if (ev.getEsAptoCalificar() == false) {
-            if (existeMiembroOtraSustentacion(ev, sessionUsuario.getUsuario(), sessionProyecto.getProyecto()) == false) {
-                grabar(ev, ev.getTribunalId(), sessionProyecto.getProyecto(), sessionUsuario.getUsuario());
+            if (existeMiembroOtraSustentacion(ev, sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado()) == false) {
+                grabar(ev, ev.getTribunalId(), sessionProyecto.getProyectoSeleccionado(), sessionUsuario.getUsuario());
             } else {
-                listadoSustentacionesPorUsuarioCarrera(sessionUsuario.getUsuario(), sessionProyecto.getProyecto());
+                listadoSustentacionesPorUsuarioCarrera(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, docenteEncontrado.toString() + " " + bundle.getString("lbl.miembro_encontrado"), "");
                 FacesContext.getCurrentInstance().addMessage(null, message);
             }
         } else {
-            listadoSustentacionesPorUsuarioCarrera(sessionUsuario.getUsuario(), sessionProyecto.getProyecto());
+            listadoSustentacionesPorUsuarioCarrera(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_editar") + ". " + bundle.getString("lbl.msm_consulte"), "");
             FacesContext.getCurrentInstance().addMessage(null, message);
         }

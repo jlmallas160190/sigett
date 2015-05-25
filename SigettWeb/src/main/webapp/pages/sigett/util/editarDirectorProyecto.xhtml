@@ -193,7 +193,7 @@
                                         <h:outputText value="#{msg['lbl.eliminar']}"/>
                                     </f:facet>
                                     <p:commandButton icon="ui-icon-trash"  onclick="if (!confirm('#{msg['lbl.confirmarEliminar']}'))
-                                                return false;" update=":contenido:msm,tblProrrogas" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()"  action="#{administrarProrrogas.remover(prorroga, sessionProyecto.proyecto, sessionUsuario.usuario)}">
+                                                return false;" update=":contenido:msm,tblProrrogas" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()"  action="#{administrarProrrogas.remover(prorroga, sessionProyecto.proyectoSeleccionado, sessionUsuario.usuario)}">
 
                                         <f:param name="2" value="remover-prorroga"/>
                                     </p:commandButton>
@@ -240,13 +240,13 @@
                     <p:tab id="autores" title="#{msg['lbl.autores']}">
                         <p:panel  header="#{msg['lbl.buscar']}" toggleable="true">
                             <h:panelGrid columns="1" styleClass="panelgrid" rowClasses="rowpanelgrid" >
-                                <p:commandButton value="#{msg['lbl.buscar']}" icon="ui-icon-search"  onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" update="dgAutores" action="#{administrarAutoresProyecto.buscarAutoresDesdeDirectorProyecto('', sessionProyectosDirector.directorProyecto.proyectoId)}"/>
+                                <p:commandButton value="#{msg['lbl.buscar']}" icon="ui-icon-search"  onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" update="dgAutores" action="#{autorProyectoPostulacionController.buscarAutoresDesdeDirectorProyecto('', sessionProyectosDirector.directorProyecto.proyectoId)}"/>
                             </h:panelGrid>
                         </p:panel>
                         <br/>
                         <p:panel header="#{msg['lbl.autores']}">
                             <p:dataGrid id="dgAutores"  rowIndexVar="rowIx"  var="autor"
-                                        paginatorPosition="bottom" value="#{administrarAutoresProyecto.autorProyectosDirectorProyecto}" paginator="true" rows="10">
+                                        paginatorPosition="bottom" value="#{autorProyectoPostulacionController.autorProyectosDirectorProyecto}" paginator="true" rows="10">
                                 <p:panel header="#{msg['lbl.datos']}" toggleable="true">
                                     <div class="row-fluid">
                                         <div class="col-sm-2">

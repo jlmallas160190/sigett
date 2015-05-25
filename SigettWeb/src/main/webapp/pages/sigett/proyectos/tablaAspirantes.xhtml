@@ -1,0 +1,51 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <body>
+        <p:dataTable id="tblAspirantes" value="#{sessionAutorProyecto.aspirantesDTO}"  var="aspirante" rows="20" paginator="true"
+                     filteredValue="#{sessionAutorProyecto.filterAspirantesDTO}" widgetVar="tblAspirantesFilter"
+                     rowIndexVar="rowIx"  rowKey="#{aspirante.persona.numeroIdentificacion}" selectionMode="single" 
+                     selection="#{aspirante}" editable="true" editMode="cell" rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'even-row' : 'odd-row'}"
+                     emptyMessage="#{msg['lbl.table.empty']}">
+
+            <p:column rendered="#{sessionAutorProyecto.renderedSeleccionar}">
+                <f:facet name="header">
+                    <h:outputText value="#{msg['lbl.seleccionar']}"/>
+                </f:facet>
+                <p:commandButton onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" icon="ui-icon-circle-plus" 
+                                 action="#{autorProyectoController.agregar(aspirante)}" 
+                                 update=":contenido:tabViewDatosProyecto:tblAutores,:contenido:msm"/>
+            </p:column>
+            <p:column  sortBy="#{aspirante.persona.apellidos}" 
+                       filterBy="#{aspirante.persona.apellidos} #{aspirante.persona.nombres}"
+                       filterMatchMode="contains">
+                <f:facet name="header">
+                    <h:outputText value="#{msg['lbl.aspirante']}"/>
+                </f:facet>
+                <h:outputText value="#{aspirante.persona.apellidos} #{aspirante.persona.nombres}"/>
+            </p:column>
+            <p:column sortBy="#{aspirante.persona.numeroIdentificacion}">
+                <f:facet name="header">
+                    <h:outputText value="#{msg['lbl.ci']}"/>
+                </f:facet>
+                <h:outputText value="#{aspirante.persona.numeroIdentificacion}"/>
+            </p:column>
+            <p:column sortBy="#{aspirante.estudianteCarrera.carreraId.nombre}">
+                <f:facet name="header">
+                    <h:outputText value="#{msg['lbl.carrera']}"/>
+                </f:facet>
+                <h:outputText value="#{aspirante.estudianteCarrera.carreraId.nombre}"/>
+            </p:column>
+            <p:column>
+                <f:facet name="header">
+                    <h:outputText value="#{msg['lbl.estado']}"/>
+                </f:facet>
+                <h:outputText value="#{aspirante.estudianteCarrera.estado}"/>
+            </p:column>
+        </p:dataTable>
+    </body>
+
+</html>

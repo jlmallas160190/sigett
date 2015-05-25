@@ -17,6 +17,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -46,6 +47,7 @@ public class LineaInvestigacionCarrera implements Serializable {
     @JoinColumn(name = "linea_investigacion_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private LineaInvestigacion lineaInvestigacionId;
+    @Transient
     private Integer count;
 
     public LineaInvestigacionCarrera() {

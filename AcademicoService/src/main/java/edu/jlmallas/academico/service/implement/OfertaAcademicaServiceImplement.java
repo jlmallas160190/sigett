@@ -49,7 +49,8 @@ public class OfertaAcademicaServiceImplement implements OfertaAcademicaService {
 
     @Override
     public OfertaAcademica buscarPorIdSga(String id) {
-        return ofertaAcademicaDao.buscarPorIdSga(id);
+        List<OfertaAcademica> ofertaAcademicas = this.ofertaAcademicaDao.buscar(new OfertaAcademica(null, null, id, null, null));
+        return !ofertaAcademicas.isEmpty() ? ofertaAcademicas.get(0) : null;
     }
 
     @Override

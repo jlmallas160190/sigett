@@ -9,6 +9,7 @@ import edu.jlmallas.academico.dao.AbstractDao;
 import edu.jlmallas.academico.dao.OfertaAcademicaDao;
 import edu.jlmallas.academico.entity.OfertaAcademica;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.Query;
@@ -78,4 +79,31 @@ public class OfertaAcademicaDaoImplement extends AbstractDao<OfertaAcademica> im
         }
         return null;
     }
+
+    @Override
+    public List<OfertaAcademica> buscar(final OfertaAcademica ofertaAcademica) {
+        StringBuilder sql = new StringBuilder();
+        HashMap<String, Object> parametros = new HashMap<>();
+        Boolean existeFiltro = Boolean.FALSE;
+        sql.append("SELECT o from OfertaAcademica o WHERE 1=1 ");
+        if (ofertaAcademica.getIdSga() != null) {
+            sql.append(" and o.idSga = :idSga ");
+            parametros.put("idSga", ofertaAcademica.getIdSga());
+            existeFiltro = Boolean.TRUE;
+        }
+        if (ofertaAcademica.getPeriodoAcademicoId() != null) {
+            sql.append(" and o.periodoId=:periodoId");
+            parametros.put("periodoId", ofertaAcademica.getPeriodoAcademicoId());
+            existeFiltro = Boolean.TRUE;
+        }
+        if (!existeFiltro) {
+            return new ArrayList<>();
+        }
+        final Query q = em.createQuery(sql.toString());
+        for (String key : parametros.keySet()) {
+            q.setParameter(key, parametros.get(key));
+        }
+        return q.getResultList();
+    }
+
 }

@@ -5,13 +5,12 @@
  */
 package edu.unl.sigett.postulacion.controlador;
 
-import edu.unl.sigett.autor.controlador.AdministrarAutoresProyecto;
 import com.jlmallas.comun.entity.Persona;
 import com.jlmallas.comun.dao.PersonaDao;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 import com.ocpsoft.pretty.faces.annotation.URLMappings;
 import edu.unl.sigett.postulacion.managed.session.SessionDocenteProyecto;
-import edu.unl.sigett.proyecto.managed.session.SessionProyecto;
+import edu.unl.sigett.proyecto.SessionProyecto;
 import edu.unl.sigett.reportes.AdministrarReportes;
 import edu.unl.sigett.comun.controlador.AdministrarConfiguraciones;
 import edu.unl.sigett.seguridad.managed.session.SessionDocenteUsuario;
@@ -101,7 +100,7 @@ public class AdministrarDocentesProyecto implements Serializable {
     @Inject
     private SessionDocenteUsuario sessionDocenteUsuario;
     @Inject
-    private AdministrarAutoresProyecto administrarAutoresProyecto;
+    private AutorProyectoPostulacionController administrarAutoresProyecto;
     @Inject
     private AdministrarDocumentosProyecto administrarDocumentosProyecto;
     @Inject
@@ -417,7 +416,7 @@ public class AdministrarDocentesProyecto implements Serializable {
 //                administrarAutoresProyecto.buscar("", sessionDocenteProyecto.getDocenteProyecto().getProyectoId(),usuario);
                 break;
             case "inicio":
-                administrarCronograma.renderedCronograma(sessionDocenteProyecto.getDocenteProyecto().getProyectoId());
+//                administrarCronograma.renderedCronograma(sessionDocenteProyecto.getDocenteProyecto().getProyectoId());
         }
     }
 
@@ -439,7 +438,7 @@ public class AdministrarDocentesProyecto implements Serializable {
                 administrarPertinencias.renderedImprimirInforme(sessionDocenteUsuario.getUsuario());
                 administrarPertinencias.buscar(sessionDocenteUsuario.getUsuario(), docenteProyecto);
                 administrarPertinencias.renderedAceptar(sessionDocenteUsuario.getUsuario());
-                administrarCronograma.renderedCronograma(sessionDocenteProyecto.getDocenteProyecto().getProyectoId());
+//                administrarCronograma.renderedCronograma(sessionDocenteProyecto.getDocenteProyecto().getProyectoId());
                 if (param.equalsIgnoreCase("editar-dlg")) {
                     RequestContext.getCurrentInstance().execute("PF('dlgEditarDocenteProyecto').show()");
                 } else {
@@ -980,11 +979,11 @@ public class AdministrarDocentesProyecto implements Serializable {
         this.renderedSortearDocente = renderedSortearDocente;
     }
 
-    public AdministrarAutoresProyecto getAdministrarAutoresProyecto() {
+    public AutorProyectoPostulacionController getAdministrarAutoresProyecto() {
         return administrarAutoresProyecto;
     }
 
-    public void setAdministrarAutoresProyecto(AdministrarAutoresProyecto administrarAutoresProyecto) {
+    public void setAdministrarAutoresProyecto(AutorProyectoPostulacionController administrarAutoresProyecto) {
         this.administrarAutoresProyecto = administrarAutoresProyecto;
     }
 

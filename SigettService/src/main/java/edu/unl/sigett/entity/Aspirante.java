@@ -41,7 +41,7 @@ public class Aspirante implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "es_apto")
-    private boolean esApto;
+    private Boolean esApto;
     @OneToMany(mappedBy = "aspiranteId")
     private List<AutorProyecto> autorProyectoList;
 
@@ -52,7 +52,7 @@ public class Aspirante implements Serializable {
         this.id = id;
     }
 
-    public Aspirante(Long id, boolean esApto) {
+    public Aspirante(Long id, Boolean esApto) {
         this.id = id;
         this.esApto = esApto;
     }
@@ -65,11 +65,11 @@ public class Aspirante implements Serializable {
         this.id = id;
     }
 
-    public boolean getEsApto() {
+    public Boolean getEsApto() {
         return esApto;
     }
 
-    public void setEsApto(boolean esApto) {
+    public void setEsApto(Boolean esApto) {
         this.esApto = esApto;
     }
 
@@ -96,10 +96,7 @@ public class Aspirante implements Serializable {
             return false;
         }
         Aspirante other = (Aspirante) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
+        return (this.id != null || other.id == null) && (this.id == null || this.id.equals(other.id));
     }
 
     @Override

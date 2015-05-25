@@ -18,6 +18,10 @@ import javax.ejb.Local;
 @Local
 public interface LineaInvestigacionService {
 
+    void guardar(final LineaInvestigacion lineaInvestigacion);
+
+    LineaInvestigacion buscarPorId(final LineaInvestigacion lineaInvestigacion);
+
     List<LineaInvestigacion> buscarPorCarrera(final LineaInvestigacionCarrera lineaInvestigacionCarrera);
 
     List<LineaInvestigacion> buscarPorDocente(final LineaInvestigacionDocente lineaInvestigacionDocente);

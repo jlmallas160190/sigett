@@ -9,7 +9,7 @@ import com.jlmallas.comun.entity.Persona;
 import com.jlmallas.comun.dao.PersonaDao;
 import edu.unl.sigett.adjudicacion.session.SessionDirectorProyecto;
 import edu.unl.sigett.adjudicacion.session.SessionRenunciaDirector;
-import edu.unl.sigett.proyecto.managed.session.SessionProyecto;
+import edu.unl.sigett.proyecto.SessionProyecto;
 import edu.unl.sigett.reportes.AdministrarReportes;
 import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
 import edu.unl.sigett.entity.AutorProyecto;

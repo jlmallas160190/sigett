@@ -38,10 +38,11 @@
     </context-param>
     <context-param>
         <param-name>com.ocpsoft.pretty.BASE_PACKAGES</param-name>
-        <param-value>edu.unl.sigett.postulacion.controlador,edu.unl.sigett.comun.controlador,
-            edu.unl.sigett.seguridad.controlador,edu.unl.sigett.seguimiento.controlador,
-            edu.unl.sigett.adjudicacion.controlador,edu.unl.sigett.finalizacion.controlador,
-            edu.unl.sigett.academico.controlador
+        <param-value>
+            edu.unl.sigett.seguridad.controlador,
+            edu.unl.sigett.academico.controlador,
+            edu.unl.sigett.comun.controlador,
+            edu.unl.sigett.proyecto 
         </param-value>
     </context-param>
     <context-param>

@@ -60,8 +60,13 @@ public class ProyectoCarreraOferta implements Serializable {
     public ProyectoCarreraOferta() {
     }
 
-    public ProyectoCarreraOferta(Proyecto proyecto, Integer carrreraId, Long ofertaId) {
+    public ProyectoCarreraOferta(Long id) {
+        this.id = id;
+    }
+
+    public ProyectoCarreraOferta(Proyecto proyecto, Integer carrreraId, Long ofertaId, Boolean esActivo) {
         this.proyectoId = proyecto;
+        this.esActivo = esActivo;
         this.carreraId = carrreraId;
         this.ofertaAcademicaId = ofertaId;
     }

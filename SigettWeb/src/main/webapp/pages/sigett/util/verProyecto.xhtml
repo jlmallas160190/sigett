@@ -1,0 +1,194 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./portada.xhtml">
+
+            <ui:define name="title">
+                <h:outputText value="#{msg['lbl.proyecto']}"/>
+            </ui:define>
+            <ui:define name="top">
+                <p:menubar>
+                    <p:menuitem icon="ui-icon-home" value="#{msg['lbl.inicio']}"  action="pretty:portada"></p:menuitem>
+                    <p:menuitem icon="ui-icon-document" value="#{msg['lbl.directorio']}"  action="pretty:directorio"></p:menuitem>
+                    <f:facet name="options">
+                        <h:panelGrid columns="1">
+                            <p:commandButton value="#{msg['lbl.regresar']}" icon="ui-icon-arrowreturnthick-1-w" onclick="regresar()"/>
+                        </h:panelGrid>
+                    </f:facet>
+                </p:menubar>
+            </ui:define>
+            <ui:define name="content">
+                <p:panel header="#{msg['lbl.informacion']}" toggleable="true">
+                    <h:panelGrid styleClass="panelgrid" rowClasses="rowpanelgrid" columnClasses="col-sm-3,col-sm-9" columns="2">
+                        <h:outputLabel value="#{msg['lbl.tema']}:"/>
+                        <h:outputText value="#{sessionConsultarProyecto.proyecto.temaActual}"/>
+                        <h:outputLabel value="#{msg['lbl.fecha']} #{msg['lbl.inicio']}:"/>
+                        <h:outputText value="#{sessionConsultarProyecto.proyecto.cronograma.fechaInicio}">
+                            <f:convertDateTime pattern="dd/MMMM/yyy"/>
+                        </h:outputText>
+                        <h:outputLabel value="#{msg['lbl.fechaCulminación']}:"/>
+                        <h:outputText value="#{sessionConsultarProyecto.proyecto.cronograma.fechaProrroga}">
+                            <f:convertDateTime pattern="dd/MMMM/yyy"/>
+                        </h:outputText>
+                        <h:outputLabel value="#{msg['lbl.estado']}:"/>
+                        <h:outputText value="#{sessionConsultarProyecto.proyecto.estadoProyectoId.nombre}"/>
+                        <h:outputLabel value="#{msg['lbl.tipoProyecto']}:"/>
+                        <h:panelGrid>
+                            <p:commandLink id="detalleTp" value="#{sessionConsultarProyecto.proyecto.tipoProyectoId.nombre}"/>
+                            <p:overlayPanel appendToBody="false"  showEffect="blind" for="detalleTp"  hideEffect="fade">
+                                <h:panelGrid columns="2" styleClass="panelgrid" rowClasses="rowpanelgrid" columnClasses="col-sm-2,col-sm-10"  >
+                                    <h:outputLabel value="#{msg['lbl.nombre']}:"/>
+                                    <h:outputText value="#{sessionConsultarProyecto.proyecto.tipoProyectoId.nombre}"/>
+                                    <h:outputLabel value="#{msg['lbl.descripcion']}:"/>
+                                    <h:outputText value="#{sessionConsultarProyecto.proyecto.tipoProyectoId.descripcion}"/>
+                                </h:panelGrid>
+                            </p:overlayPanel>
+                        </h:panelGrid>
+                        <h:outputLabel value="#{msg['lbl.categoria']}:"/>
+                        <h:panelGrid>
+                            <p:commandLink id="dc" value="#{sessionConsultarProyecto.proyecto.catalogoProyectoId.nombre}"/>
+                            <p:overlayPanel appendToBody="false" styleClass="panelgrid" showEffect="blind" for="dc"  hideEffect="fade">
+                                <h:panelGrid columns="2" rowClasses="rowpanelgrid" columnClasses="col-sm-2,col-sm-10"  >
+                                    <h:outputLabel value="#{msg['lbl.nombre']}:"/>
+                                    <h:outputText value="#{sessionConsultarProyecto.proyecto.catalogoProyectoId.nombre}"/>
+                                    <h:outputLabel value="#{msg['lbl.descripcion']}:"/>
+                                    <h:outputText value="#{sessionConsultarProyecto.proyecto.catalogoProyectoId.descripcion}"/>
+                                </h:panelGrid>
+                            </p:overlayPanel>
+                        </h:panelGrid>
+                        <h:outputLabel value="#{msg['lbl.avance']}:"/>
+                        <p:progressBar id="avance" styleClass="avance" labelTemplate="#{sessionConsultarProyecto.proyecto.cronograma.avance}%" value="#{sessionConsultarProyecto.proyecto.cronograma.avance}"/>
+                        <h:outputLabel value="#{msg['lbl.faltante']}:"/>
+                        <p:progressBar id="faltante" styleClass="faltante" labelTemplate="#{sessionConsultarProyecto.proyecto.cronograma.faltante}%" value="#{sessionConsultarProyecto.proyecto.cronograma.faltante}"/>
+                    </h:panelGrid>
+                </p:panel>
+                <br/>
+                <p:panel header="#{msg['lbl.documentos']}" toggleable="true">
+                    <p:dataTable id="tblDocumentosProyecto" rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'even-row' : 'odd-row'}" rowIndexVar="rowIx"  var="doc" rowKey="#{doc.catalogoDocumentoProyectoId.nombre}" selection="#{doc}" selectionMode="single" paginator="true" rows="8" value="#{sessionConsultarProyecto.proyecto.documentoProyectoList}">
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{msg['lbl.descargar']}"/>
+                            </f:facet> 
+                            <p:commandLink action="#{administrarDocumentosProyecto.downloadDocumento(doc)}" ajax="false">
+                                <p:graphicImage value="/resources/img/pdf.png"/>
+                            </p:commandLink> 
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{msg['lbl.documento']}"/>
+                            </f:facet>
+                            <h:outputLabel value="#{doc.catalogoDocumentoProyectoId.nombre}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{msg['lbl.size']}"/>
+                            </f:facet> 
+                            <h:outputLabel value="#{administrarDocumentosProyecto.obtenerSizeKB(doc)}"/>
+                        </p:column>
+                    </p:dataTable>
+                </p:panel>
+
+            </ui:define>
+            <ui:define name="left">
+                <p:panel toggleable="true" header="#{msg['lbl.lineasInvestigacion']}">
+                    <p:dataTable id="dgLineasInvestigacionProyecto" rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'even-row' : 'odd-row'}" rowIndexVar="rowIx"  var="lp" rowKey="#{lp.lineaInvestigacionId.nombre}" selection="#{lp}" selectionMode="single" paginator="true" rows="8" value="#{sessionConsultarProyecto.proyecto.lineaInvestigacionProyectoList}">
+                        <p:column  filterBy="#{lp.lineaInvestigacionId.nombre}" filterMatchMode="contains">
+                            <f:facet name="header">
+                                <h:outputText value="#{msg['lbl.lineaInvestigacion']}"/>
+                            </f:facet>
+                            <h:outputText id="lc"   value="#{lp.lineaInvestigacionId.nombre}"/> 
+                        </p:column>
+                    </p:dataTable>
+                </p:panel>
+            </ui:define>
+            <ui:define name="right">
+                <p:panel header="#{msg['lbl.autores']}" toggleable="true">
+                    <h:panelGrid columns="1" styleClass="panelgrid" rowClasses="rowpanelgrid" >
+                        <p:commandButton value="#{msg['lbl.buscar']}" icon="ui-icon-search"  onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" update="tblAutores" action="#{autorProyectoPostulacionController.listadoAutores('',sessionConsultarProyecto.proyecto)}"/>
+                    </h:panelGrid>
+                    <p:dataTable id="tblAutores" rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'even-row' : 'odd-row'}" rowIndexVar="rowIx"  var="autor"
+                                 value="#{autorProyectoPostulacionController.listadoAutores}" paginatorPosition="bottom" paginator="true" rows="10" 
+                                 rowKey="#{autor.aspiranteId.estudianteCarrera.estudianteId.persona.apellidos}" selection="#{autor}" selectionMode="single">
+                        <p:column filterBy="#{autor.aspiranteId.estudianteCarrera.estudianteId.persona.apellidos}" filterMatchMode="contains">
+                            <f:facet name="header">
+                                <h:outputText value="#{msg['lbl.autor']}"/>
+                            </f:facet> 
+                            <p:commandLink onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" update=":dlgViewAutor,:viewAutor" action="#{autorProyectoPostulacionController.viewAutorProyecto(autor)}" 
+                                           value="#{autor.aspiranteId.estudianteCarrera.estudianteId.persona.nombres} #{autor.aspiranteId.estudianteCarrera.estudianteId.persona.apellidos}"/>
+                        </p:column>
+                    </p:dataTable>
+                </p:panel>
+                <br/>
+                <p:panel header="#{msg['lbl.directores']}" toggleable="true">
+                    <h:panelGrid columns="1" styleClass="panelgrid" rowClasses="rowpanelgrid" >
+                        <p:commandButton value="#{msg['lbl.buscar']}" icon="ui-icon-search"  onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" update="tblDirectores" action="#{administrarDirectoresProyecto.historialDirectores}"/>
+                    </h:panelGrid>
+                    <p:dataTable id="tblDirectores" rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'even-row' : 'odd-row'}" rowIndexVar="rowIx"  var="director"
+                                 value="#{administrarDirectoresProyecto.historialDirectores}" paginator="true" paginatorPosition="bottom" rows="10" rowKey="#{director.directorId.docenteCarrera.docenteId.persona.apellidos}" selection="#{director}" selectionMode="single">
+                        <p:column filterBy="#{director.directorId.docenteCarrera.docenteId.persona.apellidos}"  filterMatchMode="contains">
+                            <f:facet name="header">
+                                <h:outputText value="#{msg['lbl.director']}"/>
+                            </f:facet> 
+                            <p:commandLink update=":dlgViewDirector,:viewDirector" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" action="#{administrarDirectoresProyecto.viewDirectorProyecto(director)}" value="#{director.directorId.docenteCarrera.docenteId.persona.nombres} #{director.directorId.docenteCarrera.docenteId.persona.apellidos}"/>
+                        </p:column>
+                    </p:dataTable>
+                </p:panel>
+
+            </ui:define>
+            <ui:define name="dlgs">
+                <p:dialog id="dlgViewAutor" header="#{msg['lbl.autor']}"  styleClass="modal-sm"  widgetVar="dlgViewAutor" modal="true">      
+                    <h:form id="viewAutor">
+                        <div class="row-fluid">
+                            <div class="col-sm-3">
+                                <p:graphicImage id="foto" cache="false"  styleClass="img-thumbnail" value="/AppServlet?id=#{autorProyectoPostulacionController.viewAutor.aspiranteId.estudianteCarrera.estudianteId.persona.id}&amp;entity=Persona"/>  
+                            </div>
+                            <div class="col-sm-9">
+                                <h:panelGrid columns="2" rowClasses="rowpanelgrid" styleClass="panelgrid" columnClasses="col-sm-4,col-sm-6"  >
+                                    <h:outputLabel value="#{msg['lbl.fecha']} #{msg['lbl.inicio']}:"/>
+                                    <h:outputText value="#{autorProyectoPostulacionController.viewAutor.fechaInicio}">
+                                        <f:convertDateTime pattern="EEEEE dd MMMMM yyyy"/>
+                                    </h:outputText>
+                                    <h:outputLabel value="#{msg['lbl.fechaCulminación']}:"/>
+                                    <h:outputText value="#{autorProyectoPostulacionController.viewAutor.fechaCulminacion}">
+                                        <f:convertDateTime pattern="EEEEE dd MMMMM yyyy"/>
+                                    </h:outputText>
+                                    <h:outputLabel value="#{msg['lbl.estado']}"/>
+                                    <h:outputText value="#{autorProyectoPostulacionController.viewAutor.aspiranteId.estudianteCarrera.estadoEstudianteCarrera.nombre}"/>
+                                    <h:outputLabel value="#{msg['lbl.email']}"/>
+                                    <h:outputText value="#{autorProyectoPostulacionController.viewAutor.aspiranteId.estudianteCarrera.estudianteId.persona.email}"/>
+                                </h:panelGrid>
+                            </div>
+                        </div>
+                    </h:form>
+                </p:dialog>
+                <p:dialog id="dlgViewDirector"  header="#{msg['lbl.director']}"  styleClass="modal-sm"  widgetVar="dlgViewDirector" modal="true">      
+                    <h:form id="viewDirector">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <p:graphicImage id="foto" cache="false"  styleClass="img-thumbnail" value="/AppServlet?id=#{administrarDirectoresProyecto.directorProyecto.directorId.docenteCarrera.docenteId.persona.id}&amp;entity=Persona"/>  
+                            </div>
+                            <div class="col-sm-9">
+                                <h:panelGrid columns="2" styleClass="panelgrid" columnClasses="col-sm-4,col-sm-6"  >
+                                    <h:outputLabel value="#{msg['lbl.fecha']} #{msg['lbl.inicio']}:"/>
+                                    <h:outputText value="#{administrarDirectoresProyecto.directorProyecto.fechaInicio}">
+                                        <f:convertDateTime pattern="EEEEE dd MMMMM yyyy"/>
+                                    </h:outputText>
+                                    <h:outputLabel value="#{msg['lbl.estado']}"/>
+                                    <h:outputText value="#{administrarDirectoresProyecto.directorProyecto.estadoDirectorId.nombre}"/>
+                                </h:panelGrid>
+                            </div>
+                        </div>
+                    </h:form>
+                </p:dialog>
+            </ui:define>
+        </ui:composition>
+
+    </body>
+</html>

@@ -3,17 +3,18 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.unl.sigett.proyecto.managed.session;
+package edu.unl.sigett.proyecto;
 
 import com.jlmallas.comun.entity.Item;
 import edu.jlmallas.academico.entity.Carrera;
 import edu.jlmallas.academico.entity.OfertaAcademica;
 import edu.unl.sigett.autor.dto.AutorProyectoDTO;
 import edu.unl.sigett.entity.ConfiguracionProyecto;
-import edu.unl.sigett.entity.DocenteProyecto;
+import edu.unl.sigett.entity.Cronograma;
 import edu.unl.sigett.entity.LineaInvestigacion;
 import edu.unl.sigett.entity.LineaInvestigacionProyecto;
 import edu.unl.sigett.entity.Proyecto;
+import edu.unl.sigett.entity.ProyectoCarreraOferta;
 import edu.unl.sigett.entity.TemaProyecto;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -30,15 +31,17 @@ import org.primefaces.model.DualListModel;
 @SessionScoped
 public class SessionProyecto implements Serializable {
 
-    private Proyecto proyecto;
+    private Proyecto proyectoSeleccionado;
     private TemaProyecto temaProyecto;
     private AutorProyectoDTO autorProyectoDTOSeleccionado;
+    private Carrera carreraSeleccionada;
+    private Item estadoSeleccionado;
+    private Item tipoSeleccionado;
+    private OfertaAcademica ofertaAcademicaSeleccionada;
+    private Cronograma cronograma;
 
     private List<Proyecto> proyectos;
     private List<Proyecto> filterProyectos;
-    private Item estadoSeleccionado;
-    private Carrera carreraSeleccionada;
-    private OfertaAcademica ofertaAcademicaSeleccionada;
     private LineaInvestigacionProyecto lineaInvestigacionProyectoSeleccionada;
     private List<Carrera> carreras;
     private List<OfertaAcademica> ofertaAcademicas;
@@ -48,18 +51,23 @@ public class SessionProyecto implements Serializable {
     private List<Carrera> filterCarrerasProyecto;
     private List<AutorProyectoDTO> autoresProyectoDTO;
     private List<AutorProyectoDTO> filterAutoresProyectoDTO;
-
+    private List<AutorProyectoDTO> autoresProyectoDTONuevos;
     private List<LineaInvestigacionProyecto> lineasInvestigacionProyecto;
     private List<LineaInvestigacionProyecto> filterLineasInvestigacionProyecto;
     private List<ConfiguracionProyecto> configuracionProyectos;
     private List<Item> estados;
     private List<Item> categorias;
     private List<Item> tipos;
+    private List<ProyectoCarreraOferta> carrerasSeleccionadasTransfer;
+    private List<ProyectoCarreraOferta> carrerasRemovidasTransfer;
+    private List<LineaInvestigacionProyecto> lineasInvestigacionSeleccionadasTransfer;
+    private List<LineaInvestigacionProyecto> lineasInvestigacionRemovidosTransfer;
+    private List<LineaInvestigacionProyecto> lineasInvestigacion;
 
     private Boolean renderedEditar;
     private Boolean renderedCrear;
-    private Boolean renderedEditarDatosProyecto;
-    private Boolean renderedEditarCronograma;
+    private Boolean renderedInicio;
+    private Boolean renderedPertinente;
     private Boolean renderedDialogoAP;
 
     private String tipo;
@@ -70,6 +78,13 @@ public class SessionProyecto implements Serializable {
     private DualListModel<Carrera> carrerasDualList;
 
     public SessionProyecto() {
+        this.autoresProyectoDTONuevos = new ArrayList<>();
+        this.cronograma = new Cronograma();
+        this.lineasInvestigacion = new ArrayList<>();
+        this.lineasInvestigacionSeleccionadasTransfer = new ArrayList<>();
+        this.lineasInvestigacionRemovidosTransfer = new ArrayList<>();
+        this.carrerasRemovidasTransfer = new ArrayList<>();
+        this.carrerasSeleccionadasTransfer = new ArrayList<>();
         this.autorProyectoDTOSeleccionado = new AutorProyectoDTO();
         this.filterAutoresProyectoDTO = new ArrayList<>();
         this.autoresProyectoDTO = new ArrayList<>();
@@ -92,15 +107,15 @@ public class SessionProyecto implements Serializable {
         this.estadoSeleccionado = new Item();
         this.proyectos = new ArrayList<>();
         this.filterProyectos = new ArrayList<>();
-        this.proyecto = new Proyecto();
+        this.proyectoSeleccionado = new Proyecto();
     }
 
-    public Proyecto getProyecto() {
-        return proyecto;
+    public Proyecto getProyectoSeleccionado() {
+        return proyectoSeleccionado;
     }
 
-    public void setProyecto(Proyecto proyecto) {
-        this.proyecto = proyecto;
+    public void setProyectoSeleccionado(Proyecto proyectoSeleccionado) {
+        this.proyectoSeleccionado = proyectoSeleccionado;
     }
 
     public List<Proyecto> getProyectos() {
@@ -263,12 +278,12 @@ public class SessionProyecto implements Serializable {
         this.configuracionProyectos = configuracionProyectos;
     }
 
-    public Boolean getRenderedEditarDatosProyecto() {
-        return renderedEditarDatosProyecto;
+    public Boolean getRenderedInicio() {
+        return renderedInicio;
     }
 
-    public void setRenderedEditarDatosProyecto(Boolean renderedEditarDatosProyecto) {
-        this.renderedEditarDatosProyecto = renderedEditarDatosProyecto;
+    public void setRenderedInicio(Boolean renderedInicio) {
+        this.renderedInicio = renderedInicio;
     }
 
     public TemaProyecto getTemaProyecto() {
@@ -279,12 +294,12 @@ public class SessionProyecto implements Serializable {
         this.temaProyecto = temaProyecto;
     }
 
-    public Boolean getRenderedEditarCronograma() {
-        return renderedEditarCronograma;
+    public Boolean getRenderedPertinente() {
+        return renderedPertinente;
     }
 
-    public void setRenderedEditarCronograma(Boolean renderedEditarCronograma) {
-        this.renderedEditarCronograma = renderedEditarCronograma;
+    public void setRenderedPertinente(Boolean renderedPertinente) {
+        this.renderedPertinente = renderedPertinente;
     }
 
     public List<Item> getEstados() {
@@ -357,6 +372,70 @@ public class SessionProyecto implements Serializable {
 
     public void setRenderedDialogoAP(Boolean renderedDialogoAP) {
         this.renderedDialogoAP = renderedDialogoAP;
+    }
+
+    public List<ProyectoCarreraOferta> getCarrerasSeleccionadasTransfer() {
+        return carrerasSeleccionadasTransfer;
+    }
+
+    public void setCarrerasSeleccionadasTransfer(List<ProyectoCarreraOferta> carrerasSeleccionadasTransfer) {
+        this.carrerasSeleccionadasTransfer = carrerasSeleccionadasTransfer;
+    }
+
+    public List<ProyectoCarreraOferta> getCarrerasRemovidasTransfer() {
+        return carrerasRemovidasTransfer;
+    }
+
+    public void setCarrerasRemovidasTransfer(List<ProyectoCarreraOferta> carrerasRemovidasTransfer) {
+        this.carrerasRemovidasTransfer = carrerasRemovidasTransfer;
+    }
+
+    public List<LineaInvestigacionProyecto> getLineasInvestigacionSeleccionadasTransfer() {
+        return lineasInvestigacionSeleccionadasTransfer;
+    }
+
+    public void setLineasInvestigacionSeleccionadasTransfer(List<LineaInvestigacionProyecto> lineasInvestigacionSeleccionadasTransfer) {
+        this.lineasInvestigacionSeleccionadasTransfer = lineasInvestigacionSeleccionadasTransfer;
+    }
+
+    public List<LineaInvestigacionProyecto> getLineasInvestigacionRemovidosTransfer() {
+        return lineasInvestigacionRemovidosTransfer;
+    }
+
+    public void setLineasInvestigacionRemovidosTransfer(List<LineaInvestigacionProyecto> lineasInvestigacionRemovidosTransfer) {
+        this.lineasInvestigacionRemovidosTransfer = lineasInvestigacionRemovidosTransfer;
+    }
+
+    public List<LineaInvestigacionProyecto> getLineasInvestigacion() {
+        return lineasInvestigacion;
+    }
+
+    public void setLineasInvestigacion(List<LineaInvestigacionProyecto> lineasInvestigacion) {
+        this.lineasInvestigacion = lineasInvestigacion;
+    }
+
+    public Cronograma getCronograma() {
+        return cronograma;
+    }
+
+    public void setCronograma(Cronograma cronograma) {
+        this.cronograma = cronograma;
+    }
+
+    public Item getTipoSeleccionado() {
+        return tipoSeleccionado;
+    }
+
+    public void setTipoSeleccionado(Item tipoSeleccionado) {
+        this.tipoSeleccionado = tipoSeleccionado;
+    }
+
+    public List<AutorProyectoDTO> getAutoresProyectoDTONuevos() {
+        return autoresProyectoDTONuevos;
+    }
+
+    public void setAutoresProyectoDTONuevos(List<AutorProyectoDTO> autoresProyectoDTONuevos) {
+        this.autoresProyectoDTONuevos = autoresProyectoDTONuevos;
     }
 
 }

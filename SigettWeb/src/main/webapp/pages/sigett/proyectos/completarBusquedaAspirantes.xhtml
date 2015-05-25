@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui">
+
+     <body>
+        <p:autoComplete   effect="fade" minQueryLength="2" placeholder="#{msg['lbl.ci']}"
+                          value="#{sessionAutorProyecto.aspiranteDTOSeleccionado}"
+                          completeMethod="#{autorProyectoController.completarAspirantes}"
+                          var="aspirante" itemLabel="#{aspirante.persona.apellidos} #{aspirante.persona.nombres}"
+                          converter="aspiranteDTOConverter" itemValue="#{aspirante}" multiple="false">
+            <p:ajax event="itemSelect" update=":contenido:tabViewDatosProyecto:tblAutores,:contenido:msm" 
+                    listener="#{autorProyectoController.agregar(aspirante)}"/>
+        </p:autoComplete>
+    </body>
+
+</html>

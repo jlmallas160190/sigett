@@ -6,12 +6,11 @@
 package edu.unl.sigett.service;
 
 import edu.unl.sigett.dao.LineaInvestigacionCarreraDao;
+import edu.unl.sigett.dao.LineaInvestigacionDao;
 import edu.unl.sigett.dao.LineaInvestigacionDocenteDao;
-import edu.unl.sigett.dao.LineaInvestigacionProyectoDao;
 import edu.unl.sigett.entity.LineaInvestigacion;
 import edu.unl.sigett.entity.LineaInvestigacionCarrera;
 import edu.unl.sigett.entity.LineaInvestigacionDocente;
-import edu.unl.sigett.entity.LineaInvestigacionProyecto;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
@@ -29,7 +28,7 @@ public class LineaInvestigacionServiceImplement implements LineaInvestigacionSer
     @EJB
     private LineaInvestigacionDocenteDao lineaInvestigacionDocenteDao;
     @EJB
-    private LineaInvestigacionProyectoDao lineaInvestigacionProyectoDao;
+    private LineaInvestigacionDao lineaInvestigacionDao;
 
     @Override
     public List<LineaInvestigacion> buscarPorCarrera(LineaInvestigacionCarrera lineaInvestigacionCarrera) {
@@ -98,6 +97,16 @@ public class LineaInvestigacionServiceImplement implements LineaInvestigacionSer
             }
         }
         return lineaInvestigacions;
+    }
+
+    @Override
+    public void guardar(final LineaInvestigacion lineaInvestigacion) {
+        this.lineaInvestigacionDao.create(lineaInvestigacion);
+    }
+
+    @Override
+    public LineaInvestigacion buscarPorId(final LineaInvestigacion lineaInvestigacion) {
+        return this.lineaInvestigacionDao.find(this);
     }
 
 }

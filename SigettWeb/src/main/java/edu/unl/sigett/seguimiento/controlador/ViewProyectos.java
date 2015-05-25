@@ -9,7 +9,7 @@ import com.jlmallas.comun.dao.PersonaDao;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 import com.ocpsoft.pretty.faces.annotation.URLMappings;
 import edu.unl.sigett.adjudicacion.controlador.AdministrarDirectoresProyecto;
-import edu.unl.sigett.autor.controlador.AdministrarAutoresProyecto;
+import edu.unl.sigett.postulacion.controlador.AutorProyectoPostulacionController;
 import edu.unl.sigett.postulacion.managed.session.SessionConsultarProyecto;
 import edu.jlmallas.academico.entity.Area;
 import edu.unl.sigett.entity.AutorProyecto;
@@ -62,7 +62,7 @@ import java.util.Map;
 public class ViewProyectos implements Serializable {
 
     @Inject
-    private AdministrarAutoresProyecto autoresProyecto;
+    private AutorProyectoPostulacionController autoresProyecto;
     @Inject
     private AdministrarDirectoresProyecto directoresProyecto;
     @Inject
@@ -411,11 +411,11 @@ public class ViewProyectos implements Serializable {
         this.sessionConsultarProyecto = sessionConsultarProyecto;
     }
 
-    public AdministrarAutoresProyecto getAutoresProyecto() {
+    public AutorProyectoPostulacionController getAutoresProyecto() {
         return autoresProyecto;
     }
 
-    public void setAutoresProyecto(AdministrarAutoresProyecto autoresProyecto) {
+    public void setAutoresProyecto(AutorProyectoPostulacionController autoresProyecto) {
         this.autoresProyecto = autoresProyecto;
     }
 

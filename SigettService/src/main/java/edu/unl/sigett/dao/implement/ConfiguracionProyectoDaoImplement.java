@@ -67,16 +67,22 @@ public class ConfiguracionProyectoDaoImplement extends AbstractDao<Configuracion
 
     @Override
     public List<ConfiguracionProyecto> buscar(final ConfiguracionProyecto configuracionProyecto) {
+        Boolean existeFiltro = Boolean.FALSE;
         StringBuilder sql = new StringBuilder();
         HashMap<String, Object> parametros = new HashMap<>();
         sql.append("SELECT c FROM ConfiguracionProyecto c where 1=1 ");
         if (configuracionProyecto.getProyectoId() != null) {
             sql.append(" and c.proyectoId=:proyectoId");
             parametros.put("proyectoId", configuracionProyecto.getProyectoId());
+            existeFiltro = Boolean.TRUE;
         }
         if (configuracionProyecto.getCodigo() != null) {
             sql.append(" and c.codigo=:codigo");
             parametros.put("codigo", configuracionProyecto.getCodigo());
+            existeFiltro = Boolean.TRUE;
+        }
+        if (!existeFiltro) {
+            return new ArrayList<>();
         }
         final Query q = em.createQuery(sql.toString());
         for (String key : parametros.keySet()) {

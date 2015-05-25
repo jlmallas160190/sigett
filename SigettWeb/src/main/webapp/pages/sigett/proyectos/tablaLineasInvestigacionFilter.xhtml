@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <body>
+        <p:dataTable id="tblLIC" paginatorPosition="bottom" 
+                     rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'even-row' : 'odd-row'}" rowIndexVar="rowIx"  var="lp" widgetVar="tblLIFilter"
+                     rowKey="#{lp.lineaInvestigacionId.nombre}" selection="#{lp}" selectionMode="single" paginator="true" rows="8" 
+                     value="#{sessionProyecto.lineasInvestigacionProyecto}" filteredValue="#{sessionProyecto.filterLineasInvestigacionProyecto}">
+            <p:ajax event="rowSelect"  onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" 
+                    listener="#{proyectoController.seleccionarLineaInvestigacion}" update=":contenido:tblProyectos,:contenido:msm" />
+            <p:column  filterBy="#{lp.lineaInvestigacionId.nombre}" filterMatchMode="contains">
+                <f:facet name="header">
+                    <h:outputText value="#{msg['lbl.lineaInvestigacion']}"/>
+                </f:facet>
+                <h:outputText id="lc"   value="#{lp.lineaInvestigacionId.nombre}"/>
+                <span class="badge">#{lp.count}</span>    
+            </p:column>
+        </p:dataTable>
+    </body>
+</html>
