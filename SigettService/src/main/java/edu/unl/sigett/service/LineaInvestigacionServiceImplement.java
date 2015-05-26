@@ -106,7 +106,7 @@ public class LineaInvestigacionServiceImplement implements LineaInvestigacionSer
 
     @Override
     public LineaInvestigacion buscarPorId(final LineaInvestigacion lineaInvestigacion) {
-        return this.lineaInvestigacionDao.find(this);
+        return this.lineaInvestigacionDao.find(lineaInvestigacion.getId());
     }
 
 }

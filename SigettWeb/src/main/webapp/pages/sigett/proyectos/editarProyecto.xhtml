@@ -14,7 +14,7 @@
         <ui:define name="content">
             <f:event type="preRenderView" listener="#{proyectoController.initEditar()}"/>
             <f:event type="preRenderView" listener="#{autorProyectoController.initPostulacion()}"/>
-            <f:event type="preRenderView" listener="#{temaProyectoController.init}"/>
+            <f:event type="preRenderView" listener="#{docenteProyectoController.init()}"/>
             <p:growl id="msm" showDetail="true" /> 
             <p:panel>
                 <p:tabView  id="tabViewDatosProyecto" >
@@ -44,6 +44,10 @@
                            title="#{msg['lbl.docentes']} #{msg['lbl.pertinencias']}">
 
                         <p:panel header="#{msg['lbl.listado']} #{msg['lbl.docentes']}">
+                            <ui:include src="tablaDocentes.xhtml"/>
+                            <f:facet name="footer">
+                                <ui:include src="botonesTablaDocentes.xhtml"/>
+                            </f:facet>  
                         </p:panel>
                     </p:tab>
                 </p:tabView>
@@ -51,10 +55,8 @@
 
                 </f:facet>
             </p:panel>
-            <p:dialog id="dlgAspirantes" widgetVar="dlgBuscarAspirantes" header="#{msg['lbl.buscar']} #{msg['lbl.aspirantes']}" 
-                      styleClass="modal-md" showEffect="fade"  modal="true" >
-                <ui:include src="tablaAspirantes.xhtml"/>
-            </p:dialog>
+             <ui:include src="dialogoDirectoresDisponibles.xhtml"/>
+            <ui:include src="dialogoAspirantes.xhtml"/>
         </ui:define>
     </ui:composition>
 </html>

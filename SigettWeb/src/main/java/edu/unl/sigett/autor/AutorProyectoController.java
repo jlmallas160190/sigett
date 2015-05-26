@@ -12,6 +12,7 @@ import com.jlmallas.comun.service.ItemService;
 import edu.jlmallas.academico.dao.EstudianteCarreraDao;
 import edu.jlmallas.academico.entity.Carrera;
 import edu.jlmallas.academico.entity.EstudianteCarrera;
+import edu.unl.sigett.academico.dto.EstudianteCarreraDTO;
 import edu.unl.sigett.autor.dto.AspiranteDTO;
 import edu.unl.sigett.autor.dto.AutorProyectoDTO;
 import edu.unl.sigett.entity.Aspirante;
@@ -23,6 +24,8 @@ import edu.unl.sigett.proyecto.SessionProyecto;
 import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
 import edu.unl.sigett.service.AspiranteService;
 import edu.unl.sigett.service.AutorProyectoService;
+import edu.unl.sigett.usuarioCarrera.SessionUsuarioCarrera;
+import edu.unl.sigett.util.CabeceraController;
 import edu.unl.sigett.util.MessageView;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
@@ -31,12 +34,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.ResourceBundle;
-import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
-import javax.persistence.PostLoad;
 import org.jlmallas.seguridad.dao.UsuarioDao;
 import org.primefaces.context.RequestContext;
 
@@ -55,6 +56,10 @@ public class AutorProyectoController implements Serializable {
     private SessionUsuario sessionUsuario;
     @Inject
     private SessionAutorProyecto sessionAutorProyecto;
+    @Inject
+    private SessionUsuarioCarrera sessionUsuarioCarrera;
+    @Inject
+    private CabeceraController cabeceraController;
 //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="SERVICIOS">
     @EJB
@@ -70,14 +75,11 @@ public class AutorProyectoController implements Serializable {
     @EJB
     private AspiranteService aspiranteService;
     //</editor-fold>
-    private MessageView messageView;
 
     public AutorProyectoController() {
     }
 
-
     public void initPostulacion() {
-        this.messageView = new MessageView();
         this.buscar();
         this.renderedBuscarAspirantes();
         this.renderedSeleccionar();
@@ -111,7 +113,7 @@ public class AutorProyectoController implements Serializable {
             /**
              * NUEVOS
              */
-            for(AutorProyectoDTO autorProyectoDTO:sessionProyecto.getAutoresProyectoDTONuevos()){
+            for (AutorProyectoDTO autorProyectoDTO : sessionProyecto.getAutoresProyectoDTONuevos()) {
                 sessionProyecto.getAutoresProyectoDTO().add(autorProyectoDTO);
             }
             sessionProyecto.setFilterAutoresProyectoDTO(sessionProyecto.getAutoresProyectoDTO());
@@ -137,17 +139,17 @@ public class AutorProyectoController implements Serializable {
                     if (item.getCodigo().equals(EstadoProyectoEnum.INICIO.getTipo())) {
                         autorProyectoDTO.getAutorProyecto().setEstadoAutorId(estadoRenunciado.getId());
                         this.buscar();
-                        messageView.message(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_eliminar") + ". ", "");
+                        cabeceraController.getMessageView().message(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_eliminar") + ". ", "");
                         return;
                     }
                     return;
                 }
                 sessionProyecto.getAutoresProyectoDTONuevos().remove(autorProyectoDTO);
                 this.buscar();
-                messageView.message(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_eliminar"), "");
+                cabeceraController.getMessageView().message(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_eliminar"), "");
                 return;
             }
-            messageView.message(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_eliminar") + ". "
+            cabeceraController.getMessageView().message(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_eliminar") + ". "
                     + bundle.getString("lbl.msm_consulte"), "");
 
         } catch (Exception e) {
@@ -167,26 +169,22 @@ public class AutorProyectoController implements Serializable {
         try {
             int tienePermiso = usuarioDao.tienePermiso(sessionUsuario.getUsuario(), "buscar_aspirante");
             if (tienePermiso == 1) {
-                for (Carrera carrera : sessionProyecto.getCarreras()) {
-                    List<EstudianteCarrera> estudianteCarreras = estudianteCarreraDao.buscar(new EstudianteCarrera(carrera, null, null, null));
-                    if (estudianteCarreras.isEmpty()) {
+                for (EstudianteCarreraDTO estudianteCarreraDTO : sessionUsuarioCarrera.getEstudiantesCarreraDTO()) {
+                    Item item = itemService.buscarPorId(estudianteCarreraDTO.getEstudianteCarrera().getEstadoId());
+                    estudianteCarreraDTO.getEstudianteCarrera().setEstado(item.getNombre());
+                    List<Aspirante> aspirantes = aspiranteService.buscar(new Aspirante(estudianteCarreraDTO.getEstudianteCarrera().getId(), null));
+                    if (aspirantes == null) {
                         continue;
                     }
-                    for (EstudianteCarrera estudianteCarrera : estudianteCarreras) {
-                        Item item = itemService.buscarPorId(estudianteCarrera.getEstadoId());
-                        estudianteCarrera.setEstado(item.getNombre());
-                        List<Aspirante> aspirantes = aspiranteService.buscar(new Aspirante(estudianteCarrera.getId(), null));
-                        if (aspirantes == null) {
-                            continue;
-                        }
-                        if (aspirantes.isEmpty()) {
-                            continue;
-                        }
-                        AspiranteDTO aspiranteDTO = new AspiranteDTO(aspirantes.get(0),
-                                estudianteCarrera, personaDao.find(estudianteCarrera.getEstudianteId().getId()));
-                        sessionAutorProyecto.getAspirantesDTO().add(aspiranteDTO);
+                    if (aspirantes.isEmpty()) {
+                        continue;
                     }
+                    AspiranteDTO aspiranteDTO = new AspiranteDTO(aspirantes.get(0),
+                            estudianteCarreraDTO.getEstudianteCarrera(), personaDao.find(
+                                    estudianteCarreraDTO.getEstudianteCarrera().getEstudianteId().getId()));
+                    sessionAutorProyecto.getAspirantesDTO().add(aspiranteDTO);
                 }
+
                 sessionAutorProyecto.setFilterAspirantesDTO(sessionAutorProyecto.getAspirantesDTO());
             } else {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_buscar") + ". "
@@ -231,13 +229,12 @@ public class AutorProyectoController implements Serializable {
         try {
             FacesContext facesContext = FacesContext.getCurrentInstance();
             ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            Item item = itemService.buscarPorId(sessionProyecto.getProyectoSeleccionado().getEstadoProyectoId());
-            if (!item.getCodigo().equalsIgnoreCase(EstadoProyectoEnum.INICIO.getTipo())) {
+            if (!sessionProyecto.getEstadoActual().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.INICIO.getTipo())) {
                 return;
             }
             int tienePermiso = usuarioDao.tienePermiso(sessionUsuario.getUsuario(), "select_autor_proyecto");
             if (tienePermiso != 1) {
-                messageView.message(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_crear") + ". "
+                cabeceraController.getMessageView().message(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_crear") + ". "
                         + bundle.getString("lbl.msm_consulte"), "");
                 return;
             }
@@ -245,18 +242,18 @@ public class AutorProyectoController implements Serializable {
                 aspiranteDTO.setAspirante(aspiranteService.buscarPorId(aspiranteDTO.getAspirante().getId()));
             }
             if (sessionProyecto.getTipoSeleccionado() == null) {
-                messageView.message(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl_no_select") + " "
+                cabeceraController.getMessageView().message(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl_no_select") + " "
                         + bundle.getString("lbl.tipo_proyecto"), "");
                 return;
             }
             if (!aspiranteDTO.getAspirante().getEsApto()
                     && sessionProyecto.getTipoSeleccionado().getCodigo().equals(TipoProyectoEnum.TRABAJOTITULACION.getTipo())) {
-                messageView.message(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.aspirante") + " "
+                cabeceraController.getMessageView().message(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.aspirante") + " "
                         + bundle.getString("lbl.msm_no_es_apto_tt"), "");
                 return;
             }
             if (tieneAsignadoTrabajoTitulacion(aspiranteDTO.getAspirante())) {
-                messageView.message(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.aspirante") + " "
+                cabeceraController.getMessageView().message(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.aspirante") + " "
                         + bundle.getString("lbl.msm_tiene_autor_proyecto"), "");
                 return;
             }
@@ -275,7 +272,7 @@ public class AutorProyectoController implements Serializable {
             AutorProyectoDTO ap = contieneAutorProyecto(autorProyectoDTO);
             if (ap == null) {
                 sessionProyecto.getAutoresProyectoDTONuevos().add(autorProyectoDTO);
-                messageView.message(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.autor") + " "
+                cabeceraController.getMessageView().message(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.autor") + " "
                         + bundle.getString("lbl.msm_agregar"), "");
                 RequestContext.getCurrentInstance().execute("PF('dlgBuscarAspirantes').hide()");
             }

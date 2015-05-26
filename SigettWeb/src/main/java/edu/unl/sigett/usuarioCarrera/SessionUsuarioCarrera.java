@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.unl.sigett.seguridad.managed.session;
+package edu.unl.sigett.usuarioCarrera;
 
+import edu.jlmallas.academico.entity.Carrera;
 import edu.unl.sigett.academico.dto.DocenteCarreraDTO;
 import edu.unl.sigett.academico.dto.EstudianteCarreraDTO;
 import edu.unl.sigett.dto.UsuarioCarreraDTO;
@@ -26,6 +27,9 @@ public class SessionUsuarioCarrera implements Serializable {
 
     private List<UsuarioCarreraDTO> usuarioCarrerasDTOS;
     private List<UsuarioCarreraDTO> filterUsuarioCarrerasDTO;
+    private List<EstudianteCarreraDTO> estudiantesCarreraDTO;
+    private List<DocenteCarreraDTO> docentesCarreraDTO;
+    private List<Carrera> carreras;
 
     private boolean renderedNoEditar;
     private boolean renderedBuscar;
@@ -33,6 +37,9 @@ public class SessionUsuarioCarrera implements Serializable {
     private boolean renderedCrear;
 
     public SessionUsuarioCarrera() {
+        this.carreras = new ArrayList<>();
+        this.estudiantesCarreraDTO = new ArrayList<>();
+        this.docentesCarreraDTO = new ArrayList<>();
         this.filterUsuarioCarrerasDTO = new ArrayList<>();
         this.usuarioCarrerasDTOS = new ArrayList<>();
         this.usuarioCarreraDTO = new UsuarioCarreraDTO();
@@ -92,6 +99,30 @@ public class SessionUsuarioCarrera implements Serializable {
 
     public void setFilterUsuarioCarrerasDTO(List<UsuarioCarreraDTO> filterUsuarioCarrerasDTO) {
         this.filterUsuarioCarrerasDTO = filterUsuarioCarrerasDTO;
+    }
+
+    public List<EstudianteCarreraDTO> getEstudiantesCarreraDTO() {
+        return estudiantesCarreraDTO;
+    }
+
+    public void setEstudiantesCarreraDTO(List<EstudianteCarreraDTO> estudiantesCarreraDTO) {
+        this.estudiantesCarreraDTO = estudiantesCarreraDTO;
+    }
+
+    public List<DocenteCarreraDTO> getDocentesCarreraDTO() {
+        return docentesCarreraDTO;
+    }
+
+    public void setDocentesCarreraDTO(List<DocenteCarreraDTO> docentesCarreraDTO) {
+        this.docentesCarreraDTO = docentesCarreraDTO;
+    }
+
+    public List<Carrera> getCarreras() {
+        return carreras;
+    }
+
+    public void setCarreras(List<Carrera> carreras) {
+        this.carreras = carreras;
     }
 
 }

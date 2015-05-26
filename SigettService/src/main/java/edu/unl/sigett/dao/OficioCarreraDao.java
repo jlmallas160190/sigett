@@ -14,7 +14,7 @@ import javax.ejb.Local;
  * @author JorgeLuis
  */
 @Local
-public interface OficioCarreraFacadeLocal {
+public interface OficioCarreraDao {
 
     void create(OficioCarrera oficioCarrera);
 
@@ -31,6 +31,8 @@ public interface OficioCarreraFacadeLocal {
     List<OficioCarrera> buscarPorCarrera(Integer carreraId);
 
     OficioCarrera buscarPorTablaId(Long id, String categoriaCodigo);
+
+    List<OficioCarrera> buscar(final OficioCarrera oficioCarrera);
 
     int count();
 

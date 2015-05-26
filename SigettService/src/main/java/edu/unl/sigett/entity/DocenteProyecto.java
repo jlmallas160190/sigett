@@ -41,7 +41,6 @@ import javax.xml.bind.annotation.XmlTransient;
 @Table(name = "docente_proyecto")
 @XmlRootElement
 @NamedStoredProcedureQueries({
-
     @NamedStoredProcedureQuery(
             name = "proyectoSinPertinencia",
             resultClasses = DocenteProyecto.class,
@@ -94,26 +93,23 @@ public class DocenteProyecto implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "es_activo")
-    private boolean esActivo;
+    private Boolean esActivo;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "docenteProyectoId")
     private List<Pertinencia> pertinenciaList;
     @JoinColumn(name = "proyecto_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Proyecto proyectoId;
-    @Transient
-    private boolean esEditado;
 
     public DocenteProyecto() {
         this.pertinenciaList = new ArrayList<>();
-        this.esEditado = false;
     }
 
     public DocenteProyecto(Long id) {
         this.id = id;
     }
 
-    public DocenteProyecto(Long id, Date fecha, long docenteId, boolean esActivo) {
-        this.id = id;
+    public DocenteProyecto(Proyecto proyecto, Date fecha, Long docenteId, Boolean esActivo) {
+        this.proyectoId=proyecto;
         this.fecha = fecha;
         this.docenteId = docenteId;
         this.esActivo = esActivo;
@@ -143,11 +139,11 @@ public class DocenteProyecto implements Serializable {
         this.docenteId = docenteId;
     }
 
-    public boolean getEsActivo() {
+    public Boolean getEsActivo() {
         return esActivo;
     }
 
-    public void setEsActivo(boolean esActivo) {
+    public void setEsActivo(Boolean esActivo) {
         this.esActivo = esActivo;
     }
 
@@ -191,14 +187,6 @@ public class DocenteProyecto implements Serializable {
     @Override
     public String toString() {
         return "edu.unl.sigett.entity.DocenteProyecto[ id=" + id + " ]";
-    }
-
-    public boolean isEsEditado() {
-        return esEditado;
-    }
-
-    public void setEsEditado(boolean esEditado) {
-        this.esEditado = esEditado;
     }
 
 }

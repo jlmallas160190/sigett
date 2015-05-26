@@ -66,7 +66,7 @@ public class Director implements Serializable {
         this.id = id;
     }
 
-    public Boolean isEsActivo() {
+    public Boolean getEsActivo() {
         return esActivo;
     }
 

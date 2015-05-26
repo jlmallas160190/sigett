@@ -3,9 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.unl.sigett.dao;
+package edu.unl.sigett.dao.implement;
 
+import edu.unl.sigett.dao.AbstractDao;
+import edu.unl.sigett.dao.DocenteProyectoDao;
 import edu.unl.sigett.entity.DocenteProyecto;
+import edu.unl.sigett.entity.LineaInvestigacionDocente;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.Query;
@@ -16,36 +21,11 @@ import javax.persistence.StoredProcedureQuery;
  * @author JorgeLuis
  */
 @Stateless
-public class DocenteProyectoFacade extends AbstractDao<DocenteProyecto> implements DocenteProyectoFacadeLocal {
+public class DocenteProyectoDaoImplement extends AbstractDao<DocenteProyecto> implements DocenteProyectoDao {
 
-    public DocenteProyectoFacade() {
+    public DocenteProyectoDaoImplement() {
         super(DocenteProyecto.class);
     }
-
-    @Override
-    public List<DocenteProyecto> buscarPorProyecto(Long proyectoId) {
-        try {
-            Query query = em.createQuery("SELECT dp FROM DocenteProyecto dp WHERE " + "(dp.esActivo=TRUE AND dp.proyectoId.id=:id) order by dp.fecha DESC");
-            query.setParameter("id", proyectoId);
-            return query.getResultList();
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-        return null;
-    }
-
-    @Override
-    public List<DocenteProyecto> buscarProyectosPorDocente(Long docenteId) {
-        try {
-            Query query = em.createQuery("SELECT dp FROM DocenteProyecto dp WHERE " + "(dp.esActivo=TRUE AND dp.docenteId.id=:id) order by (dp.fecha,dp.proyectoId.estadoProyectoId.id)");
-            query.setParameter("id", docenteId);
-            return query.getResultList();
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-        return null;
-    }
-
     @Override
     public DocenteProyecto buscarOficioInformeDocenteProyeecto(Long docenteProyectoId) {
         try {
@@ -101,5 +81,36 @@ public class DocenteProyectoFacade extends AbstractDao<DocenteProyecto> implemen
             System.out.println(e);
         }
         return null;
+    }
+
+    @Override
+    public List<DocenteProyecto> buscar(final DocenteProyecto docenteProyecto) {
+        StringBuilder sql = new StringBuilder();
+        HashMap<String, Object> parametros = new HashMap<>();
+        Boolean existeFiltro = Boolean.FALSE;
+        sql.append("SELECT dp FROM DocenteProyecto dp where ");
+        if (docenteProyecto.getDocenteId() != null) {
+            sql.append(" and dp.docenteId=:docenteId ");
+            parametros.put("docenteId", docenteProyecto.getDocenteId());
+            existeFiltro = Boolean.TRUE;
+        }
+        if (docenteProyecto.getEsActivo() != null) {
+            sql.append(" and dp.esActivo=:activo ");
+            parametros.put("activo", docenteProyecto.getEsActivo());
+            existeFiltro = Boolean.TRUE;
+        }
+        if (docenteProyecto.getProyectoId() != null) {
+            sql.append(" and dp.proyectoId=:proyecto ");
+            parametros.put("proyecto", docenteProyecto.getProyectoId());
+            existeFiltro = Boolean.TRUE;
+        }
+        if (!existeFiltro) {
+            return new ArrayList<>();
+        }
+        final Query q = em.createQuery(sql.toString());
+        for (String key : parametros.keySet()) {
+            q.setParameter(key, parametros.get(key));
+        }
+        return q.getResultList();
     }
 }

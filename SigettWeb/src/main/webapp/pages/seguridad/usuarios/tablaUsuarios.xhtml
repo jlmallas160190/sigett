@@ -7,6 +7,7 @@
 
     <p:dataTable id="tblUsuarios" value="#{sessionAdminUsuario.usuarios}" var="item" rows="20" paginator="true"
                  rowIndexVar="rowIx" rowKey="#{item.id}" selection="#{item}" 
+                 filteredValue="#{sessionAdminUsuario.filterUsuarios}" widgetVar="tblUsuariosFilter"
                  selectionMode="single" rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'even-row' : 'odd-row'}" 
                  emptyMessage="#{msg['lbl.table.empty']}">
         <p:column sortBy="#{item.username}"
@@ -27,14 +28,14 @@
             <h:outputText value="#{item.username}"/>
         </p:column>
         <p:column sortBy="#{item.nombres}"
-                  filterBy="#{item.username}"  filterMatchMode="contains">
+                  filterBy="#{item.nombres}"  filterMatchMode="contains">
             <f:facet name="header">
                 <h:outputText value="#{msg['lbl.nombres']}"/>
             </f:facet>
             <h:outputText value="#{item.nombres}"/>
         </p:column>
         <p:column sortBy="#{item.apellidos}"
-                  filterBy="#{item.username}"  filterMatchMode="contains">
+                  filterBy="#{item.apellidos}"  filterMatchMode="contains">
             <f:facet name="header">
                 <h:outputText value="#{msg['lbl.apellidos']}"/>
             </f:facet>

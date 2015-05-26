@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package edu.unl.sigett.entity;
 
 import java.io.Serializable;
@@ -14,9 +13,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -42,6 +39,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "OficioCarrera.findByCarreraId", query = "SELECT o FROM OficioCarrera o WHERE o.carreraId = :carreraId"),
     @NamedQuery(name = "OficioCarrera.findByTablaOficioId", query = "SELECT o FROM OficioCarrera o WHERE o.tablaOficioId = :tablaOficioId")})
 public class OficioCarrera implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -66,18 +64,17 @@ public class OficioCarrera implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "es_activo")
-    private boolean esActivo;
+    private Boolean esActivo;
     @Basic(optional = false)
     @NotNull
     @Column(name = "carrera_id")
-    private int carreraId;
+    private Integer carreraId;
     @Basic(optional = false)
     @NotNull
     @Column(name = "tabla_oficio_id")
-    private long tablaOficioId;
-    @JoinColumn(name = "catalogo_oficio_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private CatalogoOficio catalogoOficioId;
+    private Long tablaOficioId;
+    @Column(name = "catalogo_oficio_id")
+    private Long catalogoOficioId;
 
     public OficioCarrera() {
     }
@@ -86,8 +83,8 @@ public class OficioCarrera implements Serializable {
         this.id = id;
     }
 
-    public OficioCarrera(Long id, String numeroOficio, byte[] oficio, Date fecha, boolean esActivo, int carreraId, long tablaOficioId) {
-        this.id = id;
+    public OficioCarrera(Long catalogoOficioId, String numeroOficio, byte[] oficio, Date fecha, Boolean esActivo, Integer carreraId, Long tablaOficioId) {
+        this.catalogoOficioId = catalogoOficioId;
         this.numeroOficio = numeroOficio;
         this.oficio = oficio;
         this.fecha = fecha;
@@ -128,35 +125,35 @@ public class OficioCarrera implements Serializable {
         this.fecha = fecha;
     }
 
-    public boolean getEsActivo() {
+    public Boolean getEsActivo() {
         return esActivo;
     }
 
-    public void setEsActivo(boolean esActivo) {
+    public void setEsActivo(Boolean esActivo) {
         this.esActivo = esActivo;
     }
 
-    public int getCarreraId() {
+    public Integer getCarreraId() {
         return carreraId;
     }
 
-    public void setCarreraId(int carreraId) {
+    public void setCarreraId(Integer carreraId) {
         this.carreraId = carreraId;
     }
 
-    public long getTablaOficioId() {
+    public Long getTablaOficioId() {
         return tablaOficioId;
     }
 
-    public void setTablaOficioId(long tablaOficioId) {
+    public void setTablaOficioId(Long tablaOficioId) {
         this.tablaOficioId = tablaOficioId;
     }
 
-    public CatalogoOficio getCatalogoOficioId() {
+    public Long getCatalogoOficioId() {
         return catalogoOficioId;
     }
 
-    public void setCatalogoOficioId(CatalogoOficio catalogoOficioId) {
+    public void setCatalogoOficioId(Long catalogoOficioId) {
         this.catalogoOficioId = catalogoOficioId;
     }
 
@@ -184,5 +181,5 @@ public class OficioCarrera implements Serializable {
     public String toString() {
         return "edu.unl.sigett.entity.OficioCarrera[ id=" + id + " ]";
     }
-    
+
 }

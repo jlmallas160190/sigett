@@ -44,15 +44,14 @@ import javax.servlet.http.HttpServletResponse;
 import org.primefaces.context.RequestContext;
 import edu.unl.sigett.dao.AutorProyectoDao;
 import edu.jlmallas.academico.service.CarreraService;
-import edu.unl.sigett.dao.CatalogoOficioFacadeLocal;
 import edu.unl.sigett.dao.ConfiguracionCarreraDao;
 import edu.unl.sigett.dao.ConfiguracionGeneralDao;
 import edu.jlmallas.academico.dao.CoordinadorPeriodoDao;
-import edu.unl.sigett.dao.DirectorFacadeLocal;
+import edu.unl.sigett.dao.DirectorDao;
 import edu.unl.sigett.dao.DirectorProyectoFacadeLocal;
 import edu.unl.sigett.dao.EstadoDirectorFacadeLocal;
 import edu.unl.sigett.dao.LineaInvestigacionDocenteDao;
-import edu.unl.sigett.dao.OficioCarreraFacadeLocal;
+import edu.unl.sigett.dao.OficioCarreraDao;
 import org.jlmallas.seguridad.dao.UsuarioDao;
 import edu.jlmallas.academico.entity.Docente;
 import edu.jlmallas.academico.entity.DocenteCarrera;
@@ -87,7 +86,7 @@ public class AdministrarDirectoresProyecto implements Serializable {
     private SessionOficioCarrera sessionOficioCarrera;
 
     @EJB
-    private DirectorFacadeLocal directorFacadeLocal;
+    private DirectorDao directorFacadeLocal;
     @EJB
     private DirectorProyectoFacadeLocal directorProyectoFacadeLocal;
     @EJB
@@ -101,9 +100,7 @@ public class AdministrarDirectoresProyecto implements Serializable {
     @EJB
     private ConfiguracionCarreraDao configuracionCarreraFacadeLocal;
     @EJB
-    private OficioCarreraFacadeLocal oficioCarreraFacadeLocal;
-    @EJB
-    private CatalogoOficioFacadeLocal catalogoOficioFacadeLocal;
+    private OficioCarreraDao oficioCarreraFacadeLocal;
     @EJB
     private CarreraService carreraFacadeLocal;
     @EJB

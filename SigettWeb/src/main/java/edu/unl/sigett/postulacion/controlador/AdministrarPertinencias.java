@@ -7,7 +7,7 @@ package edu.unl.sigett.postulacion.controlador;
 
 import com.jlmallas.comun.entity.Persona;
 import com.jlmallas.comun.dao.PersonaDao;
-import edu.unl.sigett.postulacion.managed.session.SessionDocenteProyecto;
+import edu.unl.sigett.docenteProyecto.SessionDocenteProyecto;
 import edu.unl.sigett.postulacion.managed.session.SessionPertinencia;
 import edu.unl.sigett.reportes.AdministrarReportes;
 import edu.unl.sigett.entity.AutorProyecto;
@@ -36,12 +36,11 @@ import javax.servlet.http.HttpServletResponse;
 import org.primefaces.context.RequestContext;
 import edu.unl.sigett.dao.AutorProyectoDao;
 import edu.jlmallas.academico.service.CarreraService;
-import edu.unl.sigett.dao.CatalogoOficioFacadeLocal;
 import edu.unl.sigett.dao.ConfiguracionCarreraDao;
 import edu.unl.sigett.dao.ConfiguracionGeneralDao;
 import edu.jlmallas.academico.dao.CoordinadorPeriodoDao;
 import org.jlmallas.seguridad.dao.LogDao;
-import edu.unl.sigett.dao.OficioCarreraFacadeLocal;
+import edu.unl.sigett.dao.OficioCarreraDao;
 import edu.unl.sigett.dao.PertinenciaFacadeLocal;
 import edu.unl.sigett.dao.ProyectoDao;
 import org.jlmallas.seguridad.dao.UsuarioDao;
@@ -105,9 +104,7 @@ public class AdministrarPertinencias implements Serializable {
     @EJB
     private ConfiguracionCarreraDao configuracionCarreraFacadeLocal;
     @EJB
-    private OficioCarreraFacadeLocal oficioCarreraFacadeLocal;
-    @EJB
-    private CatalogoOficioFacadeLocal catalogoOficioFacadeLocal;
+    private OficioCarreraDao oficioCarreraFacadeLocal;
     @EJB
     private PersonaDao personaFacadeLocal;
     @EJB

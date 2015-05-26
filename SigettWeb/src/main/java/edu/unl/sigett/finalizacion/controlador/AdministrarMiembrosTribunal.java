@@ -13,7 +13,6 @@ import edu.unl.sigett.reportes.AdministrarReportes;
 import edu.unl.sigett.entity.AutorProyecto;
 import edu.unl.sigett.entity.CargoMiembro;
 import edu.jlmallas.academico.entity.Carrera;
-import edu.unl.sigett.entity.CatalogoOficio;
 import edu.unl.sigett.entity.ConfiguracionCarrera;
 import edu.jlmallas.academico.entity.CoordinadorPeriodo;
 import edu.jlmallas.academico.entity.Docente;
@@ -42,14 +41,13 @@ import org.primefaces.context.RequestContext;
 import edu.unl.sigett.dao.AutorProyectoDao;
 import edu.unl.sigett.dao.CargoMiembroFacadeLocal;
 import edu.jlmallas.academico.service.CarreraService;
-import edu.unl.sigett.dao.CatalogoOficioFacadeLocal;
 import edu.unl.sigett.dao.ConfiguracionCarreraDao;
 import edu.unl.sigett.dao.ConfiguracionGeneralDao;
 import edu.jlmallas.academico.dao.CoordinadorPeriodoDao;
 import edu.jlmallas.academico.dao.DocenteCarreraDao;
 import edu.jlmallas.academico.dao.DocenteDao;
 import edu.unl.sigett.dao.MiembroFacadeLocal;
-import edu.unl.sigett.dao.OficioCarreraFacadeLocal;
+import edu.unl.sigett.dao.OficioCarreraDao;
 import edu.unl.sigett.dao.ProyectoOfertaCarreraDao;
 import edu.unl.sigett.dao.ProyectoDao;
 import org.jlmallas.seguridad.dao.UsuarioDao;
@@ -96,9 +94,7 @@ public class AdministrarMiembrosTribunal implements Serializable {
     @EJB
     private ConfiguracionCarreraDao configuracionCarreraFacadeLocal;
     @EJB
-    private OficioCarreraFacadeLocal oficioCarreraFacadeLocal;
-    @EJB
-    private CatalogoOficioFacadeLocal catalogoOficioFacadeLocal;
+    private OficioCarreraDao oficioCarreraFacadeLocal;
     @EJB
     private CarreraService carreraFacadeLocal;
     @EJB

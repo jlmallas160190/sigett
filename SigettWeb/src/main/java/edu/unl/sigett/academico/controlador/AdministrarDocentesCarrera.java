@@ -27,7 +27,7 @@ import com.ocpsoft.pretty.faces.annotation.URLMapping;
 import com.ocpsoft.pretty.faces.annotation.URLMappings;
 import edu.unl.sigett.academico.managed.session.SessionDocenteCarrera;
 import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
-import edu.unl.sigett.seguridad.managed.session.SessionUsuarioCarrera;
+import edu.unl.sigett.usuarioCarrera.SessionUsuarioCarrera;
 import edu.jlmallas.academico.entity.Carrera;
 import edu.unl.sigett.entity.Director;
 import edu.jlmallas.academico.entity.Docente;
@@ -59,7 +59,7 @@ import org.primefaces.event.TransferEvent;
 import org.primefaces.model.DualListModel;
 import com.jlmallas.comun.dao.ConfiguracionDao;
 import com.jlmallas.comun.dao.NacionalidadFacadeLocal;
-import edu.unl.sigett.dao.DirectorFacadeLocal;
+import edu.unl.sigett.dao.DirectorDao;
 import edu.jlmallas.academico.dao.DocenteCarreraDao;
 import edu.jlmallas.academico.dao.DocenteDao;
 import edu.unl.sigett.dao.LineaInvestigacionDocenteDao;
@@ -163,7 +163,7 @@ public class AdministrarDocentesCarrera implements Serializable {
     @EJB
     private TituloDocenteDao tituloDocenteFacadeLocal;
     @EJB
-    private DirectorFacadeLocal directorFacadeLocal;
+    private DirectorDao directorFacadeLocal;
     @EJB
     private ConfiguracionCarreraService configuracionCarreraService;
     @EJB

@@ -9,12 +9,9 @@ import edu.jlmallas.academico.entity.Carrera;
 import edu.unl.sigett.entity.UsuarioCarrera;
 import org.jlmallas.seguridad.entity.Usuario;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
-import javax.annotation.PostConstruct;
-import javax.enterprise.context.Conversation;
-import javax.enterprise.context.ConversationScoped;
 import javax.enterprise.context.SessionScoped;
-import javax.inject.Inject;
 
 import javax.inject.Named;
 import org.jlmallas.seguridad.entity.Permiso;
@@ -40,6 +37,7 @@ public class SessionAdminUsuario implements Serializable {
     private List<UsuarioCarrera> usuariosCarrerasRemovidas;
     private List<UsuarioPermiso> usuariosPermisoRemovidos;
     private List<Usuario> usuarios;
+    private List<Usuario> filterUsuarios;
     private int numeroCarrerasDisponibles = 0;
     private int numeroCarrerasSeleccionadas = 0;
     private int numeroPermisosDisponibles = 0;
@@ -54,6 +52,8 @@ public class SessionAdminUsuario implements Serializable {
     private boolean renderedSincronizar;
 
     public SessionAdminUsuario() {
+        this.usuarios=new ArrayList<>();
+        this.filterUsuarios=new ArrayList<>();
         this.confirmarClave = "";
         this.usuario = new Usuario();
     }
@@ -207,6 +207,14 @@ public class SessionAdminUsuario implements Serializable {
 
     public void setRenderedSincronizar(boolean renderedSincronizar) {
         this.renderedSincronizar = renderedSincronizar;
+    }
+
+    public List<Usuario> getFilterUsuarios() {
+        return filterUsuarios;
+    }
+
+    public void setFilterUsuarios(List<Usuario> filterUsuarios) {
+        this.filterUsuarios = filterUsuarios;
     }
 
 }

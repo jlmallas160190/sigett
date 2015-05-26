@@ -14,7 +14,7 @@ import javax.ejb.Local;
  * @author JorgeLuis
  */
 @Local
-public interface DirectorFacadeLocal {
+public interface DirectorDao {
 
     void create(Director director);
 
@@ -29,6 +29,8 @@ public interface DirectorFacadeLocal {
     List<Director> findRange(int[] range);
 
     List<Director> buscarAptos(Integer carreraId);
+
+    List<Director> buscar(final Director director);
 
     int count();
 

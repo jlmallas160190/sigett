@@ -19,7 +19,7 @@ import com.ocpsoft.pretty.faces.annotation.URLMapping;
 import com.ocpsoft.pretty.faces.annotation.URLMappings;
 import edu.unl.sigett.academico.managed.session.SessionEstudianteCarrera;
 import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
-import edu.unl.sigett.seguridad.managed.session.SessionUsuarioCarrera;
+import edu.unl.sigett.usuarioCarrera.SessionUsuarioCarrera;
 import edu.unl.sigett.entity.Aspirante;
 import edu.jlmallas.academico.entity.Carrera;
 import edu.jlmallas.academico.entity.Estudiante;

@@ -3,13 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.unl.sigett.postulacion.controlador;
+package edu.unl.sigett.docenteProyecto;
 
 import com.jlmallas.comun.entity.Persona;
 import com.jlmallas.comun.dao.PersonaDao;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 import com.ocpsoft.pretty.faces.annotation.URLMappings;
-import edu.unl.sigett.postulacion.managed.session.SessionDocenteProyecto;
 import edu.unl.sigett.proyecto.SessionProyecto;
 import edu.unl.sigett.reportes.AdministrarReportes;
 import edu.unl.sigett.comun.controlador.AdministrarConfiguraciones;
@@ -17,13 +16,10 @@ import edu.unl.sigett.seguridad.managed.session.SessionDocenteUsuario;
 import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
 import edu.unl.sigett.entity.AutorProyecto;
 import edu.jlmallas.academico.entity.Carrera;
-import edu.unl.sigett.entity.ConfiguracionCarrera;
 import edu.jlmallas.academico.entity.CoordinadorPeriodo;
 import edu.jlmallas.academico.entity.Docente;
-import edu.jlmallas.academico.entity.DocenteCarrera;
 import edu.unl.sigett.entity.DocenteProyecto;
 import edu.unl.sigett.entity.LineaInvestigacion;
-import edu.unl.sigett.entity.LineaInvestigacionDocente;
 import edu.unl.sigett.entity.OficioCarrera;
 import edu.unl.sigett.entity.Proyecto;
 import edu.unl.sigett.entity.ProyectoCarreraOferta;
@@ -47,24 +43,24 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.event.TabChangeEvent;
 import edu.unl.sigett.dao.AutorProyectoDao;
 import edu.jlmallas.academico.service.CarreraService;
-import edu.unl.sigett.dao.CatalogoOficioFacadeLocal;
 import edu.unl.sigett.dao.ConfiguracionCarreraDao;
 import edu.unl.sigett.dao.ConfiguracionGeneralDao;
 import edu.jlmallas.academico.dao.CoordinadorPeriodoDao;
 import edu.jlmallas.academico.dao.DocenteCarreraDao;
-import edu.unl.sigett.dao.DocenteProyectoFacadeLocal;
+import edu.unl.sigett.dao.DocenteProyectoDao;
 import org.jlmallas.seguridad.dao.LogDao;
-import edu.unl.sigett.dao.OficioCarreraFacadeLocal;
+import edu.unl.sigett.dao.OficioCarreraDao;
 import edu.unl.sigett.dao.UsuarioCarreraDao;
 import org.jlmallas.seguridad.dao.UsuarioDao;
-import edu.jlmallas.academico.entity.EstudianteCarrera;
 import edu.jlmallas.academico.dao.DocenteDao;
 import edu.jlmallas.academico.dao.EstudianteCarreraDao;
 import edu.unl.sigett.comun.managed.session.SessionOficioCarrera;
 import edu.unl.sigett.enumeration.CatalogoOficioEnum;
-import edu.unl.sigett.enumeration.EstadoAutorEnum;
-import edu.unl.sigett.enumeration.EstadoProyectoEnum;
 import edu.unl.sigett.dao.LineaInvestigacionDocenteDao;
+import edu.unl.sigett.postulacion.controlador.AdministrarCronograma;
+import edu.unl.sigett.postulacion.controlador.AdministrarDocumentosProyecto;
+import edu.unl.sigett.postulacion.controlador.AdministrarPertinencias;
+import edu.unl.sigett.postulacion.controlador.AutorProyectoPostulacionController;
 import edu.unl.sigett.util.MessageView;
 import java.util.HashMap;
 import java.util.Map;
@@ -119,9 +115,7 @@ public class AdministrarDocentesProyecto implements Serializable {
     @EJB
     private AutorProyectoDao autorProyectoFacadeLocal;
     @EJB
-    private OficioCarreraFacadeLocal oficioCarreraFacadeLocal;
-    @EJB
-    private CatalogoOficioFacadeLocal catalogoOficioFacadeLocal;
+    private OficioCarreraDao oficioCarreraFacadeLocal;
     @EJB
     private DocenteCarreraDao docenteCarreraFacadeLocal;
     @EJB
@@ -129,7 +123,7 @@ public class AdministrarDocentesProyecto implements Serializable {
     @EJB
     private ConfiguracionGeneralDao configuracionGeneralFacadeLocal;
     @EJB
-    private DocenteProyectoFacadeLocal docenteProyectoFacadeLocal;
+    private DocenteProyectoDao docenteProyectoFacadeLocal;
     @EJB
     private UsuarioDao usuarioFacadeLocal;
     @EJB
@@ -405,11 +399,11 @@ public class AdministrarDocentesProyecto implements Serializable {
         Usuario usuario=usuarioFacadeLocal.find(sessionDocenteUsuario.getDocenteUsuario().getId());
         switch (event.getTab().getId()) {
             case "pertinencias":
-                administrarPertinencias.renderedCrear(usuario, sessionDocenteProyecto.getDocenteProyecto());
-                administrarPertinencias.renderedEditar(usuario, sessionDocenteProyecto.getDocenteProyecto());
-                administrarPertinencias.renderedEliminar(usuario, sessionDocenteProyecto.getDocenteProyecto());
-                administrarPertinencias.renderedImprimirInforme(usuario);
-                administrarPertinencias.buscar(usuario, sessionDocenteProyecto.getDocenteProyecto());
+//                administrarPertinencias.renderedCrear(usuario, sessionDocenteProyecto.getDocenteProyecto());
+//                administrarPertinencias.renderedEditar(usuario, sessionDocenteProyecto.getDocenteProyecto());
+//                administrarPertinencias.renderedEliminar(usuario, sessionDocenteProyecto.getDocenteProyecto());
+//                administrarPertinencias.renderedImprimirInforme(usuario);
+//                administrarPertinencias.buscar(usuario, sessionDocenteProyecto.getDocenteProyecto());
                 administrarPertinencias.renderedAceptar(usuario);
                 break;
             case "autores":
@@ -428,7 +422,7 @@ public class AdministrarDocentesProyecto implements Serializable {
             String param = (String) facesContext.getExternalContext().getRequestParameterMap().get("1");
             int tienePermiso = usuarioFacadeLocal.tienePermiso(sessionDocenteUsuario.getUsuario(), "editar_docente_proyecto");
             if (tienePermiso == 1) {
-                sessionDocenteProyecto.setDocenteProyecto(docenteProyecto);
+//                sessionDocenteProyecto.setDocenteProyecto(docenteProyecto);
                 administrarDocumentosProyecto.buscarAnteproyectos(docenteProyecto.getProyectoId(), sessionDocenteUsuario.getUsuario());
                 administrarAutoresProyecto.buscarAutoresDesdeDocenteProyecto("", docenteProyecto.getProyectoId());
 //                intervalo = administrarConfiguraciones.intervaloActualizaciones();
@@ -457,7 +451,7 @@ public class AdministrarDocentesProyecto implements Serializable {
 
     public void view(DocenteProyecto docenteProyecto) {
         try {
-            sessionDocenteProyecto.setDocenteProyecto(docenteProyecto);
+//            sessionDocenteProyecto.setDocenteProyecto(docenteProyecto);
             renderedDlgEditar = true;
             RequestContext.getCurrentInstance().execute("PF('dlgEditarDocenteProyecto').show()");
         } catch (Exception e) {
@@ -722,41 +716,41 @@ public class AdministrarDocentesProyecto implements Serializable {
     }
 
     public void buscarProyectosPorDocente(String criterio, Usuario usuario) {
-        docenteProyectosPorDocente = new ArrayList<DocenteProyecto>();
-        try {
-            int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "buscar_docente_proyecto");
-            if (tienePermiso == 1) {
-                for (DocenteProyecto docenteProyecto : docenteProyectoFacadeLocal.buscarProyectosPorDocente(sessionDocenteUsuario.getDocenteUsuario().getDocenteId())) {
-                    if (docenteProyecto.getProyectoId().getTemaActual().toLowerCase().contains(criterio.toLowerCase())) {
-                        if (!docenteProyectosPorDocente.contains(docenteProyecto)) {
-                            docenteProyectosPorDocente.add(docenteProyecto);
-                        }
-                    }
-                }
-            } else {
-                if (tienePermiso == 2) {
-                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "No tiene permisos para listar Proyectos. Consulte con el administrador del Sistema", "");
-                    FacesContext.getCurrentInstance().addMessage(null, message);
-                }
-            }
-        } catch (Exception e) {
-        }
+//        docenteProyectosPorDocente = new ArrayList<DocenteProyecto>();
+//        try {
+//            int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "buscar_docente_proyecto");
+//            if (tienePermiso == 1) {
+//                for (DocenteProyecto docenteProyecto : docenteProyectoFacadeLocal.buscarProyectosPorDocente(sessionDocenteUsuario.getDocenteUsuario().getDocenteId())) {
+//                    if (docenteProyecto.getProyectoId().getTemaActual().toLowerCase().contains(criterio.toLowerCase())) {
+//                        if (!docenteProyectosPorDocente.contains(docenteProyecto)) {
+//                            docenteProyectosPorDocente.add(docenteProyecto);
+//                        }
+//                    }
+//                }
+//            } else {
+//                if (tienePermiso == 2) {
+//                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "No tiene permisos para listar Proyectos. Consulte con el administrador del Sistema", "");
+//                    FacesContext.getCurrentInstance().addMessage(null, message);
+//                }
+//            }
+//        } catch (Exception e) {
+//        }
     }
 
     public void buscarProyectosPorDocenteTodo(String criterio, Usuario usuario) {
-        docenteProyectosPorDocente = new ArrayList<DocenteProyecto>();
-        try {
-            int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "buscar_docente_proyecto");
-            if (tienePermiso == 1) {
-                docenteProyectosPorDocente = docenteProyectoFacadeLocal.buscarProyectosPorDocente(sessionDocenteUsuario.getDocenteUsuario().getDocenteId());
-            } else {
-                if (tienePermiso == 2) {
-                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "No tiene permisos para listar Proyectos. Consulte con el administrador del Sistema", "");
-                    FacesContext.getCurrentInstance().addMessage(null, message);
-                }
-            }
-        } catch (Exception e) {
-        }
+//        docenteProyectosPorDocente = new ArrayList<DocenteProyecto>();
+//        try {
+//            int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "buscar_docente_proyecto");
+//            if (tienePermiso == 1) {
+//                docenteProyectosPorDocente = docenteProyectoFacadeLocal.buscarProyectosPorDocente(sessionDocenteUsuario.getDocenteUsuario().getDocenteId());
+//            } else {
+//                if (tienePermiso == 2) {
+//                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "No tiene permisos para listar Proyectos. Consulte con el administrador del Sistema", "");
+//                    FacesContext.getCurrentInstance().addMessage(null, message);
+//                }
+//            }
+//        } catch (Exception e) {
+//        }
     }
 
     public void docenteProyectosSinPertinencia(Usuario usuario) {

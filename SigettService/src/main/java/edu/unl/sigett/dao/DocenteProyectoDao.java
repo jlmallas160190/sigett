@@ -14,7 +14,7 @@ import javax.ejb.Local;
  * @author JorgeLuis
  */
 @Local
-public interface DocenteProyectoFacadeLocal {
+public interface DocenteProyectoDao {
 
     void create(DocenteProyecto docenteProyecto);
 
@@ -28,17 +28,15 @@ public interface DocenteProyectoFacadeLocal {
 
     List<DocenteProyecto> findRange(int[] range);
 
-    List<DocenteProyecto> buscarPorProyecto(Long proyectoId);
-
-    List<DocenteProyecto> buscarProyectosPorDocente(Long docenteId);
-
     DocenteProyecto buscarOficioInformeDocenteProyeecto(Long docenteProyectoId);
 
     List<DocenteProyecto> buscarSinPertinencia(Integer carreraId);
 
     List<DocenteProyecto> buscarDocenteProyectoParaPertinencia(String ci);
 
-    List<DocenteProyecto> buscarPorDocentePeriodo(String ci,Long ofertaId);
+    List<DocenteProyecto> buscarPorDocentePeriodo(String ci, Long ofertaId);
+
+    List<DocenteProyecto> buscar(final DocenteProyecto docenteProyecto);
 
     @Override
     public boolean equals(Object obj);

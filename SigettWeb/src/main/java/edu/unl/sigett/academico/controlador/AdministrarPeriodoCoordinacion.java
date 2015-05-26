@@ -22,7 +22,7 @@ import javax.inject.Named;
 import org.primefaces.context.RequestContext;
 import edu.jlmallas.academico.dao.PeriodoCoordinacionDao;
 import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
-import edu.unl.sigett.seguridad.managed.session.SessionUsuarioCarrera;
+import edu.unl.sigett.usuarioCarrera.SessionUsuarioCarrera;
 import org.jlmallas.seguridad.dao.UsuarioDao;
 
 /**

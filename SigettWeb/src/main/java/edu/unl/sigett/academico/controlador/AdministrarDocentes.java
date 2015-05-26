@@ -41,7 +41,7 @@ import org.primefaces.event.TransferEvent;
 import org.primefaces.model.DualListModel;
 import edu.jlmallas.academico.service.CarreraService;
 import edu.unl.sigett.dao.ConfiguracionGeneralDao;
-import edu.unl.sigett.dao.DirectorFacadeLocal;
+import edu.unl.sigett.dao.DirectorDao;
 import edu.jlmallas.academico.dao.DocenteCarreraDao;
 import edu.jlmallas.academico.dao.DocenteDao;
 import edu.unl.sigett.dao.LineaInvestigacionCarreraDao;
@@ -122,7 +122,7 @@ public class AdministrarDocentes implements Serializable {
     @EJB
     private LineaInvestigacionDao lineaInvestigacionFacadeLocal;
     @EJB
-    private DirectorFacadeLocal directorFacadeLocal;
+    private DirectorDao directorFacadeLocal;
     @EJB
     private NacionalidadFacadeLocal nacionalidadFacadeLocal;
     @EJB

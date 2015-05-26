@@ -99,7 +99,7 @@ import edu.unl.sigett.dao.ConfiguracionProyectoDao;
 import edu.unl.sigett.dao.CronogramaFacadeLocal;
 import edu.unl.sigett.dao.DirectorProyectoFacadeLocal;
 import edu.jlmallas.academico.dao.DocenteCarreraDao;
-import edu.unl.sigett.dao.DocenteProyectoFacadeLocal;
+import edu.unl.sigett.dao.DocenteProyectoDao;
 import edu.unl.sigett.dao.DocumentoProyectoFacadeLocal;
 import edu.unl.sigett.dao.ExpedienteFacadeLocal;
 import edu.unl.sigett.dao.LineaInvestigacionCarreraDao;
@@ -126,7 +126,7 @@ import edu.unl.sigett.postulacion.controlador.AutorProyectoPostulacionController
 import edu.unl.sigett.autor.dto.AutorProyectoDTO;
 import edu.unl.sigett.postulacion.controlador.AdministrarConfiguracionesProyecto;
 import edu.unl.sigett.postulacion.controlador.AdministrarCronograma;
-import edu.unl.sigett.postulacion.controlador.AdministrarDocentesProyecto;
+import edu.unl.sigett.docenteProyecto.AdministrarDocentesProyecto;
 import edu.unl.sigett.postulacion.controlador.AdministrarDocumentosExpediente;
 import edu.unl.sigett.postulacion.controlador.AdministrarDocumentosProyecto;
 import edu.unl.sigett.service.AutorProyectoService;
@@ -205,7 +205,7 @@ import edu.unl.sigett.util.MessageView;
     @EJB
     private LineaInvestigacionCarreraDao lineaInvestigacionCarreraDao;
     @EJB
-    private DocenteProyectoFacadeLocal docenteProyectoFacadeLocal;
+    private DocenteProyectoDao docenteProyectoFacadeLocal;
     @EJB
     private UsuarioCarreraDao usuarioCarreraDao;
     @EJB
@@ -474,7 +474,7 @@ import edu.unl.sigett.util.MessageView;
                 sessionProyecto.getProyectoSeleccionado().getDocumentoProyectoList().addAll(documentoProyectoFacadeLocal.buscarPorProyecto(proyecto.getId()));
                 /*Refrescar Docentes Proyecto*/
                 sessionProyecto.getProyectoSeleccionado().setDocenteProyectoList(new ArrayList<DocenteProyecto>());
-                sessionProyecto.getProyectoSeleccionado().getDocenteProyectoList().addAll(docenteProyectoFacadeLocal.buscarPorProyecto(proyecto.getId()));
+//                sessionProyecto.getProyectoSeleccionado().getDocenteProyectoList().addAll(docenteProyectoFacadeLocal.buscarPorProyecto(proyecto.getId()));
                 /*Refrescar Directores Proyecto*/
                 sessionProyecto.getProyectoSeleccionado().setDirectorProyectoList(new ArrayList<DirectorProyecto>());
                 sessionProyecto.getProyectoSeleccionado().getDirectorProyectoList().addAll(directorProyectoFacadeLocal.buscarPorProyecto(proyecto.getId()));
@@ -2188,7 +2188,7 @@ import edu.unl.sigett.util.MessageView;
         for (UsuarioCarrera usuarioCarrera : usuarioCarreraDao.buscarPorUsuario(usuario.getId())) {
             for (Proyecto proyecto : proyectoDao.buscarPorCarreraEstado(usuarioCarrera.getCarreraId(), EstadoProyectoEnum.INICIO.getTipo())) {
                 List<DocenteProyecto> docenteProyectos = new ArrayList<>();
-                docenteProyectos = docenteProyectoFacadeLocal.buscarPorProyecto(proyecto.getId());
+//                docenteProyectos = docenteProyectoFacadeLocal.buscarPorProyecto(proyecto.getId());
                 boolean tieneDocenteAsignado = false;
                 if (!docenteProyectos.isEmpty()) {
                     for (DocenteProyecto docenteProyecto : docenteProyectos) {

@@ -3,15 +3,22 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.unl.sigett.seguridad.controlador;
+package edu.unl.sigett.usuarioCarrera;
 
+import com.jlmallas.comun.dao.PersonaDao;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 import com.ocpsoft.pretty.faces.annotation.URLMappings;
 import edu.jlmallas.academico.dao.CarreraDao;
+import edu.jlmallas.academico.dao.DocenteCarreraDao;
+import edu.jlmallas.academico.dao.EstudianteCarreraDao;
 import edu.jlmallas.academico.entity.Carrera;
+import edu.jlmallas.academico.entity.DocenteCarrera;
+import edu.jlmallas.academico.entity.EstudianteCarrera;
+import edu.unl.sigett.academico.dto.DocenteCarreraDTO;
+import edu.unl.sigett.academico.dto.EstudianteCarreraDTO;
 import edu.unl.sigett.dao.ConfiguracionCarreraDao;
+import edu.unl.sigett.dao.DirectorDao;
 import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
-import edu.unl.sigett.seguridad.managed.session.SessionUsuarioCarrera;
 import org.jlmallas.seguridad.entity.Usuario;
 import edu.unl.sigett.entity.UsuarioCarrera;
 import java.io.Serializable;
@@ -27,7 +34,9 @@ import javax.inject.Named;
 import edu.unl.sigett.dao.UsuarioCarreraDao;
 import org.jlmallas.seguridad.dao.UsuarioDao;
 import edu.unl.sigett.dto.UsuarioCarreraDTO;
+import edu.unl.sigett.entity.Aspirante;
 import edu.unl.sigett.entity.ConfiguracionCarrera;
+import edu.unl.sigett.service.AspiranteService;
 import edu.unl.sigett.service.ConfiguracionCarreraService;
 import org.primefaces.event.FileUploadEvent;
 
@@ -65,6 +74,16 @@ public class AdministrarUsuarioCarrera implements Serializable {
     private CarreraDao carreraDao;
     @EJB
     private ConfiguracionCarreraService configuracionCarreraService;
+    @EJB
+    private EstudianteCarreraDao estudianteCarreraDao;
+    @EJB
+    private PersonaDao personaDao;
+    @EJB
+    private AspiranteService aspiranteService;
+    @EJB
+    private DocenteCarreraDao docenteCarreraDao;
+    @EJB
+    private DirectorDao directorDao;
     //</editor-fold>
 
     public AdministrarUsuarioCarrera() {
@@ -72,6 +91,9 @@ public class AdministrarUsuarioCarrera implements Serializable {
 
     public void init() {
         buscar();
+        this.listadoCarreras();
+        this.listasDocentes();
+        this.listasEstudiantes();
     }
 
     //<editor-fold defaultstate="collapsed" desc="MÉTODOS RENDERED">
@@ -244,4 +266,53 @@ public class AdministrarUsuarioCarrera implements Serializable {
     }
 
     //</editor-fold>
+    /**
+     * LISTAR ESTUDIANTES QUE PERTENECEN A LAS CARRERAS DE SESSION USUARIO
+     */
+    private void listasEstudiantes() {
+        this.sessionUsuarioCarrera.getEstudiantesCarreraDTO().clear();
+        for (Carrera carrera : sessionUsuarioCarrera.getCarreras()) {
+            List<EstudianteCarrera> estudiantesCarreras = estudianteCarreraDao.buscar(new EstudianteCarrera(carrera, null, null, null));
+            if (estudiantesCarreras.isEmpty()) {
+                continue;
+            }
+            for (EstudianteCarrera estudianteCarrera : estudiantesCarreras) {
+                EstudianteCarreraDTO estudianteCarreraDTO = new EstudianteCarreraDTO(estudianteCarrera,
+                        personaDao.find(estudianteCarrera.getEstudianteId().getId()), aspiranteService.buscarPorId(estudianteCarrera.getId()));
+                sessionUsuarioCarrera.getEstudiantesCarreraDTO().add(estudianteCarreraDTO);
+            }
+        }
+    }
+
+    /**
+     * LISTAR DOCENTES QUE PERTENECEN A LAS CARRERAS DE SESSION USUARIO
+     */
+    private void listasDocentes() {
+        this.sessionUsuarioCarrera.getDocentesCarreraDTO().clear();
+        for (Carrera carrera : sessionUsuarioCarrera.getCarreras()) {
+            List<DocenteCarrera> docenteCarreras = docenteCarreraDao.buscar(new DocenteCarrera(null, null, carrera, null));
+            if (docenteCarreras.isEmpty()) {
+                continue;
+            }
+            for (DocenteCarrera docenteCarrera : docenteCarreras) {
+                DocenteCarreraDTO docenteCarreraDTO = new DocenteCarreraDTO(docenteCarrera,
+                        personaDao.find(docenteCarrera.getDocenteId().getId()), directorDao.find(docenteCarrera.getId()));
+                sessionUsuarioCarrera.getDocentesCarreraDTO().add(docenteCarreraDTO);
+            }
+        }
+    }
+
+    /**
+     * LISTAR LAS CARRERAS QUE ADMINISTRA LA SESSION DE USUARIO
+     */
+    private void listadoCarreras() {
+        this.sessionUsuarioCarrera.getCarreras().clear();
+        List<UsuarioCarrera> usuarioCarreras = usuarioCarreraDao.buscar(new UsuarioCarrera(sessionUsuario.getUsuario().getId(), null));
+        if (usuarioCarreras.isEmpty()) {
+            return;
+        }
+        for (UsuarioCarrera usuarioCarrera : usuarioCarreras) {
+            sessionUsuarioCarrera.getCarreras().add(carreraDao.find(usuarioCarrera.getCarreraId()));
+        }
+    }
 }

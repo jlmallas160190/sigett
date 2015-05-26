@@ -19,7 +19,7 @@ import edu.unl.sigett.entity.DirectorProyecto;
 import edu.unl.sigett.entity.DocenteProyecto;
 import edu.unl.sigett.enumeration.EstadoAutorEnum;
 import edu.unl.sigett.finalizacion.managed.session.SessionMiembro;
-import edu.unl.sigett.postulacion.managed.session.SessionDocenteProyecto;
+import edu.unl.sigett.docenteProyecto.SessionDocenteProyecto;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;

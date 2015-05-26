@@ -35,7 +35,7 @@ import edu.unl.sigett.academico.converter.DocenteCarreraDTOConverter;
 import edu.unl.sigett.academico.dto.CoordinadorPeriodoDTO;
 import edu.unl.sigett.academico.dto.DocenteCarreraDTO;
 import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
-import edu.unl.sigett.seguridad.managed.session.SessionUsuarioCarrera;
+import edu.unl.sigett.usuarioCarrera.SessionUsuarioCarrera;
 import java.util.ArrayList;
 import org.jlmallas.seguridad.dao.UsuarioDao;
 

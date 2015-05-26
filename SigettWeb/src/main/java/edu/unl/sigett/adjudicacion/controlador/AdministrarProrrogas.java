@@ -42,13 +42,12 @@ import org.primefaces.context.RequestContext;
 import edu.unl.sigett.dao.ActividadFacadeLocal;
 import edu.unl.sigett.dao.AutorProyectoDao;
 import edu.jlmallas.academico.service.CarreraService;
-import edu.unl.sigett.dao.CatalogoOficioFacadeLocal;
 import edu.unl.sigett.dao.ConfiguracionCarreraDao;
 import edu.unl.sigett.dao.ConfiguracionGeneralDao;
 import edu.jlmallas.academico.dao.CoordinadorPeriodoDao;
 import edu.unl.sigett.dao.DirectorProyectoFacadeLocal;
 import org.jlmallas.seguridad.dao.LogDao;
-import edu.unl.sigett.dao.OficioCarreraFacadeLocal;
+import edu.unl.sigett.dao.OficioCarreraDao;
 import edu.unl.sigett.dao.ProrrogaFacadeLocal;
 import edu.unl.sigett.dao.ProyectoDao;
 import org.jlmallas.seguridad.dao.UsuarioDao;
@@ -90,9 +89,7 @@ public class AdministrarProrrogas implements Serializable {
     @EJB
     private ConfiguracionCarreraDao configuracionCarreraFacadeLocal;
     @EJB
-    private OficioCarreraFacadeLocal oficioCarreraFacadeLocal;
-    @EJB
-    private CatalogoOficioFacadeLocal catalogoOficioFacadeLocal;
+    private OficioCarreraDao oficioCarreraFacadeLocal;
     @EJB
     private ActividadFacadeLocal actividadFacadeLocal;
     @EJB

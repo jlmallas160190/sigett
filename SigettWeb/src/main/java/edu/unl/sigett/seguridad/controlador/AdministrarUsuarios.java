@@ -226,6 +226,8 @@ public class AdministrarUsuarios implements Serializable {
 
     public void buscar(Usuario usuario) {
         try {
+            sessionAdminUsuario.getUsuarios().clear();
+            sessionAdminUsuario.getFilterUsuarios().clear();
             FacesContext facesContext = FacesContext.getCurrentInstance();
             ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
             int tienePermiso = usuarioDao.tienePermiso(usuario, "buscar_usuario");
@@ -233,6 +235,7 @@ public class AdministrarUsuarios implements Serializable {
                 Usuario usuarioBuscar = new Usuario();
                 sessionAdminUsuario.setUsuario(usuario);
                 sessionAdminUsuario.setUsuarios(usuarioDao.buscarPorCriterio(usuarioBuscar));
+                sessionAdminUsuario.setFilterUsuarios(sessionAdminUsuario.getUsuarios());
             } else {
                 if (tienePermiso == 2) {
                     FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_buscar") + ". "

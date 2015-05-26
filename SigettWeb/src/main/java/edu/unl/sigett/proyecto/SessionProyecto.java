@@ -7,8 +7,11 @@ package edu.unl.sigett.proyecto;
 
 import com.jlmallas.comun.entity.Item;
 import edu.jlmallas.academico.entity.Carrera;
+import edu.jlmallas.academico.entity.DocenteCarrera;
+import edu.jlmallas.academico.entity.EstudianteCarrera;
 import edu.jlmallas.academico.entity.OfertaAcademica;
 import edu.unl.sigett.autor.dto.AutorProyectoDTO;
+import edu.unl.sigett.docenteProyecto.DocenteProyectoDTO;
 import edu.unl.sigett.entity.ConfiguracionProyecto;
 import edu.unl.sigett.entity.Cronograma;
 import edu.unl.sigett.entity.LineaInvestigacion;
@@ -37,6 +40,7 @@ public class SessionProyecto implements Serializable {
     private Carrera carreraSeleccionada;
     private Item estadoSeleccionado;
     private Item tipoSeleccionado;
+    private Item estadoActual;
     private OfertaAcademica ofertaAcademicaSeleccionada;
     private Cronograma cronograma;
 
@@ -62,7 +66,9 @@ public class SessionProyecto implements Serializable {
     private List<ProyectoCarreraOferta> carrerasRemovidasTransfer;
     private List<LineaInvestigacionProyecto> lineasInvestigacionSeleccionadasTransfer;
     private List<LineaInvestigacionProyecto> lineasInvestigacionRemovidosTransfer;
-    private List<LineaInvestigacionProyecto> lineasInvestigacion;
+    private List<LineaInvestigacion> lineasInvestigacionSeleccionadas;
+    private List<DocenteProyectoDTO> docentesProyectoDTO;
+    private List<DocenteProyectoDTO> filterDocentesProyectoDTO;
 
     private Boolean renderedEditar;
     private Boolean renderedCrear;
@@ -78,9 +84,11 @@ public class SessionProyecto implements Serializable {
     private DualListModel<Carrera> carrerasDualList;
 
     public SessionProyecto() {
+        this.docentesProyectoDTO = new ArrayList<>();
+        this.filterDocentesProyectoDTO = new ArrayList<>();
         this.autoresProyectoDTONuevos = new ArrayList<>();
         this.cronograma = new Cronograma();
-        this.lineasInvestigacion = new ArrayList<>();
+        this.lineasInvestigacionSeleccionadas = new ArrayList<>();
         this.lineasInvestigacionSeleccionadasTransfer = new ArrayList<>();
         this.lineasInvestigacionRemovidosTransfer = new ArrayList<>();
         this.carrerasRemovidasTransfer = new ArrayList<>();
@@ -405,15 +413,6 @@ public class SessionProyecto implements Serializable {
     public void setLineasInvestigacionRemovidosTransfer(List<LineaInvestigacionProyecto> lineasInvestigacionRemovidosTransfer) {
         this.lineasInvestigacionRemovidosTransfer = lineasInvestigacionRemovidosTransfer;
     }
-
-    public List<LineaInvestigacionProyecto> getLineasInvestigacion() {
-        return lineasInvestigacion;
-    }
-
-    public void setLineasInvestigacion(List<LineaInvestigacionProyecto> lineasInvestigacion) {
-        this.lineasInvestigacion = lineasInvestigacion;
-    }
-
     public Cronograma getCronograma() {
         return cronograma;
     }
@@ -436,6 +435,38 @@ public class SessionProyecto implements Serializable {
 
     public void setAutoresProyectoDTONuevos(List<AutorProyectoDTO> autoresProyectoDTONuevos) {
         this.autoresProyectoDTONuevos = autoresProyectoDTONuevos;
+    }
+
+    public Item getEstadoActual() {
+        return estadoActual;
+    }
+
+    public void setEstadoActual(Item estadoActual) {
+        this.estadoActual = estadoActual;
+    }
+
+    public List<DocenteProyectoDTO> getDocentesProyectoDTO() {
+        return docentesProyectoDTO;
+    }
+
+    public void setDocentesProyectoDTO(List<DocenteProyectoDTO> docentesProyectoDTO) {
+        this.docentesProyectoDTO = docentesProyectoDTO;
+    }
+
+    public List<DocenteProyectoDTO> getFilterDocentesProyectoDTO() {
+        return filterDocentesProyectoDTO;
+    }
+
+    public void setFilterDocentesProyectoDTO(List<DocenteProyectoDTO> filterDocentesProyectoDTO) {
+        this.filterDocentesProyectoDTO = filterDocentesProyectoDTO;
+    }
+
+    public List<LineaInvestigacion> getLineasInvestigacionSeleccionadas() {
+        return lineasInvestigacionSeleccionadas;
+    }
+
+    public void setLineasInvestigacionSeleccionadas(List<LineaInvestigacion> lineasInvestigacionSeleccionadas) {
+        this.lineasInvestigacionSeleccionadas = lineasInvestigacionSeleccionadas;
     }
 
 }

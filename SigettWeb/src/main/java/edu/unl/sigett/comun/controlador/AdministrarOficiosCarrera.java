@@ -6,7 +6,7 @@
 package edu.unl.sigett.comun.controlador;
 
 import edu.unl.sigett.entity.OficioCarrera;
-import edu.unl.sigett.dao.OficioCarreraFacadeLocal;
+import edu.unl.sigett.dao.OficioCarreraDao;
 import edu.unl.sigett.comun.managed.session.SessionOficioCarrera;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
@@ -29,7 +29,7 @@ public class AdministrarOficiosCarrera implements Serializable {
     @Inject
     private SessionOficioCarrera sessionOficioCarrera;
     @EJB
-    private OficioCarreraFacadeLocal oficioCarreraFacadeLocal;
+    private OficioCarreraDao oficioCarreraFacadeLocal;
 
     public AdministrarOficiosCarrera() {
     }

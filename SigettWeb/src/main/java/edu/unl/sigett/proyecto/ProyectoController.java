@@ -6,7 +6,6 @@ package edu.unl.sigett.proyecto;
  * and open the template in the editor.
  */
 import com.jlmallas.comun.dao.PersonaDao;
-import com.jlmallas.comun.entity.Configuracion;
 import com.jlmallas.comun.entity.Item;
 import com.jlmallas.comun.entity.Persona;
 import com.jlmallas.comun.enumeration.CatalogoEnum;
@@ -14,21 +13,24 @@ import com.jlmallas.comun.enumeration.TipoValorEnum;
 import com.jlmallas.comun.service.ItemService;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 import com.ocpsoft.pretty.faces.annotation.URLMappings;
+import edu.jlmallas.academico.dao.DocenteCarreraDao;
+import edu.jlmallas.academico.dao.DocenteDao;
 import edu.jlmallas.academico.dao.EstudianteCarreraDao;
 import edu.jlmallas.academico.entity.Carrera;
-import edu.jlmallas.academico.entity.Docente;
+import edu.jlmallas.academico.entity.DocenteCarrera;
 import edu.jlmallas.academico.entity.EstudianteCarrera;
 import edu.jlmallas.academico.entity.OfertaAcademica;
 import edu.jlmallas.academico.service.CarreraService;
 import edu.jlmallas.academico.service.OfertaAcademicaService;
-import edu.unl.sigett.autor.dto.AspiranteDTO;
 import edu.unl.sigett.autor.dto.AutorProyectoDTO;
 import edu.unl.sigett.dao.ConfiguracionProyectoDao;
+import edu.unl.sigett.dao.DirectorDao;
+import edu.unl.sigett.dao.DocenteProyectoDao;
 import edu.unl.sigett.dao.ProyectoOfertaCarreraDao;
 import edu.unl.sigett.dao.TemaProyectoDao;
 import edu.unl.sigett.dao.UsuarioCarreraDao;
+import edu.unl.sigett.docenteProyecto.DocenteProyectoDTO;
 import edu.unl.sigett.dto.ProyectoDTO;
-import edu.unl.sigett.entity.Aspirante;
 import edu.unl.sigett.entity.AutorProyecto;
 import edu.unl.sigett.entity.ConfiguracionCarrera;
 import edu.unl.sigett.entity.ConfiguracionProyecto;
@@ -40,19 +42,19 @@ import edu.unl.sigett.entity.Proyecto;
 import edu.unl.sigett.entity.ProyectoCarreraOferta;
 import edu.unl.sigett.entity.Tema;
 import edu.unl.sigett.entity.TemaProyecto;
-import edu.unl.sigett.entity.UsuarioCarrera;
 import edu.unl.sigett.enumeration.ConfiguracionCarreraEnum;
 import edu.unl.sigett.enumeration.ConfiguracionProyectoEnum;
 import edu.unl.sigett.enumeration.EstadoAutorEnum;
 import edu.unl.sigett.enumeration.EstadoProyectoEnum;
 import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
-import edu.unl.sigett.service.AspiranteService;
 import edu.unl.sigett.service.AutorProyectoService;
 import edu.unl.sigett.service.ConfiguracionCarreraService;
+import edu.unl.sigett.service.DocenteProyectoService;
 import edu.unl.sigett.service.LineaInvestigacionProyectoService;
 import edu.unl.sigett.service.LineaInvestigacionService;
 import edu.unl.sigett.service.ProyectoCarreraOfertaService;
 import edu.unl.sigett.service.ProyectoService;
+import edu.unl.sigett.usuarioCarrera.SessionUsuarioCarrera;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
@@ -66,6 +68,7 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import org.jlmallas.seguridad.dao.LogDao;
 import org.jlmallas.seguridad.dao.UsuarioDao;
+import org.jlmallas.seguridad.entity.Usuario;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.TransferEvent;
 import org.primefaces.model.DualListModel;
@@ -100,6 +103,8 @@ public class ProyectoController implements Serializable {
     private SessionUsuario sessionUsuario;
     @Inject
     private SessionProyecto sessionProyecto;
+    @Inject
+    private SessionUsuarioCarrera sessionUsuarioCarrera;
 
     //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="SERVICIOS">
@@ -113,10 +118,6 @@ public class ProyectoController implements Serializable {
     private LogDao logFacadeLocal;
     @EJB
     private LineaInvestigacionProyectoService lineaInvestigacionProyectoService;
-    @EJB
-    private UsuarioCarreraDao usuarioCarreraDao;
-    @EJB
-    private TemaProyectoDao temaProyectoDao;
     @EJB
     private ConfiguracionProyectoDao configuracionProyectoDao;
     @EJB
@@ -137,6 +138,16 @@ public class ProyectoController implements Serializable {
     private UsuarioDao usuarioDao;
     @EJB
     private ConfiguracionCarreraService configuracionCarreraService;
+    @EJB
+    private DocenteProyectoService docenteProyectoService;
+    @EJB
+    private DirectorDao directorDao;
+    @EJB
+    private DocenteCarreraDao docenteCarreraDao;
+    @EJB
+    private DocenteDao docenteDao;
+    @EJB
+    private TemaProyectoDao temaProyectoDao;
 
     //</editor-fold>
     public ProyectoController() {
@@ -155,6 +166,7 @@ public class ProyectoController implements Serializable {
         sessionProyecto.getCarrerasSeleccionadasTransfer().clear();
         sessionProyecto.getLineasInvestigacionRemovidosTransfer().clear();
         sessionProyecto.getLineasInvestigacionSeleccionadasTransfer().clear();
+        estadoActual();
         this.renderedPostulacion();
         pickListLineasInvestigacionProyecto(sessionProyecto.getProyectoSeleccionado());
         pickListCarreras(sessionProyecto.getProyectoSeleccionado());
@@ -163,6 +175,7 @@ public class ProyectoController implements Serializable {
         this.listadoTipos();
         this.listadoCategorias();
     }
+    //<editor-fold defaultstate="collapsed" desc="PROYECTO">
 
     public String crear() {
         try {
@@ -180,11 +193,13 @@ public class ProyectoController implements Serializable {
                 sessionProyecto.getCronograma().setFechaProrroga(fechaActual.getTime());
                 sessionProyecto.getCronograma().setDuracion(0.0);
                 sessionProyecto.getAutoresProyectoDTONuevos().clear();
+                crearTema();
+                buscarDocentes();
                 return "pretty:crearProyecto";
             }
             if (tienePermiso == 2) {
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_crear") + ". " +
-                        bundle.getString("lbl.msm_consulte"), "");
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_crear") + ". "
+                        + bundle.getString("lbl.msm_consulte"), "");
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return "";
             }
@@ -219,6 +234,15 @@ public class ProyectoController implements Serializable {
         Item tipo = itemService.buscarPorCatalogoCodigo(CatalogoEnum.TIPOPROYECTO.getTipo(), sessionProyecto.getTipo());
         sessionProyecto.setTipoSeleccionado(tipo);
     }
+
+    private void estadoActual() {
+        if (sessionProyecto.getProyectoSeleccionado().getEstadoProyectoId() == null) {
+            return;
+        }
+        Item estado = itemService.buscarPorId(sessionProyecto.getProyectoSeleccionado().getEstadoProyectoId());
+        sessionProyecto.setEstadoActual(estado);
+    }
+    //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="FILTROS BUSQUEDA DE PROYECTOS">
     /**
      * BUSCAR PROYECTOS POR CARRERA, OFERTA y LINEA DE INVESTIGACION
@@ -290,12 +314,7 @@ public class ProyectoController implements Serializable {
         try {
             this.sessionProyecto.getCarreras().clear();
             this.sessionProyecto.getFilterCarreras().clear();
-            for (UsuarioCarrera usuarioCarrera : usuarioCarreraDao.buscar(new UsuarioCarrera(sessionUsuario.getUsuario().getId(), null))) {
-                Carrera carrera = carreraService.find(usuarioCarrera.getCarreraId());
-                if (!sessionProyecto.getCarreras().contains(carrera)) {
-                    this.sessionProyecto.getCarreras().add(carrera);
-                }
-            }
+            this.sessionProyecto.setCarreras(sessionUsuarioCarrera.getCarreras());
             this.sessionProyecto.setFilterCarreras(this.sessionProyecto.getCarreras());
         } catch (Exception e) {
         }
@@ -309,9 +328,9 @@ public class ProyectoController implements Serializable {
         this.sessionProyecto.getOfertaAcademicas().clear();
         this.sessionProyecto.getFilterOfertaAcademicas().clear();
         try {
-            for (UsuarioCarrera usuarioCarrera : usuarioCarreraDao.buscar(new UsuarioCarrera(sessionUsuario.getUsuario().getId(), null))) {
+            for (Carrera carrera : sessionProyecto.getCarreras()) {
                 for (ProyectoCarreraOferta pco : proyectoCarreraOfertaService.buscar(
-                        new ProyectoCarreraOferta(null, usuarioCarrera.getCarreraId(), null, Boolean.TRUE))) {
+                        new ProyectoCarreraOferta(null, carrera.getId(), null, Boolean.TRUE))) {
                     OfertaAcademica ofertaAcademica = ofertaAcademicaService.find(pco.getOfertaAcademicaId());
                     if (!this.sessionProyecto.getOfertaAcademicas().contains(ofertaAcademica)) {
                         this.sessionProyecto.getOfertaAcademicas().add(ofertaAcademica);
@@ -364,6 +383,7 @@ public class ProyectoController implements Serializable {
         sessionProyecto.setLineaInvestigacionProyectoSeleccionada((LineaInvestigacionProyecto) event.getObject());
         buscar();
     }
+
     //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="LINEAS DE INVESTIGACION PROYECTO">
     /**
@@ -418,20 +438,20 @@ public class ProyectoController implements Serializable {
                     sessionProyecto.getLineasInvestigacionSeleccionadasTransfer().remove(lp);
                     sessionProyecto.getLineasInvestigacionRemovidosTransfer().add(lp);
                     int pos = 0;
-                    for (LineaInvestigacionProyecto lip : sessionProyecto.getProyectoSeleccionado().getLineaInvestigacionProyectoList()) {
+                    for (LineaInvestigacionProyecto lip : sessionProyecto.getLineasInvestigacionProyecto()) {
                         if (!lip.getLineaInvestigacionId().equals(lp.getLineaInvestigacionId())) {
                             pos++;
                         } else {
                             break;
                         }
                     }
-                    sessionProyecto.getLineasInvestigacion().remove(pos);
+                    sessionProyecto.getLineasInvestigacionSeleccionadas().remove(pos);
                 } else {
                     if (event.isAdd()) {
-                        if (contieneLineaInvestigacion(sessionProyecto.getProyectoSeleccionado().getLineaInvestigacionProyectoList(), lp)) {
+                        if (contieneLineaInvestigacion(sessionProyecto.getLineasInvestigacionProyecto(), lp)) {
                             sessionProyecto.getLineasInvestigacionRemovidosTransfer().add(lp);
                         }
-                        sessionProyecto.getLineasInvestigacion().add(lp);
+                        sessionProyecto.getLineasInvestigacionSeleccionadas().add(li);
                         sessionProyecto.getLineasInvestigacionSeleccionadasTransfer().add(lp);
                     }
                 }
@@ -616,6 +636,27 @@ public class ProyectoController implements Serializable {
     }
 
     //</editor-fold>
+    //<editor-fold defaultstate="collapsed" desc="AUTORES">
+    public void grabarAutores() {
+        try {
+            if (!sessionProyecto.getEstadoActual().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.INICIO.getTipo())) {
+                return;
+            }
+            for (AutorProyectoDTO autorProyectoDTO : sessionProyecto.getAutoresProyectoDTONuevos()) {
+                if (autorProyectoDTO.getAutorProyecto().getId() == null) {
+                    autorProyectoService.guardar(autorProyectoDTO.getAutorProyecto());
+//                        grabarIndividuoInvestigadorAutor(proyecto, autorProyecto);
+                    logFacadeLocal.create(logFacadeLocal.crearLog("AutorProyecto", autorProyectoDTO.getAutorProyecto().getId() + "", "CREAR",
+                            "|Aspirante= " + autorProyectoDTO.getAutorProyecto().getAspiranteId().getId() + "|Proyecto= "
+                            + sessionProyecto.getProyectoSeleccionado().getId(), sessionUsuario.getUsuario()));
+                }
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
+    //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="CONFIGURACIONES PROYECTO">
     private void listadoConfiguracionesProyecto() {
         this.sessionProyecto.getConfiguracionProyectos().clear();
@@ -650,6 +691,55 @@ public class ProyectoController implements Serializable {
                 sessionProyecto.getProyectoSeleccionado(), ConfiguracionProyectoEnum.CATALOGODURACION.getTipo(), "1",
                 ConfiguracionProyectoEnum.CATALOGODURACION.getTipo(), TipoValorEnum.SELECCIONMULTIPLE.getTipo());
         sessionProyecto.getConfiguracionProyectos().add(configuracionProyectoCD);
+    }
+
+    //</editor-fold>
+    //<editor-fold defaultstate="collapsed" desc="TEMAS">
+    private void crearTema() {
+        sessionProyecto.setTemaProyecto(new TemaProyecto(sessionProyecto.getProyectoSeleccionado(), new Tema(), Boolean.TRUE));
+    }
+
+    private void editarTema() {
+        List<TemaProyecto> temaProyectos = temaProyectoDao.buscar(new TemaProyecto(sessionProyecto.getProyectoSeleccionado().getId() != null
+                ? sessionProyecto.getProyectoSeleccionado() : null, null, Boolean.TRUE));
+        if (temaProyectos == null) {
+            sessionProyecto.setTemaProyecto(new TemaProyecto(sessionProyecto.getProyectoSeleccionado(), new Tema(), Boolean.TRUE));
+            return;
+        }
+        TemaProyecto temaProyecto = !temaProyectos.isEmpty() ? temaProyectos.get(0) : null;
+        if (temaProyecto == null) {
+            sessionProyecto.setTemaProyecto(new TemaProyecto(sessionProyecto.getProyectoSeleccionado(), new Tema(), Boolean.TRUE));
+            return;
+        }
+        sessionProyecto.setTemaProyecto(temaProyecto);
+    }
+    //</editor-fold>
+    //<editor-fold defaultstate="collapsed" desc="DOCENTES">
+    /**
+     * BUSCAR LOS DOCENTES QUE PERTENECEN AL PROYECTO SELECCIONADO
+     */
+    public void buscarDocentes() {
+        this.sessionProyecto.getDocentesProyectoDTO().clear();
+        try {
+            List<DocenteProyecto> docenteProyectos = docenteProyectoService.buscar(new DocenteProyecto(
+                    sessionProyecto.getProyectoSeleccionado(), null, null, Boolean.TRUE));
+            if (docenteProyectos.isEmpty()) {
+                return;
+            }
+            for (DocenteProyecto docenteProyecto : docenteProyectos) {
+                List<DocenteCarrera> docenteCarreras = docenteCarreraDao.buscar(new DocenteCarrera(null, docenteDao.find(docenteProyecto.getDocenteId()),
+                        null, Boolean.TRUE));
+                if (docenteCarreras.isEmpty()) {
+                    continue;
+                }
+                DocenteProyectoDTO docenteProyectoDTO = new DocenteProyectoDTO(docenteProyecto, personaDao.find(docenteProyecto.getDocenteId()),
+                        null, docenteCarreras.get(0));
+                docenteProyectoDTO.setDirector(directorDao.find(docenteProyectoDTO.getDirector().getId()));
+                sessionProyecto.getDocentesProyectoDTO().add(docenteProyectoDTO);
+            }
+            sessionProyecto.setFilterDocentesProyectoDTO(sessionProyecto.getDocentesProyectoDTO());
+        } catch (Exception e) {
+        }
     }
 
     //</editor-fold>
