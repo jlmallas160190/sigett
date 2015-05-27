@@ -19,7 +19,7 @@ import edu.jlmallas.academico.entity.Docente;
 import edu.jlmallas.academico.entity.DocenteCarrera;
 import edu.unl.sigett.entity.EvaluacionTribunal;
 import edu.unl.sigett.entity.Miembro;
-import edu.unl.sigett.entity.OficioCarrera;
+import edu.unl.sigett.entity.DocumentoCarrera;
 import edu.unl.sigett.entity.Proyecto;
 import edu.unl.sigett.entity.ProyectoCarreraOferta;
 import edu.unl.sigett.entity.Tribunal;
@@ -47,14 +47,14 @@ import edu.jlmallas.academico.dao.CoordinadorPeriodoDao;
 import edu.jlmallas.academico.dao.DocenteCarreraDao;
 import edu.jlmallas.academico.dao.DocenteDao;
 import edu.unl.sigett.dao.MiembroFacadeLocal;
-import edu.unl.sigett.dao.OficioCarreraDao;
+import edu.unl.sigett.dao.DocumentoCarreraDao;
 import edu.unl.sigett.dao.ProyectoOfertaCarreraDao;
 import edu.unl.sigett.dao.ProyectoDao;
 import org.jlmallas.seguridad.dao.UsuarioDao;
 import edu.jlmallas.academico.entity.EstudianteCarrera;
 import edu.jlmallas.academico.dao.EstudianteCarreraDao;
 import edu.unl.sigett.comun.controlador.AdministrarNotificaciones;
-import edu.unl.sigett.enumeration.CatalogoOficioEnum;
+import edu.unl.sigett.enumeration.CatalogoDocumentoCarreraEnum;
 import edu.unl.sigett.enumeration.EstadoAutorEnum;
 import edu.unl.sigett.enumeration.EstadoProyectoEnum;
 import java.util.HashMap;
@@ -94,7 +94,7 @@ public class AdministrarMiembrosTribunal implements Serializable {
     @EJB
     private ConfiguracionCarreraDao configuracionCarreraFacadeLocal;
     @EJB
-    private OficioCarreraDao oficioCarreraFacadeLocal;
+    private DocumentoCarreraDao oficioCarreraFacadeLocal;
     @EJB
     private CarreraService carreraFacadeLocal;
     @EJB
@@ -228,7 +228,7 @@ public class AdministrarMiembrosTribunal implements Serializable {
 //            Persona datosCoordinador = personaFacadeLocal.find(coordinadorPeriodo.getCoordinadorId().getId());
 //            Docente docenteCoordinador = docenteFacadeLocal.find(datosCoordinador.getId());
             secretario = user.getNombres().toUpperCase() + " " + user.getApellidos().toUpperCase();
-            OficioCarrera oficioCarrera = oficioCarreraFacadeLocal.buscarPorTablaId(miembroId, CatalogoOficioEnum.MIEMBROTRIBUNALPUBLICA.getTipo());
+//            DocumentoCarrera oficioCarrera = oficioCarreraFacadeLocal.buscarPorTablaId(miembroId, CatalogoDocumentoCarreraEnum.MIEMBROTRIBUNALPUBLICA.getTipo());
             HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
             Calendar fechaActual = Calendar.getInstance();
             String fechaFormateada = configuracionGeneralFacadeLocal.dateFormat(fechaActual.getTime());
@@ -316,7 +316,7 @@ public class AdministrarMiembrosTribunal implements Serializable {
 //            Persona datosCoordinador = personaFacadeLocal.find(coordinadorPeriodo.getCoordinadorId().getId());
 //            Docente docenteCoordinador = docenteFacadeLocal.find(datosCoordinador.getId());
             secretario = user.getNombres().toUpperCase() + " " + user.getApellidos().toUpperCase();
-            OficioCarrera oficioCarrera = oficioCarreraFacadeLocal.buscarPorTablaId(miembroId, CatalogoOficioEnum.MIEMBROTRIBUNALPRIVADA.getTipo());
+//            DocumentoCarrera oficioCarrera = oficioCarreraFacadeLocal.buscarPorTablaId(miembroId, CatalogoDocumentoCarreraEnum.MIEMBROTRIBUNALPRIVADA.getTipo());
             HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
             Calendar fechaActual = Calendar.getInstance();
             String fechaFormateada = configuracionGeneralFacadeLocal.dateFormat(fechaActual.getTime());

@@ -8,7 +8,6 @@ package edu.unl.sigett.reportes;
 import edu.jlmallas.academico.entity.Carrera;
 import edu.unl.sigett.entity.ConfiguracionCarrera;
 import edu.unl.sigett.entity.EvaluacionTribunal;
-import edu.unl.sigett.entity.OficioCarrera;
 import edu.unl.sigett.entity.Pertinencia;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -31,14 +30,12 @@ import net.sf.jasperreports.engine.JasperRunManager;
 import net.sf.jasperreports.engine.export.ooxml.JRDocxExporter;
 import edu.unl.sigett.dao.ActaFacadeLocal;
 import edu.unl.sigett.dao.ConfiguracionCarreraDao;
-import edu.unl.sigett.dao.OficioCarreraDao;
+import edu.unl.sigett.dao.DocumentoCarreraDao;
 import edu.unl.sigett.entity.Acta;
 import edu.unl.sigett.entity.RangoEquivalencia;
 import org.jlmallas.seguridad.entity.Usuario;
-import edu.unl.sigett.entity.CatalogoActa;
 import edu.unl.sigett.enumeration.CatalogoActaEnum;
-import edu.unl.sigett.enumeration.CatalogoOficioEnum;
-import edu.unl.sigett.dao.CategoriaActaFacadeLocal;
+import edu.unl.sigett.enumeration.CatalogoDocumentoCarreraEnum;
 import java.util.Date;
 
 /**
@@ -47,10 +44,10 @@ import java.util.Date;
  */
 public class AdministrarReportes implements Serializable {
 
-//    public void oficioDocenteProyecto(HttpServletResponse response, Map datosReporte, OficioCarrera oficioCarrera, String path, String pathSetting,
+//    public void oficioDocenteProyecto(HttpServletResponse response, Map datosReporte, DocumentoCarrera oficioCarrera, String path, String pathSetting,
 //            String tipo, Integer nroOficio, Carrera carrera, String fecha, String plazo,
 //            String usuario, ConfiguracionCarreraDao configuracionCarreraFacadeLocal, ConfiguracionCarrera configuracionCarrera,
-//            Long tablaId, OficioCarreraDao oficioCarreraFacadeLocal, CatalogoOficioFacadeLocal catalogoOficioFacadeLocal) {
+//            Long tablaId, DocumentoCarreraDao oficioCarreraFacadeLocal, CatalogoOficioFacadeLocal catalogoOficioFacadeLocal) {
 //        try {
 //            byte[] bytes = null;
 //            JasperPrint jasperPrint = null;
@@ -79,10 +76,10 @@ public class AdministrarReportes implements Serializable {
 //            File fileReport = new File(path + "/reportes/postulacion/oficio_docente_proyecto.jasper");
 //
 //            if (oficioCarrera == null) {
-//                oficioCarrera = new OficioCarrera();
+//                oficioCarrera = new DocumentoCarrera();
 //                bytes = JasperRunManager.runReportToPdf(fileReport.getPath(), p, new JREmptyDataSource());
 //                /*Grabar Oficio*/
-//                grabarOficio(oficioCarrera, oficioCarreraFacadeLocal, catalogoOficioFacadeLocal, CatalogoOficioEnum.DOCENTEPROYECTO.getTipo(), nroOficio, fechaActual.getTime(), nroOficio + "", bytes, tablaId);
+//                grabarOficio(oficioCarrera, oficioCarreraFacadeLocal, catalogoOficioFacadeLocal, CatalogoDocumentoCarreraEnum.DOCENTEPROYECTO.getTipo(), nroOficio, fechaActual.getTime(), nroOficio + "", bytes, tablaId);
 //                actualizarNroOficio(configuracionCarrera, configuracionCarreraFacadeLocal);
 //            } else {
 //                bytes = oficioCarrera.getOficio();
@@ -115,7 +112,7 @@ public class AdministrarReportes implements Serializable {
 //    }
 //
 //    public void responseProrrogaAutorProyecto(String tipo, String fecha, HttpServletResponse response, Map datosReporte, ConfiguracionCarreraDao configuracionCarreraFacadeLocal,
-//            ConfiguracionCarrera configuracionCarrera, OficioCarrera oficioCarrera, Long tablaId, OficioCarreraDao oficioCarreraFacadeLocal,
+//            ConfiguracionCarrera configuracionCarrera, DocumentoCarrera oficioCarrera, Long tablaId, DocumentoCarreraDao oficioCarreraFacadeLocal,
 //            CatalogoOficioFacadeLocal catalogoOficioFacadeLocal, Carrera carrera, Integer nroOficio, String secretario,
 //            String fechaEmision, String resolucion, String path, String pathSetting) {
 //        try {
@@ -141,10 +138,10 @@ public class AdministrarReportes implements Serializable {
 //            byte[] bytes = null;
 //            File fileReport = new File(path + "/reportes/adjudicacion/response_autor_prorroga.jasper");
 //            if (oficioCarrera == null) {
-//                oficioCarrera = new OficioCarrera();
+//                oficioCarrera = new DocumentoCarrera();
 //                bytes = JasperRunManager.runReportToPdf(fileReport.getPath(), p, new JREmptyDataSource());
 //                /*Grabar Oficio*/
-//                grabarOficio(oficioCarrera, oficioCarreraFacadeLocal, catalogoOficioFacadeLocal, CatalogoOficioEnum.RESPUESTAPRORROGAAUTOR.getTipo(), nroOficio, fechaActual.getTime(), nroOficio + "", bytes, tablaId);
+//                grabarOficio(oficioCarrera, oficioCarreraFacadeLocal, catalogoOficioFacadeLocal, CatalogoDocumentoCarreraEnum.RESPUESTAPRORROGAAUTOR.getTipo(), nroOficio, fechaActual.getTime(), nroOficio + "", bytes, tablaId);
 //                actualizarNroOficio(configuracionCarrera, configuracionCarreraFacadeLocal);
 //            } else {
 //                bytes = oficioCarrera.getOficio();
@@ -179,8 +176,8 @@ public class AdministrarReportes implements Serializable {
 //    }
 //
 //    public void informeDocenteProyecto(String tipo, String fecha, String fechaOficio, Pertinencia pertinencia, HttpServletResponse response,
-//            Map datosReporte, ConfiguracionCarreraDao configuracionCarreraFacadeLocal, ConfiguracionCarrera configuracionCarrera, OficioCarrera oficioCarrera,
-//            OficioCarreraDao oficioCarreraFacadeLocal, CatalogoOficioFacadeLocal catalogoOficioFacadeLocal, Carrera carrera, Integer nroOficio, String path, String resolucion) {
+//            Map datosReporte, ConfiguracionCarreraDao configuracionCarreraFacadeLocal, ConfiguracionCarrera configuracionCarrera, DocumentoCarrera oficioCarrera,
+//            DocumentoCarreraDao oficioCarreraFacadeLocal, CatalogoOficioFacadeLocal catalogoOficioFacadeLocal, Carrera carrera, Integer nroOficio, String path, String resolucion) {
 //        try {
 //            Calendar fechaActual = Calendar.getInstance();
 //            Map p = new HashMap();
@@ -206,10 +203,10 @@ public class AdministrarReportes implements Serializable {
 //            byte[] bytes = null;
 //            File fileReport = new File(path + "/reportes/postulacion/informe_docente_proyecto.jasper");
 //            if (oficioCarrera == null) {
-//                oficioCarrera = new OficioCarrera();
+//                oficioCarrera = new DocumentoCarrera();
 //                bytes = JasperRunManager.runReportToPdf(fileReport.getPath(), p, new JREmptyDataSource());
 //                /*Grabar Oficio*/
-//                grabarOficio(oficioCarrera, oficioCarreraFacadeLocal, catalogoOficioFacadeLocal, CatalogoOficioEnum.PERTINENCIA.getTipo(), nroOficio, fechaActual.getTime(), nroOficio + "", bytes, pertinencia.getId());
+//                grabarOficio(oficioCarrera, oficioCarreraFacadeLocal, catalogoOficioFacadeLocal, CatalogoDocumentoCarreraEnum.PERTINENCIA.getTipo(), nroOficio, fechaActual.getTime(), nroOficio + "", bytes, pertinencia.getId());
 //                actualizarNroOficio(configuracionCarrera, configuracionCarreraFacadeLocal);
 //            } else {
 //                bytes = oficioCarrera.getOficio();
@@ -242,8 +239,8 @@ public class AdministrarReportes implements Serializable {
 //    }
 //
 //    public void oficioDirectorProrroga(String tipo, String fecha, HttpServletResponse response, Map datosReporte,
-//            ConfiguracionCarreraDao configuracionCarreraFacadeLocal, ConfiguracionCarrera configuracionCarrera, OficioCarrera oficioCarrera,
-//            Long tablaId, OficioCarreraDao oficioCarreraFacadeLocal, CatalogoOficioFacadeLocal catalogoOficioFacadeLocal,
+//            ConfiguracionCarreraDao configuracionCarreraFacadeLocal, ConfiguracionCarrera configuracionCarrera, DocumentoCarrera oficioCarrera,
+//            Long tablaId, DocumentoCarreraDao oficioCarreraFacadeLocal, CatalogoOficioFacadeLocal catalogoOficioFacadeLocal,
 //            Carrera carrera, Integer nroOficio, String secretario, String path, String pathSetting) {
 //        try {
 //            Calendar fechaActual = Calendar.getInstance();
@@ -269,10 +266,10 @@ public class AdministrarReportes implements Serializable {
 //            File fileReport = new File(path + "/reportes/adjudicacion/oficio_prorroga.jasper");
 //
 //            if (oficioCarrera == null) {
-//                oficioCarrera = new OficioCarrera();
+//                oficioCarrera = new DocumentoCarrera();
 //                bytes = JasperRunManager.runReportToPdf(fileReport.getPath(), p, new JREmptyDataSource());
 //                /*Grabar Oficio*/
-//                grabarOficio(oficioCarrera, oficioCarreraFacadeLocal, catalogoOficioFacadeLocal, CatalogoOficioEnum.PRORROGA.getTipo(), nroOficio, fechaActual.getTime(), nroOficio + "", bytes, tablaId);
+//                grabarOficio(oficioCarrera, oficioCarreraFacadeLocal, catalogoOficioFacadeLocal, CatalogoDocumentoCarreraEnum.PRORROGA.getTipo(), nroOficio, fechaActual.getTime(), nroOficio + "", bytes, tablaId);
 //                actualizarNroOficio(configuracionCarrera, configuracionCarreraFacadeLocal);
 //            } else {
 //                bytes = oficioCarrera.getOficio();
@@ -308,7 +305,7 @@ public class AdministrarReportes implements Serializable {
 //
 //    public void informeDirectorProrroga(String tipo, String fechaOficio, String objetivos, String avance, String resolucion, String fecha,
 //            HttpServletResponse response, Map datosReporte, ConfiguracionCarreraDao configuracionCarreraFacadeLocal, ConfiguracionCarrera configuracionCarrera,
-//            OficioCarrera oficioCarrera, Long tablaId, OficioCarreraDao oficioCarreraFacadeLocal, CatalogoOficioFacadeLocal catalogoOficioFacadeLocal,
+//            DocumentoCarrera oficioCarrera, Long tablaId, DocumentoCarreraDao oficioCarreraFacadeLocal, CatalogoOficioFacadeLocal catalogoOficioFacadeLocal,
 //            Carrera carrera, Integer nroOficio, String secretario, Long prorrogaId, String path, String pathSetting) {
 //        try {
 //            Calendar fechaActual = Calendar.getInstance();
@@ -333,10 +330,10 @@ public class AdministrarReportes implements Serializable {
 //            byte[] bytes = null;
 //            File fileReport = new File(path + "/reportes/adjudicacion/informe_director_prorroga.jasper");
 //            if (oficioCarrera == null) {
-//                oficioCarrera = new OficioCarrera();
+//                oficioCarrera = new DocumentoCarrera();
 //                bytes = JasperRunManager.runReportToPdf(fileReport.getPath(), p, new JREmptyDataSource());
 //                /*Grabar Oficio*/
-//                grabarOficio(oficioCarrera, oficioCarreraFacadeLocal, catalogoOficioFacadeLocal, CatalogoOficioEnum.INFORMEDIRECTORPRORROGA.getTipo(), nroOficio, fechaActual.getTime(), nroOficio + "", bytes, tablaId);
+//                grabarOficio(oficioCarrera, oficioCarreraFacadeLocal, catalogoOficioFacadeLocal, CatalogoDocumentoCarreraEnum.INFORMEDIRECTORPRORROGA.getTipo(), nroOficio, fechaActual.getTime(), nroOficio + "", bytes, tablaId);
 //                actualizarNroOficio(configuracionCarrera, configuracionCarreraFacadeLocal);
 //            } else {
 //                bytes = oficioCarrera.getOficio();
@@ -371,7 +368,7 @@ public class AdministrarReportes implements Serializable {
 //    }
 //
 //    public void oficioDirectorProyecto(HttpServletResponse response, Map datosReporte, String fecha, ConfiguracionCarreraDao configuracionCarreraFacadeLocal,
-//            ConfiguracionCarrera configuracionCarrera, String tipo, OficioCarrera oficioCarrera, Long tablaId, OficioCarreraDao oficioCarreraFacadeLocal,
+//            ConfiguracionCarrera configuracionCarrera, String tipo, DocumentoCarrera oficioCarrera, Long tablaId, DocumentoCarreraDao oficioCarreraFacadeLocal,
 //            CatalogoOficioFacadeLocal catalogoOficioFacadeLocal, Carrera carrera, Integer nroOficio, String usuario, String path, String pathSetting) {
 //        try {
 //            InputStream is = new ByteArrayInputStream(carrera.getLogo());
@@ -399,10 +396,10 @@ public class AdministrarReportes implements Serializable {
 //            byte[] bytes = null;
 //            File fileReport = new File(path + "/reportes/adjudicacion/oficio_director_proyecto.jasper");
 //            if (oficioCarrera == null) {
-//                oficioCarrera = new OficioCarrera();
+//                oficioCarrera = new DocumentoCarrera();
 //                bytes = JasperRunManager.runReportToPdf(fileReport.getPath(), p, new JREmptyDataSource());
 //                /*Grabar Oficio*/
-//                grabarOficio(oficioCarrera, oficioCarreraFacadeLocal, catalogoOficioFacadeLocal, CatalogoOficioEnum.DIRECTORPROYECTO.getTipo(), nroOficio, fechaActual.getTime(), nroOficio + "", bytes, tablaId);
+//                grabarOficio(oficioCarrera, oficioCarreraFacadeLocal, catalogoOficioFacadeLocal, CatalogoDocumentoCarreraEnum.DIRECTORPROYECTO.getTipo(), nroOficio, fechaActual.getTime(), nroOficio + "", bytes, tablaId);
 //                actualizarNroOficio(configuracionCarrera, configuracionCarreraFacadeLocal);
 //            } else {
 //                bytes = oficioCarrera.getOficio();
@@ -437,8 +434,8 @@ public class AdministrarReportes implements Serializable {
 //    }
 //
 //    public void oficioMiembroTribunalSprivada(String tipo, String fecha, HttpServletResponse response, Map datosReporte, ConfiguracionCarreraDao configuracionCarreraFacadeLocal,
-//            ConfiguracionCarrera configuracionCarrera, OficioCarrera oficioCarrera, String presidente, String miembros, Long tablaId,
-//            OficioCarreraDao oficioCarreraFacadeLocal, CatalogoOficioFacadeLocal catalogoOficioFacadeLocal, Carrera carrera, Integer nroOficio, String secretario, String path, String pathSetting) {
+//            ConfiguracionCarrera configuracionCarrera, DocumentoCarrera oficioCarrera, String presidente, String miembros, Long tablaId,
+//            DocumentoCarreraDao oficioCarreraFacadeLocal, CatalogoOficioFacadeLocal catalogoOficioFacadeLocal, Carrera carrera, Integer nroOficio, String secretario, String path, String pathSetting) {
 //        try {
 //            Calendar fechaActual = Calendar.getInstance();
 //            Map p = new HashMap();
@@ -467,10 +464,10 @@ public class AdministrarReportes implements Serializable {
 //            File fileReport = new File(path + "/reportes/finalizacion/oficio_miembro_tribunal_sprivada.jasper");
 //            byte[] bytes = null;
 //            if (oficioCarrera == null) {
-//                oficioCarrera = new OficioCarrera();
+//                oficioCarrera = new DocumentoCarrera();
 //                bytes = JasperRunManager.runReportToPdf(fileReport.getPath(), p, new JREmptyDataSource());
 //                /*Grabar Oficio*/
-//                grabarOficio(oficioCarrera, oficioCarreraFacadeLocal, catalogoOficioFacadeLocal, CatalogoOficioEnum.MIEMBROTRIBUNALPRIVADA.getTipo(), nroOficio, fechaActual.getTime(), nroOficio + "", bytes, tablaId);
+//                grabarOficio(oficioCarrera, oficioCarreraFacadeLocal, catalogoOficioFacadeLocal, CatalogoDocumentoCarreraEnum.MIEMBROTRIBUNALPRIVADA.getTipo(), nroOficio, fechaActual.getTime(), nroOficio + "", bytes, tablaId);
 //                actualizarNroOficio(configuracionCarrera, configuracionCarreraFacadeLocal);
 //            } else {
 //                bytes = oficioCarrera.getOficio();
@@ -545,8 +542,8 @@ public class AdministrarReportes implements Serializable {
 //    }
 //
 //    public void oficioMiembroTribunalSpublica(String tipo, String fecha, String fechaSustentacion, String lugarSustentacion, HttpServletResponse response, Map datosReporte,
-//            ConfiguracionCarreraDao configuracionCarreraFacadeLocal, ConfiguracionCarrera configuracionCarrera, OficioCarrera oficioCarrera,
-//            String presidente, String miembros, Long tablaId, OficioCarreraDao oficioCarreraFacadeLocal, CatalogoOficioFacadeLocal catalogoOficioFacadeLocal,
+//            ConfiguracionCarreraDao configuracionCarreraFacadeLocal, ConfiguracionCarrera configuracionCarrera, DocumentoCarrera oficioCarrera,
+//            String presidente, String miembros, Long tablaId, DocumentoCarreraDao oficioCarreraFacadeLocal, CatalogoOficioFacadeLocal catalogoOficioFacadeLocal,
 //            Carrera carrera, Integer nroOficio, String secretario, String path, String pathSetting) {
 //        try {
 //            Calendar fechaActual = Calendar.getInstance();
@@ -576,10 +573,10 @@ public class AdministrarReportes implements Serializable {
 //            File fileReport = new File(path + "/reportes/finalizacion/oficio_miembro_tribunal_spublica.jasper");
 //            byte[] bytes = null;
 //            if (oficioCarrera == null) {
-//                oficioCarrera = new OficioCarrera();
+//                oficioCarrera = new DocumentoCarrera();
 //                bytes = JasperRunManager.runReportToPdf(fileReport.getPath(), p, new JREmptyDataSource());
 //                /*Grabar Oficio*/
-//                grabarOficio(oficioCarrera, oficioCarreraFacadeLocal, catalogoOficioFacadeLocal, CatalogoOficioEnum.MIEMBROTRIBUNALPUBLICA.getTipo(), nroOficio, fechaActual.getTime(), nroOficio + "", bytes, tablaId);
+//                grabarOficio(oficioCarrera, oficioCarreraFacadeLocal, catalogoOficioFacadeLocal, CatalogoDocumentoCarreraEnum.MIEMBROTRIBUNALPUBLICA.getTipo(), nroOficio, fechaActual.getTime(), nroOficio + "", bytes, tablaId);
 //                actualizarNroOficio(configuracionCarrera, configuracionCarreraFacadeLocal);
 //            } else {
 //                bytes = oficioCarrera.getOficio();
@@ -730,7 +727,7 @@ public class AdministrarReportes implements Serializable {
 //
 //    }
 //
-//    private void grabarOficio(OficioCarrera oficioCarrera, OficioCarreraDao oficioCarreraFacadeLocal, CatalogoOficioFacadeLocal catalogoOficioFacadeLocal,
+//    private void grabarOficio(DocumentoCarrera oficioCarrera, DocumentoCarreraDao oficioCarreraFacadeLocal, CatalogoOficioFacadeLocal catalogoOficioFacadeLocal,
 //            String catalogo, Integer carreraId, Date fechaActual, String nroOficio, byte[] bytes, Long tablaId) {
 //        try {
 //            if (oficioCarrera.getId() == null) {

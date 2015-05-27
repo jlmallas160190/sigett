@@ -44,8 +44,10 @@ import com.jlmallas.soporte.session.ProyectoSoftwareFacadeLocal;
 import org.jlmallas.seguridad.dao.RolDao;
 import org.jlmallas.seguridad.dao.RolUsuarioDao;
 import edu.unl.sigett.dao.UsuarioCarreraDao;
+import edu.unl.sigett.util.CabeceraController;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
+import org.jlmallas.api.secure.SecureDTO;
 import org.jlmallas.seguridad.dao.UsuarioDao;
 import org.jlmallas.seguridad.dao.UsuarioPermisoDao;
 import org.jlmallas.seguridad.dao.LogDao;
@@ -88,10 +90,13 @@ import org.jlmallas.seguridad.dao.LogDao;
             viewId = "/faces/cambiarClaveDocente.xhtml"
     )})
 public class AdministrarUsuarios implements Serializable {
-
+    //<editor-fold defaultstate="collapsed" desc="MANAGED BEANS">
     @Inject
     private SessionAdminUsuario sessionAdminUsuario;
-
+    @Inject
+    private CabeceraController cabeceraController;
+    //</editor-fold>
+    //<editor-fold defaultstate="collapsed" desc="SERVICIOS">
     @EJB
     private CarreraService carreraFacadeLocal;
     @EJB
@@ -114,14 +119,7 @@ public class AdministrarUsuarios implements Serializable {
     private UsuarioPermisoDao usuarioPermisoFacadeLocal;
     @EJB
     private UsuarioDao usuarioDao;
-    @EJB
-    private EstudianteUsuarioDao estudianteUsuarioFacadeLocal;
-    @EJB
-    private DocenteUsuarioDao docenteUsuarioFacadeLocal;
-    @EJB
-    private PersonaDao personaFacadeLocal;
-    @EJB
-    private ConfiguracionDao configuracionFacadeLocal;
+//</editor-fold>
 
     @PostConstruct
     public void AdministrarUsuarios() {
@@ -400,7 +398,9 @@ public class AdministrarUsuarios implements Serializable {
                     int tienePermiso = usuarioDao.tienePermiso(sessionUsuario, "crear_usuario");
                     if (tienePermiso == 1) {
                         if (usuarioDao.unicoUsername(sessionAdminUsuario.getUsuario().getUsername()) == false) {
-                            sessionAdminUsuario.getUsuario().setPassword(configuracionFacadeLocal.encriptaClave(sessionAdminUsuario.getUsuario().getPassword()));
+
+                            sessionAdminUsuario.getUsuario().setPassword(cabeceraController.getSecureService().encrypt(
+                                    new SecureDTO(cabeceraController.getConfiguracionGeneralDTO().getSecureKey(),sessionUsuario.getPassword())));
                             sessionAdminUsuario.getUsuario().setUsuarioPermisoList(new ArrayList<UsuarioPermiso>());
                             usuarioDao.create(sessionAdminUsuario.getUsuario());
                             logDao.create(logDao.crearLog("Usuario", sessionAdminUsuario.getUsuario().getId() + "", "CREAR", "|Username= "
@@ -442,7 +442,8 @@ public class AdministrarUsuarios implements Serializable {
                     if (tienePermiso == 1) {
                         if (usuarioDao.unicoUsername(sessionAdminUsuario.getUsuario().getUsername()) == false || usuarioDao.find(sessionAdminUsuario.getUsuario().getId())
                                 .equals(usuarioDao.buscarPorUsuario(sessionAdminUsuario.getUsuario().getUsername()))) {
-                            sessionAdminUsuario.getUsuario().setPassword(configuracionFacadeLocal.encriptaClave(sessionAdminUsuario.getUsuario().getPassword()));
+                            sessionAdminUsuario.getUsuario().setPassword(cabeceraController.getSecureService().encrypt(
+                                    new SecureDTO(cabeceraController.getConfiguracionGeneralDTO().getSecureKey(),sessionAdminUsuario.getUsuario().getPassword())));
                             sessionAdminUsuario.getUsuario().setUsuarioPermisoList(new ArrayList<UsuarioPermiso>());
                             usuarioDao.edit(sessionAdminUsuario.getUsuario());
                             logDao.create(logDao.crearLog("Usuario", sessionAdminUsuario.getUsuario().getId() + "", "EDITAR", "|Username= "
@@ -513,7 +514,6 @@ public class AdministrarUsuarios implements Serializable {
         }
         return "";
     }
-
 
     public boolean contieneCarrera(List<UsuarioCarrera> usuarioCarreras, UsuarioCarrera usuarioCarrera) {
         boolean var = false;
@@ -848,6 +848,4 @@ public class AdministrarUsuarios implements Serializable {
     }
 
     //</editor-fold>
-//</editor-fold>
-    //<editor-fold defaultstate="collapsed" desc="SET Y GET">
 }

@@ -5,8 +5,8 @@
  */
 package edu.unl.sigett.comun.controlador;
 
-import edu.unl.sigett.entity.OficioCarrera;
-import edu.unl.sigett.dao.OficioCarreraDao;
+import edu.unl.sigett.entity.DocumentoCarrera;
+import edu.unl.sigett.dao.DocumentoCarreraDao;
 import edu.unl.sigett.comun.managed.session.SessionOficioCarrera;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
@@ -29,12 +29,12 @@ public class AdministrarOficiosCarrera implements Serializable {
     @Inject
     private SessionOficioCarrera sessionOficioCarrera;
     @EJB
-    private OficioCarreraDao oficioCarreraFacadeLocal;
+    private DocumentoCarreraDao oficioCarreraFacadeLocal;
 
     public AdministrarOficiosCarrera() {
     }
 
-    public void grabar(OficioCarrera oficioCarrera) {
+    public void grabar(DocumentoCarrera oficioCarrera) {
         try {
             FacesContext facesContext = FacesContext.getCurrentInstance();
             ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
@@ -55,7 +55,7 @@ public class AdministrarOficiosCarrera implements Serializable {
     public void handleFileUpload(FileUploadEvent event) {
         try {
             if (sessionOficioCarrera.getOficioCarrera().getId() != null) {
-                sessionOficioCarrera.getOficioCarrera().setOficio(event.getFile().getContents());
+//                sessionOficioCarrera.getOficioCarrera().setOficio(event.getFile().getContents());
                 grabar(sessionOficioCarrera.getOficioCarrera());
             }
         } catch (Exception e) {

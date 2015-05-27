@@ -5,7 +5,7 @@
  */
 package edu.unl.sigett.comun.controlador;
 
-import org.jlmallas.api.email.Mail;
+import org.jlmallas.api.email.MailServiceImplement;
 import com.jlmallas.comun.entity.Persona;
 import com.jlmallas.comun.dao.PersonaDao;
 import edu.jlmallas.academico.entity.DocenteCarrera;
@@ -67,7 +67,7 @@ public class AdministrarNotificaciones implements Serializable {
         try {
             FacesContext facesContext = FacesContext.getCurrentInstance();
             ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            Mail mail = new Mail();
+            MailServiceImplement mail = new MailServiceImplement();
             String usrCorreo = configuracionGeneralFacadeLocal.find((int) 28).getValor();
             String passwordCorreo = configuracionGeneralFacadeLocal.find((int) 29).getValor();
             String puerto = configuracionGeneralFacadeLocal.find((int) 31).getValor();
@@ -76,10 +76,10 @@ public class AdministrarNotificaciones implements Serializable {
                 DocenteCarrera docenteCarrera = docenteCarreraFacadeLocal.find(directorProyecto.getDirectorId().getId());
                 Persona personaDirector = personaFacadeLocal.find(docenteCarrera.getDocenteId().getId());
                 if (directorProyecto.getEstadoDirectorId().getId() == 1) {
-                    mail.enviarNotificacionCorreo(smtp, puerto, usrCorreo, passwordCorreo, bundle.getString("lbl.actividad") + " " + bundle.getString("lbl.revisar"), bundle.getString("lbl.estimado") + personaDirector.getNombres() + " "
-                            + " " + personaDirector.getApellidos() + " " + bundle.getString("lbl.msm_envio_actividad") + " "
-                            + "" + directorProyecto.getProyectoId().getTemaActual(), personaDirector.getEmail(), personaDirector.getNombres()
-                            + " " + personaDirector.getApellidos());
+//                    mail.enviarNotificacionCorreo(smtp, puerto, usrCorreo, passwordCorreo, bundle.getString("lbl.actividad") + " " + bundle.getString("lbl.revisar"), bundle.getString("lbl.estimado") + personaDirector.getNombres() + " "
+//                            + " " + personaDirector.getApellidos() + " " + bundle.getString("lbl.msm_envio_actividad") + " "
+//                            + "" + directorProyecto.getProyectoId().getTemaActual(), personaDirector.getEmail(), personaDirector.getNombres()
+//                            + " " + personaDirector.getApellidos());
 
                 }
             }
@@ -91,15 +91,15 @@ public class AdministrarNotificaciones implements Serializable {
         try {
             FacesContext facesContext = FacesContext.getCurrentInstance();
             ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            Mail email = new Mail();
+            MailServiceImplement email = new MailServiceImplement();
             String usrCorreo = configuracionGeneralFacadeLocal.find((int) 28).getValor();
             String passwordCorreo = configuracionGeneralFacadeLocal.find((int) 29).getValor();
             String puerto = configuracionGeneralFacadeLocal.find((int) 31).getValor();
             String smtp = configuracionGeneralFacadeLocal.find((int) 30).getValor();
-            email.enviarNotificacionCorreo(smtp, puerto, usrCorreo, passwordCorreo, bundle.getString("lbl.designacion_miembro"), bundle.getString("lbl.estimado") + ": "
-                    + sessionMiembro.getPersona().getNombres() + " " + sessionMiembro.getPersona().getApellidos() + " " + bundle.getString("lbl.msm_designacion_miembro") + ": "
-                    + sessionMiembro.getMiembro().getTribunalId().getProyectoId().getTemaActual() + ""
-                    + " ", sessionMiembro.getPersona().getEmail(), sessionMiembro.getPersona().getNombres() + " " + sessionMiembro.getPersona().getApellidos());
+//            email.enviarNotificacionCorreo(smtp, puerto, usrCorreo, passwordCorreo, bundle.getString("lbl.designacion_miembro"), bundle.getString("lbl.estimado") + ": "
+//                    + sessionMiembro.getPersona().getNombres() + " " + sessionMiembro.getPersona().getApellidos() + " " + bundle.getString("lbl.msm_designacion_miembro") + ": "
+//                    + sessionMiembro.getMiembro().getTribunalId().getProyectoId().getTemaActual() + ""
+//                    + " ", sessionMiembro.getPersona().getEmail(), sessionMiembro.getPersona().getNombres() + " " + sessionMiembro.getPersona().getApellidos());
 
         } catch (Exception e) {
         }
@@ -109,18 +109,18 @@ public class AdministrarNotificaciones implements Serializable {
         try {
             FacesContext facesContext = FacesContext.getCurrentInstance();
             ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            Mail mail = new Mail();
+            MailServiceImplement mail = new MailServiceImplement();
             Persona persona=personaFacadeLocal.find(docenteProyecto.getDocenteId());
             String usrCorreo = configuracionGeneralFacadeLocal.find((int) 28).getValor();
             String passwordCorreo = configuracionGeneralFacadeLocal.find((int) 29).getValor();
             String puerto = configuracionGeneralFacadeLocal.find((int) 31).getValor();
             String smtp = configuracionGeneralFacadeLocal.find((int) 30).getValor();
-            mail.enviarNotificacionCorreo(smtp, puerto, usrCorreo, passwordCorreo, "", bundle.getString("lbl.estimado") + ": "
-                    +persona.getNombres() + " " + persona.getApellidos() + " "
-                    + bundle.getString("lbl.msm_asignacion_docente") + " " +docenteProyecto.getProyectoId().getTemaActual() + ""
-                    + "  " + ";" + bundle.getString("lbl.msm_nota_asignacion_docente") + " " + tiempoMaxPertinencia + " "
-                    + bundle.getString("lbl.dias"), persona.getEmail(),persona.getNombres() + " "
-                    + persona.getApellidos());
+//            mail.enviarNotificacionCorreo(smtp, puerto, usrCorreo, passwordCorreo, "", bundle.getString("lbl.estimado") + ": "
+//                    +persona.getNombres() + " " + persona.getApellidos() + " "
+//                    + bundle.getString("lbl.msm_asignacion_docente") + " " +docenteProyecto.getProyectoId().getTemaActual() + ""
+//                    + "  " + ";" + bundle.getString("lbl.msm_nota_asignacion_docente") + " " + tiempoMaxPertinencia + " "
+//                    + bundle.getString("lbl.dias"), persona.getEmail(),persona.getNombres() + " "
+//                    + persona.getApellidos());
 
         } catch (Exception e) {
         }
@@ -130,15 +130,15 @@ public class AdministrarNotificaciones implements Serializable {
         try {
             FacesContext facesContext = FacesContext.getCurrentInstance();
             ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            Mail mail = new Mail();
+            MailServiceImplement mail = new MailServiceImplement();
             String usrCorreo = configuracionGeneralFacadeLocal.find((int) 28).getValor();
             String passwordCorreo = configuracionGeneralFacadeLocal.find((int) 29).getValor();
             String puerto = configuracionGeneralFacadeLocal.find((int) 31).getValor();
             String smtp = configuracionGeneralFacadeLocal.find((int) 30).getValor();
-            mail.enviarNotificacionCorreo(smtp, puerto, usrCorreo, passwordCorreo, bundle.getString("lbl.director") + " " + bundle.getString("lbl.proyecto"), bundle.getString("lbl.estimado") + ": "
-                    + persona.getNombres() + " " + persona.getApellidos() + " " + bundle.getString("lbl.msm_asignacion_director") + " "
-                    +directorProyecto.getProyectoId().getTemaActual() + " ",persona.getEmail(),persona.getNombres() + " "
-                    + persona.getApellidos());
+//            mail.enviarNotificacionCorreo(smtp, puerto, usrCorreo, passwordCorreo, bundle.getString("lbl.director") + " " + bundle.getString("lbl.proyecto"), bundle.getString("lbl.estimado") + ": "
+//                    + persona.getNombres() + " " + persona.getApellidos() + " " + bundle.getString("lbl.msm_asignacion_director") + " "
+//                    +directorProyecto.getProyectoId().getTemaActual() + " ",persona.getEmail(),persona.getNombres() + " "
+//                    + persona.getApellidos());
         } catch (Exception e) {
         }
     }
@@ -147,7 +147,7 @@ public class AdministrarNotificaciones implements Serializable {
         try {
             FacesContext facesContext = FacesContext.getCurrentInstance();
             ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            Mail mail = new Mail();
+            MailServiceImplement mail = new MailServiceImplement();
             String usrCorreo = configuracionGeneralFacadeLocal.find((int) 28).getValor();
             String passwordCorreo = configuracionGeneralFacadeLocal.find((int) 29).getValor();
             String puerto = configuracionGeneralFacadeLocal.find((int) 31).getValor();
@@ -155,10 +155,10 @@ public class AdministrarNotificaciones implements Serializable {
             for (AutorProyecto autorProyecto : autorProyectos) {
                 EstudianteCarrera estudianteCarrera = estudianteCarreraFacadeLocal.find(autorProyecto.getAspiranteId().getId());
                 Persona persona = personaFacadeLocal.find(estudianteCarrera.getEstudianteId().getId());
-                mail.enviarNotificacionCorreo(smtp, puerto, usrCorreo, passwordCorreo, bundle.getString("lbl.pertinencia"), bundle.getString("lbl.estimado") + ": "
-                        + persona.getNombres() + " " + persona.getApellidos() + " " + bundle.getString("lbl.msm_informe_proyecto_autor")
-                        + ": (" + autorProyecto.getProyectoId().getTemaActual() + ") "
-                        + bundle.getString("lbl.msm_asignacion_docente_proyecto_autor") + map.values() + " " + bundle.getString("lbl.msm_info_asignacion_docente_proyecto_autor"), persona.getEmail(), persona.getNombres() + " " + persona.getApellidos());
+//                mail.enviarNotificacionCorreo(smtp, puerto, usrCorreo, passwordCorreo, bundle.getString("lbl.pertinencia"), bundle.getString("lbl.estimado") + ": "
+//                        + persona.getNombres() + " " + persona.getApellidos() + " " + bundle.getString("lbl.msm_informe_proyecto_autor")
+//                        + ": (" + autorProyecto.getProyectoId().getTemaActual() + ") "
+//                        + bundle.getString("lbl.msm_asignacion_docente_proyecto_autor") + map.values() + " " + bundle.getString("lbl.msm_info_asignacion_docente_proyecto_autor"), persona.getEmail(), persona.getNombres() + " " + persona.getApellidos());
 
             }
         } catch (Exception e) {
@@ -169,7 +169,7 @@ public class AdministrarNotificaciones implements Serializable {
         try {
             FacesContext facesContext = FacesContext.getCurrentInstance();
             ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            Mail mail = new Mail();
+            MailServiceImplement mail = new MailServiceImplement();
             String usrCorreo = configuracionGeneralFacadeLocal.find((int) 28).getValor();
             String passwordCorreo = configuracionGeneralFacadeLocal.find((int) 29).getValor();
             String puerto = configuracionGeneralFacadeLocal.find((int) 31).getValor();
@@ -177,11 +177,11 @@ public class AdministrarNotificaciones implements Serializable {
             for (AutorProyecto autorProyecto : autorProyectos) {
                 EstudianteCarrera estudianteCarrera = estudianteCarreraFacadeLocal.find(autorProyecto.getAspiranteId().getId());
                 Persona persona = personaFacadeLocal.find(estudianteCarrera.getEstudianteId().getId());
-                mail.enviarNotificacionCorreo(smtp, puerto, usrCorreo, passwordCorreo, bundle.getString("lbl.director") + " "
-                        + bundle.getString("lbl.proyecto"), bundle.getString("lbl.estimado") + ": " + persona.getNombres() + " "
-                        + persona.getApellidos() + " " + bundle.getString("lbl.msm_informe_proyecto_autor") + ":(" + autorProyecto.getProyectoId().getTemaActual() + ") "
-                        + bundle.getString("lbl.msm_asignacion_director_proyecto_autor") + ":" + map.values() + " " + bundle.getString("lbl.msm_info_asignacion_director_proyecto_autor"),
-                        persona.getEmail(), persona.getNombres() + " " + persona.getApellidos());
+//                mail.enviarNotificacionCorreo(smtp, puerto, usrCorreo, passwordCorreo, bundle.getString("lbl.director") + " "
+//                        + bundle.getString("lbl.proyecto"), bundle.getString("lbl.estimado") + ": " + persona.getNombres() + " "
+//                        + persona.getApellidos() + " " + bundle.getString("lbl.msm_informe_proyecto_autor") + ":(" + autorProyecto.getProyectoId().getTemaActual() + ") "
+//                        + bundle.getString("lbl.msm_asignacion_director_proyecto_autor") + ":" + map.values() + " " + bundle.getString("lbl.msm_info_asignacion_director_proyecto_autor"),
+//                        persona.getEmail(), persona.getNombres() + " " + persona.getApellidos());
 
             }
         } catch (Exception e) {
@@ -192,7 +192,7 @@ public class AdministrarNotificaciones implements Serializable {
         try {
             FacesContext facesContext = FacesContext.getCurrentInstance();
             ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            Mail mail = new Mail();
+            MailServiceImplement mail = new MailServiceImplement();
             String usrCorreo = configuracionGeneralFacadeLocal.find((int) 28).getValor();
             String passwordCorreo = configuracionGeneralFacadeLocal.find((int) 29).getValor();
             String puerto = configuracionGeneralFacadeLocal.find((int) 31).getValor();

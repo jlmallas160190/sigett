@@ -29,7 +29,6 @@ import com.ocpsoft.pretty.faces.annotation.URLMapping;
 import com.ocpsoft.pretty.faces.annotation.URLMappings;
 import edu.unl.sigett.adjudicacion.controlador.AdministrarDirectoresProyecto;
 import edu.unl.sigett.adjudicacion.controlador.AdministrarProrrogas;
-import edu.unl.sigett.comun.controlador.AdministrarCatalogoDuracion;
 import edu.unl.sigett.comun.controlador.AdministrarNotificaciones;
 import edu.unl.sigett.academico.managed.session.SessionPeriodoAcademico;
 import edu.unl.sigett.finalizacion.controlador.AdministrarActas;
@@ -42,7 +41,6 @@ import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
 import edu.unl.sigett.entity.Actividad;
 import edu.unl.sigett.entity.AutorProyecto;
 import edu.jlmallas.academico.entity.Carrera;
-import edu.unl.sigett.entity.CatalogoDocumentoExpediente;
 import edu.unl.sigett.entity.ConfiguracionProyecto;
 import edu.unl.sigett.entity.Cronograma;
 import edu.unl.sigett.entity.DirectorProyecto;
@@ -92,7 +90,6 @@ import org.primefaces.event.TransferEvent;
 import org.primefaces.model.DualListModel;
 import edu.unl.sigett.dao.AutorProyectoDao;
 import edu.jlmallas.academico.service.CarreraService;
-import edu.unl.sigett.dao.CatalogoDocumentoExpedienteFacadeLocal;
 import edu.unl.sigett.dao.ConfiguracionCarreraDao;
 import edu.unl.sigett.dao.ConfiguracionGeneralDao;
 import edu.unl.sigett.dao.ConfiguracionProyectoDao;
@@ -155,8 +152,6 @@ import edu.unl.sigett.util.MessageView;
     private AdministrarProrrogas administrarProrrogas;
     @Inject
     private AdministrarConfiguracionesProyecto administrarConfiguracionesProyecto;
-    @Inject
-    private AdministrarCatalogoDuracion administrarCatalogoDuracion;
     @Inject
     private AdministrarDocentesProyecto administrarDocentesProyecto;
     @Inject
@@ -224,8 +219,6 @@ import edu.unl.sigett.util.MessageView;
     private ConfiguracionCarreraDao configuracionCarreraFacadeLocal;
     @EJB
     private ProyectoOfertaCarreraDao proyectoCarreraOfertaFacadeLocal;
-    @EJB
-    private CatalogoDocumentoExpedienteFacadeLocal catalogoDocumentoExpedienteFacadeLocal;
     @EJB
     private AutorProyectoDao autorProyectoFacadeLocal;
     @EJB
@@ -858,7 +851,7 @@ import edu.unl.sigett.util.MessageView;
                     break;
                 case "tabDocentesProyecto":
                     /*------------------------------DOCENTES---------------------------------------------------*/
-                    administrarDocentesProyecto.buscar("", sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
+//                    administrarDocentesProyecto.buscar("", sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
                     administrarDocentesProyecto.renderedBuscar(sessionUsuario.getUsuario());
                     administrarDocentesProyecto.renderedEditar(sessionUsuario.getUsuario());
                     administrarDocentesProyecto.renderedBuscarEspecialista(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
@@ -1686,22 +1679,22 @@ import edu.unl.sigett.util.MessageView;
 
     public void grabarDocumentosProyecto(Proyecto proyecto, List<DocumentoProyecto> documentoProyectos) {
         try {
-            if (documentoProyectos != null) {
-                for (DocumentoProyecto documentoProyecto : documentoProyectos) {
-                    documentoProyecto.setProyectoId(proyecto);
-                    if (documentoProyecto.getId() == null) {
-                        documentoProyectoFacadeLocal.create(documentoProyecto);
-                        logFacadeLocal.create(logFacadeLocal.crearLog("DocumentoProyecto", documentoProyecto.getId() + "", "CREAR", "|TipoArchivo= " + documentoProyecto.getTipoArchivo() + "|Tamaño=" + documentoProyecto.getTamanio() + "|CatalogoDocumentoProyecto= " + documentoProyecto.getCatalogoDocumentoProyectoId() + "|Proyecto= " + documentoProyecto.getProyectoId().getId(), sessionUsuario.getUsuario()));
-                        documentoProyecto.setEsEditado(false);
-                    } else {
-                        if (documentoProyecto.isEsEditado()) {
-                            documentoProyectoFacadeLocal.edit(documentoProyecto);
-                            logFacadeLocal.create(logFacadeLocal.crearLog("DocumentoProyecto", documentoProyecto.getId() + "", "EDITAR", "|TipoArchivo= " + documentoProyecto.getTipoArchivo() + "|Tamaño=" + documentoProyecto.getTamanio() + "|CatalogoDocumentoProyecto= " + documentoProyecto.getCatalogoDocumentoProyectoId() + "|Proyecto= " + documentoProyecto.getProyectoId().getId(), sessionUsuario.getUsuario()));
-                            documentoProyecto.setEsEditado(false);
-                        }
-                    }
-                }
-            }
+//            if (documentoProyectos != null) {
+//                for (DocumentoProyecto documentoProyecto : documentoProyectos) {
+//                    documentoProyecto.setProyectoId(proyecto);
+//                    if (documentoProyecto.getId() == null) {
+//                        documentoProyectoFacadeLocal.create(documentoProyecto);
+//                        logFacadeLocal.create(logFacadeLocal.crearLog("DocumentoProyecto", documentoProyecto.getId() + "", "CREAR", "|TipoArchivo= " + documentoProyecto.getTipoArchivo() + "|Tamaño=" + documentoProyecto.getTamanio() + "|CatalogoDocumentoProyecto= " + documentoProyecto.getCatalogoDocumentoProyectoId() + "|Proyecto= " + documentoProyecto.getProyectoId().getId(), sessionUsuario.getUsuario()));
+//                        documentoProyecto.setEsEditado(false);
+//                    } else {
+//                        if (documentoProyecto.isEsEditado()) {
+//                            documentoProyectoFacadeLocal.edit(documentoProyecto);
+//                            logFacadeLocal.create(logFacadeLocal.crearLog("DocumentoProyecto", documentoProyecto.getId() + "", "EDITAR", "|TipoArchivo= " + documentoProyecto.getTipoArchivo() + "|Tamaño=" + documentoProyecto.getTamanio() + "|CatalogoDocumentoProyecto= " + documentoProyecto.getCatalogoDocumentoProyectoId() + "|Proyecto= " + documentoProyecto.getProyectoId().getId(), sessionUsuario.getUsuario()));
+//                            documentoProyecto.setEsEditado(false);
+//                        }
+//                    }
+//                }
+//            }
         } catch (Exception e) {
         }
 
@@ -1960,16 +1953,16 @@ import edu.unl.sigett.util.MessageView;
     //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="MÉTODOS REMOVER EN CASCADA">
     public void removerDocumentosProyecto(Proyecto proyecto, List<DocumentoProyecto> documentoProyectos) {
-        if (documentoProyectos != null) {
-            for (DocumentoProyecto documentoProyecto : documentoProyectos) {
-                if (documentoProyecto.getEsActivo() == false) {
-                    if (documentoProyecto.getId() != null) {
-                        logFacadeLocal.create(logFacadeLocal.crearLog("DocumentoProyecto", documentoProyecto.getId() + "", "ELIMINAR", "|TipoArchivo= " + documentoProyecto.getTipoArchivo() + "|Catalogo= " + documentoProyecto.getCatalogoDocumentoProyectoId().getId(), sessionUsuario.getUsuario()));
-                        documentoProyectoFacadeLocal.remove(documentoProyecto);
-                    }
-                }
-            }
-        }
+//        if (documentoProyectos != null) {
+//            for (DocumentoProyecto documentoProyecto : documentoProyectos) {
+//                if (documentoProyecto.getEsActivo() == false) {
+//                    if (documentoProyecto.getId() != null) {
+//                        logFacadeLocal.create(logFacadeLocal.crearLog("DocumentoProyecto", documentoProyecto.getId() + "", "ELIMINAR", "|TipoArchivo= " + documentoProyecto.getTipoArchivo() + "|Catalogo= " + documentoProyecto.getCatalogoDocumentoProyectoId().getId(), sessionUsuario.getUsuario()));
+//                        documentoProyectoFacadeLocal.remove(documentoProyecto);
+//                    }
+//                }
+//            }
+//        }
     }
 
     public void removerProyectoCarreras(Proyecto proyecto) {
@@ -2659,10 +2652,6 @@ import edu.unl.sigett.util.MessageView;
 
     public void setAdministrarConfiguracionesProyecto(AdministrarConfiguracionesProyecto administrarConfiguracionesProyecto) {
         this.administrarConfiguracionesProyecto = administrarConfiguracionesProyecto;
-    }
-
-    public AdministrarCatalogoDuracion getAdministrarCatalogoDuracion() {
-        return administrarCatalogoDuracion;
     }
 
   

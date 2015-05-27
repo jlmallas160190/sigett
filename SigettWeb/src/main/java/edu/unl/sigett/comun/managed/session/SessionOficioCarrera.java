@@ -5,7 +5,7 @@
  */
 package edu.unl.sigett.comun.managed.session;
 
-import edu.unl.sigett.entity.OficioCarrera;
+import edu.unl.sigett.entity.DocumentoCarrera;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
@@ -18,17 +18,17 @@ import java.io.Serializable;
 @SessionScoped
 public class SessionOficioCarrera implements Serializable {
 
-    private OficioCarrera oficioCarrera;
+    private DocumentoCarrera oficioCarrera;
 
     public SessionOficioCarrera() {
-        this.oficioCarrera = new OficioCarrera();
+        this.oficioCarrera = new DocumentoCarrera();
     }
 
-    public OficioCarrera getOficioCarrera() {
+    public DocumentoCarrera getOficioCarrera() {
         return oficioCarrera;
     }
 
-    public void setOficioCarrera(OficioCarrera oficioCarrera) {
+    public void setOficioCarrera(DocumentoCarrera oficioCarrera) {
         this.oficioCarrera = oficioCarrera;
     }
 

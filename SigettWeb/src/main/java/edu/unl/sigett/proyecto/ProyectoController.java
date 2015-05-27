@@ -5,6 +5,7 @@ package edu.unl.sigett.proyecto;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+import com.jlmallas.comun.dao.ConfiguracionDao;
 import com.jlmallas.comun.dao.PersonaDao;
 import com.jlmallas.comun.entity.Item;
 import com.jlmallas.comun.entity.Persona;
@@ -25,10 +26,8 @@ import edu.jlmallas.academico.service.OfertaAcademicaService;
 import edu.unl.sigett.autor.dto.AutorProyectoDTO;
 import edu.unl.sigett.dao.ConfiguracionProyectoDao;
 import edu.unl.sigett.dao.DirectorDao;
-import edu.unl.sigett.dao.DocenteProyectoDao;
 import edu.unl.sigett.dao.ProyectoOfertaCarreraDao;
 import edu.unl.sigett.dao.TemaProyectoDao;
-import edu.unl.sigett.dao.UsuarioCarreraDao;
 import edu.unl.sigett.docenteProyecto.DocenteProyectoDTO;
 import edu.unl.sigett.dto.ProyectoDTO;
 import edu.unl.sigett.entity.AutorProyecto;
@@ -55,6 +54,7 @@ import edu.unl.sigett.service.LineaInvestigacionService;
 import edu.unl.sigett.service.ProyectoCarreraOfertaService;
 import edu.unl.sigett.service.ProyectoService;
 import edu.unl.sigett.usuarioCarrera.SessionUsuarioCarrera;
+import edu.unl.sigett.util.CabeceraController;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
@@ -68,7 +68,6 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import org.jlmallas.seguridad.dao.LogDao;
 import org.jlmallas.seguridad.dao.UsuarioDao;
-import org.jlmallas.seguridad.entity.Usuario;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.TransferEvent;
 import org.primefaces.model.DualListModel;
@@ -105,6 +104,8 @@ public class ProyectoController implements Serializable {
     private SessionProyecto sessionProyecto;
     @Inject
     private SessionUsuarioCarrera sessionUsuarioCarrera;
+    @Inject
+    private CabeceraController cabeceraController;
 
     //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="SERVICIOS">
@@ -148,6 +149,8 @@ public class ProyectoController implements Serializable {
     private DocenteDao docenteDao;
     @EJB
     private TemaProyectoDao temaProyectoDao;
+    @EJB
+    private ConfiguracionDao configuracionDao;
 
     //</editor-fold>
     public ProyectoController() {
@@ -739,6 +742,37 @@ public class ProyectoController implements Serializable {
             }
             sessionProyecto.setFilterDocentesProyectoDTO(sessionProyecto.getDocentesProyectoDTO());
         } catch (Exception e) {
+        }
+    }
+
+    /**
+     * GRABAR DOCENTES
+     */
+    public void grabarDocentes() {
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
+        if (!sessionProyecto.getEstadoActual().getCodigo().equals(EstadoProyectoEnum.INICIO.getTipo())) {
+            return;
+        }
+        if (sessionProyecto.getDocentesProyectoDTO().isEmpty()) {
+            return;
+        }
+        for (DocenteProyectoDTO docenteProyectoDTO : sessionProyecto.getDocentesProyectoDTO()) {
+            if (docenteProyectoDTO.getDocenteProyecto().getId() == null) {
+                docenteProyectoService.guardar(docenteProyectoDTO.getDocenteProyecto());
+                continue;
+            }
+            docenteProyectoService.actualizar(docenteProyectoDTO.getDocenteProyecto());
+            cabeceraController.getMailDTO().setMensaje(bundle.getString("lbl.estimado") + ": "
+                    + docenteProyectoDTO.getPersona().getNombres() + " " + docenteProyectoDTO.getPersona().getApellidos() + " "
+                    + bundle.getString("lbl.msm_asignacion_docente") + " " + docenteProyectoDTO.getDocenteProyecto().getProyectoId().getTemaActual() + ""
+                    + "  " + ";" + bundle.getString("lbl.msm_nota_asignacion_docente") + " " + cabeceraController.getConfiguracionGeneralDTO().getTiempoMaximoPertinencia() + " "
+                    + bundle.getString("lbl.dias"));
+            cabeceraController.getMailDTO().setArchivo(null);
+            cabeceraController.getMailDTO().setDestino(docenteProyectoDTO.getPersona().getEmail());
+            cabeceraController.getMailDTO().setDatosDestinario(docenteProyectoDTO.getPersona().getNombres() + " "
+                    + docenteProyectoDTO.getPersona().getApellidos());
+            cabeceraController.getMailService().enviar(cabeceraController.getMailDTO());
         }
     }
 

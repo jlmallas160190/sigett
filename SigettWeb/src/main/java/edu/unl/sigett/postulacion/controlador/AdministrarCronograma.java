@@ -8,7 +8,6 @@ package edu.unl.sigett.postulacion.controlador;
 import com.jlmallas.comun.entity.Item;
 import com.jlmallas.comun.service.ItemService;
 import edu.unl.sigett.entity.Actividad;
-import edu.unl.sigett.entity.CatalogoDuracion;
 import edu.unl.sigett.entity.ConfiguracionProyecto;
 import edu.unl.sigett.entity.Cronograma;
 import edu.unl.sigett.entity.DuracionCronograma;
@@ -20,7 +19,6 @@ import java.io.Serializable;
 import java.util.List;
 import javax.ejb.EJB;
 import org.primefaces.context.RequestContext;
-import edu.unl.sigett.dao.CatalogoDuracionFacadeLocal;
 import edu.unl.sigett.dao.ConfiguracionGeneralDao;
 import edu.unl.sigett.dao.CronogramaFacadeLocal;
 import edu.unl.sigett.dao.ProyectoDao;
@@ -40,8 +38,6 @@ public class AdministrarCronograma implements Serializable {
     private SessionProyecto sessionProyecto;
     @EJB
     private ItemService itemService;
-    @EJB
-    private CatalogoDuracionFacadeLocal catalogoDuracionFacadeLocal;
     @EJB
     private ConfiguracionGeneralDao configuracionGeneralFacadeLocal;
     @EJB
@@ -176,98 +172,98 @@ public class AdministrarCronograma implements Serializable {
     }
 
     public void agregarDuracionesCronograma(Cronograma cronograma, double duracionDias, double horasTrabajo) {
-        if (cronograma.getDuracionCronogramaList() != null) {
-            for (CatalogoDuracion cd : catalogoDuracionFacadeLocal.findAll()) {
-                if (cd.getId() == 1) {
-                    DuracionCronograma duracionCronograma = new DuracionCronograma();
-                    duracionCronograma.setCatalogoDuracionId(cd);
-                    duracionCronograma.setCronogramaId(cronograma);
-                    duracionCronograma.setDuracion(duracionDias);
-                    DuracionCronograma d = contieneDuracion(cronograma, duracionCronograma);
-                    if (d == null) {
-                        cronograma.getDuracionCronogramaList().add(duracionCronograma);
-                    } else {
-                        cronograma.getDuracionCronogramaList().remove(d);
-                        d.setCronogramaId(duracionCronograma.getCronogramaId());
-                        d.setDuracion(duracionCronograma.getDuracion());
-                        d.setCatalogoDuracionId(duracionCronograma.getCatalogoDuracionId());
-                        cronograma.getDuracionCronogramaList().add(d);
-                    }
-                } else {
-                    if (cd.getId() == 2) {
-                        DuracionCronograma duracionCronograma = new DuracionCronograma();
-                        duracionCronograma.setCatalogoDuracionId(cd);
-                        duracionCronograma.setCronogramaId(cronograma);
-                        duracionCronograma.setDuracion(horasTrabajo);
-                        DuracionCronograma d = contieneDuracion(cronograma, duracionCronograma);
-                        if (d == null) {
-                            cronograma.getDuracionCronogramaList().add(duracionCronograma);
-                        } else {
-                            cronograma.getDuracionCronogramaList().remove(d);
-                            d.setCronogramaId(duracionCronograma.getCronogramaId());
-                            d.setDuracion(duracionCronograma.getDuracion());
-                            d.setCatalogoDuracionId(duracionCronograma.getCatalogoDuracionId());
-                            cronograma.getDuracionCronogramaList().add(d);
-                        }
-                    }
-                }
-            }
-        }
-        boolean encontrado = false;
-        for (DuracionCronograma d : cronograma.getDuracionCronogramaList()) {
-            for (ConfiguracionProyecto configuracionProyecto : cronograma.getProyecto().getConfiguracionProyectoList()) {
-                if (configuracionProyecto.getCodigo().equalsIgnoreCase("CD")) {
-                    Integer id = Integer.parseInt(configuracionProyecto.getValor());
-                    CatalogoDuracion c = catalogoDuracionFacadeLocal.find(id);
-                    if (d.getCatalogoDuracionId().getId() == c.getId()) {
-                        cronograma.setDuracion(d.getDuracion());
-                        encontrado = true;
-                        break;
-                    }
-                }
-                if (encontrado) {
-                    break;
-                }
-            }
-        }
-    }
+//        if (cronograma.getDuracionCronogramaList() != null) {
+//            for (CatalogoDuracion cd : catalogoDuracionFacadeLocal.findAll()) {
+//                if (cd.getId() == 1) {
+//                    DuracionCronograma duracionCronograma = new DuracionCronograma();
+//                    duracionCronograma.setCatalogoDuracionId(cd);
+//                    duracionCronograma.setCronogramaId(cronograma);
+//                    duracionCronograma.setDuracion(duracionDias);
+//                    DuracionCronograma d = contieneDuracion(cronograma, duracionCronograma);
+//                    if (d == null) {
+//                        cronograma.getDuracionCronogramaList().add(duracionCronograma);
+//                    } else {
+//                        cronograma.getDuracionCronogramaList().remove(d);
+//                        d.setCronogramaId(duracionCronograma.getCronogramaId());
+//                        d.setDuracion(duracionCronograma.getDuracion());
+//                        d.setCatalogoDuracionId(duracionCronograma.getCatalogoDuracionId());
+//                        cronograma.getDuracionCronogramaList().add(d);
+//                    }
+//                } else {
+//                    if (cd.getId() == 2) {
+//                        DuracionCronograma duracionCronograma = new DuracionCronograma();
+//                        duracionCronograma.setCatalogoDuracionId(cd);
+//                        duracionCronograma.setCronogramaId(cronograma);
+//                        duracionCronograma.setDuracion(horasTrabajo);
+//                        DuracionCronograma d = contieneDuracion(cronograma, duracionCronograma);
+//                        if (d == null) {
+//                            cronograma.getDuracionCronogramaList().add(duracionCronograma);
+//                        } else {
+//                            cronograma.getDuracionCronogramaList().remove(d);
+//                            d.setCronogramaId(duracionCronograma.getCronogramaId());
+//                            d.setDuracion(duracionCronograma.getDuracion());
+//                            d.setCatalogoDuracionId(duracionCronograma.getCatalogoDuracionId());
+//                            cronograma.getDuracionCronogramaList().add(d);
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//        boolean encontrado = false;
+//        for (DuracionCronograma d : cronograma.getDuracionCronogramaList()) {
+//            for (ConfiguracionProyecto configuracionProyecto : cronograma.getProyecto().getConfiguracionProyectoList()) {
+//                if (configuracionProyecto.getCodigo().equalsIgnoreCase("CD")) {
+//                    Integer id = Integer.parseInt(configuracionProyecto.getValor());
+//                    CatalogoDuracion c = catalogoDuracionFacadeLocal.find(id);
+//                    if (d.getCatalogoDuracionId().getId() == c.getId()) {
+//                        cronograma.setDuracion(d.getDuracion());
+//                        encontrado = true;
+//                        break;
+//                    }
+//                }
+//                if (encontrado) {
+//                    break;
+//                }
+//            }
+//        }
+//    }
+//
+//    public int calculahorasTrabajoProyecto(Proyecto proyecto) {
+//        int dias = 0;
+//        for (ConfiguracionProyecto cf : proyecto.getConfiguracionProyectoList()) {
+//            if (cf.getCodigo().equalsIgnoreCase("HD")) {
+//                dias = Integer.parseInt(cf.getValor());
+//                break;
+//            }
+//        }
+//        return dias;
+//    }
+//
+//    public DuracionCronograma contieneDuracion(Cronograma cronograma, DuracionCronograma duracionCronograma) {
+//        DuracionCronograma d = null;
+//        for (DuracionCronograma dc : cronograma.getDuracionCronogramaList()) {
+//            if (dc.getCatalogoDuracionId().getId() == duracionCronograma.getCatalogoDuracionId().getId()) {
+//                d = dc;
+//                break;
+//            }
+//        }
+//        return d;
+//    }
 
-    public int calculahorasTrabajoProyecto(Proyecto proyecto) {
-        int dias = 0;
-        for (ConfiguracionProyecto cf : proyecto.getConfiguracionProyectoList()) {
-            if (cf.getCodigo().equalsIgnoreCase("HD")) {
-                dias = Integer.parseInt(cf.getValor());
-                break;
-            }
-        }
-        return dias;
-    }
+//    public boolean isRenderedEditarDatosCronograma() {
+//        return renderedEditarDatosCronograma;
+//    }
 
-    public DuracionCronograma contieneDuracion(Cronograma cronograma, DuracionCronograma duracionCronograma) {
-        DuracionCronograma d = null;
-        for (DuracionCronograma dc : cronograma.getDuracionCronogramaList()) {
-            if (dc.getCatalogoDuracionId().getId() == duracionCronograma.getCatalogoDuracionId().getId()) {
-                d = dc;
-                break;
-            }
-        }
-        return d;
-    }
+//    public void setRenderedEditarDatosCronograma(boolean renderedEditarDatosCronograma) {
+//        this.renderedEditarDatosCronograma = renderedEditarDatosCronograma;
+//    }
 
-    public boolean isRenderedEditarDatosCronograma() {
-        return renderedEditarDatosCronograma;
+//    public boolean isRenderedNoEditarDatosCronograma() {
+//        return renderedNoEditarDatosCronograma;
+//    }
+//
+//    public void setRenderedNoEditarDatosCronograma(boolean renderedNoEditarDatosCronograma) {
+//        this.renderedNoEditarDatosCronograma = renderedNoEditarDatosCronograma;
+//    }
     }
-
-    public void setRenderedEditarDatosCronograma(boolean renderedEditarDatosCronograma) {
-        this.renderedEditarDatosCronograma = renderedEditarDatosCronograma;
-    }
-
-    public boolean isRenderedNoEditarDatosCronograma() {
-        return renderedNoEditarDatosCronograma;
-    }
-
-    public void setRenderedNoEditarDatosCronograma(boolean renderedNoEditarDatosCronograma) {
-        this.renderedNoEditarDatosCronograma = renderedNoEditarDatosCronograma;
-    }
-
 }

@@ -31,9 +31,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @Entity
 @Table(name = "estructura_cat_doc_proyecto")
 @XmlRootElement
-@NamedQueries({
-    @NamedQuery(name = "EstructuraCatDocProyecto.findAll", query = "SELECT e FROM EstructuraCatDocProyecto e"),
-    @NamedQuery(name = "EstructuraCatDocProyecto.findById", query = "SELECT e FROM EstructuraCatDocProyecto e WHERE e.id = :id")})
+
 public class EstructuraCatDocProyecto implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -46,9 +44,6 @@ public class EstructuraCatDocProyecto implements Serializable {
     @JoinColumn(name = "estructura_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Estructura estructuraId;
-    @JoinColumn(name = "catalogo_documento_proyecto_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private CatalogoDocumentoProyecto catalogoDocumentoProyectoId;
 
     public EstructuraCatDocProyecto() {
     }
@@ -80,14 +75,6 @@ public class EstructuraCatDocProyecto implements Serializable {
 
     public void setEstructuraId(Estructura estructuraId) {
         this.estructuraId = estructuraId;
-    }
-
-    public CatalogoDocumentoProyecto getCatalogoDocumentoProyectoId() {
-        return catalogoDocumentoProyectoId;
-    }
-
-    public void setCatalogoDocumentoProyectoId(CatalogoDocumentoProyecto catalogoDocumentoProyectoId) {
-        this.catalogoDocumentoProyectoId = catalogoDocumentoProyectoId;
     }
 
     @Override

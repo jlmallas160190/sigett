@@ -71,62 +71,62 @@ public class LoginDocente implements Serializable {
 
     public String logear(String username, String password) {
         String navegacion = "";
-        FacesContext facesContext = FacesContext.getCurrentInstance();
-        ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-        String value = configuracionGeneralFacadeLocal.find(40).getValor();
-        int esLogin = 3;
-        if (value.equalsIgnoreCase("SI")) {
-            sgaWebServicesValidaDocente(username, password);
-            if (resultado) {
-                esLogin = 1;
-            }
-        } else {
-            int var = usuarioFacadeLocal.logear(username, configuracionFacadeLocal.encriptaClave(password));
-            esLogin = var;
-        }
-
-        if (esLogin == 1) {
-            Usuario usuario = usuarioFacadeLocal.buscarPorUsuario(username);
-            if (usuario != null) {
-                usuario.setUsername(username);
-                usuario.setPassword(configuracionFacadeLocal.encriptaClave(password));
-                usuarioFacadeLocal.edit(usuario);
-                if (usuario.getEsActivo()) {
-                    DocenteUsuario docenteUsuario = docenteUsuarioFacadeLocal.find(usuario.getId());
-                    if (docenteUsuario != null) {
-                        sessionDocenteUsuario.setDocenteUsuario(docenteUsuario);
-                        sessionDocenteUsuario.setDocente(docenteFacadeLocal.find(docenteUsuario.getDocenteId()));
-                        administrarActividades.notificacionActividadesPorRevisar(sessionDocenteUsuario.getDocente());
-                        administrarDocentesProyecto.docenteProyectosParaPertinencia(sessionDocenteUsuario.getDocente());
-                        administrarDocentesProyecto.setDocenteProyectosPorDocente(administrarDocentesProyecto.getDocentesProyectosParaPertinencia());
-                        administrarProyectosDirector.notificacionesProyectos(sessionDocenteUsuario.getDocente());
-                        administrarTribunales.buscarPorDocente(sessionDocenteUsuario.getDocenteUsuario().getDocenteId(), "");
-                        navegacion = "pretty:principalDocente";
-                    } else {
-                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.no_user") + ". " + bundle.getString("lbl.msm_consulte"), "");
-                        FacesContext.getCurrentInstance().addMessage(null, message);
-                    }
-                } else {
-                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_user_no_active") + ". " + bundle.getString("lbl.msm_consulte"), "");
-                    FacesContext.getCurrentInstance().addMessage(null, message);
-                }
-            }
-        } else {
-            if (esLogin == 3) {
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.datos_incorrectos"), "");
-                FacesContext.getCurrentInstance().addMessage(null, message);
-            } else {
-                if (esLogin == 0) {
-                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.clave_incorrecta"), "");
-                    FacesContext.getCurrentInstance().addMessage(null, message);
-                } else {
-                    if (esLogin == 2) {
-                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.usuario_incorrecto"), "");
-                        FacesContext.getCurrentInstance().addMessage(null, message);
-                    }
-                }
-            }
-        }
+//        FacesContext facesContext = FacesContext.getCurrentInstance();
+//        ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
+//        String value = configuracionGeneralFacadeLocal.find(40).getValor();
+//        int esLogin = 3;
+//        if (value.equalsIgnoreCase("SI")) {
+//            sgaWebServicesValidaDocente(username, password);
+//            if (resultado) {
+//                esLogin = 1;
+//            }
+//        } else {
+//            int var = usuarioFacadeLocal.logear(username, configuracionFacadeLocal.encriptaClave(password));
+//            esLogin = var;
+//        }
+//
+//        if (esLogin == 1) {
+//            Usuario usuario = usuarioFacadeLocal.buscarPorUsuario(username);
+//            if (usuario != null) {
+//                usuario.setUsername(username);
+//                usuario.setPassword(configuracionFacadeLocal.encriptaClave(password));
+//                usuarioFacadeLocal.edit(usuario);
+//                if (usuario.getEsActivo()) {
+//                    DocenteUsuario docenteUsuario = docenteUsuarioFacadeLocal.find(usuario.getId());
+//                    if (docenteUsuario != null) {
+//                        sessionDocenteUsuario.setDocenteUsuario(docenteUsuario);
+//                        sessionDocenteUsuario.setDocente(docenteFacadeLocal.find(docenteUsuario.getDocenteId()));
+//                        administrarActividades.notificacionActividadesPorRevisar(sessionDocenteUsuario.getDocente());
+//                        administrarDocentesProyecto.docenteProyectosParaPertinencia(sessionDocenteUsuario.getDocente());
+//                        administrarDocentesProyecto.setDocenteProyectosPorDocente(administrarDocentesProyecto.getDocentesProyectosParaPertinencia());
+//                        administrarProyectosDirector.notificacionesProyectos(sessionDocenteUsuario.getDocente());
+//                        administrarTribunales.buscarPorDocente(sessionDocenteUsuario.getDocenteUsuario().getDocenteId(), "");
+//                        navegacion = "pretty:principalDocente";
+//                    } else {
+//                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.no_user") + ". " + bundle.getString("lbl.msm_consulte"), "");
+//                        FacesContext.getCurrentInstance().addMessage(null, message);
+//                    }
+//                } else {
+//                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_user_no_active") + ". " + bundle.getString("lbl.msm_consulte"), "");
+//                    FacesContext.getCurrentInstance().addMessage(null, message);
+//                }
+//            }
+//        } else {
+//            if (esLogin == 3) {
+//                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.datos_incorrectos"), "");
+//                FacesContext.getCurrentInstance().addMessage(null, message);
+//            } else {
+//                if (esLogin == 0) {
+//                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.clave_incorrecta"), "");
+//                    FacesContext.getCurrentInstance().addMessage(null, message);
+//                } else {
+//                    if (esLogin == 2) {
+//                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.usuario_incorrecto"), "");
+//                        FacesContext.getCurrentInstance().addMessage(null, message);
+//                    }
+//                }
+//            }
+//        }
         return navegacion;
     }
 

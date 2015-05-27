@@ -28,13 +28,7 @@ public interface ConfiguracionDao {
 
     List<Configuracion> findRange(int[] range);
 
-    String getSecretKey();
-
-    Configuracion buscarPorCodigo(String codigo);
-
-    String desencriptaClave(String clave);
-
-    String encriptaClave(String clave);
+    List<Configuracion> buscar(final Configuracion configuracion);
 
     int count();
 

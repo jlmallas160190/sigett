@@ -15,7 +15,7 @@ import edu.jlmallas.academico.entity.Carrera;
 import edu.unl.sigett.entity.ConfiguracionCarrera;
 import edu.jlmallas.academico.entity.CoordinadorPeriodo;
 import edu.unl.sigett.entity.DocenteProyecto;
-import edu.unl.sigett.entity.OficioCarrera;
+import edu.unl.sigett.entity.DocumentoCarrera;
 import edu.unl.sigett.entity.Pertinencia;
 import edu.unl.sigett.entity.Proyecto;
 import edu.unl.sigett.entity.ProyectoCarreraOferta;
@@ -40,7 +40,7 @@ import edu.unl.sigett.dao.ConfiguracionCarreraDao;
 import edu.unl.sigett.dao.ConfiguracionGeneralDao;
 import edu.jlmallas.academico.dao.CoordinadorPeriodoDao;
 import org.jlmallas.seguridad.dao.LogDao;
-import edu.unl.sigett.dao.OficioCarreraDao;
+import edu.unl.sigett.dao.DocumentoCarreraDao;
 import edu.unl.sigett.dao.PertinenciaFacadeLocal;
 import edu.unl.sigett.dao.ProyectoDao;
 import org.jlmallas.seguridad.dao.UsuarioDao;
@@ -49,7 +49,7 @@ import edu.jlmallas.academico.entity.EstudianteCarrera;
 import edu.jlmallas.academico.dao.DocenteDao;
 import edu.jlmallas.academico.dao.EstudianteCarreraDao;
 import edu.unl.sigett.comun.managed.session.SessionOficioCarrera;
-import edu.unl.sigett.enumeration.CatalogoOficioEnum;
+import edu.unl.sigett.enumeration.CatalogoDocumentoCarreraEnum;
 import edu.unl.sigett.enumeration.EstadoAutorEnum;
 import edu.unl.sigett.enumeration.EstadoProyectoEnum;
 import java.util.HashMap;
@@ -104,7 +104,7 @@ public class AdministrarPertinencias implements Serializable {
     @EJB
     private ConfiguracionCarreraDao configuracionCarreraFacadeLocal;
     @EJB
-    private OficioCarreraDao oficioCarreraFacadeLocal;
+    private DocumentoCarreraDao oficioCarreraFacadeLocal;
     @EJB
     private PersonaDao personaFacadeLocal;
     @EJB
@@ -221,12 +221,12 @@ public class AdministrarPertinencias implements Serializable {
                             break;
                         }
                     }
-                    OficioCarrera oficioCarrera = oficioCarreraFacadeLocal.buscarPorTablaId(pertinencia.getId(), CatalogoOficioEnum.PERTINENCIA.getTipo());
-                    if (oficioCarrera != null) {
-                        sessionOficioCarrera.setOficioCarrera(oficioCarrera);
-                    } else {
-                        sessionOficioCarrera.setOficioCarrera(new OficioCarrera());
-                    }
+//                    DocumentoCarrera oficioCarrera = oficioCarreraFacadeLocal.buscarPorTablaId(pertinencia.getId(), CatalogoDocumentoCarreraEnum.PERTINENCIA.getTipo());
+//                    if (oficioCarrera != null) {
+//                        sessionOficioCarrera.setOficioCarrera(oficioCarrera);
+//                    } else {
+//                        sessionOficioCarrera.setOficioCarrera(new DocumentoCarrera());
+//                    }
                     renderedDlgInforme = true;
                     RequestContext.getCurrentInstance().execute("PF('dlgInformeDocenteProyecto').show()");
                 } else {
@@ -322,10 +322,10 @@ public class AdministrarPertinencias implements Serializable {
         Pertinencia pertinencia = pertinenciaFacadeLocal.find(pertinenciaId);
         Docente docente = docenteFacadeLocal.find(pertinencia.getDocenteProyectoId().getDocenteId());
         Persona datosDocente = personaFacadeLocal.find(docente.getId());
-        OficioCarrera oficioCarrera = oficioCarreraFacadeLocal.buscarPorTablaId(pertinencia.getId(), CatalogoOficioEnum.PERTINENCIA.getTipo());
+//        DocumentoCarrera oficioCarrera = oficioCarreraFacadeLocal.buscarPorTablaId(pertinencia.getId(), CatalogoDocumentoCarreraEnum.PERTINENCIA.getTipo());
         Calendar fechaActual = Calendar.getInstance();
         String fechaFormateada = configuracionGeneralFacadeLocal.dateFormat(fechaActual.getTime());
-        String fechOficioFormat = configuracionGeneralFacadeLocal.dateFormat(oficioCarrera.getFecha());
+//        String fechOficioFormat = configuracionGeneralFacadeLocal.dateFormat(oficioCarrera.getFecha());
         HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
 //        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
 //        CoordinadorPeriodo coordinadorPeriodo = coordinadorPeriodoFacadeLocal.buscarVigente(carrera.getId());

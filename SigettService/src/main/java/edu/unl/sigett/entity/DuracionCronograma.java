@@ -15,8 +15,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -28,10 +26,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Entity
 @Table(name = "duracion_cronograma")
 @XmlRootElement
-@NamedQueries({
-    @NamedQuery(name = "DuracionCronograma.findAll", query = "SELECT d FROM DuracionCronograma d"),
-    @NamedQuery(name = "DuracionCronograma.findById", query = "SELECT d FROM DuracionCronograma d WHERE d.id = :id"),
-    @NamedQuery(name = "DuracionCronograma.findByDuracion", query = "SELECT d FROM DuracionCronograma d WHERE d.duracion = :duracion")})
 public class DuracionCronograma implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -41,14 +35,11 @@ public class DuracionCronograma implements Serializable {
     private Long id;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "duracion")
-    private double duracion;
+    @Column(name = "duracion_id")
+    private Long duracionId;
     @JoinColumn(name = "cronograma_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Cronograma cronogramaId;
-    @JoinColumn(name = "catalogo_duracion_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private CatalogoDuracion catalogoDuracionId;
 
     public DuracionCronograma() {
     }
@@ -57,11 +48,7 @@ public class DuracionCronograma implements Serializable {
         this.id = id;
     }
 
-    public DuracionCronograma(Long id, double duracion) {
-        this.id = id;
-        this.duracion = duracion;
-    }
-
+   
     public Long getId() {
         return id;
     }
@@ -70,28 +57,21 @@ public class DuracionCronograma implements Serializable {
         this.id = id;
     }
 
-    public double getDuracion() {
-        return duracion;
+    public Long getDuracionId() {
+        return duracionId;
     }
 
-    public void setDuracion(double duracion) {
-        this.duracion = duracion;
+    public void setDuracionId(Long duracionId) {
+        this.duracionId = duracionId;
     }
 
+  
     public Cronograma getCronogramaId() {
         return cronogramaId;
     }
 
     public void setCronogramaId(Cronograma cronogramaId) {
         this.cronogramaId = cronogramaId;
-    }
-
-    public CatalogoDuracion getCatalogoDuracionId() {
-        return catalogoDuracionId;
-    }
-
-    public void setCatalogoDuracionId(CatalogoDuracion catalogoDuracionId) {
-        this.catalogoDuracionId = catalogoDuracionId;
     }
 
     @Override

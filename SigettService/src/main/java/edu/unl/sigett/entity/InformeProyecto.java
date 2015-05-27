@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package edu.unl.sigett.entity;
 
 import java.io.Serializable;
@@ -32,12 +31,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Entity
 @Table(name = "informe_proyecto")
 @XmlRootElement
-@NamedQueries({
-    @NamedQuery(name = "InformeProyecto.findAll", query = "SELECT i FROM InformeProyecto i"),
-    @NamedQuery(name = "InformeProyecto.findById", query = "SELECT i FROM InformeProyecto i WHERE i.id = :id"),
-    @NamedQuery(name = "InformeProyecto.findByFecha", query = "SELECT i FROM InformeProyecto i WHERE i.fecha = :fecha"),
-    @NamedQuery(name = "InformeProyecto.findByObservacion", query = "SELECT i FROM InformeProyecto i WHERE i.observacion = :observacion")})
 public class InformeProyecto implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -55,9 +50,9 @@ public class InformeProyecto implements Serializable {
     @JoinColumn(name = "proyecto_id", referencedColumnName = "id")
     @ManyToOne
     private Proyecto proyectoId;
-    @JoinColumn(name = "catalogo_informe_proyecto_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private CatalogoInformeProyecto catalogoInformeProyectoId;
+    @Column(name = "catalogo_id")
+    @NotNull
+    private Long catalogoId;
 
     public InformeProyecto() {
     }
@@ -103,12 +98,12 @@ public class InformeProyecto implements Serializable {
         this.proyectoId = proyectoId;
     }
 
-    public CatalogoInformeProyecto getCatalogoInformeProyectoId() {
-        return catalogoInformeProyectoId;
+    public Long getCatalogoId() {
+        return catalogoId;
     }
 
-    public void setCatalogoInformeProyectoId(CatalogoInformeProyecto catalogoInformeProyectoId) {
-        this.catalogoInformeProyectoId = catalogoInformeProyectoId;
+    public void setCatalogoId(Long catalogoId) {
+        this.catalogoId = catalogoId;
     }
 
     @Override
@@ -135,5 +130,5 @@ public class InformeProyecto implements Serializable {
     public String toString() {
         return "edu.unl.sigett.entity.InformeProyecto[ id=" + id + " ]";
     }
-    
+
 }

@@ -11,6 +11,7 @@ package com.jlmallas.comun.enumeration;
  */
 public enum ConfiguracionEnum {
 
+    TIEMPOPERTINENCIA("TIEMPO_PERTINENCIA"),
     SECRETKEY("SECRET_KEY");
     String tipo;
 

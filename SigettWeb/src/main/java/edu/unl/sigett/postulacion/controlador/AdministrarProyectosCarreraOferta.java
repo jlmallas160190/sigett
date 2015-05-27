@@ -5,7 +5,7 @@
  */
 package edu.unl.sigett.postulacion.controlador;
 
-import edu.unl.sigett.comun.controlador.AdministrarLineasInvestigacionCarrera;
+import edu.unl.sigett.lineaInvestigacionCarrera.AdministrarLineasInvestigacionCarrera;
 import edu.unl.sigett.adjudicacion.controlador.AdministrarDirectoresProyecto;
 import edu.unl.sigett.postulacion.managed.session.SessionConsultarProyecto;
 import edu.unl.sigett.academico.controlador.AdministrarCarreras;

@@ -198,30 +198,30 @@ public class AdministrarActividades implements Serializable {
 
     public void download(String tipo, Actividad actividad) {
         try {
-            HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
-            byte[] documento = administrarDocumentosActividad.getDocumento(actividad).getDocumento();
-            if (tipo.equalsIgnoreCase("pdf")) {
-                response.addHeader("Content-disposition", "attachment; filename=" + actividad.getId() + ".pdf");
-                response.setContentType("application/pdf");
-                response.setContentLength(documento.length);
-                ServletOutputStream outStream = response.getOutputStream();
-                outStream.write(documento, 0, documento.length);
-                outStream.flush();
-                outStream.close();
-            } else {
-                if (tipo.equalsIgnoreCase("docx")) {
-                    int read = 0;
-                    byte[] bytes = new byte[1024];
-                    ByteArrayInputStream bis = new ByteArrayInputStream(documento);
-                    response.addHeader("Content-disposition", "attachment; filename=" + actividad.getId() + ".docx");
-                    ServletOutputStream outStream = response.getOutputStream();
-                    while ((read = bis.read(bytes)) != -1) {
-                        outStream.write(bytes, 0, read);
-                    }
-                    outStream.flush();
-                    outStream.close();
-                }
-            }
+//            HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
+//            byte[] documento = administrarDocumentosActividad.getDocumento(actividad).getDocumento();
+//            if (tipo.equalsIgnoreCase("pdf")) {
+//                response.addHeader("Content-disposition", "attachment; filename=" + actividad.getId() + ".pdf");
+//                response.setContentType("application/pdf");
+//                response.setContentLength(documento.length);
+//                ServletOutputStream outStream = response.getOutputStream();
+//                outStream.write(documento, 0, documento.length);
+//                outStream.flush();
+//                outStream.close();
+//            } else {
+//                if (tipo.equalsIgnoreCase("docx")) {
+//                    int read = 0;
+//                    byte[] bytes = new byte[1024];
+//                    ByteArrayInputStream bis = new ByteArrayInputStream(documento);
+//                    response.addHeader("Content-disposition", "attachment; filename=" + actividad.getId() + ".docx");
+//                    ServletOutputStream outStream = response.getOutputStream();
+//                    while ((read = bis.read(bytes)) != -1) {
+//                        outStream.write(bytes, 0, read);
+//                    }
+//                    outStream.flush();
+//                    outStream.close();
+//                }
+//            }
         } catch (Exception e) {
         }
     }

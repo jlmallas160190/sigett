@@ -13,7 +13,7 @@
         <module>SoporteService</module>
         <module>SigettService</module>
         <module>ComunService</module>
-        <module>SigettWebSematica</module>
         <module>AcademicoService</module>
+        <module>SigettWebSemantica</module>
     </modules>
 </project>

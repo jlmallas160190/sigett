@@ -60,9 +60,11 @@ import edu.unl.sigett.entity.EstudianteUsuario;
 import edu.unl.sigett.service.AspiranteService;
 import edu.unl.sigett.service.ConfiguracionCarreraService;
 import edu.unl.sigett.service.EstudianteUsuarioService;
+import edu.unl.sigett.util.CabeceraController;
 import edu.unl.sigett.util.MessageView;
 import org.jlmallas.api.http.UrlConexion;
 import org.jlmallas.api.http.dto.SeguridadHttp;
+import org.jlmallas.api.secure.SecureDTO;
 import org.jlmallas.seguridad.dao.RolDao;
 import org.jlmallas.seguridad.dao.RolUsuarioDao;
 import org.jlmallas.seguridad.dao.UsuarioDao;
@@ -100,6 +102,8 @@ public class AdministrarEstudiantesCarrera implements Serializable {
     private SessionEstudianteCarrera sessionEstudianteCarrera;
     @Inject
     private SessionUsuarioCarrera sessionUsuarioCarrera;
+    @Inject
+    private CabeceraController cabeceraController;
 //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="INYECCIÓN DE SERVICIOS">
     @EJB
@@ -441,7 +445,8 @@ public class AdministrarEstudiantesCarrera implements Serializable {
                 usuario.setEmail(personaEstudiante.getEmail());
                 usuario.setEsSuperuser(false);
                 usuario.setEsActivo(true);
-                usuario.setPassword(configuracionDao.encriptaClave(personaEstudiante.getNumeroIdentificacion()));
+                usuario.setPassword(cabeceraController.getSecureService().encrypt(
+                        new SecureDTO(cabeceraController.getConfiguracionGeneralDTO().getSecureKey(), personaEstudiante.getNumeroIdentificacion())));
                 usuario.setUsername(personaEstudiante.getNumeroIdentificacion());
                 if (usuarioDao.unicoUsername(usuario.getUsername()) == false) {
                     usuarioDao.create(usuario);
@@ -460,7 +465,8 @@ public class AdministrarEstudiantesCarrera implements Serializable {
                 }
             } else {
                 if (usuarioDao.unicoUsername(usuario.getUsername()) == false) {
-                    usuario.setPassword(configuracionDao.encriptaClave(personaEstudiante.getNumeroIdentificacion()));
+                    usuario.setPassword(cabeceraController.getSecureService().encrypt(
+                            new SecureDTO(cabeceraController.getConfiguracionGeneralDTO().getSecureKey(), personaEstudiante.getNumeroIdentificacion())));
                     usuarioDao.edit(usuario);
                 }
             }

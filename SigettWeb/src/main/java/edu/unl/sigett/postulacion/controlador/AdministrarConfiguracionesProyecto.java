@@ -5,7 +5,6 @@
  */
 package edu.unl.sigett.postulacion.controlador;
 
-import edu.unl.sigett.comun.controlador.AdministrarCatalogoDuracion;
 import edu.unl.sigett.proyecto.SessionProyecto;
 import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
 import edu.unl.sigett.entity.ConfiguracionProyecto;
@@ -36,8 +35,6 @@ public class AdministrarConfiguracionesProyecto implements Serializable {
     private SessionUsuario sessionUsuario;
     @Inject
     private SessionProyecto sessionProyecto;
-    @Inject
-    private AdministrarCatalogoDuracion administrarCatalogoDuracion;
 
     @EJB
     private UsuarioDao usuarioFacadeLocal;
@@ -150,13 +147,6 @@ public class AdministrarConfiguracionesProyecto implements Serializable {
         this.renderedNoEditar = renderedNoEditar;
     }
 
-    public AdministrarCatalogoDuracion getAdministrarCatalogoDuracion() {
-        return administrarCatalogoDuracion;
-    }
-
-    public void setAdministrarCatalogoDuracion(AdministrarCatalogoDuracion administrarCatalogoDuracion) {
-        this.administrarCatalogoDuracion = administrarCatalogoDuracion;
-    }
 
     public boolean isRenderedEditar() {
         return renderedEditar;

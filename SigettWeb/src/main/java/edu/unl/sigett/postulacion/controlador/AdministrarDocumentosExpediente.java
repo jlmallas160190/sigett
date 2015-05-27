@@ -8,7 +8,6 @@ package edu.unl.sigett.postulacion.controlador;
 import edu.unl.sigett.comun.managed.session.SessionDocumentoExpediente;
 import edu.unl.sigett.comun.managed.session.SessionExpediente;
 import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
-import edu.unl.sigett.entity.CatalogoDocumentoExpediente;
 import edu.unl.sigett.entity.DocumentoExpediente;
 import org.jlmallas.seguridad.entity.Usuario;
 import java.io.Serializable;
@@ -23,7 +22,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
-import edu.unl.sigett.dao.CatalogoDocumentoExpedienteFacadeLocal;
 import edu.unl.sigett.dao.DocumentoExpedienteFacadeLocal;
 import org.jlmallas.seguridad.dao.LogDao;
 import org.jlmallas.seguridad.dao.UsuarioDao;
@@ -43,9 +41,7 @@ public class AdministrarDocumentosExpediente implements Serializable {
     @Inject
     private SessionDocumentoExpediente sessionDocumentoExpediente;
     private boolean esEditado;
-    private String catalogoDocumentoExpediente;
-    @EJB
-    private CatalogoDocumentoExpedienteFacadeLocal catalogoDocumentoExpedienteFacadeLocal;
+    private String catalogoDocumentoExpediente;    
     @EJB
     private DocumentoExpedienteFacadeLocal documentoExpedienteFacadeLocal;
     @EJB
@@ -182,46 +178,46 @@ public class AdministrarDocumentosExpediente implements Serializable {
         return navegacion;
     }
 
-    public List<CatalogoDocumentoExpediente> listadoCatalogos() {
-        try {
-            return catalogoDocumentoExpedienteFacadeLocal.buscarActivos();
-        } catch (Exception e) {
-        }
-        return null;
-    }
+//    public List<CatalogoDocumentoExpediente> listadoCatalogos() {
+//        try {
+//            return catalogoDocumentoExpedienteFacadeLocal.buscarActivos();
+//        } catch (Exception e) {
+//        }
+//        return null;
+//    }
 
     public String agregar(DocumentoExpediente documentoExpediente) {
         String navegacion = "";
         Calendar fecha = Calendar.getInstance();
         try {
-            FacesContext facesContext = FacesContext.getCurrentInstance();
-            ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            String param = (String) facesContext.getExternalContext().getRequestParameterMap().get("1");
-            if (esEditado == false) {
-                if (documentoExpediente.getDocumento() != null) {
-                    int posCat = catalogoDocumentoExpediente.indexOf(":");
-                    CatalogoDocumentoExpediente cde = catalogoDocumentoExpedienteFacadeLocal.find(Integer.parseInt(catalogoDocumentoExpediente.substring(0, posCat)));
-                    if (cde != null) {
-                        documentoExpediente.setCatalogoDocumentoExpedienteId(cde);
-                    }
-                    documentoExpediente.setFecha(fecha.getTime());
-                    documentoExpediente.setExpedienteId(sessionExpediente.getExpediente());
-                    sessionExpediente.getExpediente().getDocumentoExpedienteList().add(documentoExpediente);
-                    if (param.equalsIgnoreCase("agregar-dlg")) {
-                        RequestContext.getCurrentInstance().execute("PF('dlgEditarDocumentoExpediente').hide()");
-                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_agregar"), "");
-                        FacesContext.getCurrentInstance().addMessage(null, message);
-                    }
-                } else {
-                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.no_select") + " " + bundle.getString("lbl.msm_documento"), "");
-                    FacesContext.getCurrentInstance().addMessage(null, message);
-                }
-
-            } else {
-                RequestContext.getCurrentInstance().execute("PF('dlgEditarDocumentoExpediente').hide()");
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_editar"), "");
-                FacesContext.getCurrentInstance().addMessage(null, message);
-            }
+//            FacesContext facesContext = FacesContext.getCurrentInstance();
+//            ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
+//            String param = (String) facesContext.getExternalContext().getRequestParameterMap().get("1");
+//            if (esEditado == false) {
+//                if (documentoExpediente.getDocumento() != null) {
+//                    int posCat = catalogoDocumentoExpediente.indexOf(":");
+//                    CatalogoDocumentoExpediente cde = catalogoDocumentoExpedienteFacadeLocal.find(Integer.parseInt(catalogoDocumentoExpediente.substring(0, posCat)));
+//                    if (cde != null) {
+//                        documentoExpediente.setCatalogoDocumentoExpedienteId(cde);
+//                    }
+//                    documentoExpediente.setFecha(fecha.getTime());
+//                    documentoExpediente.setExpedienteId(sessionExpediente.getExpediente());
+//                    sessionExpediente.getExpediente().getDocumentoExpedienteList().add(documentoExpediente);
+//                    if (param.equalsIgnoreCase("agregar-dlg")) {
+//                        RequestContext.getCurrentInstance().execute("PF('dlgEditarDocumentoExpediente').hide()");
+//                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_agregar"), "");
+//                        FacesContext.getCurrentInstance().addMessage(null, message);
+//                    }
+//                } else {
+//                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.no_select") + " " + bundle.getString("lbl.msm_documento"), "");
+//                    FacesContext.getCurrentInstance().addMessage(null, message);
+//                }
+//
+//            } else {
+//                RequestContext.getCurrentInstance().execute("PF('dlgEditarDocumentoExpediente').hide()");
+//                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_editar"), "");
+//                FacesContext.getCurrentInstance().addMessage(null, message);
+//            }
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -230,15 +226,15 @@ public class AdministrarDocumentosExpediente implements Serializable {
 
     public void handleFileUpload(FileUploadEvent event) {
         try {
-            FacesContext facesContext = FacesContext.getCurrentInstance();
-            ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            String tipoArchivo = event.getFile().getContentType();
-            sessionDocumentoExpediente.getDocumentoExpediente().setTipoArchivo(tipoArchivo);
-            sessionDocumentoExpediente.getDocumentoExpediente().setTamanio(event.getFile().getSize());
-            sessionDocumentoExpediente.getDocumentoExpediente().setDocumento(event.getFile().getContents());
-            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl_documento") + " " + bundle.getString("lbl.uploaded"), "");
-            FacesContext.getCurrentInstance().addMessage(null, message);
-            agregar(sessionDocumentoExpediente.getDocumentoExpediente());
+//            FacesContext facesContext = FacesContext.getCurrentInstance();
+//            ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
+//            String tipoArchivo = event.getFile().getContentType();
+//            sessionDocumentoExpediente.getDocumentoExpediente().setTipoArchivo(tipoArchivo);
+//            sessionDocumentoExpediente.getDocumentoExpediente().setTamanio(event.getFile().getSize());
+//            sessionDocumentoExpediente.getDocumentoExpediente().setDocumento(event.getFile().getContents());
+//            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl_documento") + " " + bundle.getString("lbl.uploaded"), "");
+//            FacesContext.getCurrentInstance().addMessage(null, message);
+//            agregar(sessionDocumentoExpediente.getDocumentoExpediente());
         } catch (Exception e) {
         }
 
@@ -246,19 +242,19 @@ public class AdministrarDocumentosExpediente implements Serializable {
 
     public void remover(DocumentoExpediente documentoExpediente) {
         try {
-            FacesContext facesContext = FacesContext.getCurrentInstance();
-            ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            if (documentoExpediente.getId() == null) {
-                sessionExpediente.getExpediente().getDocumentoExpedienteList().remove(documentoExpediente);
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl_msm_eliminar"), "");
-                FacesContext.getCurrentInstance().addMessage(null, message);
-            } else {
-                sessionExpediente.getExpediente().getDocumentoExpedienteList().remove(documentoExpediente);
-                logFacadeLocal.create(logFacadeLocal.crearLog("DocumentoExpediente", documentoExpediente.getId() + "", "ELIMINAR", "|TipoArchivo= " + documentoExpediente.getTipoArchivo() + "|Catalogo= " + documentoExpediente.getCatalogoDocumentoExpedienteId(), sessionUsuario.getUsuario()));
-                documentoExpedienteFacadeLocal.remove(documentoExpediente);
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl_msm_eliminar"), "");
-                FacesContext.getCurrentInstance().addMessage(null, message);
-            }
+//            FacesContext facesContext = FacesContext.getCurrentInstance();
+//            ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
+//            if (documentoExpediente.getId() == null) {
+//                sessionExpediente.getExpediente().getDocumentoExpedienteList().remove(documentoExpediente);
+//                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl_msm_eliminar"), "");
+//                FacesContext.getCurrentInstance().addMessage(null, message);
+//            } else {
+//                sessionExpediente.getExpediente().getDocumentoExpedienteList().remove(documentoExpediente);
+//                logFacadeLocal.create(logFacadeLocal.crearLog("DocumentoExpediente", documentoExpediente.getId() + "", "ELIMINAR", "|TipoArchivo= " + documentoExpediente.getTipoArchivo() + "|Catalogo= " + documentoExpediente.getCatalogoDocumentoExpedienteId(), sessionUsuario.getUsuario()));
+//                documentoExpedienteFacadeLocal.remove(documentoExpediente);
+//                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl_msm_eliminar"), "");
+//                FacesContext.getCurrentInstance().addMessage(null, message);
+//            }
 
         } catch (Exception e) {
         }

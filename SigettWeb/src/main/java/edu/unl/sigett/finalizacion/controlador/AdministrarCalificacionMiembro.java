@@ -98,34 +98,34 @@ public class AdministrarCalificacionMiembro implements Serializable {
             String param = (String) facesContext.getExternalContext().getRequestParameterMap().get("1");
             List<Miembro> miembros = new ArrayList<>();
             miembros = miembroFacadeLocal.buscarPorDocente(docente.getId());
-            if (miembros != null && evaluacionTribunal != null) {
-                for (Miembro miembro : miembros) {
-                    if (encontrado == false) {
-                        for (CalificacionMiembro cm : calificacionMiembroFacadeLocal.buscarPorMiembro(configuracionFacadeLocal.encriptaClave(miembro.getId() + ""))) {
-                            if (cm.getMiembroId().equals(calificacionMiembro.getMiembroId())) {
-                                sessionCalificacionMiembro.setCalificacionMiembro(calificacionMiembro);
-                                administrarSugerenciaCalificacionMiembro.buscar(calificacionMiembro, "");
-                                Calendar fechaActual = Calendar.getInstance();
-                                if (evaluacionTribunal != null) {
-                                    if (evaluacionTribunal.getFechaInicio().before(fechaActual.getTime()) && evaluacionTribunal.getFechaPlazo().after(fechaActual.getTime())) {
-                                        administrarCalificacionParametro.crear(evaluacionTribunal.getCatalogoEvaluacionId(), calificacionMiembro);
-                                        administrarCalificacionParametro.buscar(calificacionMiembro);
-                                        administrarCalificacionParametro.renderedRangoCalificacion(evaluacionTribunal);
-                                        if (param.equals("editar")) {
-                                            navegacion = "pretty:editarCalificacionMiembro";
-                                        }
-                                        encontrado = true;
-                                        break;
-                                    } else {
-                                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_editar"), "");
-                                        FacesContext.getCurrentInstance().addMessage(null, message);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+//            if (miembros != null && evaluacionTribunal != null) {
+//                for (Miembro miembro : miembros) {
+//                    if (encontrado == false) {
+//                        for (CalificacionMiembro cm : calificacionMiembroFacadeLocal.buscarPorMiembro(configuracionFacadeLocal.encriptaClave(miembro.getId() + ""))) {
+//                            if (cm.getMiembroId().equals(calificacionMiembro.getMiembroId())) {
+//                                sessionCalificacionMiembro.setCalificacionMiembro(calificacionMiembro);
+//                                administrarSugerenciaCalificacionMiembro.buscar(calificacionMiembro, "");
+//                                Calendar fechaActual = Calendar.getInstance();
+//                                if (evaluacionTribunal != null) {
+//                                    if (evaluacionTribunal.getFechaInicio().before(fechaActual.getTime()) && evaluacionTribunal.getFechaPlazo().after(fechaActual.getTime())) {
+//                                        administrarCalificacionParametro.crear(evaluacionTribunal.getCatalogoEvaluacionId(), calificacionMiembro);
+//                                        administrarCalificacionParametro.buscar(calificacionMiembro);
+//                                        administrarCalificacionParametro.renderedRangoCalificacion(evaluacionTribunal);
+//                                        if (param.equals("editar")) {
+//                                            navegacion = "pretty:editarCalificacionMiembro";
+//                                        }
+//                                        encontrado = true;
+//                                        break;
+//                                    } else {
+//                                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_editar"), "");
+//                                        FacesContext.getCurrentInstance().addMessage(null, message);
+//                                    }
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//            }
 
         } catch (Exception e) {
         }
@@ -201,22 +201,22 @@ public class AdministrarCalificacionMiembro implements Serializable {
 
     public void grabarCalificacionesMiembro(Tribunal tribunal, EvaluacionTribunal evaluacionTribunal) {
         try {
-            for (Miembro miembro : miembroFacadeLocal.buscarPorTribunal(tribunal.getId())) {
-                List<CalificacionMiembro> calificacionMiembros = calificacionMiembroFacadeLocal.buscarPorMiembroEvaluacionTribunal(configuracionFacadeLocal.encriptaClave(miembro.getId() + ""), evaluacionTribunal.getId());
-                CalificacionMiembro calificacionMiembro = null;
-                if (calificacionMiembros != null) {
-                    calificacionMiembro = !calificacionMiembros.isEmpty() ? calificacionMiembros.get(0) : null;
-                }
-                if (calificacionMiembro == null) {
-                    calificacionMiembro = new CalificacionMiembro();
-                    calificacionMiembro.setEsActivo(true);
-                    calificacionMiembro.setMiembroId(configuracionFacadeLocal.encriptaClave(miembro.getId() + ""));
-                    calificacionMiembro.setNota(0.0);
-                    calificacionMiembro.setEvaluacionTribunalId(evaluacionTribunal);
-                    calificacionMiembro.setObservacion("Ninguna");
-                    calificacionMiembroFacadeLocal.create(calificacionMiembro);
-                }
-            }
+////            for (Miembro miembro : miembroFacadeLocal.buscarPorTribunal(tribunal.getId())) {
+////                List<CalificacionMiembro> calificacionMiembros = calificacionMiembroFacadeLocal.buscarPorMiembroEvaluacionTribunal(configuracionFacadeLocal.encriptaClave(miembro.getId() + ""), evaluacionTribunal.getId());
+////                CalificacionMiembro calificacionMiembro = null;
+////                if (calificacionMiembros != null) {
+////                    calificacionMiembro = !calificacionMiembros.isEmpty() ? calificacionMiembros.get(0) : null;
+////                }
+////                if (calificacionMiembro == null) {
+////                    calificacionMiembro = new CalificacionMiembro();
+////                    calificacionMiembro.setEsActivo(true);
+////                    calificacionMiembro.setMiembroId(configuracionFacadeLocal.encriptaClave(miembro.getId() + ""));
+////                    calificacionMiembro.setNota(0.0);
+////                    calificacionMiembro.setEvaluacionTribunalId(evaluacionTribunal);
+////                    calificacionMiembro.setObservacion("Ninguna");
+////                    calificacionMiembroFacadeLocal.create(calificacionMiembro);
+////                }
+////            }
         } catch (Exception e) {
         }
     }
@@ -272,29 +272,29 @@ public class AdministrarCalificacionMiembro implements Serializable {
 
     public boolean renderedEditar(CalificacionMiembro calificacionMiembro, Docente docente, EvaluacionTribunal evaluacionTribunal) {
         try {
-            Calendar fechaActual = Calendar.getInstance();
-            List<Miembro> miembros = new ArrayList<>();
-            boolean encontrado = false;
-            miembros = miembroFacadeLocal.buscarPorDocente(docente.getId());
-
-            if (miembros != null && evaluacionTribunal != null) {
-                for (Miembro miembro : miembros) {
-                    if (encontrado == false) {
-                        for (CalificacionMiembro cm : calificacionMiembroFacadeLocal.buscarPorMiembro(configuracionFacadeLocal.encriptaClave(miembro.getId() + ""))) {
-                            if (cm.getMiembroId().equals(calificacionMiembro.getMiembroId()) && evaluacionTribunal.getFechaInicio().before(fechaActual.getTime()) && evaluacionTribunal.getFechaPlazo().after(fechaActual.getTime())) {
-                                renderedEditar = true;
-                                encontrado = true;
-                                break;
-                            } else {
-                                renderedEditar = false;
-                            }
-                        }
-                    }
-                }
-
-            } else {
-                renderedEditar = false;
-            }
+//            Calendar fechaActual = Calendar.getInstance();
+//            List<Miembro> miembros = new ArrayList<>();
+//            boolean encontrado = false;
+//            miembros = miembroFacadeLocal.buscarPorDocente(docente.getId());
+//
+//            if (miembros != null && evaluacionTribunal != null) {
+//                for (Miembro miembro : miembros) {
+//                    if (encontrado == false) {
+//                        for (CalificacionMiembro cm : calificacionMiembroFacadeLocal.buscarPorMiembro(configuracionFacadeLocal.encriptaClave(miembro.getId() + ""))) {
+//                            if (cm.getMiembroId().equals(calificacionMiembro.getMiembroId()) && evaluacionTribunal.getFechaInicio().before(fechaActual.getTime()) && evaluacionTribunal.getFechaPlazo().after(fechaActual.getTime())) {
+//                                renderedEditar = true;
+//                                encontrado = true;
+//                                break;
+//                            } else {
+//                                renderedEditar = false;
+//                            }
+//                        }
+//                    }
+//                }
+//
+//            } else {
+//                renderedEditar = false;
+//            }
         } catch (Exception e) {
         }
         return renderedEditar;

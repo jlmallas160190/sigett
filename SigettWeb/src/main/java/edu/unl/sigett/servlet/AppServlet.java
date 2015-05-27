@@ -23,7 +23,7 @@ import edu.unl.sigett.entity.EvaluacionTribunal;
 import com.jlmallas.comun.entity.Foto;
 import com.jlmallas.comun.entity.Persona;
 import edu.unl.sigett.entity.Miembro;
-import edu.unl.sigett.entity.OficioCarrera;
+import edu.unl.sigett.entity.DocumentoCarrera;
 import edu.unl.sigett.entity.Pertinencia;
 import edu.unl.sigett.entity.Prorroga;
 import edu.jlmallas.academico.entity.ReporteMatricula;
@@ -43,7 +43,6 @@ import edu.unl.sigett.dao.ActaFacadeLocal;
 import edu.unl.sigett.dao.ActividadFacadeLocal;
 import edu.unl.sigett.dao.AutorProyectoDao;
 import edu.jlmallas.academico.service.CarreraService;
-import edu.unl.sigett.dao.CategoriaActaFacadeLocal;
 import edu.unl.sigett.dao.ConfiguracionCarreraDao;
 import edu.unl.sigett.dao.ConfiguracionGeneralDao;
 import edu.jlmallas.academico.dao.CoordinadorPeriodoDao;
@@ -57,7 +56,7 @@ import com.jlmallas.comun.dao.FotoFacadeLocal;
 import com.jlmallas.comun.dao.ItemDao;
 import com.jlmallas.comun.dao.PersonaDao;
 import edu.unl.sigett.dao.MiembroFacadeLocal;
-import edu.unl.sigett.dao.OficioCarreraDao;
+import edu.unl.sigett.dao.DocumentoCarreraDao;
 import edu.unl.sigett.dao.PertinenciaFacadeLocal;
 import edu.unl.sigett.dao.ProrrogaFacadeLocal;
 import edu.jlmallas.academico.dao.ReporteMatriculaDao;
@@ -68,7 +67,7 @@ import edu.jlmallas.academico.dao.DocenteCarreraDao;
 import edu.jlmallas.academico.dao.DocenteDao;
 import edu.jlmallas.academico.dao.EstudianteCarreraDao;
 import edu.unl.sigett.enumeration.CargoMiembroEnum;
-import edu.unl.sigett.enumeration.CatalogoOficioEnum;
+import edu.unl.sigett.enumeration.CatalogoDocumentoCarreraEnum;
 import edu.unl.sigett.enumeration.EstadoAutorEnum;
 import edu.unl.sigett.usuarioCarrera.SessionUsuarioCarrera;
 import java.util.HashMap;
@@ -101,8 +100,6 @@ public class AppServlet extends HttpServlet {
     @EJB
     private ActaFacadeLocal actaFacadeLocal;
     @EJB
-    private CategoriaActaFacadeLocal categoriaActaFacadeLocal;
-    @EJB
     private DocumentoActividadFacadeLocal documentoActividadFacadeLocal;
     @EJB
     private DocumentoExpedienteFacadeLocal documentoExpedienteFacadeLocal;
@@ -111,7 +108,7 @@ public class AppServlet extends HttpServlet {
     @EJB
     private ConfiguracionCarreraDao configuracionCarreraFacadeLocal;
     @EJB
-    private OficioCarreraDao oficioCarreraFacadeLocal;
+    private DocumentoCarreraDao oficioCarreraFacadeLocal;
     @EJB
     private DirectorProyectoFacadeLocal directorProyectoFacadeLocal;
     @EJB
@@ -151,7 +148,7 @@ public class AppServlet extends HttpServlet {
     private Miembro miembro;
     private DocumentoProyecto documentoProyecto;
     private Usuario usuario;
-    private OficioCarrera oficioCarrera;
+    private DocumentoCarrera oficioCarrera;
     private Foto foto;
     private Docente docenteCoordinador;
     private Persona datosCoordinador;
@@ -224,7 +221,7 @@ public class AppServlet extends HttpServlet {
                     }
                     response.reset();
                     response.setContentType("/application/pdf");
-                    response.getOutputStream().write(documentoProyecto.getDocumento());
+//                    response.getOutputStream().write(documentoProyecto.getDocumento());
                     response.getOutputStream().close();
 
                     break;
@@ -250,7 +247,7 @@ public class AppServlet extends HttpServlet {
                     } else {
                         response.reset();
                         response.setContentType("/application/pdf");
-                        response.getOutputStream().write(documentoActividad.getDocumento());
+//                        response.getOutputStream().write(documentoActividad.getDocumento());
                         response.getOutputStream().close();
                     }
                     break;
@@ -262,7 +259,7 @@ public class AppServlet extends HttpServlet {
                     } else {
                         response.reset();
                         response.setContentType("/application/pdf");
-                        response.getOutputStream().write(documentoActividad.getDocumento());
+//                        response.getOutputStream().write(documentoActividad.getDocumento());
                         response.getOutputStream().close();
                     }
                     break;
@@ -274,7 +271,7 @@ public class AppServlet extends HttpServlet {
                     } else {
                         response.reset();
                         response.setContentType("/application/pdf");
-                        response.getOutputStream().write(documentoExpediente.getDocumento());
+//                        response.getOutputStream().write(documentoExpediente.getDocumento());
                         response.getOutputStream().close();
                     }
                     break;
@@ -293,7 +290,7 @@ public class AppServlet extends HttpServlet {
 //                    docenteCoordinador = docenteFacadeLocal.find(datosCoordinador.getId());
 //                    usuario = usuarioFacadeLocal.find(Long.parseLong(usuarioId));
 //                    datosUsuario = usuario.getNombres().toUpperCase() + " " + usuario.getApellidos().toUpperCase();
-//                    oficioCarrera = oficioCarreraFacadeLocal.buscarPorTablaId(Long.parseLong(entityId), CatalogoOficioEnum.DOCENTEPROYECTO.getTipo());
+//                    oficioCarrera = oficioCarreraFacadeLocal.buscarPorTablaId(Long.parseLong(entityId), CatalogoDocumentoCarreraEnum.DOCENTEPROYECTO.getTipo());
 //                    /*Envio de datos ha reporte*/
 //
 //                    datosReporte.put("docente", datosDocente.getNombres().toUpperCase() + " " + datosDocente.getApellidos().toUpperCase());
@@ -321,7 +318,7 @@ public class AppServlet extends HttpServlet {
 ////                    coordinadorPeriodo = coordinadorPeriodoFacadeLocal.buscarVigente(carrera.getId());
 //                    usuario = usuarioFacadeLocal.find(Long.parseLong(usuarioId));
 //                    datosUsuario = usuario.getNombres().toUpperCase() + " " + usuario.getApellidos().toUpperCase();
-//                    oficioCarrera = oficioCarreraFacadeLocal.buscarPorTablaId(Long.parseLong(entityId), CatalogoOficioEnum.DIRECTORPROYECTO.getTipo());
+//                    oficioCarrera = oficioCarreraFacadeLocal.buscarPorTablaId(Long.parseLong(entityId), CatalogoDocumentoCarreraEnum.DIRECTORPROYECTO.getTipo());
 //                    datosReporte.put("docente", datosDocente.getNombres().toUpperCase() + " " + datosDocente.getApellidos().toUpperCase());
 //                    datosReporte.put("coordinador", datosCoordinador.getNombres().toUpperCase() + " " + datosCoordinador.getApellidos().toUpperCase());
 //                    datosReporte.put("temaProyecto", directorProyecto.getProyectoId().getTemaActual());
@@ -350,7 +347,7 @@ public class AppServlet extends HttpServlet {
 //                    docenteCoordinador = docenteFacadeLocal.find(datosCoordinador.getId());
 //                    usuario = usuarioFacadeLocal.find(Long.parseLong(usuarioId));
 //                    datosUsuario = usuario.getNombres().toUpperCase() + " " + usuario.getApellidos().toUpperCase();
-//                    oficioCarrera = oficioCarreraFacadeLocal.buscarPorTablaId(Long.parseLong(entityId), CatalogoOficioEnum.MIEMBROTRIBUNALPRIVADA.getTipo());
+//                    oficioCarrera = oficioCarreraFacadeLocal.buscarPorTablaId(Long.parseLong(entityId), CatalogoDocumentoCarreraEnum.MIEMBROTRIBUNALPRIVADA.getTipo());
 //                    datosReporte.put("miembro", datosMiembro.getNombres().toUpperCase() + " " + datosMiembro.getApellidos().toUpperCase());
 //                    datosReporte.put("coordinador", datosCoordinador.getNombres().toUpperCase() + " " + datosCoordinador.getApellidos().toUpperCase());
 //                    datosReporte.put("temaProyecto", miembro.getTribunalId().getProyectoId().getTemaActual());
@@ -401,7 +398,7 @@ public class AppServlet extends HttpServlet {
 //                    datosReporte.put("autores", getAutores(autorProyectoFacadeLocal.buscarPorProyecto(miembro.getTribunalId().getProyectoId().getId())));
 //                    datosReporte.put("abreviacion_oficio", resourceBundle.getString("lbl.abreviacion_oficio"));
 //                    datosReporte.put("articulos_sustentacion_publica", resourceBundle.getString("lbl.articulos_sustentacion_publica"));
-//                    oficioCarrera = oficioCarreraFacadeLocal.buscarPorTablaId(Long.parseLong(entityId), CatalogoOficioEnum.MIEMBROTRIBUNALPUBLICA.getTipo());
+//                    oficioCarrera = oficioCarreraFacadeLocal.buscarPorTablaId(Long.parseLong(entityId), CatalogoDocumentoCarreraEnum.MIEMBROTRIBUNALPUBLICA.getTipo());
 //                    reportes.oficioMiembroTribunalSpublica("pdf", fechaFormateada, fechaSustentacion, lugarSustentacion, response, datosReporte,
 //                            configuracionCarreraFacadeLocal, configuracionCarrera, oficioCarrera,
 //                            presidente, datosMiembros, Long.parseLong(entityId), oficioCarreraFacadeLocal, catalogoOficioFacadeLocal, carrera,
@@ -427,7 +424,7 @@ public class AppServlet extends HttpServlet {
 //                    docenteCoordinador = docenteFacadeLocal.find(datosCoordinador.getId());
 //                    usuario = usuarioFacadeLocal.find(Long.parseLong(usuarioId));
 //                    datosUsuario = usuario.getNombres() + " " + usuario.getApellidos();
-//                    oficioCarrera = oficioCarreraFacadeLocal.buscarPorTablaId(Long.parseLong(entityId), CatalogoOficioEnum.PRORROGA.getTipo());
+//                    oficioCarrera = oficioCarreraFacadeLocal.buscarPorTablaId(Long.parseLong(entityId), CatalogoDocumentoCarreraEnum.PRORROGA.getTipo());
 //                    datosReporte.put("tituloDocente", docenteDirectorProyecto.getTituloDocenteId().getTituloId().getAbreviacion().toUpperCase());
 //                    datosReporte.put("docente", datosDocenteDirector.getNombres().toUpperCase() + " " + datosDocenteDirector.getApellidos().toUpperCase());
 //                    datosReporte.put("coordinador", datosCoordinador.getNombres().toUpperCase() + " " + datosCoordinador.getApellidos().toUpperCase());
@@ -468,7 +465,7 @@ public class AppServlet extends HttpServlet {
 //                    docenteCoordinador = docenteFacadeLocal.find(datosCoordinador.getId());
 //                    usuario = usuarioFacadeLocal.find(Long.parseLong(usuarioId));
 //                    datosUsuario = usuario.getNombres().toUpperCase() + " " + usuario.getApellidos().toUpperCase();
-//                    oficioCarrera = oficioCarreraFacadeLocal.buscarPorTablaId(Long.parseLong(entityId), CatalogoOficioEnum.INFORMEDIRECTORPRORROGA.getTipo());
+//                    oficioCarrera = oficioCarreraFacadeLocal.buscarPorTablaId(Long.parseLong(entityId), CatalogoDocumentoCarreraEnum.INFORMEDIRECTORPRORROGA.getTipo());
 //                    fechaOficioFormat = configuracionGeneralFacadeLocal.dateFormat(oficioCarrera.getFecha());
 //                    datosReporte.put("tituloDocente", docenteDirectorInforme.getTituloDocenteId().getTituloId().getAbreviacion().toUpperCase());
 //                    datosReporte.put("docente", datosDocenteDirectorInforme.getNombres().toUpperCase() + " " + datosDocenteDirectorInforme.getApellidos().toUpperCase());
@@ -485,8 +482,8 @@ public class AppServlet extends HttpServlet {
 ////                    configuracionCarrera = configuracionCarreraFacadeLocal.buscarPorCarreraId(Integer.parseInt(carreraId), "NO");
 //                    Long pertinenciaId = Long.parseLong(entityId);
 //                    Pertinencia pertinencia = pertinenciaFacadeLocal.find(pertinenciaId);
-//                    oficioCarrera = oficioCarreraFacadeLocal.buscarPorTablaId(Long.parseLong(entityId), CatalogoOficioEnum.PERTINENCIA.getTipo());
-//                    OficioCarrera oficioResponse = oficioCarreraFacadeLocal.buscarPorTablaId(pertinencia.getDocenteProyectoId().getId(), CatalogoOficioEnum.DOCENTEPROYECTO.getTipo());
+//                    oficioCarrera = oficioCarreraFacadeLocal.buscarPorTablaId(Long.parseLong(entityId), CatalogoDocumentoCarreraEnum.PERTINENCIA.getTipo());
+//                    DocumentoCarrera oficioResponse = oficioCarreraFacadeLocal.buscarPorTablaId(pertinencia.getDocenteProyectoId().getId(), CatalogoDocumentoCarreraEnum.DOCENTEPROYECTO.getTipo());
 //                    if (oficioResponse != null) {
 //                        fechaOficioFormat = configuracionGeneralFacadeLocal.dateFormat(oficioResponse.getFecha());
 //                    }
@@ -530,7 +527,7 @@ public class AppServlet extends HttpServlet {
 //                    docenteCoordinador = docenteFacadeLocal.find(datosCoordinador.getId());
 //                    usuario = usuarioFacadeLocal.find(Long.parseLong(usuarioId));
 //                    datosUsuario = usuario.getNombres().toUpperCase() + " " + usuario.getApellidos().toUpperCase();
-//                    oficioCarrera = oficioCarreraFacadeLocal.buscarPorTablaId(Long.parseLong(entityId), CatalogoOficioEnum.RESPUESTAPRORROGAAUTOR.getTipo());
+//                    oficioCarrera = oficioCarreraFacadeLocal.buscarPorTablaId(Long.parseLong(entityId), CatalogoDocumentoCarreraEnum.RESPUESTAPRORROGAAUTOR.getTipo());
 //
 //                    datosReporte.put("coordinador", datosCoordinador.getNombres().toUpperCase() + " " + datosCoordinador.getApellidos().toUpperCase());
 //                    datosReporte.put("tituloCoordinador", docenteCoordinador.getTituloDocenteId().getTituloId().getAbreviacion());

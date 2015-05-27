@@ -3,11 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package edu.unl.sigett.entity;
 
 import java.io.Serializable;
-import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,13 +13,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -33,14 +26,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Entity
 @Table(name = "documento_expediente")
 @XmlRootElement
-@NamedQueries({
-    @NamedQuery(name = "DocumentoExpediente.findAll", query = "SELECT d FROM DocumentoExpediente d"),
-    @NamedQuery(name = "DocumentoExpediente.findById", query = "SELECT d FROM DocumentoExpediente d WHERE d.id = :id"),
-    @NamedQuery(name = "DocumentoExpediente.findByFecha", query = "SELECT d FROM DocumentoExpediente d WHERE d.fecha = :fecha"),
-    @NamedQuery(name = "DocumentoExpediente.findByTamanio", query = "SELECT d FROM DocumentoExpediente d WHERE d.tamanio = :tamanio"),
-    @NamedQuery(name = "DocumentoExpediente.findByDescripcion", query = "SELECT d FROM DocumentoExpediente d WHERE d.descripcion = :descripcion"),
-    @NamedQuery(name = "DocumentoExpediente.findByTipoArchivo", query = "SELECT d FROM DocumentoExpediente d WHERE d.tipoArchivo = :tipoArchivo")})
 public class DocumentoExpediente implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -49,49 +36,20 @@ public class DocumentoExpediente implements Serializable {
     private Long id;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "fecha")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date fecha;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "tamanio")
-    private double tamanio;
-    @Basic(optional = false)
-    @NotNull
     @Size(min = 1, max = 500)
     @Column(name = "descripcion")
     private String descripcion;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 25)
-    @Column(name = "tipo_archivo")
-    private String tipoArchivo;
-    @Basic(optional = false)
-    @NotNull
-    @Lob
-    @Column(name = "documento")
-    private byte[] documento;
+    @Column(name = "documentoId")
+    private Long documentoId;
     @JoinColumn(name = "expediente_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Expediente expedienteId;
-    @JoinColumn(name = "catalogo_documento_expediente_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private CatalogoDocumentoExpediente catalogoDocumentoExpedienteId;
 
     public DocumentoExpediente() {
     }
 
     public DocumentoExpediente(Long id) {
         this.id = id;
-    }
-
-    public DocumentoExpediente(Long id, Date fecha, double tamanio, String descripcion, String tipoArchivo, byte[] documento) {
-        this.id = id;
-        this.fecha = fecha;
-        this.tamanio = tamanio;
-        this.descripcion = descripcion;
-        this.tipoArchivo = tipoArchivo;
-        this.documento = documento;
     }
 
     public Long getId() {
@@ -102,44 +60,12 @@ public class DocumentoExpediente implements Serializable {
         this.id = id;
     }
 
-    public Date getFecha() {
-        return fecha;
-    }
-
-    public void setFecha(Date fecha) {
-        this.fecha = fecha;
-    }
-
-    public double getTamanio() {
-        return tamanio;
-    }
-
-    public void setTamanio(double tamanio) {
-        this.tamanio = tamanio;
-    }
-
     public String getDescripcion() {
         return descripcion;
     }
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
-    }
-
-    public String getTipoArchivo() {
-        return tipoArchivo;
-    }
-
-    public void setTipoArchivo(String tipoArchivo) {
-        this.tipoArchivo = tipoArchivo;
-    }
-
-    public byte[] getDocumento() {
-        return documento;
-    }
-
-    public void setDocumento(byte[] documento) {
-        this.documento = documento;
     }
 
     public Expediente getExpedienteId() {
@@ -150,12 +76,12 @@ public class DocumentoExpediente implements Serializable {
         this.expedienteId = expedienteId;
     }
 
-    public CatalogoDocumentoExpediente getCatalogoDocumentoExpedienteId() {
-        return catalogoDocumentoExpedienteId;
+    public Long getDocumentoId() {
+        return documentoId;
     }
 
-    public void setCatalogoDocumentoExpedienteId(CatalogoDocumentoExpediente catalogoDocumentoExpedienteId) {
-        this.catalogoDocumentoExpedienteId = catalogoDocumentoExpedienteId;
+    public void setDocumentoId(Long documentoId) {
+        this.documentoId = documentoId;
     }
 
     @Override
@@ -182,5 +108,5 @@ public class DocumentoExpediente implements Serializable {
     public String toString() {
         return "edu.unl.sigett.entity.DocumentoExpediente[ id=" + id + " ]";
     }
-    
+
 }

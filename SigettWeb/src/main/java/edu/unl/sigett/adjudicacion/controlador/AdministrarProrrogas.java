@@ -20,7 +20,7 @@ import edu.unl.sigett.entity.ConfiguracionProyecto;
 import edu.jlmallas.academico.entity.CoordinadorPeriodo;
 import edu.unl.sigett.entity.Cronograma;
 import edu.unl.sigett.entity.DirectorProyecto;
-import edu.unl.sigett.entity.OficioCarrera;
+import edu.unl.sigett.entity.DocumentoCarrera;
 import edu.unl.sigett.entity.Prorroga;
 import edu.unl.sigett.entity.Proyecto;
 import edu.unl.sigett.entity.ProyectoCarreraOferta;
@@ -47,7 +47,7 @@ import edu.unl.sigett.dao.ConfiguracionGeneralDao;
 import edu.jlmallas.academico.dao.CoordinadorPeriodoDao;
 import edu.unl.sigett.dao.DirectorProyectoFacadeLocal;
 import org.jlmallas.seguridad.dao.LogDao;
-import edu.unl.sigett.dao.OficioCarreraDao;
+import edu.unl.sigett.dao.DocumentoCarreraDao;
 import edu.unl.sigett.dao.ProrrogaFacadeLocal;
 import edu.unl.sigett.dao.ProyectoDao;
 import org.jlmallas.seguridad.dao.UsuarioDao;
@@ -57,7 +57,7 @@ import edu.jlmallas.academico.dao.DocenteCarreraDao;
 import edu.jlmallas.academico.dao.DocenteDao;
 import edu.jlmallas.academico.dao.EstudianteCarreraDao;
 import edu.unl.sigett.comun.managed.session.SessionOficioCarrera;
-import edu.unl.sigett.enumeration.CatalogoOficioEnum;
+import edu.unl.sigett.enumeration.CatalogoDocumentoCarreraEnum;
 import edu.unl.sigett.enumeration.EstadoAutorEnum;
 import edu.unl.sigett.enumeration.EstadoProyectoEnum;
 import java.util.HashMap;
@@ -89,7 +89,7 @@ public class AdministrarProrrogas implements Serializable {
     @EJB
     private ConfiguracionCarreraDao configuracionCarreraFacadeLocal;
     @EJB
-    private OficioCarreraDao oficioCarreraFacadeLocal;
+    private DocumentoCarreraDao oficioCarreraFacadeLocal;
     @EJB
     private ActividadFacadeLocal actividadFacadeLocal;
     @EJB
@@ -262,13 +262,13 @@ public class AdministrarProrrogas implements Serializable {
                             break;
                         }
                     }
-                    OficioCarrera oficioCarrera = oficioCarreraFacadeLocal.buscarPorTablaId(prorroga.getId(),
-                            CatalogoOficioEnum.RESPUESTAPRORROGAAUTOR.getTipo());
-                    if (oficioCarrera != null) {
-                        sessionOficioCarrera.setOficioCarrera(oficioCarrera);
-                    } else {
-                        sessionOficioCarrera.setOficioCarrera(new OficioCarrera());
-                    }
+//                    DocumentoCarrera oficioCarrera = oficioCarreraFacadeLocal.buscarPorTablaId(prorroga.getId(),
+//                            CatalogoDocumentoCarreraEnum.RESPUESTAPRORROGAAUTOR.getTipo());
+//                    if (oficioCarrera != null) {
+//                        sessionOficioCarrera.setOficioCarrera(oficioCarrera);
+//                    } else {
+//                        sessionOficioCarrera.setOficioCarrera(new DocumentoCarrera());
+//                    }
                     if (param.equalsIgnoreCase("oficio")) {
                         renderedDlgOficio = true;
                         RequestContext.getCurrentInstance().execute("PF('dlgOficioDirectorProrroga').show()");
@@ -329,7 +329,7 @@ public class AdministrarProrrogas implements Serializable {
 //        Persona personaCoordinador = personaFacadeLocal.find(coordinadorPeriodo.getCoordinadorId().getId());
 //        Docente docenteCoordinador = docenteFacadeLocal.find(personaCoordinador.getId());
 //        secretario = user.getNombres().toUpperCase() + " " + user.getApellidos().toUpperCase();
-//        OficioCarrera oficioCarrera = oficioCarreraFacadeLocal.buscarPorTablaId(prorrogaId, CatalogoOficioEnum.INFORMEDIRECTORPRORROGA.getTipo());
+//        DocumentoCarrera oficioCarrera = oficioCarreraFacadeLocal.buscarPorTablaId(prorrogaId, CatalogoDocumentoCarreraEnum.INFORMEDIRECTORPRORROGA.getTipo());
 //        Calendar fechaActual = Calendar.getInstance();
 //        String fechaFormateada = configuracionGeneralFacadeLocal.dateFormat(fechaActual.getTime());
 //        String fechOficioFormat = configuracionGeneralFacadeLocal.dateFormat(oficioCarrera.getFecha());
@@ -399,7 +399,7 @@ public class AdministrarProrrogas implements Serializable {
 //        ConfiguracionCarrera configuracionCarrera = configuracionCarreraFacadeLocal.buscarPorCarreraId(carreraId, "NO");
 //        Integer nOficio = Integer.parseInt(configuracionCarrera.getValor());
         secretario = user.getNombres().toUpperCase() + " " + user.getApellidos().toUpperCase();
-        OficioCarrera oficioCarrera = oficioCarreraFacadeLocal.buscarPorTablaId(prorroga.getId(), CatalogoOficioEnum.RESPUESTAPRORROGAAUTOR.getTipo());
+//        DocumentoCarrera oficioCarrera = oficioCarreraFacadeLocal.buscarPorTablaId(prorroga.getId(), CatalogoDocumentoCarreraEnum.RESPUESTAPRORROGAAUTOR.getTipo());
         HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
 //        datosReporte.put("coordinador", datosCoordinador.getNombres().toUpperCase() + " " + datosCoordinador.getApellidos().toUpperCase());
 //        datosReporte.put("tituloCoordinador", docenteCoordinador.getTituloDocenteId().getTituloId().getAbreviacion());
@@ -438,7 +438,7 @@ public class AdministrarProrrogas implements Serializable {
 //        ConfiguracionCarrera configuracionCarrera = configuracionCarreraFacadeLocal.buscarPorCarreraId(carreraId, "NO");
 //        Integer nOficio = Integer.parseInt(configuracionCarrera.getValor());
         secretario = user.getNombres() + " " + user.getApellidos();
-        OficioCarrera oficioCarrera = oficioCarreraFacadeLocal.buscarPorTablaId(prorroga.getId(), CatalogoOficioEnum.PRORROGA.getTipo());
+//        DocumentoCarrera oficioCarrera = oficioCarreraFacadeLocal.buscarPorTablaId(prorroga.getId(), CatalogoDocumentoCarreraEnum.PRORROGA.getTipo());
         HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
         Calendar fechaActual = Calendar.getInstance();
         String fechaFormateada = configuracionGeneralFacadeLocal.dateFormat(fechaActual.getTime());

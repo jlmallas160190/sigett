@@ -11,9 +11,9 @@ package edu.unl.sigett.enumeration;
  */
 public enum CatalogoActaEnum {
 
-    ACTAPRELIMINAR("ACTAPRELIMINAR"),
-    ACTATESIS(" ACTATESIS"),
-    ACTAGRADO("ACTAGRADO");
+    ACTAPRELIMINAR("ACTA_PRELIMINAR"),
+    ACTATESIS(" ACTA_TESIS"),
+    ACTAGRADO("ACTA_GRADO");
     String tipo;
 
     private CatalogoActaEnum(String tipo) {

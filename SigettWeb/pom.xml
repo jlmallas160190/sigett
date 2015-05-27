@@ -20,12 +20,6 @@
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>SigettService</artifactId>
-            <version>1.0</version>
-            <type>ejb</type>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
             <artifactId>SoporteService</artifactId>
             <version>1.0</version>
             <type>ejb</type>
@@ -102,12 +96,6 @@
             <artifactId>primefaces</artifactId>
             <version>5.1</version>
         </dependency>
-        <!--<dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>SigettWebService</artifactId>
-            <version>${project.version}</version>
-            <type>ejb</type>
-        </dependency>-->
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>ComunService</artifactId>
@@ -117,6 +105,11 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>SeguridadService</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>SigettService</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

@@ -20,7 +20,7 @@ import edu.jlmallas.academico.entity.CoordinadorPeriodo;
 import edu.jlmallas.academico.entity.Docente;
 import edu.unl.sigett.entity.DocenteProyecto;
 import edu.unl.sigett.entity.LineaInvestigacion;
-import edu.unl.sigett.entity.OficioCarrera;
+import edu.unl.sigett.entity.DocumentoCarrera;
 import edu.unl.sigett.entity.Proyecto;
 import edu.unl.sigett.entity.ProyectoCarreraOferta;
 import org.jlmallas.seguridad.entity.Usuario;
@@ -49,13 +49,13 @@ import edu.jlmallas.academico.dao.CoordinadorPeriodoDao;
 import edu.jlmallas.academico.dao.DocenteCarreraDao;
 import edu.unl.sigett.dao.DocenteProyectoDao;
 import org.jlmallas.seguridad.dao.LogDao;
-import edu.unl.sigett.dao.OficioCarreraDao;
+import edu.unl.sigett.dao.DocumentoCarreraDao;
 import edu.unl.sigett.dao.UsuarioCarreraDao;
 import org.jlmallas.seguridad.dao.UsuarioDao;
 import edu.jlmallas.academico.dao.DocenteDao;
 import edu.jlmallas.academico.dao.EstudianteCarreraDao;
 import edu.unl.sigett.comun.managed.session.SessionOficioCarrera;
-import edu.unl.sigett.enumeration.CatalogoOficioEnum;
+import edu.unl.sigett.enumeration.CatalogoDocumentoCarreraEnum;
 import edu.unl.sigett.dao.LineaInvestigacionDocenteDao;
 import edu.unl.sigett.postulacion.controlador.AdministrarCronograma;
 import edu.unl.sigett.postulacion.controlador.AdministrarDocumentosProyecto;
@@ -115,7 +115,7 @@ public class AdministrarDocentesProyecto implements Serializable {
     @EJB
     private AutorProyectoDao autorProyectoFacadeLocal;
     @EJB
-    private OficioCarreraDao oficioCarreraFacadeLocal;
+    private DocumentoCarreraDao oficioCarreraFacadeLocal;
     @EJB
     private DocenteCarreraDao docenteCarreraFacadeLocal;
     @EJB
@@ -276,38 +276,7 @@ public class AdministrarDocentesProyecto implements Serializable {
 
     //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="MÉTODOS CRUD">
-    public void imprimirOficioDocenteProyecto(DocenteProyecto docenteProyecto, Usuario usuario) {
-        try {
-            FacesContext facesContext = FacesContext.getCurrentInstance();
-            ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            if (docenteProyecto.getId() != null) {
-                int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "imprimir_docente_proyecto");
-                if (tienePermiso == 1) {
-                    docenteProyectoId = docenteProyecto.getId();
-                    for (ProyectoCarreraOferta pco : docenteProyecto.getProyectoId().getProyectoCarreraOfertaList()) {
-                        if (pco.getEsActivo()) {
-                            carreraId = pco.getCarreraId();
-                            break;
-                        }
-                    }
-                    OficioCarrera oficioCarrera = oficioCarreraFacadeLocal.buscarPorTablaId(docenteProyecto.getId(), CatalogoOficioEnum.DOCENTEPROYECTO.getTipo());
-                    if (oficioCarrera != null) {
-                        sessionOficioCarrera.setOficioCarrera(oficioCarrera);
-                    } else {
-                        sessionOficioCarrera.setOficioCarrera(new OficioCarrera());
-                    }
-                    renderedDlgOficioDocenteProyecto = true;
-                    RequestContext.getCurrentInstance().execute("PF('dlgOficioDocenteProyecto').show()");
-                } else {
-                    view.message(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_imprimir") + ". " + bundle.getString("lbl.msm_consulte"), "");
-                }
-            } else {
-                view.message(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_imprimir") + ". " + bundle.getString("lbl.msm_consulte"), "");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+  
 
     public void downloadDocx(Usuario user) {
         Map datosReporte = new HashMap();
@@ -330,7 +299,7 @@ public class AdministrarDocentesProyecto implements Serializable {
         Persona datosCoordinador = personaFacadeLocal.find(coordinadorPeriodo.getCoordinadorId().getId());
         Docente docenteCoordinador = docenteFacadeLocal.find(datosCoordinador.getId());
         secretario = user.getNombres().toUpperCase() + " " + user.getApellidos().toUpperCase();
-        OficioCarrera oficioCarrera = oficioCarreraFacadeLocal.buscarPorTablaId(docenteProyecto.getId(), CatalogoOficioEnum.DOCENTEPROYECTO.getTipo());
+//        DocumentoCarrera oficioCarrera = oficioCarreraFacadeLocal.buscarPorTablaId(docenteProyecto.getId(), CatalogoDocumentoCarreraEnum.DOCENTEPROYECTO.getTipo());
         HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
         Calendar fechaActual = Calendar.getInstance();
         String fechaFormateada = configuracionGeneralFacadeLocal.dateFormat(fechaActual.getTime());
@@ -372,29 +341,7 @@ public class AdministrarDocentesProyecto implements Serializable {
         return datosAutores;
     }
 
-    public void sortearDocente(List<LineaInvestigacion> lineaInvestigacions, Usuario usuario, Proyecto proyecto) {
-        Random random = new Random();
-        try {
-            FacesContext facesContext = FacesContext.getCurrentInstance();
-            ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            int tienePermiso = usuarioFacadeLocal.tienePermiso(sessionUsuario.getUsuario(), "sortear_docente_especialista");
-            if (tienePermiso == 1 && permiteAgregarDocente(proyecto)) {
-                List<Docente> docentes = new ArrayList<>();
-                docentes.addAll(listadoDocentesSorteo(lineaInvestigacions));
-                int numeroProbabilidades = docentes.size();
-                int pos = random.nextInt(numeroProbabilidades);
-                Docente docente = docentes.get(pos);
-                agregarDocenteProyectoSorteo(docente, usuario, proyecto);
-            } else {
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_crear") + ". " + bundle.getString("lbl.msm_consulte"), "");
-                FacesContext.getCurrentInstance().addMessage(null, message);
-            }
-        } catch (Exception e) {
-            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), "");
-            FacesContext.getCurrentInstance().addMessage(null, message);
-        }
-    }
-
+   
     public void onTabChange(TabChangeEvent event) {
         Usuario usuario=usuarioFacadeLocal.find(sessionDocenteUsuario.getDocenteUsuario().getId());
         switch (event.getTab().getId()) {
@@ -458,262 +405,7 @@ public class AdministrarDocentesProyecto implements Serializable {
         }
     }
 
-    public String openbuscarDocentesDisponible(String criterio, List<LineaInvestigacion> lineaInvestigacions) {
-        String navegacion = "";
-        FacesContext facesContext = FacesContext.getCurrentInstance();
-        String param = (String) facesContext.getExternalContext().getRequestParameterMap().get("1");
-        try {
-            listadoDocentesDiponibles(criterio, lineaInvestigacions);
-            if (param.equalsIgnoreCase("buscar-especialistas-dlg")) {
-                renderedDlgBuscarDocentesDisponibles = true;
-                RequestContext.getCurrentInstance().execute("PF('dlgBuscarDocentesDisponibles').show()");
-            }
-        } catch (Exception e) {
-        }
-        return navegacion;
-    }
-
-    public void agregarDocenteProyecto(Docente docente, Usuario usuario, Proyecto proyecto) {
-        Calendar fecha = Calendar.getInstance();
-        try {
-//            FacesContext facesContext = FacesContext.getCurrentInstance();
-//            ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-//            String param = (String) facesContext.getExternalContext().getRequestParameterMap().get("1");
-//            if (proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.INICIO.getTipo())) {
-//                int tienePermiso = usuarioFacadeLocal.tienePermiso(sessionUsuario.getUsuario(), "select_docente_especialista");
-//                if (tienePermiso == 1) {
-//                    if (permiteAgregarDocente(proyecto)) {
-//                        DocenteProyecto docenteProyecto = new DocenteProyecto();
-//                        docenteProyecto.setDocenteId(docente.getId());
-//                        docenteProyecto.setEsActivo(true);
-//                        docenteProyecto.setFecha(fecha.getTime());
-//                        docenteProyecto.setProyectoId(proyecto);
-//                        DocenteProyecto dp = devuelveDocenteProyecto(proyecto, docenteProyecto);
-//                        if (dp == null) {
-//                            docenteProyecto.setEsEditado(true);
-//                            proyecto.getDocenteProyectoList().add(docenteProyecto);
-//                        } else {
-//                            dp.setDocenteId(docente.getId());
-//                            dp.setEsEditado(true);
-//                            dp.setEsActivo(true);
-//                            dp.setFecha(fecha.getTime());
-//
-//                        }
-//                        buscar("", usuario, proyecto);
-//                        if (param.equalsIgnoreCase("seleccionar-dlg")) {
-//                            renderedBuscarEspecialista(usuario, proyecto);
-//                            renderedSortearDocente(usuario, proyecto);
-//                            renderedSeleccionarDocenteEspecialista(usuario, proyecto);
-//                            RequestContext.getCurrentInstance().execute("PF('dlgBuscarDocentesDisponibles').hide()");
-//                            sessionDocenteProyecto.setDocenteProyecto(new DocenteProyecto());
-//                        }
-//                    } else {
-//                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_existe") + " " + bundle.getString("lbl.docente"), "");
-//                        FacesContext.getCurrentInstance().addMessage(null, message);
-//                    }
-//                } else {
-//                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_crear") + ". " + bundle.getString("lbl.msm_consulte"), "");
-//                    FacesContext.getCurrentInstance().addMessage(null, message);
-//                }
-//            } else {
-//                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_crear") + ". " + bundle.getString("lbl.msm_consulte"), "");
-//                FacesContext.getCurrentInstance().addMessage(null, message);
-//            }
-        } catch (Exception e) {
-        }
-    }
-
-    public boolean permiteAgregarDocente(Proyecto proyecto) {
-        boolean var = false;
-        String val = configuracionGeneralFacadeLocal.find((int) 19).getValor();
-        if (!proyecto.getDocenteProyectoList().isEmpty()) {
-            for (DocenteProyecto directorProyecto : proyecto.getDocenteProyectoList()) {
-                if (directorProyecto.getEsActivo()) {
-                    if (val.equalsIgnoreCase("SI")) {
-                        var = true;
-                    } else {
-                        var = false;
-                        break;
-                    }
-                } else {
-                    var = true;
-                }
-            }
-        } else {
-            var = true;
-        }
-        return var;
-    }
-
-    public void agregarDocenteProyectoSorteo(Docente docente, Usuario usuario, Proyecto proyecto) {
-        Calendar fecha = Calendar.getInstance();
-        try {
-//            FacesContext facesContext = FacesContext.getCurrentInstance();
-//            ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-//            if (proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.INICIO.getTipo())) {
-//                int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "sortear_docente_especialista");
-//                if (tienePermiso == 1) {
-//                    if (permiteAgregarDocente(proyecto)) {
-//                        DocenteProyecto docenteProyecto = new DocenteProyecto();
-//                        docenteProyecto.setDocenteId(docente.getId());
-//                        docenteProyecto.setEsActivo(true);
-//                        docenteProyecto.setFecha(fecha.getTime());
-//                        docenteProyecto.setProyectoId(sessionProyecto.getProyecto());
-//                        DocenteProyecto dp = devuelveDocenteProyecto(sessionProyecto.getProyecto(), docenteProyecto);
-//                        docenteProyecto.setEsEditado(true);
-//                        if (dp == null) {
-//                            sessionProyecto.getProyecto().getDocenteProyectoList().add(docenteProyecto);
-//                        } else {
-//                            dp.setDocenteId(docente.getId());
-//                            dp.setEsActivo(true);
-//                            dp.setEsEditado(true);
-//                            dp.setFecha(fecha.getTime());
-//
-//                        }
-//                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_agregar"), "");
-//                        FacesContext.getCurrentInstance().addMessage(null, message);
-//                        renderedBuscarEspecialista(usuario, proyecto);
-//                        renderedSortearDocente(usuario, proyecto);
-//                        renderedSeleccionarDocenteEspecialista(usuario, proyecto);
-//                        buscar("", usuario, proyecto);
-//                    } else {
-//                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_existe") + " " + bundle.getString("lbl.docente"), "");
-//                        FacesContext.getCurrentInstance().addMessage(null, message);
-//                    }
-//                } else {
-//                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_crear") + ". " + bundle.getString("lbl.msm_consulte"), "");
-//                    FacesContext.getCurrentInstance().addMessage(null, message);
-//                }
-//            } else {
-//                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_crear") + ". " + bundle.getString("lbl.msm_consulte"), "");
-//                FacesContext.getCurrentInstance().addMessage(null, message);
-//            }
-        } catch (Exception e) {
-        }
-    }
-
-    public DocenteProyecto devuelveDocenteProyecto(Proyecto proyecto, DocenteProyecto dp) {
-        DocenteProyecto docente = null;
-        try {
-            for (DocenteProyecto docenteProyecto : proyecto.getDocenteProyectoList()) {
-                if (docenteProyecto.getDocenteId().equals(dp.getDocenteId())) {
-                    docente = docenteProyecto;
-                    break;
-                }
-            }
-        } catch (Exception e) {
-        }
-        return docente;
-    }
-
-    public void removerDocenteProyecto(DocenteProyecto docenteProyecto, Usuario usuario, Proyecto proyecto) {
-        try {
-//            FacesContext facesContext = FacesContext.getCurrentInstance();
-//            ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-//            if (proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.INICIO.getTipo())) {
-//                int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "eliminar_docente_proyecto");
-//                if (tienePermiso == 1) {
-//                    if (docenteProyecto.getId() != null) {
-//                        docenteProyecto.setEsActivo(false);
-//                        docenteProyecto.setEsEditado(true);
-//                        logFacadeLocal.create(logFacadeLocal.crearLog("DocenteProyecto", docenteProyecto.getId() + "", "DESACTIVAR", "|Docente= " + docenteProyecto.getDocenteId() + "|Proyecto= " + docenteProyecto.getProyectoId().getId() + "|EsActivo= " + docenteProyecto.getEsActivo(), sessionUsuario.getUsuario()));
-//                    } else {
-//                        proyecto.getDocenteProyectoList().remove(docenteProyecto);
-//                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_eliminar"), "");
-//                        FacesContext.getCurrentInstance().addMessage(null, message);
-//                    }
-//                    buscar("", usuario, proyecto);
-//                    renderedBuscarEspecialista(usuario, proyecto);
-//                    renderedSortearDocente(usuario, proyecto);
-//                    renderedSeleccionarDocenteEspecialista(usuario, proyecto);
-//                } else {
-//                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_eliminar") + ". " + bundle.getString("lbl.msm_consulte"), "");
-//                    FacesContext.getCurrentInstance().addMessage(null, message);
-//                }
-//            } else {
-//                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_eliminar") + ". " + bundle.getString("lbl.msm_consulte"), "");
-//                FacesContext.getCurrentInstance().addMessage(null, message);
-//            }
-        } catch (Exception e) {
-        }
-    }
-
-    public List<Docente> listadoDocentesSorteo(List<LineaInvestigacion> lineaInvestigacions) {
-        List<Docente> docentesDisponiblesSorteo = new ArrayList<>();
-        try {
-            for (UsuarioCarrera usuarioCarrera :usuarioCarreraFacadeLocal.buscarPorUsuario(sessionUsuario.getUsuario().getId())) {
-//                for (DocenteCarrera docenteCarrera : docenteCarreraFacadeLocal.buscarPorCarrera(usuarioCarrera.getCarreraId())) {
-//                    for (LineaInvestigacion li : lineaInvestigacions) {
-//                        for (LineaInvestigacionDocente lid : lineaInvestigacionDocenteFacadeLocal.buscarPorDocenteId(docenteCarrera.getDocenteId().getId())) {
-//                            if (lid.getLineaInvestigacionId().equals(li)) {
-//                                docentesDisponiblesSorteo.add(docenteCarrera.getDocenteId());
-//                            }
-//                        }
-//                    }
-//                }
-            }
-        } catch (Exception e) {
-        }
-        return docentesDisponiblesSorteo;
-    }
-
-    public void listadoDocentesDiponibles(String criterio, List<LineaInvestigacion> lineaInvestigacions) {
-        docentesDisponibles = new ArrayList<>();
-        try {
-            int tienePermiso = usuarioFacadeLocal.tienePermiso(sessionUsuario.getUsuario(), "buscar_docente_especialista");
-            if (tienePermiso == 1) {
-                for (UsuarioCarrera usuarioCarrera : usuarioCarreraFacadeLocal.buscarPorUsuario(sessionUsuario.getUsuario().getId())) {
-//                    for (DocenteCarrera docenteCarrera : docenteCarreraFacadeLocal.buscarPorCarrera(usuarioCarrera.getCarreraId())) {
-//                        if (docenteCarrera.isEsActivo()) {
-//                            Persona persona=personaFacadeLocal.find(docenteCarrera.getDocenteId());
-//                            for (LineaInvestigacion li : lineaInvestigacions) {
-//                                for (LineaInvestigacionDocente lid : lineaInvestigacionDocenteFacadeLocal.buscarPorDocenteId(docenteCarrera.getDocenteId().getId())) {
-//                                    if (lid.getLineaInvestigacionId().equals(li)) {
-//                                        if (persona.getApellidos().toLowerCase().contains(criterio.toLowerCase()) || 
-//                                                persona.getNombres().toLowerCase().contains(criterio.toLowerCase())
-//                                                ||persona.getNumeroIdentificacion().contains(criterio)) {
-//                                            if (!docentesDisponibles.contains(docenteCarrera.getDocenteId())) {
-//                                                docentesDisponibles.add(docenteCarrera.getDocenteId());
-//                                            }
-//                                        }
-//                                    }
-//                                }
-//                            }
-//                        }
-//                    }
-                }
-            } else {
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "No tiene permisos para buscar Docentes Especialistas. Consulte con el administrador del Sistema.", "");
-                FacesContext.getCurrentInstance().addMessage(null, message);
-            }
-        } catch (Exception e) {
-        }
-    }
-
-    public void buscar(String criterio, Usuario usuario, Proyecto proyecto) {
-        this.docenteProyectos = new ArrayList<>();
-        try {
-
-            FacesContext facesContext = FacesContext.getCurrentInstance();
-            ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "buscar_docente_proyecto");
-            if (tienePermiso == 1) {
-                for (DocenteProyecto docenteProyecto : proyecto.getDocenteProyectoList()) {
-                    Persona persona=personaFacadeLocal.find(docenteProyecto.getDocenteId());
-                    if (persona.getNombres().contains(criterio) || persona.getApellidos().contains(criterio)
-                            ||persona.getNumeroIdentificacion().contains(criterio)) {
-                        if (docenteProyecto.getEsActivo()) {
-                            docenteProyectos.add(docenteProyecto);
-                        }
-                    }
-                }
-            } else {
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_buscar") + ". " + bundle.getString("lbl.msm_consulte"), "");
-                FacesContext.getCurrentInstance().addMessage(null, message);
-            }
-        } catch (Exception e) {
-        }
-    }
+   
 
     public void buscarProyectosPorDocente(String criterio, Usuario usuario) {
 //        docenteProyectosPorDocente = new ArrayList<DocenteProyecto>();
@@ -779,7 +471,7 @@ public class AdministrarDocentesProyecto implements Serializable {
 
 //    public void grabarOficio(String contenido) {
 //        try {
-//            OficioCarrera oficioCarrera = new OficioCarrera();
+//            DocumentoCarrera oficioCarrera = new DocumentoCarrera();
 //            Carrera carrera = carreraFacadeLocal.find(carreraId);
 //            oficioCarrera.setCarreraId(carrera);
 //            CatalogoOficio catalogoOficio = new CatalogoOficio();

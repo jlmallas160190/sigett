@@ -6,25 +6,26 @@
 package edu.unl.sigett.docenteProyecto;
 
 import com.jlmallas.comun.dao.PersonaDao;
+import com.jlmallas.comun.entity.Documento;
 import com.jlmallas.comun.entity.Item;
 import com.jlmallas.comun.enumeration.CatalogoEnum;
+import com.jlmallas.comun.service.DocumentoService;
 import com.jlmallas.comun.service.ItemService;
+import edu.jlmallas.academico.entity.Carrera;
 import edu.unl.sigett.academico.dto.DocenteCarreraDTO;
 import edu.unl.sigett.dao.ConfiguracionGeneralDao;
 import edu.unl.sigett.dao.DirectorDao;
 import edu.unl.sigett.dao.LineaInvestigacionDocenteDao;
 import edu.unl.sigett.entity.DocenteProyecto;
+import edu.unl.sigett.entity.DocumentoCarrera;
 import edu.unl.sigett.entity.LineaInvestigacion;
 import edu.unl.sigett.entity.LineaInvestigacionDocente;
-import edu.unl.sigett.entity.OficioCarrera;
-import edu.unl.sigett.entity.Proyecto;
 import edu.unl.sigett.entity.ProyectoCarreraOferta;
-import edu.unl.sigett.enumeration.CatalogoOficioEnum;
+import edu.unl.sigett.enumeration.CatalogoDocumentoCarreraEnum;
 import edu.unl.sigett.enumeration.EstadoProyectoEnum;
 import edu.unl.sigett.proyecto.SessionProyecto;
 import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
-import edu.unl.sigett.service.DocenteProyectoService;
-import edu.unl.sigett.service.OficioCarreraService;
+import edu.unl.sigett.service.DocumentoCarreraService;
 import edu.unl.sigett.usuarioCarrera.SessionUsuarioCarrera;
 import edu.unl.sigett.util.CabeceraController;
 import javax.inject.Named;
@@ -39,7 +40,6 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import org.jlmallas.seguridad.dao.UsuarioDao;
-import org.jlmallas.seguridad.entity.Usuario;
 import org.primefaces.context.RequestContext;
 
 /**
@@ -75,9 +75,11 @@ public class DocenteProyectoController implements Serializable {
     @EJB
     private PersonaDao personaDao;
     @EJB
-    private OficioCarreraService oficioCarreraService;
+    private DocumentoCarreraService documentoCarreraService;
     @EJB
     private ItemService itemService;
+    @EJB
+    private DocumentoService documentoService;
     //</editor-fold>
     private static final Logger LOG = Logger.getLogger(DocenteProyectoController.class.getName());
 
@@ -169,20 +171,15 @@ public class DocenteProyectoController implements Serializable {
         try {
             if (docenteProyectoDTO.getDocenteProyecto().getId() != null) {
                 sessionDocenteProyecto.setDocenteProyectoId(docenteProyectoDTO.getDocenteProyecto().getDocenteId());
-                Item item = itemService.buscarPorCatalogoCodigo(CatalogoEnum.CATALOGOOFICIO.getTipo(), CatalogoOficioEnum.DOCENTEPROYECTO.getTipo());
-                for (ProyectoCarreraOferta pco : docenteProyectoDTO.getDocenteProyecto().getProyectoId().getProyectoCarreraOfertaList()) {
-                    if (pco.getEsActivo()) {
-                        sessionDocenteProyecto.setCarreraId(pco.getId());
-                        break;
-                    }
-                }
-                OficioCarrera oficioCarrera = oficioCarreraService.buscar(new OficioCarrera(
-                        item.getId(), null, null, null, Boolean.TRUE, Integer.MIN_VALUE, docenteProyectoDTO.getDocenteProyecto().getId())).get(0);
-
-                if (oficioCarrera != null) {
-                    sessionDocenteProyecto.setOficioCarrera(oficioCarrera);
-                } else {
-                    sessionDocenteProyecto.setOficioCarrera(new OficioCarrera());
+                Item item = itemService.buscarPorCatalogoCodigo(CatalogoEnum.CATALOGOOFICIO.getTipo(),
+                        CatalogoDocumentoCarreraEnum.DOCENTEPROYECTO.getTipo());
+                Documento documento = documentoService.buscarSingle(new Documento(null, null, item.getId(), null, null));
+                sessionDocenteProyecto.setCarreraId(!sessionProyecto.getCarreras().isEmpty() ? sessionProyecto.getCarreras().get(0).getId() : null);
+                DocumentoCarrera documentoCarrera = documentoCarreraService.buscar(new DocumentoCarrera(
+                        null, documento.getId(), Boolean.TRUE, Integer.MIN_VALUE, sessionDocenteProyecto.getDocenteProyectoId())).get(0);
+                sessionDocenteProyecto.setDocumentoCarrera(new DocumentoCarrera());
+                if (documentoCarrera != null) {
+                    sessionDocenteProyecto.setDocumentoCarrera(documentoCarrera);
                 }
                 sessionDocenteProyecto.setRenderedDialogoOficio(Boolean.TRUE);
                 RequestContext.getCurrentInstance().execute("PF('dlgOficioDocenteProyecto').show()");
@@ -192,6 +189,10 @@ public class DocenteProyectoController implements Serializable {
         }
     }
 
+    /**
+     * DETERMINAR SI SE PUEDEN AGREGAR MAS DE 2 DOCENTES AL PROYECTO SELECCIONADO
+     * @return 
+     */
     public boolean permitirAgregarDocente() {
         boolean var = false;
         String val = configuracionGeneralDao.find((int) 19).getValor();
@@ -227,7 +228,7 @@ public class DocenteProyectoController implements Serializable {
                 if (lineaInvestigacionDocentes.isEmpty()) {
                     continue;
                 }
-                for (LineaInvestigacion lineaInvestigacion :sessionProyecto.getLineasInvestigacionSeleccionadas()) {
+                for (LineaInvestigacion lineaInvestigacion : sessionProyecto.getLineasInvestigacionSeleccionadas()) {
                     for (LineaInvestigacionDocente lid : lineaInvestigacionDocentes) {
                         if (lineaInvestigacion.equals(lid.getLineaInvestigacionId())) {
                             DirectorDTO directorDTO = new DirectorDTO(directorDao.find(

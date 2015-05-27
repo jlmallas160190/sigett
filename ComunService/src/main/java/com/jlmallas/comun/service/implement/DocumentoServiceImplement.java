@@ -1,0 +1,49 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.jlmallas.comun.service.implement;
+
+import com.jlmallas.comun.dao.DocumentoDao;
+import com.jlmallas.comun.entity.Documento;
+import com.jlmallas.comun.service.DocumentoService;
+import javax.ejb.EJB;
+import javax.ejb.Stateless;
+
+/**
+ *
+ * @author jorge-luis
+ */
+@Stateless
+public class DocumentoServiceImplement implements DocumentoService {
+
+    @EJB
+    private DocumentoDao documentoDao;
+
+    @Override
+    public void guardar(final Documento documento) {
+        this.documentoDao.create(documento);
+    }
+
+    @Override
+    public void actualizar(final Documento documento) {
+        this.documentoDao.edit(documento);
+    }
+
+    @Override
+    public void eliminar(final Documento documento) {
+        this.documentoDao.remove(documento);
+    }
+
+    @Override
+    public Documento buscarPorId(final Documento documento) {
+        return this.documentoDao.find(documento.getId());
+    }
+
+    @Override
+    public Documento buscarSingle(final Documento documento) {
+        return this.documentoDao.buscarSingle(documento);
+    }
+
+}

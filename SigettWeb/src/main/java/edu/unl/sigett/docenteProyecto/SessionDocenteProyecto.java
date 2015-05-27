@@ -5,7 +5,7 @@
  */
 package edu.unl.sigett.docenteProyecto;
 
-import edu.unl.sigett.entity.OficioCarrera;
+import edu.unl.sigett.entity.DocumentoCarrera;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +21,7 @@ import javax.inject.Named;
 public class SessionDocenteProyecto implements Serializable {
 
     private DocenteProyectoDTO docenteProyectoDTO;
-    private OficioCarrera oficioCarrera;
+    private DocumentoCarrera documentoCarrera;
 
     private List<DirectorDTO> directoresDTO;
     private List<DirectorDTO> filterDirectoresDTO;
@@ -34,7 +34,7 @@ public class SessionDocenteProyecto implements Serializable {
     private Boolean renderedDialogoOficio;
     
     private Long docenteProyectoId;
-    private Long carreraId;
+    private Integer carreraId;
 
     public SessionDocenteProyecto() {
         this.filterDirectoresDTO=new ArrayList<>();
@@ -114,14 +114,15 @@ public class SessionDocenteProyecto implements Serializable {
         this.docenteProyectoId = docenteProyectoId;
     }
 
-    public Long getCarreraId() {
+    public Integer getCarreraId() {
         return carreraId;
     }
 
-    public void setCarreraId(Long carreraId) {
+    public void setCarreraId(Integer carreraId) {
         this.carreraId = carreraId;
     }
 
+ 
     public Boolean getRenderedDialogoOficio() {
         return renderedDialogoOficio;
     }
@@ -130,12 +131,12 @@ public class SessionDocenteProyecto implements Serializable {
         this.renderedDialogoOficio = renderedDialogoOficio;
     }
 
-    public OficioCarrera getOficioCarrera() {
-        return oficioCarrera;
+    public DocumentoCarrera getDocumentoCarrera() {
+        return documentoCarrera;
     }
 
-    public void setOficioCarrera(OficioCarrera oficioCarrera) {
-        this.oficioCarrera = oficioCarrera;
+    public void setDocumentoCarrera(DocumentoCarrera documentoCarrera) {
+        this.documentoCarrera = documentoCarrera;
     }
 
 }

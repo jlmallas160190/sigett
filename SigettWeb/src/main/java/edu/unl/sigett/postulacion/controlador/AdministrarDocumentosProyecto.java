@@ -10,7 +10,6 @@ import edu.unl.sigett.proyecto.SessionProyecto;
 import edu.unl.sigett.seguridad.managed.session.SessionDocenteUsuario;
 import edu.unl.sigett.seguridad.managed.session.SessionEstudianteUsuario;
 import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
-import edu.unl.sigett.entity.CatalogoDocumentoProyecto;
 import edu.unl.sigett.entity.DocumentoProyecto;
 import edu.unl.sigett.entity.Proyecto;
 import org.jlmallas.seguridad.entity.Usuario;
@@ -30,7 +29,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
-import edu.unl.sigett.dao.CatalogoDocumentoProyectoFacadeLocal;
 import edu.unl.sigett.dao.DocumentoProyectoFacadeLocal;
 import org.jlmallas.seguridad.dao.LogDao;
 import org.jlmallas.seguridad.dao.UsuarioDao;
@@ -56,8 +54,6 @@ public class AdministrarDocumentosProyecto implements Serializable {
     private UploadedFile uploadedFile;
     @EJB
     private LogDao logFacadeLocal;
-    @EJB
-    private CatalogoDocumentoProyectoFacadeLocal catalogoDocumentoProyectoFacadeLocal;
     private String catalogoDocumentoProyecto;
     @EJB
     private UsuarioDao usuarioFacadeLocal;
@@ -158,15 +154,15 @@ public class AdministrarDocumentosProyecto implements Serializable {
 
     public void downloadDocumento(DocumentoProyecto documentoProyecto) {
         try {
-            FacesContext context = FacesContext.getCurrentInstance();
-            HttpServletResponse response = (HttpServletResponse) context.getCurrentInstance().getExternalContext().getResponse();
-            response.setHeader("Content-Disposition", "attachment; filename=\"" + documentoProyecto.getCatalogoDocumentoProyectoId().getNombre() + ".pdf");
-            response.setContentType("application/pdf");
-            response.setContentLength(documentoProyecto.getDocumento().length);
-            response.getOutputStream().write(documentoProyecto.getDocumento());
-            response.getOutputStream().flush();
-            response.getOutputStream().close();
-            context.responseComplete();
+//            FacesContext context = FacesContext.getCurrentInstance();
+//            HttpServletResponse response = (HttpServletResponse) context.getCurrentInstance().getExternalContext().getResponse();
+//            response.setHeader("Content-Disposition", "attachment; filename=\"" + documentoProyecto.getCatalogoDocumentoProyectoId().getNombre() + ".pdf");
+//            response.setContentType("application/pdf");
+//            response.setContentLength(documentoProyecto.getDocumento().length);
+//            response.getOutputStream().write(documentoProyecto.getDocumento());
+//            response.getOutputStream().flush();
+//            response.getOutputStream().close();
+//            context.responseComplete();
         } catch (Exception e) {
         }
     }
@@ -211,12 +207,12 @@ public class AdministrarDocumentosProyecto implements Serializable {
         }
     }
 
-    public String obtenerSizeKB(DocumentoProyecto documentoProyecto) {
-        double valorKB = documentoProyecto.getTamanio() / 1024;
-        valorKB = Math.round(valorKB * 100);
-        valorKB = valorKB / 100;
-        return valorKB + " kB";
-    }
+//    public String obtenerSizeKB(DocumentoProyecto documentoProyecto) {
+////        double valorKB = documentoProyecto.getTamanio() / 1024;
+////        valorKB = Math.round(valorKB * 100);
+////        valorKB = valorKB / 100;
+////        return valorKB + " kB";
+//    }
 
     public String crear(Usuario usuario) {
         String navegacion = "";
@@ -246,24 +242,24 @@ public class AdministrarDocumentosProyecto implements Serializable {
     public String editar(DocumentoProyecto documentoProyecto, Usuario usuario) {
         String navegacion = "";
         try {
-            FacesContext facesContext = FacesContext.getCurrentInstance();
-            ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            String param = (String) facesContext.getExternalContext().getRequestParameterMap().get("1");
-            int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "editar_documento_proyecto");
-            if (tienePermiso == 1) {
-                sessionDocumentoProyecto.setDocumentoProyecto(documentoProyecto);
-                catalogoDocumentoProyecto = documentoProyecto.getCatalogoDocumentoProyectoId().toString();
-                esEditado = true;
-                if (param.equalsIgnoreCase("editar-dlg")) {
-                    this.renderedDlgEditar = true;
-                    RequestContext.getCurrentInstance().execute("PF('dlgEditarDocumentoProyecto').show()");
-                } else {
-                    navegacion = "pretty:editarDocumentoProyecto";
-                }
-            } else {
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_editar") + ". " + bundle.getString("lbl.msm_consulte"), "");
-                FacesContext.getCurrentInstance().addMessage(null, message);
-            }
+//            FacesContext facesContext = FacesContext.getCurrentInstance();
+//            ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
+//            String param = (String) facesContext.getExternalContext().getRequestParameterMap().get("1");
+//            int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "editar_documento_proyecto");
+//            if (tienePermiso == 1) {
+//                sessionDocumentoProyecto.setDocumentoProyecto(documentoProyecto);
+//                catalogoDocumentoProyecto = documentoProyecto.getCatalogoDocumentoProyectoId().toString();
+//                esEditado = true;
+//                if (param.equalsIgnoreCase("editar-dlg")) {
+//                    this.renderedDlgEditar = true;
+//                    RequestContext.getCurrentInstance().execute("PF('dlgEditarDocumentoProyecto').show()");
+//                } else {
+//                    navegacion = "pretty:editarDocumentoProyecto";
+//                }
+//            } else {
+//                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_editar") + ". " + bundle.getString("lbl.msm_consulte"), "");
+//                FacesContext.getCurrentInstance().addMessage(null, message);
+//            }
         } catch (Exception e) {
             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_FATAL, e.getMessage(), "");
             FacesContext.getCurrentInstance().addMessage(null, message);
@@ -273,14 +269,14 @@ public class AdministrarDocumentosProyecto implements Serializable {
 
     public void handleFileUpload(FileUploadEvent event) {
         try {
-            FacesContext facesContext = FacesContext.getCurrentInstance();
-            ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            String tipoArchivo = event.getFile().getContentType();
-            sessionDocumentoProyecto.getDocumentoProyecto().setTipoArchivo(tipoArchivo);
-            sessionDocumentoProyecto.getDocumentoProyecto().setTamanio(event.getFile().getSize());
-            sessionDocumentoProyecto.getDocumentoProyecto().setDocumento(event.getFile().getContents());
-            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.uploaded"), "");
-            FacesContext.getCurrentInstance().addMessage(null, message);
+//            FacesContext facesContext = FacesContext.getCurrentInstance();
+//            ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
+//            String tipoArchivo = event.getFile().getContentType();
+//            sessionDocumentoProyecto.getDocumentoProyecto().setTipoArchivo(tipoArchivo);
+//            sessionDocumentoProyecto.getDocumentoProyecto().setTamanio(event.getFile().getSize());
+//            sessionDocumentoProyecto.getDocumentoProyecto().setDocumento(event.getFile().getContents());
+//            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.uploaded"), "");
+//            FacesContext.getCurrentInstance().addMessage(null, message);
         } catch (Exception e) {
             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, e.getMessage(), "");
             FacesContext.getCurrentInstance().addMessage(null, message);
@@ -290,108 +286,108 @@ public class AdministrarDocumentosProyecto implements Serializable {
 
     public String grabar(DocumentoProyecto documentoProyecto, Proyecto proyecto, Usuario usuario) {
         String navegacion = "";
-        FacesContext facesContext = FacesContext.getCurrentInstance();
-        ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-        String param = (String) facesContext.getExternalContext().getRequestParameterMap().get("1");
-        documentoProyecto.setProyectoId(proyecto);
-        Calendar fecha = Calendar.getInstance();
-        documentoProyecto.setFecha(fecha.getTime());
-        documentoProyecto.setEsActivo(true);
-        try {
-            int posCat = catalogoDocumentoProyecto.indexOf(":");
-            CatalogoDocumentoProyecto cdp = catalogoDocumentoProyectoFacadeLocal.find(Integer.parseInt(catalogoDocumentoProyecto.substring(0, posCat)));
-            if (cdp != null) {
-                documentoProyecto.setCatalogoDocumentoProyectoId(cdp);
-            }
-            if (documentoProyecto.getId() == null) {
-                int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "crear_documento_proyecto");
-                if (tienePermiso == 1) {
-                    documentoProyectoFacadeLocal.create(documentoProyecto);
-                    logFacadeLocal.create(logFacadeLocal.crearLog("DocumentoProyecto", documentoProyecto.getId() + "", "CREAR", "|TipoArchivo= " + documentoProyecto.getTipoArchivo() + "|Tamaño=" + documentoProyecto.getTamanio() + "|CatalogoDocumentoProyecto= " + documentoProyecto.getCatalogoDocumentoProyectoId() + "|Proyecto= " + documentoProyecto.getProyectoId().getId(), usuario));
-                    if (param.equalsIgnoreCase("grabar-dlg")) {
-                        RequestContext.getCurrentInstance().execute("PF('dlgEditarDocumentoProyecto').hide()");
-                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_grabar"), "");
-                        FacesContext.getCurrentInstance().addMessage(null, message);
-                        sessionDocumentoProyecto.setDocumentoProyecto(new DocumentoProyecto());
-                    } else {
-                        if (param.equalsIgnoreCase("grabar-editar-dlg")) {
-                            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_grabar"), "");
-                            FacesContext.getCurrentInstance().addMessage(null, message);
-                        }
-                    }
-                    buscarPorAutor(proyecto);
-                } else {
-                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_crear") + ". " + bundle.getString("lbl.msm_consulte"), "");
-                    FacesContext.getCurrentInstance().addMessage(null, message);
-                }
-            } else {
-                int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "editar_documento_proyecto");
-                if (tienePermiso == 1) {
-                    documentoProyectoFacadeLocal.edit(documentoProyecto);
-                    logFacadeLocal.create(logFacadeLocal.crearLog("DocumentoProyecto", documentoProyecto.getId() + "", "EDITAR", "|TipoArchivo= " + documentoProyecto.getTipoArchivo() + "|Tamaño=" + documentoProyecto.getTamanio() + "|CatalogoDocumentoProyecto= " + documentoProyecto.getCatalogoDocumentoProyectoId() + "|Proyecto= " + documentoProyecto.getProyectoId().getId(), usuario));
-                    if (param.equalsIgnoreCase("grabar-dlg")) {
-                        RequestContext.getCurrentInstance().execute("PF('dlgEditarDocumentoProyecto').hide()");
-                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_editar"), "");
-                        FacesContext.getCurrentInstance().addMessage(null, message);
-                        sessionDocumentoProyecto.setDocumentoProyecto(new DocumentoProyecto());
-                    } else {
-                        if (param.equalsIgnoreCase("grabar-editar-dlg")) {
-                            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_editar"), "");
-                            FacesContext.getCurrentInstance().addMessage(null, message);
-                        }
-                    }
-                    buscarPorAutor(proyecto);
-                } else {
-                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_editar") + ". " + bundle.getString("lbl.msm_consulte"), "");
-                    FacesContext.getCurrentInstance().addMessage(null, message);
-                }
-            }
-        } catch (Exception e) {
-            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_FATAL, e.getMessage(), "");
-            FacesContext.getCurrentInstance().addMessage(null, message);
-        }
+//        FacesContext facesContext = FacesContext.getCurrentInstance();
+//        ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
+//        String param = (String) facesContext.getExternalContext().getRequestParameterMap().get("1");
+//        documentoProyecto.setProyectoId(proyecto);
+//        Calendar fecha = Calendar.getInstance();
+//        documentoProyecto.setFecha(fecha.getTime());
+//        documentoProyecto.setEsActivo(true);
+//        try {
+//            int posCat = catalogoDocumentoProyecto.indexOf(":");
+//            CatalogoDocumentoProyecto cdp = catalogoDocumentoProyectoFacadeLocal.find(Integer.parseInt(catalogoDocumentoProyecto.substring(0, posCat)));
+//            if (cdp != null) {
+//                documentoProyecto.setCatalogoDocumentoProyectoId(cdp);
+//            }
+//            if (documentoProyecto.getId() == null) {
+//                int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "crear_documento_proyecto");
+//                if (tienePermiso == 1) {
+//                    documentoProyectoFacadeLocal.create(documentoProyecto);
+//                    logFacadeLocal.create(logFacadeLocal.crearLog("DocumentoProyecto", documentoProyecto.getId() + "", "CREAR", "|TipoArchivo= " + documentoProyecto.getTipoArchivo() + "|Tamaño=" + documentoProyecto.getTamanio() + "|CatalogoDocumentoProyecto= " + documentoProyecto.getCatalogoDocumentoProyectoId() + "|Proyecto= " + documentoProyecto.getProyectoId().getId(), usuario));
+//                    if (param.equalsIgnoreCase("grabar-dlg")) {
+//                        RequestContext.getCurrentInstance().execute("PF('dlgEditarDocumentoProyecto').hide()");
+//                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_grabar"), "");
+//                        FacesContext.getCurrentInstance().addMessage(null, message);
+//                        sessionDocumentoProyecto.setDocumentoProyecto(new DocumentoProyecto());
+//                    } else {
+//                        if (param.equalsIgnoreCase("grabar-editar-dlg")) {
+//                            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_grabar"), "");
+//                            FacesContext.getCurrentInstance().addMessage(null, message);
+//                        }
+//                    }
+//                    buscarPorAutor(proyecto);
+//                } else {
+//                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_crear") + ". " + bundle.getString("lbl.msm_consulte"), "");
+//                    FacesContext.getCurrentInstance().addMessage(null, message);
+//                }
+//            } else {
+//                int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "editar_documento_proyecto");
+//                if (tienePermiso == 1) {
+//                    documentoProyectoFacadeLocal.edit(documentoProyecto);
+//                    logFacadeLocal.create(logFacadeLocal.crearLog("DocumentoProyecto", documentoProyecto.getId() + "", "EDITAR", "|TipoArchivo= " + documentoProyecto.getTipoArchivo() + "|Tamaño=" + documentoProyecto.getTamanio() + "|CatalogoDocumentoProyecto= " + documentoProyecto.getCatalogoDocumentoProyectoId() + "|Proyecto= " + documentoProyecto.getProyectoId().getId(), usuario));
+//                    if (param.equalsIgnoreCase("grabar-dlg")) {
+//                        RequestContext.getCurrentInstance().execute("PF('dlgEditarDocumentoProyecto').hide()");
+//                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_editar"), "");
+//                        FacesContext.getCurrentInstance().addMessage(null, message);
+//                        sessionDocumentoProyecto.setDocumentoProyecto(new DocumentoProyecto());
+//                    } else {
+//                        if (param.equalsIgnoreCase("grabar-editar-dlg")) {
+//                            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_editar"), "");
+//                            FacesContext.getCurrentInstance().addMessage(null, message);
+//                        }
+//                    }
+//                    buscarPorAutor(proyecto);
+//                } else {
+//                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_editar") + ". " + bundle.getString("lbl.msm_consulte"), "");
+//                    FacesContext.getCurrentInstance().addMessage(null, message);
+//                }
+//            }
+//        } catch (Exception e) {
+//            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_FATAL, e.getMessage(), "");
+//            FacesContext.getCurrentInstance().addMessage(null, message);
+//        }
 
         return navegacion;
     }
 
     public String agregarDocumentoProyecto(DocumentoProyecto documentoProyecto, Proyecto proyecto) {
         String navegacion = "";
-        Calendar fecha = Calendar.getInstance();
-        try {
-            FacesContext facesContext = FacesContext.getCurrentInstance();
-            ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            String param = (String) facesContext.getExternalContext().getRequestParameterMap().get("1");
-            documentoProyecto.setEsEditado(true);
-            if (esEditado == false) {
-                if (documentoProyecto.getDocumento() != null) {
-                    int posCat = catalogoDocumentoProyecto.indexOf(":");
-                    CatalogoDocumentoProyecto cdp = catalogoDocumentoProyectoFacadeLocal.find(Integer.parseInt(catalogoDocumentoProyecto.substring(0, posCat)));
-                    if (cdp != null) {
-                        documentoProyecto.setCatalogoDocumentoProyectoId(cdp);
-                    }
-                    documentoProyecto.setEsActivo(true);
-                    documentoProyecto.setFecha(fecha.getTime());
-                    proyecto.getDocumentoProyectoList().add(documentoProyecto);
-                    if (param.equalsIgnoreCase("agregar-dlg")) {
-                        RequestContext.getCurrentInstance().execute("PF('dlgEditarDocumentoProyecto').hide()");
-                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_agregar"), "");
-                        FacesContext.getCurrentInstance().addMessage(null, message);
-                    }
-                    buscar(proyecto);
-                } else {
-                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.no_select") + " " + bundle.getString("lbl.documento"), "");
-                    FacesContext.getCurrentInstance().addMessage(null, message);
-                }
-
-            } else {
-                RequestContext.getCurrentInstance().execute("PF('dlgEditarDocumentoProyecto').hide()");
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_editar"), "");
-                FacesContext.getCurrentInstance().addMessage(null, message);
-            }
-        } catch (Exception e) {
-            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, e.getMessage(), "");
-            FacesContext.getCurrentInstance().addMessage(null, message);
-        }
+//        Calendar fecha = Calendar.getInstance();
+//        try {
+//            FacesContext facesContext = FacesContext.getCurrentInstance();
+//            ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
+//            String param = (String) facesContext.getExternalContext().getRequestParameterMap().get("1");
+//            documentoProyecto.setEsEditado(true);
+//            if (esEditado == false) {
+//                if (documentoProyecto.getDocumento() != null) {
+//                    int posCat = catalogoDocumentoProyecto.indexOf(":");
+//                    CatalogoDocumentoProyecto cdp = catalogoDocumentoProyectoFacadeLocal.find(Integer.parseInt(catalogoDocumentoProyecto.substring(0, posCat)));
+//                    if (cdp != null) {
+//                        documentoProyecto.setCatalogoDocumentoProyectoId(cdp);
+//                    }
+//                    documentoProyecto.setEsActivo(true);
+//                    documentoProyecto.setFecha(fecha.getTime());
+//                    proyecto.getDocumentoProyectoList().add(documentoProyecto);
+//                    if (param.equalsIgnoreCase("agregar-dlg")) {
+//                        RequestContext.getCurrentInstance().execute("PF('dlgEditarDocumentoProyecto').hide()");
+//                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_agregar"), "");
+//                        FacesContext.getCurrentInstance().addMessage(null, message);
+//                    }
+//                    buscar(proyecto);
+//                } else {
+//                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.no_select") + " " + bundle.getString("lbl.documento"), "");
+//                    FacesContext.getCurrentInstance().addMessage(null, message);
+//                }
+//
+//            } else {
+//                RequestContext.getCurrentInstance().execute("PF('dlgEditarDocumentoProyecto').hide()");
+//                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_editar"), "");
+//                FacesContext.getCurrentInstance().addMessage(null, message);
+//            }
+//        } catch (Exception e) {
+//            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, e.getMessage(), "");
+//            FacesContext.getCurrentInstance().addMessage(null, message);
+//        }
         return navegacion;
     }
 

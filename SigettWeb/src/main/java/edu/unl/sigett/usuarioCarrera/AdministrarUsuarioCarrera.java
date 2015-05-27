@@ -33,7 +33,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import edu.unl.sigett.dao.UsuarioCarreraDao;
 import org.jlmallas.seguridad.dao.UsuarioDao;
-import edu.unl.sigett.dto.UsuarioCarreraDTO;
 import edu.unl.sigett.entity.Aspirante;
 import edu.unl.sigett.entity.ConfiguracionCarrera;
 import edu.unl.sigett.service.AspiranteService;

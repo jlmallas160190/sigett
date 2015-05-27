@@ -37,13 +37,6 @@ import javax.xml.bind.annotation.XmlTransient;
 @Entity
 @Table(name = "documento_proyecto")
 @XmlRootElement
-@NamedQueries({
-    @NamedQuery(name = "DocumentoProyecto.findAll", query = "SELECT d FROM DocumentoProyecto d"),
-    @NamedQuery(name = "DocumentoProyecto.findById", query = "SELECT d FROM DocumentoProyecto d WHERE d.id = :id"),
-    @NamedQuery(name = "DocumentoProyecto.findByFecha", query = "SELECT d FROM DocumentoProyecto d WHERE d.fecha = :fecha"),
-    @NamedQuery(name = "DocumentoProyecto.findByTamanio", query = "SELECT d FROM DocumentoProyecto d WHERE d.tamanio = :tamanio"),
-    @NamedQuery(name = "DocumentoProyecto.findByEsActivo", query = "SELECT d FROM DocumentoProyecto d WHERE d.esActivo = :esActivo"),
-    @NamedQuery(name = "DocumentoProyecto.findByTipoArchivo", query = "SELECT d FROM DocumentoProyecto d WHERE d.tipoArchivo = :tipoArchivo")})
 public class DocumentoProyecto implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -54,53 +47,21 @@ public class DocumentoProyecto implements Serializable {
     private Long id;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "fecha")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date fecha;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "tamanio")
-    private double tamanio;
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "es_activo")
-    private boolean esActivo;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 25)
-    @Column(name = "tipo_archivo")
-    private String tipoArchivo;
-    @Basic(optional = false)
-    @NotNull
-    @Lob
-    @Column(name = "documento")
-    private byte[] documento;
+    private Boolean esActivo;
+    @Column(name = "documentoId")
+    private Long documentoId;
     @JoinColumn(name = "proyecto_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Proyecto proyectoId;
-    @JoinColumn(name = "catalogo_documento_proyecto_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private CatalogoDocumentoProyecto catalogoDocumentoProyectoId;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "documentoProyectoId")
     private List<EstructuraDocumentoProyecto> estructuraDocumentoProyectoList;
-    @Transient
-    private boolean esEditado;
 
     public DocumentoProyecto() {
-        this.esEditado = false;
     }
 
     public DocumentoProyecto(Long id) {
         this.id = id;
-    }
-
-    public DocumentoProyecto(Long id, Date fecha, double tamanio, boolean esActivo, String tipoArchivo, byte[] documento) {
-        this.id = id;
-        this.fecha = fecha;
-        this.tamanio = tamanio;
-        this.esActivo = esActivo;
-        this.tipoArchivo = tipoArchivo;
-        this.documento = documento;
     }
 
     public Long getId() {
@@ -111,44 +72,12 @@ public class DocumentoProyecto implements Serializable {
         this.id = id;
     }
 
-    public Date getFecha() {
-        return fecha;
-    }
-
-    public void setFecha(Date fecha) {
-        this.fecha = fecha;
-    }
-
-    public double getTamanio() {
-        return tamanio;
-    }
-
-    public void setTamanio(double tamanio) {
-        this.tamanio = tamanio;
-    }
-
-    public boolean getEsActivo() {
+    public Boolean getEsActivo() {
         return esActivo;
     }
 
-    public void setEsActivo(boolean esActivo) {
+    public void setEsActivo(Boolean esActivo) {
         this.esActivo = esActivo;
-    }
-
-    public String getTipoArchivo() {
-        return tipoArchivo;
-    }
-
-    public void setTipoArchivo(String tipoArchivo) {
-        this.tipoArchivo = tipoArchivo;
-    }
-
-    public byte[] getDocumento() {
-        return documento;
-    }
-
-    public void setDocumento(byte[] documento) {
-        this.documento = documento;
     }
 
     public Proyecto getProyectoId() {
@@ -159,20 +88,12 @@ public class DocumentoProyecto implements Serializable {
         this.proyectoId = proyectoId;
     }
 
-    public CatalogoDocumentoProyecto getCatalogoDocumentoProyectoId() {
-        return catalogoDocumentoProyectoId;
+    public Long getDocumentoId() {
+        return documentoId;
     }
 
-    public void setCatalogoDocumentoProyectoId(CatalogoDocumentoProyecto catalogoDocumentoProyectoId) {
-        this.catalogoDocumentoProyectoId = catalogoDocumentoProyectoId;
-    }
-
-    public boolean isEsEditado() {
-        return esEditado;
-    }
-
-    public void setEsEditado(boolean esEditado) {
-        this.esEditado = esEditado;
+    public void setDocumentoId(Long documentoId) {
+        this.documentoId = documentoId;
     }
 
     @XmlTransient

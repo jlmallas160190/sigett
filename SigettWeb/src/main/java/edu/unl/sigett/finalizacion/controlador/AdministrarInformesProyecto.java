@@ -11,7 +11,6 @@ import edu.unl.sigett.finalizacion.managed.session.SessionInformeProyecto;
 import edu.unl.sigett.reportes.AdministrarReportes;
 import edu.unl.sigett.entity.AutorProyecto;
 import edu.jlmallas.academico.entity.Carrera;
-import edu.unl.sigett.entity.CatalogoInformeProyecto;
 import edu.unl.sigett.entity.DirectorProyecto;
 import edu.unl.sigett.entity.InformeProyecto;
 import edu.unl.sigett.entity.Proyecto;
@@ -33,7 +32,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.primefaces.context.RequestContext;
 import edu.unl.sigett.dao.AutorProyectoDao;
 import edu.jlmallas.academico.service.CarreraService;
-import edu.unl.sigett.dao.CatalogoInformeProyectoFacadeLocal;
 import edu.unl.sigett.dao.ConfiguracionGeneralDao;
 import edu.unl.sigett.dao.DirectorProyectoFacadeLocal;
 import edu.unl.sigett.dao.InformeProyectoFacadeLocal;
@@ -61,8 +59,6 @@ public class AdministrarInformesProyecto implements Serializable {
 
     @EJB
     private UsuarioDao usuarioFacadeLocal;
-    @EJB
-    private CatalogoInformeProyectoFacadeLocal catalogoInformeProyectoFacadeLocal;
     @EJB
     private InformeProyectoFacadeLocal informeProyectoFacadeLocal;
     @EJB
@@ -275,10 +271,10 @@ public class AdministrarInformesProyecto implements Serializable {
 
     public void seleccionaCatalogoInforme(InformeProyecto informeProyecto) {
         int pos = catalogoInformeProyecto.indexOf(":");
-        CatalogoInformeProyecto cp = catalogoInformeProyectoFacadeLocal.find(Integer.parseInt(catalogoInformeProyecto.substring(0, pos)));
-        if (cp != null) {
-            informeProyecto.setCatalogoInformeProyectoId(cp);
-        }
+//        CatalogoInformeProyecto cp = catalogoInformeProyectoFacadeLocal.find(Integer.parseInt(catalogoInformeProyecto.substring(0, pos)));
+//        if (cp != null) {
+//            informeProyecto.setCatalogoInformeProyectoId(cp);
+//        }
     }
 
     public String grabar(InformeProyecto informe, Proyecto proyecto, Usuario usuario) {
@@ -386,20 +382,20 @@ public class AdministrarInformesProyecto implements Serializable {
 
     public void buscar(String criterio, Proyecto proyecto, Usuario usuario) {
         try {
-            FacesContext facesContext = FacesContext.getCurrentInstance();
-            ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            this.informeProyectos = new ArrayList<>();
-            int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "buscar_informe_proyecto");
-            if (tienePermiso == 1) {
-                for (InformeProyecto informeProyecto : informeProyectoFacadeLocal.buscarPorProyecto(proyecto.getId())) {
-                    if (informeProyecto.getCatalogoInformeProyectoId().getNombre().toUpperCase().contains(criterio.toUpperCase())) {
-                        informeProyectos.add(informeProyecto);
-                    }
-                }
-            } else {
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_buscar") + ". " + bundle.getString("lbl.msm_consulte"), "");
-                FacesContext.getCurrentInstance().addMessage(null, message);
-            }
+//            FacesContext facesContext = FacesContext.getCurrentInstance();
+//            ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
+//            this.informeProyectos = new ArrayList<>();
+//            int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "buscar_informe_proyecto");
+//            if (tienePermiso == 1) {
+//                for (InformeProyecto informeProyecto : informeProyectoFacadeLocal.buscarPorProyecto(proyecto.getId())) {
+//                    if (informeProyecto.getCatalogoInformeProyectoId().getNombre().toUpperCase().contains(criterio.toUpperCase())) {
+//                        informeProyectos.add(informeProyecto);
+//                    }
+//                }
+//            } else {
+//                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_buscar") + ". " + bundle.getString("lbl.msm_consulte"), "");
+//                FacesContext.getCurrentInstance().addMessage(null, message);
+//            }
         } catch (Exception e) {
         }
     }
@@ -436,12 +432,12 @@ public class AdministrarInformesProyecto implements Serializable {
 
     public boolean existeInformeAutorizacionSp(Proyecto proyecto) {
         boolean var = false;
-        for (InformeProyecto informeProyecto : informeProyectoFacadeLocal.buscarPorProyecto(proyecto.getId())) {
-            if (informeProyecto.getCatalogoInformeProyectoId().getId() == 1) {
-                var = true;
-                break;
-            }
-        }
+//        for (InformeProyecto informeProyecto : informeProyectoFacadeLocal.buscarPorProyecto(proyecto.getId())) {
+//            if (informeProyecto.getCatalogoInformeProyectoId().getId() == 1) {
+//                var = true;
+//                break;
+//            }
+//        }
         return var;
     }
 

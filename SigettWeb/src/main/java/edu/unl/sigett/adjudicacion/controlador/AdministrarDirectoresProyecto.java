@@ -14,17 +14,12 @@ import edu.unl.sigett.reportes.AdministrarReportes;
 import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
 import edu.unl.sigett.entity.AutorProyecto;
 import edu.jlmallas.academico.entity.Carrera;
-import edu.unl.sigett.entity.ConfiguracionCarrera;
-import edu.jlmallas.academico.entity.CoordinadorPeriodo;
 import edu.unl.sigett.entity.Director;
 import edu.unl.sigett.entity.DirectorProyecto;
-import edu.unl.sigett.entity.EstadoDirector;
 import edu.unl.sigett.entity.LineaInvestigacion;
-import edu.unl.sigett.entity.LineaInvestigacionDocente;
-import edu.unl.sigett.entity.OficioCarrera;
+import edu.unl.sigett.entity.DocumentoCarrera;
 import edu.unl.sigett.entity.Proyecto;
 import edu.unl.sigett.entity.ProyectoCarreraOferta;
-import edu.unl.sigett.entity.RenunciaDirector;
 import org.jlmallas.seguridad.entity.Usuario;
 import edu.unl.sigett.entity.UsuarioCarrera;
 import java.io.Serializable;
@@ -51,17 +46,13 @@ import edu.unl.sigett.dao.DirectorDao;
 import edu.unl.sigett.dao.DirectorProyectoFacadeLocal;
 import edu.unl.sigett.dao.EstadoDirectorFacadeLocal;
 import edu.unl.sigett.dao.LineaInvestigacionDocenteDao;
-import edu.unl.sigett.dao.OficioCarreraDao;
+import edu.unl.sigett.dao.DocumentoCarreraDao;
 import org.jlmallas.seguridad.dao.UsuarioDao;
-import edu.jlmallas.academico.entity.Docente;
 import edu.jlmallas.academico.entity.DocenteCarrera;
-import edu.jlmallas.academico.entity.EstudianteCarrera;
 import edu.jlmallas.academico.dao.DocenteCarreraDao;
 import edu.jlmallas.academico.dao.EstudianteCarreraDao;
 import edu.unl.sigett.comun.managed.session.SessionOficioCarrera;
-import edu.unl.sigett.enumeration.CatalogoOficioEnum;
-import edu.unl.sigett.enumeration.EstadoAutorEnum;
-import edu.unl.sigett.enumeration.EstadoProyectoEnum;
+import edu.unl.sigett.enumeration.CatalogoDocumentoCarreraEnum;
 import edu.unl.sigett.dao.UsuarioCarreraDao;
 import java.util.HashMap;
 import java.util.Map;
@@ -100,7 +91,7 @@ public class AdministrarDirectoresProyecto implements Serializable {
     @EJB
     private ConfiguracionCarreraDao configuracionCarreraFacadeLocal;
     @EJB
-    private OficioCarreraDao oficioCarreraFacadeLocal;
+    private DocumentoCarreraDao oficioCarreraFacadeLocal;
     @EJB
     private CarreraService carreraFacadeLocal;
     @EJB
@@ -280,12 +271,12 @@ public class AdministrarDirectoresProyecto implements Serializable {
                             break;
                         }
                     }
-                    OficioCarrera oficioCarrera = oficioCarreraFacadeLocal.buscarPorTablaId(directorProyecto.getId(), CatalogoOficioEnum.DIRECTORPROYECTO.getTipo());
-                    if (oficioCarrera != null) {
-                        sessionOficioCarrera.setOficioCarrera(oficioCarrera);
-                    } else {
-                        sessionOficioCarrera.setOficioCarrera(new OficioCarrera());
-                    }
+//                    DocumentoCarrera oficioCarrera = oficioCarreraFacadeLocal.buscarPorTablaId(directorProyecto.getId(), CatalogoDocumentoCarreraEnum.DIRECTORPROYECTO.getTipo());
+//                    if (oficioCarrera != null) {
+//                        sessionOficioCarrera.setOficioCarrera(oficioCarrera);
+//                    } else {
+//                        sessionOficioCarrera.setOficioCarrera(new DocumentoCarrera());
+//                    }
                     renderedDlgOficio = true;
                     RequestContext.getCurrentInstance().execute("PF('dlgOficioDirectorProyecto').show()");
                 } else {
@@ -343,7 +334,7 @@ public class AdministrarDirectoresProyecto implements Serializable {
 //        ConfiguracionCarrera configuracionCarrera = configuracionCarreraFacadeLocal.buscarPorCarreraId(carreraId, "NO");
 //        Integer nOficio = Integer.parseInt(configuracionCarrera.getValor());
         secretario = user.getNombres().toUpperCase() + " " + user.getApellidos().toUpperCase();
-        OficioCarrera oficioCarrera = oficioCarreraFacadeLocal.buscarPorTablaId(dp.getId(), CatalogoOficioEnum.DIRECTORPROYECTO.getTipo());
+//        DocumentoCarrera oficioCarrera = oficioCarreraFacadeLocal.buscarPorTablaId(dp.getId(), CatalogoDocumentoCarreraEnum.DIRECTORPROYECTO.getTipo());
         HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
         Calendar fechaActual = Calendar.getInstance();
         String fechaFormateada = configuracionGeneralFacadeLocal.dateFormat(fechaActual.getTime());

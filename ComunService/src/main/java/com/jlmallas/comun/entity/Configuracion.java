@@ -67,6 +67,10 @@ public class Configuracion implements Serializable {
     public Configuracion() {
     }
 
+    public Configuracion(String codigo) {
+        this.codigo = codigo;
+    }
+
     public Long getId() {
         return id;
     }

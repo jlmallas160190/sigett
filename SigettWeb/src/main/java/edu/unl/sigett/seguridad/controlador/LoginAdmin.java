@@ -7,6 +7,7 @@ package edu.unl.sigett.seguridad.controlador;
 
 import com.jlmallas.comun.dao.ConfiguracionDao;
 import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
+import edu.unl.sigett.util.CabeceraController;
 import org.jlmallas.seguridad.entity.Usuario;
 import java.io.Serializable;
 import java.util.ResourceBundle;
@@ -16,6 +17,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
+import org.jlmallas.api.secure.SecureDTO;
 import org.jlmallas.seguridad.dao.UsuarioDao;
 
 /**
@@ -28,10 +30,9 @@ public class LoginAdmin implements Serializable {
     
     @EJB
     private UsuarioDao usuarioFacadeLocal;
-    @EJB
-    private ConfiguracionDao configuracionFacadeLocal;
     @Inject
     private SessionUsuario sessionUsuario;
+    @Inject CabeceraController cabeceraController;
     
     public LoginAdmin() {
     }
@@ -46,7 +47,8 @@ public class LoginAdmin implements Serializable {
         String navegacion = "";
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-        int var = usuarioFacadeLocal.logear(username, configuracionFacadeLocal.encriptaClave(password));
+        int var = usuarioFacadeLocal.logear(username,cabeceraController.getSecureService().encrypt(
+                                    new SecureDTO(cabeceraController.getConfiguracionGeneralDTO().getSecureKey(),password)));
         if (var == 1) {
             sessionUsuario.setUsuario(usuarioFacadeLocal.buscarPorUsuario(username));
             if (sessionUsuario.getUsuario().getEsActivo()) {

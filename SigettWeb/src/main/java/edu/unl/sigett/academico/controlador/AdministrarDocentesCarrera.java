@@ -83,10 +83,12 @@ import edu.unl.sigett.entity.LineaInvestigacionCarrera;
 import edu.unl.sigett.service.ConfiguracionCarreraService;
 import edu.unl.sigett.service.DocenteUsuarioService;
 import edu.unl.sigett.service.LineaInvestigacionService;
+import edu.unl.sigett.util.CabeceraController;
 import edu.unl.sigett.util.MessageView;
 import java.util.Calendar;
 import org.jlmallas.api.http.UrlConexion;
 import org.jlmallas.api.http.dto.SeguridadHttp;
+import org.jlmallas.api.secure.SecureDTO;
 import org.jlmallas.seguridad.dao.UsuarioDao;
 import org.jlmallas.seguridad.dao.RolDao;
 import org.jlmallas.seguridad.dao.RolUsuarioDao;
@@ -126,6 +128,8 @@ public class AdministrarDocentesCarrera implements Serializable {
     private SessionUsuario sessionUsuario;
     @Inject
     private SessionUsuarioCarrera sessionUsuarioCarrera;
+    @Inject
+    private CabeceraController cabeceraController;
 //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="INYECCIÓN DE SERVICIOS">
     @EJB
@@ -630,7 +634,8 @@ public class AdministrarDocentesCarrera implements Serializable {
                 usuario.setEmail(personaDocente.getEmail());
                 usuario.setEsSuperuser(false);
                 usuario.setEsActivo(true);
-                usuario.setPassword(configuracionDao.encriptaClave(personaDocente.getNumeroIdentificacion()));
+                usuario.setPassword(cabeceraController.getSecureService().encrypt(
+                                    new SecureDTO(cabeceraController.getConfiguracionGeneralDTO().getSecureKey(),personaDocente.getNumeroIdentificacion())));
                 usuario.setUsername(personaDocente.getNumeroIdentificacion());
                 if (usuarioDao.unicoUsername(usuario.getUsername()) == false) {
                     usuarioDao.create(usuario);
@@ -648,7 +653,8 @@ public class AdministrarDocentesCarrera implements Serializable {
                     }
                 }
             } else {
-                usuario.setPassword(configuracionDao.encriptaClave(personaDocente.getNumeroIdentificacion()));
+                usuario.setPassword(cabeceraController.getSecureService().encrypt(
+                                    new SecureDTO(cabeceraController.getConfiguracionGeneralDTO().getSecureKey(),personaDocente.getNumeroIdentificacion())));
                 usuarioDao.edit(usuario);
             }
         } catch (Exception e) {

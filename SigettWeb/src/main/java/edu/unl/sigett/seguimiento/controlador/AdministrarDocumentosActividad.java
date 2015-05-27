@@ -134,12 +134,12 @@ public class AdministrarDocumentosActividad implements Serializable {
         return documentoActividad;
     }
 
-    public String obtenerSizeKB(DocumentoActividad documentoActividad) {
-        double valorKB = documentoActividad.getTamanio() / 1024;
-        valorKB = Math.round(valorKB * 100);
-        valorKB = valorKB / 100;
-        return valorKB + " kB";
-    }
+//    public String obtenerSizeKB(DocumentoActividad documentoActividad) {
+//        double valorKB = documentoActividad.getTamanio() / 1024;
+//        valorKB = Math.round(valorKB * 100);
+//        valorKB = valorKB / 100;
+//        return valorKB + " kB";
+//    }
 
     public void buscar(Actividad actividad, Usuario usuario) {
         try {
@@ -182,35 +182,35 @@ public class AdministrarDocumentosActividad implements Serializable {
 
     public void handleFileUpload(FileUploadEvent event) {
         try {
-            Calendar fechaActual = Calendar.getInstance();
-            String tipoArchivo = event.getFile().getContentType();
-            String param = (String) event.getComponent().getAttributes().get("1");
-            Usuario usuario = new Usuario();
-            Proyecto p = null;
-            if (param.equalsIgnoreCase("usuario")) {
-                usuario = sessionUsuario.getUsuario();
-                p = sessionProyecto.getProyectoSeleccionado();
-            } else {
-                if (param.equalsIgnoreCase("autor")) {
-                    usuario = sessionEstudianteUsuario.getUsuario();
-                    p = sessionProyectosAutor.getAutorProyecto().getProyectoId();
-                } else {
-                    if (param.equalsIgnoreCase("director")) {
-                        p = sessionActividad.getActividad().getCronogramaId().getProyecto();
-                        usuario = sessionDocenteUsuario.getUsuario();
-                    } else {
-                        if (param.equalsIgnoreCase("autor1")) {
-                            usuario = sessionEstudianteUsuario.getUsuario();
-                            p = sessionActividad.getActividad().getCronogramaId().getProyecto();
-                        }
-                    }
-                }
-            }
-            this.sessionDocumentoActividad.getDocumentoActividad().setTamanio(event.getFile().getSize());
-            sessionDocumentoActividad.getDocumentoActividad().setTipoArchivo(tipoArchivo);
-            sessionDocumentoActividad.getDocumentoActividad().setDocumento(event.getFile().getContents());
-            sessionDocumentoActividad.getDocumentoActividad().setFecha(fechaActual.getTime());
-            grabar(sessionDocumentoActividad.getDocumentoActividad(), usuario, p);
+//            Calendar fechaActual = Calendar.getInstance();
+//            String tipoArchivo = event.getFile().getContentType();
+//            String param = (String) event.getComponent().getAttributes().get("1");
+//            Usuario usuario = new Usuario();
+//            Proyecto p = null;
+//            if (param.equalsIgnoreCase("usuario")) {
+//                usuario = sessionUsuario.getUsuario();
+//                p = sessionProyecto.getProyectoSeleccionado();
+//            } else {
+//                if (param.equalsIgnoreCase("autor")) {
+//                    usuario = sessionEstudianteUsuario.getUsuario();
+//                    p = sessionProyectosAutor.getAutorProyecto().getProyectoId();
+//                } else {
+//                    if (param.equalsIgnoreCase("director")) {
+//                        p = sessionActividad.getActividad().getCronogramaId().getProyecto();
+//                        usuario = sessionDocenteUsuario.getUsuario();
+//                    } else {
+//                        if (param.equalsIgnoreCase("autor1")) {
+//                            usuario = sessionEstudianteUsuario.getUsuario();
+//                            p = sessionActividad.getActividad().getCronogramaId().getProyecto();
+//                        }
+//                    }
+//                }
+//            }
+//            this.sessionDocumentoActividad.getDocumentoActividad().setTamanio(event.getFile().getSize());
+//            sessionDocumentoActividad.getDocumentoActividad().setTipoArchivo(tipoArchivo);
+//            sessionDocumentoActividad.getDocumentoActividad().setDocumento(event.getFile().getContents());
+//            sessionDocumentoActividad.getDocumentoActividad().setFecha(fechaActual.getTime());
+//            grabar(sessionDocumentoActividad.getDocumentoActividad(), usuario, p);
         } catch (Exception e) {
             System.out.println(e);
         }

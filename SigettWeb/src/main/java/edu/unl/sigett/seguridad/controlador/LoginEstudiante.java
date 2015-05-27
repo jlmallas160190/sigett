@@ -65,57 +65,57 @@ public class LoginEstudiante implements Serializable {
 
     public String logear(String username, String password) {
         String navegacion = "";
-        int esLogin = 3;
-        String value = configuracionGeneralFacadeLocal.find(40).getValor();
-        if (value.equalsIgnoreCase("SI")) {
-            sgaWebServicesValidaEstudiante(username, password);
-            if (resultado) {
-                esLogin = 1;
-            }
-        } else {
-            int var = usuarioFacadeLocal.logear(username, configuracionFacadeLocal.encriptaClave(password));
-            esLogin = var;
-        }
-        FacesContext facesContext = FacesContext.getCurrentInstance();
-        ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-        if (esLogin == 1) {
-            Usuario usuario = usuarioFacadeLocal.buscarPorUsuario(username);
-            if (usuario != null) {
-                usuario.setUsername(username);
-                usuario.setPassword(configuracionFacadeLocal.encriptaClave(password));
-                usuarioFacadeLocal.edit(usuario);
-                if (usuario.getEsActivo()) {
-                    EstudianteUsuario estudianteUsuario = estudianteUsuarioFacadeLocal.find(usuario.getId());
-                    if (estudianteUsuario != null) {
-                        sessionEstudianteUsuario.setEstudianteUsuario(estudianteUsuario);
-                        sessionEstudianteUsuario.setEstudiante(estudianteFacadeLocal.find(estudianteUsuario.getEstudianteId()));
-                        administrarActividades.notificacionActividadesAutorProyecto(sessionEstudianteUsuario.getEstudiante());
-                        navegacion = "pretty:principalEstudiante";
-                    } else {
-                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.no_user") + ". " + bundle.getString("lbl.msm_consulte"), "");
-                        FacesContext.getCurrentInstance().addMessage(null, message);
-                    }
-                } else {
-                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_user_no_active") + ". " + bundle.getString("lbl.msm_consulte"), "");
-                    FacesContext.getCurrentInstance().addMessage(null, message);
-                }
-            }
-        } else {
-            if (esLogin == 3) {
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.datos_incorrectos"), "");
-                FacesContext.getCurrentInstance().addMessage(null, message);
-            } else {
-                if (esLogin == 0) {
-                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.clave_incorrecta"), "");
-                    FacesContext.getCurrentInstance().addMessage(null, message);
-                } else {
-                    if (esLogin == 2) {
-                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.usuario_incorrecto"), "");
-                        FacesContext.getCurrentInstance().addMessage(null, message);
-                    }
-                }
-            }
-        }
+//        int esLogin = 3;
+//        String value = configuracionGeneralFacadeLocal.find(40).getValor();
+//        if (value.equalsIgnoreCase("SI")) {
+//            sgaWebServicesValidaEstudiante(username, password);
+//            if (resultado) {
+//                esLogin = 1;
+//            }
+//        } else {
+//            int var = usuarioFacadeLocal.logear(username, configuracionFacadeLocal.encriptaClave(password));
+//            esLogin = var;
+//        }
+//        FacesContext facesContext = FacesContext.getCurrentInstance();
+//        ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
+//        if (esLogin == 1) {
+//            Usuario usuario = usuarioFacadeLocal.buscarPorUsuario(username);
+//            if (usuario != null) {
+//                usuario.setUsername(username);
+//                usuario.setPassword(configuracionFacadeLocal.encriptaClave(password));
+//                usuarioFacadeLocal.edit(usuario);
+//                if (usuario.getEsActivo()) {
+//                    EstudianteUsuario estudianteUsuario = estudianteUsuarioFacadeLocal.find(usuario.getId());
+//                    if (estudianteUsuario != null) {
+//                        sessionEstudianteUsuario.setEstudianteUsuario(estudianteUsuario);
+//                        sessionEstudianteUsuario.setEstudiante(estudianteFacadeLocal.find(estudianteUsuario.getEstudianteId()));
+//                        administrarActividades.notificacionActividadesAutorProyecto(sessionEstudianteUsuario.getEstudiante());
+//                        navegacion = "pretty:principalEstudiante";
+//                    } else {
+//                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.no_user") + ". " + bundle.getString("lbl.msm_consulte"), "");
+//                        FacesContext.getCurrentInstance().addMessage(null, message);
+//                    }
+//                } else {
+//                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_user_no_active") + ". " + bundle.getString("lbl.msm_consulte"), "");
+//                    FacesContext.getCurrentInstance().addMessage(null, message);
+//                }
+//            }
+//        } else {
+//            if (esLogin == 3) {
+//                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.datos_incorrectos"), "");
+//                FacesContext.getCurrentInstance().addMessage(null, message);
+//            } else {
+//                if (esLogin == 0) {
+//                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.clave_incorrecta"), "");
+//                    FacesContext.getCurrentInstance().addMessage(null, message);
+//                } else {
+//                    if (esLogin == 2) {
+//                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.usuario_incorrecto"), "");
+//                        FacesContext.getCurrentInstance().addMessage(null, message);
+//                    }
+//                }
+//            }
+//        }
         return navegacion;
     }
 
