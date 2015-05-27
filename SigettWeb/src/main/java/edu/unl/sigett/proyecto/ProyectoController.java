@@ -55,6 +55,7 @@ import edu.unl.sigett.service.ProyectoCarreraOfertaService;
 import edu.unl.sigett.service.ProyectoService;
 import edu.unl.sigett.usuarioCarrera.SessionUsuarioCarrera;
 import edu.unl.sigett.util.CabeceraController;
+import edu.unl.sigett.webSemantica.dto.AutorOntDTO;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
@@ -648,7 +649,10 @@ public class ProyectoController implements Serializable {
             for (AutorProyectoDTO autorProyectoDTO : sessionProyecto.getAutoresProyectoDTONuevos()) {
                 if (autorProyectoDTO.getAutorProyecto().getId() == null) {
                     autorProyectoService.guardar(autorProyectoDTO.getAutorProyecto());
-//                        grabarIndividuoInvestigadorAutor(proyecto, autorProyecto);
+                    cabeceraController.getOntologyService().getAutorOntService().read(cabeceraController.getCabeceraWebSemantica());
+                    cabeceraController.getOntologyService().getAutorOntService().write(new AutorOntDTO(autorProyectoDTO.getAspirante().getId(),
+                            autorProyectoDTO.getPersona().getNombres(), autorProyectoDTO.getPersona().getApellidos(), autorProyectoDTO.getPersona().getFechaNacimiento(),
+                            itemService.buscarPorId(autorProyectoDTO.getPersona().getGeneroId()).getNombre(), autorProyectoDTO.getPersona().getEmail()));
                     logFacadeLocal.create(logFacadeLocal.crearLog("AutorProyecto", autorProyectoDTO.getAutorProyecto().getId() + "", "CREAR",
                             "|Aspirante= " + autorProyectoDTO.getAutorProyecto().getAspiranteId().getId() + "|Proyecto= "
                             + sessionProyecto.getProyectoSeleccionado().getId(), sessionUsuario.getUsuario()));

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.unl.sigett.vocabulay;
+package edu.unl.sigett.webSemantica.vocabulay;
 
 import com.hp.hpl.jena.ontology.DatatypeProperty;
 import com.hp.hpl.jena.ontology.OntClass;
@@ -71,7 +71,7 @@ public class Vocabulario {
         return this.nivelAcademicoOnt;
     }
 
-    public void crearClaseCarrera() {
+    public void crearCarreraOnt() {
         this.carreraOnt = model.createClass(getNS() + "carrera");
     }
 

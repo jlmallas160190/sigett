@@ -5,6 +5,7 @@
  */
 package edu.unl.sigett.webSemantica.dto;
 
+import com.hp.hpl.jena.ontology.Individual;
 import java.io.Serializable;
 
 /**
@@ -16,14 +17,15 @@ public class CarreraDTO implements Serializable {
     private Long id;
     private String nombre;
     private String sigla;
-    private NivelDTO nivelDTO;
+    private NivelAcademicoDTO nivelAcademicoDTO;
     private AreaAcademicaDTO areaAcademicaDTO;
+    private Individual individual;
 
-    public CarreraDTO(Long id, String nombre, String sigla, NivelDTO nivelDTO, AreaAcademicaDTO areaAcademicaDTO) {
+    public CarreraDTO(Long id, String nombre, String sigla, NivelAcademicoDTO nivelDTO, AreaAcademicaDTO areaAcademicaDTO) {
         this.id = id;
         this.sigla = sigla;
         this.nombre = nombre;
-        this.nivelDTO = nivelDTO;
+        this.nivelAcademicoDTO = nivelDTO;
         this.areaAcademicaDTO = areaAcademicaDTO;
     }
 
@@ -46,12 +48,12 @@ public class CarreraDTO implements Serializable {
         this.nombre = nombre;
     }
 
-    public NivelDTO getNivelDTO() {
-        return nivelDTO;
+    public NivelAcademicoDTO getNivelAcademicoDTO() {
+        return nivelAcademicoDTO;
     }
 
-    public void setNivelDTO(NivelDTO nivelDTO) {
-        this.nivelDTO = nivelDTO;
+    public void setNivelAcademicoDTO(NivelAcademicoDTO nivelAcademicoDTO) {
+        this.nivelAcademicoDTO = nivelAcademicoDTO;
     }
 
     public String getSigla() {
@@ -68,6 +70,14 @@ public class CarreraDTO implements Serializable {
 
     public void setAreaAcademicaDTO(AreaAcademicaDTO areaAcademicaDTO) {
         this.areaAcademicaDTO = areaAcademicaDTO;
+    }
+
+    public Individual getIndividual() {
+        return individual;
+    }
+
+    public void setIndividual(Individual individual) {
+        this.individual = individual;
     }
 
 }

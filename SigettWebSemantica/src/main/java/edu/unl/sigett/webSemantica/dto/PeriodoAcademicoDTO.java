@@ -5,6 +5,7 @@
  */
 package edu.unl.sigett.webSemantica.dto;
 
+import com.hp.hpl.jena.ontology.Individual;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -18,6 +19,7 @@ public class PeriodoAcademicoDTO implements Serializable {
     private String nombre;
     private Date fechaInicio;
     private Date fechaFin;
+    private Individual individual;
 
     public PeriodoAcademicoDTO() {
     }
@@ -59,6 +61,14 @@ public class PeriodoAcademicoDTO implements Serializable {
 
     public void setFechaFin(Date fechaFin) {
         this.fechaFin = fechaFin;
+    }
+
+    public Individual getIndividual() {
+        return individual;
+    }
+
+    public void setIndividual(Individual individual) {
+        this.individual = individual;
     }
 
 }

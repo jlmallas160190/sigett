@@ -3,21 +3,37 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package edu.unl.sigett.webSemantica.dto;
 
+import com.hp.hpl.jena.ontology.Individual;
 import java.io.Serializable;
 
 /**
  *
  * @author jorge-luis
  */
-public class ProyectoDTO implements Serializable{
+public class ProyectoDTO implements Serializable {
+
     private Long id;
     private String tema;
     private String fechaCreacion;
     private String tipo;
     private String estado;
+    private Individual individual;
+    private String uri;
+
+    public ProyectoDTO() {
+    }
+
+    public ProyectoDTO(Long id, String tema, String fechaCreacion, String tipo, String estado, Individual individual, String uri) {
+        this.id = id;
+        this.tema = tema;
+        this.fechaCreacion = fechaCreacion;
+        this.tipo = tipo;
+        this.estado = estado;
+        this.individual = individual;
+        this.uri = uri;
+    }
 
     public Long getId() {
         return id;
@@ -58,5 +74,21 @@ public class ProyectoDTO implements Serializable{
     public void setEstado(String estado) {
         this.estado = estado;
     }
-    
+
+    public Individual getIndividual() {
+        return individual;
+    }
+
+    public void setIndividual(Individual individual) {
+        this.individual = individual;
+    }
+
+    public String getUri() {
+        return uri;
+    }
+
+    public void setUri(String uri) {
+        this.uri = uri;
+    }
+
 }

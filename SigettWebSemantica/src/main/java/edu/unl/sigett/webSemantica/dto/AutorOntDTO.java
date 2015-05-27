@@ -5,6 +5,7 @@
  */
 package edu.unl.sigett.webSemantica.dto;
 
+import com.hp.hpl.jena.ontology.Individual;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.logging.Logger;
@@ -13,21 +14,20 @@ import java.util.logging.Logger;
  *
  * @author jorge-luis
  */
-public class AutorDTO extends PersonaDTO implements Serializable {
+public class AutorOntDTO extends PersonaDTO implements Serializable {
 
     private Long id;
-    private static final Logger LOG = Logger.getLogger(AutorDTO.class.getName());
+    private static final Logger LOG = Logger.getLogger(AutorOntDTO.class.getName());
+    private Individual individual;
 
-    public AutorDTO(Long id) {
+    public AutorOntDTO(Long id) {
         this.id = id;
     }
 
-    public AutorDTO(Long id, String nombres, String apellidos, Date fechaNacimiento, String genero, String email) {
+    public AutorOntDTO(Long id, String nombres, String apellidos, Date fechaNacimiento, String genero, String email) {
         super(nombres, apellidos, fechaNacimiento, genero, email);
         this.id = id;
     }
-
-    
 
     public Long getId() {
         return id;
@@ -35,6 +35,14 @@ public class AutorDTO extends PersonaDTO implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Individual getIndividual() {
+        return individual;
+    }
+
+    public void setIndividual(Individual individual) {
+        this.individual = individual;
     }
 
 }

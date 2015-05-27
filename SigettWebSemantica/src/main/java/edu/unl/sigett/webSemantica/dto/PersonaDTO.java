@@ -71,4 +71,8 @@ public class PersonaDTO implements Serializable {
         this.email = email;
     }
 
+    @Override
+    public String toString() {
+        return this.nombres + " " + this.apellidos;
+    }
 }

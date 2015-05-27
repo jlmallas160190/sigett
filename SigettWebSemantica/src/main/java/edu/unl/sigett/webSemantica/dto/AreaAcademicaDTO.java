@@ -5,6 +5,7 @@
  */
 package edu.unl.sigett.webSemantica.dto;
 
+import com.hp.hpl.jena.ontology.Individual;
 import java.io.Serializable;
 
 /**
@@ -17,11 +18,13 @@ public class AreaAcademicaDTO implements Serializable {
     private String institucion;
     private String nombre;
     private String sigla;
+    private Individual individual;
+    private String uri;
 
     public AreaAcademicaDTO() {
     }
 
-    public AreaAcademicaDTO(Long id, String institucion, String nombre, String sigla) {
+    public AreaAcademicaDTO(Long id, String institucion, String nombre, String sigla,String uri) {
         this.id = id;
         this.institucion = institucion;
         this.nombre = nombre;
@@ -58,6 +61,22 @@ public class AreaAcademicaDTO implements Serializable {
 
     public void setInstitucion(String institucion) {
         this.institucion = institucion;
+    }
+
+    public Individual getIndividual() {
+        return individual;
+    }
+
+    public void setIndividual(Individual individual) {
+        this.individual = individual;
+    }
+
+    public String getUri() {
+        return uri;
+    }
+
+    public void setUri(String uri) {
+        this.uri = uri;
     }
 
 }

@@ -3,25 +3,29 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package edu.unl.sigett.webSemantica.dto;
 
+import com.hp.hpl.jena.ontology.Individual;
 import java.io.Serializable;
 
 /**
  *
  * @author jorge-luis
  */
-public class NivelDTO implements Serializable{
+public class NivelAcademicoDTO implements Serializable {
+
     private Long id;
     private String nombre;
+    private Individual individual;
+    private String uri;
 
-    public NivelDTO(Long id, String nombre) {
+    public NivelAcademicoDTO(Long id, String nombre, String uri) {
         this.id = id;
+        this.uri = uri;
         this.nombre = nombre;
     }
 
-    public NivelDTO() {
+    public NivelAcademicoDTO() {
     }
 
     public Long getId() {
@@ -39,5 +43,21 @@ public class NivelDTO implements Serializable{
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
-    
+
+    public Individual getIndividual() {
+        return individual;
+    }
+
+    public void setIndividual(Individual individual) {
+        this.individual = individual;
+    }
+
+    public String getUri() {
+        return uri;
+    }
+
+    public void setUri(String uri) {
+        this.uri = uri;
+    }
+
 }

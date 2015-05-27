@@ -5,6 +5,7 @@
  */
 package edu.unl.sigett.webSemantica.dto;
 
+import com.hp.hpl.jena.ontology.Individual;
 import java.io.Serializable;
 
 /**
@@ -13,8 +14,19 @@ import java.io.Serializable;
  */
 public class AutorProyectoDTO implements Serializable {
 
+    private Long id;
     private ProyectoDTO proyectoDTO;
-    private AutorDTO autorDTO;
+    private AutorOntDTO autorDTO;
+    private Individual individual;
+
+    public AutorProyectoDTO(Long id, ProyectoDTO proyectoDTO, AutorOntDTO autorDTO) {
+        this.id = id;
+        this.proyectoDTO = proyectoDTO;
+        this.autorDTO = autorDTO;
+    }
+
+    public AutorProyectoDTO() {
+    }
 
     public ProyectoDTO getProyectoDTO() {
         return proyectoDTO;
@@ -24,12 +36,28 @@ public class AutorProyectoDTO implements Serializable {
         this.proyectoDTO = proyectoDTO;
     }
 
-    public AutorDTO getAutorDTO() {
+    public AutorOntDTO getAutorDTO() {
         return autorDTO;
     }
 
-    public void setAutorDTO(AutorDTO autorDTO) {
+    public void setAutorDTO(AutorOntDTO autorDTO) {
         this.autorDTO = autorDTO;
+    }
+
+    public Individual getIndividual() {
+        return individual;
+    }
+
+    public void setIndividual(Individual individual) {
+        this.individual = individual;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
 }

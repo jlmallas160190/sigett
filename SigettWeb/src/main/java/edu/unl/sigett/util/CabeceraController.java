@@ -9,9 +9,24 @@ import com.jlmallas.comun.dao.ConfiguracionDao;
 import com.jlmallas.comun.entity.Configuracion;
 import com.jlmallas.comun.enumeration.ConfiguracionEnum;
 import com.jlmallas.comun.enumeration.ServidorCorreoEnum;
+import edu.unl.sigett.webSemantica.service.AutorOntService;
+import edu.unl.sigett.webSemantica.service.implement.AreaAcademicaOntServiceImplement;
+import edu.unl.sigett.webSemantica.service.implement.AutorOntServiceImplement;
+import edu.unl.sigett.webSemantica.service.implement.AutorProyectoOntServiceImplement;
+import edu.unl.sigett.webSemantica.service.implement.CarreraOntServiceImplement;
+import edu.unl.sigett.webSemantica.service.implement.LineaInvestigacionOntServiceImplement;
+import edu.unl.sigett.webSemantica.service.implement.LineaInvestigacionProyectoOntServiceImplement;
+import edu.unl.sigett.webSemantica.service.implement.NivelAcademicoOntServiceImplement;
+import edu.unl.sigett.webSemantica.service.implement.PeriodoAcademicoOntServiceImplement;
+import edu.unl.sigett.webSemantica.service.implement.ProyectoOntServiceImplement;
+import edu.unl.sigett.webSemantica.util.CabeceraWebSemantica;
+import edu.unl.sigett.webSemantica.vocabulay.Vocabulario;
 import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
@@ -41,11 +56,15 @@ public class CabeceraController implements Serializable {
     private MailDTO mailDTO;
     private ConfiguracionGeneralDTO configuracionGeneralDTO;
     private SecureService secureService;
+    private CabeceraWebSemantica cabeceraWebSemantica;
+    private OntologyService ontologyService;
 
     public CabeceraController() {
     }
 
     public void init() {
+        inicarOntologias();
+        this.fijarParametrosWebSemantica();
         this.fijarParametrosMail();
         this.fijarConfiguraciones();
         this.mailService = new MailServiceImplement();
@@ -53,7 +72,7 @@ public class CabeceraController implements Serializable {
     }
 
     public void initLogin() {
-        this.configuracionGeneralDTO=new ConfiguracionGeneralDTO();
+        this.configuracionGeneralDTO = new ConfiguracionGeneralDTO();
         this.secureService = new SecureServiceImplement();
         this.fijarSecretKey();
     }
@@ -61,8 +80,8 @@ public class CabeceraController implements Serializable {
     private void fijarParametrosMail() {
         String puerto = configuracionDao.buscar(new Configuracion(ServidorCorreoEnum.PUERTO.getTipo())).get(0).getValor();
         String smtp = configuracionDao.buscar(new Configuracion(ServidorCorreoEnum.SMTP.getTipo())).get(0).getValor();
-        String usuario =configuracionDao.buscar(new Configuracion(ServidorCorreoEnum.USUARIO.getTipo())).get(0).getValor();
-        String clave =this.secureService.encrypt(new SecureDTO(this.getConfiguracionGeneralDTO().getSecureKey(),
+        String usuario = configuracionDao.buscar(new Configuracion(ServidorCorreoEnum.USUARIO.getTipo())).get(0).getValor();
+        String clave = this.secureService.encrypt(new SecureDTO(this.getConfiguracionGeneralDTO().getSecureKey(),
                 configuracionDao.buscar(new Configuracion(ServidorCorreoEnum.USUARIO.getTipo())).get(0).getValor()));
         mailDTO = new MailDTO(smtp, puerto, usuario, clave, null, null, null, null);
 
@@ -100,6 +119,30 @@ public class CabeceraController implements Serializable {
             System.out.println(e);
         }
         this.configuracionGeneralDTO.setSecureKey(secretKey);
+    }
+
+    private void fijarParametrosWebSemantica() {
+        try {
+            String ruta = configuracionDao.buscar(new Configuracion(ConfiguracionEnum.RUTARDF.getTipo())).get(0).getValor();
+            if (ruta == null) {
+                return;
+            }
+            this.cabeceraWebSemantica = new CabeceraWebSemantica(new Vocabulario(), ruta);
+        } catch (FileNotFoundException e) {
+        }
+    }
+
+    private void inicarOntologias() {
+        this.ontologyService = new OntologyService();
+        this.ontologyService.setAutorOntService(new AutorOntServiceImplement());
+        this.ontologyService.setAutorProyectoOntService(new AutorProyectoOntServiceImplement());
+        this.ontologyService.setProyectoOntService(new ProyectoOntServiceImplement());
+        this.ontologyService.setLineaInvestigacionOntService(new LineaInvestigacionOntServiceImplement());
+        this.ontologyService.setLineaInvestigacionProyectoOntService(new LineaInvestigacionProyectoOntServiceImplement());
+        this.ontologyService.setCarreraOntService(new CarreraOntServiceImplement());
+        this.ontologyService.setAreaAcademicaOntService(new AreaAcademicaOntServiceImplement());
+        this.ontologyService.setPeriodoAcademicoOntService(new PeriodoAcademicoOntServiceImplement());
+        this.ontologyService.setNivelAcademicoOntService(new NivelAcademicoOntServiceImplement());
     }
 
     public MessageView getMessageView() {
@@ -140,6 +183,22 @@ public class CabeceraController implements Serializable {
 
     public void setSecureService(SecureService secureService) {
         this.secureService = secureService;
+    }
+
+    public CabeceraWebSemantica getCabeceraWebSemantica() {
+        return cabeceraWebSemantica;
+    }
+
+    public void setCabeceraWebSemantica(CabeceraWebSemantica cabeceraWebSemantica) {
+        this.cabeceraWebSemantica = cabeceraWebSemantica;
+    }
+
+    public OntologyService getOntologyService() {
+        return ontologyService;
+    }
+
+    public void setOntologyService(OntologyService ontologyService) {
+        this.ontologyService = ontologyService;
     }
 
 }

@@ -5,25 +5,29 @@
  */
 package edu.unl.sigett.webSemantica.dto;
 
+import com.hp.hpl.jena.ontology.Individual;
 import java.io.Serializable;
 
 /**
  *
  * @author jorge-luis
  */
-public class ProyectoCarreraPeriodoDTO implements Serializable {
+public class ProyectoCarreraOfertaDTO implements Serializable {
 
+    private Long id;
     private OfertaAcademicaDTO ofertaAcademicaDTO;
     private ProyectoDTO proyectoDTO;
     private CarreraDTO carreraDTO;
+    private Individual individual;
 
-    public ProyectoCarreraPeriodoDTO(OfertaAcademicaDTO ofertaAcademicaDTO, ProyectoDTO proyectoDTO, CarreraDTO carreraDTO) {
+    public ProyectoCarreraOfertaDTO(Long id, OfertaAcademicaDTO ofertaAcademicaDTO, ProyectoDTO proyectoDTO, CarreraDTO carreraDTO) {
+        this.id = id;
         this.ofertaAcademicaDTO = ofertaAcademicaDTO;
         this.proyectoDTO = proyectoDTO;
         this.carreraDTO = carreraDTO;
     }
 
-    public ProyectoCarreraPeriodoDTO() {
+    public ProyectoCarreraOfertaDTO() {
     }
 
     public OfertaAcademicaDTO getOfertaAcademicaDTO() {
@@ -48,6 +52,22 @@ public class ProyectoCarreraPeriodoDTO implements Serializable {
 
     public void setCarreraDTO(CarreraDTO carreraDTO) {
         this.carreraDTO = carreraDTO;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Individual getIndividual() {
+        return individual;
+    }
+
+    public void setIndividual(Individual individual) {
+        this.individual = individual;
     }
 
 }
