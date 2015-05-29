@@ -39,55 +39,70 @@ public class UsuarioDaoImplement extends AbstractDao<Usuario> implements Usuario
         super(Usuario.class);
     }
 
-    @Override
-    public boolean unicoUsername(String username) {
-        boolean var = false;
-        Usuario user = buscarPorUsuario(username);
-        if (user != null) {
-            var = true;
-        }
-        return var;
-    }
-
-    @Override
-    public int logear(String username, String password) {
-        //if var=0 no existe clave; if var=2 no existe username; if var=3 no coinciden
-        int var = 0;
-        Usuario usuarioPorUsername = buscarPorUsuario(username);
-        Usuario usuarioClave = new Usuario();
-        if (usuarioPorUsername != null) {
-            usuarioClave = buscarPorClave(usuarioPorUsername.getUsername(), password);
-        }
-        if (usuarioPorUsername != null) {
-            if (usuarioClave != null) {
-                if (usuarioPorUsername.equals(usuarioClave)) {
-                    var = 1;
-                } else {
-                    var = 3;
-                }
-            } else {
-                var = 2;
-            }
-        }
-        return var;
-    }
-
+//    @Override
+//    public boolean unicoUsername(String username) {
+//        boolean var = false;
+//        Usuario user = buscarPorUsuario(username);
+//        if (user != null) {
+//            var = true;
+//        }
+//        return var;
+//    }
+//    @Override
+//    public int logear(String username, String password) {
+//        //if var=0 no existe clave; if var=2 no existe username; if var=3 no coinciden
+//        int var = 0;
+//        Usuario usuarioPorUsername = buscarPorUsuario(username);
+//        Usuario usuarioClave = new Usuario();
+//        if (usuarioPorUsername != null) {
+//            usuarioClave = buscarPorClave(usuarioPorUsername.getUsername(), password);
+//        }
+//        if (usuarioPorUsername != null) {
+//            if (usuarioClave != null) {
+//                if (usuarioPorUsername.equals(usuarioClave)) {
+//                    var = 1;
+//                } else {
+//                    var = 3;
+//                }
+//            } else {
+//                var = 2;
+//            }
+//        }
+//        return var;
+//    }
     @Override
     public List<Usuario> buscarPorCriterio(Usuario usuario) {
         StringBuilder sql = new StringBuilder();
         HashMap<String, Object> parametros = new HashMap<>();
+        Boolean existeFiltro = Boolean.FALSE;
         sql.append("Select u from Usuario u where 1=1 ");
         if (usuario.getNombres() != null) {
             sql.append(" and (LOWER(u.nombres) like concat('%',LOWER(:nombres),'%'))");
             parametros.put("nombres", usuario.getNombres());
+            existeFiltro = Boolean.TRUE;
         }
         if (usuario.getApellidos() != null) {
             sql.append(" and (LOWER(u.apellidos) like concat('%',LOWER(:apellidos),'%'))");
             parametros.put("apellidos", usuario.getNombres());
+            existeFiltro = Boolean.TRUE;
         }
-        if (usuario.getNombres() != null) {
-            sql.append(" and (LOWER(u.nombres) like concat('%',LOWER(:nombres),'%'))");
-            parametros.put("nombres", usuario.getNombres());
+        if (usuario.getUsername() != null) {
+            sql.append(" and u.username=:username");
+            parametros.put("username", usuario.getUsername());
+            existeFiltro = Boolean.TRUE;
+        }
+        if (usuario.getPassword() != null) {
+            sql.append(" and u.password=:password");
+            parametros.put("password", usuario.getPassword());
+            existeFiltro = Boolean.TRUE;
+        }
+        if (usuario.getEsActivo() != null) {
+            sql.append(" and u.esActivo:=activo");
+            parametros.put("activo", usuario.getEsActivo());
+            existeFiltro = Boolean.TRUE;
+        }
+        if (!existeFiltro) {
+            return new ArrayList<>();
         }
         sql.append(" order by u.apellidos asc ");
         final Query q = em.createQuery(sql.toString());
@@ -129,30 +144,29 @@ public class UsuarioDaoImplement extends AbstractDao<Usuario> implements Usuario
     public int tienePermiso(Usuario user, String permiso) {
         int var = 0;
         boolean permisoEncontrado = false;
-        if (user.getId() != null) {
-            if (user.getEsSuperuser()) {
+        if (user.getId() == null) {
+            return var;
+        }
+        if (user.getEsSuperuser()) {
+            return 1;
+        }
+        UsuarioPermiso up = usuarioPermisoFacadeLocal.buscarPorUsuarioYCodigoPermiso(user.getId(), permiso);
+        if (up != null) {
+            return 1;
+        }
+        List<RolUsuario> rolUsuarios = rolUsuarioFacadeLocal.buscarPorUsuario(user.getId());
+        for (RolUsuario rolUsuario : rolUsuarios) {
+            RolPermiso rp = rolPermisoFacadeLocal.buscarPorRolCodigoPermiso(rolUsuario.getRolId().getId(), permiso);
+            if (rp != null) {
                 permisoEncontrado = true;
-            } else {
-                UsuarioPermiso up = usuarioPermisoFacadeLocal.buscarPorUsuarioYCodigoPermiso(user.getId(), permiso);
-                if (up != null) {
-                    permisoEncontrado = true;
-                }
-                if (permisoEncontrado == false) {
-                    List<RolUsuario> rolUsuarios = rolUsuarioFacadeLocal.buscarPorUsuario(user.getId());
-                    for (RolUsuario rolUsuario : rolUsuarios) {
-                        RolPermiso rp = rolPermisoFacadeLocal.buscarPorRolCodigoPermiso(rolUsuario.getRolId().getId(), permiso);
-                        if (rp != null) {
-                            permisoEncontrado = true;
-                            break;
-                        }
-                    }
-                }
+                break;
             }
-            if (permisoEncontrado == true) {
-                var = 1;
-            } else {
-                var = 2;
-            }
+        }
+
+        if (permisoEncontrado == true) {
+            var = 1;
+        } else {
+            var = 2;
         }
         return var;
     }

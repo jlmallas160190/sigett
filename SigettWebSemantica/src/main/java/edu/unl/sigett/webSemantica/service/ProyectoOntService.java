@@ -5,7 +5,7 @@
  */
 package edu.unl.sigett.webSemantica.service;
 
-import edu.unl.sigett.webSemantica.dto.ProyectoDTO;
+import edu.unl.sigett.webSemantica.dto.ProyectoOntDTO;
 import edu.unl.sigett.webSemantica.util.CabeceraWebSemantica;
 
 /**
@@ -16,5 +16,5 @@ public interface ProyectoOntService {
 
     void read(final CabeceraWebSemantica cabecera);
 
-    void write(final ProyectoDTO proyectoDTO);
+    void write(final ProyectoOntDTO proyectoDTO);
 }

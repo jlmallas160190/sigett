@@ -51,6 +51,7 @@ import org.jlmallas.api.secure.SecureDTO;
 import org.jlmallas.seguridad.dao.UsuarioDao;
 import org.jlmallas.seguridad.dao.UsuarioPermisoDao;
 import org.jlmallas.seguridad.dao.LogDao;
+import org.jlmallas.seguridad.service.UsuarioService;
 
 /**
  *
@@ -119,6 +120,8 @@ public class AdministrarUsuarios implements Serializable {
     private UsuarioPermisoDao usuarioPermisoFacadeLocal;
     @EJB
     private UsuarioDao usuarioDao;
+    @EJB
+    private UsuarioService usuarioService;
 //</editor-fold>
 
     @PostConstruct
@@ -324,7 +327,7 @@ public class AdministrarUsuarios implements Serializable {
             String param = (String) facesContext.getExternalContext().getRequestParameterMap().get("1");
             int tienePermiso = usuarioDao.tienePermiso(sessionUsuario, "editar_usuario");//editar Usuario
             if (tienePermiso == 1) {
-                if (usuarioDao.unicoUsername(sessionAdminUsuario.getUsuario().getUsername()) == false || usuarioDao.find(sessionAdminUsuario.getUsuario().getId()).
+                if (usuarioService.unicoUsername(sessionAdminUsuario.getUsuario().getUsername()) == false || usuarioDao.find(sessionAdminUsuario.getUsuario().getId()).
                         equals(usuarioDao.buscarPorUsuario(sessionAdminUsuario.getUsuario().getUsername()))) {
                     sessionAdminUsuario.getUsuario().setUsuarioPermisoList(new ArrayList<UsuarioPermiso>());
                     usuarioDao.edit(sessionAdminUsuario.getUsuario());
@@ -397,7 +400,7 @@ public class AdministrarUsuarios implements Serializable {
                 if (sessionAdminUsuario.getUsuario().getId() == null) {
                     int tienePermiso = usuarioDao.tienePermiso(sessionUsuario, "crear_usuario");
                     if (tienePermiso == 1) {
-                        if (usuarioDao.unicoUsername(sessionAdminUsuario.getUsuario().getUsername()) == false) {
+                        if (usuarioService.unicoUsername(sessionAdminUsuario.getUsuario().getUsername()) == false) {
 
                             sessionAdminUsuario.getUsuario().setPassword(cabeceraController.getSecureService().encrypt(
                                     new SecureDTO(cabeceraController.getConfiguracionGeneralDTO().getSecureKey(),sessionUsuario.getPassword())));
@@ -440,7 +443,8 @@ public class AdministrarUsuarios implements Serializable {
                 } else {
                     int tienePermiso = usuarioDao.tienePermiso(sessionUsuario, "editar_usuario");
                     if (tienePermiso == 1) {
-                        if (usuarioDao.unicoUsername(sessionAdminUsuario.getUsuario().getUsername()) == false || usuarioDao.find(sessionAdminUsuario.getUsuario().getId())
+                        if (usuarioService.unicoUsername(sessionAdminUsuario.getUsuario().getUsername()) == false || 
+                                usuarioDao.find(sessionAdminUsuario.getUsuario().getId())
                                 .equals(usuarioDao.buscarPorUsuario(sessionAdminUsuario.getUsuario().getUsername()))) {
                             sessionAdminUsuario.getUsuario().setPassword(cabeceraController.getSecureService().encrypt(
                                     new SecureDTO(cabeceraController.getConfiguracionGeneralDTO().getSecureKey(),sessionAdminUsuario.getUsuario().getPassword())));

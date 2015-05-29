@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package org.jlmallas.seguridad.entity;
 
 import java.io.Serializable;
@@ -26,13 +25,14 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author JorgeLuis
  */
 @Entity
-@Table(name = "rol_usuario",schema = "seguridad")
+@Table(name = "rol_usuario", schema = "seguridad")
 @Cacheable(value = false)
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "RolUsuario.findAll", query = "SELECT r FROM RolUsuario r"),
     @NamedQuery(name = "RolUsuario.findById", query = "SELECT r FROM RolUsuario r WHERE r.id = :id")})
 public class RolUsuario implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,6 +47,11 @@ public class RolUsuario implements Serializable {
     private Rol rolId;
 
     public RolUsuario() {
+    }
+
+    public RolUsuario(Usuario usuarioId, Rol rolId) {
+        this.usuarioId = usuarioId;
+        this.rolId = rolId;
     }
 
     public RolUsuario(Long id) {
@@ -99,7 +104,7 @@ public class RolUsuario implements Serializable {
 
     @Override
     public String toString() {
-        return id+""+usuarioId+"-"+rolId;
+        return id + "" + usuarioId + "-" + rolId;
     }
-    
+
 }

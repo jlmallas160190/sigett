@@ -32,6 +32,8 @@ public interface RolPermisoDao {
 
     RolPermiso buscarPorRolCodigoPermiso(Long rolId, String codigoNombre);
 
+    List<RolPermiso> buscar(final RolPermiso rolPermiso);
+
     int count();
 
 }

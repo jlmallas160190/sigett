@@ -6,7 +6,7 @@
 package edu.unl.sigett.webSemantica.service.implement;
 
 import com.hp.hpl.jena.vocabulary.DC;
-import edu.unl.sigett.webSemantica.dto.CarreraDTO;
+import edu.unl.sigett.webSemantica.dto.CarreraOntDTO;
 import edu.unl.sigett.webSemantica.service.CarreraOntService;
 import edu.unl.sigett.webSemantica.util.CabeceraWebSemantica;
 import java.io.File;
@@ -27,7 +27,7 @@ public class CarreraOntServiceImplement implements CarreraOntService {
         this.cabecera = cabecera;
     }
 
-    public void write(CarreraDTO carreraDTO) {
+    public void write(CarreraOntDTO carreraDTO) {
         try {
             carreraDTO.setIndividual(cabecera.getVocabulario().getModel().getIndividual(
                     cabecera.getVocabulario().getNS() + "carrera/" + carreraDTO.getId()));

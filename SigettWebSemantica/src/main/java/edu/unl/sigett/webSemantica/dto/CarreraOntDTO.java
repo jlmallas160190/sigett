@@ -12,23 +12,24 @@ import java.io.Serializable;
  *
  * @author jorge-luis
  */
-public class AreaAcademicaDTO implements Serializable {
+public class CarreraOntDTO implements Serializable {
 
     private Long id;
-    private String institucion;
     private String nombre;
     private String sigla;
+    private NivelAcademicoOntDTO nivelAcademicoDTO;
+    private AreaAcademicaOntDTO areaAcademicaDTO;
     private Individual individual;
-    private String uri;
 
-    public AreaAcademicaDTO() {
+    public CarreraOntDTO(Long id, String nombre, String sigla, NivelAcademicoOntDTO nivelDTO, AreaAcademicaOntDTO areaAcademicaDTO) {
+        this.id = id;
+        this.sigla = sigla;
+        this.nombre = nombre;
+        this.nivelAcademicoDTO = nivelDTO;
+        this.areaAcademicaDTO = areaAcademicaDTO;
     }
 
-    public AreaAcademicaDTO(Long id, String institucion, String nombre, String sigla,String uri) {
-        this.id = id;
-        this.institucion = institucion;
-        this.nombre = nombre;
-        this.sigla = sigla;
+    public CarreraOntDTO() {
     }
 
     public Long getId() {
@@ -47,6 +48,14 @@ public class AreaAcademicaDTO implements Serializable {
         this.nombre = nombre;
     }
 
+    public NivelAcademicoOntDTO getNivelAcademicoDTO() {
+        return nivelAcademicoDTO;
+    }
+
+    public void setNivelAcademicoDTO(NivelAcademicoOntDTO nivelAcademicoDTO) {
+        this.nivelAcademicoDTO = nivelAcademicoDTO;
+    }
+
     public String getSigla() {
         return sigla;
     }
@@ -55,12 +64,12 @@ public class AreaAcademicaDTO implements Serializable {
         this.sigla = sigla;
     }
 
-    public String getInstitucion() {
-        return institucion;
+    public AreaAcademicaOntDTO getAreaAcademicaDTO() {
+        return areaAcademicaDTO;
     }
 
-    public void setInstitucion(String institucion) {
-        this.institucion = institucion;
+    public void setAreaAcademicaDTO(AreaAcademicaOntDTO areaAcademicaDTO) {
+        this.areaAcademicaDTO = areaAcademicaDTO;
     }
 
     public Individual getIndividual() {
@@ -69,14 +78,6 @@ public class AreaAcademicaDTO implements Serializable {
 
     public void setIndividual(Individual individual) {
         this.individual = individual;
-    }
-
-    public String getUri() {
-        return uri;
-    }
-
-    public void setUri(String uri) {
-        this.uri = uri;
     }
 
 }

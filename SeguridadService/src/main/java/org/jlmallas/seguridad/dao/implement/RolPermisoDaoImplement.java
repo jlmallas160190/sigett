@@ -7,6 +7,7 @@ package org.jlmallas.seguridad.dao.implement;
 
 import org.jlmallas.seguridad.entity.RolPermiso;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.Query;
@@ -42,10 +43,36 @@ public class RolPermisoDaoImplement extends AbstractDao<RolPermiso> implements R
             Query query = em.createQuery("SELECT rp from RolPermiso rp WHERE " + "(rp.permisoId.codigoNombre=:codigoNombre AND rp.rolId.id=:id)");
             query.setParameter("id", rolId);
             query.setParameter("codigoNombre", codigoNombre);
-            rolesPermisos=query.getResultList();
+            rolesPermisos = query.getResultList();
             return !rolesPermisos.isEmpty() ? rolesPermisos.get(0) : null;
         } catch (Exception e) {
         }
         return null;
+    }
+
+    @Override
+    public List<RolPermiso> buscar(RolPermiso rolPermiso) {
+        StringBuilder sql = new StringBuilder();
+        HashMap<String, Object> parametros = new HashMap<>();
+        sql.append("SELECT rp from RolPermiso rp WHERE 1=1 ");
+        Boolean existeFiltro = Boolean.FALSE;
+        if (rolPermiso.getPermisoId() == null) {
+            sql.append(" and rp.permiso=:permisoId");
+            parametros.put("permisoId", rolPermiso.getPermisoId());
+            existeFiltro = Boolean.TRUE;
+        }
+        if (rolPermiso.getRolId() == null) {
+            sql.append(" and rp.rol=:rolId");
+            parametros.put("rolId", rolPermiso.getRolId());
+            existeFiltro = Boolean.TRUE;
+        }
+        if (!existeFiltro) {
+            return new ArrayList<>();
+        }
+        final Query q = em.createQuery(sql.toString());
+        for (String key : parametros.keySet()) {
+            q.setParameter(key, parametros.get(key));
+        }
+        return q.getResultList();
     }
 }

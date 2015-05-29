@@ -25,7 +25,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author JorgeLuis
  */
 @Entity
-@Table(name = "usuario_permiso",schema = "seguridad")
+@Table(name = "usuario_permiso", schema = "seguridad")
 @Cacheable(value = false)
 @XmlRootElement
 @NamedQueries({
@@ -47,6 +47,11 @@ public class UsuarioPermiso implements Serializable {
     private Permiso permisoId;
 
     public UsuarioPermiso() {
+    }
+
+    public UsuarioPermiso(Usuario usuarioId, Permiso permisoId) {
+        this.usuarioId = usuarioId;
+        this.permisoId = permisoId;
     }
 
     public UsuarioPermiso(Long id) {

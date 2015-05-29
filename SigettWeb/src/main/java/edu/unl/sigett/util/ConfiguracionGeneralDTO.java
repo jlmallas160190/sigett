@@ -6,11 +6,13 @@
 
 package edu.unl.sigett.util;
 
+import java.io.Serializable;
+
 /**
  *
  * @author jorge-luis
  */
-public class ConfiguracionGeneralDTO {
+public class ConfiguracionGeneralDTO implements Serializable{
     private String tiempoMaximoPertinencia;
     private String secureKey;
 

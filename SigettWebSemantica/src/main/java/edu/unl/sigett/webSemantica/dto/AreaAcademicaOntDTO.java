@@ -7,28 +7,28 @@ package edu.unl.sigett.webSemantica.dto;
 
 import com.hp.hpl.jena.ontology.Individual;
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  *
  * @author jorge-luis
  */
-public class PeriodoAcademicoDTO implements Serializable {
+public class AreaAcademicaOntDTO implements Serializable {
 
     private Long id;
+    private String institucion;
     private String nombre;
-    private Date fechaInicio;
-    private Date fechaFin;
+    private String sigla;
     private Individual individual;
+    private String uri;
 
-    public PeriodoAcademicoDTO() {
+    public AreaAcademicaOntDTO() {
     }
 
-    public PeriodoAcademicoDTO(Long id, String nombre, Date fechaInicio, Date fechaFin) {
+    public AreaAcademicaOntDTO(Long id, String institucion, String nombre, String sigla,String uri) {
         this.id = id;
+        this.institucion = institucion;
         this.nombre = nombre;
-        this.fechaInicio = fechaInicio;
-        this.fechaFin = fechaFin;
+        this.sigla = sigla;
     }
 
     public Long getId() {
@@ -47,20 +47,20 @@ public class PeriodoAcademicoDTO implements Serializable {
         this.nombre = nombre;
     }
 
-    public Date getFechaInicio() {
-        return fechaInicio;
+    public String getSigla() {
+        return sigla;
     }
 
-    public void setFechaInicio(Date fechaInicio) {
-        this.fechaInicio = fechaInicio;
+    public void setSigla(String sigla) {
+        this.sigla = sigla;
     }
 
-    public Date getFechaFin() {
-        return fechaFin;
+    public String getInstitucion() {
+        return institucion;
     }
 
-    public void setFechaFin(Date fechaFin) {
-        this.fechaFin = fechaFin;
+    public void setInstitucion(String institucion) {
+        this.institucion = institucion;
     }
 
     public Individual getIndividual() {
@@ -69,6 +69,14 @@ public class PeriodoAcademicoDTO implements Serializable {
 
     public void setIndividual(Individual individual) {
         this.individual = individual;
+    }
+
+    public String getUri() {
+        return uri;
+    }
+
+    public void setUri(String uri) {
+        this.uri = uri;
     }
 
 }

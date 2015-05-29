@@ -79,7 +79,7 @@ public class Usuario implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "es_activo")
-    private boolean esActivo;
+    private Boolean esActivo;
     @Basic(optional = false)
     @NotNull
     @Column(name = "es_superuser")
@@ -98,7 +98,7 @@ public class Usuario implements Serializable {
         this.id = id;
     }
 
-    public Usuario(Long id, String password, String username, String nombres, String apellidos, String email, boolean esActivo, boolean esSuperuser) {
+    public Usuario(Long id, String password, String username, String nombres, String apellidos, String email, Boolean esActivo, Boolean esSuperuser) {
         this.id = id;
         this.password = password;
         this.username = username;
@@ -157,19 +157,19 @@ public class Usuario implements Serializable {
         this.email = email;
     }
 
-    public boolean getEsActivo() {
+    public Boolean getEsActivo() {
         return esActivo;
     }
 
-    public void setEsActivo(boolean esActivo) {
+    public void setEsActivo(Boolean esActivo) {
         this.esActivo = esActivo;
     }
 
-    public boolean getEsSuperuser() {
+    public Boolean getEsSuperuser() {
         return esSuperuser;
     }
 
-    public void setEsSuperuser(boolean esSuperuser) {
+    public void setEsSuperuser(Boolean esSuperuser) {
         this.esSuperuser = esSuperuser;
     }
 

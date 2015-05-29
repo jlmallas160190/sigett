@@ -49,6 +49,11 @@ public class RolPermiso implements Serializable {
     public RolPermiso() {
     }
 
+    public RolPermiso(Rol rolId, Permiso permisoId) {
+        this.rolId = rolId;
+        this.permisoId = permisoId;
+    }
+
     public RolPermiso(Long id) {
         this.id = id;
     }

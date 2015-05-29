@@ -13,16 +13,16 @@ import java.util.Date;
  *
  * @author jorge-luis
  */
-public class OfertaAcademicaDTO implements Serializable {
+public class OfertaAcademicaOntDTO implements Serializable {
 
     private Long id;
     private String nombre;
     private Date fechaInicio;
     private Date fechaFin;
-    private PeriodoAcademicoDTO periodoAcademicoDTO;
+    private PeriodoAcademicoOntDTO periodoAcademicoDTO;
     private Individual individual;
 
-    public OfertaAcademicaDTO(Long id, String nombre, Date fechaInicio, Date fechaFin, PeriodoAcademicoDTO periodoAcademicoDTO) {
+    public OfertaAcademicaOntDTO(Long id, String nombre, Date fechaInicio, Date fechaFin, PeriodoAcademicoOntDTO periodoAcademicoDTO) {
         this.id = id;
         this.nombre = nombre;
         this.fechaInicio = fechaInicio;
@@ -30,7 +30,7 @@ public class OfertaAcademicaDTO implements Serializable {
         this.periodoAcademicoDTO = periodoAcademicoDTO;
     }
 
-    public OfertaAcademicaDTO() {
+    public OfertaAcademicaOntDTO() {
     }
 
     public Long getId() {
@@ -65,11 +65,11 @@ public class OfertaAcademicaDTO implements Serializable {
         this.fechaFin = fechaFin;
     }
 
-    public PeriodoAcademicoDTO getPeriodoAcademicoDTO() {
+    public PeriodoAcademicoOntDTO getPeriodoAcademicoDTO() {
         return periodoAcademicoDTO;
     }
 
-    public void setPeriodoAcademicoDTO(PeriodoAcademicoDTO periodoAcademicoDTO) {
+    public void setPeriodoAcademicoDTO(PeriodoAcademicoOntDTO periodoAcademicoDTO) {
         this.periodoAcademicoDTO = periodoAcademicoDTO;
     }
 

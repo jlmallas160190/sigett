@@ -12,37 +12,37 @@ import java.io.Serializable;
  *
  * @author jorge-luis
  */
-public class LineaInvestigacionProyectoDTO implements Serializable {
+public class LineaInvestigacionProyectoOntDTO implements Serializable {
 
     private Long id;
-    private LineaInvestigacionDTO lineaInvestigacionDTO;
-    private ProyectoDTO proyectoDTO;
+    private LineaInvestigacionOntDTO lineaInvestigacionDTO;
+    private ProyectoOntDTO proyectoDTO;
     private Individual individual;
     private String uri;
 
-    public LineaInvestigacionProyectoDTO() {
+    public LineaInvestigacionProyectoOntDTO() {
     }
 
-    public LineaInvestigacionProyectoDTO(Long id, LineaInvestigacionDTO lineaInvestigacionDTO, ProyectoDTO proyectoDTO, String uri) {
+    public LineaInvestigacionProyectoOntDTO(Long id, LineaInvestigacionOntDTO lineaInvestigacionDTO, ProyectoOntDTO proyectoDTO, String uri) {
         this.id = id;
         this.lineaInvestigacionDTO = lineaInvestigacionDTO;
         this.proyectoDTO = proyectoDTO;
         this.uri = uri;
     }
 
-    public LineaInvestigacionDTO getLineaInvestigacionDTO() {
+    public LineaInvestigacionOntDTO getLineaInvestigacionDTO() {
         return lineaInvestigacionDTO;
     }
 
-    public void setLineaInvestigacionDTO(LineaInvestigacionDTO lineaInvestigacionDTO) {
+    public void setLineaInvestigacionDTO(LineaInvestigacionOntDTO lineaInvestigacionDTO) {
         this.lineaInvestigacionDTO = lineaInvestigacionDTO;
     }
 
-    public ProyectoDTO getProyectoDTO() {
+    public ProyectoOntDTO getProyectoDTO() {
         return proyectoDTO;
     }
 
-    public void setProyectoDTO(ProyectoDTO proyectoDTO) {
+    public void setProyectoDTO(ProyectoOntDTO proyectoDTO) {
         this.proyectoDTO = proyectoDTO;
     }
 

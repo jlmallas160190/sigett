@@ -5,7 +5,7 @@
  */
 package edu.unl.sigett.webSemantica.service.implement;
 
-import edu.unl.sigett.webSemantica.dto.ProyectoCarreraOfertaDTO;
+import edu.unl.sigett.webSemantica.dto.ProyectoCarreraOfertaOntDTO;
 import edu.unl.sigett.webSemantica.service.ProyectoCarreraOfertaOntService;
 import edu.unl.sigett.webSemantica.util.CabeceraWebSemantica;
 import java.io.File;
@@ -27,7 +27,7 @@ public class ProyectoCarreraOfertaOntServiceImplement implements ProyectoCarrera
         this.cabecera = cabecera;
     }
 
-    public void write(final ProyectoCarreraOfertaDTO proyectoCarreraOfertaDTO) {
+    public void write(final ProyectoCarreraOfertaOntDTO proyectoCarreraOfertaDTO) {
         try {
             proyectoCarreraOfertaDTO.setIndividual(cabecera.getVocabulario().getModel().getIndividual(
                     cabecera.getVocabulario().getNS() + "proyectoCarreraOferta/" + proyectoCarreraOfertaDTO.getId()));

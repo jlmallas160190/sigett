@@ -6,7 +6,7 @@
 package edu.unl.sigett.webSemantica.service.implement;
 
 import com.hp.hpl.jena.vocabulary.DC;
-import edu.unl.sigett.webSemantica.dto.LineaInvestigacionDTO;
+import edu.unl.sigett.webSemantica.dto.LineaInvestigacionOntDTO;
 import edu.unl.sigett.webSemantica.service.LineaInvestigacionOntService;
 import edu.unl.sigett.webSemantica.util.CabeceraWebSemantica;
 import java.io.File;
@@ -27,7 +27,7 @@ public class LineaInvestigacionOntServiceImplement implements LineaInvestigacion
         this.cabeceraWebSemantica = cabecera;
     }
 
-    public void write(LineaInvestigacionDTO lineaInvestigacionDTO) {
+    public void write(LineaInvestigacionOntDTO lineaInvestigacionDTO) {
         try {
             lineaInvestigacionDTO.setIndividual(cabeceraWebSemantica.getVocabulario().getModel().getIndividual(
                     cabeceraWebSemantica.getVocabulario().getNS() + lineaInvestigacionDTO.getUri() + "/" + lineaInvestigacionDTO.getId()));

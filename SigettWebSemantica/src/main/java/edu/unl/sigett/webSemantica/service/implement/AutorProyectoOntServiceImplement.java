@@ -5,7 +5,7 @@
  */
 package edu.unl.sigett.webSemantica.service.implement;
 
-import edu.unl.sigett.webSemantica.dto.AutorProyectoDTO;
+import edu.unl.sigett.webSemantica.dto.AutorProyectoOntDTO;
 import edu.unl.sigett.webSemantica.service.AutorProyectoOntService;
 import edu.unl.sigett.webSemantica.util.CabeceraWebSemantica;
 import java.io.File;
@@ -24,7 +24,7 @@ public class AutorProyectoOntServiceImplement implements AutorProyectoOntService
         this.cabecera = cabecera;
     }
 
-    public void write(AutorProyectoDTO autorProyectoDTO) {
+    public void write(AutorProyectoOntDTO autorProyectoDTO) {
         try {
             autorProyectoDTO.setIndividual(cabecera.getVocabulario().getModel().getIndividual(
                     cabecera.getVocabulario().getNS() + "autorProyecto/" + autorProyectoDTO.getId()));

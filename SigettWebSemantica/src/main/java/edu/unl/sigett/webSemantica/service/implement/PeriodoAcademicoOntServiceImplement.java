@@ -6,7 +6,7 @@
 package edu.unl.sigett.webSemantica.service.implement;
 
 import com.hp.hpl.jena.vocabulary.DC;
-import edu.unl.sigett.webSemantica.dto.PeriodoAcademicoDTO;
+import edu.unl.sigett.webSemantica.dto.PeriodoAcademicoOntDTO;
 import edu.unl.sigett.webSemantica.service.PeriodoAcademicoOntService;
 import edu.unl.sigett.webSemantica.util.CabeceraWebSemantica;
 import java.io.File;
@@ -28,7 +28,7 @@ public class PeriodoAcademicoOntServiceImplement implements PeriodoAcademicoOntS
         this.cabecera = cabecera;
     }
 
-    public void write(PeriodoAcademicoDTO periodoAcademicoDTO) {
+    public void write(PeriodoAcademicoOntDTO periodoAcademicoDTO) {
         try {
             periodoAcademicoDTO.setIndividual(cabecera.getVocabulario().getModel().getIndividual(
                     cabecera.getVocabulario().getNS() + "periodo/" + periodoAcademicoDTO.getId()));

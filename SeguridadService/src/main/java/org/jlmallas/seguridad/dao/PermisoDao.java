@@ -30,5 +30,5 @@ public interface PermisoDao {
 
     int count();
 
-    List<Permiso> buscarPorNombre(String nombre);
+    List<Permiso> buscar(final Permiso permiso);
 }

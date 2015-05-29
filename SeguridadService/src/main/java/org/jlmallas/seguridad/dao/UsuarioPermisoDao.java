@@ -32,6 +32,8 @@ public interface UsuarioPermisoDao {
 
     UsuarioPermiso buscarPorUsuarioYCodigoPermiso(Long usuarioId, String codigoPermiso);
 
+    List<UsuarioPermiso> buscar(final UsuarioPermiso usuarioPermiso);
+
     int count();
 
 }

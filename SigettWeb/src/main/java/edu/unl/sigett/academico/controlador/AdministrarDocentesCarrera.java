@@ -95,6 +95,7 @@ import org.jlmallas.seguridad.dao.RolUsuarioDao;
 import org.jlmallas.seguridad.entity.Rol;
 import org.jlmallas.seguridad.entity.RolUsuario;
 import org.jlmallas.seguridad.entity.Usuario;
+import org.jlmallas.seguridad.service.UsuarioService;
 
 /**
  *
@@ -145,8 +146,6 @@ public class AdministrarDocentesCarrera implements Serializable {
     @EJB
     private RolUsuarioDao rolUsuarioDao;
     @EJB
-    private ConfiguracionDao configuracionDao;
-    @EJB
     private DocenteCarreraDao docenteCarreraDao;
     @EJB
     private DocenteDao docenteDao;
@@ -158,6 +157,8 @@ public class AdministrarDocentesCarrera implements Serializable {
     private EstadoLaboralService estadoLaboralService;
     @EJB
     private UsuarioDao usuarioDao;
+    @EJB
+    private UsuarioService usuarioService;
     @EJB
     private DocenteUsuarioService docenteUsuarioService;
     @EJB
@@ -637,7 +638,7 @@ public class AdministrarDocentesCarrera implements Serializable {
                 usuario.setPassword(cabeceraController.getSecureService().encrypt(
                                     new SecureDTO(cabeceraController.getConfiguracionGeneralDTO().getSecureKey(),personaDocente.getNumeroIdentificacion())));
                 usuario.setUsername(personaDocente.getNumeroIdentificacion());
-                if (usuarioDao.unicoUsername(usuario.getUsername()) == false) {
+                if (usuarioService.unicoUsername(usuario.getUsername()) == false) {
                     usuarioDao.create(usuario);
                     DocenteUsuario docenteUsuario = new DocenteUsuario();
                     docenteUsuario.setDocenteId(docente.getId());

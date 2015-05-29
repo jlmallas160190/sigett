@@ -11,24 +11,24 @@ import java.io.Serializable;
  *
  * @author jorge-luis
  */
-public class DirectorProyectoDTO implements Serializable {
+public class DirectorProyectoOntDTO implements Serializable {
 
-    private DocenteDTO docenteDTO;
-    private ProyectoDTO proyectoDTO;
+    private DocenteOntDTO docenteDTO;
+    private ProyectoOntDTO proyectoDTO;
 
-    public DocenteDTO getDocenteDTO() {
+    public DocenteOntDTO getDocenteDTO() {
         return docenteDTO;
     }
 
-    public void setDocenteDTO(DocenteDTO docenteDTO) {
+    public void setDocenteDTO(DocenteOntDTO docenteDTO) {
         this.docenteDTO = docenteDTO;
     }
 
-    public ProyectoDTO getProyectoDTO() {
+    public ProyectoOntDTO getProyectoDTO() {
         return proyectoDTO;
     }
 
-    public void setProyectoDTO(ProyectoDTO proyectoDTO) {
+    public void setProyectoDTO(ProyectoOntDTO proyectoDTO) {
         this.proyectoDTO = proyectoDTO;
     }
 

@@ -12,15 +12,15 @@ import java.util.Date;
  *
  * @author jorge-luis
  */
-public class DocenteDTO extends PersonaDTO implements Serializable {
+public class DocenteOntDTO extends PersonaOntDTO implements Serializable {
 
     private Long id;
 
-    public DocenteDTO(Long id) {
+    public DocenteOntDTO(Long id) {
         this.id = id;
     }
 
-    public DocenteDTO(Long id, String nombres, String apellidos, Date fechaNacimiento, String genero, String email) {
+    public DocenteOntDTO(Long id, String nombres, String apellidos, Date fechaNacimiento, String genero, String email) {
         super(nombres, apellidos, fechaNacimiento, genero, email);
         this.id = id;
     }

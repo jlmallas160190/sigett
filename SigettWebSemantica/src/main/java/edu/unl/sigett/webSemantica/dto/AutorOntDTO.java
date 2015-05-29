@@ -14,7 +14,7 @@ import java.util.logging.Logger;
  *
  * @author jorge-luis
  */
-public class AutorOntDTO extends PersonaDTO implements Serializable {
+public class AutorOntDTO extends PersonaOntDTO implements Serializable {
 
     private Long id;
     private static final Logger LOG = Logger.getLogger(AutorOntDTO.class.getName());

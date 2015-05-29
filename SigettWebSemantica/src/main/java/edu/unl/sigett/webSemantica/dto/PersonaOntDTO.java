@@ -12,7 +12,7 @@ import java.util.Date;
  *
  * @author jorge-luis
  */
-public class PersonaDTO implements Serializable {
+public class PersonaOntDTO implements Serializable {
 
     private String nombres;
     private String apellidos;
@@ -20,10 +20,10 @@ public class PersonaDTO implements Serializable {
     private String genero;
     private String email;
 
-    public PersonaDTO() {
+    public PersonaOntDTO() {
     }
 
-    public PersonaDTO(String nombres, String apellidos, Date fechaNacimiento, String genero, String email) {
+    public PersonaOntDTO(String nombres, String apellidos, Date fechaNacimiento, String genero, String email) {
         this.nombres = nombres;
         this.apellidos = apellidos;
         this.fechaNacimiento = fechaNacimiento;

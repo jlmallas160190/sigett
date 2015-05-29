@@ -19,6 +19,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import org.jlmallas.api.secure.SecureDTO;
 import org.jlmallas.seguridad.dao.UsuarioDao;
+import org.jlmallas.seguridad.service.UsuarioService;
 
 /**
  *
@@ -30,6 +31,8 @@ public class LoginAdmin implements Serializable {
     
     @EJB
     private UsuarioDao usuarioFacadeLocal;
+    @EJB
+    private UsuarioService usuarioService;
     @Inject
     private SessionUsuario sessionUsuario;
     @Inject CabeceraController cabeceraController;
@@ -47,7 +50,7 @@ public class LoginAdmin implements Serializable {
         String navegacion = "";
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-        int var = usuarioFacadeLocal.logear(username,cabeceraController.getSecureService().encrypt(
+        int var = usuarioService.logear(username,cabeceraController.getSecureService().encrypt(
                                     new SecureDTO(cabeceraController.getConfiguracionGeneralDTO().getSecureKey(),password)));
         if (var == 1) {
             sessionUsuario.setUsuario(usuarioFacadeLocal.buscarPorUsuario(username));

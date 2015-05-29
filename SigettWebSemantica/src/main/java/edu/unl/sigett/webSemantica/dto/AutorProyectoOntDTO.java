@@ -12,27 +12,27 @@ import java.io.Serializable;
  *
  * @author jorge-luis
  */
-public class AutorProyectoDTO implements Serializable {
+public class AutorProyectoOntDTO implements Serializable {
 
     private Long id;
-    private ProyectoDTO proyectoDTO;
+    private ProyectoOntDTO proyectoDTO;
     private AutorOntDTO autorDTO;
     private Individual individual;
 
-    public AutorProyectoDTO(Long id, ProyectoDTO proyectoDTO, AutorOntDTO autorDTO) {
+    public AutorProyectoOntDTO(Long id, ProyectoOntDTO proyectoDTO, AutorOntDTO autorDTO) {
         this.id = id;
         this.proyectoDTO = proyectoDTO;
         this.autorDTO = autorDTO;
     }
 
-    public AutorProyectoDTO() {
+    public AutorProyectoOntDTO() {
     }
 
-    public ProyectoDTO getProyectoDTO() {
+    public ProyectoOntDTO getProyectoDTO() {
         return proyectoDTO;
     }
 
-    public void setProyectoDTO(ProyectoDTO proyectoDTO) {
+    public void setProyectoDTO(ProyectoOntDTO proyectoDTO) {
         this.proyectoDTO = proyectoDTO;
     }
 

@@ -55,7 +55,11 @@ import edu.unl.sigett.service.ProyectoCarreraOfertaService;
 import edu.unl.sigett.service.ProyectoService;
 import edu.unl.sigett.usuarioCarrera.SessionUsuarioCarrera;
 import edu.unl.sigett.util.CabeceraController;
+import edu.unl.sigett.util.PropertiesFileEnum;
 import edu.unl.sigett.webSemantica.dto.AutorOntDTO;
+import edu.unl.sigett.webSemantica.dto.AutorProyectoOntDTO;
+import edu.unl.sigett.webSemantica.dto.LineaInvestigacionOntDTO;
+import edu.unl.sigett.webSemantica.dto.LineaInvestigacionProyectoOntDTO;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
@@ -156,7 +160,7 @@ public class ProyectoController implements Serializable {
     //</editor-fold>
     public ProyectoController() {
     }
-
+    
     public void init() {
         this.buscar();
         this.listadoCarreras();
@@ -164,7 +168,7 @@ public class ProyectoController implements Serializable {
         this.renderedCrear();
         this.renderedEditar();
     }
-
+    
     public void initEditar() {
         sessionProyecto.getCarrerasRemovidasTransfer().clear();
         sessionProyecto.getCarrerasSeleccionadasTransfer().clear();
@@ -238,7 +242,7 @@ public class ProyectoController implements Serializable {
         Item tipo = itemService.buscarPorCatalogoCodigo(CatalogoEnum.TIPOPROYECTO.getTipo(), sessionProyecto.getTipo());
         sessionProyecto.setTipoSeleccionado(tipo);
     }
-
+    
     private void estadoActual() {
         if (sessionProyecto.getProyectoSeleccionado().getEstadoProyectoId() == null) {
             return;
@@ -262,7 +266,7 @@ public class ProyectoController implements Serializable {
                                     sessionProyecto.getOfertaAcademicaSeleccionada().getId() != null
                                     ? sessionProyecto.getOfertaAcademicaSeleccionada().getId() : null, Boolean.TRUE),
                             sessionProyecto.getLineaInvestigacionProyectoSeleccionada()));
-
+            
             if (proyectosEncontrados == null) {
                 return;
             }
@@ -377,19 +381,19 @@ public class ProyectoController implements Serializable {
             System.out.println(e);
         }
     }
-
+    
     public void seleccionarOfertaAcademica(SelectEvent event) {
         sessionProyecto.setOfertaAcademicaSeleccionada((OfertaAcademica) event.getObject());
         buscar();
     }
-
+    
     public void seleccionarLineaInvestigacion(SelectEvent event) {
         sessionProyecto.setLineaInvestigacionProyectoSeleccionada((LineaInvestigacionProyecto) event.getObject());
         buscar();
     }
 
     //</editor-fold>
-    //<editor-fold defaultstate="collapsed" desc="LINEAS DE INVESTIGACION PROYECTO">
+    //<editor-fold defaultstate="collapsed" desc="LINEAS DE INVESTIGACION">
     /**
      * BUSCAR LA LINEAS DE INVESTIGACION DEL PROYECTO Y DE LAS CARRERAS DEL
      * USUARIO PARA VISUALIZAR EN UN PICKLIST
@@ -404,7 +408,7 @@ public class ProyectoController implements Serializable {
         try {
             lineasInvestigacionProyecto = lineaInvestigacionProyectoService.buscarLineaInvestigacion(
                     new LineaInvestigacionProyecto(proyecto.getId() != null ? proyecto : null, null, null));
-
+            
             for (Carrera carrera : sessionProyecto.getCarreras()) {
                 List<LineaInvestigacion> lics = lineaInvestigacionService.buscarPorCarrera(new LineaInvestigacionCarrera(null, carrera.getId()));
                 if (lics == null) {
@@ -483,8 +487,40 @@ public class ProyectoController implements Serializable {
         }
         return var;
     }
+    /**
+     * PERMITE GRABAR LINEAS DE INVESTIGACION
+     * PERMITE CREAR UNA ONTOLOGIA Y ALMACENAR EN UN ARCHIVO FORMATO RDF
+     */
+    public void grabarLineasInvestigacionProyecto() {
+        try {
+            if (!sessionProyecto.getEstadoActual().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.INICIO.getTipo())) {
+                return;
+            }
+            for (LineaInvestigacionProyecto lineaInvestigacionProyecto : sessionProyecto.getLineasInvestigacionSeleccionadasTransfer()) {
+                if (lineaInvestigacionProyecto.getId() == null) {
+                    lineaInvestigacionProyecto.setProyectoId(sessionProyecto.getProyectoSeleccionado());
+                    lineaInvestigacionProyectoService.guardar(lineaInvestigacionProyecto);
+                    LineaInvestigacionOntDTO lineaInvestigacionOntDTO = new LineaInvestigacionOntDTO(lineaInvestigacionProyecto.getLineaInvestigacionId().getId(),
+                            lineaInvestigacionProyecto.getLineaInvestigacionId().getNombre(),
+                            cabeceraController.getValueFromProperties(PropertiesFileEnum.URI, "lineaInvestigacion"));
+                    cabeceraController.getOntologyService().getLineaInvestigacionOntService().read(cabeceraController.getCabeceraWebSemantica());
+                    cabeceraController.getOntologyService().getLineaInvestigacionOntService().write(lineaInvestigacionOntDTO);
+                    cabeceraController.getOntologyService().getLineaInvestigacionProyectoOntService().read(cabeceraController.getCabeceraWebSemantica());
+                    cabeceraController.getOntologyService().getLineaInvestigacionProyectoOntService().write(new LineaInvestigacionProyectoOntDTO(
+                            lineaInvestigacionProyecto.getId(), lineaInvestigacionOntDTO, sessionProyecto.getProyectoOntDTO(), null));
+                    logFacadeLocal.create(logFacadeLocal.crearLog("LineaInvestigacionProyecto", lineaInvestigacionProyecto.getId() + "",
+                            "CREAR", "Proyecto=" + sessionProyecto.getProyectoSeleccionado().getId() + "|LineaInvestigacion="
+                            + lineaInvestigacionProyecto.getLineaInvestigacionId().getId(), sessionUsuario.getUsuario()));
+                    return;
+                }
+                lineaInvestigacionProyectoService.actulizar(lineaInvestigacionProyecto);
+            }
+        } catch (Exception e) {
+        }
+        
+    }
 //</editor-fold>
-    //<editor-fold defaultstate="collapsed" desc="CARRERA DE PROYECTO">
+    //<editor-fold defaultstate="collapsed" desc="CARRERAS">
 
     /**
      * CARRERAS QUE PERTENECEN AL PROYECTO SELECCIONADO Y A LAS CARRERAS DEL
@@ -507,7 +543,7 @@ public class ProyectoController implements Serializable {
                     }
                 }
             }
-
+            
             for (Carrera carrera : sessionProyecto.getCarreras()) {
                 if (!usuarioCarreras.contains(carrera)) {
                     usuarioCarreras.add(carrera);
@@ -577,13 +613,13 @@ public class ProyectoController implements Serializable {
                 sessionProyecto.setProyectoSeleccionado(proyectoService.buscarPorId(sessionProyecto.getProyectoSeleccionado()));
             }
             Item estado = itemService.buscarPorCatalogoCodigo(CatalogoEnum.ESTADOPROYECTO.getTipo(), EstadoProyectoEnum.INICIO.getTipo());
-
+            
             if (sessionProyecto.getProyectoSeleccionado().getEstadoProyectoId().equals(estado.getId())) {
                 for (ProyectoCarreraOferta proyectoCarreraOferta : sessionProyecto.getCarrerasSeleccionadasTransfer()) {
                     Carrera c = carreraService.find(proyectoCarreraOferta.getCarreraId());
                     List<ProyectoCarreraOferta> proyectoCarreraOfertas = proyectoCarreraOfertaService.buscar(
                             new ProyectoCarreraOferta(sessionProyecto.getProyectoSeleccionado(), null, null, Boolean.TRUE));
-
+                    
                     Long pcoId = devuelveProyectoCarreraId(proyectoCarreraOfertas, proyectoCarreraOferta);
                     proyectoCarreraOferta = proyectoCarreraOfertaService.buscarPorId(new ProyectoCarreraOferta(pcoId));
                     if (proyectoCarreraOferta == null) {
@@ -599,7 +635,7 @@ public class ProyectoController implements Serializable {
                         }
                         proyectoCarreraOferta = new ProyectoCarreraOferta(sessionProyecto.getProyectoSeleccionado(), c.getId(), ofertaAcademica.getId(),
                                 Boolean.TRUE);
-
+                        
                         if (contieneCarrera(proyectoCarreraOfertas, proyectoCarreraOferta) == false) {
                             proyectoCarreraOfertaService.guardar(proyectoCarreraOferta);
 //                            grabarIndividuoProyectoOfertaCarrera(proyecto, proyectoCarreraOferta);
@@ -641,6 +677,10 @@ public class ProyectoController implements Serializable {
 
     //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="AUTORES">
+    /**
+     * PERMITE GRABAR AUTORES 
+     * PERMITE CREAR ONTOLOGÍA Y ALMACENARLAS EN UN ARCHIVO FORMATO RDF
+     */
     public void grabarAutores() {
         try {
             if (!sessionProyecto.getEstadoActual().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.INICIO.getTipo())) {
@@ -650,9 +690,13 @@ public class ProyectoController implements Serializable {
                 if (autorProyectoDTO.getAutorProyecto().getId() == null) {
                     autorProyectoService.guardar(autorProyectoDTO.getAutorProyecto());
                     cabeceraController.getOntologyService().getAutorOntService().read(cabeceraController.getCabeceraWebSemantica());
-                    cabeceraController.getOntologyService().getAutorOntService().write(new AutorOntDTO(autorProyectoDTO.getAspirante().getId(),
+                    AutorOntDTO autorOntDTO = new AutorOntDTO(autorProyectoDTO.getAspirante().getId(),
                             autorProyectoDTO.getPersona().getNombres(), autorProyectoDTO.getPersona().getApellidos(), autorProyectoDTO.getPersona().getFechaNacimiento(),
-                            itemService.buscarPorId(autorProyectoDTO.getPersona().getGeneroId()).getNombre(), autorProyectoDTO.getPersona().getEmail()));
+                            itemService.buscarPorId(autorProyectoDTO.getPersona().getGeneroId()).getNombre(), autorProyectoDTO.getPersona().getEmail());
+                    cabeceraController.getOntologyService().getAutorOntService().write(autorOntDTO);
+                    cabeceraController.getOntologyService().getAutorProyectoOntService().read(cabeceraController.getCabeceraWebSemantica());
+                    cabeceraController.getOntologyService().getAutorProyectoOntService().write(new AutorProyectoOntDTO(
+                            autorProyectoDTO.getAspirante().getId(), sessionProyecto.getProyectoOntDTO(), autorOntDTO));
                     logFacadeLocal.create(logFacadeLocal.crearLog("AutorProyecto", autorProyectoDTO.getAutorProyecto().getId() + "", "CREAR",
                             "|Aspirante= " + autorProyectoDTO.getAutorProyecto().getAspiranteId().getId() + "|Proyecto= "
                             + sessionProyecto.getProyectoSeleccionado().getId(), sessionUsuario.getUsuario()));
@@ -705,7 +749,7 @@ public class ProyectoController implements Serializable {
     private void crearTema() {
         sessionProyecto.setTemaProyecto(new TemaProyecto(sessionProyecto.getProyectoSeleccionado(), new Tema(), Boolean.TRUE));
     }
-
+    
     private void editarTema() {
         List<TemaProyecto> temaProyectos = temaProyectoDao.buscar(new TemaProyecto(sessionProyecto.getProyectoSeleccionado().getId() != null
                 ? sessionProyecto.getProyectoSeleccionado() : null, null, Boolean.TRUE));
@@ -789,7 +833,7 @@ public class ProyectoController implements Serializable {
             sessionProyecto.setRenderedCrear(Boolean.TRUE);
         }
     }
-
+    
     public void renderedEditar() {
         sessionProyecto.setRenderedEditar(Boolean.FALSE);
         int tienePermiso = usuarioDao.tienePermiso(sessionUsuario.getUsuario(), "editar_proyecto");

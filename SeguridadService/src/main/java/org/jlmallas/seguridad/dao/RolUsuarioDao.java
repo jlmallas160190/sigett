@@ -30,6 +30,8 @@ public interface RolUsuarioDao {
 
     List<RolUsuario> buscarPorUsuario(Long usuarioId);
 
+    List<RolUsuario> buscar(final RolUsuario rolUsuario);
+
     int count();
 
 }

@@ -87,77 +87,18 @@ public class DocenteProyectoController implements Serializable {
     }
 
     public void init() {
-        this.renderedBuscar();
-        this.renderedBuscarEspecialista();
-        this.renderedEliminar();
-        this.renderedImprimirOficio();
-        this.renderedSeleccionarDocenteEspecialista();
+        this.iniciarPermisos();
     }
 
     //<editor-fold defaultstate="collapsed" desc="MÉTODOS RENDERED">
-    public void renderedBuscar() {
-        sessionDocenteProyecto.setRenderedBuscar(Boolean.FALSE);
-        int tienePermiso = usuarioDao.tienePermiso(sessionUsuario.getUsuario(), "buscar_docente_proyecto");
-        if (tienePermiso == 1) {
-            sessionDocenteProyecto.setRenderedBuscar(Boolean.TRUE);
-        }
+    private void iniciarPermisos() {
+        sessionDocenteProyecto.setRenderedBuscar(cabeceraController.getPermisoAdministrarProyecto().getRenderedBuscarDocenteProyecto());
+        sessionDocenteProyecto.setRenderedBuscarEspecialista(cabeceraController.getPermisoAdministrarProyecto().getRenderedBuscarEspecialista());
+        sessionDocenteProyecto.setRenderedEliminar(cabeceraController.getPermisoAdministrarProyecto().getRenderedEliminarDocenteProyecto());
+        sessionDocenteProyecto.setRenderedImprimiOficio(cabeceraController.getPermisoAdministrarProyecto().getRenderedImprimirOficioDocenteProyecto());
+        sessionDocenteProyecto.setRenderedSeleccionarEspecialista(cabeceraController.getPermisoAdministrarProyecto().getRenderedSeleccionarEspecialista());
     }
 
-    public void renderedImprimirOficio() {
-        try {
-            sessionDocenteProyecto.setRenderedImprimiOficio(Boolean.FALSE);
-            int tienePermiso = usuarioDao.tienePermiso(sessionUsuario.getUsuario(), "imprimir_docente_proyecto");
-            if (tienePermiso == 1) {
-                sessionDocenteProyecto.setRenderedImprimiOficio(Boolean.TRUE);
-            }
-        } catch (Exception e) {
-        }
-    }
-
-    public void renderedSeleccionarDocenteEspecialista() {
-        try {
-            sessionDocenteProyecto.setRenderedSeleccionarEspecialista(Boolean.FALSE);
-            if (sessionProyecto.getEstadoActual().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.INICIO.getTipo())) {
-                int tienePermiso = usuarioDao.tienePermiso(sessionUsuario.getUsuario(), "select_docente_especialista");
-                if (tienePermiso == 1 && permitirAgregarDocente()) {
-                    sessionDocenteProyecto.setRenderedSeleccionarEspecialista(Boolean.TRUE);
-                }
-            }
-        } catch (Exception e) {
-        }
-
-    }
-
-    public void renderedBuscarEspecialista() {
-        try {
-            sessionDocenteProyecto.setRenderedBuscarEspecialista(Boolean.FALSE);
-            if (!sessionProyecto.getEstadoActual().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.INICIO.getTipo())) {
-                return;
-            }
-            int tienePermiso = usuarioDao.tienePermiso(sessionUsuario.getUsuario(), "buscar_docente_especialista");
-            if (tienePermiso == 1) {
-                sessionDocenteProyecto.setRenderedBuscarEspecialista(Boolean.TRUE);
-            }
-        } catch (Exception e) {
-        }
-
-    }
-
-    public void renderedEliminar() {
-        try {
-            sessionDocenteProyecto.setRenderedEliminar(Boolean.FALSE);
-            if (!sessionProyecto.getEstadoActual().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.INICIO.getTipo())) {
-                return;
-            }
-            int tienePermiso = usuarioDao.tienePermiso(sessionUsuario.getUsuario(), "eliminar_docente_proyecto");
-            if (tienePermiso == 1) {
-                sessionDocenteProyecto.setRenderedEliminar(Boolean.TRUE);
-            }
-
-        } catch (Exception e) {
-        }
-
-    }
 //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="POSTULACIÓN">
 
@@ -190,8 +131,10 @@ public class DocenteProyectoController implements Serializable {
     }
 
     /**
-     * DETERMINAR SI SE PUEDEN AGREGAR MAS DE 2 DOCENTES AL PROYECTO SELECCIONADO
-     * @return 
+     * DETERMINAR SI SE PUEDEN AGREGAR MAS DE 2 DOCENTES AL PROYECTO
+     * SELECCIONADO
+     *
+     * @return
      */
     public boolean permitirAgregarDocente() {
         boolean var = false;

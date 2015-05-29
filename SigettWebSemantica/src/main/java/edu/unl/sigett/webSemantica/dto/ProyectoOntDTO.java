@@ -12,7 +12,7 @@ import java.io.Serializable;
  *
  * @author jorge-luis
  */
-public class ProyectoDTO implements Serializable {
+public class ProyectoOntDTO implements Serializable {
 
     private Long id;
     private String tema;
@@ -22,10 +22,10 @@ public class ProyectoDTO implements Serializable {
     private Individual individual;
     private String uri;
 
-    public ProyectoDTO() {
+    public ProyectoOntDTO() {
     }
 
-    public ProyectoDTO(Long id, String tema, String fechaCreacion, String tipo, String estado, Individual individual, String uri) {
+    public ProyectoOntDTO(Long id, String tema, String fechaCreacion, String tipo, String estado, Individual individual, String uri) {
         this.id = id;
         this.tema = tema;
         this.fechaCreacion = fechaCreacion;

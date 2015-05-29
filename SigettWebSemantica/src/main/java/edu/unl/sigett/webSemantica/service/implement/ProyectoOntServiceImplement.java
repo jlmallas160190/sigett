@@ -7,7 +7,7 @@ package edu.unl.sigett.webSemantica.service.implement;
 
 import com.hp.hpl.jena.sparql.vocabulary.FOAF;
 import com.hp.hpl.jena.vocabulary.DC;
-import edu.unl.sigett.webSemantica.dto.ProyectoDTO;
+import edu.unl.sigett.webSemantica.dto.ProyectoOntDTO;
 import edu.unl.sigett.webSemantica.service.ProyectoOntService;
 import edu.unl.sigett.webSemantica.util.CabeceraWebSemantica;
 import java.io.File;
@@ -29,7 +29,7 @@ public class ProyectoOntServiceImplement implements ProyectoOntService {
         this.cabecera = cabecera;
     }
 
-    public void write(ProyectoDTO proyectoDTO) {
+    public void write(ProyectoOntDTO proyectoDTO) {
         try {
             proyectoDTO.setIndividual(cabecera.getVocabulario().getModel().getIndividual(
                     cabecera.getVocabulario().getNS() + "proyecto/" + proyectoDTO.getId()));

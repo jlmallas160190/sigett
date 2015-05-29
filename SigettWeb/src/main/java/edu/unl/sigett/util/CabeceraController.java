@@ -9,7 +9,7 @@ import com.jlmallas.comun.dao.ConfiguracionDao;
 import com.jlmallas.comun.entity.Configuracion;
 import com.jlmallas.comun.enumeration.ConfiguracionEnum;
 import com.jlmallas.comun.enumeration.ServidorCorreoEnum;
-import edu.unl.sigett.webSemantica.service.AutorOntService;
+import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
 import edu.unl.sigett.webSemantica.service.implement.AreaAcademicaOntServiceImplement;
 import edu.unl.sigett.webSemantica.service.implement.AutorOntServiceImplement;
 import edu.unl.sigett.webSemantica.service.implement.AutorProyectoOntServiceImplement;
@@ -22,7 +22,6 @@ import edu.unl.sigett.webSemantica.service.implement.ProyectoOntServiceImplement
 import edu.unl.sigett.webSemantica.util.CabeceraWebSemantica;
 import edu.unl.sigett.webSemantica.vocabulay.Vocabulario;
 import java.io.BufferedReader;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -30,14 +29,19 @@ import java.io.InputStream;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
+import java.util.Properties;
 import java.util.StringTokenizer;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
+import javax.inject.Inject;
 import org.jlmallas.api.email.MailServiceImplement;
 import org.jlmallas.api.email.MailDTO;
 import org.jlmallas.api.email.MailService;
 import org.jlmallas.api.secure.SecureDTO;
 import org.jlmallas.api.secure.SecureService;
 import org.jlmallas.api.secure.SecureServiceImplement;
+import org.jlmallas.seguridad.dao.UsuarioDao;
+import org.jlmallas.seguridad.service.UsuarioService;
 
 /**
  *
@@ -46,10 +50,17 @@ import org.jlmallas.api.secure.SecureServiceImplement;
 @Named(value = "cabeceraController")
 @SessionScoped
 public class CabeceraController implements Serializable {
+
+    //<editor-fold defaultstate="collapsed" desc="MANAGED BEANS">
+    @Inject
+    private SessionUsuario sessionUsuario;
+    //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="SERVICIOS">
 
     @EJB
     private ConfiguracionDao configuracionDao;
+    @EJB
+    private UsuarioService usuarioService;
 //</editor-fold>
     private MessageView messageView;
     private MailService mailService;
@@ -58,11 +69,14 @@ public class CabeceraController implements Serializable {
     private SecureService secureService;
     private CabeceraWebSemantica cabeceraWebSemantica;
     private OntologyService ontologyService;
+    private PermisoAdministrarProyecto permisoAdministrarProyecto;
+    private static final Logger LOG = Logger.getLogger(CabeceraController.class.getName());
 
     public CabeceraController() {
     }
 
     public void init() {
+        buscarPermisosAdministrarProyecto();
         inicarOntologias();
         this.fijarParametrosWebSemantica();
         this.fijarParametrosMail();
@@ -132,6 +146,29 @@ public class CabeceraController implements Serializable {
         }
     }
 
+    private void buscarPermisosAdministrarProyecto() {
+        this.permisoAdministrarProyecto = new PermisoAdministrarProyecto();
+        this.permisoAdministrarProyecto.setRenderedBuscarDocenteProyecto(
+                usuarioService.tienePermiso(sessionUsuario.getUsuario(),
+                        getValueFromProperties(PropertiesFileEnum.PERMISOS, "buscar_docente_proyecto")) == 1 ? Boolean.TRUE : Boolean.FALSE);
+
+        this.permisoAdministrarProyecto.setRenderedBuscarEspecialista(
+                usuarioService.tienePermiso(sessionUsuario.getUsuario(),
+                        getValueFromProperties(PropertiesFileEnum.PERMISOS, "buscar_docente_especialista")) == 1 ? Boolean.TRUE : Boolean.FALSE);
+
+        this.permisoAdministrarProyecto.setRenderedEliminarDocenteProyecto(
+                usuarioService.tienePermiso(sessionUsuario.getUsuario(),
+                        getValueFromProperties(PropertiesFileEnum.PERMISOS, "eliminar_docente_proyecto")) == 1 ? Boolean.TRUE : Boolean.FALSE);
+
+        this.permisoAdministrarProyecto.setRenderedImprimirOficioDocenteProyecto(
+                usuarioService.tienePermiso(sessionUsuario.getUsuario(),
+                        getValueFromProperties(PropertiesFileEnum.PERMISOS, "imprimir_docente_proyecto")) == 1 ? Boolean.TRUE : Boolean.FALSE);
+
+        this.permisoAdministrarProyecto.setRenderedSeleccionarEspecialista(
+                usuarioService.tienePermiso(sessionUsuario.getUsuario(),
+                        getValueFromProperties(PropertiesFileEnum.PERMISOS, "select_docente_especialista")) == 1 ? Boolean.TRUE : Boolean.FALSE);
+    }
+
     private void inicarOntologias() {
         this.ontologyService = new OntologyService();
         this.ontologyService.setAutorOntService(new AutorOntServiceImplement());
@@ -143,6 +180,22 @@ public class CabeceraController implements Serializable {
         this.ontologyService.setAreaAcademicaOntService(new AreaAcademicaOntServiceImplement());
         this.ontologyService.setPeriodoAcademicoOntService(new PeriodoAcademicoOntServiceImplement());
         this.ontologyService.setNivelAcademicoOntService(new NivelAcademicoOntServiceImplement());
+    }
+
+    public String getValueFromProperties(final PropertiesFileEnum file,
+            final String propiedad) {
+
+        Properties propiedades = new Properties();
+        try {
+            InputStream is = this.getClass().getClassLoader()
+                    .getResourceAsStream(file.getArchivo());
+            propiedades.load(is);
+            return propiedades.getProperty(propiedad);
+
+        } catch (IOException ioe) {
+            LOG.info(ioe.getMessage());
+        }
+        return null;
     }
 
     public MessageView getMessageView() {
@@ -199,6 +252,14 @@ public class CabeceraController implements Serializable {
 
     public void setOntologyService(OntologyService ontologyService) {
         this.ontologyService = ontologyService;
+    }
+
+    public PermisoAdministrarProyecto getPermisoAdministrarProyecto() {
+        return permisoAdministrarProyecto;
+    }
+
+    public void setPermisoAdministrarProyecto(PermisoAdministrarProyecto permisoAdministrarProyecto) {
+        this.permisoAdministrarProyecto = permisoAdministrarProyecto;
     }
 
 }

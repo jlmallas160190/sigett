@@ -12,20 +12,20 @@ import java.io.Serializable;
  *
  * @author jorge-luis
  */
-public class LineaInvestigacionDTO implements Serializable {
+public class NivelAcademicoOntDTO implements Serializable {
 
     private Long id;
     private String nombre;
     private Individual individual;
     private String uri;
 
-    public LineaInvestigacionDTO() {
+    public NivelAcademicoOntDTO(Long id, String nombre, String uri) {
+        this.id = id;
+        this.uri = uri;
+        this.nombre = nombre;
     }
 
-    public LineaInvestigacionDTO(Long id, String nombre,String uri) {
-        this.id = id;
-        this.uri=uri;
-        this.nombre = nombre;
+    public NivelAcademicoOntDTO() {
     }
 
     public Long getId() {

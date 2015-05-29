@@ -12,45 +12,45 @@ import java.io.Serializable;
  *
  * @author jorge-luis
  */
-public class ProyectoCarreraOfertaDTO implements Serializable {
+public class ProyectoCarreraOfertaOntDTO implements Serializable {
 
     private Long id;
-    private OfertaAcademicaDTO ofertaAcademicaDTO;
-    private ProyectoDTO proyectoDTO;
-    private CarreraDTO carreraDTO;
+    private OfertaAcademicaOntDTO ofertaAcademicaDTO;
+    private ProyectoOntDTO proyectoDTO;
+    private CarreraOntDTO carreraDTO;
     private Individual individual;
 
-    public ProyectoCarreraOfertaDTO(Long id, OfertaAcademicaDTO ofertaAcademicaDTO, ProyectoDTO proyectoDTO, CarreraDTO carreraDTO) {
+    public ProyectoCarreraOfertaOntDTO(Long id, OfertaAcademicaOntDTO ofertaAcademicaDTO, ProyectoOntDTO proyectoDTO, CarreraOntDTO carreraDTO) {
         this.id = id;
         this.ofertaAcademicaDTO = ofertaAcademicaDTO;
         this.proyectoDTO = proyectoDTO;
         this.carreraDTO = carreraDTO;
     }
 
-    public ProyectoCarreraOfertaDTO() {
+    public ProyectoCarreraOfertaOntDTO() {
     }
 
-    public OfertaAcademicaDTO getOfertaAcademicaDTO() {
+    public OfertaAcademicaOntDTO getOfertaAcademicaDTO() {
         return ofertaAcademicaDTO;
     }
 
-    public void setOfertaAcademicaDTO(OfertaAcademicaDTO ofertaAcademicaDTO) {
+    public void setOfertaAcademicaDTO(OfertaAcademicaOntDTO ofertaAcademicaDTO) {
         this.ofertaAcademicaDTO = ofertaAcademicaDTO;
     }
 
-    public ProyectoDTO getProyectoDTO() {
+    public ProyectoOntDTO getProyectoDTO() {
         return proyectoDTO;
     }
 
-    public void setProyectoDTO(ProyectoDTO proyectoDTO) {
+    public void setProyectoDTO(ProyectoOntDTO proyectoDTO) {
         this.proyectoDTO = proyectoDTO;
     }
 
-    public CarreraDTO getCarreraDTO() {
+    public CarreraOntDTO getCarreraDTO() {
         return carreraDTO;
     }
 
-    public void setCarreraDTO(CarreraDTO carreraDTO) {
+    public void setCarreraDTO(CarreraOntDTO carreraDTO) {
         this.carreraDTO = carreraDTO;
     }
 

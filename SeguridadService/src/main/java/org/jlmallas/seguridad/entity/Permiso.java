@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package org.jlmallas.seguridad.entity;
 
 import java.io.Serializable;
@@ -30,13 +29,12 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author JorgeLuis
  */
 @Entity
-@Table(name = "permiso",schema = "seguridad")
+@Table(name = "permiso", schema = "seguridad")
 @Cacheable(value = false)
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Permiso.findAll", query = "SELECT p FROM Permiso p"),
     @NamedQuery(name = "Permiso.findById", query = "SELECT p FROM Permiso p WHERE p.id = :id"),
-    @NamedQuery(name = "Permiso.findByCodigoNombre", query = "SELECT p FROM Permiso p WHERE p.codigoNombre = :codigoNombre"),
     @NamedQuery(name = "Permiso.findByNombre", query = "SELECT p FROM Permiso p WHERE p.nombre = :nombre")})
 public class Permiso implements Serializable {
 
@@ -54,8 +52,8 @@ public class Permiso implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 500)
-    @Column(name = "codigo_nombre")
-    private String codigoNombre;
+    @Column(name = "codigo")
+    private String codigo;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "permisoId")
     private List<UsuarioPermiso> usuarioPermisoList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "permisoId")
@@ -68,8 +66,8 @@ public class Permiso implements Serializable {
         this.id = id;
     }
 
-    public Permiso(Long id, String nombre) {
-        this.id = id;
+    public Permiso(String codigo, String nombre) {
+        this.codigo = codigo;
         this.nombre = nombre;
     }
 
@@ -127,12 +125,12 @@ public class Permiso implements Serializable {
         return true;
     }
 
-    public String getCodigoNombre() {
-        return codigoNombre;
+    public String getCodigo() {
+        return codigo;
     }
 
-    public void setCodigoNombre(String codigoNombre) {
-        this.codigoNombre = codigoNombre;
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
     }
 
     @Override

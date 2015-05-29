@@ -5,7 +5,7 @@
  */
 package edu.unl.sigett.webSemantica.service;
 
-import edu.unl.sigett.webSemantica.dto.CarreraDTO;
+import edu.unl.sigett.webSemantica.dto.CarreraOntDTO;
 import edu.unl.sigett.webSemantica.util.CabeceraWebSemantica;
 
 /**
@@ -16,5 +16,5 @@ public interface CarreraOntService {
 
     void read(final CabeceraWebSemantica cabecera);
 
-    void write(final CarreraDTO carreraDTO);
+    void write(final CarreraOntDTO carreraDTO);
 }

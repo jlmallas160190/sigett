@@ -19,6 +19,7 @@ import edu.unl.sigett.entity.LineaInvestigacionProyecto;
 import edu.unl.sigett.entity.Proyecto;
 import edu.unl.sigett.entity.ProyectoCarreraOferta;
 import edu.unl.sigett.entity.TemaProyecto;
+import edu.unl.sigett.webSemantica.dto.ProyectoOntDTO;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -69,6 +70,8 @@ public class SessionProyecto implements Serializable {
     private List<LineaInvestigacion> lineasInvestigacionSeleccionadas;
     private List<DocenteProyectoDTO> docentesProyectoDTO;
     private List<DocenteProyectoDTO> filterDocentesProyectoDTO;
+    
+    private ProyectoOntDTO proyectoOntDTO;
 
     private Boolean renderedEditar;
     private Boolean renderedCrear;
@@ -467,6 +470,14 @@ public class SessionProyecto implements Serializable {
 
     public void setLineasInvestigacionSeleccionadas(List<LineaInvestigacion> lineasInvestigacionSeleccionadas) {
         this.lineasInvestigacionSeleccionadas = lineasInvestigacionSeleccionadas;
+    }
+
+    public ProyectoOntDTO getProyectoOntDTO() {
+        return proyectoOntDTO;
+    }
+
+    public void setProyectoOntDTO(ProyectoOntDTO proyectoOntDTO) {
+        this.proyectoOntDTO = proyectoOntDTO;
     }
 
 }

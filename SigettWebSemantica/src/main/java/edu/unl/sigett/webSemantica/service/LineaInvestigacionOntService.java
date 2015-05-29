@@ -5,7 +5,7 @@
  */
 package edu.unl.sigett.webSemantica.service;
 
-import edu.unl.sigett.webSemantica.dto.LineaInvestigacionDTO;
+import edu.unl.sigett.webSemantica.dto.LineaInvestigacionOntDTO;
 import edu.unl.sigett.webSemantica.util.CabeceraWebSemantica;
 
 /**
@@ -16,5 +16,5 @@ public interface LineaInvestigacionOntService {
 
     void read(final CabeceraWebSemantica cabecera);
 
-    void write(final LineaInvestigacionDTO lineaInvestigacionDTO);
+    void write(final LineaInvestigacionOntDTO lineaInvestigacionDTO);
 }

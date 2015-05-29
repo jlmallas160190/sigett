@@ -6,7 +6,7 @@
 package edu.unl.sigett.webSemantica.service.implement;
 
 import com.hp.hpl.jena.vocabulary.DC;
-import edu.unl.sigett.webSemantica.dto.AreaAcademicaDTO;
+import edu.unl.sigett.webSemantica.dto.AreaAcademicaOntDTO;
 import edu.unl.sigett.webSemantica.service.AreaAcademicaOntService;
 import edu.unl.sigett.webSemantica.util.CabeceraWebSemantica;
 import java.io.File;
@@ -27,7 +27,7 @@ public class AreaAcademicaOntServiceImplement implements AreaAcademicaOntService
         this.cabecera = cabecera;
     }
 
-    public void write(final AreaAcademicaDTO areaAcademicaDTO) {
+    public void write(final AreaAcademicaOntDTO areaAcademicaDTO) {
         try {
             areaAcademicaDTO.setIndividual(cabecera.getVocabulario().getModel().getIndividual(
                     cabecera.getVocabulario().getNS() + areaAcademicaDTO.getUri() + "/" + areaAcademicaDTO));

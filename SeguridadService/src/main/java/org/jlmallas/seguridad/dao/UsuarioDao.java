@@ -36,9 +36,7 @@ public interface UsuarioDao {
 
     List<Usuario> buscarPorCriterio(Usuario usuario);
 
-    int logear(String username, String password);
-
-    boolean unicoUsername(String username);
-
+//    int logear(String username, String password);
+//    boolean unicoUsername(String username);
     int tienePermiso(Usuario usuario, String permiso);
 }

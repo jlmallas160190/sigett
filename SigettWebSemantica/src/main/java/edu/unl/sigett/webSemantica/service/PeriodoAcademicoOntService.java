@@ -5,7 +5,7 @@
  */
 package edu.unl.sigett.webSemantica.service;
 
-import edu.unl.sigett.webSemantica.dto.PeriodoAcademicoDTO;
+import edu.unl.sigett.webSemantica.dto.PeriodoAcademicoOntDTO;
 import edu.unl.sigett.webSemantica.util.CabeceraWebSemantica;
 
 /**
@@ -16,5 +16,5 @@ public interface PeriodoAcademicoOntService {
 
     void read(final CabeceraWebSemantica cabecera);
 
-    void write(final PeriodoAcademicoDTO periodoAcademicoDTO);
+    void write(final PeriodoAcademicoOntDTO periodoAcademicoDTO);
 }

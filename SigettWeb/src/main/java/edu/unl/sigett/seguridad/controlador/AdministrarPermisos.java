@@ -93,36 +93,36 @@ public class AdministrarPermisos implements Serializable {
 
     public List<Permiso> listadoPermisos() {
         List<Permiso> permisos = new ArrayList<>();
-        try {
-            int tienePermiso = usuarioFacadeLocal.tienePermiso(sessionUsuario.getUsuario(), "");
-            if (tienePermiso == 1) {
-                permisos = permisoFacadeLocal.buscarPorNombre(criterio);
-            } else {
-                if (tienePermiso == 2) {
-                    FacesContext.getCurrentInstance().getExternalContext().redirect("admin.xhtml");
-                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "No tiene permisos para listar Permisos...", "");
-                    FacesContext.getCurrentInstance().addMessage(null, message);
-                } else {
-                    FacesContext.getCurrentInstance().getExternalContext().redirect("loginAdmin.xhtml");
-                }
-            }
-        } catch (Exception e) {
-            String mensaje = "Error al buscar Permisos";
-            if (e.getMessage() != null) {
-                mensaje = mensaje + "|Informe= " + e.getMessage();
-            }
-            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_FATAL, mensaje, "");
-            FacesContext.getCurrentInstance().addMessage(null, message);
-            if (sessionUsuario.getUsuario() != null) {
-                Objeto obj = objetoFacadeLocal.buscarPorNombre("Permiso");
-                if (obj == null) {
-                    obj = new Objeto(null, "Permiso", "Permiso");
-                    obj.setProyectoSoftwareId(proyectoSoftwareFacadeLocal.find((int) 1));
-                    objetoFacadeLocal.create(obj);
-                }
-                excepcionFacadeLocal.create(excepcionFacadeLocal.crearExcepcion(sessionUsuario.getUsuario().toString(), mensaje, obj));
-            }
-        }
+//        try {
+//            int tienePermiso = usuarioFacadeLocal.tienePermiso(sessionUsuario.getUsuario(), "");
+//            if (tienePermiso == 1) {
+//                permisos = permisoFacadeLocal.buscarPorNombre(criterio);
+//            } else {
+//                if (tienePermiso == 2) {
+//                    FacesContext.getCurrentInstance().getExternalContext().redirect("admin.xhtml");
+//                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "No tiene permisos para listar Permisos...", "");
+//                    FacesContext.getCurrentInstance().addMessage(null, message);
+//                } else {
+//                    FacesContext.getCurrentInstance().getExternalContext().redirect("loginAdmin.xhtml");
+//                }
+//            }
+//        } catch (Exception e) {
+//            String mensaje = "Error al buscar Permisos";
+//            if (e.getMessage() != null) {
+//                mensaje = mensaje + "|Informe= " + e.getMessage();
+//            }
+//            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_FATAL, mensaje, "");
+//            FacesContext.getCurrentInstance().addMessage(null, message);
+//            if (sessionUsuario.getUsuario() != null) {
+//                Objeto obj = objetoFacadeLocal.buscarPorNombre("Permiso");
+//                if (obj == null) {
+//                    obj = new Objeto(null, "Permiso", "Permiso");
+//                    obj.setProyectoSoftwareId(proyectoSoftwareFacadeLocal.find((int) 1));
+//                    objetoFacadeLocal.create(obj);
+//                }
+//                excepcionFacadeLocal.create(excepcionFacadeLocal.crearExcepcion(sessionUsuario.getUsuario().toString(), mensaje, obj));
+//            }
+//        }
         return permisos;
     }
 

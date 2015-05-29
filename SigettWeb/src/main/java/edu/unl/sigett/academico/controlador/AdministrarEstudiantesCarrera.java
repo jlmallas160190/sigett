@@ -70,6 +70,7 @@ import org.jlmallas.seguridad.dao.RolUsuarioDao;
 import org.jlmallas.seguridad.dao.UsuarioDao;
 import org.jlmallas.seguridad.entity.Rol;
 import org.jlmallas.seguridad.entity.RolUsuario;
+import org.jlmallas.seguridad.service.UsuarioService;
 
 /**
  *
@@ -122,6 +123,8 @@ public class AdministrarEstudiantesCarrera implements Serializable {
     private UsuarioDao usuarioDao;
     @EJB
     private RolDao rolDao;
+    @EJB
+    private UsuarioService usuarioService;
     @EJB
     private RolUsuarioDao rolUsuarioDao;
     @EJB
@@ -448,7 +451,7 @@ public class AdministrarEstudiantesCarrera implements Serializable {
                 usuario.setPassword(cabeceraController.getSecureService().encrypt(
                         new SecureDTO(cabeceraController.getConfiguracionGeneralDTO().getSecureKey(), personaEstudiante.getNumeroIdentificacion())));
                 usuario.setUsername(personaEstudiante.getNumeroIdentificacion());
-                if (usuarioDao.unicoUsername(usuario.getUsername()) == false) {
+                if (usuarioService.unicoUsername(usuario.getUsername()) == false) {
                     usuarioDao.create(usuario);
                     EstudianteUsuario estudianteUsuario = new EstudianteUsuario();
                     estudianteUsuario.setEstudianteId(estudiante.getId());
@@ -464,7 +467,7 @@ public class AdministrarEstudiantesCarrera implements Serializable {
                     }
                 }
             } else {
-                if (usuarioDao.unicoUsername(usuario.getUsername()) == false) {
+                if (usuarioService.unicoUsername(usuario.getUsername()) == false) {
                     usuario.setPassword(cabeceraController.getSecureService().encrypt(
                             new SecureDTO(cabeceraController.getConfiguracionGeneralDTO().getSecureKey(), personaEstudiante.getNumeroIdentificacion())));
                     usuarioDao.edit(usuario);

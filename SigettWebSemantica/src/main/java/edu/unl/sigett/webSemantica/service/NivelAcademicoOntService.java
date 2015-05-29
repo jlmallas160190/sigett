@@ -5,7 +5,7 @@
  */
 package edu.unl.sigett.webSemantica.service;
 
-import edu.unl.sigett.webSemantica.dto.NivelAcademicoDTO;
+import edu.unl.sigett.webSemantica.dto.NivelAcademicoOntDTO;
 import edu.unl.sigett.webSemantica.util.CabeceraWebSemantica;
 
 /**
@@ -16,5 +16,5 @@ public interface NivelAcademicoOntService {
 
     void read(final CabeceraWebSemantica cabecera);
 
-    void write(final NivelAcademicoDTO nivelDTO);
+    void write(final NivelAcademicoOntDTO nivelDTO);
 }

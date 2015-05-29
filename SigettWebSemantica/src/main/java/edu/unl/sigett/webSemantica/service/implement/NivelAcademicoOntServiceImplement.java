@@ -6,7 +6,7 @@
 package edu.unl.sigett.webSemantica.service.implement;
 
 import com.hp.hpl.jena.vocabulary.DC;
-import edu.unl.sigett.webSemantica.dto.NivelAcademicoDTO;
+import edu.unl.sigett.webSemantica.dto.NivelAcademicoOntDTO;
 import edu.unl.sigett.webSemantica.service.NivelAcademicoOntService;
 import edu.unl.sigett.webSemantica.util.CabeceraWebSemantica;
 import java.io.File;
@@ -28,7 +28,7 @@ public class NivelAcademicoOntServiceImplement implements NivelAcademicoOntServi
         this.cabecera = cabecera;
     }
 
-    public void write(NivelAcademicoDTO nivelDTO) {
+    public void write(NivelAcademicoOntDTO nivelDTO) {
         try {
             nivelDTO.setIndividual(cabecera.getVocabulario().getModel().getIndividual(
                     cabecera.getVocabulario().getNS() + nivelDTO.getUri() + "/" + nivelDTO.getId()));

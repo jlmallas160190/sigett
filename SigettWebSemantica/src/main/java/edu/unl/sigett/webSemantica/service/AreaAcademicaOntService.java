@@ -5,7 +5,7 @@
  */
 package edu.unl.sigett.webSemantica.service;
 
-import edu.unl.sigett.webSemantica.dto.AreaAcademicaDTO;
+import edu.unl.sigett.webSemantica.dto.AreaAcademicaOntDTO;
 import edu.unl.sigett.webSemantica.util.CabeceraWebSemantica;
 
 /**
@@ -16,5 +16,5 @@ public interface AreaAcademicaOntService {
 
     void read(final CabeceraWebSemantica cabecera);
 
-    void write(final AreaAcademicaDTO areaAcademicaDTO);
+    void write(final AreaAcademicaOntDTO areaAcademicaDTO);
 }

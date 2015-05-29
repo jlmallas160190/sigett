@@ -7,6 +7,7 @@ package org.jlmallas.seguridad.dao.implement;
 
 import org.jlmallas.seguridad.entity.Permiso;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.Query;
@@ -25,16 +26,24 @@ public class PermisoDaoImplement extends AbstractDao<Permiso> implements Permiso
     }
 
     @Override
-    public List<Permiso> buscarPorNombre(String nombre) {
-        List<Permiso> permisos = new ArrayList<>();
-        try {
-            Query query = em.createQuery("Select p from Permiso p WHERE" + " ( p.nombre like concat('%',:criterio,'%') )");
-            query.setParameter("criterio", nombre);
-            permisos = query.getResultList();
-        } catch (Exception e) {
-            System.out.println(e);
+    public List<Permiso> buscar(final Permiso permiso) {
+        StringBuilder sql = new StringBuilder();
+        HashMap<String, Object> parametros = new HashMap<>();
+        sql.append("SELECT p from Permiso p WHERE 1=1 ");
+        Boolean existeFiltro = Boolean.FALSE;
+        if (permiso.getCodigo() == null) {
+            sql.append(" and p.codigo=:codigo");
+            parametros.put("codigo", permiso.getCodigo());
+            existeFiltro = Boolean.TRUE;
         }
-        return permisos;
+        if (!existeFiltro) {
+            return new ArrayList<>();
+        }
+        final Query q = em.createQuery(sql.toString());
+        for (String key : parametros.keySet()) {
+            q.setParameter(key, parametros.get(key));
+        }
+        return q.getResultList();
     }
 
 }

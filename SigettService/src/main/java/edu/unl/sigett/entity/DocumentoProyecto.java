@@ -6,29 +6,17 @@
 package edu.unl.sigett.entity;
 
 import java.io.Serializable;
-import java.util.Date;
-import java.util.List;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -54,8 +42,6 @@ public class DocumentoProyecto implements Serializable {
     @JoinColumn(name = "proyecto_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Proyecto proyectoId;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "documentoProyectoId")
-    private List<EstructuraDocumentoProyecto> estructuraDocumentoProyectoList;
 
     public DocumentoProyecto() {
     }
@@ -94,15 +80,6 @@ public class DocumentoProyecto implements Serializable {
 
     public void setDocumentoId(Long documentoId) {
         this.documentoId = documentoId;
-    }
-
-    @XmlTransient
-    public List<EstructuraDocumentoProyecto> getEstructuraDocumentoProyectoList() {
-        return estructuraDocumentoProyectoList;
-    }
-
-    public void setEstructuraDocumentoProyectoList(List<EstructuraDocumentoProyecto> estructuraDocumentoProyectoList) {
-        this.estructuraDocumentoProyectoList = estructuraDocumentoProyectoList;
     }
 
     @Override

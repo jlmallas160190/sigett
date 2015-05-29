@@ -51,7 +51,7 @@ import org.jlmallas.seguridad.dao.UsuarioDao;
     @URLMapping(
             id = "crearRol",
             pattern = "/crearRol/",
-            viewId = "/faces/pages/seguridad/roles/crearRol.xhtml"
+            viewId = "/faces/pages/seguridad/roles/editarRol.xhtml"
     ),
     @URLMapping(
             id = "roles",
