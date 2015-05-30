@@ -7,7 +7,6 @@ package edu.unl.sigett.seguridad.controlador;
 
 import com.jlmallas.comun.dao.ConfiguracionDao;
 import edu.unl.sigett.finalizacion.controlador.AdministrarTribunales;
-import edu.unl.sigett.docenteProyecto.AdministrarDocentesProyecto;
 import edu.unl.sigett.seguimiento.controlador.AdministrarActividades;
 import edu.unl.sigett.seguimiento.controlador.AdministrarProyectosDirector;
 import edu.unl.sigett.seguridad.managed.session.SessionDocenteUsuario;
@@ -40,8 +39,6 @@ public class LoginDocente implements Serializable {
     private SessionDocenteUsuario sessionDocenteUsuario;
     @Inject
     private AdministrarActividades administrarActividades;
-    @Inject
-    private AdministrarDocentesProyecto administrarDocentesProyecto;
     @Inject
     private AdministrarProyectosDirector administrarProyectosDirector;
     @Inject

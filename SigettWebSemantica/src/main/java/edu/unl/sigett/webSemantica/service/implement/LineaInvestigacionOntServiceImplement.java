@@ -23,11 +23,13 @@ public class LineaInvestigacionOntServiceImplement implements LineaInvestigacion
     private static final Logger LOG = Logger.getLogger(LineaInvestigacionOntServiceImplement.class.getName());
     private CabeceraWebSemantica cabeceraWebSemantica;
 
-    public void read(CabeceraWebSemantica cabecera) {
+    @Override
+    public void read(final CabeceraWebSemantica cabecera) {
         this.cabeceraWebSemantica = cabecera;
     }
 
-    public void write(LineaInvestigacionOntDTO lineaInvestigacionDTO) {
+    @Override
+    public void write(final LineaInvestigacionOntDTO lineaInvestigacionDTO) {
         try {
             lineaInvestigacionDTO.setIndividual(cabeceraWebSemantica.getVocabulario().getModel().getIndividual(
                     cabeceraWebSemantica.getVocabulario().getNS() + lineaInvestigacionDTO.getUri() + "/" + lineaInvestigacionDTO.getId()));

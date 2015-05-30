@@ -17,17 +17,17 @@ import java.util.GregorianCalendar;
  */
 public class DateResource implements Serializable {
 
-    public int calculaDuracionEnDias(Date fechaInicio, Date fechaFin, int diasNoContabilizados) {
-        int ai, af, mi, mf, di, df = 0;
+    public Double calculaDuracionEnDias(Date fechaInicio, Date fechaFin, int diasNoContabilizados) {
+        Integer ai, af, mi, mf, di, df = 0;
         ai = fechaInicio.getYear();
         af = fechaFin.getYear();
         mi = fechaInicio.getMonth();
         mf = fechaFin.getMonth();
         di = fechaInicio.getDate();
         df = fechaFin.getDate();
-        int mesActual = mi;
-        int anio = ai;
-        int dias = 0;
+        Integer mesActual = mi;
+        Integer anio = ai;
+        Double dias = 0.0;
         boolean fin = true;
         while (fin) {
             if (mesActual == mi && ai == anio) {

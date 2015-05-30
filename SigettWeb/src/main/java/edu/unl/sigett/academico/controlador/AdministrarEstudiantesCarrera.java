@@ -613,8 +613,8 @@ public class AdministrarEstudiantesCarrera implements Serializable {
             if (reporte.getNumeroModuloMatriculado() != null) {
                 if (Integer.parseInt(reporte.getNumeroModuloMatriculado()) > Integer.parseInt(moduloMaxAprobado)) {
                     Calendar fechaActual = Calendar.getInstance();
-                    int tiempo = calculo.calculaDuracionEnDias(reporte.getOfertaAcademicaId().getFechaFin(), fechaActual.getTime(), 0);
-                    if (tiempo >= 0) {
+                    Double tiempo = calculo.calculaDuracionEnDias(reporte.getOfertaAcademicaId().getFechaFin(), fechaActual.getTime(), 0);
+                    if (tiempo >= 0.0) {
                         if (tiempo <= tiempoGracia) {
                             esApto = true;
                         } else {

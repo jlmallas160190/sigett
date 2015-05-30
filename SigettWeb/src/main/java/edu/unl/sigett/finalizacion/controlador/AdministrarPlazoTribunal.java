@@ -80,49 +80,49 @@ public class AdministrarPlazoTribunal implements Serializable {
 
     public void grabar(PlazoEvaluacionTribunal plazoEvaluacionTribunal) {
         try {
-            int plazoMaximo = Integer.parseInt(configuracionGeneralFacadeLocal.find((int) 10).getValor());
-            DateResource calculo = new DateResource();
-            int duracionDias = 0;
-            FacesContext facesContext = FacesContext.getCurrentInstance();
-            ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            String param = (String) facesContext.getExternalContext().getRequestParameterMap().get("1");
-            duracionDias = calculo.calculaDuracionEnDias(plazoEvaluacionTribunal.getEvaluacionTribunalId().getFechaInicio(), plazoEvaluacionTribunal.getFechaPlazo(), 2);
-            if (plazoMaximo >= duracionDias) {
-                if (plazoEvaluacionTribunal.getId() == null) {
-                    plazoEvaluacionTribunalFacadeLocal.create(plazoEvaluacionTribunal);
-                    plazoEvaluacionTribunal.getEvaluacionTribunalId().setFechaPlazo(plazoEvaluacionTribunal.getFechaPlazo());
-                    evaluacionTribunalFacadeLocal.edit(plazoEvaluacionTribunal.getEvaluacionTribunalId());
-                    administrarTribunales.buscarPorDocente(sessionDocenteUsuario.getDocenteUsuario().getDocenteId(), "");
-                    if (param.equalsIgnoreCase("grabar-dlg")) {
-                        RequestContext.getCurrentInstance().execute("PF('dlgEditarPlazo').hide()");
-                        sessionPlazoEvaluacionTribunal.setPlazoEvaluacionTribunal(new PlazoEvaluacionTribunal());
-                    } else {
-                        if (param.equalsIgnoreCase("grabar-editar-dlg")) {
-                            RequestContext.getCurrentInstance().execute("PF('dlgEditarPlazo').hide()");
-                        }
-                    }
-                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_grabar"), "");
-                    FacesContext.getCurrentInstance().addMessage(null, message);
-                } else {
-                    plazoEvaluacionTribunalFacadeLocal.edit(plazoEvaluacionTribunal);
-                    plazoEvaluacionTribunal.getEvaluacionTribunalId().setFechaPlazo(plazoEvaluacionTribunal.getFechaPlazo());
-                    evaluacionTribunalFacadeLocal.edit(plazoEvaluacionTribunal.getEvaluacionTribunalId());
-                    administrarTribunales.buscarPorDocente(sessionDocenteUsuario.getDocenteUsuario().getDocenteId(), "");
-                    if (param.equalsIgnoreCase("grabar-dlg")) {
-                        RequestContext.getCurrentInstance().execute("PF('dlgEditarPlazoEvaluacionTribunal').hide()");
-                        sessionPlazoEvaluacionTribunal.setPlazoEvaluacionTribunal(new PlazoEvaluacionTribunal());
-                    } else {
-                        if (param.equalsIgnoreCase("grabar-editar-dlg")) {
-                            RequestContext.getCurrentInstance().execute("PF('dlgEditarPlazoEvaluacionTribunal').hide()");
-                        }
-                    }
-                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_editar"), "");
-                    FacesContext.getCurrentInstance().addMessage(null, message);
-                }
-            } else {
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.plazo_cambios_privada_excede") + ".", "");
-                FacesContext.getCurrentInstance().addMessage(null, message);
-            }
+//            int plazoMaximo = Integer.parseInt(configuracionGeneralFacadeLocal.find((int) 10).getValor());
+//            DateResource calculo = new DateResource();
+//            int duracionDias = 0;
+//            FacesContext facesContext = FacesContext.getCurrentInstance();
+//            ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
+//            String param = (String) facesContext.getExternalContext().getRequestParameterMap().get("1");
+//            duracionDias = calculo.calculaDuracionEnDias(plazoEvaluacionTribunal.getEvaluacionTribunalId().getFechaInicio(), plazoEvaluacionTribunal.getFechaPlazo(), 2);
+//            if (plazoMaximo >= duracionDias) {
+//                if (plazoEvaluacionTribunal.getId() == null) {
+//                    plazoEvaluacionTribunalFacadeLocal.create(plazoEvaluacionTribunal);
+//                    plazoEvaluacionTribunal.getEvaluacionTribunalId().setFechaPlazo(plazoEvaluacionTribunal.getFechaPlazo());
+//                    evaluacionTribunalFacadeLocal.edit(plazoEvaluacionTribunal.getEvaluacionTribunalId());
+//                    administrarTribunales.buscarPorDocente(sessionDocenteUsuario.getDocenteUsuario().getDocenteId(), "");
+//                    if (param.equalsIgnoreCase("grabar-dlg")) {
+//                        RequestContext.getCurrentInstance().execute("PF('dlgEditarPlazo').hide()");
+//                        sessionPlazoEvaluacionTribunal.setPlazoEvaluacionTribunal(new PlazoEvaluacionTribunal());
+//                    } else {
+//                        if (param.equalsIgnoreCase("grabar-editar-dlg")) {
+//                            RequestContext.getCurrentInstance().execute("PF('dlgEditarPlazo').hide()");
+//                        }
+//                    }
+//                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_grabar"), "");
+//                    FacesContext.getCurrentInstance().addMessage(null, message);
+//                } else {
+//                    plazoEvaluacionTribunalFacadeLocal.edit(plazoEvaluacionTribunal);
+//                    plazoEvaluacionTribunal.getEvaluacionTribunalId().setFechaPlazo(plazoEvaluacionTribunal.getFechaPlazo());
+//                    evaluacionTribunalFacadeLocal.edit(plazoEvaluacionTribunal.getEvaluacionTribunalId());
+//                    administrarTribunales.buscarPorDocente(sessionDocenteUsuario.getDocenteUsuario().getDocenteId(), "");
+//                    if (param.equalsIgnoreCase("grabar-dlg")) {
+//                        RequestContext.getCurrentInstance().execute("PF('dlgEditarPlazoEvaluacionTribunal').hide()");
+//                        sessionPlazoEvaluacionTribunal.setPlazoEvaluacionTribunal(new PlazoEvaluacionTribunal());
+//                    } else {
+//                        if (param.equalsIgnoreCase("grabar-editar-dlg")) {
+//                            RequestContext.getCurrentInstance().execute("PF('dlgEditarPlazoEvaluacionTribunal').hide()");
+//                        }
+//                    }
+//                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_editar"), "");
+//                    FacesContext.getCurrentInstance().addMessage(null, message);
+//                }
+//            } else {
+//                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.plazo_cambios_privada_excede") + ".", "");
+//                FacesContext.getCurrentInstance().addMessage(null, message);
+//            }
         } catch (Exception e) {
         }
     }

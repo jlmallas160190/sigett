@@ -10,8 +10,6 @@ import java.util.HashMap;
 import org.jlmallas.seguridad.entity.RolUsuario;
 import java.util.List;
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import org.jlmallas.seguridad.dao.AbstractDao;
 import org.jlmallas.seguridad.dao.RolUsuarioDao;
@@ -44,13 +42,13 @@ public class RolUsuarioDaoImplement extends AbstractDao<RolUsuario> implements R
         HashMap<String, Object> parametros = new HashMap<>();
         sql.append("SELECT ru from RolUsuario ru WHERE 1=1 ");
         Boolean existeFiltro = Boolean.FALSE;
-        if (rolUsuario.getRolId() == null) {
-            sql.append(" and ru.rol=:rolId");
+        if (rolUsuario.getRolId() != null) {
+            sql.append(" and ru.rolId=:rolId");
             parametros.put("rolId", rolUsuario.getRolId());
             existeFiltro = Boolean.TRUE;
         }
-        if (rolUsuario.getRolId() == null) {
-            sql.append(" and ru.usuario=:usuarioId");
+        if (rolUsuario.getUsuarioId() != null) {
+            sql.append(" and ru.usuarioId=:usuarioId");
             parametros.put("usuarioId", rolUsuario.getUsuarioId());
             existeFiltro = Boolean.TRUE;
         }

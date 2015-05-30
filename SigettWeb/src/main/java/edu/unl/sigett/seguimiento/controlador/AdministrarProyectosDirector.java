@@ -12,7 +12,6 @@ import com.ocpsoft.pretty.faces.annotation.URLMappings;
 import edu.unl.sigett.adjudicacion.controlador.AdministrarProrrogas;
 import edu.unl.sigett.finalizacion.controlador.AdministrarInformesProyecto;
 import edu.unl.sigett.postulacion.controlador.AutorProyectoPostulacionController;
-import edu.unl.sigett.postulacion.controlador.AdministrarCronograma;
 import edu.unl.sigett.seguimiento.session.SessionProyectosDirector;
 import edu.unl.sigett.comun.controlador.AdministrarConfiguraciones;
 import edu.unl.sigett.seguridad.managed.session.SessionDocenteUsuario;
@@ -81,9 +80,6 @@ public class AdministrarProyectosDirector implements Serializable {
     private AdministrarProrrogas administrarProrrogas;
     @Inject
     private AdministrarConfiguraciones administrarConfiguraciones;
-    @Inject
-    private AdministrarCronograma administrarCronograma;
-
     @EJB
     private UsuarioDao usuarioFacadeLocal;
     @EJB
@@ -184,7 +180,7 @@ public class AdministrarProyectosDirector implements Serializable {
                     break;
                 case "prorrogas":
                     administrarProrrogas.setRenderedDlgOficio(false);
-                    administrarProrrogas.buscar(sessionProyectosDirector.getDirectorProyecto().getProyectoId().getCronograma(), sessionDocenteUsuario.getUsuario(),"");
+                    administrarProrrogas.buscar(sessionProyectosDirector.getDirectorProyecto().getProyectoId().getCronograma(), sessionDocenteUsuario.getUsuario(), "");
                     administrarProrrogas.renderedCrear(sessionDocenteUsuario.getUsuario(), sessionProyectosDirector.getDirectorProyecto().getProyectoId());
                     administrarProrrogas.renderedBuscar(sessionDocenteUsuario.getUsuario(), sessionProyectosDirector.getDirectorProyecto().getProyectoId());
                     administrarProrrogas.renderedEditar(sessionDocenteUsuario.getUsuario(), sessionProyectosDirector.getDirectorProyecto().getProyectoId());
@@ -203,9 +199,9 @@ public class AdministrarProyectosDirector implements Serializable {
                     break;
                 case "inicio":
                     administrarInformesProyecto.setRenderedDlgEditar(false);
-                    administrarCronograma.calculaAvanceFaltanteCronograma(sessionProyectosDirector.getDirectorProyecto().getProyectoId().getCronograma(), 
-                            actividadFacadeLocal.buscarPorProyecto(sessionProyectosDirector.getDirectorProyecto().getProyectoId().getCronograma().getId()), 
-                            sessionDocenteUsuario.getUsuario());
+//                    administrarCronograma.calculaAvanceFaltanteCronograma(sessionProyectosDirector.getDirectorProyecto().getProyectoId().getCronograma(),
+//                            actividadFacadeLocal.buscarPorProyecto(sessionProyectosDirector.getDirectorProyecto().getProyectoId().getCronograma().getId()),
+//                            sessionDocenteUsuario.getUsuario());
                     administrarInformesProyecto.setRenderedDlgCertificado(false);
                 case "informes":
                     administrarInformesProyecto.buscar("", sessionProyectosDirector.getDirectorProyecto().getProyectoId(), sessionDocenteUsuario.getUsuario());
@@ -240,7 +236,7 @@ public class AdministrarProyectosDirector implements Serializable {
         try {
             for (DocenteCarrera docenteCarrera : docente.getDocenteCarreraList()) {
                 for (ProyectoCarreraOferta pco : proyectoCarreraOfertaFacadeLocal.buscarPorCarrera(docenteCarrera.getCarreraId().getId())) {
-                    OfertaAcademica ofertaAcademica=ofertaAcademicaFacadeLocal.find(pco.getOfertaAcademicaId());
+                    OfertaAcademica ofertaAcademica = ofertaAcademicaFacadeLocal.find(pco.getOfertaAcademicaId());
                     if (!ofertaAcademicas.contains(ofertaAcademica)) {
                         ofertaAcademicas.add(ofertaAcademica);
                     }
@@ -255,7 +251,7 @@ public class AdministrarProyectosDirector implements Serializable {
     public int countProyectosPeriodoCarrera(Docente docente, OfertaAcademica of) {
         int count = 0;
         try {
-            Persona p= personaFacadeLocal.find(docente.getId());
+            Persona p = personaFacadeLocal.find(docente.getId());
             count = count + directorProyectoFacadeLocal.buscarPorDocenteOferta(p.getNumeroIdentificacion(), of.getId()).size();
         } catch (Exception e) {
             System.out.println(e);

@@ -9,17 +9,13 @@ package com.jlmallas.comun.enumeration;
  *
  * @author jorge-luis
  */
-public enum ConfiguracionEnum {
+public enum CatalogoDocumentoProyectoEnum {
 
-    TIEMPOPERTINENCIA("TIEMPO_PERTINENCIA"),
-    RUTARDF("RUTA_RDF"),
-    RUTADOCUMENTOPROYECTO("RUTA_DOCUMENTO_PROYECTO"),
-    RUTAOFICIO("RUTA_OFICIO"),
-    RUTAFEPRESENTACION("RUTA_FE_PRESENTACION"),
-    SECRETKEY("SECRET_KEY");
+    ANTEPROYECTO("ANTEPROYECTO"),
+    DOCUMENTOFINAL("DOCUMENTO_FINAL");
     String tipo;
 
-    private ConfiguracionEnum(String tipo) {
+    private CatalogoDocumentoProyectoEnum(String tipo) {
         this.tipo = tipo;
     }
 

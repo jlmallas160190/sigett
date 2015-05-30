@@ -16,10 +16,12 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.Query;
 import org.jlmallas.seguridad.dao.AbstractDao;
+import org.jlmallas.seguridad.dao.PermisoDao;
 import org.jlmallas.seguridad.dao.RolPermisoDao;
 import org.jlmallas.seguridad.dao.RolUsuarioDao;
 import org.jlmallas.seguridad.dao.UsuarioDao;
 import org.jlmallas.seguridad.dao.UsuarioPermisoDao;
+import org.jlmallas.seguridad.entity.Permiso;
 
 /**
  *
@@ -31,45 +33,18 @@ public class UsuarioDaoImplement extends AbstractDao<Usuario> implements Usuario
     @EJB
     private UsuarioPermisoDao usuarioPermisoFacadeLocal;
     @EJB
-    private RolPermisoDao rolPermisoFacadeLocal;
+    private RolPermisoDao rolPermisoDao;
     @EJB
-    private RolUsuarioDao rolUsuarioFacadeLocal;
+    private RolUsuarioDao rolUsuarioDao;
+    @EJB
+    private PermisoDao permisoDao;
+    @EJB
+    private UsuarioPermisoDao usuarioPermisoDao;
 
     public UsuarioDaoImplement() {
         super(Usuario.class);
     }
 
-//    @Override
-//    public boolean unicoUsername(String username) {
-//        boolean var = false;
-//        Usuario user = buscarPorUsuario(username);
-//        if (user != null) {
-//            var = true;
-//        }
-//        return var;
-//    }
-//    @Override
-//    public int logear(String username, String password) {
-//        //if var=0 no existe clave; if var=2 no existe username; if var=3 no coinciden
-//        int var = 0;
-//        Usuario usuarioPorUsername = buscarPorUsuario(username);
-//        Usuario usuarioClave = new Usuario();
-//        if (usuarioPorUsername != null) {
-//            usuarioClave = buscarPorClave(usuarioPorUsername.getUsername(), password);
-//        }
-//        if (usuarioPorUsername != null) {
-//            if (usuarioClave != null) {
-//                if (usuarioPorUsername.equals(usuarioClave)) {
-//                    var = 1;
-//                } else {
-//                    var = 3;
-//                }
-//            } else {
-//                var = 2;
-//            }
-//        }
-//        return var;
-//    }
     @Override
     public List<Usuario> buscarPorCriterio(Usuario usuario) {
         StringBuilder sql = new StringBuilder();
@@ -83,7 +58,7 @@ public class UsuarioDaoImplement extends AbstractDao<Usuario> implements Usuario
         }
         if (usuario.getApellidos() != null) {
             sql.append(" and (LOWER(u.apellidos) like concat('%',LOWER(:apellidos),'%'))");
-            parametros.put("apellidos", usuario.getNombres());
+            parametros.put("apellidos", usuario.getApellidos());
             existeFiltro = Boolean.TRUE;
         }
         if (usuario.getUsername() != null) {
@@ -97,7 +72,7 @@ public class UsuarioDaoImplement extends AbstractDao<Usuario> implements Usuario
             existeFiltro = Boolean.TRUE;
         }
         if (usuario.getEsActivo() != null) {
-            sql.append(" and u.esActivo:=activo");
+            sql.append(" and u.esActivo=:activo");
             parametros.put("activo", usuario.getEsActivo());
             existeFiltro = Boolean.TRUE;
         }
@@ -142,33 +117,27 @@ public class UsuarioDaoImplement extends AbstractDao<Usuario> implements Usuario
 
     @Override
     public int tienePermiso(Usuario user, String permiso) {
-        int var = 0;
-        boolean permisoEncontrado = false;
         if (user.getId() == null) {
-            return var;
+            return 0;
         }
         if (user.getEsSuperuser()) {
             return 1;
         }
-        UsuarioPermiso up = usuarioPermisoFacadeLocal.buscarPorUsuarioYCodigoPermiso(user.getId(), permiso);
+        List<Permiso> permisos = permisoDao.buscar(new Permiso(permiso, null));
+        List<UsuarioPermiso> usuarioPermisos = usuarioPermisoDao.buscar(new UsuarioPermiso(user, !permisos.isEmpty() ? permisos.get(0) : null));
+        UsuarioPermiso up = !usuarioPermisos.isEmpty() ? usuarioPermisos.get(0) : null;
         if (up != null) {
             return 1;
         }
-        List<RolUsuario> rolUsuarios = rolUsuarioFacadeLocal.buscarPorUsuario(user.getId());
+        List<RolUsuario> rolUsuarios = rolUsuarioDao.buscar(new RolUsuario(user, null));
         for (RolUsuario rolUsuario : rolUsuarios) {
-            RolPermiso rp = rolPermisoFacadeLocal.buscarPorRolCodigoPermiso(rolUsuario.getRolId().getId(), permiso);
+            List<RolPermiso> rolPermisos = rolPermisoDao.buscar(new RolPermiso(rolUsuario.getRolId(), !permisos.isEmpty() ? permisos.get(0) : null));
+            RolPermiso rp = !rolPermisos.isEmpty() ? rolPermisos.get(0) : null;
             if (rp != null) {
-                permisoEncontrado = true;
-                break;
+                return 1;
             }
         }
-
-        if (permisoEncontrado == true) {
-            var = 1;
-        } else {
-            var = 2;
-        }
-        return var;
+        return 0;
     }
 
 }

@@ -28,7 +28,7 @@ public class SessionDocenteProyecto implements Serializable {
 
     private Boolean renderedBuscar;
     private Boolean renderedBuscarEspecialista;
-    private Boolean renderedImprimiOficio;
+    private Boolean renderedImprimirOficio;
     private Boolean renderedSeleccionarEspecialista;
     private Boolean renderedEliminar;
     private Boolean renderedDialogoOficio;
@@ -66,12 +66,12 @@ public class SessionDocenteProyecto implements Serializable {
         this.renderedBuscarEspecialista = renderedBuscarEspecialista;
     }
 
-    public Boolean getRenderedImprimiOficio() {
-        return renderedImprimiOficio;
+    public Boolean getRenderedImprimirOficio() {
+        return renderedImprimirOficio;
     }
 
-    public void setRenderedImprimiOficio(Boolean renderedImprimiOficio) {
-        this.renderedImprimiOficio = renderedImprimiOficio;
+    public void setRenderedImprimirOficio(Boolean renderedImprimirOficio) {
+        this.renderedImprimirOficio = renderedImprimirOficio;
     }
 
     public Boolean getRenderedSeleccionarEspecialista() {

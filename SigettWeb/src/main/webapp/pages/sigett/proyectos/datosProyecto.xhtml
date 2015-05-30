@@ -22,7 +22,7 @@
                 <f:param  name="2" value="agregar-cronograma"/>
                 <p:ajax event="dateSelect" update="fechaInicio,fechaProrroga,duracion,:contenido:msm,
                         :contenido:tabViewDatosProyecto:tblAutores" process="fechaInicio"
-                        listener="#{cronogramaController.editarCronograma()}"/>     
+                        listener="#{cronogramaController.calcularDuracion()}"/>     
             </p:calendar>
             <h:outputText rendered="#{!sessionProyecto.renderedPertinente}" value="#{sessionProyecto.cronograma.fechaInicio}">
                 <f:convertDateTime pattern="EEEEE dd MMMMM yyyy"/>
@@ -37,7 +37,7 @@
                 <p:ajax event="dateSelect" update=":contenido:msm,fechaInicio,fechaFin,fechaProrroga,duracion,,:contenido:msm,
                         ,:contenido:tabViewDatosProyecto:tblAutores" 
                         onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" process="fechaInicio,fechaFin"
-                        listener="#{cronogramaController.editarCronograma()}"/> 
+                        listener="#{cronogramaController.calcularDuracion()}"/> 
             </p:calendar>
             <h:outputText value="#{sessionProyecto.cronograma.fechaFin}" rendered="#{!sessionProyecto.renderedPertinente}">
                 <f:convertDateTime pattern="EEEEE dd MMMMM yyyy"/>

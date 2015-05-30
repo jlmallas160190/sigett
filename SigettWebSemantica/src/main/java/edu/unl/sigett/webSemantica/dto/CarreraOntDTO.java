@@ -14,14 +14,14 @@ import java.io.Serializable;
  */
 public class CarreraOntDTO implements Serializable {
 
-    private Long id;
+    private Integer id;
     private String nombre;
     private String sigla;
     private NivelAcademicoOntDTO nivelAcademicoDTO;
     private AreaAcademicaOntDTO areaAcademicaDTO;
     private Individual individual;
 
-    public CarreraOntDTO(Long id, String nombre, String sigla, NivelAcademicoOntDTO nivelDTO, AreaAcademicaOntDTO areaAcademicaDTO) {
+    public CarreraOntDTO(Integer id, String nombre, String sigla, NivelAcademicoOntDTO nivelDTO, AreaAcademicaOntDTO areaAcademicaDTO) {
         this.id = id;
         this.sigla = sigla;
         this.nombre = nombre;
@@ -32,11 +32,11 @@ public class CarreraOntDTO implements Serializable {
     public CarreraOntDTO() {
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

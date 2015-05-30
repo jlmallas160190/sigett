@@ -14,7 +14,7 @@ import javax.ejb.Local;
  * @author JorgeLuis
  */
 @Local
-public interface DocumentoProyectoFacadeLocal {
+public interface DocumentoProyectoDao {
 
     void create(DocumentoProyecto documentoProyecto);
 
@@ -28,7 +28,7 @@ public interface DocumentoProyectoFacadeLocal {
 
     List<DocumentoProyecto> findRange(int[] range);
 
-    List<DocumentoProyecto> buscarPorProyecto(Long proyectoId);
+    List<DocumentoProyecto> buscar(final DocumentoProyecto documentoProyecto);
 
     int count();
 

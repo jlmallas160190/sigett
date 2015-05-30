@@ -24,7 +24,7 @@
         </p:password>
         <h:inputHidden/>
         <h:outputLabel value="#{msg['lbl.confirmar']} #{msg['lbl.clave']}:"  />
-        <p:password  style="text-transform: none" feedback="true" value="#{sessionAdminUsuario.confirmaClave}" 
+        <p:password  style="text-transform: none" feedback="true" value="#{sessionAdminUsuario.confirmarClave}" 
                      title="#{msg['lbl.confirmar']} #{msg['lbl.clave']}" required="true" 
                      requiredMessage="#{msg['lbl.confirmar']} #{msg['lbl.obligatorio']}.">
             <p:ajax event="change" update=":contenido:msm"/>

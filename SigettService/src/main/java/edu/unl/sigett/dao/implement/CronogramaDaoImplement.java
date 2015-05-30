@@ -3,8 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.unl.sigett.dao;
+package edu.unl.sigett.dao.implement;
 
+import edu.unl.sigett.dao.AbstractDao;
+import edu.unl.sigett.dao.CronogramaDao;
 import edu.unl.sigett.entity.Cronograma;
 import javax.ejb.Stateless;
 
@@ -13,9 +15,9 @@ import javax.ejb.Stateless;
  * @author JorgeLuis
  */
 @Stateless
-public class CronogramaFacade extends AbstractDao<Cronograma> implements CronogramaFacadeLocal {
+public class CronogramaDaoImplement extends AbstractDao<Cronograma> implements CronogramaDao {
 
-    public CronogramaFacade() {
+    public CronogramaDaoImplement() {
         super(Cronograma.class);
     }
 

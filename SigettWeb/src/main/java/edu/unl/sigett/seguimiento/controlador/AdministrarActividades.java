@@ -8,7 +8,6 @@ package edu.unl.sigett.seguimiento.controlador;
 import org.jlmallas.api.date.DateResource;
 import com.jlmallas.comun.entity.Persona;
 import com.jlmallas.comun.dao.PersonaDao;
-import edu.unl.sigett.postulacion.controlador.AdministrarCronograma;
 import edu.unl.sigett.proyecto.SessionProyecto;
 import edu.unl.sigett.seguimiento.session.SessionActividad;
 import edu.unl.sigett.seguimiento.session.SessionProyectosAutor;
@@ -89,8 +88,6 @@ public class AdministrarActividades implements Serializable {
     private SessionProyectosAutor sessionProyectosAutor;
     @Inject
     private SessionProyectosDirector sessionProyectosDirector;
-    @Inject
-    private AdministrarCronograma administrarCronograma;
     @Inject
     private AdministrarRevisiones administrarRevisiones;
 
@@ -877,34 +874,34 @@ public class AdministrarActividades implements Serializable {
 
     public void desactivar(Actividad actividad, Cronograma cronograma, Usuario usuario) {
         try {
-            FacesContext facesContext = FacesContext.getCurrentInstance();
-            ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            String param = (String) facesContext.getExternalContext().getRequestParameterMap().get("1");
-            int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "eliminar_actividad");
-            if (tienePermiso == 1) {
-                if (actividad.getEsActivo()) {
-                    actividad.setEsActivo(false);
-                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_eliminar"), "");
-                    FacesContext.getCurrentInstance().addMessage(null, message);
-                } else {
-                    actividad.setEsActivo(true);
-                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_eliminar"), "");
-                    FacesContext.getCurrentInstance().addMessage(null, message);
-                }
-                actividadFacadeLocal.edit(actividad);
-                logFacadeLocal.create(logFacadeLocal.crearLog("Actividad", actividad.getId() + "", "EDITAR", "|Nombre= " + actividad.getNombre() + "|EsActivo= " + actividad.getCronogramaId().getId() + "|Tipo= " + actividad.getTipoActividadId().getId() + "|ActividadId= " + actividad.getActividadId(), usuario));
-                actualizarPorcentajesDuracionActividades(actividad, actividadFacadeLocal.buscarPorProyecto(cronograma.getId()));
-                calculosActividadObjetivo(actividad);
-                administrarCronograma.calculaAvanceFaltanteCronograma(cronograma, actividadFacadeLocal.buscarPorProyecto(cronograma.getId()), usuario);
-                if (param.equalsIgnoreCase("estudiante")) {
-                    buscarPorAutorProyecto(criterioPorAutorProyecto, usuario, cronograma);
-                } else {
-                    buscarPorCronograma(criterio, cronograma, usuario);
-                }
-            } else {
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_eliminar") + ". " + bundle.getString("lbl.msm_consulte"), "");
-                FacesContext.getCurrentInstance().addMessage(null, message);
-            }
+//            FacesContext facesContext = FacesContext.getCurrentInstance();
+//            ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
+//            String param = (String) facesContext.getExternalContext().getRequestParameterMap().get("1");
+//            int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "eliminar_actividad");
+//            if (tienePermiso == 1) {
+//                if (actividad.getEsActivo()) {
+//                    actividad.setEsActivo(false);
+//                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_eliminar"), "");
+//                    FacesContext.getCurrentInstance().addMessage(null, message);
+//                } else {
+//                    actividad.setEsActivo(true);
+//                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_eliminar"), "");
+//                    FacesContext.getCurrentInstance().addMessage(null, message);
+//                }
+//                actividadFacadeLocal.edit(actividad);
+//                logFacadeLocal.create(logFacadeLocal.crearLog("Actividad", actividad.getId() + "", "EDITAR", "|Nombre= " + actividad.getNombre() + "|EsActivo= " + actividad.getCronogramaId().getId() + "|Tipo= " + actividad.getTipoActividadId().getId() + "|ActividadId= " + actividad.getActividadId(), usuario));
+//                actualizarPorcentajesDuracionActividades(actividad, actividadFacadeLocal.buscarPorProyecto(cronograma.getId()));
+//                calculosActividadObjetivo(actividad);
+//                administrarCronograma.calculaAvanceFaltanteCronograma(cronograma, actividadFacadeLocal.buscarPorProyecto(cronograma.getId()), usuario);
+//                if (param.equalsIgnoreCase("estudiante")) {
+//                    buscarPorAutorProyecto(criterioPorAutorProyecto, usuario, cronograma);
+//                } else {
+//                    buscarPorCronograma(criterio, cronograma, usuario);
+//                }
+//            } else {
+//                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_eliminar") + ". " + bundle.getString("lbl.msm_consulte"), "");
+//                FacesContext.getCurrentInstance().addMessage(null, message);
+//            }
         } catch (Exception e) {
         }
     }

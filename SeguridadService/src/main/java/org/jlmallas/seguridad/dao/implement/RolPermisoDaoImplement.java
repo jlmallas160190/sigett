@@ -56,13 +56,13 @@ public class RolPermisoDaoImplement extends AbstractDao<RolPermiso> implements R
         HashMap<String, Object> parametros = new HashMap<>();
         sql.append("SELECT rp from RolPermiso rp WHERE 1=1 ");
         Boolean existeFiltro = Boolean.FALSE;
-        if (rolPermiso.getPermisoId() == null) {
-            sql.append(" and rp.permiso=:permisoId");
+        if (rolPermiso.getPermisoId() != null) {
+            sql.append(" and rp.permisoId=:permisoId");
             parametros.put("permisoId", rolPermiso.getPermisoId());
             existeFiltro = Boolean.TRUE;
         }
-        if (rolPermiso.getRolId() == null) {
-            sql.append(" and rp.rol=:rolId");
+        if (rolPermiso.getRolId() != null) {
+            sql.append(" and rp.rolId=:rolId");
             parametros.put("rolId", rolPermiso.getRolId());
             existeFiltro = Boolean.TRUE;
         }

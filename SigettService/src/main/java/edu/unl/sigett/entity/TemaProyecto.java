@@ -28,10 +28,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Entity
 @Table(name = "tema_proyecto")
 @XmlRootElement
-@NamedQueries({
-    @NamedQuery(name = "TemaProyecto.findAll", query = "SELECT t FROM TemaProyecto t"),
-    @NamedQuery(name = "TemaProyecto.findById", query = "SELECT t FROM TemaProyecto t WHERE t.id = :id"),
-    @NamedQuery(name = "TemaProyecto.findByEsActual", query = "SELECT t FROM TemaProyecto t WHERE t.esActual = :esActual")})
 public class TemaProyecto implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -50,11 +46,8 @@ public class TemaProyecto implements Serializable {
     @JoinColumn(name = "proyecto_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Proyecto proyectoId;
-    @Transient
-    private boolean esRemovido;
 
     public TemaProyecto() {
-        this.esRemovido = false;
     }
 
     public TemaProyecto(Proyecto proyecto, Tema tema, Boolean esActual) {
@@ -93,14 +86,6 @@ public class TemaProyecto implements Serializable {
 
     public void setProyectoId(Proyecto proyectoId) {
         this.proyectoId = proyectoId;
-    }
-
-    public boolean isEsRemovido() {
-        return esRemovido;
-    }
-
-    public void setEsRemovido(boolean esRemovido) {
-        this.esRemovido = esRemovido;
     }
 
     @Override

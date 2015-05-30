@@ -50,7 +50,7 @@ import edu.unl.sigett.dao.DirectorProyectoFacadeLocal;
 import edu.unl.sigett.dao.DocenteProyectoDao;
 import edu.unl.sigett.dao.DocumentoActividadFacadeLocal;
 import edu.unl.sigett.dao.DocumentoExpedienteFacadeLocal;
-import edu.unl.sigett.dao.DocumentoProyectoFacadeLocal;
+import edu.unl.sigett.dao.DocumentoProyectoDao;
 import edu.unl.sigett.dao.EvaluacionTribunalFacadeLocal;
 import com.jlmallas.comun.dao.FotoFacadeLocal;
 import com.jlmallas.comun.dao.ItemDao;
@@ -90,7 +90,7 @@ public class AppServlet extends HttpServlet {
     @EJB
     private FotoFacadeLocal fotoFacadeLocal;
     @EJB
-    private DocumentoProyectoFacadeLocal documentoProyectoFacadeLocal;
+    private DocumentoProyectoDao documentoProyectoFacadeLocal;
     @EJB
     private CarreraService carreraFacadeLocal;
     @EJB

@@ -18,6 +18,7 @@ import edu.unl.sigett.webSemantica.service.implement.LineaInvestigacionOntServic
 import edu.unl.sigett.webSemantica.service.implement.LineaInvestigacionProyectoOntServiceImplement;
 import edu.unl.sigett.webSemantica.service.implement.NivelAcademicoOntServiceImplement;
 import edu.unl.sigett.webSemantica.service.implement.PeriodoAcademicoOntServiceImplement;
+import edu.unl.sigett.webSemantica.service.implement.ProyectoCarreraOfertaOntServiceImplement;
 import edu.unl.sigett.webSemantica.service.implement.ProyectoOntServiceImplement;
 import edu.unl.sigett.webSemantica.util.CabeceraWebSemantica;
 import edu.unl.sigett.webSemantica.vocabulay.Vocabulario;
@@ -40,7 +41,6 @@ import org.jlmallas.api.email.MailService;
 import org.jlmallas.api.secure.SecureDTO;
 import org.jlmallas.api.secure.SecureService;
 import org.jlmallas.api.secure.SecureServiceImplement;
-import org.jlmallas.seguridad.dao.UsuarioDao;
 import org.jlmallas.seguridad.service.UsuarioService;
 
 /**
@@ -76,7 +76,6 @@ public class CabeceraController implements Serializable {
     }
 
     public void init() {
-        buscarPermisosAdministrarProyecto();
         inicarOntologias();
         this.fijarParametrosWebSemantica();
         this.fijarParametrosMail();
@@ -102,10 +101,8 @@ public class CabeceraController implements Serializable {
     }
 
     private void fijarConfiguraciones() {
-        configuracionGeneralDTO = new ConfiguracionGeneralDTO();
         configuracionGeneralDTO.setTiempoMaximoPertinencia(configuracionDao.buscar(
-                new Configuracion(ConfiguracionEnum.SECRETKEY.getTipo())).get(0).getValor());
-        configuracionGeneralDTO.setSecureKey(null);
+                new Configuracion(ConfiguracionEnum.TIEMPOPERTINENCIA.getTipo())).get(0).getValor());
     }
 
     private void fijarSecretKey() {
@@ -146,29 +143,6 @@ public class CabeceraController implements Serializable {
         }
     }
 
-    private void buscarPermisosAdministrarProyecto() {
-        this.permisoAdministrarProyecto = new PermisoAdministrarProyecto();
-        this.permisoAdministrarProyecto.setRenderedBuscarDocenteProyecto(
-                usuarioService.tienePermiso(sessionUsuario.getUsuario(),
-                        getValueFromProperties(PropertiesFileEnum.PERMISOS, "buscar_docente_proyecto")) == 1 ? Boolean.TRUE : Boolean.FALSE);
-
-        this.permisoAdministrarProyecto.setRenderedBuscarEspecialista(
-                usuarioService.tienePermiso(sessionUsuario.getUsuario(),
-                        getValueFromProperties(PropertiesFileEnum.PERMISOS, "buscar_docente_especialista")) == 1 ? Boolean.TRUE : Boolean.FALSE);
-
-        this.permisoAdministrarProyecto.setRenderedEliminarDocenteProyecto(
-                usuarioService.tienePermiso(sessionUsuario.getUsuario(),
-                        getValueFromProperties(PropertiesFileEnum.PERMISOS, "eliminar_docente_proyecto")) == 1 ? Boolean.TRUE : Boolean.FALSE);
-
-        this.permisoAdministrarProyecto.setRenderedImprimirOficioDocenteProyecto(
-                usuarioService.tienePermiso(sessionUsuario.getUsuario(),
-                        getValueFromProperties(PropertiesFileEnum.PERMISOS, "imprimir_docente_proyecto")) == 1 ? Boolean.TRUE : Boolean.FALSE);
-
-        this.permisoAdministrarProyecto.setRenderedSeleccionarEspecialista(
-                usuarioService.tienePermiso(sessionUsuario.getUsuario(),
-                        getValueFromProperties(PropertiesFileEnum.PERMISOS, "select_docente_especialista")) == 1 ? Boolean.TRUE : Boolean.FALSE);
-    }
-
     private void inicarOntologias() {
         this.ontologyService = new OntologyService();
         this.ontologyService.setAutorOntService(new AutorOntServiceImplement());
@@ -180,6 +154,7 @@ public class CabeceraController implements Serializable {
         this.ontologyService.setAreaAcademicaOntService(new AreaAcademicaOntServiceImplement());
         this.ontologyService.setPeriodoAcademicoOntService(new PeriodoAcademicoOntServiceImplement());
         this.ontologyService.setNivelAcademicoOntService(new NivelAcademicoOntServiceImplement());
+        this.ontologyService.setProyectoCarreraOfertaOntService(new ProyectoCarreraOfertaOntServiceImplement());
     }
 
     public String getValueFromProperties(final PropertiesFileEnum file,

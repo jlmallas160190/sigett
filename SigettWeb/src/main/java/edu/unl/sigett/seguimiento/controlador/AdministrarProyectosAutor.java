@@ -8,8 +8,7 @@ package edu.unl.sigett.seguimiento.controlador;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 import com.ocpsoft.pretty.faces.annotation.URLMappings;
 import edu.unl.sigett.adjudicacion.controlador.AdministrarDirectoresProyecto;
-import edu.unl.sigett.postulacion.controlador.AdministrarCronograma;
-import edu.unl.sigett.postulacion.controlador.AdministrarDocumentosProyecto;
+import edu.unl.sigett.documentoProyecto.AdministrarDocumentosProyecto;
 import edu.unl.sigett.seguimiento.session.SessionProyectosAutor;
 import edu.unl.sigett.comun.controlador.AdministrarConfiguraciones;
 import edu.unl.sigett.seguridad.managed.session.SessionEstudianteUsuario;
@@ -65,8 +64,6 @@ public class AdministrarProyectosAutor implements Serializable {
     private AdministrarDirectoresProyecto administrarDirectoresProyecto;
     @Inject
     private AdministrarConfiguraciones administrarConfiguraciones;
-    @Inject
-    private AdministrarCronograma administrarCronograma;
 
     @EJB
     private AutorProyectoDao autorProyectoFacadeLocal;
@@ -127,9 +124,9 @@ public class AdministrarProyectosAutor implements Serializable {
                 administrarActividades.setRenderedEditar(false);
                 break;
             case "inicio":
-                administrarCronograma.calculaAvanceFaltanteCronograma(sessionProyectosAutor.getAutorProyecto().getProyectoId().getCronograma(),
-                        actividadFacadeLocal.buscarPorProyecto(sessionProyectosAutor.getAutorProyecto().getProyectoId().getCronograma().getId()), 
-                        sessionEstudianteUsuario.getUsuario());
+//                administrarCronograma.calculaAvanceFaltanteCronograma(sessionProyectosAutor.getAutorProyecto().getProyectoId().getCronograma(),
+//                        actividadFacadeLocal.buscarPorProyecto(sessionProyectosAutor.getAutorProyecto().getProyectoId().getCronograma().getId()), 
+//                        sessionEstudianteUsuario.getUsuario());
         }
     }
 

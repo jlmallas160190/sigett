@@ -50,6 +50,12 @@ public class DocumentoProyecto implements Serializable {
         this.id = id;
     }
 
+    public DocumentoProyecto(Boolean esActivo, Long documentoId, Proyecto proyectoId) {
+        this.esActivo = esActivo;
+        this.documentoId = documentoId;
+        this.proyectoId = proyectoId;
+    }
+
     public Long getId() {
         return id;
     }

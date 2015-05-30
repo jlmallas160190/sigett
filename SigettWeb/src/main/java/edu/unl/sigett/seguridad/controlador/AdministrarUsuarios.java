@@ -91,6 +91,7 @@ import org.jlmallas.seguridad.service.UsuarioService;
             viewId = "/faces/cambiarClaveDocente.xhtml"
     )})
 public class AdministrarUsuarios implements Serializable {
+
     //<editor-fold defaultstate="collapsed" desc="MANAGED BEANS">
     @Inject
     private SessionAdminUsuario sessionAdminUsuario;
@@ -177,7 +178,7 @@ public class AdministrarUsuarios implements Serializable {
         try {
             renderedCrear(usuario);
             renderedEditar(usuario);
-            buscar(usuario);
+            buscar();
             return "pretty:usuarios";
         } catch (Exception e) {
             e.printStackTrace();
@@ -225,25 +226,14 @@ public class AdministrarUsuarios implements Serializable {
         return "";
     }
 
-    public void buscar(Usuario usuario) {
+    public void buscar() {
         try {
             sessionAdminUsuario.getUsuarios().clear();
             sessionAdminUsuario.getFilterUsuarios().clear();
-            FacesContext facesContext = FacesContext.getCurrentInstance();
-            ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            int tienePermiso = usuarioDao.tienePermiso(usuario, "buscar_usuario");
-            if (tienePermiso == 1) {
-                Usuario usuarioBuscar = new Usuario();
-                sessionAdminUsuario.setUsuario(usuario);
-                sessionAdminUsuario.setUsuarios(usuarioDao.buscarPorCriterio(usuarioBuscar));
-                sessionAdminUsuario.setFilterUsuarios(sessionAdminUsuario.getUsuarios());
-            } else {
-                if (tienePermiso == 2) {
-                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_buscar") + ". "
-                            + bundle.getString("lbl.msm_consulte"), "");
-                    FacesContext.getCurrentInstance().addMessage(null, message);
-                }
-            }
+            Usuario usuarioBuscar = new Usuario();
+            usuarioBuscar.setApellidos("");
+            sessionAdminUsuario.setUsuarios(usuarioDao.buscarPorCriterio(usuarioBuscar));
+            sessionAdminUsuario.setFilterUsuarios(sessionAdminUsuario.getUsuarios());
 
         } catch (Exception e) {
             String mensaje = "Error al buscar Usuarios.";
@@ -252,15 +242,6 @@ public class AdministrarUsuarios implements Serializable {
             }
             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_FATAL, e.getMessage(), "");
             FacesContext.getCurrentInstance().addMessage(null, message);
-            if (usuario != null) {
-                Objeto obj = objetoFacadeLocal.buscarPorNombre("Usuario");
-                if (obj == null) {
-                    obj = new Objeto(null, "Usuario", "Usuario");
-                    obj.setProyectoSoftwareId(proyectoSoftwareFacadeLocal.find((int) 1));
-                    objetoFacadeLocal.create(obj);
-                }
-                excepcionFacadeLocal.create(excepcionFacadeLocal.crearExcepcion(usuario.toString(), mensaje, obj));
-            }
         }
     }
 
@@ -343,7 +324,7 @@ public class AdministrarUsuarios implements Serializable {
                     removerUsuariosPermisos();
                     guardarUsuariosCarreras();
                     removerUsuariosCarreras();
-                    buscar(sessionUsuario);
+                    buscar();
                     if (param.equalsIgnoreCase("guardar")) {
                         sessionAdminUsuario.setUsuario(new Usuario());
                         return ("pretty:usuarios");
@@ -403,7 +384,7 @@ public class AdministrarUsuarios implements Serializable {
                         if (usuarioService.unicoUsername(sessionAdminUsuario.getUsuario().getUsername()) == false) {
 
                             sessionAdminUsuario.getUsuario().setPassword(cabeceraController.getSecureService().encrypt(
-                                    new SecureDTO(cabeceraController.getConfiguracionGeneralDTO().getSecureKey(),sessionUsuario.getPassword())));
+                                    new SecureDTO(cabeceraController.getConfiguracionGeneralDTO().getSecureKey(), sessionUsuario.getPassword())));
                             sessionAdminUsuario.getUsuario().setUsuarioPermisoList(new ArrayList<UsuarioPermiso>());
                             usuarioDao.create(sessionAdminUsuario.getUsuario());
                             logDao.create(logDao.crearLog("Usuario", sessionAdminUsuario.getUsuario().getId() + "", "CREAR", "|Username= "
@@ -416,7 +397,7 @@ public class AdministrarUsuarios implements Serializable {
                             removerUsuariosPermisos();
                             guardarUsuariosCarreras();
                             removerUsuariosCarreras();
-                            buscar(sessionUsuario);
+                            buscar();
                             if (param.equalsIgnoreCase("guardar")) {
                                 sessionAdminUsuario.setUsuario(new Usuario());
                                 return ("pretty:usuarios");
@@ -443,11 +424,11 @@ public class AdministrarUsuarios implements Serializable {
                 } else {
                     int tienePermiso = usuarioDao.tienePermiso(sessionUsuario, "editar_usuario");
                     if (tienePermiso == 1) {
-                        if (usuarioService.unicoUsername(sessionAdminUsuario.getUsuario().getUsername()) == false || 
-                                usuarioDao.find(sessionAdminUsuario.getUsuario().getId())
+                        if (usuarioService.unicoUsername(sessionAdminUsuario.getUsuario().getUsername()) == false
+                                || usuarioDao.find(sessionAdminUsuario.getUsuario().getId())
                                 .equals(usuarioDao.buscarPorUsuario(sessionAdminUsuario.getUsuario().getUsername()))) {
                             sessionAdminUsuario.getUsuario().setPassword(cabeceraController.getSecureService().encrypt(
-                                    new SecureDTO(cabeceraController.getConfiguracionGeneralDTO().getSecureKey(),sessionAdminUsuario.getUsuario().getPassword())));
+                                    new SecureDTO(cabeceraController.getConfiguracionGeneralDTO().getSecureKey(), sessionAdminUsuario.getUsuario().getPassword())));
                             sessionAdminUsuario.getUsuario().setUsuarioPermisoList(new ArrayList<UsuarioPermiso>());
                             usuarioDao.edit(sessionAdminUsuario.getUsuario());
                             logDao.create(logDao.crearLog("Usuario", sessionAdminUsuario.getUsuario().getId() + "", "EDITAR", "|Username= "
@@ -456,7 +437,7 @@ public class AdministrarUsuarios implements Serializable {
                                     + sessionAdminUsuario.getUsuario().getApellidos() + "|Email= " + sessionAdminUsuario.getUsuario().getEmail(), sessionUsuario));
                             guardarRolesUsuario();
                             removerRolUsuarios();
-                            buscar(sessionUsuario);
+                            buscar();
                             if (param.equalsIgnoreCase("guardar")) {
                                 sessionAdminUsuario.setUsuario(new Usuario());
                                 return ("pretty:usuarios");

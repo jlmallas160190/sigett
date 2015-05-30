@@ -13,6 +13,7 @@ import edu.unl.sigett.enumeration.ConfiguracionProyectoEnum;
 import edu.unl.sigett.enumeration.EstadoProyectoEnum;
 import edu.unl.sigett.proyecto.SessionProyecto;
 import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
+import edu.unl.sigett.util.CabeceraController;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
@@ -33,9 +34,9 @@ public class CronogramaController implements Serializable {
 
     //<editor-fold defaultstate="collapsed" desc="MANAGED BEANS">
     @Inject
-    private SessionUsuario sessionUsuario;
-    @Inject
     private SessionProyecto sessionProyecto;
+    @Inject
+    private CabeceraController cabeceraController;
 
     //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="SERVICIOS">
@@ -49,19 +50,32 @@ public class CronogramaController implements Serializable {
     }
 
     /**
-     * EDITAR
+     * CALCULAR DURACIÓN DE CRONOGRAMA
      */
-    public void editarCronograma() {
+    public void calcularDuracion() {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         String param = (String) facesContext.getExternalContext().getRequestParameterMap().get("2");
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
         double var = Double.parseDouble(configuracionGeneralDao.find((int) 22).getValor());
-        int varMaxProrroga = Integer.parseInt(configuracionGeneralDao.find((int) 23).getValor());
-        double var1 = (var / ((1 / (double) varMaxProrroga) * 100));
-        double duracionDias = 0;
-        double horasTrabajo = 0;
+        Integer varMaxProrroga = Integer.parseInt(configuracionGeneralDao.find((int) 23).getValor());
+        Double var1 = (var / ((1 / (double) varMaxProrroga) * 100));
+        Double duracionDias = 0.0;
+        Double horasTrabajo = 0.0;
         DateResource calculo = new DateResource();
-        Item estado = itemService.buscarPorId(sessionProyecto.getProyectoSeleccionado().getEstadoProyectoId());
+        if (!sessionProyecto.getEstadoActual().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.PERTINENTE.getTipo())) {
+            if (horasTrabajo <= (var + var1)) {
+                sessionProyecto.getCronograma().setDuracion(duracionDias);
+                return;
+            }
+            this.cabeceraController.getMessageView().message(FacesMessage.SEVERITY_ERROR, bundle.getString(
+                    "lbl.msm_fechas_cronograma_limit") + ".", "");
+            if (param.equals("agregar-cronograma")) {
+                sessionProyecto.getCronograma().setFechaFin(null);
+                sessionProyecto.getCronograma().setFechaProrroga(null);
+                sessionProyecto.getCronograma().setDuracion(0.0);
+            }
+            return;
+        }
         if (sessionProyecto.getCronograma().getFechaInicio() == null || sessionProyecto.getCronograma().getFechaFin() == null) {
             return;
         }
@@ -75,40 +89,24 @@ public class CronogramaController implements Serializable {
             duracionDias = calculo.calculaDuracionEnDias(sessionProyecto.getCronograma().getFechaInicio(),
                     sessionProyecto.getCronograma().getFechaProrroga(), 7 - calculaDiasSemanaTrabajoProyecto());
             horasTrabajo = duracionDias * calculahorasTrabajoProyecto();
-            if (estado.getCodigo().equalsIgnoreCase(EstadoProyectoEnum.PERTINENTE.getTipo())) {
-                if (horasTrabajo <= var) {
-                    sessionProyecto.getCronograma().setDuracion(duracionDias);
-                } else {
-                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString(
-                            "lbl.msm_fechas_cronograma_limit") + ".", "");
-                    FacesContext.getCurrentInstance().addMessage(null, message);
-                    if (param.equals("agregar-cronograma")) {
-                        sessionProyecto.getCronograma().setFechaFin(null);
-                        sessionProyecto.getCronograma().setFechaProrroga(null);
-                        sessionProyecto.getCronograma().setDuracion(0.0);
-                    }
-                }
-            } else {
-                if (horasTrabajo <= (var + var1)) {
-                    sessionProyecto.getCronograma().setDuracion(duracionDias);
-                } else {
-                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString(
-                            "lbl.msm_fechas_cronograma_limit") + ".", "");
-                    FacesContext.getCurrentInstance().addMessage(null, message);
-                    if (param.equals("agregar-cronograma")) {
-                        sessionProyecto.getCronograma().setFechaFin(null);
-                        sessionProyecto.getCronograma().setFechaProrroga(null);
-                        sessionProyecto.getCronograma().setDuracion(0.0);
-                    }
-                }
+            if (horasTrabajo <= var) {
+                sessionProyecto.getCronograma().setDuracion(duracionDias);
+                return;
+            }
+            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString(
+                    "lbl.msm_fechas_cronograma_limit") + ".", "");
+            FacesContext.getCurrentInstance().addMessage(null, message);
+            if (param.equalsIgnoreCase("agregar-cronograma")) {
+                sessionProyecto.getCronograma().setFechaFin(null);
+                sessionProyecto.getCronograma().setFechaProrroga(null);
+                sessionProyecto.getCronograma().setDuracion(0.0);
             }
             return;
-        } 
-            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_fechas_cronograma_invalidas"), "");
-            FacesContext.getCurrentInstance().addMessage(null, message);
-            sessionProyecto.getCronograma().setFechaFin(null);
-            sessionProyecto.getCronograma().setFechaProrroga(null);
-            sessionProyecto.getCronograma().setDuracion(0.0);
+        }
+        cabeceraController.getMessageView().message(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_fechas_cronograma_invalidas"), "");
+        sessionProyecto.getCronograma().setFechaFin(null);
+        sessionProyecto.getCronograma().setFechaProrroga(null);
+        sessionProyecto.getCronograma().setDuracion(0.0);
     }
 
     public int calculaDiasSemanaTrabajoProyecto() {

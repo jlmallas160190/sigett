@@ -31,7 +31,7 @@ public class PermisoDaoImplement extends AbstractDao<Permiso> implements Permiso
         HashMap<String, Object> parametros = new HashMap<>();
         sql.append("SELECT p from Permiso p WHERE 1=1 ");
         Boolean existeFiltro = Boolean.FALSE;
-        if (permiso.getCodigo() == null) {
+        if (permiso.getCodigo() != null) {
             sql.append(" and p.codigo=:codigo");
             parametros.put("codigo", permiso.getCodigo());
             existeFiltro = Boolean.TRUE;

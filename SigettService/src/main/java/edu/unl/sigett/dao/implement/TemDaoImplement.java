@@ -3,8 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.unl.sigett.dao;
+package edu.unl.sigett.dao.implement;
 
+import edu.unl.sigett.dao.AbstractDao;
+import edu.unl.sigett.dao.TemaDao;
 import edu.unl.sigett.entity.Tema;
 import javax.ejb.Stateless;
 
@@ -13,9 +15,9 @@ import javax.ejb.Stateless;
  * @author JorgeLuis
  */
 @Stateless
-public class TemaFacade extends AbstractDao<Tema> implements TemaFacadeLocal {
+public class TemDaoImplement extends AbstractDao<Tema> implements TemaDao {
 
-    public TemaFacade() {
+    public TemDaoImplement() {
         super(Tema.class);
     }
 

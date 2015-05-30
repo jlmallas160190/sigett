@@ -15,7 +15,7 @@ import java.util.Date;
  */
 public class PeriodoAcademicoOntDTO implements Serializable {
 
-    private Long id;
+    private Integer id;
     private String nombre;
     private Date fechaInicio;
     private Date fechaFin;
@@ -24,18 +24,18 @@ public class PeriodoAcademicoOntDTO implements Serializable {
     public PeriodoAcademicoOntDTO() {
     }
 
-    public PeriodoAcademicoOntDTO(Long id, String nombre, Date fechaInicio, Date fechaFin) {
+    public PeriodoAcademicoOntDTO(Integer id, String nombre, Date fechaInicio, Date fechaFin) {
         this.id = id;
         this.nombre = nombre;
         this.fechaInicio = fechaInicio;
         this.fechaFin = fechaFin;
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

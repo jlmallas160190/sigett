@@ -33,7 +33,7 @@
                                   onclick="if (!confirm('¿#{msg['lbl.confirmarEliminar']}?'))return false;"  
                                   action="#{docenteProyectoController.removerDocenteProyecto(item)}"/>
             </p:column>
-            <p:column rendered="#{sessionDocenteProyecto.renderedImprimiOficio}">
+            <p:column >
                 <f:facet name="header">
                     <h:outputText value="#{msg['lbl.imprimir']} #{msg['lbl.oficio']}"/>
                 </f:facet> 

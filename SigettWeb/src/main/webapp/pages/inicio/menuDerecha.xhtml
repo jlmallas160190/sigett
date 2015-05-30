@@ -9,7 +9,7 @@
                          filteredValue="#{sessionUsuarioCarrera.filterUsuarioCarrerasDTO}"
                          rowIndexVar="rowIx" emptyMessage="#{msg['lbl.table.empty']}" value="#{sessionUsuarioCarrera.usuarioCarrerasDTOS}">
                 <p:column filterBy="#{uc.carrera.nombre}" sortBy="#{uc.carrera.nombre}" filterMatchMode="contains">
-                    <p:commandLink value="#{uc.carrera.nombre}" action="#{administrarUsuarioCarrera.editar(uc)}"/>
+                    <p:commandLink value="#{uc.carrera.nombre}" ajax="false" action="#{administrarUsuarioCarrera.editar(uc)}"/>
                 </p:column>
             </p:dataTable>
           

@@ -482,7 +482,7 @@
                             <div class="row-fluid">
                                 <div class="col-sm-6">
                                     <p:panel header="#{msg['lbl.documento']}" toggleable="true">
-                                        <p:media styleClass="img-thumbnail" value="/AppServlet?id=#{sessionDocumentoProyecto.documentoProyecto.id}&amp;entity=DocumentoProyecto" player="pdf" width="100%" height="250"/>
+                                        <p:media styleClass="img-thumbnail" value="/AppServlet?id=#{sessionDocumentoProyecto.documentoProyectoSeleccionado.id}&amp;entity=DocumentoProyecto" player="pdf" width="100%" height="250"/>
                                         <br/>
                                         <h:panelGrid styleClass="pnl-botones">
                                             <p:commandButton value="#{msg['lbl.subir']}" icon="ui-icon-refresh" onclick="PF('dlgSubirDocumentoProyecto').show();" />        
@@ -502,7 +502,7 @@
                             </div>
                             <br/> 
                             <h:panelGrid styleClass="pnl-botones" columns="1">
-                                <p:commandButton  value="#{msg['lbl.grabar']}" update=":contenido:datos:tblDocumentos,msm" icon="ui-icon-disk" onstart="PF('dlgLoading').show();" oncomplete="PF('dlgLoading').hide()" action="#{administrarDocumentosProyecto.grabar(sessionDocumentoProyecto.documentoProyecto,sessionProyectosAutor.autorProyecto.proyectoId,sessionEstudianteUsuario.estudianteUsuario.usuario)}">
+                                <p:commandButton  value="#{msg['lbl.grabar']}" update=":contenido:datos:tblDocumentos,msm" icon="ui-icon-disk" onstart="PF('dlgLoading').show();" oncomplete="PF('dlgLoading').hide()" action="#{administrarDocumentosProyecto.grabar(sessionDocumentoProyecto.documentoProyectoSeleccionado,sessionProyectosAutor.autorProyecto.proyectoId,sessionEstudianteUsuario.estudianteUsuario.usuario)}">
                                     <f:param name="1" value="grabar-dlg" />
                                 </p:commandButton>
                             </h:panelGrid>

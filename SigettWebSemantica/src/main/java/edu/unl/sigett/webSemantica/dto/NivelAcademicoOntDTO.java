@@ -14,12 +14,12 @@ import java.io.Serializable;
  */
 public class NivelAcademicoOntDTO implements Serializable {
 
-    private Long id;
+    private Integer id;
     private String nombre;
     private Individual individual;
     private String uri;
 
-    public NivelAcademicoOntDTO(Long id, String nombre, String uri) {
+    public NivelAcademicoOntDTO(Integer id, String nombre, String uri) {
         this.id = id;
         this.uri = uri;
         this.nombre = nombre;
@@ -28,11 +28,11 @@ public class NivelAcademicoOntDTO implements Serializable {
     public NivelAcademicoOntDTO() {
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

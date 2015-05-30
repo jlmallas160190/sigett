@@ -3,9 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.unl.sigett.postulacion.controlador;
+package edu.unl.sigett.documentoProyecto;
 
-import edu.unl.sigett.postulacion.managed.session.SessionDocumentoProyecto;
 import edu.unl.sigett.proyecto.SessionProyecto;
 import edu.unl.sigett.seguridad.managed.session.SessionDocenteUsuario;
 import edu.unl.sigett.seguridad.managed.session.SessionEstudianteUsuario;
@@ -29,7 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
-import edu.unl.sigett.dao.DocumentoProyectoFacadeLocal;
+import edu.unl.sigett.dao.DocumentoProyectoDao;
 import org.jlmallas.seguridad.dao.LogDao;
 import org.jlmallas.seguridad.dao.UsuarioDao;
 
@@ -58,7 +57,7 @@ public class AdministrarDocumentosProyecto implements Serializable {
     @EJB
     private UsuarioDao usuarioFacadeLocal;
     @EJB
-    private DocumentoProyectoFacadeLocal documentoProyectoFacadeLocal;
+    private DocumentoProyectoDao documentoProyectoFacadeLocal;
 
     private List<DocumentoProyecto> documentoProyectos;
     private List<DocumentoProyecto> anteproyectos;
@@ -174,11 +173,11 @@ public class AdministrarDocumentosProyecto implements Serializable {
             ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
             int tienePermiso = usuarioFacadeLocal.tienePermiso(sessionEstudianteUsuario.getUsuario(), "buscar_autor_proyecto");
             if (tienePermiso == 1) {
-                for (DocumentoProyecto documentoProyecto : documentoProyectoFacadeLocal.buscarPorProyecto(proyecto.getId())) {
-                    if (documentoProyecto.getEsActivo()) {
-                        documentoProyectosPorAutor.add(documentoProyecto);
-                    }
-                }
+//                for (DocumentoProyecto documentoProyecto : documentoProyectoFacadeLocal.buscarPorProyecto(proyecto.getId())) {
+//                    if (documentoProyecto.getEsActivo()) {
+//                        documentoProyectosPorAutor.add(documentoProyecto);
+//                    }
+//                }
             } else {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_buscar") + ". " + bundle.getString("lbl.msm_consulte"), "");
                 FacesContext.getCurrentInstance().addMessage(null, message);
@@ -195,9 +194,9 @@ public class AdministrarDocumentosProyecto implements Serializable {
             ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
             int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "buscar_documento_proyecto");
             if (tienePermiso == 1) {
-                for (DocumentoProyecto documentoProyecto : documentoProyectoFacadeLocal.buscarPorProyecto(proyecto.getId())) {
-                    anteproyectos.add(documentoProyecto);
-                }
+//                for (DocumentoProyecto documentoProyecto : documentoProyectoFacadeLocal.buscarPorProyecto(proyecto.getId())) {
+//                    anteproyectos.add(documentoProyecto);
+//                }
             } else {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_buscar") + ". " + bundle.getString("lbl.msm_consulte"), "");
                 FacesContext.getCurrentInstance().addMessage(null, message);
@@ -213,7 +212,6 @@ public class AdministrarDocumentosProyecto implements Serializable {
 ////        valorKB = valorKB / 100;
 ////        return valorKB + " kB";
 //    }
-
     public String crear(Usuario usuario) {
         String navegacion = "";
         try {
@@ -222,7 +220,7 @@ public class AdministrarDocumentosProyecto implements Serializable {
             String param = (String) facesContext.getExternalContext().getRequestParameterMap().get("1");
             int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "crear_documento_proyecto");
             if (tienePermiso == 1) {
-                sessionDocumentoProyecto.setDocumentoProyecto(new DocumentoProyecto());
+//                sessionDocumentoProyecto.setDocumentoProyectoSeleccionado(new DocumentoProyecto());
                 esEditado = false;
                 if (param.equalsIgnoreCase("crear-dlg")) {
                     this.renderedDlgEditar = true;

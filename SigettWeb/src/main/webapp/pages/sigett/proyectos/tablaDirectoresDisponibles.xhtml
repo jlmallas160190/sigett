@@ -9,7 +9,7 @@
                      rowIndexVar="rowIx" rowKey="#{item.persona.apellidos}" selection="#{item}" selectionMode="single" editable="true"  
                      filteredValue="#{sessionDocenteProyecto.filterDirectoresDTO}" widgetVar="tblDocentesFilter"
                      editMode="cell" rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'even-row' : 'odd-row'}" emptyMessage="#{msg['lbl.table.empty']}">
-            <p:column rendered="#{sessionDocenteProyecto.renderedSeleccionarEspecialista}">
+            <p:column rendered="#{sessionProyecto.renderedInicio}">
                 <f:facet name="header">
                     <h:outputText value="#{msg['lbl.seleccionar']}"/>
                 </f:facet>

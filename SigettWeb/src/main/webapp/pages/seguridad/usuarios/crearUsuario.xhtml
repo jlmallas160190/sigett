@@ -5,29 +5,41 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
     <body>
-    <p:panel>
-        <p:panel header="#{msg['lbl.usuario']}" toggleable="true">
-            <ui:include src="datosUsuario.xhtml" /> 
-        </p:panel>
-        <br/>
-        <p:panel header="#{msg['lbl.datos']} #{msg['lbl.usuario']}" toggleable="true">
-            <ui:include src="datosPersonalesUsuario.xhtml"/>
-        </p:panel>
-        <br/>
-        <p:panel header="#{msg['lbl.roles']}" toggleable="true">
-            <ui:include src="rolesUsuario.xhtml"/>
-        </p:panel>
-        <br/>
-        <p:panel header="#{msg['lbl.permisos']}" toggleable="true">
-            <ui:include src="permisosUsuario.xhtml"/>
-        </p:panel>
-        <br/>
-        <p:panel header="#{msg['lbl.carreras']}" toggleable="true">
-            <ui:include src="carrerasUsuario.xhtml"/>
-        </p:panel>
-        <f:facet name="footer">
-            <ui:include src="botonesUsuario.xhtml"/>
-        </f:facet>
-    </p:panel>
-</body>
+        <ui:composition template="./../../../template.xhtml">
+            <ui:define name="top">
+                <ui:include src="./../../admin/menu.xhtml"/>
+            </ui:define>
+            <ui:define name="left">
+                <ui:include src="./../../admin/menuIzquierdo.xhtml"/>
+            </ui:define>
+            <ui:define name="title">#{msg['lbl.usuario']}</ui:define>
+            <ui:define name="content">
+                <p:growl id="msm"/>
+                <p:panel>
+                    <p:panel header="#{msg['lbl.usuario']}" toggleable="true">
+                        <ui:include src="datosUsuario.xhtml" /> 
+                    </p:panel>
+                    <br/>
+                    <p:panel header="#{msg['lbl.datos']} #{msg['lbl.usuario']}" toggleable="true">
+                        <ui:include src="datosPersonalesUsuario.xhtml"/>
+                    </p:panel>
+                    <br/>
+                    <p:panel header="#{msg['lbl.roles']}" toggleable="true">
+                        <ui:include src="rolesUsuario.xhtml"/>
+                    </p:panel>
+                    <br/>
+                    <p:panel header="#{msg['lbl.permisos']}" toggleable="true">
+                        <ui:include src="permisosUsuario.xhtml"/>
+                    </p:panel>
+                    <br/>
+                    <p:panel header="#{msg['lbl.carreras']}" toggleable="true">
+                        <ui:include src="carrerasUsuario.xhtml"/>
+                    </p:panel>
+                    <f:facet name="footer">
+                        <ui:include src="botonesUsuario.xhtml"/>
+                    </f:facet>
+                </p:panel>
+            </ui:define>
+        </ui:composition>
+    </body>
 </html>

@@ -3,10 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package edu.unl.sigett.dao;
 
-import edu.unl.sigett.entity.Cronograma;
+import edu.unl.sigett.entity.Tema;
 import java.util.List;
 import javax.ejb.Local;
 
@@ -15,20 +14,20 @@ import javax.ejb.Local;
  * @author JorgeLuis
  */
 @Local
-public interface CronogramaFacadeLocal {
+public interface TemaDao {
 
-    void create(Cronograma cronograma);
+    void create(Tema tema);
 
-    void edit(Cronograma cronograma);
+    void edit(Tema tema);
 
-    void remove(Cronograma cronograma);
+    void remove(Tema tema);
 
-    Cronograma find(Object id);
+    Tema find(Object id);
 
-    List<Cronograma> findAll();
+    List<Tema> findAll();
 
-    List<Cronograma> findRange(int[] range);
+    List<Tema> findRange(int[] range);
 
     int count();
-    
+
 }

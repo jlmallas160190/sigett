@@ -95,7 +95,7 @@ public class DocenteProyectoController implements Serializable {
         sessionDocenteProyecto.setRenderedBuscar(cabeceraController.getPermisoAdministrarProyecto().getRenderedBuscarDocenteProyecto());
         sessionDocenteProyecto.setRenderedBuscarEspecialista(cabeceraController.getPermisoAdministrarProyecto().getRenderedBuscarEspecialista());
         sessionDocenteProyecto.setRenderedEliminar(cabeceraController.getPermisoAdministrarProyecto().getRenderedEliminarDocenteProyecto());
-        sessionDocenteProyecto.setRenderedImprimiOficio(cabeceraController.getPermisoAdministrarProyecto().getRenderedImprimirOficioDocenteProyecto());
+        sessionDocenteProyecto.setRenderedImprimirOficio(cabeceraController.getPermisoAdministrarProyecto().getRenderedImprimirOficioDocenteProyecto());
         sessionDocenteProyecto.setRenderedSeleccionarEspecialista(cabeceraController.getPermisoAdministrarProyecto().getRenderedSeleccionarEspecialista());
     }
 
@@ -114,7 +114,7 @@ public class DocenteProyectoController implements Serializable {
                 sessionDocenteProyecto.setDocenteProyectoId(docenteProyectoDTO.getDocenteProyecto().getDocenteId());
                 Item item = itemService.buscarPorCatalogoCodigo(CatalogoEnum.CATALOGOOFICIO.getTipo(),
                         CatalogoDocumentoCarreraEnum.DOCENTEPROYECTO.getTipo());
-                Documento documento = documentoService.buscarSingle(new Documento(null, null, item.getId(), null, null));
+                Documento documento = documentoService.buscarSingle(new Documento(null, null, item.getId(), null, null,null));
                 sessionDocenteProyecto.setCarreraId(!sessionProyecto.getCarreras().isEmpty() ? sessionProyecto.getCarreras().get(0).getId() : null);
                 DocumentoCarrera documentoCarrera = documentoCarreraService.buscar(new DocumentoCarrera(
                         null, documento.getId(), Boolean.TRUE, Integer.MIN_VALUE, sessionDocenteProyecto.getDocenteProyectoId())).get(0);

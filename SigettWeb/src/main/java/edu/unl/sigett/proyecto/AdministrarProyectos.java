@@ -93,11 +93,11 @@ import edu.jlmallas.academico.service.CarreraService;
 import edu.unl.sigett.dao.ConfiguracionCarreraDao;
 import edu.unl.sigett.dao.ConfiguracionGeneralDao;
 import edu.unl.sigett.dao.ConfiguracionProyectoDao;
-import edu.unl.sigett.dao.CronogramaFacadeLocal;
+import edu.unl.sigett.dao.CronogramaDao;
 import edu.unl.sigett.dao.DirectorProyectoFacadeLocal;
 import edu.jlmallas.academico.dao.DocenteCarreraDao;
 import edu.unl.sigett.dao.DocenteProyectoDao;
-import edu.unl.sigett.dao.DocumentoProyectoFacadeLocal;
+import edu.unl.sigett.dao.DocumentoProyectoDao;
 import edu.unl.sigett.dao.ExpedienteFacadeLocal;
 import edu.unl.sigett.dao.LineaInvestigacionCarreraDao;
 import edu.unl.sigett.dao.LineaInvestigacionDao;
@@ -122,10 +122,8 @@ import edu.unl.sigett.enumeration.ConfiguracionProyectoEnum;
 import edu.unl.sigett.postulacion.controlador.AutorProyectoPostulacionController;
 import edu.unl.sigett.autor.dto.AutorProyectoDTO;
 import edu.unl.sigett.postulacion.controlador.AdministrarConfiguracionesProyecto;
-import edu.unl.sigett.postulacion.controlador.AdministrarCronograma;
-import edu.unl.sigett.docenteProyecto.AdministrarDocentesProyecto;
 import edu.unl.sigett.postulacion.controlador.AdministrarDocumentosExpediente;
-import edu.unl.sigett.postulacion.controlador.AdministrarDocumentosProyecto;
+import edu.unl.sigett.documentoProyecto.AdministrarDocumentosProyecto;
 import edu.unl.sigett.service.AutorProyectoService;
 import edu.unl.sigett.service.LineaInvestigacionProyectoService;
 import edu.unl.sigett.service.LineaInvestigacionService;
@@ -153,8 +151,6 @@ import edu.unl.sigett.util.MessageView;
     @Inject
     private AdministrarConfiguracionesProyecto administrarConfiguracionesProyecto;
     @Inject
-    private AdministrarDocentesProyecto administrarDocentesProyecto;
-    @Inject
     private AdministrarDirectoresProyecto administrarDirectoresProyecto;
     @Inject
     AutorProyectoPostulacionController administrarAutoresProyecto;
@@ -170,8 +166,6 @@ import edu.unl.sigett.util.MessageView;
     private AdministrarEstudiantesCarrera administrarEstudiantesCarrera;
     @Inject
     private AdministrarDocumentosExpediente administrarDocumentosExpediente;
-    @Inject
-    private AdministrarCronograma administrarCronograma;
     @Inject
     private AdministrarNotificaciones administrarNotificaciones;
     @Inject
@@ -196,7 +190,7 @@ import edu.unl.sigett.util.MessageView;
     @EJB
     private LineaInvestigacionProyectoService lineaInvestigacionProyectoService;
     @EJB
-    private DocumentoProyectoFacadeLocal documentoProyectoFacadeLocal;
+    private DocumentoProyectoDao documentoProyectoFacadeLocal;
     @EJB
     private LineaInvestigacionCarreraDao lineaInvestigacionCarreraDao;
     @EJB
@@ -226,7 +220,7 @@ import edu.unl.sigett.util.MessageView;
     @EJB
     private UsuarioDao usuarioDao;
     @EJB
-    private CronogramaFacadeLocal cronogramaFacadeLocal;
+    private CronogramaDao cronogramaFacadeLocal;
     @EJB
     private LineaInvestigacionDocenteDao lineaInvestigacionDocenteDao;
     @EJB
@@ -321,7 +315,7 @@ import edu.unl.sigett.util.MessageView;
                 administrarProrrogas.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
 //                administrarTemaProyectos.renderedBuscar(sessionUsuario.getUsuario());
                 administrarTribunales.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
-                administrarDocentesProyecto.renderedBuscar(sessionUsuario.getUsuario());
+//                administrarDocentesProyecto.renderedBuscar(sessionUsuario.getUsuario());
                 administrarConfiguracionesProyecto.renderedBuscar(sessionUsuario.getUsuario());
 //                administrarCronograma.renderedCronograma(sessionProyecto.getProyectoSeleccionado());
                 administrarProrrogas.tieneProrroga(sessionProyecto.getProyectoSeleccionado());
@@ -464,7 +458,7 @@ import edu.unl.sigett.util.MessageView;
                 }
                 /*Refrescar Documentos Proyecto*/
                 sessionProyecto.getProyectoSeleccionado().setDocumentoProyectoList(new ArrayList<DocumentoProyecto>());
-                sessionProyecto.getProyectoSeleccionado().getDocumentoProyectoList().addAll(documentoProyectoFacadeLocal.buscarPorProyecto(proyecto.getId()));
+//                sessionProyecto.getProyectoSeleccionado().getDocumentoProyectoList().addAll(documentoProyectoFacadeLocal.buscarPorProyecto(proyecto.getId()));
                 /*Refrescar Docentes Proyecto*/
                 sessionProyecto.getProyectoSeleccionado().setDocenteProyectoList(new ArrayList<DocenteProyecto>());
 //                sessionProyecto.getProyectoSeleccionado().getDocenteProyectoList().addAll(docenteProyectoFacadeLocal.buscarPorProyecto(proyecto.getId()));
@@ -482,7 +476,7 @@ import edu.unl.sigett.util.MessageView;
                 administrarDocumentosProyecto.renderedBuscar(sessionUsuario.getUsuario());
                 administrarProrrogas.renderedBuscar(sessionUsuario.getUsuario(), proyecto);
                 administrarTribunales.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
-                administrarDocentesProyecto.renderedBuscar(sessionUsuario.getUsuario());
+//                administrarDocentesProyecto.renderedBuscar(sessionUsuario.getUsuario());
 //                administrarCronograma.renderedCronograma(sessionProyecto.getProyectoSeleccionado());
                 administrarConfiguracionesProyecto.renderedBuscar(sessionUsuario.getUsuario());
                 administrarProrrogas.tieneProrroga(proyecto);
@@ -785,9 +779,9 @@ import edu.unl.sigett.util.MessageView;
                     administrarDirectoresProyecto.setRenderedDlgEditar(false);
                     administrarDirectoresProyecto.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
                     /*------------------------------------------------------Docentes Proyecto----------------------------------------------*/
-                    administrarDocentesProyecto.setRenderedDlgBuscarDocentesDisponibles(false);
-                    administrarDocentesProyecto.setRenderedDlgOficioDocenteProyecto(false);
-                    administrarDocentesProyecto.setRenderedDlgEditar(false);
+//                    administrarDocentesProyecto.setRenderedDlgBuscarDocentesDisponibles(false);
+//                    administrarDocentesProyecto.setRenderedDlgOficioDocenteProyecto(false);
+//                    administrarDocentesProyecto.setRenderedDlgEditar(false);
                     /*---------------------------------------------Autores------------------------------------------------------------*/
                     administrarAutoresProyecto.setRenderedDlgEditarAutorProyecto(false);
 //                    administrarEstudiantes.setRenderedDlgEditar(false);
@@ -828,8 +822,8 @@ import edu.unl.sigett.util.MessageView;
                     administrarDirectoresProyecto.setRenderedDlgEditar(false);
                     administrarDirectoresProyecto.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
                     /*------------------------------------------------------Docentes Proyecto----------------------------------------------*/
-                    administrarDocentesProyecto.setRenderedDlgBuscarDocentesDisponibles(false);
-                    administrarDocentesProyecto.setRenderedDlgOficioDocenteProyecto(false);
+//                    administrarDocentesProyecto.setRenderedDlgBuscarDocentesDisponibles(false);
+//                    administrarDocentesProyecto.setRenderedDlgOficioDocenteProyecto(false);
                     /*-------------------------------------------Tribunales--------------------------------------------------------------------*/
                     administrarTribunales.setRenderedDlgEditar(false);
                     /*----------------------------------------------Evaluaciones Tribunales-------------------------------------------------------*/
@@ -852,17 +846,17 @@ import edu.unl.sigett.util.MessageView;
                 case "tabDocentesProyecto":
                     /*------------------------------DOCENTES---------------------------------------------------*/
 //                    administrarDocentesProyecto.buscar("", sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
-                    administrarDocentesProyecto.renderedBuscar(sessionUsuario.getUsuario());
-                    administrarDocentesProyecto.renderedEditar(sessionUsuario.getUsuario());
-                    administrarDocentesProyecto.renderedBuscarEspecialista(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
-                    administrarDocentesProyecto.renderedEliminar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
-                    administrarDocentesProyecto.renderedSeleccionarDocenteEspecialista(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
-                    administrarDocentesProyecto.renderedSortearDocente(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
-                    administrarDocentesProyecto.setRenderedDlgBuscarDocentesDisponibles(false);
-                    administrarDocentesProyecto.setRenderedDlgOficioDocenteProyecto(false);
-                    administrarDocentesProyecto.setRenderedDlgEditar(false);
-                    administrarDocentesProyecto.setRenderedDlgEditar(false);
-                    administrarDocentesProyecto.renderedImprimirOficio(sessionUsuario.getUsuario());
+//                    administrarDocentesProyecto.renderedBuscar(sessionUsuario.getUsuario());
+//                    administrarDocentesProyecto.renderedEditar(sessionUsuario.getUsuario());
+//                    administrarDocentesProyecto.renderedBuscarEspecialista(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
+//                    administrarDocentesProyecto.renderedEliminar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
+//                    administrarDocentesProyecto.renderedSeleccionarDocenteEspecialista(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
+//                    administrarDocentesProyecto.renderedSortearDocente(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
+//                    administrarDocentesProyecto.setRenderedDlgBuscarDocentesDisponibles(false);
+//                    administrarDocentesProyecto.setRenderedDlgOficioDocenteProyecto(false);
+//                    administrarDocentesProyecto.setRenderedDlgEditar(false);
+//                    administrarDocentesProyecto.setRenderedDlgEditar(false);
+//                    administrarDocentesProyecto.renderedImprimirOficio(sessionUsuario.getUsuario());
                     /*----------------------------------------------Documentos-------------------------------------------------------*/
                     administrarDocumentosProyecto.setRenderedDlgEditar(false);
                     /*----------------------------------------------Directores-------------------------------------------------------*/
@@ -905,9 +899,9 @@ import edu.unl.sigett.util.MessageView;
                     administrarDirectoresProyecto.setRenderedDlgEditar(false);
                     administrarDirectoresProyecto.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
                     /*----------------------------------------------Docentes-------------------------------------------------------*/
-                    administrarDocentesProyecto.setRenderedDlgBuscarDocentesDisponibles(false);
-                    administrarDocentesProyecto.setRenderedDlgOficioDocenteProyecto(false);
-                    /*----------------------------------------------Autores-------------------------------------------------------*/
+//                    administrarDocentesProyecto.setRenderedDlgBuscarDocentesDisponibles(false);
+//                    administrarDocentesProyecto.setRenderedDlgOficioDocenteProyecto(false);
+//                    /*----------------------------------------------Autores-------------------------------------------------------*/
                     administrarAutoresProyecto.setRenderedDlgEditarAutorProyecto(false);
 //                    administrarEstudiantes.setRenderedDlgEditar(false);
                     /*----------------------------------------------Tribunales-------------------------------------------------------*/
@@ -942,9 +936,9 @@ import edu.unl.sigett.util.MessageView;
                     /*----------------------------------------------Documentos-------------------------------------------------------*/
                     administrarDocumentosProyecto.setRenderedDlgEditar(false);
                     /*----------------------------------------------Docentes-------------------------------------------------------*/
-                    administrarDocentesProyecto.setRenderedDlgBuscarDocentesDisponibles(false);
-                    administrarDocentesProyecto.setRenderedDlgOficioDocenteProyecto(false);
-                    administrarDocentesProyecto.setRenderedDlgEditar(false);
+//                    administrarDocentesProyecto.setRenderedDlgBuscarDocentesDisponibles(false);
+//                    administrarDocentesProyecto.setRenderedDlgOficioDocenteProyecto(false);
+//                    administrarDocentesProyecto.setRenderedDlgEditar(false);
                     /*----------------------------------------------Autores-------------------------------------------------------*/
                     administrarAutoresProyecto.setRenderedDlgEditarAutorProyecto(false);
 //                    administrarEstudiantes.setRenderedDlgEditar(false);
@@ -988,10 +982,10 @@ import edu.unl.sigett.util.MessageView;
                     /*----------------------------------------------Documentos Expediente-------------------------------------------------------*/
                     administrarDocumentosExpediente.setRenderedDlgEditar(false);
                     /*----------------------------------------------Docentes Proyecto-------------------------------------------------------*/
-                    administrarDocentesProyecto.setRenderedDlgBuscarDocentesDisponibles(false);
-                    administrarDocentesProyecto.setRenderedDlgOficioDocenteProyecto(false);
-                    administrarDocentesProyecto.setRenderedDlgEditar(false);
-                    /*----------------------------------------------Autores-------------------------------------------------------*/
+//                    administrarDocentesProyecto.setRenderedDlgBuscarDocentesDisponibles(false);
+//                    administrarDocentesProyecto.setRenderedDlgOficioDocenteProyecto(false);
+//                    administrarDocentesProyecto.setRenderedDlgEditar(false);
+//                    /*----------------------------------------------Autores-------------------------------------------------------*/
                     administrarAutoresProyecto.setRenderedDlgEditarAutorProyecto(false);
 //                    administrarEstudiantes.setRenderedDlgEditar(false);
                     /*----------------------------------------------Tribunales-------------------------------------------------------*/
@@ -1021,10 +1015,10 @@ import edu.unl.sigett.util.MessageView;
                     administrarDirectoresProyecto.setRenderedDlgEditar(false);
                     administrarDirectoresProyecto.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
                     /*----------------------------------------------Docentes-------------------------------------------------------*/
-                    administrarDocentesProyecto.setRenderedDlgBuscarDocentesDisponibles(false);
-                    administrarDocentesProyecto.setRenderedDlgOficioDocenteProyecto(false);
-                    administrarDocentesProyecto.setRenderedDlgEditar(false);
-                    /*----------------------------------------------Autores-------------------------------------------------------*/
+//                    administrarDocentesProyecto.setRenderedDlgBuscarDocentesDisponibles(false);
+//                    administrarDocentesProyecto.setRenderedDlgOficioDocenteProyecto(false);
+//                    administrarDocentesProyecto.setRenderedDlgEditar(false);
+//                    /*----------------------------------------------Autores-------------------------------------------------------*/
                     administrarAutoresProyecto.setRenderedDlgEditarAutorProyecto(false);
 //                    administrarEstudiantes.setRenderedDlgEditar(false);
                     /*----------------------------------------------Tribunales-------------------------------------------------------*/
@@ -1047,8 +1041,8 @@ import edu.unl.sigett.util.MessageView;
                     administrarDirectoresProyecto.renderedImprimirOficio(sessionUsuario.getUsuario());
                     administrarDirectoresProyecto.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
                     /*----------------------------------------------Docentes-------------------------------------------------------*/
-                    administrarDocentesProyecto.setRenderedDlgBuscarDocentesDisponibles(false);
-                    administrarDocentesProyecto.setRenderedDlgOficioDocenteProyecto(false);
+//                    administrarDocentesProyecto.setRenderedDlgBuscarDocentesDisponibles(false);
+//                    administrarDocentesProyecto.setRenderedDlgOficioDocenteProyecto(false);
                     /*----------------------------------------------Autores-------------------------------------------------------*/
                     administrarAutoresProyecto.setRenderedDlgEditarAutorProyecto(false);
 //                    administrarEstudiantes.setRenderedDlgEditar(false);
@@ -1071,7 +1065,7 @@ import edu.unl.sigett.util.MessageView;
 //                    renderedEditarDatosProyecto(sessionProyecto.getProyecto());
                     /*----------------------------------------------Cronograma-------------------------------------------------------*/
 //                    administrarCronograma.renderedCronograma(sessionProyecto.getProyectoSeleccionado());
-                    administrarCronograma.editarCronograma(sessionProyecto.getProyectoSeleccionado().getCronograma());
+//                    administrarCronograma.editarCronograma(sessionProyecto.getProyectoSeleccionado().getCronograma());
                     /*----------------------------------------------Documentos-------------------------------------------------------*/
                     administrarDocumentosProyecto.setRenderedDlgEditar(false);
                     /*----------------------------------------------Directores-------------------------------------------------------*/
@@ -1080,9 +1074,9 @@ import edu.unl.sigett.util.MessageView;
                     administrarDirectoresProyecto.setRenderedDlgEditar(false);
                     administrarDirectoresProyecto.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
                     /*----------------------------------------------Docentes-------------------------------------------------------*/
-                    administrarDocentesProyecto.setRenderedDlgBuscarDocentesDisponibles(false);
-                    administrarDocentesProyecto.setRenderedDlgOficioDocenteProyecto(false);
-                    administrarDocentesProyecto.setRenderedDlgEditar(false);
+//                    administrarDocentesProyecto.setRenderedDlgBuscarDocentesDisponibles(false);
+//                    administrarDocentesProyecto.setRenderedDlgOficioDocenteProyecto(false);
+//                    administrarDocentesProyecto.setRenderedDlgEditar(false);
                     /*----------------------------------------------Autores-------------------------------------------------------*/
                     administrarAutoresProyecto.setRenderedDlgEditarAutorProyecto(false);
 //                    administrarEstudiantes.setRenderedDlgEditar(false);
@@ -1136,8 +1130,8 @@ import edu.unl.sigett.util.MessageView;
                     administrarDirectoresProyecto.setRenderedDlgEditar(false);
                     administrarDirectoresProyecto.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
                     /*----------------------------------------------Docentes-------------------------------------------------------*/
-                    administrarDocentesProyecto.setRenderedDlgBuscarDocentesDisponibles(false);
-                    administrarDocentesProyecto.setRenderedDlgOficioDocenteProyecto(false);
+//                    administrarDocentesProyecto.setRenderedDlgBuscarDocentesDisponibles(false);
+//                    administrarDocentesProyecto.setRenderedDlgOficioDocenteProyecto(false);
                     /*----------------------------------------------Autores-------------------------------------------------------*/
                     administrarAutoresProyecto.setRenderedDlgEditarAutorProyecto(false);
 //                    administrarEstudiantes.setRenderedDlgEditar(false);
@@ -1162,9 +1156,9 @@ import edu.unl.sigett.util.MessageView;
                     administrarDirectoresProyecto.setRenderedDlgEditar(false);
                     administrarDirectoresProyecto.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
                     /*----------------------------------------------Docentes-------------------------------------------------------*/
-                    administrarDocentesProyecto.setRenderedDlgBuscarDocentesDisponibles(false);
-                    administrarDocentesProyecto.setRenderedDlgOficioDocenteProyecto(false);
-                    administrarDocentesProyecto.setRenderedDlgEditar(false);
+//                    administrarDocentesProyecto.setRenderedDlgBuscarDocentesDisponibles(false);
+//                    administrarDocentesProyecto.setRenderedDlgOficioDocenteProyecto(false);
+//                    administrarDocentesProyecto.setRenderedDlgEditar(false);
                     /*----------------------------------------------Autores-------------------------------------------------------*/
                     administrarAutoresProyecto.setRenderedDlgEditarAutorProyecto(false);
 //                    administrarEstudiantes.setRenderedDlgEditar(false);
@@ -2652,16 +2646,6 @@ import edu.unl.sigett.util.MessageView;
 
     public void setAdministrarConfiguracionesProyecto(AdministrarConfiguracionesProyecto administrarConfiguracionesProyecto) {
         this.administrarConfiguracionesProyecto = administrarConfiguracionesProyecto;
-    }
-
-  
-
-    public AdministrarDocentesProyecto getAdministrarDocentesProyecto() {
-        return administrarDocentesProyecto;
-    }
-
-    public void setAdministrarDocentesProyecto(AdministrarDocentesProyecto administrarDocentesProyecto) {
-        this.administrarDocentesProyecto = administrarDocentesProyecto;
     }
 
     public AdministrarDocumentosProyecto getAdministrarDocumentosProyecto() {

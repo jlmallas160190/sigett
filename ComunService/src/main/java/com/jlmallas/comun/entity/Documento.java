@@ -16,6 +16,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -25,7 +26,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author jorge-luis
  */
 @Entity
-@Table(name = "documento",schema = "comun")
+@Table(name = "documento", schema = "comun")
 @XmlRootElement
 public class Documento implements Serializable {
 
@@ -52,6 +53,8 @@ public class Documento implements Serializable {
     @Column(name = "fecha_creacion")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaCreacion;
+    @Transient
+    private byte[] contents;
 
     public Documento() {
     }
@@ -60,10 +63,11 @@ public class Documento implements Serializable {
         this.id = id;
     }
 
-    public Documento(Long id, String ruta, Long catalogoId,Double tamanio,Date fechaCreacion) {
+    public Documento(Long id, String ruta, Long catalogoId, Double tamanio, Date fechaCreacion, byte[] contents) {
         this.id = id;
-        this.fechaCreacion=fechaCreacion;
-        this.tamanio=tamanio;
+        this.contents = contents;
+        this.fechaCreacion = fechaCreacion;
+        this.tamanio = tamanio;
         this.ruta = ruta;
         this.catalogoId = catalogoId;
     }
@@ -136,6 +140,14 @@ public class Documento implements Serializable {
     @Override
     public String toString() {
         return "com.jlmallas.comun.entity.Documento[ id=" + id + " ]";
+    }
+
+    public byte[] getContents() {
+        return contents;
+    }
+
+    public void setContents(byte[] contents) {
+        this.contents = contents;
     }
 
 }

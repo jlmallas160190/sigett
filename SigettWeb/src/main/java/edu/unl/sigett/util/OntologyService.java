@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package edu.unl.sigett.util;
 
+import edu.unl.sigett.webSemantica.dto.ProyectoCarreraOfertaOntDTO;
 import edu.unl.sigett.webSemantica.service.AreaAcademicaOntService;
 import edu.unl.sigett.webSemantica.service.AutorOntService;
 import edu.unl.sigett.webSemantica.service.AutorProyectoOntService;
@@ -15,6 +15,7 @@ import edu.unl.sigett.webSemantica.service.LineaInvestigacionProyectoOntService;
 import edu.unl.sigett.webSemantica.service.NivelAcademicoOntService;
 import edu.unl.sigett.webSemantica.service.OfertaAcademicoOntService;
 import edu.unl.sigett.webSemantica.service.PeriodoAcademicoOntService;
+import edu.unl.sigett.webSemantica.service.ProyectoCarreraOfertaOntService;
 import edu.unl.sigett.webSemantica.service.ProyectoOntService;
 import java.io.Serializable;
 
@@ -22,7 +23,8 @@ import java.io.Serializable;
  *
  * @author jorge-luis
  */
-public class OntologyService implements Serializable{
+public class OntologyService implements Serializable {
+
     private AutorOntService autorOntService;
     private AutorProyectoOntService autorProyectoOntService;
     private ProyectoOntService proyectoOntService;
@@ -33,6 +35,7 @@ public class OntologyService implements Serializable{
     private NivelAcademicoOntService nivelAcademicoOntService;
     private LineaInvestigacionOntService lineaInvestigacionOntService;
     private LineaInvestigacionProyectoOntService lineaInvestigacionProyectoOntService;
+    private ProyectoCarreraOfertaOntService proyectoCarreraOfertaOntService;
 
     public OntologyService() {
     }
@@ -116,5 +119,13 @@ public class OntologyService implements Serializable{
     public void setLineaInvestigacionProyectoOntService(LineaInvestigacionProyectoOntService lineaInvestigacionProyectoOntService) {
         this.lineaInvestigacionProyectoOntService = lineaInvestigacionProyectoOntService;
     }
-    
+
+    public ProyectoCarreraOfertaOntService getProyectoCarreraOfertaOntService() {
+        return proyectoCarreraOfertaOntService;
+    }
+
+    public void setProyectoCarreraOfertaOntService(ProyectoCarreraOfertaOntService proyectoCarreraOfertaOntService) {
+        this.proyectoCarreraOfertaOntService = proyectoCarreraOfertaOntService;
+    }
+
 }

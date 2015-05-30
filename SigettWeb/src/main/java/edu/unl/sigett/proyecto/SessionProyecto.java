@@ -12,8 +12,10 @@ import edu.jlmallas.academico.entity.EstudianteCarrera;
 import edu.jlmallas.academico.entity.OfertaAcademica;
 import edu.unl.sigett.autor.dto.AutorProyectoDTO;
 import edu.unl.sigett.docenteProyecto.DocenteProyectoDTO;
+import edu.unl.sigett.documentoProyecto.DocumentoProyectoDTO;
 import edu.unl.sigett.entity.ConfiguracionProyecto;
 import edu.unl.sigett.entity.Cronograma;
+import edu.unl.sigett.entity.DocumentoProyecto;
 import edu.unl.sigett.entity.LineaInvestigacion;
 import edu.unl.sigett.entity.LineaInvestigacionProyecto;
 import edu.unl.sigett.entity.Proyecto;
@@ -46,6 +48,9 @@ public class SessionProyecto implements Serializable {
     private Cronograma cronograma;
 
     private List<Proyecto> proyectos;
+    private List<DocumentoProyectoDTO> documentosProyectoDTO;
+    private List<DocumentoProyectoDTO> filterDocumentosProyectoDTO;
+    private List<DocumentoProyectoDTO> documentosProyectosDTOAgregados;
     private List<Proyecto> filterProyectos;
     private LineaInvestigacionProyecto lineaInvestigacionProyectoSeleccionada;
     private List<Carrera> carreras;
@@ -70,7 +75,7 @@ public class SessionProyecto implements Serializable {
     private List<LineaInvestigacion> lineasInvestigacionSeleccionadas;
     private List<DocenteProyectoDTO> docentesProyectoDTO;
     private List<DocenteProyectoDTO> filterDocentesProyectoDTO;
-    
+
     private ProyectoOntDTO proyectoOntDTO;
 
     private Boolean renderedEditar;
@@ -87,6 +92,9 @@ public class SessionProyecto implements Serializable {
     private DualListModel<Carrera> carrerasDualList;
 
     public SessionProyecto() {
+        this.documentosProyectosDTOAgregados = new ArrayList<>();
+        this.documentosProyectoDTO = new ArrayList<>();
+        this.filterDocumentosProyectoDTO = new ArrayList<>();
         this.docentesProyectoDTO = new ArrayList<>();
         this.filterDocentesProyectoDTO = new ArrayList<>();
         this.autoresProyectoDTONuevos = new ArrayList<>();
@@ -416,6 +424,7 @@ public class SessionProyecto implements Serializable {
     public void setLineasInvestigacionRemovidosTransfer(List<LineaInvestigacionProyecto> lineasInvestigacionRemovidosTransfer) {
         this.lineasInvestigacionRemovidosTransfer = lineasInvestigacionRemovidosTransfer;
     }
+
     public Cronograma getCronograma() {
         return cronograma;
     }
@@ -478,6 +487,30 @@ public class SessionProyecto implements Serializable {
 
     public void setProyectoOntDTO(ProyectoOntDTO proyectoOntDTO) {
         this.proyectoOntDTO = proyectoOntDTO;
+    }
+
+    public List<DocumentoProyectoDTO> getDocumentosProyectoDTO() {
+        return documentosProyectoDTO;
+    }
+
+    public void setDocumentosProyectoDTO(List<DocumentoProyectoDTO> documentosProyectoDTO) {
+        this.documentosProyectoDTO = documentosProyectoDTO;
+    }
+
+    public List<DocumentoProyectoDTO> getFilterDocumentosProyectoDTO() {
+        return filterDocumentosProyectoDTO;
+    }
+
+    public void setFilterDocumentosProyectoDTO(List<DocumentoProyectoDTO> filterDocumentosProyectoDTO) {
+        this.filterDocumentosProyectoDTO = filterDocumentosProyectoDTO;
+    }
+
+    public List<DocumentoProyectoDTO> getDocumentosProyectosDTOAgregados() {
+        return documentosProyectosDTOAgregados;
+    }
+
+    public void setDocumentosProyectosDTOAgregados(List<DocumentoProyectoDTO> documentosProyectosDTOAgregados) {
+        this.documentosProyectosDTOAgregados = documentosProyectosDTOAgregados;
     }
 
 }

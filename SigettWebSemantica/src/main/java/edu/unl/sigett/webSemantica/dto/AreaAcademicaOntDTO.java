@@ -14,7 +14,7 @@ import java.io.Serializable;
  */
 public class AreaAcademicaOntDTO implements Serializable {
 
-    private Long id;
+    private Integer id;
     private String institucion;
     private String nombre;
     private String sigla;
@@ -24,18 +24,18 @@ public class AreaAcademicaOntDTO implements Serializable {
     public AreaAcademicaOntDTO() {
     }
 
-    public AreaAcademicaOntDTO(Long id, String institucion, String nombre, String sigla,String uri) {
+    public AreaAcademicaOntDTO(Integer id, String institucion, String nombre, String sigla,String uri) {
         this.id = id;
         this.institucion = institucion;
         this.nombre = nombre;
         this.sigla = sigla;
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
