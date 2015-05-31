@@ -7,7 +7,7 @@
     <body>
         <p:panel header="#{msg['lbl.logo']}" toggleable="true">
             <p:graphicImage id="logo" styleClass="img-thumbnail" cache="false"  height="100" width="100" 
-                            value="/AppServlet?id=#{sessionUsuarioCarrera.usuarioCarreraDTO.carrera.id}&amp;entity=Carrera"/>
+                            value="/AppServlet?entity=carrera"/>
             <f:facet name="footer">
                 <h:panelGrid >
                     <p:commandButton icon="ui-icon-upload"  onstart="PF('dlgLoading').show();" oncomplete="PF('dlgLoading').hide()" 

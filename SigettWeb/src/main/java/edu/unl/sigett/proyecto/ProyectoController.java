@@ -33,8 +33,6 @@ import edu.unl.sigett.autor.dto.AutorProyectoDTO;
 import edu.unl.sigett.dao.ConfiguracionProyectoDao;
 import edu.unl.sigett.dao.DirectorDao;
 import edu.unl.sigett.dao.ProyectoOfertaCarreraDao;
-import edu.unl.sigett.dao.TemaDao;
-import edu.unl.sigett.dao.TemaProyectoDao;
 import edu.unl.sigett.docenteProyecto.DocenteProyectoDTO;
 import edu.unl.sigett.documentoProyecto.DocumentoProyectoDTO;
 import edu.unl.sigett.dto.ProyectoDTO;
@@ -68,7 +66,6 @@ import edu.unl.sigett.service.TemaProyectoService;
 import edu.unl.sigett.service.TemaService;
 import edu.unl.sigett.usuarioCarrera.SessionUsuarioCarrera;
 import edu.unl.sigett.util.CabeceraController;
-import edu.unl.sigett.util.MessageView;
 import edu.unl.sigett.util.PropertiesFileEnum;
 import edu.unl.sigett.webSemantica.dto.AreaAcademicaOntDTO;
 import edu.unl.sigett.webSemantica.dto.AutorOntDTO;
@@ -80,7 +77,6 @@ import edu.unl.sigett.webSemantica.dto.NivelAcademicoOntDTO;
 import edu.unl.sigett.webSemantica.dto.OfertaAcademicaOntDTO;
 import edu.unl.sigett.webSemantica.dto.PeriodoAcademicoOntDTO;
 import edu.unl.sigett.webSemantica.dto.ProyectoCarreraOfertaOntDTO;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import javax.inject.Named;
@@ -195,7 +191,7 @@ public class ProyectoController implements Serializable {
     public ProyectoController() {
     }
 
-    public void init() {
+    public void preRenderView() {
         this.buscar();
         this.listadoCarreras();
         this.listadoOfertasAcademicas();
@@ -203,15 +199,12 @@ public class ProyectoController implements Serializable {
         this.renderedEditar();
     }
 
-    public void initEditar() {
+    public void preRenderViewEdit() {
         estadoActual();
         this.renderedInicio();
-        pickListLineasInvestigacionProyecto(sessionProyecto.getProyectoSeleccionado());
-        pickListCarreras(sessionProyecto.getProyectoSeleccionado());
         this.listadoConfiguracionesProyecto();
         this.listadoTipos();
         this.listadoCategorias();
-        buscarDocumentos();
     }
     //<editor-fold defaultstate="collapsed" desc="PROYECTO">
 
@@ -226,12 +219,7 @@ public class ProyectoController implements Serializable {
             sessionProyecto.getCronograma().setFechaFin(fechaActual.getTime());
             sessionProyecto.getCronograma().setFechaProrroga(fechaActual.getTime());
             sessionProyecto.getCronograma().setDuracion(0.0);
-            sessionProyecto.getAutoresProyectoDTONuevos().clear();
-            this.sessionProyecto.getDocentesProyectoDTO().clear();
-            sessionProyecto.getCarrerasRemovidasTransfer().clear();
-            sessionProyecto.getCarrerasSeleccionadasTransfer().clear();
-            sessionProyecto.getLineasInvestigacionRemovidosTransfer().clear();
-            sessionProyecto.getLineasInvestigacionSeleccionadasTransfer().clear();
+            iniciar();
             crearTema();
             this.agregarConfiguracionesProyecto();
             return "pretty:crearProyecto";
@@ -249,6 +237,17 @@ public class ProyectoController implements Serializable {
         sessionProyecto.setCategorias(itemService.buscarPorCatalogo(CatalogoEnum.CATALOGOPROYECTO.getTipo()));
     }
 
+    private void iniciar() {
+        sessionProyecto.getAutoresProyectoDTONuevos().clear();
+        sessionProyecto.getCarrerasRemovidasTransfer().clear();
+        sessionProyecto.getCarrerasSeleccionadasTransfer().clear();
+        sessionProyecto.getLineasInvestigacionRemovidosTransfer().clear();
+        sessionProyecto.getLineasInvestigacionSeleccionadasTransfer().clear();
+        sessionProyecto.getDocumentosProyectosDTOAgregados().clear();
+        pickListLineasInvestigacionProyecto(sessionProyecto.getProyectoSeleccionado());
+        pickListCarreras(sessionProyecto.getProyectoSeleccionado());
+    }
+
     public String editar(final Proyecto proyecto) {
         try {
             Calendar fechaActual = Calendar.getInstance();
@@ -258,13 +257,10 @@ public class ProyectoController implements Serializable {
             sessionProyecto.getCronograma().setFechaFin(fechaActual.getTime());
             sessionProyecto.getCronograma().setFechaProrroga(fechaActual.getTime());
             sessionProyecto.getCronograma().setDuracion(0.0);
-            sessionProyecto.getAutoresProyectoDTONuevos().clear();
-            sessionProyecto.getCarrerasRemovidasTransfer().clear();
-            sessionProyecto.getCarrerasSeleccionadasTransfer().clear();
-            sessionProyecto.getLineasInvestigacionRemovidosTransfer().clear();
-            sessionProyecto.getLineasInvestigacionSeleccionadasTransfer().clear();
+            iniciar();
             editarTema();
             buscarDocentes();
+            this.buscarDocumentos();
             sessionProyecto.setTipo(itemService.buscarPorId(proyecto.getTipoProyectoId()).getCodigo());
             sessionProyecto.setCatalogo(itemService.buscarPorId(proyecto.getCatalogoProyectoId()).getCodigo());
             return "pretty:editarProyecto";
@@ -437,7 +433,7 @@ public class ProyectoController implements Serializable {
         try {
             this.sessionProyecto.getCarreras().clear();
             this.sessionProyecto.getFilterCarreras().clear();
-            this.sessionProyecto.setCarreras(sessionUsuarioCarrera.getCarreras());
+            this.sessionProyecto.getCarreras().addAll(sessionUsuarioCarrera.getCarreras());
             this.sessionProyecto.setFilterCarreras(this.sessionProyecto.getCarreras());
         } catch (Exception e) {
         }
@@ -579,7 +575,7 @@ public class ProyectoController implements Serializable {
                     }
                 }
             }
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
             System.out.println(e);
         }
     }
@@ -1057,6 +1053,7 @@ public class ProyectoController implements Serializable {
             for (DocumentoProyecto documentoProyecto : documentoProyectos) {
                 DocumentoProyectoDTO documentoProyectoDTO = new DocumentoProyectoDTO(
                         documentoProyecto, documentoService.buscarPorId(new Documento(documentoProyecto.getDocumentoId())));
+                documentoProyectoDTO.getDocumento().setCatalogo(itemService.buscarPorId(documentoProyectoDTO.getDocumento().getCatalogoId()).getNombre());
                 sessionProyecto.getDocumentosProyectoDTO().add(documentoProyectoDTO);
             }
 
@@ -1080,7 +1077,7 @@ public class ProyectoController implements Serializable {
                 }
                 documentoProyectoService.actualizar(documentoProyectoDTO.getDocumentoProyecto());
             }
-        } catch (Exception e) {
+        } catch (IOException e) {
             LOG.info(e.getMessage());
         }
 
@@ -1109,13 +1106,7 @@ public class ProyectoController implements Serializable {
      */
     public void renderedInicio() {
         sessionProyecto.setRenderedInicio(Boolean.FALSE);
-        Item item = itemService.buscarPorId(sessionProyecto.getProyectoSeleccionado().getEstadoProyectoId() != null
-                ? sessionProyecto.getProyectoSeleccionado().getEstadoProyectoId() : null);
-        if (item == null) {
-            sessionProyecto.setRenderedInicio(Boolean.TRUE);
-            return;
-        }
-        if (item.getCodigo().equalsIgnoreCase(EstadoProyectoEnum.INICIO.getTipo())) {
+        if (sessionProyecto.getEstadoActual().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.INICIO.getTipo())) {
             sessionProyecto.setRenderedInicio(Boolean.TRUE);
         }
     }

@@ -42,8 +42,8 @@ public class DocumentoServiceImplement implements DocumentoService {
     }
 
     @Override
-    public Documento buscarSingle(final Documento documento) {
-        return this.documentoDao.buscarSingle(documento);
+    public Documento buscar(final Documento documento) {
+        return this.documentoDao.buscar(documento);
     }
 
 }

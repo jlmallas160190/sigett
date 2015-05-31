@@ -15,8 +15,8 @@
                 </f:facet>
                 <p:commandButton icon="ui-icon-circle-plus" onclick="if (!confirm('¿#{msg['lbl.confirmarSeleccionar']}.?'))
                             return false;" 
-                            action="#{docenteProyectoController.agregarDocenteProyecto(item)}"
-                                 onstart="PF('dlgLoading').show();" oncomplete="PF('dlgLoading').hide()" 
+                            action="#{docenteProyectoController.agregar(item)}"
+                                 onstart="PF('dlgLoading').show();" oncomplete="PF('dlgLoading').hide(),PF('tblDPFilter').filter()" 
                                  update=":contenido:tabViewDatosProyecto:tblDocentesProyecto,:contenido:msm">
                     <f:param name="1" value="seleccionar-dlg"/>
                 </p:commandButton>

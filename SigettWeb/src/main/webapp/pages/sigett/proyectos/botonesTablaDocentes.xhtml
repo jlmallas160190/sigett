@@ -8,7 +8,7 @@
         <h:panelGrid id="opcionesDocente"  columns="2">
             <p:commandButton  icon="ui-icon-search" rendered="#{sessionProyecto.renderedInicio}" 
                               value="#{msg['lbl.buscar']} #{msg['lbl.docentes']}"  onstart="PF('dlgLoading').show()" 
-                              oncomplete="PF('dlgLoading').hide(),PF('dlgBuscarDocentesDisponibles').show()"  
+                              oncomplete="PF('dlgLoading').hide(),PF('dlgBuscarDocentesDisponibles').show(),PF('tblDocentesFilter').filter()"  
                               update=":contenido:msm,opcionesDocente,:contenido:dlgDocentesDisponibles"
                               action="#{docenteProyectoController.listadoDirectoresDiponibles()}">
             </p:commandButton>

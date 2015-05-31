@@ -5,74 +5,17 @@
  */
 package edu.unl.sigett.servlet;
 
-import edu.unl.sigett.academico.controlador.AdministrarEstudiantesCarrera;
-import edu.unl.sigett.finalizacion.controlador.AdministrarActas;
+import edu.unl.sigett.docenteProyecto.SessionDocenteProyecto;
 import edu.unl.sigett.reportes.AdministrarReportes;
-import edu.unl.sigett.entity.Actividad;
-import edu.unl.sigett.entity.AutorProyecto;
-import edu.unl.sigett.entity.CalificacionMiembro;
-import edu.jlmallas.academico.entity.Carrera;
-import edu.unl.sigett.entity.ConfiguracionCarrera;
-import edu.jlmallas.academico.entity.CoordinadorPeriodo;
-import edu.unl.sigett.entity.DirectorProyecto;
-import edu.unl.sigett.entity.DocenteProyecto;
-import edu.unl.sigett.entity.DocumentoActividad;
-import edu.unl.sigett.entity.DocumentoExpediente;
-import edu.unl.sigett.entity.DocumentoProyecto;
-import edu.unl.sigett.entity.EvaluacionTribunal;
-import com.jlmallas.comun.entity.Foto;
-import com.jlmallas.comun.entity.Persona;
-import edu.unl.sigett.entity.Miembro;
-import edu.unl.sigett.entity.DocumentoCarrera;
-import edu.unl.sigett.entity.Pertinencia;
-import edu.unl.sigett.entity.Prorroga;
-import edu.jlmallas.academico.entity.ReporteMatricula;
-import org.jlmallas.seguridad.entity.Usuario;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.ResourceBundle;
-import javax.ejb.EJB;
 import javax.inject.Inject;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import edu.unl.sigett.dao.ActaFacadeLocal;
-import edu.unl.sigett.dao.ActividadFacadeLocal;
-import edu.unl.sigett.dao.AutorProyectoDao;
-import edu.jlmallas.academico.service.CarreraService;
-import edu.unl.sigett.dao.ConfiguracionCarreraDao;
-import edu.unl.sigett.dao.ConfiguracionGeneralDao;
-import edu.jlmallas.academico.dao.CoordinadorPeriodoDao;
-import edu.unl.sigett.dao.DirectorProyectoFacadeLocal;
-import edu.unl.sigett.dao.DocenteProyectoDao;
-import edu.unl.sigett.dao.DocumentoActividadFacadeLocal;
-import edu.unl.sigett.dao.DocumentoExpedienteFacadeLocal;
-import edu.unl.sigett.dao.DocumentoProyectoDao;
-import edu.unl.sigett.dao.EvaluacionTribunalFacadeLocal;
-import com.jlmallas.comun.dao.FotoFacadeLocal;
-import com.jlmallas.comun.dao.ItemDao;
-import com.jlmallas.comun.dao.PersonaDao;
-import edu.unl.sigett.dao.MiembroFacadeLocal;
-import edu.unl.sigett.dao.DocumentoCarreraDao;
-import edu.unl.sigett.dao.PertinenciaFacadeLocal;
-import edu.unl.sigett.dao.ProrrogaFacadeLocal;
-import edu.jlmallas.academico.dao.ReporteMatriculaDao;
-import org.jlmallas.seguridad.dao.UsuarioDao;
-import edu.jlmallas.academico.entity.Docente;
-import edu.jlmallas.academico.entity.EstudianteCarrera;
-import edu.jlmallas.academico.dao.DocenteCarreraDao;
-import edu.jlmallas.academico.dao.DocenteDao;
-import edu.jlmallas.academico.dao.EstudianteCarreraDao;
-import edu.unl.sigett.enumeration.CargoMiembroEnum;
-import edu.unl.sigett.enumeration.CatalogoDocumentoCarreraEnum;
-import edu.unl.sigett.enumeration.EstadoAutorEnum;
+import edu.unl.sigett.documentoProyecto.SessionDocumentoProyecto;
 import edu.unl.sigett.usuarioCarrera.SessionUsuarioCarrera;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  *
@@ -81,157 +24,47 @@ import java.util.Map;
 @WebServlet(name = "AppServlet", urlPatterns = {"/AppServlet/*"})
 public class AppServlet extends HttpServlet {
 
+    //<editor-fold defaultstate="collapsed" desc="MANAGED BEANS">
     @Inject
-    private AdministrarActas administrarActas;
-    @Inject
-    private AdministrarEstudiantesCarrera administrarEstudiantesCarrera;
+    private SessionDocumentoProyecto sessionDocumentoProyecto;
     @Inject
     private SessionUsuarioCarrera sessionUsuarioCarrera;
-    @EJB
-    private FotoFacadeLocal fotoFacadeLocal;
-    @EJB
-    private DocumentoProyectoDao documentoProyectoFacadeLocal;
-    @EJB
-    private CarreraService carreraFacadeLocal;
-    @EJB
-    private ConfiguracionGeneralDao configuracionGeneralFacadeLocal;
-    @EJB
-    private UsuarioDao usuarioFacadeLocal;
-    @EJB
-    private ActaFacadeLocal actaFacadeLocal;
-    @EJB
-    private DocumentoActividadFacadeLocal documentoActividadFacadeLocal;
-    @EJB
-    private DocumentoExpedienteFacadeLocal documentoExpedienteFacadeLocal;
-    @EJB
-    private AutorProyectoDao autorProyectoFacadeLocal;
-    @EJB
-    private ConfiguracionCarreraDao configuracionCarreraFacadeLocal;
-    @EJB
-    private DocumentoCarreraDao oficioCarreraFacadeLocal;
-    @EJB
-    private DirectorProyectoFacadeLocal directorProyectoFacadeLocal;
-    @EJB
-    private DocenteProyectoDao docenteProyectoFacadeLocal;
-    @EJB
-    private MiembroFacadeLocal miembroFacadeLocal;
-    @EJB
-    private ProrrogaFacadeLocal prorrogaFacadeLocal;
-    @EJB
-    private ActividadFacadeLocal actividadFacadeLocal;
-    @EJB
-    private PertinenciaFacadeLocal pertinenciaFacadeLocal;
-    @EJB
-    private EvaluacionTribunalFacadeLocal evaluacionTribunalFacadeLocal;
-    @EJB
-    private ReporteMatriculaDao reporteMatriculaFacadeLocal;
-    @EJB
-    private CoordinadorPeriodoDao coordinadorPeriodoFacadeLocal;
-    @EJB
-    private EstudianteCarreraDao estudianteCarreraFacadeLocal;
-    @EJB
-    private PersonaDao personaFacadeLocal;
-    @EJB
-    private DocenteDao docenteFacadeLocal;
-    @EJB
-    private DocenteCarreraDao docenteCarreraFacadeLocal;
-    @EJB
-    private ItemDao itemFacadeLocal;
-
+    @Inject
+    private SessionDocenteProyecto sessionDocenteProyecto;
+    //</editor-fold>
     private AdministrarReportes reportes;
-    private ConfiguracionCarrera configuracionCarrera;
-
-    private Docente docente;
-    private CoordinadorPeriodo coordinadorPeriodo;
-    private Prorroga prorroga;
-    private DirectorProyecto directorProyecto;
-    private Miembro miembro;
-    private DocumentoProyecto documentoProyecto;
-    private Usuario usuario;
-    private DocumentoCarrera oficioCarrera;
-    private Foto foto;
-    private Docente docenteCoordinador;
-    private Persona datosCoordinador;
-    private Persona datosDirector;
-    private Persona datosDocente;
-    private Persona datosAutor;
-
-    private Long prorrogaId;
-    private String presidente;
-    private String datosMiembros;
-    private Long miembroId;
-    private String datosUsuario;
-    private String path;
-    private String pathSetting;
-    private Integer nOficio;
-    private String resolucion;
-    private String fechaOficioFormat;
-    private Calendar fechaActual;
-    private String fechaFormateada;
-    private Carrera carrera;
-
-    private Map datosReporte;
-    private ResourceBundle resourceBundle;
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            String entityId = request.getParameter("id");
-            String lenguaje = request.getParameter("lenguaje");
             String entity = request.getParameter("entity");
-            String carreraId = request.getParameter("carreraId");
-            String usuarioId = request.getParameter("usuarioId");
-            path = request.getRealPath("/");
-            pathSetting = request.getRealPath("/settings.txt");
-            if (entityId == null && entity == null) {
-                response.sendError(HttpServletResponse.SC_NOT_FOUND); // 404.
-                return;
-            }
-            inicio();
-            getResourceBundle(lenguaje);
-            if (entityId.equalsIgnoreCase("")) {
-                response.sendError(HttpServletResponse.SC_NOT_FOUND); // 404.
+            if (entity == null) {
                 return;
             }
             switch (entity) {
-                case "Foto":
-                    foto = fotoFacadeLocal.find(Long.parseLong(entityId));
-                    if (foto == null) {
-                        response.sendError(HttpServletResponse.SC_NOT_FOUND); // 404.
+                case "documentoProyecto":
+                    if (sessionDocumentoProyecto.getDocumentoProyectoDTOSeleccionado() == null) {
                         return;
-                    } else {
-                        response.reset();
-                        response.setContentType("/image/png");
-                        response.getOutputStream().write(foto.getFoto());
-                        response.getOutputStream().close();
                     }
-                    break;
-                case "Persona":
-                    foto = fotoFacadeLocal.fotoActual(Long.parseLong(entityId));
-                    response.reset();
-                    response.setContentType("/image/png");
-                    response.getOutputStream().write(foto.getFoto());
-                    response.getOutputStream().close();
-                    break;
-                case "DocumentoProyecto":
-                    documentoProyecto = documentoProyectoFacadeLocal.find(Long.parseLong(entityId));
-                    if (documentoProyecto == null) {
+                    if (sessionDocumentoProyecto.getDocumentoProyectoDTOSeleccionado().getDocumento() == null) {
+                        return;
+                    }
+                    if (sessionDocumentoProyecto.getDocumentoProyectoDTOSeleccionado().getDocumento().getContents() == null) {
                         response.sendError(HttpServletResponse.SC_NOT_FOUND); // 404.
                         return;
                     }
                     response.reset();
                     response.setContentType("/application/pdf");
-//                    response.getOutputStream().write(documentoProyecto.getDocumento());
+                    response.getOutputStream().write(sessionDocumentoProyecto.getDocumentoProyectoDTOSeleccionado().getDocumento().getContents());
                     response.getOutputStream().close();
-
                     break;
-                case "Carrera":
+                case "carrera":
                     if (sessionUsuarioCarrera.getUsuarioCarreraDTO().getCarrera() == null) {
-                        response.sendError(HttpServletResponse.SC_NOT_FOUND); // 404.
+                        response.sendError(HttpServletResponse.SC_NOT_FOUND);
                         return;
                     }
                     if (sessionUsuarioCarrera.getUsuarioCarreraDTO().getCarrera().getLogo() == null) {
-                        response.sendError(HttpServletResponse.SC_NOT_FOUND); // 404.
+                        response.sendError(HttpServletResponse.SC_NOT_FOUND);
                         return;
                     }
                     response.reset();
@@ -240,43 +73,43 @@ public class AppServlet extends HttpServlet {
                     response.getOutputStream().close();
                     break;
                 case "DocumentoActividad":
-                    DocumentoActividad documentoActividad = documentoActividadFacadeLocal.find(Long.parseLong(entityId));
-                    if (documentoActividad == null) {
-                        response.sendError(HttpServletResponse.SC_NOT_FOUND); // 404.
-                        return;
-                    } else {
-                        response.reset();
-                        response.setContentType("/application/pdf");
-//                        response.getOutputStream().write(documentoActividad.getDocumento());
-                        response.getOutputStream().close();
-                    }
+//                    DocumentoActividad documentoActividad = documentoActividadFacadeLocal.find(Long.parseLong(entityId));
+//                    if (documentoActividad == null) {
+//                        response.sendError(HttpServletResponse.SC_NOT_FOUND); // 404.
+//                        return;
+//                    } else {
+//                        response.reset();
+//                        response.setContentType("/application/pdf");
+////                        response.getOutputStream().write(documentoActividad.getDocumento());
+//                        response.getOutputStream().close();
+//                    }
                     break;
                 case "Actividad":
-                    documentoActividad = documentoActividadFacadeLocal.documentoActual(Long.parseLong(entityId));
-                    if (documentoActividad == null) {
-                        response.sendError(HttpServletResponse.SC_NOT_FOUND); // 404.
-                        return;
-                    } else {
-                        response.reset();
-                        response.setContentType("/application/pdf");
-//                        response.getOutputStream().write(documentoActividad.getDocumento());
-                        response.getOutputStream().close();
-                    }
-                    break;
-                case "DocumentoExpediente":
-                    DocumentoExpediente documentoExpediente = documentoExpedienteFacadeLocal.find(Long.parseLong(entityId));
-                    if (documentoExpediente == null) {
-                        response.sendError(HttpServletResponse.SC_NOT_FOUND); // 404.
-                        return;
-                    } else {
-                        response.reset();
-                        response.setContentType("/application/pdf");
-//                        response.getOutputStream().write(documentoExpediente.getDocumento());
-                        response.getOutputStream().close();
-                    }
+//                    documentoActividad = documentoActividadFacadeLocal.documentoActual(Long.parseLong(entityId));
+//                    if (documentoActividad == null) {
+//                        response.sendError(HttpServletResponse.SC_NOT_FOUND); // 404.
+//                        return;
+//                    } else {
+//                        response.reset();
+//                        response.setContentType("/application/pdf");
+////                        response.getOutputStream().write(documentoActividad.getDocumento());
+//                        response.getOutputStream().close();
+//                    }
                     break;
 
                 case "oficioDocenteProyecto":
+                    if (sessionDocenteProyecto.getOficioPertinenciaDTO() == null) {
+                        response.sendError(HttpServletResponse.SC_NOT_FOUND);
+                        return;
+                    }
+                    if (sessionDocenteProyecto.getOficioPertinenciaDTO().getDocumento().getContents() == null) {
+                        response.sendError(HttpServletResponse.SC_NOT_FOUND);
+                        return;
+                    }
+                    response.reset();
+                    response.setContentType("/application/pdf");
+                    response.getOutputStream().write(sessionDocenteProyecto.getOficioPertinenciaDTO().getDocumento().getContents());
+                    response.getOutputStream().close();
 //                    carrera = carreraFacadeLocal.find(Integer.parseInt(carreraId));
 ////                    configuracionCarrera = configuracionCarreraFacadeLocal.buscarPorCarreraId(Integer.parseInt(carreraId), "NO");
 //                    nOficio = Integer.parseInt(configuracionCarrera.getValor());
@@ -644,77 +477,30 @@ public class AppServlet extends HttpServlet {
     }
 
     private void getResourceBundle(String lenguaje) {
-        if (lenguaje == null) {
-            return;
-        }
-        if (lenguaje.equalsIgnoreCase("es")) {
-            resourceBundle = ResourceBundle.getBundle("i18n.mensajes.mensajes_es");
-            return;
-        }
-        if (lenguaje.equalsIgnoreCase("en")) {
-            resourceBundle = ResourceBundle.getBundle("i18n.mensajes.mensajes_en");
-            return;
-        }
+//        if (lenguaje == null) {
+//            return;
+//        }
+//        if (lenguaje.equalsIgnoreCase("es")) {
+//            resourceBundle = ResourceBundle.getBundle("i18n.mensajes.mensajes_es");
+//            return;
+//        }
+//        if (lenguaje.equalsIgnoreCase("en")) {
+//            resourceBundle = ResourceBundle.getBundle("i18n.mensajes.mensajes_en");
+//            return;
+//        }
 
     }
 
     private void inicio() {
-        datosReporte = new HashMap();
-        reportes = new AdministrarReportes();
-        configuracionCarrera = new ConfiguracionCarrera();
-        fechaOficioFormat = "";
-        resolucion = "";
-        fechaActual = Calendar.getInstance();
-        path = configuracionGeneralFacadeLocal.find(2).getValor();
-        pathSetting = configuracionGeneralFacadeLocal.find(1).getValor();
-        nOficio = 0;
-        fechaFormateada = configuracionGeneralFacadeLocal.dateFormat(fechaActual.getTime());
-    }
-
-    private void getMiembros(List<Miembro> miembrosList) {
-        try {
-            int contador = 0;
-//            miembroFacadeLocal.buscarPorTribunal(miembro.getTribunalId().getId())
-            for (Miembro m : miembrosList) {
-                Docente docenteMiembro = docenteFacadeLocal.find(m.getDocenteId());
-                Persona datosMiembro = personaFacadeLocal.find(docente.getId());
-                if (m.getCargoId().getId() == 1) {
-                    presidente += docenteMiembro.getTituloDocenteId().getTituloId().getAbreviacion().toUpperCase() + " " + datosMiembro.getNombres().toUpperCase() + " " + datosMiembro.getApellidos().toUpperCase();
-                } else {
-                    if (contador == 0) {
-                        datosMiembros += "" + docenteMiembro.getTituloDocenteId().getTituloId().getAbreviacion().toUpperCase() + " " + datosMiembro.getNombres().toUpperCase() + " " + datosMiembro.getApellidos().toUpperCase();
-                        contador++;
-                    } else {
-                        datosMiembros += ", " + docenteMiembro.getTituloDocenteId().getTituloId().getAbreviacion().toUpperCase() + " " + datosMiembro.getNombres().toUpperCase() + " " + datosMiembro.getApellidos().toUpperCase();
-                        contador++;
-                    }
-                }
-            }
-        } catch (Exception e) {
-        }
-    }
-
-    private String getAutores(List<AutorProyecto> autorProyectos) {
-        String datosAutores = "";
-        int cont = 0;
-        try {
-            for (AutorProyecto autorProyecto : autorProyectos) {
-//                if (!autorProyecto.getEstadoAutorId().getCodigo().equalsIgnoreCase(EstadoAutorEnum.ABANDONADO.getTipo())) {
-//                    EstudianteCarrera estudianteCarrera = estudianteCarreraFacadeLocal.find(autorProyecto.getAspiranteId().getId());
-//                    datosAutor = personaFacadeLocal.find(estudianteCarrera.getEstudianteId().getId());
-//                    if (cont == 0) {
-////                        datosAutores += "" + estudianteCarrera.getEstadoId().getNombre() + " " + datosAutor.getNombres().toUpperCase() + " " + datosAutor.getApellidos().toUpperCase() + "";
-//                        cont++;
-//                    } else {
-////                        datosAutores += ", " + estudianteCarrera.getEstadoId().getNombre() + " " + datosAutor.getNombres().toUpperCase() + " " + datosAutor.getApellidos().toUpperCase();
-//                        cont++;
-//                    }
-//                }
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return datosAutores;
+//        datosReporte = new HashMap();
+//        reportes = new AdministrarReportes();
+//        configuracionCarrera = new ConfiguracionCarrera();
+//        fechaOficioFormat = "";
+//        resolucion = "";
+//        fechaActual = Calendar.getInstance();
+//        path = configuracionGeneralFacadeLocal.find(2).getValor();
+//        pathSetting = configuracionGeneralFacadeLocal.find(1).getValor();
+//        nOficio = 0;
+//        fechaFormateada = configuracionGeneralFacadeLocal.dateFormat(fechaActual.getTime());
     }
 }

@@ -242,8 +242,8 @@ public class AutorProyectoController implements Serializable {
                 aspiranteDTO.setAspirante(aspiranteService.buscarPorId(aspiranteDTO.getAspirante().getId()));
             }
             if (sessionProyecto.getTipoSeleccionado() == null) {
-                cabeceraController.getMessageView().message(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl_no_select") + " "
-                        + bundle.getString("lbl.tipo_proyecto"), "");
+                cabeceraController.getMessageView().message(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.no_select") + " "
+                        + bundle.getString("lbl.tipoProyecto"), "");
                 return;
             }
             if (!aspiranteDTO.getAspirante().getEsApto()

@@ -11,7 +11,6 @@ import com.jlmallas.comun.entity.Item;
 import com.jlmallas.comun.enumeration.CatalogoEnum;
 import com.jlmallas.comun.service.DocumentoService;
 import com.jlmallas.comun.service.ItemService;
-import edu.jlmallas.academico.entity.Carrera;
 import edu.unl.sigett.academico.dto.DocenteCarreraDTO;
 import edu.unl.sigett.dao.ConfiguracionGeneralDao;
 import edu.unl.sigett.dao.DirectorDao;
@@ -20,7 +19,6 @@ import edu.unl.sigett.entity.DocenteProyecto;
 import edu.unl.sigett.entity.DocumentoCarrera;
 import edu.unl.sigett.entity.LineaInvestigacion;
 import edu.unl.sigett.entity.LineaInvestigacionDocente;
-import edu.unl.sigett.entity.ProyectoCarreraOferta;
 import edu.unl.sigett.enumeration.CatalogoDocumentoCarreraEnum;
 import edu.unl.sigett.enumeration.EstadoProyectoEnum;
 import edu.unl.sigett.proyecto.SessionProyecto;
@@ -82,12 +80,12 @@ public class DocenteProyectoController implements Serializable {
     private DocumentoService documentoService;
     //</editor-fold>
     private static final Logger LOG = Logger.getLogger(DocenteProyectoController.class.getName());
-
+    
     public DocenteProyectoController() {
     }
-
+    
     public void init() {
-        this.iniciarPermisos();
+//        this.iniciarPermisos();
     }
 
     //<editor-fold defaultstate="collapsed" desc="MÉTODOS RENDERED">
@@ -101,7 +99,6 @@ public class DocenteProyectoController implements Serializable {
 
 //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="POSTULACIÓN">
-
     /**
      * IMPRIMIR OFICIO AL DOCENTE NOTIFICANDO SU DESIGNACIÓN PARA DAR
      * PERTIENENCIA AL PROYECTO SELECCIONADO.
@@ -114,20 +111,24 @@ public class DocenteProyectoController implements Serializable {
                 sessionDocenteProyecto.setDocenteProyectoId(docenteProyectoDTO.getDocenteProyecto().getDocenteId());
                 Item item = itemService.buscarPorCatalogoCodigo(CatalogoEnum.CATALOGOOFICIO.getTipo(),
                         CatalogoDocumentoCarreraEnum.DOCENTEPROYECTO.getTipo());
-                Documento documento = documentoService.buscarSingle(new Documento(null, null, item.getId(), null, null,null));
-                sessionDocenteProyecto.setCarreraId(!sessionProyecto.getCarreras().isEmpty() ? sessionProyecto.getCarreras().get(0).getId() : null);
+                Documento documentoBuscar = documentoService.buscar(new Documento(null, null, item.getId(), null, null, null, null));
                 DocumentoCarrera documentoCarrera = documentoCarreraService.buscar(new DocumentoCarrera(
-                        null, documento.getId(), Boolean.TRUE, Integer.MIN_VALUE, sessionDocenteProyecto.getDocenteProyectoId())).get(0);
-                sessionDocenteProyecto.setDocumentoCarrera(new DocumentoCarrera());
+                        null, documentoBuscar.getId(), Boolean.TRUE, Integer.MIN_VALUE, sessionDocenteProyecto.getDocenteProyectoId())).get(0);
+                sessionDocenteProyecto.setOficioPertinenciaDTO(new OficioPertinenciaDTO(new DocumentoCarrera(), new Documento(), sessionProyecto.getCarreras().get(0)));
                 if (documentoCarrera != null) {
-                    sessionDocenteProyecto.setDocumentoCarrera(documentoCarrera);
+                    
+                    sessionDocenteProyecto.setOficioPertinenciaDTO(new OficioPertinenciaDTO(
+                            documentoCarrera, documentoService.buscarPorId(new Documento(documentoCarrera.getDocumentoId())), sessionProyecto.getCarreras().get(0)));
                 }
                 sessionDocenteProyecto.setRenderedDialogoOficio(Boolean.TRUE);
-                RequestContext.getCurrentInstance().execute("PF('dlgOficioDocenteProyecto').show()");
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.info(e.getMessage());
         }
+    }
+    
+    public void cancelarImprimirOficio() {
+        sessionDocenteProyecto.setRenderedDialogoOficio(Boolean.FALSE);
     }
 
     /**
@@ -140,7 +141,7 @@ public class DocenteProyectoController implements Serializable {
         boolean var = false;
         String val = configuracionGeneralDao.find((int) 19).getValor();
         if (sessionProyecto.getDocentesProyectoDTO().isEmpty()) {
-            return false;
+            return true;
         }
         for (DocenteProyectoDTO docenteProyectoDTO : sessionProyecto.getDocentesProyectoDTO()) {
             if (docenteProyectoDTO.getDocenteProyecto().getEsActivo()) {
@@ -177,12 +178,14 @@ public class DocenteProyectoController implements Serializable {
                             DirectorDTO directorDTO = new DirectorDTO(directorDao.find(
                                     docenteCarreraDTO.getDocenteCarrera().getId()), docenteCarreraDTO.getDocenteCarrera(), personaDao.find(
                                             docenteCarreraDTO.getDocenteCarrera().getDocenteId().getId()));
-                            sessionDocenteProyecto.getDirectoresDTO().add(directorDTO);
+                            if (!sessionDocenteProyecto.getDirectoresDTO().contains(directorDTO)) {
+                                sessionDocenteProyecto.getDirectoresDTO().add(directorDTO);
+                            }
                         }
                     }
                 }
             }
-
+            sessionDocenteProyecto.setFilterDirectoresDTO(sessionDocenteProyecto.getDirectoresDTO());
         } catch (Exception e) {
             LOG.info(e.getMessage());
         }
@@ -193,7 +196,7 @@ public class DocenteProyectoController implements Serializable {
      *
      * @param directorDTO
      */
-    public void agregarDocenteProyecto(DirectorDTO directorDTO) {
+    public void agregar(DirectorDTO directorDTO) {
         Calendar fecha = Calendar.getInstance();
         try {
             FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -223,7 +226,7 @@ public class DocenteProyectoController implements Serializable {
             LOG.info(e.getMessage());
         }
     }
-
+    
     private DocenteProyectoDTO devuelveDocenteProyecto(DirectorDTO directorDTO) {
         DocenteProyectoDTO dTO = null;
         try {
@@ -238,12 +241,12 @@ public class DocenteProyectoController implements Serializable {
         }
         return dTO;
     }
-
-    public void removerDocenteProyecto(DocenteProyectoDTO docenteProyectoDTO) {
+    
+    public void remover(DocenteProyectoDTO docenteProyectoDTO) {
         try {
             FacesContext facesContext = FacesContext.getCurrentInstance();
             ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            if (sessionProyecto.getEstadoActual().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.INICIO.getTipo())) {
+            if (!sessionProyecto.getEstadoActual().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.INICIO.getTipo())) {
                 return;
             }
             if (docenteProyectoDTO.getDocenteProyecto().getId() != null) {

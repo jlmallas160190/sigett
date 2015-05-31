@@ -23,11 +23,13 @@ public class SessionDocumentoProyecto implements Serializable {
     private DocumentoProyectoDTO documentoProyectoDTOSeleccionado;
     private Item catalogoSeleccionado;
 
-    private List<Item> catalogosDocuemento;
+    private Double tamanioArchivo;
+
+    private List<Item> catalogosDocumento;
 
     public SessionDocumentoProyecto() {
         this.catalogoSeleccionado = new Item();
-        this.catalogosDocuemento = new ArrayList<>();
+        this.catalogosDocumento = new ArrayList<>();
         this.documentoProyectoDTOSeleccionado = new DocumentoProyectoDTO();
     }
 
@@ -39,12 +41,12 @@ public class SessionDocumentoProyecto implements Serializable {
         this.documentoProyectoDTOSeleccionado = documentoProyectoDTOSeleccionado;
     }
 
-    public List<Item> getCatalogosDocuemento() {
-        return catalogosDocuemento;
+    public List<Item> getCatalogosDocumento() {
+        return catalogosDocumento;
     }
 
-    public void setCatalogosDocuemento(List<Item> catalogosDocuemento) {
-        this.catalogosDocuemento = catalogosDocuemento;
+    public void setCatalogosDocumento(List<Item> catalogosDocumento) {
+        this.catalogosDocumento = catalogosDocumento;
     }
 
     public Item getCatalogoSeleccionado() {
@@ -53,6 +55,14 @@ public class SessionDocumentoProyecto implements Serializable {
 
     public void setCatalogoSeleccionado(Item catalogoSeleccionado) {
         this.catalogoSeleccionado = catalogoSeleccionado;
+    }
+
+    public Double getTamanioArchivo() {
+        return tamanioArchivo;
+    }
+
+    public void setTamanioArchivo(Double tamanioArchivo) {
+        this.tamanioArchivo = tamanioArchivo;
     }
 
 }

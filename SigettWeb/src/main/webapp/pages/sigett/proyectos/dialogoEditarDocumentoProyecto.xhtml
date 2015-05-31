@@ -1,11 +1,19 @@
 <?xml version='1.0' encoding='UTF-8' ?> 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
 
     <body>
         <p:dialog id="dlgEditarDocumentoProyecto" widgetVar="dlgEditarDocumentoProyecto"  header="#{msg['lbl.editar']} #{msg['lbl.documento']}" 
                   styleClass="modal-md" modal="true" >
+            <p:panel id='pnlEditarDocProy' >
+                <ui:include src="./../documentosProyecto/editarDocumentoProyecto.xhtml"/>
+                <f:facet name="footer">
+                    <ui:include src="botonesEditarDocumentoProyecto.xhtml"/>
+                </f:facet>
+            </p:panel>
         </p:dialog> 
     </body>
 

@@ -12,7 +12,7 @@
             <ui:include src="./../../inicio/menu.xhtml"/>
         </ui:define>
         <ui:define name="content">
-            <f:event type="preRenderView" listener="#{proyectoController.initEditar()}"/>
+            <f:event type="preRenderView" listener="#{proyectoController.preRenderViewEdit()}"/>
             <f:event type="preRenderView" listener="#{autorProyectoController.initPostulacion()}"/>
             <f:event type="preRenderView" listener="#{docenteProyectoController.init()}"/>
             <p:growl id="msm" showDetail="true" /> 
@@ -50,6 +50,15 @@
                             </f:facet>  
                         </p:panel>
                     </p:tab>
+                    <p:tab id="tabDocumentos" 
+                           title="#{msg['lbl.documentos']}">
+                        <p:panel header="#{msg['lbl.listado']} #{msg['lbl.documentos']}" toggleable="true">
+                            <ui:include src="tablaDocumentosProyecto.xhtml"/>
+                            <f:facet name="footer">
+                                <ui:include src="botonesTablaDocumentosProyecto.xhtml"/>
+                            </f:facet>  
+                        </p:panel>
+                    </p:tab>
                 </p:tabView>
                 <f:facet name="footer">
                     <ui:include src="botonesEditarProyecto.xhtml"/>
@@ -57,6 +66,11 @@
             </p:panel>
             <ui:include src="dialogoDirectoresDisponibles.xhtml"/>
             <ui:include src="dialogoAspirantes.xhtml"/>
+            <ui:include src="dialogoOficioDocenteProyecto.xhtml"/>
+            <ui:include src="dialogoVerDocumentoProyecto.xhtml"/>
+            <ui:include src="dialogoEditarDocumentoProyecto.xhtml"/>
+            <ui:include src="./../documentosProyecto/dialogoUpload.xhtml"/>
+            
         </ui:define>
     </ui:composition>
 </html>

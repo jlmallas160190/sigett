@@ -237,7 +237,9 @@ input[disabled="disabled"], select[disabled="disabled"], textarea[disabled="disa
 .ui-panelgrid th:hover{
     background: #eee;
 }
-
+.ui-panelgrid td, .ui-panelgrid tr{
+    border: 0 solid transparent!important;  
+}
 .ui-picklist .ui-inputfield{
     text-transform: none; 
 }

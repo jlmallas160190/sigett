@@ -23,5 +23,5 @@ public interface DocumentoService {
 
     Documento buscarPorId(final Documento documento);
 
-    Documento buscarSingle(final Documento documento);
+    Documento buscar(final Documento documento);
 }

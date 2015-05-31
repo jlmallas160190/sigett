@@ -7,12 +7,11 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
     <body>
-        <p:panel>
             <div class="row-fluid">
                 <div class="col-sm-6">
                     <p:panel header="#{msg['lbl.documento']}" toggleable="true">
-                        <p:media styleClass="img-thumbnail" 
-                                 value="/AppServlet?id=#{sessionDocumentoProyecto.documentoProyectoSeleccionado.documentoId}&amp;entity=Documento"
+                        <p:media styleClass="img-thumbnail" id="documentoProyectoMedia"
+                                 value="/AppServlet?entity=documentoProyecto"
                                  player="pdf" width="100%" height="250"/>
                         
                         <f:facet name="footer">
@@ -22,16 +21,16 @@
                 </div>
                 <div class="col-sm-6">
                     <p:panel header="#{msg['lbl.informacion']}" toggleable="true">
-                        <h:panelGrid style="background: #f4f4f4" styleClass="panelgrid"  rowClasses="rowpanelgrid" columnClasses="col-sm-2,col-sm-10" columns="2">
+                        <h:panelGrid style="background: #f4f4f4" styleClass="panelgrid"  rowClasses="rowpanelgrid" columnClasses="col-sm-2,col-sm-10" 
+                                     columns="2">
                             <h:outputLabel value="#{msg['lbl.categoria']}:" for="catDoc" />
-                            <p:selectOneMenu id="catDoc" value="#{administrarDocumentosProyecto.catalogoDocumentoProyecto}" >
-                                <f:selectItems value="#{administrarCatalogoDocumentoProyecto.buscarActivos()}"/>
+                            <p:selectOneMenu id="catDoc" converter="catalogoDocumentoConverter" value="#{sessionDocumentoProyecto.catalogoSeleccionado}">
+                                <f:selectItems value="#{sessionDocumentoProyecto.catalogosDocumento}"/>
                             </p:selectOneMenu>
                         </h:panelGrid>
                     </p:panel>
                 </div>
             </div>
-        </p:panel>
     </body>
 
 </html>

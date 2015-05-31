@@ -7,10 +7,9 @@
     <body>
         <h:panelGrid id="datosProyecto" styleClass="panelgrid" rowClasses="rowpanelgrid" columnClasses="col-sm-3,col-sm-8,col-sm-1" columns="3">
             <h:outputLabel value="#{msg['lbl.tema']}:" for="tema" />
-            <p:inputTextarea id="tema" required="true"  rendered="#{sessionProyecto.renderedInicio}" 
+            <p:editor id="tema" required="true"  rendered="#{sessionProyecto.renderedInicio}" 
                              requiredMessage="#{msg['lbl.tema']} #{msg['lbl.obligatorio']}" value="#{sessionProyecto.temaProyecto.temaId.nombre}">
-                <p:ajax event="change" update="msmTema"/>
-            </p:inputTextarea>
+            </p:editor>
             <h:outputText rendered="#{!sessionProyecto.renderedInicio}" value="#{sessionProyecto.temaProyecto.temaId.nombre}"/>
             <p:message id="msmTema" display="icon" for="tema"/>
 

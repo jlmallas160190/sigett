@@ -41,7 +41,6 @@ import org.jlmallas.api.email.MailService;
 import org.jlmallas.api.secure.SecureDTO;
 import org.jlmallas.api.secure.SecureService;
 import org.jlmallas.api.secure.SecureServiceImplement;
-import org.jlmallas.seguridad.service.UsuarioService;
 
 /**
  *
@@ -59,8 +58,6 @@ public class CabeceraController implements Serializable {
 
     @EJB
     private ConfiguracionDao configuracionDao;
-    @EJB
-    private UsuarioService usuarioService;
 //</editor-fold>
     private MessageView messageView;
     private MailService mailService;
@@ -103,6 +100,8 @@ public class CabeceraController implements Serializable {
     private void fijarConfiguraciones() {
         configuracionGeneralDTO.setTiempoMaximoPertinencia(configuracionDao.buscar(
                 new Configuracion(ConfiguracionEnum.TIEMPOPERTINENCIA.getTipo())).get(0).getValor());
+        configuracionGeneralDTO.setTamanioArchivo(Double.parseDouble(configuracionDao.buscar(
+                new Configuracion(ConfiguracionEnum.TAMANIOARCHIVO.getTipo())).get(0).getValor()));
     }
 
     private void fijarSecretKey() {

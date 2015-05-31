@@ -21,7 +21,7 @@ import javax.inject.Named;
 public class SessionDocenteProyecto implements Serializable {
 
     private DocenteProyectoDTO docenteProyectoDTO;
-    private DocumentoCarrera documentoCarrera;
+    private OficioPertinenciaDTO oficioPertinenciaDTO;
 
     private List<DirectorDTO> directoresDTO;
     private List<DirectorDTO> filterDirectoresDTO;
@@ -32,12 +32,11 @@ public class SessionDocenteProyecto implements Serializable {
     private Boolean renderedSeleccionarEspecialista;
     private Boolean renderedEliminar;
     private Boolean renderedDialogoOficio;
-    
+
     private Long docenteProyectoId;
-    private Integer carreraId;
 
     public SessionDocenteProyecto() {
-        this.filterDirectoresDTO=new ArrayList<>();
+        this.filterDirectoresDTO = new ArrayList<>();
         this.directoresDTO = new ArrayList<>();
         this.docenteProyectoDTO = new DocenteProyectoDTO();
     }
@@ -114,15 +113,6 @@ public class SessionDocenteProyecto implements Serializable {
         this.docenteProyectoId = docenteProyectoId;
     }
 
-    public Integer getCarreraId() {
-        return carreraId;
-    }
-
-    public void setCarreraId(Integer carreraId) {
-        this.carreraId = carreraId;
-    }
-
- 
     public Boolean getRenderedDialogoOficio() {
         return renderedDialogoOficio;
     }
@@ -131,12 +121,12 @@ public class SessionDocenteProyecto implements Serializable {
         this.renderedDialogoOficio = renderedDialogoOficio;
     }
 
-    public DocumentoCarrera getDocumentoCarrera() {
-        return documentoCarrera;
+    public OficioPertinenciaDTO getOficioPertinenciaDTO() {
+        return oficioPertinenciaDTO;
     }
 
-    public void setDocumentoCarrera(DocumentoCarrera documentoCarrera) {
-        this.documentoCarrera = documentoCarrera;
+    public void setOficioPertinenciaDTO(OficioPertinenciaDTO oficioPertinenciaDTO) {
+        this.oficioPertinenciaDTO = oficioPertinenciaDTO;
     }
 
 }

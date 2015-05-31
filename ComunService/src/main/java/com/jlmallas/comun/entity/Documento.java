@@ -55,6 +55,8 @@ public class Documento implements Serializable {
     private Date fechaCreacion;
     @Transient
     private byte[] contents;
+    @Transient
+    private String catalogo;
 
     public Documento() {
     }
@@ -63,13 +65,14 @@ public class Documento implements Serializable {
         this.id = id;
     }
 
-    public Documento(Long id, String ruta, Long catalogoId, Double tamanio, Date fechaCreacion, byte[] contents) {
+    public Documento(Long id, String ruta, Long catalogoId, Double tamanio, Date fechaCreacion, byte[] contents,String catalogo) {
         this.id = id;
         this.contents = contents;
         this.fechaCreacion = fechaCreacion;
         this.tamanio = tamanio;
         this.ruta = ruta;
         this.catalogoId = catalogoId;
+        this.catalogo=catalogo;
     }
 
     public Long getId() {
@@ -118,6 +121,14 @@ public class Documento implements Serializable {
 
     public void setFechaCreacion(Date fechaCreacion) {
         this.fechaCreacion = fechaCreacion;
+    }
+
+    public String getCatalogo() {
+        return catalogo;
+    }
+
+    public void setCatalogo(String catalogo) {
+        this.catalogo = catalogo;
     }
 
     @Override

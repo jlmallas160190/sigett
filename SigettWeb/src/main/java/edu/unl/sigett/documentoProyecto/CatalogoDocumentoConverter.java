@@ -6,6 +6,7 @@
 package edu.unl.sigett.documentoProyecto;
 
 import com.jlmallas.comun.entity.Item;
+import com.jlmallas.comun.enumeration.CatalogoEnum;
 import com.jlmallas.comun.service.ItemService;
 import javax.ejb.EJB;
 import javax.faces.component.UIComponent;
@@ -25,13 +26,13 @@ public class CatalogoDocumentoConverter implements Converter {
 
     @Override
     public Object getAsObject(FacesContext context, UIComponent component, String value) {
-        return itemService.buscarPorId(Long.valueOf(value));
+        return itemService.buscarPorCatalogoCodigo(CatalogoEnum.CATALOGODOCUMENTOPROYECTO.getTipo(),value);
     }
 
     @Override
     public String getAsString(FacesContext context, UIComponent component, Object value) {
         Item item=((Item) value);
-        return item.getNombre();
+        return item.getCodigo();
     }
 
 }

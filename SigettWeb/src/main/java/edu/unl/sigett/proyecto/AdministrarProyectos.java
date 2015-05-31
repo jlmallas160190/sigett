@@ -121,7 +121,6 @@ import edu.unl.sigett.entity.Tema;
 import edu.unl.sigett.enumeration.ConfiguracionProyectoEnum;
 import edu.unl.sigett.postulacion.controlador.AutorProyectoPostulacionController;
 import edu.unl.sigett.autor.dto.AutorProyectoDTO;
-import edu.unl.sigett.postulacion.controlador.AdministrarConfiguracionesProyecto;
 import edu.unl.sigett.postulacion.controlador.AdministrarDocumentosExpediente;
 import edu.unl.sigett.documentoProyecto.AdministrarDocumentosProyecto;
 import edu.unl.sigett.service.AutorProyectoService;
@@ -148,8 +147,6 @@ import edu.unl.sigett.util.MessageView;
     private SessionPeriodoAcademico sessionPeriodoAcademico;
     @Inject
     private AdministrarProrrogas administrarProrrogas;
-    @Inject
-    private AdministrarConfiguracionesProyecto administrarConfiguracionesProyecto;
     @Inject
     private AdministrarDirectoresProyecto administrarDirectoresProyecto;
     @Inject
@@ -316,7 +313,7 @@ import edu.unl.sigett.util.MessageView;
 //                administrarTemaProyectos.renderedBuscar(sessionUsuario.getUsuario());
                 administrarTribunales.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
 //                administrarDocentesProyecto.renderedBuscar(sessionUsuario.getUsuario());
-                administrarConfiguracionesProyecto.renderedBuscar(sessionUsuario.getUsuario());
+//                administrarConfiguracionesProyecto.renderedBuscar(sessionUsuario.getUsuario());
 //                administrarCronograma.renderedCronograma(sessionProyecto.getProyectoSeleccionado());
                 administrarProrrogas.tieneProrroga(sessionProyecto.getProyectoSeleccionado());
                 /*LISTADOS*/
@@ -478,7 +475,7 @@ import edu.unl.sigett.util.MessageView;
                 administrarTribunales.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
 //                administrarDocentesProyecto.renderedBuscar(sessionUsuario.getUsuario());
 //                administrarCronograma.renderedCronograma(sessionProyecto.getProyectoSeleccionado());
-                administrarConfiguracionesProyecto.renderedBuscar(sessionUsuario.getUsuario());
+//                administrarConfiguracionesProyecto.renderedBuscar(sessionUsuario.getUsuario());
                 administrarProrrogas.tieneProrroga(proyecto);
                 renderedCaducado(proyecto);
                 navegacion = "pretty:editarProyecto";
@@ -769,8 +766,8 @@ import edu.unl.sigett.util.MessageView;
             switch (event.getTab().getId()) {
                 case "tabPropiedades":
                     /*-----------------------Configuraciones Proyecto----------------------------------------------------*/
-                    administrarConfiguracionesProyecto.buscar(administrarConfiguracionesProyecto.getCriterio(), sessionProyecto.getProyectoSeleccionado());
-                    administrarConfiguracionesProyecto.renderedEditar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
+//                    administrarConfiguracionesProyecto.buscar(administrarConfiguracionesProyecto.getCriterio(), sessionProyecto.getProyectoSeleccionado());
+//                    administrarConfiguracionesProyecto.renderedEditar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
                     /*----------------------------------------------Documentos Proyecto-------------------------------------------------------*/
                     administrarDocumentosProyecto.setRenderedDlgEditar(false);
                     /*----------------------------------------------Directores-------------------------------------------------------*/
@@ -2637,15 +2634,6 @@ import edu.unl.sigett.util.MessageView;
 
     public void setProyectosPorWS(List<Proyecto> proyectosPorWS) {
         this.proyectosPorWS = proyectosPorWS;
-    }
-
-
-    public AdministrarConfiguracionesProyecto getAdministrarConfiguracionesProyecto() {
-        return administrarConfiguracionesProyecto;
-    }
-
-    public void setAdministrarConfiguracionesProyecto(AdministrarConfiguracionesProyecto administrarConfiguracionesProyecto) {
-        this.administrarConfiguracionesProyecto = administrarConfiguracionesProyecto;
     }
 
     public AdministrarDocumentosProyecto getAdministrarDocumentosProyecto() {

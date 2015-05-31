@@ -15,6 +15,7 @@ import java.io.Serializable;
 public class ConfiguracionGeneralDTO implements Serializable{
     private String tiempoMaximoPertinencia;
     private String secureKey;
+    private Double tamanioArchivo;
 
     public ConfiguracionGeneralDTO() {
     }
@@ -33,6 +34,14 @@ public class ConfiguracionGeneralDTO implements Serializable{
 
     public void setSecureKey(String secureKey) {
         this.secureKey = secureKey;
+    }
+
+    public Double getTamanioArchivo() {
+        return tamanioArchivo;
+    }
+
+    public void setTamanioArchivo(Double tamanioArchivo) {
+        this.tamanioArchivo = tamanioArchivo;
     }
     
 }

@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui">
+    <body>
+        <p:fileUpload fileUploadListener="#{documentoProyectoController.handleFileUpload}" 
+                      multiple="true" allowTypes="/(\.|\/)(pdf)$/" sizeLimit="#{sessionDocumentoProyecto.tamanioArchivo}" 
+                      update="pnlEditarDocProy"
+                      invalidFileMessage="#{msg['lbl.invalidTypeFileMessage']}"  invalidSizeMessage="#{msg['lbl.fileLimitMessage']}" required="true"  
+                      oncomplete="PF('dlgSubirDocumentoProyecto').hide()" cancelLabel="#{msg['lbl.cancelar']}"  label="#{msg['lbl.seleccionar']}" 
+                      uploadLabel="#{msg['lbl.subir']}"/> 
+    </body>
+</html>

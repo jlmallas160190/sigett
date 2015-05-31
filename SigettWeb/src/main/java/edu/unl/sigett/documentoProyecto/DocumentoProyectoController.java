@@ -5,27 +5,22 @@
  */
 package edu.unl.sigett.documentoProyecto;
 
-import com.jlmallas.comun.dao.ConfiguracionDao;
-import com.jlmallas.comun.entity.Configuracion;
 import com.jlmallas.comun.entity.Documento;
-import com.jlmallas.comun.enumeration.ConfiguracionEnum;
+import com.jlmallas.comun.enumeration.CatalogoEnum;
+import com.jlmallas.comun.service.ItemService;
 import edu.unl.sigett.entity.DocumentoProyecto;
-import edu.unl.sigett.entity.Proyecto;
 import edu.unl.sigett.proyecto.SessionProyecto;
 import edu.unl.sigett.util.CabeceraController;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.ResourceBundle;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
-import org.jlmallas.seguridad.entity.Usuario;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 
@@ -42,33 +37,46 @@ public class DocumentoProyectoController implements Serializable {
     private SessionDocumentoProyecto sessionDocumentoProyecto;
     @Inject
     private SessionProyecto sessionProyecto;
-    //</editor-fold>
-//<editor-fold defaultstate="collapsed" desc="SERVICIOS">
-
-    //</editor-fold>
+    @Inject
     private CabeceraController cabeceraController;
-    
+    //</editor-fold>
+    //<editor-fold defaultstate="collapsed" desc="SERVICIOS">
+    @EJB
+    private ItemService itemService;
+    //</editor-fold>
+    private static final Logger LOG = Logger.getLogger(DocumentoProyectoController.class.getName());
+
     public DocumentoProyectoController() {
     }
 
-    //<editor-fold defaultstate="collapsed" desc="CRUD">
-    public String crear() {
+    private void listarCategorias() {
+        sessionDocumentoProyecto.getCatalogosDocumento().clear();
+        sessionDocumentoProyecto.getCatalogosDocumento().addAll(itemService.buscarPorCatalogo(CatalogoEnum.CATALOGODOCUMENTOPROYECTO.getTipo()));
+    }
+
+    //<editor-fold defaultstate="collapsed" desc="INICIO">
+    public void crear() {
+        listarCategorias();
+        sessionDocumentoProyecto.setTamanioArchivo(cabeceraController.getConfiguracionGeneralDTO().getTamanioArchivo());
         sessionDocumentoProyecto.setDocumentoProyectoDTOSeleccionado(new DocumentoProyectoDTO(
                 new DocumentoProyecto(Boolean.TRUE, null, sessionProyecto.getProyectoSeleccionado()), new Documento()));
-        RequestContext.getCurrentInstance().execute("PF('dlgEditarDocumentoProyecto').show()");
-        return "";
     }
-    
     public void editar(DocumentoProyectoDTO documentoProyectoDTO) {
         try {
+            sessionDocumentoProyecto.setTamanioArchivo(cabeceraController.getConfiguracionGeneralDTO().getTamanioArchivo());
+            listarCategorias();
             sessionDocumentoProyecto.setDocumentoProyectoDTOSeleccionado(documentoProyectoDTO);
-            RequestContext.getCurrentInstance().execute("PF('dlgEditarDocumentoProyecto').show()");
         } catch (Exception e) {
             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_FATAL, e.getMessage(), "");
             FacesContext.getCurrentInstance().addMessage(null, message);
         }
     }
-    
+
+    /**
+     * SUBIR ARCHIVO
+     *
+     * @param event
+     */
     public void handleFileUpload(FileUploadEvent event) {
         try {
             FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -84,46 +92,51 @@ public class DocumentoProyectoController implements Serializable {
             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, e.getMessage(), "");
             FacesContext.getCurrentInstance().addMessage(null, message);
         }
-        
+
     }
-    
-    public void agregarDocumentoProyecto(final DocumentoProyectoDTO documentoProyectoDTO) {
+
+    /**
+     * AGREGAR DOCUMENTO
+     *
+     */
+    public void agregar() {
         Calendar fecha = Calendar.getInstance();
         try {
             FacesContext facesContext = FacesContext.getCurrentInstance();
             ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
             sessionDocumentoProyecto.getDocumentoProyectoDTOSeleccionado().getDocumento().setCatalogoId(
                     sessionDocumentoProyecto.getCatalogoSeleccionado().getId());
+            sessionDocumentoProyecto.getDocumentoProyectoDTOSeleccionado().getDocumento().setCatalogo(
+                    sessionDocumentoProyecto.getCatalogoSeleccionado().getNombre());
             sessionDocumentoProyecto.getDocumentoProyectoDTOSeleccionado().getDocumento().setFechaCreacion(fecha.getTime());
-            if (!sessionProyecto.getDocumentosProyectosDTOAgregados().contains(documentoProyectoDTO)) {
-                sessionProyecto.getDocumentosProyectosDTOAgregados().add(documentoProyectoDTO);
+            if (!sessionProyecto.getDocumentosProyectosDTOAgregados().contains(sessionDocumentoProyecto.getDocumentoProyectoDTOSeleccionado())) {
+                sessionProyecto.getDocumentosProyectosDTOAgregados().add(sessionDocumentoProyecto.getDocumentoProyectoDTOSeleccionado());
             }
-            if (!sessionProyecto.getDocumentosProyectoDTO().contains(documentoProyectoDTO)) {
-                sessionProyecto.getDocumentosProyectoDTO().add(documentoProyectoDTO);
-                sessionProyecto.getFilterDocumentosProyectoDTO().add(documentoProyectoDTO);
+            if (!sessionProyecto.getDocumentosProyectoDTO().contains(sessionDocumentoProyecto.getDocumentoProyectoDTOSeleccionado())) {
+                sessionProyecto.getDocumentosProyectoDTO().add(sessionDocumentoProyecto.getDocumentoProyectoDTOSeleccionado());
             }
-            RequestContext.getCurrentInstance().execute("PF('dlgEditarDocumentoProyecto').hide()");
-            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_agregar"), "");
-            FacesContext.getCurrentInstance().addMessage(null, message);
-            
+            cabeceraController.getMessageView().message(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_agregar"), "");
         } catch (Exception e) {
-            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, e.getMessage(), "");
-            FacesContext.getCurrentInstance().addMessage(null, message);
+            LOG.info(e.getMessage());
         }
     }
-    
+
     public void remover(DocumentoProyectoDTO documentoProyectoDTO) {
         try {
             FacesContext facesContext = FacesContext.getCurrentInstance();
             ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            documentoProyectoDTO.getDocumentoProyecto().setEsActivo(Boolean.FALSE);
+            if (documentoProyectoDTO.getDocumentoProyecto().getId() != null) {
+                documentoProyectoDTO.getDocumentoProyecto().setEsActivo(Boolean.FALSE);
+                cabeceraController.getMessageView().message(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_eliminar"), "");
+                return;
+            }
             sessionProyecto.getDocumentosProyectoDTO().remove(documentoProyectoDTO);
-            sessionProyecto.getFilterDocumentosProyectoDTO().remove(documentoProyectoDTO);
-            cabeceraController.getMessageView().message(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_eliminar") + ". "
-                    + bundle.getString("lbl.msm_consulte"), "");
+            sessionProyecto.getDocumentosProyectosDTOAgregados().remove(documentoProyectoDTO);
+            cabeceraController.getMessageView().message(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_eliminar"), "");
         } catch (Exception e) {
             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), "");
             FacesContext.getCurrentInstance().addMessage(null, message);
         }
     }
+    //</editor-fold>
 }
