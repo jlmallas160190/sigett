@@ -3,15 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.jlmallas.api.secure;
+package org.jlmallas.email;
 
 /**
  *
  * @author jorge-luis
  */
-public interface SecureService {
+public interface MailService {
 
-    String encrypt(final SecureDTO secureDTO);
-
-    String decrypt(final SecureDTO secureDTO);
+    void enviar(final MailDTO mailDTO);
 }

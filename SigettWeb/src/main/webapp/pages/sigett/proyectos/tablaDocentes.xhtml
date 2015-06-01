@@ -39,11 +39,11 @@
                                       action="#{docenteProyectoController.remover(item)}"/>
                     <p:commandButton onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" icon="ui-icon-print"
                                      update=":contenido:msm,:contenido:dlgOficioDocenteProyecto" title="#{msg['lbl.oficio']}"
-                                     action="#{docenteProyectoController.imprimirOficioDocenteProyecto(item)}"/>
+                                     action="#{docenteProyectoController.imprimirOficioPertinencia(item)}"/>
                     <p:commandButton onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" icon="ui-icon-print" 
                                      update=":contenido:msm,:contenido:dlgOficioDocenteProyecto" title="#{lbl['fe_presentacion']}"
-                                     action="#{docenteProyectoController.imprimirOficioDocenteProyecto(item)}"/>
-                </p:panelGrid>
+                                     action="#{docenteProyectoController.imprimirimprimirOficioPertinencia(item)}"
+            </p:panelGrid>
             </p:column>
         </p:dataTable>
     </body>

@@ -5,7 +5,6 @@
  */
 package edu.unl.sigett.seguimiento.controlador;
 
-import org.jlmallas.api.date.DateResource;
 import com.jlmallas.comun.entity.Persona;
 import com.jlmallas.comun.dao.PersonaDao;
 import edu.unl.sigett.proyecto.SessionProyecto;
@@ -546,34 +545,34 @@ public class AdministrarActividades implements Serializable {
     public void calculaDuracionActividad(Actividad actividad, Cronograma cronograma) {
         double duracionDias = 0;
         try {
-            FacesContext facesContext = FacesContext.getCurrentInstance();
-            ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            DateResource calculo = new DateResource();
-            if (actividad.getFechaCulminacion() != null && actividad.getFechaInicio() != null) {
-                int var = validaFechas(actividad, cronograma);
-                if (var == 1) {
-                    actividad.setCronogramaId(cronograma);
-                    duracionDias = calculo.calculaDuracionEnDias(actividad.getFechaInicio(), actividad.getFechaCulminacion(), 7 - calcularDiasSemanaTrabajo(cronograma.getProyecto()));
-                } else {
-                    actividad.setFechaCulminacion(null);
-                    if (var == 0) {
-                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_fechas_invalidas"), "");
-                        FacesContext.getCurrentInstance().addMessage(null, message);
-                    } else {
-                        if (var == -1) {
-                            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_fechas_invalidas"), "");
-                            FacesContext.getCurrentInstance().addMessage(null, message);
-                        } else {
-                            if (var == 2) {
-                                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_fechas_invalidas"), "");
-                                FacesContext.getCurrentInstance().addMessage(null, message);
-                            }
-                        }
-                    }
-                }
-            }
-            actividad.setDuracion(duracionDias);
-            calculaPorcentajeDuracion(actividad);
+//            FacesContext facesContext = FacesContext.getCurrentInstance();
+//            ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
+//            DateResource calculo = new DateResource();
+//            if (actividad.getFechaCulminacion() != null && actividad.getFechaInicio() != null) {
+//                int var = validaFechas(actividad, cronograma);
+//                if (var == 1) {
+//                    actividad.setCronogramaId(cronograma);
+//                    duracionDias = calculo.calculaDuracionEnDias(actividad.getFechaInicio(), actividad.getFechaCulminacion(), 7 - calcularDiasSemanaTrabajo(cronograma.getProyecto()));
+//                } else {
+//                    actividad.setFechaCulminacion(null);
+//                    if (var == 0) {
+//                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_fechas_invalidas"), "");
+//                        FacesContext.getCurrentInstance().addMessage(null, message);
+//                    } else {
+//                        if (var == -1) {
+//                            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_fechas_invalidas"), "");
+//                            FacesContext.getCurrentInstance().addMessage(null, message);
+//                        } else {
+//                            if (var == 2) {
+//                                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_fechas_invalidas"), "");
+//                                FacesContext.getCurrentInstance().addMessage(null, message);
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//            actividad.setDuracion(duracionDias);
+//            calculaPorcentajeDuracion(actividad);
 
         } catch (Exception e) {
             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), "");

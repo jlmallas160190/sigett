@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.jlmallas.api.text;
+package org.jlmallas.poi;
 
 import com.itextpdf.text.Chunk;
 import com.lowagie.text.Document;

@@ -8,6 +8,7 @@ package edu.jlmallas.academico.dao.implement;
 import edu.jlmallas.academico.entity.CoordinadorPeriodo;
 import edu.jlmallas.academico.dao.AbstractDao;
 import edu.jlmallas.academico.dao.CoordinadorPeriodoDao;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -53,18 +54,25 @@ public class CoordinadorPeriodoDaoImplement extends AbstractDao<CoordinadorPerio
     public List<CoordinadorPeriodo> buscar(CoordinadorPeriodo coordinadorPeriodo) {
         StringBuilder sql = new StringBuilder();
         HashMap<String, Object> parametros = new HashMap<>();
+        Boolean existeFiltro = Boolean.FALSE;
         sql.append("SELECT c from CoordinadorPeriodo c WHERE 1=1 ");
-        if (coordinadorPeriodo.getPeriodoId().getCarreraId() != null) {
-            sql.append(" and c.periodoId.carreraId=:carreraId ");
-            parametros.put("carreraId", coordinadorPeriodo.getPeriodoId().getCarreraId());
+        if (coordinadorPeriodo.getPeriodoId() != null) {
+            sql.append(" and c.periodoId=:periodoId ");
+            parametros.put("periodoId", coordinadorPeriodo.getPeriodoId());
+            existeFiltro = Boolean.TRUE;
         }
         if (coordinadorPeriodo.getCoordinadorId() != null) {
             sql.append(" and c.coordinador=:coordinadorId");
             parametros.put("coordinadorId", coordinadorPeriodo.getCoordinadorId());
+            existeFiltro = Boolean.TRUE;
         }
         if (coordinadorPeriodo.getEsVigente() != null) {
             sql.append(" and c.esVigente=:vigente");
             parametros.put("vigente", coordinadorPeriodo.getEsVigente());
+            existeFiltro = Boolean.TRUE;
+        }
+        if (!existeFiltro) {
+            return new ArrayList<>();
         }
         final Query q = em.createQuery(sql.toString());
         for (String key : parametros.keySet()) {

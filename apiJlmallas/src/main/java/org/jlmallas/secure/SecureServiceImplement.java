@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.jlmallas.api.secure;
+package org.jlmallas.secure;
 
 import java.security.spec.KeySpec;
 import javax.crypto.Cipher;

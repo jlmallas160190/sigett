@@ -5,7 +5,6 @@
  */
 package edu.unl.sigett.docenteProyecto;
 
-import edu.unl.sigett.entity.DocumentoCarrera;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;

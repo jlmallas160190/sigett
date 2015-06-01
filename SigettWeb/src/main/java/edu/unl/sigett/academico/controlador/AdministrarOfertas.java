@@ -10,9 +10,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
-import org.jlmallas.api.date.DateResource;
-import org.jlmallas.api.http.UrlConexion;
-import org.jlmallas.api.http.dto.SeguridadHttp;
+import org.jlmallas.httpClient.NetClientServiceImplement;
+import org.jlmallas.httpClient.ConexionDTO;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 import com.ocpsoft.pretty.faces.annotation.URLMappings;
 import edu.unl.sigett.academico.managed.session.SessionOfertaAcademica;
@@ -31,6 +30,8 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import edu.unl.sigett.dao.ConfiguracionGeneralDao;
+import edu.unl.sigett.util.CabeceraController;
+import org.jlmallas.httpClient.NetClientService;
 import org.jlmallas.seguridad.dao.UsuarioDao;
 
 /**
@@ -56,6 +57,8 @@ public class AdministrarOfertas implements Serializable {
     private SessionUsuario sessionUsuario;
     @Inject
     private SessionOfertaAcademica sessionOfertaAcademica;
+    @Inject
+    private CabeceraController cabeceraController;
     @EJB
     private ConfiguracionGeneralDao configuracionGeneralFacadeLocal;
     @EJB
@@ -194,10 +197,10 @@ public class AdministrarOfertas implements Serializable {
 
                 String serviceUrl = configuracionGeneralFacadeLocal.find((int) 15).getValor();
                 String s = serviceUrl + "?id_periodo=" + periodoId;
-                SeguridadHttp seguridad = new SeguridadHttp(configuracionGeneralFacadeLocal.find((int) 5).getValor(),
+                ConexionDTO seguridad = new ConexionDTO(configuracionGeneralFacadeLocal.find((int) 5).getValor(),
                         s, configuracionGeneralFacadeLocal.find((int) 6).getValor());
-                UrlConexion conexion = new UrlConexion();
-                String datosJson = conexion.conectar(seguridad);
+                NetClientService conexion = new NetClientServiceImplement();
+                String datosJson = conexion.response(seguridad);
                 if (!datosJson.equalsIgnoreCase("")) {
                     JsonParser parser = new JsonParser();
                     JsonElement jsonElement = parser.parse(datosJson);
@@ -265,15 +268,13 @@ public class AdministrarOfertas implements Serializable {
                 return;
             }
             if (sessionOfertaAcademica.getKeyEntero() == 2) {
-                DateResource dateResource = new DateResource();
-                sessionOfertaAcademica.getOfertaAcademicaWS().setFechaInicio(dateResource.DeStringADate(new String(
+                sessionOfertaAcademica.getOfertaAcademicaWS().setFechaInicio(cabeceraController.getUtilService().getFecha(new String(
                         valor.getAsString().getBytes()), "yyyy-MM-dd"));
                 sessionOfertaAcademica.setKeyEntero(sessionOfertaAcademica.getKeyEntero() + 1);
                 return;
             }
-            if (sessionOfertaAcademica.getKeyEntero() == 3) {
-                DateResource dateResource = new DateResource();
-                sessionOfertaAcademica.getOfertaAcademicaWS().setFechaFin(dateResource.DeStringADate(new String(
+            if (sessionOfertaAcademica.getKeyEntero() == 3) {                
+                sessionOfertaAcademica.getOfertaAcademicaWS().setFechaFin(cabeceraController.getUtilService().getFecha(new String(
                         valor.getAsString().getBytes()), "yyyy-MM-dd"));
                 sessionOfertaAcademica.setKeyEntero(sessionOfertaAcademica.getKeyEntero() + 1);
             }

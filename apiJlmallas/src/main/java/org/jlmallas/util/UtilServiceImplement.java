@@ -3,21 +3,50 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.jlmallas.api.date;
+package org.jlmallas.util;
 
-import java.io.Serializable;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
- * @author JorgeLuis
+ * @author jorge-luis
  */
-public class DateResource implements Serializable {
+public class UtilServiceImplement implements UtilService {
 
-    public Double calculaDuracionEnDias(Date fechaInicio, Date fechaFin, int diasNoContabilizados) {
+    @Override
+    public byte[] obtenerBytes(File file) {
+        ByteArrayOutputStream ous = null;
+        InputStream ios = null;
+        try {
+            byte[] buffer = new byte[4096];
+            ous = new ByteArrayOutputStream();
+            ios = new FileInputStream(file);
+            int read = 0;
+            while ((read = ios.read(buffer)) != -1) {
+                ous.write(buffer, 0, read);
+            }
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(UtilServiceImplement.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(UtilServiceImplement.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return ous.toByteArray();
+    }
+
+    @Override
+    public Double calculaDuracion(Date fechaInicio, Date fechaFin, int diasNoContabilizados) {
         Integer ai, af, mi, mf, di, df = 0;
         ai = fechaInicio.getYear();
         af = fechaFin.getYear();
@@ -79,28 +108,13 @@ public class DateResource implements Serializable {
         return dias;
     }
 
-    public String deDateAString(Date fecha, String formato) {
-        String fechaFormateada = "Fecha sin formato...";
+    @Override
+    public Date getFecha(String fecha, String formato) {
         try {
-            SimpleDateFormat formatoFecha = new SimpleDateFormat(formato);
-            if (fecha != null) {
-                fechaFormateada = formatoFecha.format(fecha);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return fechaFormateada;
-    }
-
-    public Date DeStringADate(String fecha, String formato) {
-        Date fechaDate = null;
-        try {
-            SimpleDateFormat formatoFecha = new SimpleDateFormat(formato);
-            String strFecha = fecha;
-            fechaDate = formatoFecha.parse(strFecha);
-            return fechaDate;
-        } catch (Exception e) {
-            e.printStackTrace();
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(formato);
+            return simpleDateFormat.parse(fecha);
+        } catch (ParseException ex) {
+            Logger.getLogger(UtilServiceImplement.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }

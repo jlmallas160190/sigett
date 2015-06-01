@@ -10,8 +10,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
-import org.jlmallas.api.http.UrlConexion;
-import org.jlmallas.api.http.dto.SeguridadHttp;
+import org.jlmallas.httpClient.NetClientServiceImplement;
+import org.jlmallas.httpClient.ConexionDTO;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 import com.ocpsoft.pretty.faces.annotation.URLMappings;
 import edu.unl.sigett.academico.managed.session.SessionCarrera;
@@ -43,6 +43,7 @@ import edu.unl.sigett.academico.managed.session.SessionArea;
 import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
 import edu.unl.sigett.dao.ConfiguracionGeneralDao;
 import edu.unl.sigett.service.ConfiguracionCarreraService;
+import org.jlmallas.httpClient.NetClientService;
 
 /**
  *
@@ -573,10 +574,10 @@ public class AdministrarCarreras implements Serializable {
             try {
                 String serviceUrl = configuracionGeneralFacadeLocal.find((int) 7).getValor();
                 String s = serviceUrl + "?siglas=" + area.getSigla();
-                SeguridadHttp seguridad = new SeguridadHttp(configuracionGeneralFacadeLocal.find((int) 5).getValor(),
+                ConexionDTO seguridad = new ConexionDTO(configuracionGeneralFacadeLocal.find((int) 5).getValor(),
                         s, configuracionGeneralFacadeLocal.find((int) 6).getValor());
-                UrlConexion conexion = new UrlConexion();
-                String datosJson = conexion.conectar(seguridad);
+                NetClientService conexion = new NetClientServiceImplement();
+                String datosJson = conexion.response(seguridad);
                 if (!datosJson.equalsIgnoreCase("")) {
                     JsonParser parser = new JsonParser();
                     JsonElement jsonElement = parser.parse(datosJson);

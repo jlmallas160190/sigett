@@ -6,6 +6,7 @@
 package edu.jlmallas.academico.service.implement;
 
 import edu.jlmallas.academico.dao.DocenteDao;
+import edu.jlmallas.academico.entity.Docente;
 import edu.jlmallas.academico.service.DocenteService;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -19,5 +20,10 @@ public class DocenteServiceImplement implements DocenteService {
 
     @EJB
     private DocenteDao docenteDao;
+
+    @Override
+    public Docente buscarPorId(final Docente docente) {
+        return docenteDao.find(docente.getId());
+    }
 
 }

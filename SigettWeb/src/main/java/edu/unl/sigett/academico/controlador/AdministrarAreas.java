@@ -10,8 +10,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
-import org.jlmallas.api.http.UrlConexion;
-import org.jlmallas.api.http.dto.SeguridadHttp;
+import org.jlmallas.httpClient.NetClientServiceImplement;
+import org.jlmallas.httpClient.ConexionDTO;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 import com.ocpsoft.pretty.faces.annotation.URLMappings;
 import edu.unl.sigett.academico.managed.session.SessionArea;
@@ -40,8 +40,8 @@ import org.jlmallas.seguridad.dao.UsuarioDao;
 import edu.unl.sigett.academico.managed.session.SessionCarrera;
 import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
 import edu.unl.sigett.dao.ProyectoOfertaCarreraDao;
-import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
+import org.jlmallas.httpClient.NetClientService;
 
 /**
  *
@@ -424,10 +424,10 @@ public class AdministrarAreas implements Serializable {
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
         try {
             if (usuarioFacadeLocal.tienePermiso(usuario, "sga_ws_area") == 1) {
-                SeguridadHttp seguridad = new SeguridadHttp(configuracionGeneralFacadeLocal.find((int) 5).getValor(),
+                ConexionDTO seguridad = new ConexionDTO(configuracionGeneralFacadeLocal.find((int) 5).getValor(),
                         configuracionGeneralFacadeLocal.find((int) 4).getValor(), configuracionGeneralFacadeLocal.find((int) 6).getValor());
-                UrlConexion conexion = new UrlConexion();
-                String datosJson = conexion.conectar(seguridad);
+                NetClientService conexion = new NetClientServiceImplement();
+                String datosJson = conexion.response(seguridad);
                 if (!datosJson.equalsIgnoreCase("")) {
                     JsonParser parser = new JsonParser();
                     JsonElement jsonElement = parser.parse(datosJson);

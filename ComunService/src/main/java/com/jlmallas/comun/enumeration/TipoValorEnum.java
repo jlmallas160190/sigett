@@ -12,7 +12,8 @@ package com.jlmallas.comun.enumeration;
 public enum TipoValorEnum {
 
     NUMERICO("NUMERICO"),
-    TEXTO("NUMERICO"),
+    TEXTO("TEXTO"),
+    PASSWORD("PASSWORD"),
     SELECCIONUNICA("SELECCION_UNICA"),
     SELECCIONMULTIPLE("SELECCION_MULTIPLE");
     String tipo;

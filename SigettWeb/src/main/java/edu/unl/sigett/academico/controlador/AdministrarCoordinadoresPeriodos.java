@@ -113,7 +113,7 @@ public class AdministrarCoordinadoresPeriodos implements Serializable {
             int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "crear_coordinador_periodo_coordinacion");
             if (tienePermiso == 1) {
                 sessionCoordinadorPeriodo.setCoordinadorPeriodoDTO(new CoordinadorPeriodoDTO(new CoordinadorPeriodo(
-                        Boolean.FALSE, new Coordinador(Boolean.TRUE), null), new Persona()));
+                        Boolean.FALSE, new Coordinador(Boolean.TRUE), null), new Persona(),null));
                 if (param.equalsIgnoreCase("crear")) {
                     navegacion = "pretty:crearCoordinador";
                 } else {
@@ -213,7 +213,7 @@ public class AdministrarCoordinadoresPeriodos implements Serializable {
                 }
                 for (CoordinadorPeriodo coordinadorPeriodo : coordinadorPeriodos) {
                     CoordinadorPeriodoDTO coordinadorPeriodoDTO = new CoordinadorPeriodoDTO(coordinadorPeriodo,
-                            personaDao.find(coordinadorPeriodo.getCoordinadorId().getId()));
+                            personaDao.find(coordinadorPeriodo.getCoordinadorId().getId()),null);
                     sessionCoordinadorPeriodo.getCoordinadorPeriodos().add(coordinadorPeriodoDTO);
                 }
                 this.sessionCoordinadorPeriodo.setFilterCoordinadorPeriodos(sessionCoordinadorPeriodo.getCoordinadorPeriodos());

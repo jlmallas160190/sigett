@@ -3,16 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.jlmallas.academico.service;
-
-import edu.jlmallas.academico.entity.Docente;
-import javax.ejb.Local;
+package org.jlmallas.secure;
 
 /**
  *
  * @author jorge-luis
  */
-@Local
-public interface DocenteService {
-    Docente buscarPorId(final Docente docente);
+public interface SecureService {
+
+    String encrypt(final SecureDTO secureDTO);
+
+    String decrypt(final SecureDTO secureDTO);
 }

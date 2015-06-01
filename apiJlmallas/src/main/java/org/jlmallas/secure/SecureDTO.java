@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package org.jlmallas.api.secure;
+package org.jlmallas.secure;
 
 import java.io.Serializable;
 

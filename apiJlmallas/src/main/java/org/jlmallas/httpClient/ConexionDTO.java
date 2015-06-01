@@ -3,22 +3,22 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.jlmallas.api.http.dto;
+package org.jlmallas.httpClient;
 
 /**
  *
  * @author jorge-luis
  */
-public class SeguridadHttp {
+public class ConexionDTO {
 
     private String clave;
     private String url;
     private String usuario;
 
-    public SeguridadHttp() {
+    public ConexionDTO() {
     }
 
-    public SeguridadHttp(String clave, String url, String usuario) {
+    public ConexionDTO(String clave, String url, String usuario) {
         this.clave = clave;
         this.url = url;
         this.usuario = usuario;

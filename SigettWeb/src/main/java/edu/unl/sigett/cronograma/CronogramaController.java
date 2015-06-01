@@ -12,7 +12,6 @@ import edu.unl.sigett.entity.ConfiguracionProyecto;
 import edu.unl.sigett.enumeration.ConfiguracionProyectoEnum;
 import edu.unl.sigett.enumeration.EstadoProyectoEnum;
 import edu.unl.sigett.proyecto.SessionProyecto;
-import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
 import edu.unl.sigett.util.CabeceraController;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
@@ -22,7 +21,6 @@ import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
-import org.jlmallas.api.date.DateResource;
 
 /**
  *
@@ -61,7 +59,6 @@ public class CronogramaController implements Serializable {
         Double var1 = (var / ((1 / (double) varMaxProrroga) * 100));
         Double duracionDias = 0.0;
         Double horasTrabajo = 0.0;
-        DateResource calculo = new DateResource();
         if (!sessionProyecto.getEstadoActual().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.PERTINENTE.getTipo())) {
             if (horasTrabajo <= (var + var1)) {
                 sessionProyecto.getCronograma().setDuracion(duracionDias);
@@ -86,7 +83,7 @@ public class CronogramaController implements Serializable {
         }
         if (sessionProyecto.getCronograma().getFechaInicio().before(sessionProyecto.getCronograma().getFechaProrroga())
                 || sessionProyecto.getCronograma().getFechaInicio().equals(sessionProyecto.getCronograma().getFechaProrroga())) {
-            duracionDias = calculo.calculaDuracionEnDias(sessionProyecto.getCronograma().getFechaInicio(),
+            duracionDias = cabeceraController.getUtilService().calculaDuracion(sessionProyecto.getCronograma().getFechaInicio(),
                     sessionProyecto.getCronograma().getFechaProrroga(), 7 - calculaDiasSemanaTrabajoProyecto());
             horasTrabajo = duracionDias * calculahorasTrabajoProyecto();
             if (horasTrabajo <= var) {

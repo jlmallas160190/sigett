@@ -86,9 +86,10 @@ import edu.unl.sigett.service.LineaInvestigacionService;
 import edu.unl.sigett.util.CabeceraController;
 import edu.unl.sigett.util.MessageView;
 import java.util.Calendar;
-import org.jlmallas.api.http.UrlConexion;
-import org.jlmallas.api.http.dto.SeguridadHttp;
-import org.jlmallas.api.secure.SecureDTO;
+import org.jlmallas.httpClient.NetClientServiceImplement;
+import org.jlmallas.httpClient.ConexionDTO;
+import org.jlmallas.httpClient.NetClientService;
+import org.jlmallas.secure.SecureDTO;
 import org.jlmallas.seguridad.dao.UsuarioDao;
 import org.jlmallas.seguridad.dao.RolDao;
 import org.jlmallas.seguridad.dao.RolUsuarioDao;
@@ -787,10 +788,10 @@ public class AdministrarDocentesCarrera implements Serializable {
             try {
                 String serviceUrl = configuracionGeneralDao.find((int) 43).getValor();
                 String s = serviceUrl + "?id_paralelo=" + paraleloId;
-                SeguridadHttp seguridad = new SeguridadHttp(configuracionGeneralDao.find((int) 5).getValor(),
+                ConexionDTO seguridad = new ConexionDTO(configuracionGeneralDao.find((int) 5).getValor(),
                         s, configuracionGeneralDao.find((int) 6).getValor());
-                UrlConexion conexion = new UrlConexion();
-                String datosJson = conexion.conectar(seguridad);
+                NetClientService conexion = new NetClientServiceImplement();
+                String datosJson = conexion.response(seguridad);
                 if (!datosJson.equalsIgnoreCase("")) {
                     JsonParser parser = new JsonParser();
                     JsonElement datos = parser.parse(datosJson);
@@ -889,10 +890,10 @@ public class AdministrarDocentesCarrera implements Serializable {
                 sessionDocenteCarrera.getDocenteCarrerDTOWS().getPersona().setEmail("S/N");
                 String serviceUrl = configuracionGeneralDao.find((int) 26).getValor();
                 String s = serviceUrl + "?cedula=" + sessionDocenteCarrera.getDocenteCarrerDTOWS().getPersona().getNumeroIdentificacion();
-                SeguridadHttp seguridad = new SeguridadHttp(configuracionGeneralDao.find((int) 5).getValor(),
+                ConexionDTO seguridad = new ConexionDTO(configuracionGeneralDao.find((int) 5).getValor(),
                         s, configuracionGeneralDao.find((int) 6).getValor());
-                UrlConexion conexion = new UrlConexion();
-                String datosJson = conexion.conectar(seguridad);
+                NetClientService conexion = new NetClientServiceImplement();
+                String datosJson = conexion.response(seguridad);
                 if (!datosJson.equalsIgnoreCase("")) {
                     JsonParser parser = new JsonParser();
                     JsonElement datos = parser.parse(datosJson);
@@ -963,10 +964,10 @@ public class AdministrarDocentesCarrera implements Serializable {
                 String ofertaIdActual = configuracionCarrera.getValor();
                 String serviceUrl = configuracionGeneralDao.find((int) 41).getValor();
                 String s = serviceUrl + "?id_oferta=" + ofertaIdActual + ";id_carrera=" + c.getIdSga();
-                SeguridadHttp seguridad = new SeguridadHttp(configuracionGeneralDao.find((int) 5).getValor(),
+                ConexionDTO seguridad = new ConexionDTO(configuracionGeneralDao.find((int) 5).getValor(),
                         s, configuracionGeneralDao.find((int) 6).getValor());
-                UrlConexion conexion = new UrlConexion();
-                String datosJson = conexion.conectar(seguridad);
+                NetClientService conexion = new NetClientServiceImplement();
+                String datosJson = conexion.response(seguridad);
                 if (!datosJson.equalsIgnoreCase("")) {
                     JsonParser parser = new JsonParser();
                     JsonElement datos = parser.parse(datosJson);
@@ -1040,10 +1041,10 @@ public class AdministrarDocentesCarrera implements Serializable {
                 String serviceUrl = configuracionGeneralDao.find((int) 26).getValor();
                 String s = serviceUrl + "?cedula=" + sessionDocenteCarrera.getDocenteCarreraDTO().
                         getPersona().getNumeroIdentificacion();
-                SeguridadHttp seguridad = new SeguridadHttp(configuracionGeneralDao.find((int) 5).getValor(),
+                ConexionDTO seguridad = new ConexionDTO(configuracionGeneralDao.find((int) 5).getValor(),
                         s, configuracionGeneralDao.find((int) 6).getValor());
-                UrlConexion conexion = new UrlConexion();
-                String datosJson = conexion.conectar(seguridad);
+                NetClientService conexion = new NetClientServiceImplement();
+                String datosJson = conexion.response(seguridad);
                 if (!datosJson.equalsIgnoreCase("")) {
                     JsonParser parser = new JsonParser();
                     JsonElement datos = parser.parse(datosJson);

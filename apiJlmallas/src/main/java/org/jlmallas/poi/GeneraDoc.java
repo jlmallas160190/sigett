@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.jlmallas.api.text;
+package org.jlmallas.poi;
 
 import java.io.InputStream;
 import java.io.OutputStream;

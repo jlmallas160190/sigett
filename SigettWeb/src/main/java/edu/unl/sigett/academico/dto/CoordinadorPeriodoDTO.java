@@ -7,6 +7,7 @@ package edu.unl.sigett.academico.dto;
 
 import com.jlmallas.comun.entity.Persona;
 import edu.jlmallas.academico.entity.CoordinadorPeriodo;
+import edu.jlmallas.academico.entity.Docente;
 import java.io.Serializable;
 
 /**
@@ -17,13 +18,15 @@ public class CoordinadorPeriodoDTO implements Serializable {
 
     private CoordinadorPeriodo coordinadorPeriodo;
     private Persona persona;
+    private Docente docente;
 
     public CoordinadorPeriodoDTO() {
     }
 
-    public CoordinadorPeriodoDTO(CoordinadorPeriodo coordinadorPeriodo, Persona persona) {
+    public CoordinadorPeriodoDTO(CoordinadorPeriodo coordinadorPeriodo, Persona persona, Docente docente) {
         this.coordinadorPeriodo = coordinadorPeriodo;
         this.persona = persona;
+        this.docente = docente;
     }
 
     public CoordinadorPeriodo getCoordinadorPeriodo() {
@@ -40,6 +43,14 @@ public class CoordinadorPeriodoDTO implements Serializable {
 
     public void setPersona(Persona persona) {
         this.persona = persona;
+    }
+
+    public Docente getDocente() {
+        return docente;
+    }
+
+    public void setDocente(Docente docente) {
+        this.docente = docente;
     }
 
 }

@@ -14,7 +14,7 @@
 
             <ui:define name="content">
                 <f:metadata>
-                    <f:event type="preRenderView" listener="#{cabeceraController.initLogin()}"/>
+                    <f:event type="preRenderView" listener="#{cabeceraController.preRenderViewInit()}"/>
                 </f:metadata>
                 <p:panel id="header" header="#{msg['lbl.ingresar']}">
                     <p:messages id="msm" showDetail="true"/>

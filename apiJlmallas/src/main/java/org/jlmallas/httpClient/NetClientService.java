@@ -3,13 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.jlmallas.api.email;
+package org.jlmallas.httpClient;
 
 /**
  *
  * @author jorge-luis
  */
-public interface MailService {
+public interface NetClientService {
 
-    void enviar(final MailDTO mailDTO);
+    String response(final ConexionDTO conexionDTO);
 }

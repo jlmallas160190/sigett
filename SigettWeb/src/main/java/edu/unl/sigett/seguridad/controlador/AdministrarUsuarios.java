@@ -47,7 +47,7 @@ import edu.unl.sigett.dao.UsuarioCarreraDao;
 import edu.unl.sigett.util.CabeceraController;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
-import org.jlmallas.api.secure.SecureDTO;
+import org.jlmallas.secure.SecureDTO;
 import org.jlmallas.seguridad.dao.UsuarioDao;
 import org.jlmallas.seguridad.dao.UsuarioPermisoDao;
 import org.jlmallas.seguridad.dao.LogDao;

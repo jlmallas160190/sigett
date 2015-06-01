@@ -5,7 +5,7 @@
  */
 package edu.unl.sigett.comun.controlador;
 
-import org.jlmallas.api.email.MailServiceImplement;
+import org.jlmallas.email.MailServiceImplement;
 import com.jlmallas.comun.entity.Persona;
 import com.jlmallas.comun.dao.PersonaDao;
 import edu.jlmallas.academico.entity.DocenteCarrera;

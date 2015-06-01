@@ -17,7 +17,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
-import org.jlmallas.api.secure.SecureDTO;
+import org.jlmallas.secure.SecureDTO;
 import org.jlmallas.seguridad.service.UsuarioService;
 
 /**

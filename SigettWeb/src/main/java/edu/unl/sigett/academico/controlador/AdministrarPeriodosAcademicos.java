@@ -5,14 +5,13 @@
  */
 package edu.unl.sigett.academico.controlador;
 
-import org.jlmallas.api.date.DateResource;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
-import org.jlmallas.api.http.UrlConexion;
-import org.jlmallas.api.http.dto.SeguridadHttp;
+import org.jlmallas.httpClient.NetClientServiceImplement;
+import org.jlmallas.httpClient.ConexionDTO;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 import com.ocpsoft.pretty.faces.annotation.URLMappings;
 import edu.unl.sigett.academico.managed.session.SessionPeriodoAcademico;
@@ -36,7 +35,9 @@ import edu.jlmallas.academico.service.OfertaAcademicaService;
 import edu.jlmallas.academico.service.PeriodoAcademicoService;
 import org.jlmallas.seguridad.dao.UsuarioDao;
 import edu.unl.sigett.academico.managed.session.SessionOfertaAcademica;
+import edu.unl.sigett.util.CabeceraController;
 import javax.annotation.PostConstruct;
+import org.jlmallas.httpClient.NetClientService;
 
 /**
  *
@@ -68,6 +69,8 @@ public class AdministrarPeriodosAcademicos implements Serializable {
     private SessionPeriodoAcademico sessionPeriodoAcademico;
     @Inject
     private SessionOfertaAcademica sessionOfertaAcademica;
+    @Inject
+    private CabeceraController cabeceraController;
 
     @EJB
     private PeriodoAcademicoService periodoAcademicoFacadeLocal;
@@ -315,10 +318,10 @@ public class AdministrarPeriodosAcademicos implements Serializable {
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
         try {
             if (usuarioFacadeLocal.tienePermiso(usuario, "sga_ws_periodo_academico") == 1) {
-                SeguridadHttp seguridad = new SeguridadHttp(configuracionGeneralFacadeLocal.find((int) 5).getValor(),
+                ConexionDTO seguridad = new ConexionDTO(configuracionGeneralFacadeLocal.find((int) 5).getValor(),
                         configuracionGeneralFacadeLocal.find((int) 14).getValor(), configuracionGeneralFacadeLocal.find((int) 6).getValor());
-                UrlConexion conexion = new UrlConexion();
-                String datosJson = conexion.conectar(seguridad);
+                NetClientService conexion = new NetClientServiceImplement();
+                String datosJson = conexion.response(seguridad);
                 if (!datosJson.equalsIgnoreCase("")) {
                     JsonParser parser = new JsonParser();
                     JsonElement jsonElement = parser.parse(datosJson);
@@ -386,9 +389,8 @@ public class AdministrarPeriodosAcademicos implements Serializable {
                 if (pos > 0) {
                     String fechaInicio = fecha.substring(0, pos);
                     String fechaFin = fecha.substring(pos + 1);
-                    DateResource dateResource = new DateResource();
-                    sessionPeriodoAcademico.getPeriodoAcademicoWs().setFechaInicio(dateResource.DeStringADate(fechaInicio + "-01-01", "yyyy-MM-dd"));
-                    sessionPeriodoAcademico.getPeriodoAcademicoWs().setFechaFin(dateResource.DeStringADate(fechaFin + "-01-01", "yyyy-MM-dd"));
+                    sessionPeriodoAcademico.getPeriodoAcademicoWs().setFechaInicio(cabeceraController.getUtilService().getFecha(fechaInicio + "-01-01", "yyyy-MM-dd"));
+                    sessionPeriodoAcademico.getPeriodoAcademicoWs().setFechaFin(cabeceraController.getUtilService().getFecha(fechaFin + "-01-01", "yyyy-MM-dd"));
                 }
                 sessionPeriodoAcademico.setKeyEntero(sessionPeriodoAcademico.getKeyEntero() + 1);
             }

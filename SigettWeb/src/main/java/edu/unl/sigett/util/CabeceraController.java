@@ -35,12 +35,14 @@ import java.util.StringTokenizer;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.inject.Inject;
-import org.jlmallas.api.email.MailServiceImplement;
-import org.jlmallas.api.email.MailDTO;
-import org.jlmallas.api.email.MailService;
-import org.jlmallas.api.secure.SecureDTO;
-import org.jlmallas.api.secure.SecureService;
-import org.jlmallas.api.secure.SecureServiceImplement;
+import org.jlmallas.email.MailServiceImplement;
+import org.jlmallas.email.MailDTO;
+import org.jlmallas.email.MailService;
+import org.jlmallas.secure.SecureDTO;
+import org.jlmallas.secure.SecureService;
+import org.jlmallas.secure.SecureServiceImplement;
+import org.jlmallas.util.UtilService;
+import org.jlmallas.util.UtilServiceImplement;
 
 /**
  *
@@ -67,23 +69,25 @@ public class CabeceraController implements Serializable {
     private CabeceraWebSemantica cabeceraWebSemantica;
     private OntologyService ontologyService;
     private PermisoAdministrarProyecto permisoAdministrarProyecto;
+    private UtilService utilService;
     private static final Logger LOG = Logger.getLogger(CabeceraController.class.getName());
 
     public CabeceraController() {
     }
 
-    public void init() {
+    public void preRenderView() {
         inicarOntologias();
         this.fijarParametrosWebSemantica();
         this.fijarParametrosMail();
         this.fijarConfiguraciones();
-        this.mailService = new MailServiceImplement();
-        this.messageView = new MessageView();
     }
 
-    public void initLogin() {
+    public void preRenderViewInit() {
         this.configuracionGeneralDTO = new ConfiguracionGeneralDTO();
         this.secureService = new SecureServiceImplement();
+        this.mailService = new MailServiceImplement();
+        this.messageView = new MessageView();
+        this.utilService = new UtilServiceImplement();
         this.fijarSecretKey();
     }
 
@@ -234,6 +238,14 @@ public class CabeceraController implements Serializable {
 
     public void setPermisoAdministrarProyecto(PermisoAdministrarProyecto permisoAdministrarProyecto) {
         this.permisoAdministrarProyecto = permisoAdministrarProyecto;
+    }
+
+    public UtilService getUtilService() {
+        return utilService;
+    }
+
+    public void setUtilService(UtilService utilService) {
+        this.utilService = utilService;
     }
 
 }

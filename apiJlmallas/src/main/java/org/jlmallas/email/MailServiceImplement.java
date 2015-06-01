@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.jlmallas.api.email;
+package org.jlmallas.email;
 
 import java.util.Properties;
 import javax.mail.BodyPart;

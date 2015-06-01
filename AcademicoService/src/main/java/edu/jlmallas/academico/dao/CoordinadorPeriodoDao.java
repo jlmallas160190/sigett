@@ -28,9 +28,6 @@ public interface CoordinadorPeriodoDao {
 
     List<CoordinadorPeriodo> findRange(int[] range);
 
-//    List<CoordinadorPeriodo> buscarPorCarrera(Integer carreraId);
-//
-//    CoordinadorPeriodo buscarVigente(Integer carreraId);
     List<CoordinadorPeriodo> buscar(CoordinadorPeriodo coordinadorPeriodo);
 
     int count();

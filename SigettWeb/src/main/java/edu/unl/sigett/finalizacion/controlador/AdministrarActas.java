@@ -5,9 +5,8 @@
  */
 package edu.unl.sigett.finalizacion.controlador;
 
-import org.jlmallas.api.date.DateResource;
-import org.jlmallas.api.text.GeneraDoc;
-import org.jlmallas.api.text.GeneraPdf;
+import org.jlmallas.poi.GeneraDoc;
+import org.jlmallas.poi.GeneraPdf;
 import com.jlmallas.comun.entity.Persona;
 import com.jlmallas.comun.dao.PersonaDao;
 import edu.unl.sigett.entity.Acta;

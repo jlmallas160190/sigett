@@ -5,7 +5,6 @@
  */
 package edu.unl.sigett.adjudicacion.controlador;
 
-import org.jlmallas.api.date.DateResource;
 import com.jlmallas.comun.entity.Persona;
 import com.jlmallas.comun.dao.PersonaDao;
 import edu.unl.sigett.adjudicacion.session.SessionProrroga;
