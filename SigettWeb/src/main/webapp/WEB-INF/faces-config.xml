@@ -16,5 +16,9 @@
             <base-name>i18n.etiquetas</base-name>
             <var>lbl</var>
         </resource-bundle>
+        <resource-bundle>
+            <base-name>i18n.botones</base-name>
+            <var>btn</var>
+        </resource-bundle>
     </application> 
 </faces-config>

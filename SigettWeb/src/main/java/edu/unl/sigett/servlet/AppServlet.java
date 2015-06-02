@@ -6,7 +6,7 @@
 package edu.unl.sigett.servlet;
 
 import edu.unl.sigett.docenteProyecto.SessionDocenteProyecto;
-import edu.unl.sigett.reportes.AdministrarReportes;
+import edu.unl.sigett.reporte.AdministrarReportes;
 import java.io.IOException;
 import javax.inject.Inject;
 import javax.servlet.ServletException;
@@ -73,28 +73,10 @@ public class AppServlet extends HttpServlet {
                     response.getOutputStream().close();
                     break;
                 case "DocumentoActividad":
-//                    DocumentoActividad documentoActividad = documentoActividadFacadeLocal.find(Long.parseLong(entityId));
-//                    if (documentoActividad == null) {
-//                        response.sendError(HttpServletResponse.SC_NOT_FOUND); // 404.
-//                        return;
-//                    } else {
-//                        response.reset();
-//                        response.setContentType("/application/pdf");
-////                        response.getOutputStream().write(documentoActividad.getDocumento());
-//                        response.getOutputStream().close();
-//                    }
+
                     break;
                 case "Actividad":
-//                    documentoActividad = documentoActividadFacadeLocal.documentoActual(Long.parseLong(entityId));
-//                    if (documentoActividad == null) {
-//                        response.sendError(HttpServletResponse.SC_NOT_FOUND); // 404.
-//                        return;
-//                    } else {
-//                        response.reset();
-//                        response.setContentType("/application/pdf");
-////                        response.getOutputStream().write(documentoActividad.getDocumento());
-//                        response.getOutputStream().close();
-//                    }
+
                     break;
 
                 case "oficioDocenteProyecto":
@@ -110,93 +92,8 @@ public class AppServlet extends HttpServlet {
                     response.setContentType("/application/pdf");
                     response.getOutputStream().write(sessionDocenteProyecto.getOficioPertinenciaDTO().getDocumento().getContents());
                     response.getOutputStream().close();
-//                    carrera = carreraFacadeLocal.find(Integer.parseInt(carreraId));
-////                    configuracionCarrera = configuracionCarreraFacadeLocal.buscarPorCarreraId(Integer.parseInt(carreraId), "NO");
-//                    nOficio = Integer.parseInt(configuracionCarrera.getValor());
-//                    String plazo = configuracionGeneralFacadeLocal.find(3).getValor() + " días laborables";
-//                    Long docenteProyectoId = Long.parseLong(entityId);
-//                    DocenteProyecto docenteProyecto = docenteProyectoFacadeLocal.find(docenteProyectoId);
-//                    docente = docenteFacadeLocal.find(docenteProyecto.getDocenteId());
-//                    datosDocente = personaFacadeLocal.find(docente.getId());
-////                    coordinadorPeriodo = coordinadorPeriodoFacadeLocal.buscarVigente(carrera.getId());
-//                    datosCoordinador = personaFacadeLocal.find(coordinadorPeriodo.getCoordinadorId().getId());
-//                    docenteCoordinador = docenteFacadeLocal.find(datosCoordinador.getId());
-//                    usuario = usuarioFacadeLocal.find(Long.parseLong(usuarioId));
-//                    datosUsuario = usuario.getNombres().toUpperCase() + " " + usuario.getApellidos().toUpperCase();
-//                    oficioCarrera = oficioCarreraFacadeLocal.buscarPorTablaId(Long.parseLong(entityId), CatalogoDocumentoCarreraEnum.DOCENTEPROYECTO.getTipo());
-//                    /*Envio de datos ha reporte*/
-//
-//                    datosReporte.put("docente", datosDocente.getNombres().toUpperCase() + " " + datosDocente.getApellidos().toUpperCase());
-//                    datosReporte.put("coordinador", datosCoordinador.getNombres().toUpperCase() + " " + datosCoordinador.getApellidos().toUpperCase());
-//                    datosReporte.put("temaProyecto", docenteProyecto.getProyectoId().getTemaActual());
-//                    datosReporte.put("tituloDocente", docente.getTituloDocenteId().getTituloId().getAbreviacion().toUpperCase());
-//                    datosReporte.put("tituloCoordinador", docenteCoordinador.getTituloDocenteId().getTituloId().getAbreviacion());
-//                    datosReporte.put("abreviacion_oficio", resourceBundle.getString("lbl.abreviacion_oficio"));
-//                    datosReporte.put("articulos_pertinencia_tt", resourceBundle.getString("lbl.articulos_pertinencia_tt"));
-//                    datosReporte.put("asunto_pertinencia_tt", resourceBundle.getString("lbl.asunto_pertinencia_tt"));
-//                    datosReporte.put("nota_pertinencia_tt", resourceBundle.getString("lbl.nota_pertinencia_tt"));
-//                    datosReporte.put("autores", getAutores(autorProyectoFacadeLocal.buscarPorProyecto(docenteProyecto.getProyectoId().getId())));
-//                    reportes.oficioDocenteProyecto(response, datosReporte, oficioCarrera, request.getRealPath("/"), pathSetting, "pdf", nOficio, carrera, fechaFormateada,
-//                            plazo, datosUsuario, configuracionCarreraFacadeLocal, configuracionCarrera, docenteProyectoId,
-//                            oficioCarreraFacadeLocal, catalogoOficioFacadeLocal);
-//                    break;
-//                case "oficioDirectorProyecto":
-//                    carrera = carreraFacadeLocal.find(Integer.parseInt(carreraId));
-////                    configuracionCarrera = configuracionCarreraFacadeLocal.buscarPorCarreraId(Integer.parseInt(carreraId), "NO");
-//                    nOficio = Integer.parseInt(configuracionCarrera.getValor());
-//                    Long directorProyectoId = Long.parseLong(entityId);
-//                    directorProyecto = directorProyectoFacadeLocal.find(directorProyectoId);
-//                    docente = docenteCarreraFacadeLocal.find(directorProyecto.getDirectorId().getId()).getDocenteId();
-//                    datosDirector = personaFacadeLocal.find(docente.getId());
-////                    coordinadorPeriodo = coordinadorPeriodoFacadeLocal.buscarVigente(carrera.getId());
-//                    usuario = usuarioFacadeLocal.find(Long.parseLong(usuarioId));
-//                    datosUsuario = usuario.getNombres().toUpperCase() + " " + usuario.getApellidos().toUpperCase();
-//                    oficioCarrera = oficioCarreraFacadeLocal.buscarPorTablaId(Long.parseLong(entityId), CatalogoDocumentoCarreraEnum.DIRECTORPROYECTO.getTipo());
-//                    datosReporte.put("docente", datosDocente.getNombres().toUpperCase() + " " + datosDocente.getApellidos().toUpperCase());
-//                    datosReporte.put("coordinador", datosCoordinador.getNombres().toUpperCase() + " " + datosCoordinador.getApellidos().toUpperCase());
-//                    datosReporte.put("temaProyecto", directorProyecto.getProyectoId().getTemaActual());
-//                    datosReporte.put("tituloDocente", docente.getTituloDocenteId().getTituloId().getAbreviacion().toUpperCase());
-//                    datosReporte.put("tituloCoordinador", docenteCoordinador.getTituloDocenteId().getTituloId().getAbreviacion());
-//                    datosReporte.put("autores", getAutores(autorProyectoFacadeLocal.buscarPorProyecto(directorProyecto.getProyectoId().getId())));
-//                    datosReporte.put("abreviacion_oficio", resourceBundle.getString("lbl.abreviacion_oficio"));
-//                    datosReporte.put("articulos_adjudicacion_tt", resourceBundle.getString("lbl.articulos_pertinencia_tt"));
-//                    datosReporte.put("asunto_adjudicacion_tt", resourceBundle.getString("lbl.asunto_adjudciacion_tt"));
-//                    datosReporte.put("nota_adjudicacion_tt", resourceBundle.getString("lbl.nota_adjudicacion_tt"));
-//                    reportes.oficioDirectorProyecto(response, datosReporte, fechaFormateada, configuracionCarreraFacadeLocal, configuracionCarrera,
-//                            "pdf", oficioCarrera, directorProyectoId, oficioCarreraFacadeLocal, catalogoOficioFacadeLocal, carrera, nOficio,
-//                            datosUsuario, request.getRealPath("/"), pathSetting);
-//                    break;
-//                case "oficioMiembroTribunalSprivada":
-//                    carrera = carreraFacadeLocal.find(Integer.parseInt(carreraId));
-////                    configuracionCarrera = configuracionCarreraFacadeLocal.buscarPorCarreraId(Integer.parseInt(carreraId), "NO");
-//                    nOficio = Integer.parseInt(configuracionCarrera.getValor());
-//                    miembroId = Long.parseLong(entityId);
-//                    miembro = miembroFacadeLocal.find(miembroId);
-//                    Docente docenteMiembro = docenteFacadeLocal.find(miembro.getDocenteId());
-//                    Persona datosMiembro = personaFacadeLocal.find(docenteMiembro.getId());
-//                    getMiembros(miembroFacadeLocal.buscarPorTribunal(miembro.getTribunalId().getId()));
-////                    coordinadorPeriodo = coordinadorPeriodoFacadeLocal.buscarVigente(carrera.getId());
-//                    datosCoordinador = personaFacadeLocal.find(coordinadorPeriodo.getCoordinadorId().getId());
-//                    docenteCoordinador = docenteFacadeLocal.find(datosCoordinador.getId());
-//                    usuario = usuarioFacadeLocal.find(Long.parseLong(usuarioId));
-//                    datosUsuario = usuario.getNombres().toUpperCase() + " " + usuario.getApellidos().toUpperCase();
-//                    oficioCarrera = oficioCarreraFacadeLocal.buscarPorTablaId(Long.parseLong(entityId), CatalogoDocumentoCarreraEnum.MIEMBROTRIBUNALPRIVADA.getTipo());
-//                    datosReporte.put("miembro", datosMiembro.getNombres().toUpperCase() + " " + datosMiembro.getApellidos().toUpperCase());
-//                    datosReporte.put("coordinador", datosCoordinador.getNombres().toUpperCase() + " " + datosCoordinador.getApellidos().toUpperCase());
-//                    datosReporte.put("temaProyecto", miembro.getTribunalId().getProyectoId().getTemaActual());
-//                    datosReporte.put("tituloMiembro", docente.getTituloDocenteId().getTituloId().getAbreviacion().toUpperCase());
-//                    datosReporte.put("cargoMiembro", miembro.getCargoId().getNombre().toUpperCase());
-//                    datosReporte.put("tituloCoordinador", docenteCoordinador.getTituloDocenteId().getTituloId().getAbreviacion());
-//                    datosReporte.put("autores", getAutores(autorProyectoFacadeLocal.buscarPorProyecto(miembro.getTribunalId().getProyectoId().getId())));
-//                    datosReporte.put("abreviacion_oficio", resourceBundle.getString("lbl.abreviacion_oficio"));
-//                    datosReporte.put("articulos_designar_miembro_tribunal", resourceBundle.getString("lbl.articulos_designar_miembro_tribunal"));
-//                    datosReporte.put("asunto_designar_miembro_tribunal", resourceBundle.getString("lbl.asunto_designar_miembro_tribunal"));
-//                    datosReporte.put("nota_designar_miembro_tribunal", resourceBundle.getString("lbl.designar_miembro_tribunal"));
-//
-//                    reportes.oficioMiembroTribunalSprivada("pdf", fechaFormateada, response, datosReporte, configuracionCarreraFacadeLocal, configuracionCarrera,
-//                            oficioCarrera, presidente, datosMiembros, Long.parseLong(entityId), oficioCarreraFacadeLocal, catalogoOficioFacadeLocal,
-//                            carrera, nOficio, datosUsuario, path, pathSetting);
-//                    break;
+                    break;
+
 //                case "oficioMiembroTribunalSpublica":
 //                    carrera = carreraFacadeLocal.find(Integer.parseInt(carreraId));
 ////                    configuracionCarrera = configuracionCarreraFacadeLocal.buscarPorCarreraId(Integer.parseInt(carreraId), "NO");

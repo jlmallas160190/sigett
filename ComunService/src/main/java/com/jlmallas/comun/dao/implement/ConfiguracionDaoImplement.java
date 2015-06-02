@@ -54,7 +54,6 @@ public class ConfiguracionDaoImplement extends AbstractDao<Configuracion> implem
             return null;
         }
         final Query q = em.createQuery(sql.toString());
-        q.setMaxResults(1);
         for (String key : parametros.keySet()) {
             q.setParameter(key, parametros.get(key));
         }

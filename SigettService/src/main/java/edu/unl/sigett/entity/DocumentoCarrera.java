@@ -39,7 +39,7 @@ public class DocumentoCarrera implements Serializable {
     @Column(name = "numeracion")
     private String numeracion;
     @Basic(optional = false)
-    @Column(name = "documentoId")
+    @Column(name = "documento_id")
     @NotNull
     private Long documentoId;
    

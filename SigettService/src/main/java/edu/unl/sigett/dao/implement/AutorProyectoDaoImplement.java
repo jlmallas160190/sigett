@@ -55,17 +55,17 @@ public class AutorProyectoDaoImplement extends AbstractDao<AutorProyecto> implem
         HashMap<String, Object> parametros = new HashMap<>();
         sql.append("SELECT a FROM AutorProyecto a WHERE 1=1 ");
         Boolean existeFiltro = Boolean.FALSE;
-        if (autorProyecto.getAspiranteId() == null) {
+        if (autorProyecto.getAspiranteId() != null) {
             sql.append(" and a.aspiranteId=:aspiranteId ");
             parametros.put("aspiranteId", autorProyecto.getAspiranteId());
             existeFiltro = Boolean.TRUE;
         }
-        if (autorProyecto.getEstadoAutorId() == null) {
+        if (autorProyecto.getEstadoAutorId() != null) {
             sql.append(" and a.estadoAutorId!=:estado ");
             parametros.put("estado", autorProyecto.getEstadoAutorId());
             existeFiltro = Boolean.TRUE;
         }
-        if (autorProyecto.getProyectoId() == null) {
+        if (autorProyecto.getProyectoId() != null) {
             sql.append(" and a.proyectoId=:proyectoId ");
             parametros.put("proyectoId", autorProyecto.getProyectoId());
             existeFiltro = Boolean.TRUE;

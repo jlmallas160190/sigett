@@ -7,15 +7,12 @@ package edu.unl.sigett.proyecto;
 
 import com.jlmallas.comun.entity.Item;
 import edu.jlmallas.academico.entity.Carrera;
-import edu.jlmallas.academico.entity.DocenteCarrera;
-import edu.jlmallas.academico.entity.EstudianteCarrera;
 import edu.jlmallas.academico.entity.OfertaAcademica;
-import edu.unl.sigett.autor.dto.AutorProyectoDTO;
+import edu.unl.sigett.autor.AutorProyectoDTO;
 import edu.unl.sigett.docenteProyecto.DocenteProyectoDTO;
 import edu.unl.sigett.documentoProyecto.DocumentoProyectoDTO;
 import edu.unl.sigett.entity.ConfiguracionProyecto;
 import edu.unl.sigett.entity.Cronograma;
-import edu.unl.sigett.entity.DocumentoProyecto;
 import edu.unl.sigett.entity.LineaInvestigacion;
 import edu.unl.sigett.entity.LineaInvestigacionProyecto;
 import edu.unl.sigett.entity.Proyecto;
@@ -42,6 +39,7 @@ public class SessionProyecto implements Serializable {
     private AutorProyectoDTO autorProyectoDTOSeleccionado;
     private Carrera carreraSeleccionada;
     private Item estadoSeleccionado;
+    private Item categoriaSeleccionada;
     private Item tipoSeleccionado;
     private Item estadoActual;
     private OfertaAcademica ofertaAcademicaSeleccionada;
@@ -83,10 +81,6 @@ public class SessionProyecto implements Serializable {
     private Boolean renderedInicio;
     private Boolean renderedPertinente;
     private Boolean renderedDialogoAP;
-
-    private String tipo;
-    private String catalogo;
-    private String estado;
 
     private DualListModel<LineaInvestigacion> lineasInvestigacionDualList;
     private DualListModel<Carrera> carrerasDualList;
@@ -249,28 +243,12 @@ public class SessionProyecto implements Serializable {
         this.lineaInvestigacionProyectoSeleccionada = lineaInvestigacionProyectoSeleccionada;
     }
 
-    public String getTipo() {
-        return tipo;
+    public Item getCategoriaSeleccionada() {
+        return categoriaSeleccionada;
     }
 
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
-    }
-
-    public String getCatalogo() {
-        return catalogo;
-    }
-
-    public void setCatalogo(String catalogo) {
-        this.catalogo = catalogo;
-    }
-
-    public String getEstado() {
-        return estado;
-    }
-
-    public void setEstado(String estado) {
-        this.estado = estado;
+    public void setCategoriaSeleccionada(Item categoriaSeleccionada) {
+        this.categoriaSeleccionada = categoriaSeleccionada;
     }
 
     public DualListModel<LineaInvestigacion> getLineasInvestigacionDualList() {

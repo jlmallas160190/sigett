@@ -37,7 +37,7 @@ public class LineaInvestigacionProyectoDaoImplement extends AbstractDao<LineaInv
             existeFiltro = Boolean.TRUE;
         }
         if (lineaInvestigacionProyecto.getProyectoId() != null) {
-            sql.append(" and lc.proyectoId=:proyectoId");
+            sql.append(" and lp.proyectoId=:proyectoId");
             parametros.put("proyectoId", lineaInvestigacionProyecto.getProyectoId());
             existeFiltro = Boolean.TRUE;
         }

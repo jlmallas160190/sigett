@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.unl.sigett.reportes;
+package edu.unl.sigett.reporte;
 
 import edu.jlmallas.academico.entity.Carrera;
 import edu.unl.sigett.entity.ConfiguracionCarrera;

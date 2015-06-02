@@ -17,6 +17,7 @@ import edu.unl.sigett.webSemantica.service.implement.CarreraOntServiceImplement;
 import edu.unl.sigett.webSemantica.service.implement.LineaInvestigacionOntServiceImplement;
 import edu.unl.sigett.webSemantica.service.implement.LineaInvestigacionProyectoOntServiceImplement;
 import edu.unl.sigett.webSemantica.service.implement.NivelAcademicoOntServiceImplement;
+import edu.unl.sigett.webSemantica.service.implement.OfertaAcademicaOntServiceImplement;
 import edu.unl.sigett.webSemantica.service.implement.PeriodoAcademicoOntServiceImplement;
 import edu.unl.sigett.webSemantica.service.implement.ProyectoCarreraOfertaOntServiceImplement;
 import edu.unl.sigett.webSemantica.service.implement.ProyectoOntServiceImplement;
@@ -95,8 +96,8 @@ public class CabeceraController implements Serializable {
         String puerto = configuracionDao.buscar(new Configuracion(ServidorCorreoEnum.PUERTO.getTipo())).get(0).getValor();
         String smtp = configuracionDao.buscar(new Configuracion(ServidorCorreoEnum.SMTP.getTipo())).get(0).getValor();
         String usuario = configuracionDao.buscar(new Configuracion(ServidorCorreoEnum.USUARIO.getTipo())).get(0).getValor();
-        String clave = this.secureService.encrypt(new SecureDTO(this.getConfiguracionGeneralDTO().getSecureKey(),
-                configuracionDao.buscar(new Configuracion(ServidorCorreoEnum.USUARIO.getTipo())).get(0).getValor()));
+        String clave = this.secureService.decrypt(new SecureDTO(this.getConfiguracionGeneralDTO().getSecureKey(),
+                configuracionDao.buscar(new Configuracion(ServidorCorreoEnum.CLAVE.getTipo())).get(0).getValor()));
         mailDTO = new MailDTO(smtp, puerto, usuario, clave, null, null, null, null);
 
     }
@@ -157,6 +158,7 @@ public class CabeceraController implements Serializable {
         this.ontologyService.setAreaAcademicaOntService(new AreaAcademicaOntServiceImplement());
         this.ontologyService.setPeriodoAcademicoOntService(new PeriodoAcademicoOntServiceImplement());
         this.ontologyService.setNivelAcademicoOntService(new NivelAcademicoOntServiceImplement());
+        this.ontologyService.setOfertaAcademicoOntService(new OfertaAcademicaOntServiceImplement());
         this.ontologyService.setProyectoCarreraOfertaOntService(new ProyectoCarreraOfertaOntServiceImplement());
     }
 

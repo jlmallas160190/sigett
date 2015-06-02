@@ -3,9 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.unl.sigett.reportes;
+package edu.unl.sigett.reporte;
 
-import edu.unl.sigett.docenteProyecto.ReporteOficioPertinenciaDTO;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -30,7 +29,7 @@ public class ReporteController {
 
     private static final Logger LOG = Logger.getLogger(ReporteController.class.getName());
     
-    public byte[] pertinencia(final ReporteOficioPertinenciaDTO reporteOficioPertinenciaDTO) {
+    public byte[] pertinencia(final ReporteOficio reporteOficioPertinenciaDTO) {
         byte[] bytes = null;
         try {
             Map p = new HashMap();

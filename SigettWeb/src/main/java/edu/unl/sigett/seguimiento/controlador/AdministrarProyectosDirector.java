@@ -11,7 +11,6 @@ import com.ocpsoft.pretty.faces.annotation.URLMapping;
 import com.ocpsoft.pretty.faces.annotation.URLMappings;
 import edu.unl.sigett.adjudicacion.controlador.AdministrarProrrogas;
 import edu.unl.sigett.finalizacion.controlador.AdministrarInformesProyecto;
-import edu.unl.sigett.postulacion.controlador.AutorProyectoPostulacionController;
 import edu.unl.sigett.seguimiento.session.SessionProyectosDirector;
 import edu.unl.sigett.comun.controlador.AdministrarConfiguraciones;
 import edu.unl.sigett.seguridad.managed.session.SessionDocenteUsuario;
@@ -68,8 +67,6 @@ public class AdministrarProyectosDirector implements Serializable {
     private SessionProyectosDirector sessionProyectosDirector;
     @Inject
     private SessionDocenteUsuario sessionDocenteUsuario;
-    @Inject
-    private AutorProyectoPostulacionController administrarAutoresProyecto;
     @Inject
     private AdministrarActividades administrarActividades;
     @Inject
@@ -174,7 +171,7 @@ public class AdministrarProyectosDirector implements Serializable {
         if (sessionProyectosDirector.getDirectorProyecto().getProyectoId() != null) {
             switch (event.getTab().getId()) {
                 case "autores":
-                    administrarAutoresProyecto.buscarAutoresDesdeDirectorProyecto("", sessionProyectosDirector.getDirectorProyecto().getProyectoId());
+//                    administrarAutoresProyecto.buscarAutoresDesdeDirectorProyecto("", sessionProyectosDirector.getDirectorProyecto().getProyectoId());
                     administrarInformesProyecto.setRenderedDlgEditar(false);
                     administrarInformesProyecto.setRenderedDlgCertificado(false);
                     break;
@@ -268,7 +265,7 @@ public class AdministrarProyectosDirector implements Serializable {
             if (tienePermiso == 1) {
                 sessionProyectosDirector.setDirectorProyecto(directorProyecto);
                 /*---------------------------------------------------------Autores-----------------------------------------------------------*/
-                administrarAutoresProyecto.buscarAutoresDesdeDirectorProyecto("", sessionProyectosDirector.getDirectorProyecto().getProyectoId());
+//                administrarAutoresProyecto.buscarAutoresDesdeDirectorProyecto("", sessionProyectosDirector.getDirectorProyecto().getProyectoId());
                 /*---------------------------------------------Prorrogas------------------------------------------------------------------*/
                 administrarProrrogas.setRenderedDlgOficio(false);
                 administrarProrrogas.buscar(sessionProyectosDirector.getDirectorProyecto().getProyectoId().getCronograma(), sessionDocenteUsuario.getUsuario(), criterio);
@@ -384,13 +381,13 @@ public class AdministrarProyectosDirector implements Serializable {
         this.renderedNoEditar = renderedNoEditar;
     }
 
-    public AutorProyectoPostulacionController getAdministrarAutoresProyecto() {
-        return administrarAutoresProyecto;
-    }
-
-    public void setAdministrarAutoresProyecto(AutorProyectoPostulacionController administrarAutoresProyecto) {
-        this.administrarAutoresProyecto = administrarAutoresProyecto;
-    }
+//    public AutorProyectoPostulacionController getAdministrarAutoresProyecto() {
+//        return administrarAutoresProyecto;
+//    }
+//
+//    public void setAdministrarAutoresProyecto(AutorProyectoPostulacionController administrarAutoresProyecto) {
+//        this.administrarAutoresProyecto = administrarAutoresProyecto;
+//    }
 
     public AdministrarActividades getAdministrarActividades() {
         return administrarActividades;

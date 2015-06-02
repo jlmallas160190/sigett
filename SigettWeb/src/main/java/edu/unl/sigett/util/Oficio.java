@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.unl.sigett.reportes;
+package edu.unl.sigett.util;
 
 import java.io.Serializable;
 
@@ -11,7 +11,7 @@ import java.io.Serializable;
  *
  * @author jorge-luis
  */
-public class OficioDTO implements Serializable {
+public class Oficio implements Serializable {
 
     private String lugar;
     private String fecha;
@@ -26,7 +26,7 @@ public class OficioDTO implements Serializable {
     private String despedida;
     private String saludo;
 
-    public OficioDTO(String lugar, String fecha, String numeracion, String cargoDestinatario, String destinatario, String cargoQuienFirma, 
+    public Oficio(String lugar, String fecha, String numeracion, String cargoDestinatario, String destinatario, String cargoQuienFirma, 
             String datosQuienFirma, String cuerpo, String referencia, String asunto, String despedida, String saludo) {
         this.lugar = lugar;
         this.fecha = fecha;
@@ -43,7 +43,7 @@ public class OficioDTO implements Serializable {
     }
 
     
-    public OficioDTO() {
+    public Oficio() {
     }
 
     public String getLugar() {

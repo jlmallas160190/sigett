@@ -3,6 +3,7 @@ package edu.unl.sigett;
 import com.hp.hpl.jena.sparql.vocabulary.FOAF;
 import edu.unl.sigett.webSemantica.vocabulay.Vocabulario;
 import java.io.File;
+import java.io.IOException;
 import java.io.PrintWriter;
 
 /**
@@ -52,7 +53,7 @@ public class App
             PrintWriter out = new PrintWriter(file);
             out.println("<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>");
             lUDSigett.getModel().write(out, "RDF/XML");
-        } catch (Exception e) {
+        } catch (IOException e) {
             System.out.println(e);
         }
     }

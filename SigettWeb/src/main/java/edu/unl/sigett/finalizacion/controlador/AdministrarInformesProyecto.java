@@ -8,7 +8,7 @@ package edu.unl.sigett.finalizacion.controlador;
 import com.jlmallas.comun.entity.Persona;
 import com.jlmallas.comun.dao.PersonaDao;
 import edu.unl.sigett.finalizacion.managed.session.SessionInformeProyecto;
-import edu.unl.sigett.reportes.AdministrarReportes;
+import edu.unl.sigett.reporte.AdministrarReportes;
 import edu.unl.sigett.entity.AutorProyecto;
 import edu.jlmallas.academico.entity.Carrera;
 import edu.unl.sigett.entity.DirectorProyecto;

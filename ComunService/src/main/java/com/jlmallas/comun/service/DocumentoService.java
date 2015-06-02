@@ -6,6 +6,7 @@
 package com.jlmallas.comun.service;
 
 import com.jlmallas.comun.entity.Documento;
+import java.util.List;
 import javax.ejb.Local;
 
 /**
@@ -23,5 +24,7 @@ public interface DocumentoService {
 
     Documento buscarPorId(final Documento documento);
 
-    Documento buscar(final Documento documento);
+    List<Documento> buscar(final Documento documento);
+
+    Documento buscarPorCatalogo(final Documento documento);
 }

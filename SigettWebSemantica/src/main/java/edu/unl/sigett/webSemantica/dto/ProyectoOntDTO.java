@@ -25,13 +25,12 @@ public class ProyectoOntDTO implements Serializable {
     public ProyectoOntDTO() {
     }
 
-    public ProyectoOntDTO(Long id, String tema, String fechaCreacion, String tipo, String estado, Individual individual, String uri) {
+    public ProyectoOntDTO(Long id, String tema, String fechaCreacion, String tipo, String estado, String uri) {
         this.id = id;
         this.tema = tema;
         this.fechaCreacion = fechaCreacion;
         this.tipo = tipo;
         this.estado = estado;
-        this.individual = individual;
         this.uri = uri;
     }
 

@@ -28,7 +28,7 @@ public interface DocumentoDao {
 
     List<Documento> findRange(int[] range);
 
-    Documento buscar(final Documento documento);
+   List<Documento> buscar(final Documento documento);
 
     int count();
 

@@ -68,21 +68,21 @@ public class ProyectoOfertaCarreraDaoImplement extends AbstractDao<ProyectoCarre
         HashMap<String, Object> parametros = new HashMap<>();
         Boolean existeFiltro = Boolean.FALSE;
         sql.append("SELECT pco from ProyectoCarreraOferta pco WHERE 1=1");
-        if (proyectoCarreraOferta.getCarreraId() == null) {
+        if (proyectoCarreraOferta.getCarreraId() != null) {
             sql.append(" and pco.carreraId=:carreraId ");
             parametros.put("carreraId", proyectoCarreraOferta.getCarreraId());
             existeFiltro = Boolean.TRUE;
         }
-        if (proyectoCarreraOferta.getEsActivo() == null) {
+        if (proyectoCarreraOferta.getEsActivo() != null) {
             sql.append(" and pco.esActivo=:activo ");
             parametros.put("activo", proyectoCarreraOferta.getEsActivo());
         }
-        if (proyectoCarreraOferta.getProyectoId() == null) {
+        if (proyectoCarreraOferta.getProyectoId() != null) {
             sql.append(" and pco.proyectoId=:proyecto ");
             parametros.put("proyecto", proyectoCarreraOferta.getProyectoId());
             existeFiltro = Boolean.TRUE;
         }
-        if (proyectoCarreraOferta.getOfertaAcademicaId() == null) {
+        if (proyectoCarreraOferta.getOfertaAcademicaId() != null) {
             sql.append(" and pco.ofertaAcademicaId=:ofertaId ");
             parametros.put("ofertaId", proyectoCarreraOferta.getOfertaAcademicaId());
             existeFiltro = Boolean.TRUE;

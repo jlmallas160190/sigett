@@ -61,8 +61,6 @@ public class AdministrarProyectosCarreraOferta implements Serializable {
     @Inject
     private SessionConsultarProyecto sessionConsultarProyecto;
     @Inject
-    private AutorProyectoPostulacionController administrarAutoresProyecto;
-    @Inject
     private AdministrarDirectoresProyecto administrarDirectoresProyecto;
     @Inject
     private AdministrarLineasInvestigacionCarrera administrarLineasInvestigacionCarrera;

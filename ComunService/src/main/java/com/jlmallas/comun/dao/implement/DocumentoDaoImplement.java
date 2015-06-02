@@ -9,6 +9,7 @@ import com.jlmallas.comun.dao.AbstractDao;
 import com.jlmallas.comun.dao.DocumentoDao;
 import com.jlmallas.comun.entity.Documento;
 import java.util.HashMap;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.Query;
 
@@ -24,7 +25,7 @@ public class DocumentoDaoImplement extends AbstractDao<Documento> implements Doc
     }
 
     @Override
-    public Documento buscar(Documento documento) {
+    public List<Documento> buscar(final Documento documento) {
         StringBuilder sql = new StringBuilder();
         HashMap<String, Object> parametros = new HashMap<>();
         Boolean existeFiltro = Boolean.FALSE;
@@ -42,7 +43,7 @@ public class DocumentoDaoImplement extends AbstractDao<Documento> implements Doc
         for (String key : parametros.keySet()) {
             q.setParameter(key, parametros.get(key));
         }
-        return (Documento) q.getSingleResult();
+        return q.getResultList();
     }
 
 }

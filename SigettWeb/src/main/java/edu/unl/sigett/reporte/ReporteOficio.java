@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.unl.sigett.docenteProyecto;
+package edu.unl.sigett.reporte;
 
-import edu.unl.sigett.reportes.OficioDTO;
+import edu.unl.sigett.util.Oficio;
 import java.io.Serializable;
 import javax.servlet.http.HttpServletResponse;
 
@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author jorge-luis
  */
-public class ReporteOficioPertinenciaDTO extends OficioDTO implements Serializable {
+public class ReporteOficio extends Oficio implements Serializable {
 
     private HttpServletResponse response;
     private byte[] logoCarrera;
@@ -28,7 +28,7 @@ public class ReporteOficioPertinenciaDTO extends OficioDTO implements Serializab
     private String tipoArchivo;
     private String responsable;
 
-    public ReporteOficioPertinenciaDTO(byte[] logoCarrera, String rutaLogoIntitucion, String nombreCarrera, String nombreArea, String carreraSigla,
+    public ReporteOficio(byte[] logoCarrera, String rutaLogoIntitucion, String nombreCarrera, String nombreArea, String carreraSigla,
             String etiquetaNO, String cabecera1, String cabecera2, String lugar, String fecha, String numeracion, String cargoDestinatario, String destinatario,
             String cargoQuienFirma, String datosQuienFirma, String cuerpo, String referencia, String asunto, String despedida, String saludo,String tipoArchivo,
             String responsable,String ruta,HttpServletResponse response) {
@@ -47,7 +47,7 @@ public class ReporteOficioPertinenciaDTO extends OficioDTO implements Serializab
         this.responsable=responsable;
     }
 
-    public ReporteOficioPertinenciaDTO(byte[] logoCarrera, String rutaLogoIntitucion, String nombreCarrera, String nombreArea, String carreraSigla,
+    public ReporteOficio(byte[] logoCarrera, String rutaLogoIntitucion, String nombreCarrera, String nombreArea, String carreraSigla,
             String etiquetaNO, String cabecera1, String cabecera2) {
         this.logoCarrera = logoCarrera;
         this.rutaLogoIntitucion = rutaLogoIntitucion;

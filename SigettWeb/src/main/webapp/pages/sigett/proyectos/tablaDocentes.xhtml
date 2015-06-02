@@ -35,15 +35,17 @@
                                       update=":contenido:tabViewDatosProyecto:tblDocentesProyecto,:contenido:msm,
                                       :contenido:tabViewDatosProyecto:opcionesDocente"  
                                       onclick="if (!confirm('¿#{msg['lbl.confirmarEliminar']}?'))
-                                              return false;"  
+                                                  return false;"  
                                       action="#{docenteProyectoController.remover(item)}"/>
-                    <p:commandButton onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" icon="ui-icon-print"
-                                     update=":contenido:msm,:contenido:dlgOficioDocenteProyecto" title="#{msg['lbl.oficio']}"
+                    <p:commandButton onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide(),PF('dlgOficioPertinencia').show()" icon="ui-icon-print"
+                                     update=":contenido:msm,:contenido:pnlOficioPertinencia" title="#{msg['lbl.oficio']}"
+                                     rendered="#{sessionProyecto.proyectoSeleccionado.id!=null}"
                                      action="#{docenteProyectoController.imprimirOficioPertinencia(item)}"/>
                     <p:commandButton onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" icon="ui-icon-print" 
+                                     rendered="#{sessionProyecto.proyectoSeleccionado.id!=null}"
                                      update=":contenido:msm,:contenido:dlgOficioDocenteProyecto" title="#{lbl['fe_presentacion']}"
-                                     action="#{docenteProyectoController.imprimirimprimirOficioPertinencia(item)}"
-            </p:panelGrid>
+                                     action="#{docenteProyectoController.imprimirOficioPertinencia(item)}"/>
+                </p:panelGrid>
             </p:column>
         </p:dataTable>
     </body>

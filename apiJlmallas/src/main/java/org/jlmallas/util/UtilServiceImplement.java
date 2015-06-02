@@ -5,10 +5,12 @@
  */
 package org.jlmallas.util;
 
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
@@ -117,5 +119,17 @@ public class UtilServiceImplement implements UtilService {
             Logger.getLogger(UtilServiceImplement.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
+    }
+
+    @Override
+    public void generaDocumento(File file, byte[] bytes) {
+        BufferedOutputStream bos = null;
+        try {
+            FileOutputStream fos = new FileOutputStream(file);
+            bos = new BufferedOutputStream(fos);
+            bos.write(bytes);
+        } catch (IOException ex) {
+            Logger.getLogger(UtilServiceImplement.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

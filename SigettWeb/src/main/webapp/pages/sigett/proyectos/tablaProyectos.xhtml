@@ -27,7 +27,9 @@
                 <f:facet name="header">
                     <h:outputText value="#{msg['lbl.creacion']}"/>
                 </f:facet>
-                <h:outputText value="#{item.fechaCreated}" />
+                <h:outputText value="#{item.fechaCreated}">
+                    <f:convertDateTime pattern="EEEEE dd MMMMM yyyy HH:mm:ss"/>
+                </h:outputText>
             </p:column>
             <p:column  rendered="#{sessionProyecto.renderedEditar}" 
                        filterBy="#{item.temaActual}"
@@ -35,8 +37,8 @@
                 <f:facet name="header">
                     <h:outputText value="#{msg['lbl.tema']}"/>
                 </f:facet>
-                <p:commandLink  value="#{item.temaActual}" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" 
-                                action="#{administrarProyectos.editar(item)}"/>
+                <p:commandLink  value="#{item.temaActual}" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide(),PF('tblProyectosFilter').filter()" 
+                                action="#{proyectoController.editar(item)}"/>
             </p:column>
             <p:column  rendered="#{!sessionProyecto.renderedEditar}" 
                        filterBy="#{item.temaActual}"

@@ -23,10 +23,12 @@ public class ProyectoCarreraOfertaOntServiceImplement implements ProyectoCarrera
 
     private CabeceraWebSemantica cabecera;
 
+    @Override
     public void read(CabeceraWebSemantica cabecera) {
         this.cabecera = cabecera;
     }
 
+    @Override
     public void write(final ProyectoCarreraOfertaOntDTO proyectoCarreraOfertaDTO) {
         try {
             proyectoCarreraOfertaDTO.setIndividual(cabecera.getVocabulario().getModel().getIndividual(

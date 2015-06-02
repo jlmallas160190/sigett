@@ -8,6 +8,7 @@ package com.jlmallas.comun.service.implement;
 import com.jlmallas.comun.dao.DocumentoDao;
 import com.jlmallas.comun.entity.Documento;
 import com.jlmallas.comun.service.DocumentoService;
+import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 
@@ -42,8 +43,16 @@ public class DocumentoServiceImplement implements DocumentoService {
     }
 
     @Override
-    public Documento buscar(final Documento documento) {
+    public List<Documento> buscar(final Documento documento) {
         return this.documentoDao.buscar(documento);
     }
 
+    @Override
+    public Documento buscarPorCatalogo(final Documento documento) {
+        List<Documento> documentos = this.documentoDao.buscar(documento);
+        if (documento == null) {
+            return null;
+        }
+        return !documentos.isEmpty() ? documentos.get(0) : null;
+    }
 }

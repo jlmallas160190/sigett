@@ -24,10 +24,12 @@ public class AutorOntServiceImplement implements AutorOntService {
 
     private CabeceraWebSemantica cabecera;
 
+    @Override
     public void read(CabeceraWebSemantica cabecera) {
         this.cabecera = cabecera;
     }
 
+    @Override
     public void write(AutorOntDTO autorDTO) {
         try {
             autorDTO.setIndividual(cabecera.getVocabulario().getModel().getIndividual(cabecera.getVocabulario().getNS() + "autor/" + autorDTO.getId()));

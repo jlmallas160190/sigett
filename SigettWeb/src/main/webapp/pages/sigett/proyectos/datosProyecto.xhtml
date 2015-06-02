@@ -50,21 +50,20 @@
             <p:message  id="msmFechaProrroga" rendered="#{administrarProrrogas.tieneProrroga}" display="icon" for="fechaProrroga"/>
 
             <h:outputLabel value="#{msg['lbl.tipo']}:" />
-            <p:selectOneMenu id="tipoProyecto" rendered="#{sessionProyecto.renderedInicio}" value="#{sessionProyecto.tipo}" 
-                             requiredMessage="#{msg['lbl.tipo']} #{msg['lbl.obligatorio']}.">
+            <p:selectOneMenu id="tipoProyecto" rendered="#{sessionProyecto.renderedInicio}" converter="tipoProyectoConverter" 
+                             value="#{sessionProyecto.tipoSeleccionado}" requiredMessage="#{msg['lbl.tipo']} #{msg['lbl.obligatorio']}.">
                 <f:selectItem itemLabel="#{msg['lbl.seleccionar']}"/>
                 <f:selectItems value="#{sessionProyecto.tipos}"/>
-                <p:ajax event="change" process="tipoProyecto" listener="#{proyectoController.seleccionarTipoProyecto()}"
-                        update="tipoProyecto,:contenido:msm"/>
             </p:selectOneMenu>
             <h:outputText rendered="#{!sessionProyecto.renderedInicio}" value="#{sessionProyecto.tipo}"/>
             <h:inputHidden/>
             <h:outputLabel value="#{msg['lbl.categoria']}:" for="catProyecto"/>
-            <p:selectOneMenu id="catProyecto" rendered="#{sessionProyecto.renderedInicio}" value="#{sessionProyecto.catalogo}"  
+            <p:selectOneMenu id="catProyecto" rendered="#{sessionProyecto.renderedInicio}" converter="categoriaProyectoConverter"
+                             value="#{sessionProyecto.categoriaSeleccionada}"  
                              requiredMessage="#{msg['lbl.categoria']} #{msg['lbl.obligatorio']}.">
                 <f:selectItems value="#{sessionProyecto.categorias}"/>
             </p:selectOneMenu>
-            <h:outputText value="#{sessionProyecto.catalogo}" rendered="#{!sessionProyecto.renderedInicio}"/>
+            <h:outputText value="#{sessionProyecto.categoriaSeleccionada.nombre}" rendered="#{!sessionProyecto.renderedInicio}"/>
             <h:inputHidden/>
             <h:outputLabel value="#{msg['lbl.duracion']}:"/>
             <h:outputLabel id="duracion" styleClass="informacion" value="#{sessionProyecto.cronograma.duracion}"/>

@@ -10,12 +10,12 @@
             <p:commandButton  value="#{msg['lbl.grabar']}"  update=":contenido:msm" onstart="PF('dlgLoading').show()"
                               oncomplete="PF('dlgLoading').hide()" icon="ui-icon-disk" 
                               action="#{proyectoController.grabar()}">
-                <f:param name="1" value="guardar" />
+                <f:param name="tipo-grabado" value="guardar" />
             </p:commandButton>
             <p:commandButton  value="#{msg['lbl.grabar']} #{msg['lbl.y']} #{msg['lbl.editar']}" icon="ui-icon-disk" onstart="PF('dlgLoading').show()"
                               oncomplete="PF('dlgLoading').hide()" update=":contenido:msm,:contenido:tabViewDatosProyecto" 
                               action="#{proyectoController.grabar()}">
-                <f:param name="1" value="guardar-editar" />
+                <f:param name="tipo-grabado" value="guardar-editar" />
             </p:commandButton>
         </h:panelGrid>
     </body>

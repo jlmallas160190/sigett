@@ -20,10 +20,12 @@ public class AutorProyectoOntServiceImplement implements AutorProyectoOntService
 
     private CabeceraWebSemantica cabecera;
 
+    @Override
     public void read(CabeceraWebSemantica cabecera) {
         this.cabecera = cabecera;
     }
 
+    @Override
     public void write(AutorProyectoOntDTO autorProyectoDTO) {
         try {
             autorProyectoDTO.setIndividual(cabecera.getVocabulario().getModel().getIndividual(
