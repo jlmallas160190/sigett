@@ -389,8 +389,8 @@ public class AdministrarPeriodosAcademicos implements Serializable {
                 if (pos > 0) {
                     String fechaInicio = fecha.substring(0, pos);
                     String fechaFin = fecha.substring(pos + 1);
-                    sessionPeriodoAcademico.getPeriodoAcademicoWs().setFechaInicio(cabeceraController.getUtilService().getFecha(fechaInicio + "-01-01", "yyyy-MM-dd"));
-                    sessionPeriodoAcademico.getPeriodoAcademicoWs().setFechaFin(cabeceraController.getUtilService().getFecha(fechaFin + "-01-01", "yyyy-MM-dd"));
+                    sessionPeriodoAcademico.getPeriodoAcademicoWs().setFechaInicio(cabeceraController.getUtilService().parserFecha(fechaInicio + "-01-01", "yyyy-MM-dd"));
+                    sessionPeriodoAcademico.getPeriodoAcademicoWs().setFechaFin(cabeceraController.getUtilService().parserFecha(fechaFin + "-01-01", "yyyy-MM-dd"));
                 }
                 sessionPeriodoAcademico.setKeyEntero(sessionPeriodoAcademico.getKeyEntero() + 1);
             }

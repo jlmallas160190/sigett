@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="2e74cc02-9123-4601-844b-4163d2b5a8f4">
 	<property name="ireport.zoom" value="1.6105100000000008"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="288"/>
+	<property name="ireport.y" value="65"/>
 	<parameter name="cabecera1" class="java.lang.String"/>
 	<parameter name="cabecera2" class="java.lang.String"/>
 	<parameter name="area" class="java.lang.String"/>
@@ -20,6 +20,7 @@
 	<parameter name="logoInstitucion" class="java.lang.String"/>
 	<parameter name="logoCarrera" class="java.io.InputStream"/>
 	<parameter name="responsable" class="java.lang.String"/>
+	<parameter name="autores" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -61,7 +62,7 @@
 				<textFieldExpression><![CDATA[$P{saludo}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement stretchType="RelativeToTallestObject" x="68" y="145" width="488" height="15" uuid="5eb190b5-1e86-465d-a272-178a68e33917"/>
+				<reportElement stretchType="RelativeToTallestObject" x="113" y="145" width="443" height="15" uuid="5eb190b5-1e86-465d-a272-178a68e33917"/>
 				<textElement textAlignment="Justified">
 					<font fontName="SansSerif" size="11"/>
 				</textElement>
@@ -90,13 +91,13 @@
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
 				<reportElement stretchType="RelativeToBandHeight" x="1" y="185" width="555" height="30" uuid="fc657785-78c0-4399-90ce-efeef95dd66c"/>
-				<textElement textAlignment="Justified" verticalAlignment="Top" markup="styled">
+				<textElement textAlignment="Justified" verticalAlignment="Top" markup="html">
 					<font fontName="SansSerif" size="11"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{destinatario}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="1" y="145" width="67" height="15" uuid="a7be287e-c912-4cab-b513-2b7433c88dc7"/>
+				<reportElement x="1" y="145" width="112" height="15" uuid="a7be287e-c912-4cab-b513-2b7433c88dc7"/>
 				<textFieldExpression><![CDATA[$P{etiquetaNO}]]></textFieldExpression>
 			</textField>
 			<textField>
@@ -115,7 +116,7 @@
 		<band height="100" splitType="Stretch">
 			<textField>
 				<reportElement x="0" y="0" width="555" height="100" uuid="0c4449a7-9021-4c85-b010-b1535c95054b"/>
-				<textElement markup="styled">
+				<textElement markup="html">
 					<font size="11"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{cuerpo}]]></textFieldExpression>
@@ -147,10 +148,10 @@
 			</textField>
 			<textField isStretchWithOverflow="true">
 				<reportElement x="2" y="16" width="554" height="25" uuid="2234a0cf-8a1b-4cf9-922e-3b205d4bd3e9"/>
-				<textElement textAlignment="Justified">
+				<textElement textAlignment="Justified" markup="styled">
 					<font fontName="SansSerif" size="11"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{destinatario}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{autores}]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageFooter>
@@ -165,11 +166,12 @@
 			</textField>
 			<textField>
 				<reportElement x="1" y="64" width="554" height="30" uuid="aecfcaf4-36af-45aa-a59c-5b532bcae626"/>
-				<textElement markup="styled"/>
+				<textElement markup="html"/>
 				<textFieldExpression><![CDATA[$P{quienFirma}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="0" y="94" width="555" height="20" uuid="905ab5e5-dfd6-4872-931b-021a7437286b"/>
+				<textElement markup="html"/>
 				<textFieldExpression><![CDATA[$P{cargoQuienFirma}]]></textFieldExpression>
 			</textField>
 		</band>

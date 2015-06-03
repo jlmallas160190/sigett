@@ -23,6 +23,9 @@
                     <p:inputText id="globalFilter" onkeyup="PF('tblProyectosFilter').filter()" style="width:150px" placeholder="#{msg['lbl.buscar']}"/>
                 </h:panelGrid>
             </f:facet>
+            <p:column>
+               <h:outputText value="#{rowIx+1}" />
+            </p:column>
             <p:column sortBy="#{item.fechaCreated}">
                 <f:facet name="header">
                     <h:outputText value="#{msg['lbl.creacion']}"/>

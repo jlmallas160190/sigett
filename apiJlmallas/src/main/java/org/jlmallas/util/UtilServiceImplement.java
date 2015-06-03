@@ -111,7 +111,7 @@ public class UtilServiceImplement implements UtilService {
     }
 
     @Override
-    public Date getFecha(String fecha, String formato) {
+    public Date parserFecha(String fecha, String formato) {
         try {
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat(formato);
             return simpleDateFormat.parse(fecha);
@@ -132,4 +132,11 @@ public class UtilServiceImplement implements UtilService {
             Logger.getLogger(UtilServiceImplement.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
+    @Override
+    public String formatoFecha(Date fecha, String formato) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(formato);
+        return simpleDateFormat.format(fecha);
+    }
+    
 }

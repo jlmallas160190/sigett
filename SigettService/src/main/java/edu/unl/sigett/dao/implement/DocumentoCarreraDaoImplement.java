@@ -25,9 +25,8 @@ public class DocumentoCarreraDaoImplement extends AbstractDao<DocumentoCarrera> 
         super(DocumentoCarrera.class);
     }
 
-  
     @Override
-   public List<DocumentoCarrera>buscar(DocumentoCarrera oficioCarrera) {
+    public List<DocumentoCarrera> buscar(DocumentoCarrera oficioCarrera) {
         StringBuilder sql = new StringBuilder();
         HashMap<String, Object> parametros = new HashMap<>();
         Boolean existeFiltro = Boolean.FALSE;
@@ -40,15 +39,10 @@ public class DocumentoCarreraDaoImplement extends AbstractDao<DocumentoCarrera> 
         if (oficioCarrera.getEsActivo() != null) {
             sql.append(" and d.esActivo=:activo");
             parametros.put("activo", oficioCarrera.getEsActivo());
-            existeFiltro = Boolean.TRUE;
         }
-        if (oficioCarrera.getDocumentoId()!= null) {
-            sql.append(" and d.documentoId=:documento");
+        if (oficioCarrera.getDocumentoId() != null && oficioCarrera.getTablaId() != null) {
+            sql.append(" and d.documentoId=:documento and d.tablaId=:tabla");
             parametros.put("documento", oficioCarrera.getDocumentoId());
-            existeFiltro = Boolean.TRUE;
-        }
-        if (oficioCarrera.getTablaId() != null) {
-            sql.append(" and d.tablaId=:tabla");
             parametros.put("tabla", oficioCarrera.getTablaId());
             existeFiltro = Boolean.TRUE;
         }

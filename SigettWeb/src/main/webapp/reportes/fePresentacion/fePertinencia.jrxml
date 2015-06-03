@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="bfc7a819-48e6-4928-84b9-d404113d9b91">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="referencia" class="java.lang.String"/>
+	<parameter name="cuerpo" class="java.lang.String"/>
+	<parameter name="final" class="java.lang.String"/>
+	<parameter name="firmaInvolucrados" class="java.lang.String"/>
+	<parameter name="responsable" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="251">
+			<textField isStretchWithOverflow="true">
+				<reportElement x="0" y="100" width="555" height="150" uuid="a4d98dd2-5931-498f-95f0-9924fb8c62d8"/>
+				<textElement textAlignment="Justified" markup="html">
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{cuerpo}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="0" y="0" width="555" height="100" uuid="c5ecf626-5bea-4514-92d3-ba7c9b9c7df3"/>
+				<textElement textAlignment="Justified" markup="html">
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{referencia}]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="150">
+			<textField isStretchWithOverflow="true">
+				<reportElement x="0" y="0" width="555" height="150" uuid="fad13e47-1ffc-43ec-a3cd-b46bac5b309d"/>
+				<textElement textAlignment="Justified" markup="html">
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{final}+"<p>"+$P{firmaInvolucrados}+"</p>"]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="555" height="20" uuid="85c0826a-4641-4203-9bdf-f133f324252e"/>
+				<textElement textAlignment="Justified" markup="html"/>
+				<textFieldExpression><![CDATA[$P{responsable}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

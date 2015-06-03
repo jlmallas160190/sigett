@@ -4,12 +4,14 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
     <body>
-        <p:dialog id="dlgOficioPertinencia" widgetVar="dlgOficioPertinencia" header="#{msg['lbl.oficio']}" styleClass="modal-md"  modal="true" >
-            <p:panel rendered="#{sessionDocenteProyecto.renderedDialogoOficio}" id="pnlOficioPertinencia">
-                <p:media  value="/AppServlet?oficioDocenteProyecto" player="pdf" width="100%" height="400"/>
+        <p:dialog id="dlgOficioPertinencia" widgetVar="dlgOficioPertinencia" header="#{msg['lbl.oficio']}" styleClass="modal-md"  modal="true" 
+                  closable="false" >
+            <p:panel  id="pnlOficioPertinencia">
+                <p:media  value="/AppServlet?entity=pertinencia" player="pdf" width="100%" height="400"/>
                 <f:facet name="footer">
-                    <p:commandButton action="#{docenteProyectoController.cancelarImprimirOficio()}" update=":contenido:pnlOficioPertinencia" 
-                                     value="#{btn['cancelar']}" oncomplete="PF('dlgOficioPertinencia').hide()"/> 
+                    <p:commandButton action="#{docenteProyectoController.cancelarImprimirOficio()}" update=":contenido:pnlOficioPertinencia"
+                                     onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide(),PF('dlgOficioPertinencia').hide()"
+                                     value="#{btn['cancelar']}"/> 
                 </f:facet>
             </p:panel>
         </p:dialog>

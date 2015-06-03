@@ -268,13 +268,13 @@ public class AdministrarOfertas implements Serializable {
                 return;
             }
             if (sessionOfertaAcademica.getKeyEntero() == 2) {
-                sessionOfertaAcademica.getOfertaAcademicaWS().setFechaInicio(cabeceraController.getUtilService().getFecha(new String(
+                sessionOfertaAcademica.getOfertaAcademicaWS().setFechaInicio(cabeceraController.getUtilService().parserFecha(new String(
                         valor.getAsString().getBytes()), "yyyy-MM-dd"));
                 sessionOfertaAcademica.setKeyEntero(sessionOfertaAcademica.getKeyEntero() + 1);
                 return;
             }
             if (sessionOfertaAcademica.getKeyEntero() == 3) {                
-                sessionOfertaAcademica.getOfertaAcademicaWS().setFechaFin(cabeceraController.getUtilService().getFecha(new String(
+                sessionOfertaAcademica.getOfertaAcademicaWS().setFechaFin(cabeceraController.getUtilService().parserFecha(new String(
                         valor.getAsString().getBytes()), "yyyy-MM-dd"));
                 sessionOfertaAcademica.setKeyEntero(sessionOfertaAcademica.getKeyEntero() + 1);
             }

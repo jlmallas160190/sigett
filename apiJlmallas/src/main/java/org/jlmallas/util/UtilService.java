@@ -16,9 +16,11 @@ public interface UtilService {
 
     byte[] obtenerBytes(final File file);
 
-    void generaDocumento(final File file,final byte[] bytes);
+    void generaDocumento(final File file, final byte[] bytes);
 
     Double calculaDuracion(Date fechaInicio, Date fechaFin, int diasNoContabilizados);
 
-    Date getFecha(final String fecha, String formato);
+    Date parserFecha(final String fecha, String formato);
+
+    String formatoFecha(final Date fecha, String formato);
 }

@@ -65,14 +65,15 @@ public class Documento implements Serializable {
         this.id = id;
     }
 
-    public Documento(Long id, String ruta, Long catalogoId, Double tamanio, Date fechaCreacion, byte[] contents,String catalogo) {
+    public Documento(Long id, String ruta, Long catalogoId, Double tamanio, Date fechaCreacion, byte[] contents, String catalogo, String tipo) {
         this.id = id;
         this.contents = contents;
         this.fechaCreacion = fechaCreacion;
         this.tamanio = tamanio;
         this.ruta = ruta;
         this.catalogoId = catalogoId;
-        this.catalogo=catalogo;
+        this.catalogo = catalogo;
+        this.tipo = tipo;
     }
 
     public Long getId() {

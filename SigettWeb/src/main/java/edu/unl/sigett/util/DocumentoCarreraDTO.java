@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.unl.sigett.docenteProyecto;
+package edu.unl.sigett.util;
 
 import com.jlmallas.comun.entity.Documento;
 import edu.jlmallas.academico.entity.Carrera;
@@ -14,16 +14,16 @@ import java.io.Serializable;
  *
  * @author jorge-luis
  */
-public class OficioPertinenciaDTO implements Serializable {
+public class DocumentoCarreraDTO implements Serializable {
 
     private DocumentoCarrera documentoCarrera;
     private Documento documento;
     private Carrera carrera;
 
-    public OficioPertinenciaDTO() {
+    public DocumentoCarreraDTO() {
     }
 
-    public OficioPertinenciaDTO(DocumentoCarrera documentoCarrera, Documento documento, Carrera carrera) {
+    public DocumentoCarreraDTO(DocumentoCarrera documentoCarrera, Documento documento, Carrera carrera) {
         this.documentoCarrera = documentoCarrera;
         this.documento = documento;
         this.carrera = carrera;

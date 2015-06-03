@@ -21,14 +21,22 @@ import com.ocpsoft.pretty.faces.annotation.URLMappings;
 import edu.jlmallas.academico.dao.DocenteCarreraDao;
 import edu.jlmallas.academico.dao.DocenteDao;
 import edu.jlmallas.academico.dao.EstudianteCarreraDao;
+import edu.jlmallas.academico.dao.PeriodoCoordinacionDao;
 import edu.jlmallas.academico.entity.Carrera;
+import edu.jlmallas.academico.entity.Coordinador;
+import edu.jlmallas.academico.entity.CoordinadorPeriodo;
+import edu.jlmallas.academico.entity.Docente;
 import edu.jlmallas.academico.entity.DocenteCarrera;
 import edu.jlmallas.academico.entity.EstudianteCarrera;
 import edu.jlmallas.academico.entity.Nivel;
 import edu.jlmallas.academico.entity.OfertaAcademica;
 import edu.jlmallas.academico.entity.PeriodoAcademico;
+import edu.jlmallas.academico.entity.PeriodoCoordinacion;
 import edu.jlmallas.academico.service.CarreraService;
+import edu.jlmallas.academico.service.CoordinadorPeriodoService;
+import edu.jlmallas.academico.service.DocenteService;
 import edu.jlmallas.academico.service.OfertaAcademicaService;
+import edu.unl.sigett.academico.dto.CoordinadorPeriodoDTO;
 import edu.unl.sigett.autor.AutorProyectoDTO;
 import edu.unl.sigett.dao.ConfiguracionProyectoDao;
 import edu.unl.sigett.dao.DirectorDao;
@@ -174,8 +182,6 @@ public class ProyectoController implements Serializable {
     @EJB
     private DocenteCarreraDao docenteCarreraDao;
     @EJB
-    private DocenteDao docenteDao;
-    @EJB
     private TemaProyectoService temaProyectoService;
     @EJB
     private DocumentoProyectoService documentoProyectoService;
@@ -187,6 +193,12 @@ public class ProyectoController implements Serializable {
     private DocumentoService documentoService;
     @EJB
     private ConfiguracionDao configuracionDao;
+    @EJB
+    private PeriodoCoordinacionDao periodoCoordinacionDao;
+    @EJB
+    private CoordinadorPeriodoService coordinadorPeriodoService;
+    @EJB
+    private DocenteService docenteService;
     //</editor-fold>
     private static final Logger LOG = Logger.getLogger(ProyectoController.class.getName());
 
@@ -486,6 +498,20 @@ public class ProyectoController implements Serializable {
     public void seleccionarCarrera(SelectEvent event) {
         try {
             sessionProyecto.setCarreraSeleccionada((Carrera) event.getObject());
+            List<PeriodoCoordinacion> periodoCoordinacions = periodoCoordinacionDao.buscar(new PeriodoCoordinacion(
+                    sessionProyecto.getCarreraSeleccionada(), Boolean.TRUE));
+            if (periodoCoordinacions == null) {
+                return;
+            }
+            List<CoordinadorPeriodo> coordinadores = coordinadorPeriodoService.buscar(new CoordinadorPeriodo(Boolean.TRUE, null,
+                    !periodoCoordinacions.isEmpty() ? periodoCoordinacions.get(0) : null));
+            if (coordinadores == null) {
+                return;
+            }
+            CoordinadorPeriodo coordinadorPeriodo = !coordinadores.isEmpty() ? coordinadores.get(0) : null;
+            CoordinadorPeriodoDTO coordinadorPeriodoDTO = new CoordinadorPeriodoDTO(coordinadorPeriodo, personaDao.find(coordinadorPeriodo.getCoordinadorId().getId()), null);
+            coordinadorPeriodoDTO.setDocente(docenteService.buscarPorId(new Docente(coordinadorPeriodoDTO.getPersona().getId())));
+            sessionProyecto.setCoordinadorPeriodoDTOCarreraSeleccionada(coordinadorPeriodoDTO);
             buscar();
         } catch (Exception e) {
             System.out.println(e);
@@ -1001,7 +1027,7 @@ public class ProyectoController implements Serializable {
                 return;
             }
             for (DocenteProyecto docenteProyecto : docenteProyectos) {
-                List<DocenteCarrera> docenteCarreras = docenteCarreraDao.buscar(new DocenteCarrera(null, docenteDao.find(docenteProyecto.getDocenteId()),
+                List<DocenteCarrera> docenteCarreras = docenteCarreraDao.buscar(new DocenteCarrera(null, docenteService.buscarPorId(new Docente(docenteProyecto.getDocenteId())),
                         null, Boolean.TRUE));
                 if (docenteCarreras.isEmpty()) {
                     continue;

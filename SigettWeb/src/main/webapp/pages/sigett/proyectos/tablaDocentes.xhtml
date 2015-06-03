@@ -38,13 +38,13 @@
                                                   return false;"  
                                       action="#{docenteProyectoController.remover(item)}"/>
                     <p:commandButton onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide(),PF('dlgOficioPertinencia').show()" icon="ui-icon-print"
-                                     update=":contenido:msm,:contenido:pnlOficioPertinencia" title="#{msg['lbl.oficio']}"
+                                     update=":contenido:msm,:contenido:dlgOficioPertinencia" title="#{msg['lbl.oficio']}"
                                      rendered="#{sessionProyecto.proyectoSeleccionado.id!=null}"
                                      action="#{docenteProyectoController.imprimirOficioPertinencia(item)}"/>
-                    <p:commandButton onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" icon="ui-icon-print" 
+                    <p:commandButton onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide(),PF('dlgFePertinencia').show()" icon="ui-icon-print" 
                                      rendered="#{sessionProyecto.proyectoSeleccionado.id!=null}"
-                                     update=":contenido:msm,:contenido:dlgOficioDocenteProyecto" title="#{lbl['fe_presentacion']}"
-                                     action="#{docenteProyectoController.imprimirOficioPertinencia(item)}"/>
+                                     update=":contenido:msm,:contenido:dlgFePertinencia" title="#{lbl['fe_presentacion']}"
+                                     action="#{docenteProyectoController.imprimirFePresentacion(item)}"/>
                 </p:panelGrid>
             </p:column>
         </p:dataTable>

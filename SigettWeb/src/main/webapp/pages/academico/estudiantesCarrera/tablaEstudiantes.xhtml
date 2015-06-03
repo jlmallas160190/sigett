@@ -15,6 +15,9 @@
                     <p:inputText id="globalFilter" onkeyup="PF('tblEstudiantesFilter').filter()" style="width:150px" placeholder="#{msg['lbl.buscar']}"/>
                 </h:panelGrid>
             </f:facet>
+            <p:column>
+                <h:outputText value="#{rowIx+1}" />
+            </p:column>
             <p:column rendered="#{sessionEstudianteCarrera.renderedEditar}" 
                       sortBy="#{item.persona.numeroIdentificacion}" 
                       filterBy="#{item.persona.numeroIdentificacion}"

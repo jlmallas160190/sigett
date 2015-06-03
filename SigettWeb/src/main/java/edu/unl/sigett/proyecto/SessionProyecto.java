@@ -7,7 +7,10 @@ package edu.unl.sigett.proyecto;
 
 import com.jlmallas.comun.entity.Item;
 import edu.jlmallas.academico.entity.Carrera;
+import edu.jlmallas.academico.entity.Coordinador;
+import edu.jlmallas.academico.entity.CoordinadorPeriodo;
 import edu.jlmallas.academico.entity.OfertaAcademica;
+import edu.unl.sigett.academico.dto.CoordinadorPeriodoDTO;
 import edu.unl.sigett.autor.AutorProyectoDTO;
 import edu.unl.sigett.docenteProyecto.DocenteProyectoDTO;
 import edu.unl.sigett.documentoProyecto.DocumentoProyectoDTO;
@@ -38,6 +41,7 @@ public class SessionProyecto implements Serializable {
     private TemaProyecto temaProyecto;
     private AutorProyectoDTO autorProyectoDTOSeleccionado;
     private Carrera carreraSeleccionada;
+    private CoordinadorPeriodoDTO coordinadorPeriodoDTOCarreraSeleccionada;
     private Item estadoSeleccionado;
     private Item categoriaSeleccionada;
     private Item tipoSeleccionado;
@@ -489,6 +493,14 @@ public class SessionProyecto implements Serializable {
 
     public void setDocumentosProyectosDTOAgregados(List<DocumentoProyectoDTO> documentosProyectosDTOAgregados) {
         this.documentosProyectosDTOAgregados = documentosProyectosDTOAgregados;
+    }
+
+    public CoordinadorPeriodoDTO getCoordinadorPeriodoDTOCarreraSeleccionada() {
+        return coordinadorPeriodoDTOCarreraSeleccionada;
+    }
+
+    public void setCoordinadorPeriodoDTOCarreraSeleccionada(CoordinadorPeriodoDTO coordinadorPeriodoDTOCarreraSeleccionada) {
+        this.coordinadorPeriodoDTOCarreraSeleccionada = coordinadorPeriodoDTOCarreraSeleccionada;
     }
 
 }

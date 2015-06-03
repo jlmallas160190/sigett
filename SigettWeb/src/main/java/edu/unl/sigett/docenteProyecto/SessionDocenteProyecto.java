@@ -5,6 +5,7 @@
  */
 package edu.unl.sigett.docenteProyecto;
 
+import edu.unl.sigett.util.DocumentoCarreraDTO;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +21,7 @@ import javax.inject.Named;
 public class SessionDocenteProyecto implements Serializable {
 
     private DocenteProyectoDTO docenteProyectoDTO;
-    private OficioPertinenciaDTO oficioPertinenciaDTO;
+    private DocumentoCarreraDTO oficioPertinenciaDTO;
 
     private List<DirectorDTO> directoresDTO;
     private List<DirectorDTO> filterDirectoresDTO;
@@ -30,7 +31,8 @@ public class SessionDocenteProyecto implements Serializable {
     private Boolean renderedImprimirOficio;
     private Boolean renderedSeleccionarEspecialista;
     private Boolean renderedEliminar;
-    private Boolean renderedDialogoOficio;
+    private Boolean renderedPnlDialogoOficio;
+    private Boolean renderedPnlDialogoFe;
 
     private Long docenteProyectoId;
 
@@ -112,20 +114,28 @@ public class SessionDocenteProyecto implements Serializable {
         this.docenteProyectoId = docenteProyectoId;
     }
 
-    public Boolean getRenderedDialogoOficio() {
-        return renderedDialogoOficio;
+    public Boolean getRenderedPnlDialogoOficio() {
+        return renderedPnlDialogoOficio;
     }
 
-    public void setRenderedDialogoOficio(Boolean renderedDialogoOficio) {
-        this.renderedDialogoOficio = renderedDialogoOficio;
+    public void setRenderedPnlDialogoOficio(Boolean renderedPnlDialogoOficio) {
+        this.renderedPnlDialogoOficio = renderedPnlDialogoOficio;
     }
 
-    public OficioPertinenciaDTO getOficioPertinenciaDTO() {
+    public DocumentoCarreraDTO getOficioPertinenciaDTO() {
         return oficioPertinenciaDTO;
     }
 
-    public void setOficioPertinenciaDTO(OficioPertinenciaDTO oficioPertinenciaDTO) {
+    public void setOficioPertinenciaDTO(DocumentoCarreraDTO oficioPertinenciaDTO) {
         this.oficioPertinenciaDTO = oficioPertinenciaDTO;
+    }
+
+    public Boolean isRenderedPnlDialogoFe() {
+        return renderedPnlDialogoFe;
+    }
+
+    public void setRenderedPnlDialogoFe(Boolean renderedPnlDialogoFe) {
+        this.renderedPnlDialogoFe = renderedPnlDialogoFe;
     }
 
 }
