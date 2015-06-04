@@ -6,7 +6,6 @@
 package edu.unl.sigett.docenteProyecto;
 
 import edu.unl.sigett.reporte.ReporteFePresentacion;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  *
@@ -14,18 +13,16 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class ReporteFePresentacionPertinencia extends ReporteFePresentacion {
 
-    private HttpServletResponse response;
     private String ruta;
     private String tipoArchivo;
 
     public ReporteFePresentacionPertinencia() {
     }
 
-    public ReporteFePresentacionPertinencia(HttpServletResponse response, String ruta, String tipoArchivo, String referencia, String cuerpo,
+    public ReporteFePresentacionPertinencia(String ruta, String tipoArchivo, String referencia, String cuerpo,
             String firmaInvolucrados, String parteFinal, String responsable) {
         super(referencia, cuerpo, firmaInvolucrados, parteFinal, responsable);
         this.ruta = ruta;
-        this.response = response;
         this.tipoArchivo = tipoArchivo;
     }
 
@@ -48,14 +45,6 @@ public class ReporteFePresentacionPertinencia extends ReporteFePresentacion {
 
     public void setTipoArchivo(String tipoArchivo) {
         this.tipoArchivo = tipoArchivo;
-    }
-
-    public HttpServletResponse getResponse() {
-        return response;
-    }
-
-    public void setResponse(HttpServletResponse response) {
-        this.response = response;
     }
 
 }

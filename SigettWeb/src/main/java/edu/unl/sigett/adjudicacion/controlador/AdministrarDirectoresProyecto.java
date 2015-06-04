@@ -10,7 +10,6 @@ import com.jlmallas.comun.dao.PersonaDao;
 import edu.unl.sigett.adjudicacion.session.SessionDirectorProyecto;
 import edu.unl.sigett.adjudicacion.session.SessionRenunciaDirector;
 import edu.unl.sigett.proyecto.SessionProyecto;
-import edu.unl.sigett.reporte.AdministrarReportes;
 import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
 import edu.unl.sigett.entity.AutorProyecto;
 import edu.jlmallas.academico.entity.Carrera;
@@ -317,7 +316,7 @@ public class AdministrarDirectoresProyecto implements Serializable {
     }
 
     public void descargarOficio(Usuario user) {
-        AdministrarReportes reportes = new AdministrarReportes();
+        
         Map datosReporte = new HashMap();
         FacesContext facesContext = FacesContext.getCurrentInstance();
         HttpServletRequest request = (HttpServletRequest) facesContext.getExternalContext().getRequest();

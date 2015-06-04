@@ -8,7 +8,6 @@ package edu.unl.sigett.finalizacion.controlador;
 import com.jlmallas.comun.entity.Persona;
 import com.jlmallas.comun.dao.PersonaDao;
 import edu.unl.sigett.finalizacion.managed.session.SessionInformeProyecto;
-import edu.unl.sigett.reporte.AdministrarReportes;
 import edu.unl.sigett.entity.AutorProyecto;
 import edu.jlmallas.academico.entity.Carrera;
 import edu.unl.sigett.entity.DirectorProyecto;
@@ -193,7 +192,7 @@ public class AdministrarInformesProyecto implements Serializable {
     public void download() {
         try {
             Map datosReporte = new HashMap();
-            AdministrarReportes reportes = new AdministrarReportes();
+//            AdministrarReportes reportes = new AdministrarReportes();
             FacesContext facesContext = FacesContext.getCurrentInstance();
             ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
             HttpServletRequest request = (HttpServletRequest) facesContext.getExternalContext().getRequest();

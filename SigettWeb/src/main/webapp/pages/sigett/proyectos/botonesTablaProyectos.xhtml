@@ -4,9 +4,9 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:p="http://primefaces.org/ui">
     <body>
-        <h:panelGrid styleClass="pnl-botones" columns="3">
-            <p:commandButton   id="btnCrearProyecto" value="#{msg['lbl.crear']}" onstart="PF('dlgLoading').show()" 
-                               rendered="#{sessionProyecto.renderedCrear and sessionProyecto.carreraSeleccionada.id!=null}"
+        <h:panelGrid styleClass="pnl-botones" id="pnlBotonesTblProyecto" columns="3">
+            <p:commandButton value="#{msg['lbl.crear']}" onstart="PF('dlgLoading').show()" 
+                              rendered="#{sessionProyecto.renderedCrear and sessionProyecto.carreraSeleccionada.id!=null}"
                               oncomplete="PF('dlgLoading').hide()" icon="ui-icon-newwin" 
                               action="#{proyectoController.crear()}">
             </p:commandButton>

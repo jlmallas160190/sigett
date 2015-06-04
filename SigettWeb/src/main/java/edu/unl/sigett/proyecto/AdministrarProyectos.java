@@ -35,7 +35,6 @@ import edu.unl.sigett.finalizacion.controlador.AdministrarActas;
 import edu.unl.sigett.finalizacion.controlador.AdministrarEvaluacionesTribunal;
 import edu.unl.sigett.finalizacion.controlador.AdministrarMiembrosTribunal;
 import edu.unl.sigett.finalizacion.controlador.AdministrarTribunales;
-import edu.unl.sigett.reporte.AdministrarReportes;
 import edu.unl.sigett.seguimiento.controlador.AdministrarActividades;
 import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
 import edu.unl.sigett.entity.Actividad;
@@ -164,7 +163,6 @@ class AdministrarProyectos implements Serializable {
     @Inject
     private AdministrarActas administrarActas;
 //</editor-fold>
-    private AdministrarReportes administrarReportes;
     //<editor-fold defaultstate="collapsed" desc="SERVICIOS">
     @EJB
     private ProyectoDao proyectoDao;
@@ -2651,13 +2649,6 @@ class AdministrarProyectos implements Serializable {
         this.administrarTribunales = administrarTribunales;
     }
 
-    public AdministrarReportes getAdministrarReportes() {
-        return administrarReportes;
-    }
-
-    public void setAdministrarReportes(AdministrarReportes administrarReportes) {
-        this.administrarReportes = administrarReportes;
-    }
 
     public List<ProyectoCarreraOferta> getProyectoCarreraOfertasAgregados() {
         return proyectoCarreraOfertasAgregados;

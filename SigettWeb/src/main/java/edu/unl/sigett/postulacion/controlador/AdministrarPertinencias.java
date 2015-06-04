@@ -9,7 +9,6 @@ import com.jlmallas.comun.entity.Persona;
 import com.jlmallas.comun.dao.PersonaDao;
 import edu.unl.sigett.docenteProyecto.SessionDocenteProyecto;
 import edu.unl.sigett.postulacion.managed.session.SessionPertinencia;
-import edu.unl.sigett.reporte.AdministrarReportes;
 import edu.unl.sigett.entity.AutorProyecto;
 import edu.jlmallas.academico.entity.Carrera;
 import edu.unl.sigett.entity.ConfiguracionCarrera;
@@ -315,7 +314,7 @@ public class AdministrarPertinencias implements Serializable {
     }
 
     public void downloadInformeDocx(Usuario user) {
-        AdministrarReportes reportes = new AdministrarReportes();
+//        AdministrarReportes reportes = new AdministrarReportes();
         Map datosReporte = new HashMap();
         Carrera carrera = carreraFacadeLocal.find(carreraId);
 //        ConfiguracionCarrera configuracionCarrera = configuracionCarreraFacadeLocal.buscarPorCarreraId(carreraId, "NO");

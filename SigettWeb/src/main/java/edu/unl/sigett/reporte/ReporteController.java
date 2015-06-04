@@ -9,13 +9,19 @@ import edu.unl.sigett.docenteProyecto.ReporteFePresentacionPertinencia;
 import edu.unl.sigett.docenteProyecto.ReporteOficioPertinencia;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
+import javax.servlet.ServletOutputStream;
 import net.sf.jasperreports.engine.JREmptyDataSource;
 import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JRExporterParameter;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperRunManager;
+import net.sf.jasperreports.engine.export.ooxml.JRDocxExporter;
 
 /**
  *
@@ -55,27 +61,7 @@ public class ReporteController {
             p.put("responsable", reporteOficioPertinenciaDTO.getResponsable());
             p.put("autores", reporteOficioPertinenciaDTO.getAutores());
             File fileReport = new File(reporteOficioPertinenciaDTO.getRuta());
-            bytes = JasperRunManager.runReportToPdf(fileReport.getPath(), p, new JREmptyDataSource());
-
-//            if (reporteOficioPertinenciaDTO.getTipoArchivo().equalsIgnoreCase("pdf")) {
-//                reporteOficioPertinenciaDTO.getResponse().setCharacterEncoding("ISO-8859-1");
-//                reporteOficioPertinenciaDTO.getResponse().setContentType("application/pdf");
-//                reporteOficioPertinenciaDTO.getResponse().setContentLength(bytes.length);
-//                reporteOficioPertinenciaDTO.getResponse().getOutputStream().write(bytes, 0, bytes.length);
-//                reporteOficioPertinenciaDTO.getResponse().getOutputStream().flush();
-//                reporteOficioPertinenciaDTO.getResponse().getOutputStream().close();
-//                return bytes;
-//            }
-//            reporteOficioPertinenciaDTO.getResponse().setCharacterEncoding("ISO-8859-1");
-//            reporteOficioPertinenciaDTO.getResponse().addHeader("Content-disposition", "attachment; filename=informeDocenteProyecto.docx");
-//            JasperPrint jasperPrint = JasperFillManager.fillReport(fileReport.getPath(), p, new JREmptyDataSource());
-//            ServletOutputStream servletOutputStream = reporteOficioPertinenciaDTO.getResponse().getOutputStream();
-//            JRDocxExporter docxExporter = new JRDocxExporter();
-//            docxExporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
-//            docxExporter.setParameter(JRExporterParameter.OUTPUT_STREAM, servletOutputStream);
-//            docxExporter.exportReport();
-            return bytes;
-
+            return JasperRunManager.runReportToPdf(fileReport.getPath(), p, new JREmptyDataSource());
         } catch (JRException ex) {
             LOG.info(ex.getMessage());
         }
@@ -98,26 +84,7 @@ public class ReporteController {
             p.put("firmaInvolucrados", reporteFePresentacionPertinencia.getFirmaInvolucrados());
             p.put("responsable", reporteFePresentacionPertinencia.getResponsable());
             File fileReport = new File(reporteFePresentacionPertinencia.getRuta());
-            bytes = JasperRunManager.runReportToPdf(fileReport.getPath(), p, new JREmptyDataSource());
-
-//            if (reporteFePresentacionPertinencia.getTipoArchivo().equalsIgnoreCase("pdf")) {
-//                reporteFePresentacionPertinencia.getResponse().setCharacterEncoding("ISO-8859-1");
-//                reporteFePresentacionPertinencia.getResponse().setContentType("application/pdf");
-//                reporteFePresentacionPertinencia.getResponse().setContentLength(bytes.length);
-//                reporteFePresentacionPertinencia.getResponse().getOutputStream().write(bytes, 0, bytes.length);
-//                reporteFePresentacionPertinencia.getResponse().getOutputStream().flush();
-//                reporteFePresentacionPertinencia.getResponse().getOutputStream().close();
-//                return bytes;
-//            }
-//            reporteFePresentacionPertinencia.getResponse().setCharacterEncoding("ISO-8859-1");
-//            reporteFePresentacionPertinencia.getResponse().addHeader("Content-disposition", "attachment; filename=informeDocenteProyecto.docx");
-//            JasperPrint jasperPrint = JasperFillManager.fillReport(fileReport.getPath(), p, new JREmptyDataSource());
-//            ServletOutputStream servletOutputStream = reporteFePresentacionPertinencia.getResponse().getOutputStream();
-//            JRDocxExporter docxExporter = new JRDocxExporter();
-//            docxExporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
-//            docxExporter.setParameter(JRExporterParameter.OUTPUT_STREAM, servletOutputStream);
-//            docxExporter.exportReport();
-            return bytes;
+            return JasperRunManager.runReportToPdf(fileReport.getPath(), p, new JREmptyDataSource());
         } catch (JRException ex) {
             LOG.info(ex.getMessage());
         }

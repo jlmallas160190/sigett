@@ -21,7 +21,7 @@ import javax.inject.Named;
 public class SessionDocenteProyecto implements Serializable {
 
     private DocenteProyectoDTO docenteProyectoDTO;
-    private DocumentoCarreraDTO oficioPertinenciaDTO;
+    private DocumentoCarreraDTO documentoCarreraDTO;
 
     private List<DirectorDTO> directoresDTO;
     private List<DirectorDTO> filterDirectoresDTO;
@@ -31,10 +31,8 @@ public class SessionDocenteProyecto implements Serializable {
     private Boolean renderedImprimirOficio;
     private Boolean renderedSeleccionarEspecialista;
     private Boolean renderedEliminar;
-    private Boolean renderedPnlDialogoOficio;
-    private Boolean renderedPnlDialogoFe;
-
-    private Long docenteProyectoId;
+    private Boolean renderedMediaOficio;
+    private Boolean renderedMediaFePresentacion;
 
     public SessionDocenteProyecto() {
         this.filterDirectoresDTO = new ArrayList<>();
@@ -106,36 +104,28 @@ public class SessionDocenteProyecto implements Serializable {
         this.filterDirectoresDTO = filterDirectoresDTO;
     }
 
-    public Long getDocenteProyectoId() {
-        return docenteProyectoId;
+    public Boolean getRenderedMediaOficio() {
+        return renderedMediaOficio;
     }
 
-    public void setDocenteProyectoId(Long docenteProyectoId) {
-        this.docenteProyectoId = docenteProyectoId;
+    public void setRenderedMediaOficio(Boolean renderedMediaOficio) {
+        this.renderedMediaOficio = renderedMediaOficio;
     }
 
-    public Boolean getRenderedPnlDialogoOficio() {
-        return renderedPnlDialogoOficio;
+    public DocumentoCarreraDTO getDocumentoCarreraDTO() {
+        return documentoCarreraDTO;
     }
 
-    public void setRenderedPnlDialogoOficio(Boolean renderedPnlDialogoOficio) {
-        this.renderedPnlDialogoOficio = renderedPnlDialogoOficio;
+    public void setDocumentoCarreraDTO(DocumentoCarreraDTO documentoCarreraDTO) {
+        this.documentoCarreraDTO = documentoCarreraDTO;
     }
 
-    public DocumentoCarreraDTO getOficioPertinenciaDTO() {
-        return oficioPertinenciaDTO;
+    public Boolean getRenderedMediaFePresentacion() {
+        return renderedMediaFePresentacion;
     }
 
-    public void setOficioPertinenciaDTO(DocumentoCarreraDTO oficioPertinenciaDTO) {
-        this.oficioPertinenciaDTO = oficioPertinenciaDTO;
-    }
-
-    public Boolean isRenderedPnlDialogoFe() {
-        return renderedPnlDialogoFe;
-    }
-
-    public void setRenderedPnlDialogoFe(Boolean renderedPnlDialogoFe) {
-        this.renderedPnlDialogoFe = renderedPnlDialogoFe;
+    public void setRenderedMediaFePresentacion(Boolean renderedMediaFePresentacion) {
+        this.renderedMediaFePresentacion = renderedMediaFePresentacion;
     }
 
 }

@@ -9,7 +9,6 @@ import com.jlmallas.comun.entity.Persona;
 import com.jlmallas.comun.dao.PersonaDao;
 import edu.unl.sigett.finalizacion.managed.session.SessionMiembro;
 import edu.unl.sigett.proyecto.SessionProyecto;
-import edu.unl.sigett.reporte.AdministrarReportes;
 import edu.unl.sigett.entity.AutorProyecto;
 import edu.unl.sigett.entity.CargoMiembro;
 import edu.jlmallas.academico.entity.Carrera;
@@ -179,7 +178,7 @@ public class AdministrarMiembrosTribunal implements Serializable {
     public void descargarOficioMiembroTribunalPublica(Usuario user) {
         try {
             Map datosReporte = new HashMap();
-            AdministrarReportes reportes = new AdministrarReportes();
+//            AdministrarReportes reportes = new AdministrarReportes();
             FacesContext facesContext = FacesContext.getCurrentInstance();
             ResourceBundle resourceBundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
             HttpServletRequest request = (HttpServletRequest) facesContext.getExternalContext().getRequest();
@@ -279,7 +278,7 @@ public class AdministrarMiembrosTribunal implements Serializable {
             FacesContext facesContext = FacesContext.getCurrentInstance();
             ResourceBundle resourceBundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
             Map datosReporte = new HashMap();
-            AdministrarReportes reportes = new AdministrarReportes();
+//            AdministrarReportes reportes = new AdministrarReportes();
             HttpServletRequest request = (HttpServletRequest) facesContext.getExternalContext().getRequest();
             String path = request.getRealPath("/");
             String pathSetting = request.getRealPath("/settings.txt");

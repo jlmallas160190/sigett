@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="2e74cc02-9123-4601-844b-4163d2b5a8f4">
 	<property name="ireport.zoom" value="1.6105100000000008"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="65"/>
+	<property name="ireport.y" value="239"/>
 	<parameter name="cabecera1" class="java.lang.String"/>
 	<parameter name="cabecera2" class="java.lang.String"/>
 	<parameter name="area" class="java.lang.String"/>
@@ -62,11 +62,11 @@
 				<textFieldExpression><![CDATA[$P{saludo}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement stretchType="RelativeToTallestObject" x="113" y="145" width="443" height="15" uuid="5eb190b5-1e86-465d-a272-178a68e33917"/>
+				<reportElement stretchType="RelativeToTallestObject" x="2" y="145" width="553" height="15" uuid="5eb190b5-1e86-465d-a272-178a68e33917"/>
 				<textElement textAlignment="Justified">
 					<font fontName="SansSerif" size="11"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{numeracion}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{etiquetaNO}+":"+$P{numeracion}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="1" y="230" width="554" height="15" uuid="42d972d5-c17c-4cdc-ac69-ab987d666981"/>
@@ -97,17 +97,13 @@
 				<textFieldExpression><![CDATA[$P{destinatario}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="1" y="145" width="112" height="15" uuid="a7be287e-c912-4cab-b513-2b7433c88dc7"/>
-				<textFieldExpression><![CDATA[$P{etiquetaNO}]]></textFieldExpression>
-			</textField>
-			<textField>
 				<reportElement x="51" y="1" width="100" height="49" uuid="7b88f03f-a15c-403d-9194-a2d9a86ca12b"/>
 				<textElement markup="styled"/>
 				<textFieldExpression><![CDATA[$P{cabecera1}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="455" y="0" width="100" height="20" uuid="4c9dc408-9868-4a27-8100-3195441c51c5"/>
-				<textElement markup="styled"/>
+				<textElement textAlignment="Center" markup="styled"/>
 				<textFieldExpression><![CDATA[$P{cabecera2}]]></textFieldExpression>
 			</textField>
 		</band>
@@ -116,7 +112,7 @@
 		<band height="100" splitType="Stretch">
 			<textField>
 				<reportElement x="0" y="0" width="555" height="100" uuid="0c4449a7-9021-4c85-b010-b1535c95054b"/>
-				<textElement markup="html">
+				<textElement textAlignment="Justified" markup="html">
 					<font size="11"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{cuerpo}]]></textFieldExpression>
@@ -159,19 +155,19 @@
 		<band height="114" splitType="Stretch">
 			<textField>
 				<reportElement x="0" y="0" width="555" height="42" uuid="0da7ef61-55c1-42b8-a632-c1f559c610c2"/>
-				<textElement>
+				<textElement textAlignment="Justified">
 					<font size="11"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{despedida}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="1" y="64" width="554" height="30" uuid="aecfcaf4-36af-45aa-a59c-5b532bcae626"/>
-				<textElement markup="html"/>
+				<textElement textAlignment="Justified" markup="html"/>
 				<textFieldExpression><![CDATA[$P{quienFirma}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="0" y="94" width="555" height="20" uuid="905ab5e5-dfd6-4872-931b-021a7437286b"/>
-				<textElement markup="html"/>
+				<textElement textAlignment="Justified" markup="html"/>
 				<textFieldExpression><![CDATA[$P{cargoQuienFirma}]]></textFieldExpression>
 			</textField>
 		</band>

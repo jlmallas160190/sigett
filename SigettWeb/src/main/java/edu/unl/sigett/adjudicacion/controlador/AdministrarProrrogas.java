@@ -9,7 +9,6 @@ import com.jlmallas.comun.entity.Persona;
 import com.jlmallas.comun.dao.PersonaDao;
 import edu.unl.sigett.adjudicacion.session.SessionProrroga;
 import edu.unl.sigett.proyecto.SessionProyecto;
-import edu.unl.sigett.reporte.AdministrarReportes;
 import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
 import edu.unl.sigett.entity.Actividad;
 import edu.unl.sigett.entity.AutorProyecto;
@@ -369,7 +368,7 @@ public class AdministrarProrrogas implements Serializable {
     }
 
     public void downloadResponseDocx(Usuario user) {
-        AdministrarReportes reportes = new AdministrarReportes();
+//        AdministrarReportes reportes = new AdministrarReportes();
         Map datosReporte = new HashMap();
         Carrera carrera = carreraFacadeLocal.find(carreraId);
         String secretario = "";
@@ -411,7 +410,7 @@ public class AdministrarProrrogas implements Serializable {
     }
 
     public void downloadDocx(Usuario user) {
-        AdministrarReportes reportes = new AdministrarReportes();
+//        AdministrarReportes reportes = new AdministrarReportes();
         Map datosReporte = new HashMap();
         Carrera carrera = carreraFacadeLocal.find(carreraId);
         String secretario = "";

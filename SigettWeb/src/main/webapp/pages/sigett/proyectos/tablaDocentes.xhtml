@@ -30,21 +30,31 @@
                     <h:outputText value="#{msg['lbl.accion']}"/>
                 </f:facet> 
                 <p:panelGrid columns="3">
-                    <p:commandButton  onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide(),PF('tblDPFilter').filter()" icon="ui-icon-trash" 
-                                      rendered="#{sessionProyecto.renderedInicio}"
-                                      update=":contenido:tabViewDatosProyecto:tblDocentesProyecto,:contenido:msm,
-                                      :contenido:tabViewDatosProyecto:opcionesDocente"  
-                                      onclick="if (!confirm('¿#{msg['lbl.confirmarEliminar']}?'))
+                    <p:row>
+                        <p:column>
+                            <p:commandButton  onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide(),PF('tblDPFilter').filter()" icon="ui-icon-trash" 
+                                              rendered="#{sessionProyecto.renderedInicio}"
+                                              update=":contenido:tabViewDatosProyecto:tblDocentesProyecto,:contenido:msm,
+                                              :contenido:tabViewDatosProyecto:opcionesDocente"  
+                                              onclick="if (!confirm('¿#{msg['lbl.confirmarEliminar']}?'))
                                                   return false;"  
-                                      action="#{docenteProyectoController.remover(item)}"/>
-                    <p:commandButton onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide(),PF('dlgOficioPertinencia').show()" icon="ui-icon-print"
-                                     update=":contenido:msm,:contenido:dlgOficioPertinencia" title="#{msg['lbl.oficio']}"
-                                     rendered="#{sessionProyecto.proyectoSeleccionado.id!=null}"
-                                     action="#{docenteProyectoController.imprimirOficioPertinencia(item)}"/>
-                    <p:commandButton onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide(),PF('dlgFePertinencia').show()" icon="ui-icon-print" 
-                                     rendered="#{sessionProyecto.proyectoSeleccionado.id!=null}"
-                                     update=":contenido:msm,:contenido:dlgFePertinencia" title="#{lbl['fe_presentacion']}"
-                                     action="#{docenteProyectoController.imprimirFePresentacion(item)}"/>
+                                              action="#{docenteProyectoController.remover(item)}"/>
+                        </p:column>
+                        <p:column>
+                            <p:commandButton onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide(),PF('dlgOficioPertinencia').show()" icon="ui-icon-print"
+                                             update=":contenido:msm,:contenido:pnlOficioPertinencia" 
+                                             rendered="#{sessionProyecto.proyectoSeleccionado.id!=null}" value="#{msg['lbl.oficio']}"
+                                             action="#{docenteProyectoController.imprimirOficioPertinencia(item)}"/>
+                        </p:column>
+                        <p:column>
+                            <p:commandButton onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide(),PF('dlgFePertinencia').show()" icon="ui-icon-print" 
+                                             rendered="#{sessionProyecto.proyectoSeleccionado.id!=null}" iconPos="left" value="#{lbl['fe_presentacion']}"
+                                             update=":contenido:msm,:contenido:pnlFePertinencia" title="#{lbl['fe_presentacion']}"
+                                             action="#{docenteProyectoController.imprimirFePresentacion(item)}"/>
+                        </p:column>
+                    </p:row>
+
+
                 </p:panelGrid>
             </p:column>
         </p:dataTable>

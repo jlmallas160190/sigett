@@ -81,8 +81,7 @@ public class DocumentoProyectoController implements Serializable {
         try {
             FacesContext facesContext = FacesContext.getCurrentInstance();
             ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            String tipoArchivo = event.getFile().getContentType();
-            sessionDocumentoProyecto.getDocumentoProyectoDTOSeleccionado().getDocumento().setTipo(tipoArchivo);
+            sessionDocumentoProyecto.getDocumentoProyectoDTOSeleccionado().getDocumento().setTipo("pdf");
             sessionDocumentoProyecto.getDocumentoProyectoDTOSeleccionado().getDocumento().setContents(event.getFile().getContents());
             Long size = event.getFile().getSize();
             sessionDocumentoProyecto.getDocumentoProyectoDTOSeleccionado().getDocumento().setTamanio(size.doubleValue());

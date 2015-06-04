@@ -6,6 +6,7 @@
 package org.jlmallas.util;
 
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -123,11 +124,13 @@ public class UtilServiceImplement implements UtilService {
 
     @Override
     public void generaDocumento(File file, byte[] bytes) {
-        BufferedOutputStream bos = null;
         try {
             FileOutputStream fos = new FileOutputStream(file);
-            bos = new BufferedOutputStream(fos);
-            bos.write(bytes);
+            try (BufferedOutputStream bos = new BufferedOutputStream(fos)) {
+                bos.write(bytes);
+                bos.flush();
+            }
+
         } catch (IOException ex) {
             Logger.getLogger(UtilServiceImplement.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -138,5 +141,5 @@ public class UtilServiceImplement implements UtilService {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(formato);
         return simpleDateFormat.format(fecha);
     }
-    
+
 }

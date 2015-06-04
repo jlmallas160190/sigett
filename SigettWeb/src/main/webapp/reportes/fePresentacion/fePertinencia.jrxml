@@ -14,27 +14,11 @@
 	<detail>
 		<band height="251">
 			<textField isStretchWithOverflow="true">
-				<reportElement x="0" y="100" width="555" height="150" uuid="a4d98dd2-5931-498f-95f0-9924fb8c62d8"/>
+				<reportElement x="0" y="0" width="555" height="251" uuid="a4d98dd2-5931-498f-95f0-9924fb8c62d8"/>
 				<textElement textAlignment="Justified" markup="html">
 					<font size="11"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{cuerpo}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true">
-				<reportElement x="0" y="0" width="555" height="100" uuid="c5ecf626-5bea-4514-92d3-ba7c9b9c7df3"/>
-				<textElement textAlignment="Justified" markup="html">
-					<font size="11"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$P{referencia}]]></textFieldExpression>
-			</textField>
-		</band>
-		<band height="150">
-			<textField isStretchWithOverflow="true">
-				<reportElement x="0" y="0" width="555" height="150" uuid="fad13e47-1ffc-43ec-a3cd-b46bac5b309d"/>
-				<textElement textAlignment="Justified" markup="html">
-					<font size="11"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$P{final}+"<p>"+$P{firmaInvolucrados}+"</p>"]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{referencia}+"<br/>"+$P{cuerpo}+"<br/><br/>"+$P{final}+"<br/><br/>"+$P{firmaInvolucrados}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

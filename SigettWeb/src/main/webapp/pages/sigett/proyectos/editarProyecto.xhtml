@@ -41,7 +41,6 @@
                     </p:tab>
                     <p:tab id="tabDocentesProyecto" 
                            title="#{msg['lbl.docentes']} #{msg['lbl.pertinencias']}">
-
                         <p:panel header="#{msg['lbl.listado']} #{msg['lbl.docentes']}">
                             <ui:include src="tablaDocentes.xhtml"/>
                             <f:facet name="footer">
@@ -67,10 +66,11 @@
             <ui:include src="dialogoAspirantes.xhtml"/>
             <ui:include src="dialogoOficioDocenteProyecto.xhtml"/>
             <ui:include src="dialogoFePresentacionPertinencia.xhtml"/>
+            <ui:include src="dialogoSubirDocumentoPertinencia.xhtml"/>
             <ui:include src="dialogoVerDocumentoProyecto.xhtml"/>
             <ui:include src="dialogoEditarDocumentoProyecto.xhtml"/>
             <ui:include src="./../documentosProyecto/dialogoUpload.xhtml"/>
-            
+
         </ui:define>
     </ui:composition>
 </html>

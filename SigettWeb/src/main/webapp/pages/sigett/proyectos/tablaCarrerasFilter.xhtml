@@ -11,7 +11,7 @@
                      filteredValue="#{sessionProyecto.filterCarreras}" widgetVar="tblCarrerasFilter">
             <p:ajax event="rowSelect" listener="#{proyectoController.seleccionarCarrera}" onstart="PF('dlgLoading').show()" 
                     oncomplete="PF('dlgLoading').hide(),PF('tblCarrerasFilter').filter()" 
-                    update=":contenido:tblProyectos,:contenido:btnCrearProyecto"/>
+                    update=":contenido:tblProyectos,:contenido:pnlBotonesTblProyecto"/>
             <p:column filterBy="#{carrera.nombre}" filterMatchMode="contains" sortBy="#{carrera.nombre}">
                 <f:facet name="header">
                     <h:outputText value="#{msg['lbl.carrera']}"/>
