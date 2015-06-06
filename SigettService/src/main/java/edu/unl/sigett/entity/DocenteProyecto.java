@@ -18,13 +18,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.NamedStoredProcedureQueries;
-import javax.persistence.NamedStoredProcedureQuery;
 import javax.persistence.OneToMany;
-import static javax.persistence.ParameterMode.IN;
-import javax.persistence.StoredProcedureParameter;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -40,39 +34,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @Entity
 @Table(name = "docente_proyecto")
 @XmlRootElement
-@NamedStoredProcedureQueries({
-    @NamedStoredProcedureQuery(
-            name = "proyectoSinPertinencia",
-            resultClasses = DocenteProyecto.class,
-            procedureName = "sp_proyectos_sin_pertinencia",
-            parameters = {
-                @StoredProcedureParameter(mode = IN, name = "carreraId", type = Integer.class)
-            }
-    ),
-    @NamedStoredProcedureQuery(
-            name = "proyectosParaPertinencia",
-            resultClasses = DocenteProyecto.class,
-            procedureName = "sp_proyectos_para_pertinencia",
-            parameters = {
-                @StoredProcedureParameter(mode = IN, name = "ci", type = String.class)
-            }
-    ),
-    @NamedStoredProcedureQuery(
-            name = "docenteProyectoPorDocenteOferta",
-            resultClasses = DocenteProyecto.class,
-            procedureName = "sp_docentes_proyecto_periodo",
-            parameters = {
-                @StoredProcedureParameter(mode = IN, name = "ci", type = String.class),
-                @StoredProcedureParameter(mode = IN, name = "ofertaId", type = Integer.class)
-            }
-    )
-})
-@NamedQueries({
-    @NamedQuery(name = "DocenteProyecto.findAll", query = "SELECT d FROM DocenteProyecto d"),
-    @NamedQuery(name = "DocenteProyecto.findById", query = "SELECT d FROM DocenteProyecto d WHERE d.id = :id"),
-    @NamedQuery(name = "DocenteProyecto.findByFecha", query = "SELECT d FROM DocenteProyecto d WHERE d.fecha = :fecha"),
-    @NamedQuery(name = "DocenteProyecto.findByDocenteId", query = "SELECT d FROM DocenteProyecto d WHERE d.docenteId = :docenteId"),
-    @NamedQuery(name = "DocenteProyecto.findByEsActivo", query = "SELECT d FROM DocenteProyecto d WHERE d.esActivo = :esActivo")})
+
 public class DocenteProyecto implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -99,6 +61,8 @@ public class DocenteProyecto implements Serializable {
     @JoinColumn(name = "proyecto_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Proyecto proyectoId;
+    @Transient
+    private Long estadoProyecto;
 
     public DocenteProyecto() {
         this.pertinenciaList = new ArrayList<>();
@@ -108,11 +72,12 @@ public class DocenteProyecto implements Serializable {
         this.id = id;
     }
 
-    public DocenteProyecto(Proyecto proyecto, Date fecha, Long docenteId, Boolean esActivo) {
-        this.proyectoId=proyecto;
+    public DocenteProyecto(Proyecto proyecto, Date fecha, Long docenteId, Boolean esActivo, Long estadoProyecto) {
+        this.proyectoId = proyecto;
         this.fecha = fecha;
         this.docenteId = docenteId;
         this.esActivo = esActivo;
+        this.estadoProyecto = estadoProyecto;
     }
 
     public Long getId() {
@@ -164,6 +129,14 @@ public class DocenteProyecto implements Serializable {
         this.proyectoId = proyectoId;
     }
 
+    public Long getEstadoProyecto() {
+        return estadoProyecto;
+    }
+
+    public void setEstadoProyecto(Long estadoProyecto) {
+        this.estadoProyecto = estadoProyecto;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -178,10 +151,7 @@ public class DocenteProyecto implements Serializable {
             return false;
         }
         DocenteProyecto other = (DocenteProyecto) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
+        return (this.id != null || other.id == null) && (this.id == null || this.id.equals(other.id));
     }
 
     @Override

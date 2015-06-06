@@ -18,6 +18,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -51,14 +52,17 @@ public class CoordinadorPeriodo implements Serializable {
     @JoinColumn(name = "coordinador_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Coordinador coordinadorId;
+    @Transient
+    private Carrera carrera;
 
     public CoordinadorPeriodo() {
     }
 
-    public CoordinadorPeriodo(Boolean esVigente, Coordinador coordinador, PeriodoCoordinacion periodoCoordinacion) {
+    public CoordinadorPeriodo(Boolean esVigente, Coordinador coordinador, PeriodoCoordinacion periodoCoordinacion, Carrera carrera) {
         this.esVigente = esVigente;
         this.periodoId = periodoCoordinacion;
         this.coordinadorId = coordinador;
+        this.carrera = carrera;
     }
 
     public Long getId() {
@@ -100,6 +104,14 @@ public class CoordinadorPeriodo implements Serializable {
         return hash;
     }
 
+    public Carrera getCarrera() {
+        return carrera;
+    }
+
+    public void setCarrera(Carrera carrera) {
+        this.carrera = carrera;
+    }
+
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
@@ -107,10 +119,7 @@ public class CoordinadorPeriodo implements Serializable {
             return false;
         }
         CoordinadorPeriodo other = (CoordinadorPeriodo) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
+        return (this.id != null || other.id == null) && (this.id == null || this.id.equals(other.id));
     }
 
     @Override

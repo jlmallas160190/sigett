@@ -162,6 +162,7 @@ public class AdministrarLineasInvestigacionCarrera implements Serializable {
 
     public void buscar() {
         this.sessionLineaInvestigacionCarrera.getLineaInvestigacionCarreras().clear();
+        this.sessionLineaInvestigacionCarrera.getFilterLineasInvestigacionCarreras().clear();
         try {
             FacesContext facesContext = FacesContext.getCurrentInstance();
             ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
@@ -177,6 +178,7 @@ public class AdministrarLineasInvestigacionCarrera implements Serializable {
 
                 }
             }
+            sessionLineaInvestigacionCarrera.setFilterLineasInvestigacionCarreras(sessionLineaInvestigacionCarrera.getLineaInvestigacionCarreras());
         } catch (Exception e) {
             e.printStackTrace();
         }

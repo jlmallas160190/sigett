@@ -69,7 +69,7 @@ public class DocenteUsuarioController implements Serializable {
     //<editor-fold defaultstate="collapsed" desc="SERVICIOS">
     @EJB
     private ConfiguracionDao configuracionDao;
-    @EJB(lookup = "java:global")
+    @EJB
     private UsuarioService usuarioService;
     @EJB
     private DocenteUsuarioDao docenteUsuarioDao;
@@ -107,6 +107,7 @@ public class DocenteUsuarioController implements Serializable {
                 }
                 DocenteUsuario docenteUsuario = docenteUsuarioDao.find(!usuarios.isEmpty() ? usuarios.get(0).getId() : null);
                 if (docenteUsuario == null) {
+                    this.cabeceraController.getMessageView().message(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.datos_incorrectos"), "");
                     return "";
                 }
                 docenteUsuarioDM.setDocenteUsuarioDTO(new DocenteUsuarioDTO(docenteDao.find(docenteUsuario.getDocenteId()),

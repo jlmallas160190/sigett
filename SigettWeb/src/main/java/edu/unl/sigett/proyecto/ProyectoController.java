@@ -500,7 +500,7 @@ public class ProyectoController implements Serializable {
                 return;
             }
             List<CoordinadorPeriodo> coordinadores = coordinadorPeriodoService.buscar(new CoordinadorPeriodo(Boolean.TRUE, null,
-                    !periodoCoordinacions.isEmpty() ? periodoCoordinacions.get(0) : null));
+                    !periodoCoordinacions.isEmpty() ? periodoCoordinacions.get(0) : null,null));
             if (coordinadores == null) {
                 return;
             }
@@ -1018,7 +1018,7 @@ public class ProyectoController implements Serializable {
     public void buscarDocentes() {
         try {
             List<DocenteProyecto> docenteProyectos = docenteProyectoService.buscar(new DocenteProyecto(
-                    sessionProyecto.getProyectoSeleccionado(), null, null, Boolean.TRUE));
+                    sessionProyecto.getProyectoSeleccionado(), null, null, Boolean.TRUE,null));
             if (docenteProyectos.isEmpty()) {
                 return;
             }

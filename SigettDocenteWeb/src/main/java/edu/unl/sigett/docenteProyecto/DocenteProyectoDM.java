@@ -5,7 +5,6 @@
  */
 package edu.unl.sigett.docenteProyecto;
 
-
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
@@ -23,8 +22,12 @@ public class DocenteProyectoDM implements Serializable {
     private DocenteProyectoDTO docenteProyectoDTOSeleccionado;
     private List<DocenteProyectoDTO> docentesProyectoDTO;
     private List<DocenteProyectoDTO> filterDocentesProyectoDTO;
+    private List<DocenteProyectoDTO> historialDocenteProyectosDTO;
+    private List<DocenteProyectoDTO> filterHistorialDocenteProyectosDTO;
 
     public DocenteProyectoDM() {
+        this.filterHistorialDocenteProyectosDTO = new ArrayList<>();
+        this.historialDocenteProyectosDTO = new ArrayList<>();
         this.docenteProyectoDTOSeleccionado = new DocenteProyectoDTO();
         this.filterDocentesProyectoDTO = new ArrayList<>();
         this.docentesProyectoDTO = new ArrayList<>();
@@ -52,6 +55,22 @@ public class DocenteProyectoDM implements Serializable {
 
     public void setFilterDocentesProyectoDTO(List<DocenteProyectoDTO> filterDocentesProyectoDTO) {
         this.filterDocentesProyectoDTO = filterDocentesProyectoDTO;
+    }
+
+    public List<DocenteProyectoDTO> getHistorialDocenteProyectosDTO() {
+        return historialDocenteProyectosDTO;
+    }
+
+    public void setHistorialDocenteProyectosDTO(List<DocenteProyectoDTO> historialDocenteProyectosDTO) {
+        this.historialDocenteProyectosDTO = historialDocenteProyectosDTO;
+    }
+
+    public List<DocenteProyectoDTO> getFilterHistorialDocenteProyectosDTO() {
+        return filterHistorialDocenteProyectosDTO;
+    }
+
+    public void setFilterHistorialDocenteProyectosDTO(List<DocenteProyectoDTO> filterHistorialDocenteProyectosDTO) {
+        this.filterHistorialDocenteProyectosDTO = filterHistorialDocenteProyectosDTO;
     }
 
 }

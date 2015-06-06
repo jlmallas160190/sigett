@@ -113,7 +113,7 @@ public class AdministrarCoordinadoresPeriodos implements Serializable {
             int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "crear_coordinador_periodo_coordinacion");
             if (tienePermiso == 1) {
                 sessionCoordinadorPeriodo.setCoordinadorPeriodoDTO(new CoordinadorPeriodoDTO(new CoordinadorPeriodo(
-                        Boolean.FALSE, new Coordinador(Boolean.TRUE), null), new Persona(),null));
+                        Boolean.FALSE, new Coordinador(Boolean.TRUE), null,null), new Persona(),null));
                 if (param.equalsIgnoreCase("crear")) {
                     navegacion = "pretty:crearCoordinador";
                 } else {
@@ -184,6 +184,9 @@ public class AdministrarCoordinadoresPeriodos implements Serializable {
                     continue;
                 }
                 DocenteCarrera docenteCarrera = !docenteCarreras.isEmpty() ? docenteCarreras.get(0) : null;
+                if(docenteCarrera==null){
+                    continue;
+                }
                 docentesCarrera.add(docenteCarrera);
             }
         }
@@ -207,7 +210,7 @@ public class AdministrarCoordinadoresPeriodos implements Serializable {
             int tienePermiso = usuarioFacadeLocal.tienePermiso(sessionUsuario.getUsuario(), "buscar_coordinador_periodo_coordinacion");
             if (tienePermiso == 1) {
                 List<CoordinadorPeriodo> coordinadorPeriodos = coordinadorPeriodoService.buscar(new CoordinadorPeriodo(
-                            null, null, new PeriodoCoordinacion(sessionUsuarioCarrera.getUsuarioCarreraDTO().getCarrera(), null)));
+                            null, null, null,sessionUsuarioCarrera.getUsuarioCarreraDTO().getCarrera()));
                 if (coordinadorPeriodos == null) {
                     return;
                 }
@@ -249,7 +252,7 @@ public class AdministrarCoordinadoresPeriodos implements Serializable {
                 if (coordinadorPeriodoDTO.getCoordinadorPeriodo().getId() != null) {
                     if (coordinadorPeriodoDTO.getCoordinadorPeriodo().getEsVigente()) {
                         List<CoordinadorPeriodo> coordinadorPeriodos = coordinadorPeriodoService.buscar(new CoordinadorPeriodo(
-                                Boolean.TRUE, null, new PeriodoCoordinacion(sessionUsuarioCarrera.getUsuarioCarreraDTO().getCarrera(), null)));
+                                Boolean.TRUE, null, new PeriodoCoordinacion(sessionUsuarioCarrera.getUsuarioCarreraDTO().getCarrera(), null),null));
                         for (CoordinadorPeriodo c : coordinadorPeriodos) {
                             if (!c.equals(coordinadorPeriodoDTO.getCoordinadorPeriodo())) {
                                 c.setEsVigente(Boolean.FALSE);

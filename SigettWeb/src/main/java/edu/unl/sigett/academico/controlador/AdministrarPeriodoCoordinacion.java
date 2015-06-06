@@ -145,13 +145,6 @@ public class AdministrarPeriodoCoordinacion implements Serializable {
         }
     }
 
-//    public List<PeriodoCoordinacion> buscarActivos() {
-//        try {
-//            return periodoCoordinacionDao.buscarActivos();
-//        } catch (Exception e) {
-//        }
-//        return null;
-//    }
     /**
      * GRABAR PERIODO DE COORDINACIÓN
      *

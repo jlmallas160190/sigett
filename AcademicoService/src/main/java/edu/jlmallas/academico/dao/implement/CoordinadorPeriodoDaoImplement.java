@@ -71,6 +71,11 @@ public class CoordinadorPeriodoDaoImplement extends AbstractDao<CoordinadorPerio
             parametros.put("vigente", coordinadorPeriodo.getEsVigente());
             existeFiltro = Boolean.TRUE;
         }
+        if (coordinadorPeriodo.getCarrera() != null) {
+            sql.append(" and c.periodoId.carreraId=:carrera");
+            parametros.put("carrera", coordinadorPeriodo.getCarrera());
+            existeFiltro = Boolean.TRUE;
+        }
         if (!existeFiltro) {
             return new ArrayList<>();
         }

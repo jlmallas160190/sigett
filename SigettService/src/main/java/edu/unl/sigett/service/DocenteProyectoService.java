@@ -25,4 +25,5 @@ public interface DocenteProyectoService {
     DocenteProyecto buscarPorId(final DocenteProyecto docenteProyecto);
 
     List<DocenteProyecto> buscar(final DocenteProyecto docenteProyecto);
+
 }

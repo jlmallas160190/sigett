@@ -9,6 +9,9 @@
                      filteredValue="#{sessionPeriodoCoordinacion.filterPeriodosCoordinacion}" widgetVar="tblPeriodosFilter"
                      rowIndexVar="rowIx"  rowKey="#{item.id}" selectionMode="single" selection="#{item}" 
                      rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'even-row' : 'odd-row'}" emptyMessage="#{msg['lbl.table.empty']}">
+             <p:column>
+               <h:outputText value="#{rowIx+1}" />
+            </p:column>
             <p:column rendered="#{sessionPeriodoCoordinacion.renderedEditar}" sortBy="#{item.fechaInicio}">
                 <f:facet name="header">
                     <h:outputText value="#{msg['lbl.fecha']} #{msg['lbl.inicio']}"/>
