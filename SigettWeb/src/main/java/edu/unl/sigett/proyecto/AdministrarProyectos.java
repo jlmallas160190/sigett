@@ -686,7 +686,7 @@ class AdministrarProyectos implements Serializable {
     public Long devuelveDocenteProyecto(List<DocenteProyecto> docenteProyectos, DocenteProyecto docenteProyecto) {
         Long var = (long) 0;
         for (DocenteProyecto dp : docenteProyectos) {
-            if (dp.getDocenteId().equals(docenteProyecto.getDocenteId())) {
+            if (dp.getDocenteCarreraId().equals(docenteProyecto.getDocenteCarreraId())) {
                 var = dp.getId();
             }
         }

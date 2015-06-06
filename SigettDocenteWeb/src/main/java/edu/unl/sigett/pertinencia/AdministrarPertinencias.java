@@ -7,13 +7,9 @@ package edu.unl.sigett.pertinencia;
 
 import com.jlmallas.comun.entity.Persona;
 import com.jlmallas.comun.dao.PersonaDao;
-import edu.unl.sigett.docenteProyecto.SessionDocenteProyecto;
 import edu.unl.sigett.entity.AutorProyecto;
 import edu.jlmallas.academico.entity.Carrera;
-import edu.unl.sigett.entity.ConfiguracionCarrera;
-import edu.jlmallas.academico.entity.CoordinadorPeriodo;
 import edu.unl.sigett.entity.DocenteProyecto;
-import edu.unl.sigett.entity.DocumentoCarrera;
 import edu.unl.sigett.entity.Pertinencia;
 import edu.unl.sigett.entity.Proyecto;
 import edu.unl.sigett.entity.ProyectoCarreraOferta;
@@ -29,7 +25,6 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.primefaces.context.RequestContext;
 import edu.unl.sigett.dao.AutorProyectoDao;
@@ -39,16 +34,12 @@ import edu.unl.sigett.dao.ConfiguracionGeneralDao;
 import edu.jlmallas.academico.dao.CoordinadorPeriodoDao;
 import org.jlmallas.seguridad.dao.LogDao;
 import edu.unl.sigett.dao.DocumentoCarreraDao;
-import edu.unl.sigett.dao.PertinenciaFacadeLocal;
+import edu.unl.sigett.dao.PertinenciaDao;
 import edu.unl.sigett.dao.ProyectoDao;
 import org.jlmallas.seguridad.dao.UsuarioDao;
 import edu.jlmallas.academico.entity.Docente;
-import edu.jlmallas.academico.entity.EstudianteCarrera;
 import edu.jlmallas.academico.dao.DocenteDao;
 import edu.jlmallas.academico.dao.EstudianteCarreraDao;
-import edu.unl.sigett.enumeration.CatalogoDocumentoCarreraEnum;
-import edu.unl.sigett.enumeration.EstadoAutorEnum;
-import edu.unl.sigett.enumeration.EstadoProyectoEnum;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -61,14 +52,12 @@ import java.util.Map;
 public class AdministrarPertinencias implements Serializable {
 
     @Inject
-    private SessionDocenteProyecto sessionDocenteProyecto;
-    @Inject
-    private SessionPertinencia sessionPertinencia;
+    private PertinenciaDM sessionPertinencia;
 
     @EJB
     private LogDao logDao;
     @EJB
-    private PertinenciaFacadeLocal pertinenciaFacadeLocal;
+    private PertinenciaDao pertinenciaFacadeLocal;
     private List<Pertinencia> pertinenciasGrabar;
     private List<Pertinencia> pertinenciasRemover;
     @EJB
@@ -246,7 +235,7 @@ public class AdministrarPertinencias implements Serializable {
                 tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "buscar_pertinencia");
             }
             if (tienePermiso == 1) {
-                pertinencias = pertinenciaFacadeLocal.buscarPertinenciasPorDocenteProyecto(docenteProyecto.getId());
+//                pertinencias = pertinenciaFacadeLocal.buscarPertinenciasPorDocenteProyecto(docenteProyecto.getId());
             } else {
                 if (tienePermiso == 2) {
                     FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_buscar") + ". " + bundle.getString("lbl.msm_consulte"), "");
@@ -315,7 +304,7 @@ public class AdministrarPertinencias implements Serializable {
         Carrera carrera = carreraFacadeLocal.find(carreraId);
 //        ConfiguracionCarrera configuracionCarrera = configuracionCarreraFacadeLocal.buscarPorCarreraId(carreraId, "NO");
         Pertinencia pertinencia = pertinenciaFacadeLocal.find(pertinenciaId);
-        Docente docente = docenteFacadeLocal.find(pertinencia.getDocenteProyectoId().getDocenteId());
+        Docente docente = docenteFacadeLocal.find(pertinencia.getDocenteProyectoId().getDocenteCarreraId());
         Persona datosDocente = personaFacadeLocal.find(docente.getId());
 //        DocumentoCarrera oficioCarrera = oficioCarreraFacadeLocal.buscarPorTablaId(pertinencia.getId(), CatalogoDocumentoCarreraEnum.PERTINENCIA.getTipo());
         Calendar fechaActual = Calendar.getInstance();
@@ -516,28 +505,20 @@ public class AdministrarPertinencias implements Serializable {
 
     public boolean existePertinencias(DocenteProyecto docenteProyecto) {
         boolean var = false;
-        for (Pertinencia pertinencia : pertinenciaFacadeLocal.buscarPertinenciasPorDocenteProyecto(docenteProyecto.getId())) {
-            var = true;
-            break;
-        }
+//        for (Pertinencia pertinencia : pertinenciaFacadeLocal.buscarPertinenciasPorDocenteProyecto(docenteProyecto.getId())) {
+//            var = true;
+//            break;
+//        }
         return var;
     }
 //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="SET Y GET">
 
-    public SessionDocenteProyecto getSessionDocenteProyecto() {
-        return sessionDocenteProyecto;
-    }
-
-    public void setSessionDocenteProyecto(SessionDocenteProyecto sessionDocenteProyecto) {
-        this.sessionDocenteProyecto = sessionDocenteProyecto;
-    }
-
-    public SessionPertinencia getSessionPertinencia() {
+    public PertinenciaDM getSessionPertinencia() {
         return sessionPertinencia;
     }
 
-    public void setSessionPertinencia(SessionPertinencia sessionPertinencia) {
+    public void setSessionPertinencia(PertinenciaDM sessionPertinencia) {
         this.sessionPertinencia = sessionPertinencia;
     }
 

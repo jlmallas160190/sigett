@@ -11,7 +11,6 @@ package edu.unl.sigett.enumeration;
  */
 public enum CatalogoDocumentoCarreraEnum {
 
-    RESPUESTAPERTINENCIA("RESPUESTA_PERTINENCIA"),
     PERTINENCIA("PERTINENCIA"),
     DIRECTORPROYECTO("DIRECTOR_PROYECTO"),
     PRORROGA("PRORROGA"),

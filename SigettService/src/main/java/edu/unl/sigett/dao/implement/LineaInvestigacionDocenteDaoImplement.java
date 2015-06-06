@@ -43,9 +43,9 @@ public class LineaInvestigacionDocenteDaoImplement extends AbstractDao<LineaInve
         StringBuilder sql = new StringBuilder();
         HashMap<String, Object> parametros = new HashMap<>();
         Boolean existeFiltro = Boolean.FALSE;
-        sql.append("SELECT ld FROM LineaInvestigacionDocente ld where ");
+        sql.append("SELECT ld FROM LineaInvestigacionDocente ld where 1=1 ");
         if (lid.getDocenteId() != null) {
-            sql.append(" ld.docenteId=:docenteId ");
+            sql.append(" and ld.docenteId=:docenteId ");
             parametros.put("docenteId", lid.getDocenteId());
             existeFiltro = Boolean.TRUE;
         }

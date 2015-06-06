@@ -13,7 +13,18 @@ import com.jlmallas.comun.service.ItemService;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 import com.ocpsoft.pretty.faces.annotation.URLMappings;
 import edu.jlmallas.academico.dao.EstudianteCarreraDao;
+import edu.jlmallas.academico.dao.PeriodoCoordinacionDao;
+import edu.jlmallas.academico.dao.implement.CoordinadorPeriodoDaoImplement;
+import edu.jlmallas.academico.entity.Carrera;
+import edu.jlmallas.academico.entity.CoordinadorPeriodo;
+import edu.jlmallas.academico.entity.Docente;
+import edu.jlmallas.academico.entity.DocenteCarrera;
 import edu.jlmallas.academico.entity.EstudianteCarrera;
+import edu.jlmallas.academico.entity.PeriodoCoordinacion;
+import edu.jlmallas.academico.service.CoordinadorPeriodoService;
+import edu.jlmallas.academico.service.DocenteCarreraService;
+import edu.jlmallas.academico.service.DocenteService;
+import edu.unl.sigett.academico.coordinadorPeriodo.CoordinadorPeriodoDTO;
 import edu.unl.sigett.docenteUsuario.DocenteUsuarioDM;
 import edu.unl.sigett.entity.AutorProyecto;
 import edu.unl.sigett.entity.DocenteProyecto;
@@ -66,6 +77,12 @@ public class DocenteProyectoController implements Serializable {
     private AutorProyectoService autorProyectoService;
     @EJB
     private EstudianteCarreraDao estudianteCarreraDao;
+    @EJB
+    private DocenteCarreraService docenteCarreraService;
+    @EJB
+    private CoordinadorPeriodoService coordinadorPeriodoService;
+    @EJB
+    private DocenteService docenteService;
 //</editor-fold>
 
     public DocenteProyectoController() {
@@ -75,9 +92,28 @@ public class DocenteProyectoController implements Serializable {
         this.listadoPertinenciaProyecto();
     }
     
+    public void preRenderViewEditar() {
+        this.recuperaEstadoActualProyecto();
+    }
+    
     public String editar(final DocenteProyectoDTO docenteProyectoDTO) {
         docenteProyectoDM.setDocenteProyectoDTOSeleccionado(docenteProyectoDTO);
+        List<CoordinadorPeriodo> coordinadores = coordinadorPeriodoService.buscar(new CoordinadorPeriodo(Boolean.TRUE, null, null,
+                docenteProyectoDTO.getDocenteCarrera().getCarreraId()));
+        if (coordinadores == null) {
+            return "";
+        }
+        CoordinadorPeriodo coordinadorPeriodo = !coordinadores.isEmpty() ? coordinadores.get(0) : null;
+        CoordinadorPeriodoDTO coordinadorPeriodoDTO = new CoordinadorPeriodoDTO(
+                coordinadorPeriodo, personaDao.find(coordinadorPeriodo.getCoordinadorId().getId()), null);
+        coordinadorPeriodoDTO.setDocente(docenteService.buscarPorId(new Docente(coordinadorPeriodoDTO.getPersona().getId())));
+        docenteProyectoDM.setCoordinadorPeriodoDTO(coordinadorPeriodoDTO);
         return "pretty:editarDocenteProyecto";
+    }
+    
+    private void recuperaEstadoActualProyecto() {
+        this.docenteProyectoDM.setEstadoActualProyecto(itemService.buscarPorId(
+                docenteProyectoDM.getDocenteProyectoDTOSeleccionado().getDocenteProyecto().getProyectoId().getEstadoProyectoId()));
     }
 
     /**
@@ -87,9 +123,9 @@ public class DocenteProyectoController implements Serializable {
     private void listadoPertinenciaProyecto() {
         docenteProyectoDM.getDocentesProyectoDTO().clear();
         docenteProyectoDM.getFilterDocentesProyectoDTO().clear();
-        Item estadoProyecto=itemService.buscarPorCatalogoCodigo(CatalogoEnum.ESTADOPROYECTO.getTipo(), EstadoProyectoEnum.INICIO.getTipo());
+        Item estadoProyecto = itemService.buscarPorCatalogoCodigo(CatalogoEnum.ESTADOPROYECTO.getTipo(), EstadoProyectoEnum.INICIO.getTipo());
         List<DocenteProyecto> docenteProyectos = this.docenteProyectoService.buscar(new DocenteProyecto(
-                null, null, docenteUsuarioDM.getDocenteUsuarioDTO().getDocente().getId(), Boolean.TRUE,estadoProyecto.getId()));
+                null, null, docenteUsuarioDM.getDocenteUsuarioDTO().getDocente().getId(), Boolean.TRUE, estadoProyecto.getId()));
         if (docenteProyectos == null) {
             return;
         }
@@ -101,17 +137,21 @@ public class DocenteProyectoController implements Serializable {
             docenteProyecto.getProyectoId().setTipo(tipo.getNombre());
             docenteProyecto.getProyectoId().setCatalogo(categoria.getNombre());
             docenteProyecto.getProyectoId().setAutores(autores(docenteProyecto.getProyectoId()));
-            DocenteProyectoDTO docenteProyectoDTO = new DocenteProyectoDTO(docenteProyecto, personaDao.find(docenteProyecto.getDocenteId()));
+            DocenteProyectoDTO docenteProyectoDTO = new DocenteProyectoDTO(docenteProyecto, personaDao.find(docenteProyecto.getDocenteCarreraId()),
+                    docenteCarreraService.buscarPorId(new DocenteCarrera(docenteProyecto.getDocenteCarreraId(), null, null, null)));
             docenteProyectoDM.getDocentesProyectoDTO().add(docenteProyectoDTO);
         }
         docenteProyectoDM.setFilterDocentesProyectoDTO(docenteProyectoDM.getDocentesProyectoDTO());
     }
+
+    /**
+     * HISTORIAL DE PROYECTOS ASIGNADOS A DOCENTE PARA SU POSTERIOR PERTINENCIA
+     */
     private void historialPertinenciaProyecto() {
         docenteProyectoDM.getHistorialDocenteProyectosDTO().clear();
         docenteProyectoDM.getFilterHistorialDocenteProyectosDTO().clear();
-        Item estadoProyecto=itemService.buscarPorCatalogoCodigo(CatalogoEnum.ESTADOPROYECTO.getTipo(), EstadoProyectoEnum.INICIO.getTipo());
         List<DocenteProyecto> docenteProyectos = this.docenteProyectoService.buscar(new DocenteProyecto(
-                null, null, docenteUsuarioDM.getDocenteUsuarioDTO().getDocente().getId(), Boolean.TRUE,estadoProyecto.getId()));
+                null, null, docenteUsuarioDM.getDocenteUsuarioDTO().getDocente().getId(), Boolean.TRUE, null));
         if (docenteProyectos == null) {
             return;
         }
@@ -123,10 +163,11 @@ public class DocenteProyectoController implements Serializable {
             docenteProyecto.getProyectoId().setTipo(tipo.getNombre());
             docenteProyecto.getProyectoId().setCatalogo(categoria.getNombre());
             docenteProyecto.getProyectoId().setAutores(autores(docenteProyecto.getProyectoId()));
-            DocenteProyectoDTO docenteProyectoDTO = new DocenteProyectoDTO(docenteProyecto, personaDao.find(docenteProyecto.getDocenteId()));
-            docenteProyectoDM.getDocentesProyectoDTO().add(docenteProyectoDTO);
+            DocenteProyectoDTO docenteProyectoDTO = new DocenteProyectoDTO(docenteProyecto, personaDao.find(docenteProyecto.getDocenteCarreraId()),
+                    docenteCarreraService.buscarPorId(new DocenteCarrera(docenteProyecto.getDocenteCarreraId(), null, null, null)));
+            docenteProyectoDM.getHistorialDocenteProyectosDTO().add(docenteProyectoDTO);
         }
-        docenteProyectoDM.setFilterDocentesProyectoDTO(docenteProyectoDM.getDocentesProyectoDTO());
+        docenteProyectoDM.setFilterHistorialDocenteProyectosDTO(docenteProyectoDM.getHistorialDocenteProyectosDTO());
     }
 
     /**

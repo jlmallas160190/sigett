@@ -5,6 +5,9 @@
  */
 package edu.unl.sigett.docenteProyecto;
 
+import com.jlmallas.comun.entity.Item;
+import edu.jlmallas.academico.entity.CoordinadorPeriodo;
+import edu.unl.sigett.academico.coordinadorPeriodo.CoordinadorPeriodoDTO;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
@@ -20,6 +23,8 @@ import java.util.List;
 public class DocenteProyectoDM implements Serializable {
 
     private DocenteProyectoDTO docenteProyectoDTOSeleccionado;
+    private Item estadoActualProyecto;
+    private CoordinadorPeriodoDTO coordinadorPeriodoDTO;
     private List<DocenteProyectoDTO> docentesProyectoDTO;
     private List<DocenteProyectoDTO> filterDocentesProyectoDTO;
     private List<DocenteProyectoDTO> historialDocenteProyectosDTO;
@@ -28,6 +33,7 @@ public class DocenteProyectoDM implements Serializable {
     public DocenteProyectoDM() {
         this.filterHistorialDocenteProyectosDTO = new ArrayList<>();
         this.historialDocenteProyectosDTO = new ArrayList<>();
+        this.estadoActualProyecto = new Item();
         this.docenteProyectoDTOSeleccionado = new DocenteProyectoDTO();
         this.filterDocentesProyectoDTO = new ArrayList<>();
         this.docentesProyectoDTO = new ArrayList<>();
@@ -71,6 +77,22 @@ public class DocenteProyectoDM implements Serializable {
 
     public void setFilterHistorialDocenteProyectosDTO(List<DocenteProyectoDTO> filterHistorialDocenteProyectosDTO) {
         this.filterHistorialDocenteProyectosDTO = filterHistorialDocenteProyectosDTO;
+    }
+
+    public Item getEstadoActualProyecto() {
+        return estadoActualProyecto;
+    }
+
+    public void setEstadoActualProyecto(Item estadoActualProyecto) {
+        this.estadoActualProyecto = estadoActualProyecto;
+    }
+
+    public CoordinadorPeriodoDTO getCoordinadorPeriodoDTO() {
+        return coordinadorPeriodoDTO;
+    }
+
+    public void setCoordinadorPeriodoDTO(CoordinadorPeriodoDTO coordinadorPeriodoDTO) {
+        this.coordinadorPeriodoDTO = coordinadorPeriodoDTO;
     }
 
 }

@@ -29,7 +29,6 @@ import edu.jlmallas.academico.entity.EstudianteCarrera;
 import edu.jlmallas.academico.entity.Nivel;
 import edu.jlmallas.academico.entity.OfertaAcademica;
 import edu.jlmallas.academico.entity.PeriodoAcademico;
-import edu.jlmallas.academico.entity.PeriodoCoordinacion;
 import edu.jlmallas.academico.service.CarreraService;
 import edu.jlmallas.academico.service.CoordinadorPeriodoService;
 import edu.jlmallas.academico.service.DocenteService;
@@ -494,18 +493,15 @@ public class ProyectoController implements Serializable {
     public void seleccionarCarrera(SelectEvent event) {
         try {
             sessionProyecto.setCarreraSeleccionada((Carrera) event.getObject());
-            List<PeriodoCoordinacion> periodoCoordinacions = periodoCoordinacionDao.buscar(new PeriodoCoordinacion(
-                    sessionProyecto.getCarreraSeleccionada(), Boolean.TRUE));
-            if (periodoCoordinacions == null) {
-                return;
-            }
-            List<CoordinadorPeriodo> coordinadores = coordinadorPeriodoService.buscar(new CoordinadorPeriodo(Boolean.TRUE, null,
-                    !periodoCoordinacions.isEmpty() ? periodoCoordinacions.get(0) : null,null));
+
+            List<CoordinadorPeriodo> coordinadores = coordinadorPeriodoService.buscar(new CoordinadorPeriodo(Boolean.TRUE, null, null,
+                    sessionProyecto.getCarreraSeleccionada()));
             if (coordinadores == null) {
                 return;
             }
             CoordinadorPeriodo coordinadorPeriodo = !coordinadores.isEmpty() ? coordinadores.get(0) : null;
-            CoordinadorPeriodoDTO coordinadorPeriodoDTO = new CoordinadorPeriodoDTO(coordinadorPeriodo, personaDao.find(coordinadorPeriodo.getCoordinadorId().getId()), null);
+            CoordinadorPeriodoDTO coordinadorPeriodoDTO = new CoordinadorPeriodoDTO(coordinadorPeriodo, personaDao.find(
+                    coordinadorPeriodo.getCoordinadorId().getId()), null);
             coordinadorPeriodoDTO.setDocente(docenteService.buscarPorId(new Docente(coordinadorPeriodoDTO.getPersona().getId())));
             sessionProyecto.setCoordinadorPeriodoDTOCarreraSeleccionada(coordinadorPeriodoDTO);
             buscar();
@@ -1018,17 +1014,17 @@ public class ProyectoController implements Serializable {
     public void buscarDocentes() {
         try {
             List<DocenteProyecto> docenteProyectos = docenteProyectoService.buscar(new DocenteProyecto(
-                    sessionProyecto.getProyectoSeleccionado(), null, null, Boolean.TRUE,null));
+                    sessionProyecto.getProyectoSeleccionado(), null, null, Boolean.TRUE, null));
             if (docenteProyectos.isEmpty()) {
                 return;
             }
             for (DocenteProyecto docenteProyecto : docenteProyectos) {
-                List<DocenteCarrera> docenteCarreras = docenteCarreraDao.buscar(new DocenteCarrera(null, docenteService.buscarPorId(new Docente(docenteProyecto.getDocenteId())),
+                List<DocenteCarrera> docenteCarreras = docenteCarreraDao.buscar(new DocenteCarrera(null, docenteService.buscarPorId(new Docente(docenteProyecto.getDocenteCarreraId())),
                         null, Boolean.TRUE));
                 if (docenteCarreras.isEmpty()) {
                     continue;
                 }
-                DocenteProyectoDTO docenteProyectoDTO = new DocenteProyectoDTO(docenteProyecto, personaDao.find(docenteProyecto.getDocenteId()),
+                DocenteProyectoDTO docenteProyectoDTO = new DocenteProyectoDTO(docenteProyecto, personaDao.find(docenteProyecto.getDocenteCarreraId()),
                         docenteCarreras.get(0));
                 sessionProyecto.getDocentesProyectoDTO().add(docenteProyectoDTO);
             }

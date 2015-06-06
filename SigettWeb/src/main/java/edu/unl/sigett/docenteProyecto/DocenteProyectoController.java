@@ -529,7 +529,7 @@ public class DocenteProyectoController implements Serializable {
                 DocenteProyectoDTO dp = devuelveDocenteProyecto(directorDTO);
                 if (dp == null) {
                     DocenteProyecto docenteProyecto = new DocenteProyecto(sessionProyecto.getProyectoSeleccionado(), fecha.getTime(),
-                            directorDTO.getDocenteCarrera().getDocenteId().getId(), Boolean.TRUE,null);
+                            directorDTO.getDocenteCarrera().getId(), Boolean.TRUE,null);
                     DocenteProyectoDTO docenteProyectoDTO = new DocenteProyectoDTO(docenteProyecto, directorDTO.getPersona(),
                             directorDTO.getDocenteCarrera());
                     sessionProyecto.getDocentesProyectoDTO().add(docenteProyectoDTO);

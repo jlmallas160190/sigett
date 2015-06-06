@@ -50,8 +50,8 @@ public class DocenteProyecto implements Serializable {
     private Date fecha;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "docente_id")
-    private Long docenteId;
+    @Column(name = "docente_carrera_id")
+    private Long docenteCarreraId;
     @Basic(optional = false)
     @NotNull
     @Column(name = "es_activo")
@@ -72,10 +72,10 @@ public class DocenteProyecto implements Serializable {
         this.id = id;
     }
 
-    public DocenteProyecto(Proyecto proyecto, Date fecha, Long docenteId, Boolean esActivo, Long estadoProyecto) {
+    public DocenteProyecto(Proyecto proyecto, Date fecha, Long docenteCarreraId, Boolean esActivo, Long estadoProyecto) {
         this.proyectoId = proyecto;
         this.fecha = fecha;
-        this.docenteId = docenteId;
+        this.docenteCarreraId = docenteCarreraId;
         this.esActivo = esActivo;
         this.estadoProyecto = estadoProyecto;
     }
@@ -96,12 +96,12 @@ public class DocenteProyecto implements Serializable {
         this.fecha = fecha;
     }
 
-    public Long getDocenteId() {
-        return docenteId;
+    public Long getDocenteCarreraId() {
+        return docenteCarreraId;
     }
 
-    public void setDocenteId(Long docenteId) {
-        this.docenteId = docenteId;
+    public void setDocenteCarreraId(Long docenteCarreraId) {
+        this.docenteCarreraId = docenteCarreraId;
     }
 
     public Boolean getEsActivo() {

@@ -33,9 +33,9 @@ public class DocenteProyectoDaoImplement extends AbstractDao<DocenteProyecto> im
         HashMap<String, Object> parametros = new HashMap<>();
         Boolean existeFiltro = Boolean.FALSE;
         sql.append("SELECT dp FROM DocenteProyecto dp where 1=1");
-        if (docenteProyecto.getDocenteId() != null) {
+        if (docenteProyecto.getDocenteCarreraId() != null) {
             sql.append(" and dp.docenteId=:docenteId ");
-            parametros.put("docenteId", docenteProyecto.getDocenteId());
+            parametros.put("docenteId", docenteProyecto.getDocenteCarreraId());
             existeFiltro = Boolean.TRUE;
         }
         if (docenteProyecto.getEsActivo() != null) {

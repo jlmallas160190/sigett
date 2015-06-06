@@ -110,7 +110,7 @@ public class AdministrarNotificaciones implements Serializable {
             FacesContext facesContext = FacesContext.getCurrentInstance();
             ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
             MailServiceImplement mail = new MailServiceImplement();
-            Persona persona=personaFacadeLocal.find(docenteProyecto.getDocenteId());
+            Persona persona=personaFacadeLocal.find(docenteProyecto.getDocenteCarreraId());
             String usrCorreo = configuracionGeneralFacadeLocal.find((int) 28).getValor();
             String passwordCorreo = configuracionGeneralFacadeLocal.find((int) 29).getValor();
             String puerto = configuracionGeneralFacadeLocal.find((int) 31).getValor();

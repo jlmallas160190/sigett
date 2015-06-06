@@ -6,6 +6,7 @@
 package edu.unl.sigett.docenteProyecto;
 
 import com.jlmallas.comun.entity.Persona;
+import edu.jlmallas.academico.entity.DocenteCarrera;
 import edu.unl.sigett.entity.DocenteProyecto;
 import java.io.Serializable;
 
@@ -17,13 +18,15 @@ public class DocenteProyectoDTO implements Serializable {
 
     private DocenteProyecto docenteProyecto;
     private Persona persona;
+    private DocenteCarrera docenteCarrera;
 
     public DocenteProyectoDTO() {
     }
 
-    public DocenteProyectoDTO(DocenteProyecto docenteProyecto, Persona persona) {
+    public DocenteProyectoDTO(DocenteProyecto docenteProyecto, Persona persona, DocenteCarrera docenteCarrera) {
         this.docenteProyecto = docenteProyecto;
         this.persona = persona;
+        this.docenteCarrera = docenteCarrera;
     }
 
     public DocenteProyecto getDocenteProyecto() {
@@ -40,6 +43,14 @@ public class DocenteProyectoDTO implements Serializable {
 
     public void setPersona(Persona persona) {
         this.persona = persona;
+    }
+
+    public DocenteCarrera getDocenteCarrera() {
+        return docenteCarrera;
+    }
+
+    public void setDocenteCarrera(DocenteCarrera docenteCarrera) {
+        this.docenteCarrera = docenteCarrera;
     }
 
 }

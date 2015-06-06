@@ -11,10 +11,7 @@ package edu.unl.sigett.util;
  */
 public enum PropertiesFileEnum {
 
-    URI("uris.properties"),
-    CONTENIDOREPORTE("contenidoReporte.properties"),
-    ETIQUETASREPORTEEN("contenidoReporte_en_US.properties"),
-    PERMISOS("permisos.properties");
+    CONTENIDOREPORTE("contenidoReporte.properties");
     String archivo;
 
     private PropertiesFileEnum(String tipo) {

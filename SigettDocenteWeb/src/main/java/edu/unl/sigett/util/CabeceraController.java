@@ -11,14 +11,17 @@ import com.jlmallas.comun.enumeration.ConfiguracionEnum;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
+import java.util.Properties;
 import java.util.StringTokenizer;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
 import org.jlmallas.secure.SecureService;
 import org.jlmallas.secure.SecureServiceImplement;
-import org.jlmallas.util.UtilService;
+import org.jlmallas.util.service.UtilService;
 
 /**
  *
@@ -36,6 +39,7 @@ public class CabeceraController implements Serializable {
     private SecureService secureService;
     private UtilService utilService;
     private String secureKey;
+    private static final Logger LOG = Logger.getLogger(CabeceraController.class.getName());
 
     public CabeceraController() {
     }
@@ -71,6 +75,22 @@ public class CabeceraController implements Serializable {
             System.out.println(e);
         }
         this.secureKey = secretKey;
+    }
+
+    public String getValueFromProperties(final PropertiesFileEnum file,
+            final String propiedad) {
+
+        Properties propiedades = new Properties();
+        try {
+            InputStream is = this.getClass().getClassLoader()
+                    .getResourceAsStream(file.getArchivo());
+            propiedades.load(is);
+            return propiedades.getProperty(propiedad);
+
+        } catch (IOException ioe) {
+            LOG.info(ioe.getMessage());
+        }
+        return null;
     }
 
     public MessageView getMessageView() {

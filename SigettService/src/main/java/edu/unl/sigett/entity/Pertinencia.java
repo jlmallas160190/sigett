@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package edu.unl.sigett.entity;
 
 import java.io.Serializable;
@@ -40,6 +39,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Pertinencia.findByEsActivo", query = "SELECT p FROM Pertinencia p WHERE p.esActivo = :esActivo"),
     @NamedQuery(name = "Pertinencia.findByEsAceptado", query = "SELECT p FROM Pertinencia p WHERE p.esAceptado = :esAceptado")})
 public class Pertinencia implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -61,7 +61,7 @@ public class Pertinencia implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "es_aceptado")
-    private boolean esAceptado;
+    private Boolean esAceptado;
     @JoinColumn(name = "docente_proyecto_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private DocenteProyecto docenteProyectoId;
@@ -73,11 +73,13 @@ public class Pertinencia implements Serializable {
         this.id = id;
     }
 
-    public Pertinencia(Long id, Date fecha, String observacion, boolean esAceptado) {
+    public Pertinencia(Long id, Date fecha, String observacion, Boolean esAceptado, Boolean esActivo, DocenteProyecto docenteProyecto) {
         this.id = id;
         this.fecha = fecha;
         this.observacion = observacion;
         this.esAceptado = esAceptado;
+        this.esActivo = esActivo;
+        this.docenteProyectoId = docenteProyecto;
     }
 
     public Long getId() {
@@ -112,11 +114,11 @@ public class Pertinencia implements Serializable {
         this.esActivo = esActivo;
     }
 
-    public boolean getEsAceptado() {
+    public Boolean getEsAceptado() {
         return esAceptado;
     }
 
-    public void setEsAceptado(boolean esAceptado) {
+    public void setEsAceptado(Boolean esAceptado) {
         this.esAceptado = esAceptado;
     }
 
@@ -152,5 +154,5 @@ public class Pertinencia implements Serializable {
     public String toString() {
         return "edu.unl.sigett.entity.Pertinencia[ id=" + id + " ]";
     }
-    
+
 }

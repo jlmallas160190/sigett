@@ -5,7 +5,6 @@
  */
 package edu.unl.sigett.reporte;
 
-
 import java.io.Serializable;
 import javax.servlet.http.HttpServletResponse;
 import org.jlmallas.util.Oficio;
@@ -16,7 +15,6 @@ import org.jlmallas.util.Oficio;
  */
 public class ReporteOficio extends Oficio implements Serializable {
 
-    private HttpServletResponse response;
     private byte[] logoCarrera;
     private String rutaLogoIntitucion;
     private String nombreCarrera;
@@ -32,7 +30,7 @@ public class ReporteOficio extends Oficio implements Serializable {
     public ReporteOficio(byte[] logoCarrera, String rutaLogoIntitucion, String nombreCarrera, String nombreArea, String carreraSigla,
             String etiquetaNO, String cabecera1, String cabecera2, String lugar, String fecha, String numeracion, String cargoDestinatario, String destinatario,
             String cargoQuienFirma, String datosQuienFirma, String cuerpo, String referencia, String asunto, String despedida, String saludo, String tipoArchivo,
-            String responsable, String ruta, HttpServletResponse response) {
+            String responsable, String ruta) {
         super(lugar, fecha, numeracion, cargoDestinatario, destinatario, cargoQuienFirma, datosQuienFirma, cuerpo, referencia, asunto, despedida, saludo);
         this.logoCarrera = logoCarrera;
         this.rutaLogoIntitucion = rutaLogoIntitucion;
@@ -45,7 +43,6 @@ public class ReporteOficio extends Oficio implements Serializable {
         this.ruta = ruta;
         this.tipoArchivo = tipoArchivo;
         this.responsable = responsable;
-        this.response = response;
     }
 
     public ReporteOficio(byte[] logoCarrera, String rutaLogoIntitucion, String nombreCarrera, String nombreArea, String carreraSigla,
@@ -146,14 +143,6 @@ public class ReporteOficio extends Oficio implements Serializable {
 
     public void setResponsable(String responsable) {
         this.responsable = responsable;
-    }
-
-    public HttpServletResponse getResponse() {
-        return response;
-    }
-
-    public void setResponse(HttpServletResponse response) {
-        this.response = response;
     }
 
 }

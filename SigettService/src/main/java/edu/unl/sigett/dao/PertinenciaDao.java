@@ -14,7 +14,7 @@ import javax.ejb.Local;
  * @author JorgeLuis
  */
 @Local
-public interface PertinenciaFacadeLocal {
+public interface PertinenciaDao {
 
     void create(Pertinencia pertinencia);
 
@@ -28,7 +28,8 @@ public interface PertinenciaFacadeLocal {
 
     List<Pertinencia> findRange(int[] range);
 
-    List<Pertinencia> buscarPertinenciasPorDocenteProyecto(Long docenteProyectoId);
+//    List<Pertinencia> buscarPertinenciasPorDocenteProyecto(Long docenteProyectoId);
+    List<Pertinencia> buscar(final Pertinencia pertinencia);
 
     int count();
 
