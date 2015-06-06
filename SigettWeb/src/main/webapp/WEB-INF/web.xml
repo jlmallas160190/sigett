@@ -44,7 +44,8 @@
             edu.unl.sigett.usuarioCarrera,
             edu.unl.sigett.comun.controlador,
             edu.unl.sigett.lineaInvestigacionCarrera,
-            edu.unl.sigett.proyecto 
+            edu.unl.sigett.configuracionCarrera,
+            edu.unl.sigett.proyecto,
         </param-value>
     </context-param>
     <context-param>

@@ -1,0 +1,58 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xml:lang="es" lang="es">
+
+    <body>
+
+        <ui:composition template="./../../../template.xhtml">
+            <ui:define name="top">
+                <ui:include src="./../../inicio/menu.xhtml"/>
+            </ui:define>
+            <ui:define name="left">
+                <ui:include src="./../../inicio/menuIzquierdo.xhtml"/>
+            </ui:define>
+            <ui:define name="title">#{msg['lbl.oferta_academica']}</ui:define>
+            <ui:define name="content">
+                <p:messages id="msm"/>
+                <h:panelGrid styleClass="pnl-botones">
+                    <p:commandButton onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" value="#{msg['lbl.historial']}" icon="ui-icon-document-w" update="@form" action="#{administrarLogs.historico('OfertaAcademica', sessionOfertaAcademica.ofertaAcademica.id)}"/>
+                </h:panelGrid>
+                <br/>
+                <p:panel toggleable="true" header="Editar Oferta Academica">
+                    <h:panelGrid styleClass="panelgrid" rowClasses="rowpanelgrid" columnClasses="col-sm-3,col-sm-8,col-sm-1" columns="3">
+                        <h:outputLabel value="#{msg['lbl.nombre']}:" for="nombre" />
+                        <p:inputText id="nombre" value="#{sessionOfertaAcademica.ofertaAcademica.nombre}" title="#{msg['lbl.nombre']}" 
+                                     onkeyup="this.value = this.value.toUpperCase()"  required="true" requiredMessage="#{msg['lbl.nombre']} #{msg['lbl.obligatorio']}">
+                            <p:ajax event="keyup" update="msmNombre"/>
+                            <p:ajax event="change" update="@this,:contenido:msm"/>
+                        </p:inputText>
+                        <p:message id="msmNombre" display="icon" for="nombre"/>
+                        <h:outputLabel value="#{msg['lbl.fecha']} #{msg['lbl.inicio']}:" for="fechaInicio" />
+                        <p:calendar id="fechaInicio" required="true"  requiredMessage="#{msg['lbl.fecha']} #{msg['lbl.inicio']} #{msg['lbl.obligatorio']}." navigator="true" pattern="dd/MM/yyyy" value="#{sessionOfertaAcademica.ofertaAcademica.fechaInicio}">
+                            <p:ajax event="dateSelect" update="msmFechaInicio,@this"/>
+                        </p:calendar>
+                        <p:message id="msmFechaInicio" display="icon" for="fechaInicio"/>
+                        <h:outputLabel value="#{msg['lbl.fechaCulminación']}:" for="fechaFin" />
+                        <p:calendar id="fechaFin" navigator="true" required="true" requiredMessage="#{msg['lbl.fechaCulminación']} #{msg['lbl.obligatorio']}." pattern="dd/MM/yyyy" value="#{sessionOfertaAcademica.ofertaAcademica.fechaFin}">
+                            <p:ajax event="dateSelect" update="msmFechaFin,@this"/>
+                        </p:calendar>
+                        <p:message id="msmFechaFin" display="icon" for="fechaFin"/>
+                    </h:panelGrid>
+                    <f:facet name="footer">
+                        <h:panelGrid columns="1">
+                            <p:commandButton id="guardar" value="#{msg['lbl.agregar']}" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" update="@form" icon="ui-icon-circle-plus" action="#{administrarOfertas.agregar(sessionOfertaAcademica.ofertaAcademica,usuarioDM.usuario)}">
+                                <f:param name="1" value="agregar"/>
+                            </p:commandButton>
+                        </h:panelGrid>
+                    </f:facet>
+                </p:panel>
+            </ui:define>
+        </ui:composition>
+
+    </body>
+</html>

@@ -13,7 +13,7 @@ import com.jlmallas.comun.entity.Item;
 import com.jlmallas.comun.entity.Persona;
 import com.jlmallas.comun.enumeration.CatalogoEnum;
 import com.jlmallas.comun.enumeration.ConfiguracionEnum;
-import com.jlmallas.comun.enumeration.TipoValorEnum;
+import com.jlmallas.comun.enumeration.TipoConfiguracionEnum;
 import com.jlmallas.comun.service.DocumentoService;
 import com.jlmallas.comun.service.ItemService;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
@@ -540,7 +540,7 @@ public class ProyectoController implements Serializable {
         try {
             lineasInvestigacionProyecto = lineaInvestigacionProyectoService.buscarLineaInvestigacion(
                     new LineaInvestigacionProyecto(proyecto.getId() != null ? proyecto : null, null, null));
-
+            sessionProyecto.getLineasInvestigacionSeleccionadas().addAll(lineasInvestigacionProyecto);
             for (Carrera carrera : sessionProyecto.getCarreras()) {
                 List<LineaInvestigacion> lics = lineaInvestigacionService.buscarPorCarrera(new LineaInvestigacionCarrera(null, carrera.getId()));
                 if (lics == null) {
@@ -978,15 +978,15 @@ public class ProyectoController implements Serializable {
         }
         ConfiguracionProyecto configuracionProyectoDS = new ConfiguracionProyecto(
                 sessionProyecto.getProyectoSeleccionado(), ConfiguracionProyectoEnum.DIASSEMANA.getTipo(), "7",
-                ConfiguracionProyectoEnum.DIASSEMANA.getTipo(), TipoValorEnum.NUMERICO.getTipo());
+                ConfiguracionProyectoEnum.DIASSEMANA.getTipo(), TipoConfiguracionEnum.NUMERICO.getTipo());
         sessionProyecto.getConfiguracionProyectos().add(configuracionProyectoDS);
         ConfiguracionProyecto configuracionProyectoHD = new ConfiguracionProyecto(
                 sessionProyecto.getProyectoSeleccionado(), ConfiguracionProyectoEnum.HORASDIARIAS.getTipo(), "8",
-                ConfiguracionProyectoEnum.HORASDIARIAS.getTipo(), TipoValorEnum.NUMERICO.getTipo());
+                ConfiguracionProyectoEnum.HORASDIARIAS.getTipo(), TipoConfiguracionEnum.NUMERICO.getTipo());
         sessionProyecto.getConfiguracionProyectos().add(configuracionProyectoHD);
         ConfiguracionProyecto configuracionProyectoCD = new ConfiguracionProyecto(
                 sessionProyecto.getProyectoSeleccionado(), ConfiguracionProyectoEnum.CATALOGODURACION.getTipo(), "1",
-                ConfiguracionProyectoEnum.CATALOGODURACION.getTipo(), TipoValorEnum.SELECCIONMULTIPLE.getTipo());
+                ConfiguracionProyectoEnum.CATALOGODURACION.getTipo(), TipoConfiguracionEnum.SELECCIONMULTIPLE.getTipo());
         sessionProyecto.getConfiguracionProyectos().add(configuracionProyectoCD);
     }
 
@@ -1029,8 +1029,7 @@ public class ProyectoController implements Serializable {
                     continue;
                 }
                 DocenteProyectoDTO docenteProyectoDTO = new DocenteProyectoDTO(docenteProyecto, personaDao.find(docenteProyecto.getDocenteId()),
-                        null, docenteCarreras.get(0));
-                docenteProyectoDTO.setDirector(directorDao.find(docenteProyectoDTO.getDocenteCarrera().getId()));
+                        docenteCarreras.get(0));
                 sessionProyecto.getDocentesProyectoDTO().add(docenteProyectoDTO);
             }
             sessionProyecto.setFilterDocentesProyectoDTO(sessionProyecto.getDocentesProyectoDTO());

@@ -30,8 +30,6 @@ public interface DocenteCarreraDao {
 
     List<DocenteCarrera> buscar(DocenteCarrera docenteCarrera);
 
-    List<DocenteCarrera> buscarPorDocente(Long docenteId);
-
     int count();
 
 }

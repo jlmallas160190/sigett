@@ -6,7 +6,6 @@
 package edu.unl.sigett.finalizacion.controlador;
 
 import edu.unl.sigett.finalizacion.managed.session.SessionPlazoEvaluacionTribunal;
-import edu.unl.sigett.seguridad.managed.session.SessionDocenteUsuario;
 import edu.unl.sigett.entity.EvaluacionTribunal;
 import edu.unl.sigett.entity.PlazoEvaluacionTribunal;
 import javax.inject.Named;
@@ -32,8 +31,6 @@ public class AdministrarPlazoTribunal implements Serializable {
 
     @Inject
     private SessionPlazoEvaluacionTribunal sessionPlazoEvaluacionTribunal;
-    @Inject
-    private SessionDocenteUsuario sessionDocenteUsuario;
     @Inject
     private AdministrarTribunales administrarTribunales;
 

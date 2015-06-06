@@ -1,0 +1,66 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xml:lang="es" lang="es">
+
+
+    <body>
+
+        <ui:composition template="./../../../template.xhtml">
+            <ui:define name="title">#{msg['lbl.area']}</ui:define>
+            <ui:define name="top">
+                <ui:include src="./../../inicio/menu.xhtml"/>
+            </ui:define>
+            <ui:define name="content">
+                <p:messages id="msm"/>
+                <p:panel>
+                    <f:facet name="header">
+                        <h:panelGrid>
+                            <p:commandButton  value="#{msg['lbl.historial']}" update="@form" icon="ui-icon-document-w" action="#{administrarLogs.historico('Area', sessionArea.area.id)}"/>
+                        </h:panelGrid>
+                    </f:facet>
+                    <p:panel header="#{msg['lbl.editar']} #{msg['lbl.area']}" toggleable="true">
+                        <h:panelGrid styleClass="panelgrid" rowClasses="rowpanelgrid" columnClasses="col-sm-2,col-sm-9,col-sm-1" columns="3">
+                            <h:outputLabel value="#{msg['lbl.nombre']}:" for="nombre" />
+                            <p:inputText id="nombre" value="#{sessionArea.area.nombre}" title="#{msg['lbl.nombre']}" required="true" requiredMessage="#{msg['lbl.nombre']} #{msg['lbl.obligatorio']}">
+                                <p:ajax event="keyup" update="msmNombre"/>
+                                <p:ajax event="change" update="@this,:contenido:msm"/>
+                            </p:inputText>
+                            <p:message id="msmNombre" display="icon" for="nombre"/>
+                            <h:outputLabel value="#{msg['lbl.sigla']}:" for="sigla" />
+                            <p:inputText id="sigla" value="#{sessionArea.area.sigla}" title="#{msg['lbl.sigla']}">
+                                <p:ajax event="keyup" update="msmSigla"/>
+                                <p:ajax event="change" update="@this,:contenido:msm"/>
+                            </p:inputText>
+                            <p:message id="msmSigla" display="icon" for="sigla"/>
+                            <h:outputLabel value="#{msg['lbl.secretario']}:" />
+                            <p:inputText id="secretario" value="#{sessionArea.area.secretario}" title="#{msg['lbl.secretario']}">
+                                <p:ajax event="keyup" update="msmSecretario"/>
+                                <p:ajax event="change" update="@this,:contenido:msm"/>
+                            </p:inputText>
+                            <p:message id="msmSecretario" display="icon" for="secretario"/>
+                        </h:panelGrid> 
+                    </p:panel>
+                    <br/>
+                    <p:panel rendered="#{administrarAreas.renderedCarreras(sessionArea.area)}" toggleable="true" header="#{msg['lbl.carreras']}">
+                        <p:panel>
+                            <ui:include src="tablaCarreras.xhtml" /> 
+                            <f:facet name="footer">
+                                <ui:include src="botonesTablaCarrera.xhtml" /> 
+                            </f:facet>
+                        </p:panel>
+                    </p:panel>
+                    <f:facet name="footer">
+                        <ui:include src="botonesArea.xhtml" /> 
+                    </f:facet>
+                </p:panel>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

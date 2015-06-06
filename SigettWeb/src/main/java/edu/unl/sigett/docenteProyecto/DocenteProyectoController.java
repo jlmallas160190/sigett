@@ -39,12 +39,7 @@ import edu.unl.sigett.service.DocumentoCarreraService;
 import edu.unl.sigett.usuarioCarrera.SessionUsuarioCarrera;
 import edu.unl.sigett.util.CabeceraController;
 import edu.unl.sigett.util.PropertiesFileEnum;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.OutputStream;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
@@ -56,11 +51,8 @@ import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
-import javax.servlet.ServletException;
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import static org.eclipse.jdt.internal.core.util.CharArrayBuffer.DEFAULT_BUFFER_SIZE;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 
@@ -399,7 +391,7 @@ public class DocenteProyectoController implements Serializable {
                 getPersona().getNombres().toUpperCase() + " " + sessionProyecto.getCoordinadorPeriodoDTOCarreraSeleccionada().getPersona().getApellidos().toUpperCase() + ", "
                 + cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "fper_final_c")
                 + " " + carrera.getNombre().toUpperCase() + ", " + cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE,
-                        "fper_final_d") + "</p><br/><br/><p>" + carrera.getAreaId().getSecretario() + "</p><br/><p><b>" + cabeceraController.
+                        "fper_final_d") + "</p><br/><br/><p>" + carrera.getAreaId().getSecretario() + "</p><p><b>" + cabeceraController.
                 getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "fper_final_e") + "</b></p></br><p>" + carrera.getLugar() + ", " + cabeceraController.getUtilService().
                 formatoFecha(fechaActual.getTime(), "dd MMMM yyyy") + ", " + cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE,
                         "fper_final_f") + " " + cabeceraController.getUtilService().formatoFecha(fechaActual.getTime(), "HH:mm") + ".-"
@@ -418,11 +410,10 @@ public class DocenteProyectoController implements Serializable {
     private String generaFirmasInvolucrados(final DocenteProyectoDTO docenteProyectoDTO, final Carrera carrera) {
         return (docenteProyectoDTO.getDocenteCarrera().getDocenteId().getTituloDocenteId().getTituloId().getAbreviacion().toUpperCase() + " " + docenteProyectoDTO.
                 getPersona().getNombres().toUpperCase() + " " + docenteProyectoDTO.getPersona().getApellidos().toUpperCase() + "</p><p>" + cabeceraController
-                .getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "fper_firma_a") + "</p><p>" + carrera.getAreaId().getSecretario().toUpperCase() + "</p>"
+                .getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "fper_firma_a") + "</p><br/><br/><p>" + carrera.getAreaId().getSecretario().toUpperCase() + "</p>"
                 + "<p><b> " + cabeceraController
                 .getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "fper_firma_b") + "</b>");
     }
-
 
     public void cancelarImprimirOficio() {
         sessionDocenteProyecto.setDocumentoCarreraDTO(new DocumentoCarreraDTO());
@@ -539,7 +530,7 @@ public class DocenteProyectoController implements Serializable {
                 if (dp == null) {
                     DocenteProyecto docenteProyecto = new DocenteProyecto(sessionProyecto.getProyectoSeleccionado(), fecha.getTime(),
                             directorDTO.getDocenteCarrera().getDocenteId().getId(), Boolean.TRUE);
-                    DocenteProyectoDTO docenteProyectoDTO = new DocenteProyectoDTO(docenteProyecto, directorDTO.getPersona(), directorDTO.getDirector(),
+                    DocenteProyectoDTO docenteProyectoDTO = new DocenteProyectoDTO(docenteProyecto, directorDTO.getPersona(),
                             directorDTO.getDocenteCarrera());
                     sessionProyecto.getDocentesProyectoDTO().add(docenteProyectoDTO);
                     RequestContext.getCurrentInstance().execute("PF('dlgBuscarDocentesDisponibles').hide()");

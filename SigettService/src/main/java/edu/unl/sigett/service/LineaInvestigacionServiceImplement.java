@@ -88,7 +88,7 @@ public class LineaInvestigacionServiceImplement implements LineaInvestigacionSer
         if(lics.isEmpty()){
             return lics;
         }
-        if (!lips.isEmpty()) {
+        if (lips.isEmpty()) {
             return lics;
         }
         for (LineaInvestigacion lic : lics) {

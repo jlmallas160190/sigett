@@ -1,0 +1,66 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+    <body>
+        <ui:composition template="./../../../template.xhtml">
+            <ui:define name="top">
+                <ui:include src="./../../inicio/menu.xhtml"/>
+            </ui:define>
+            <ui:define name="left">
+                <ui:include src="./../../inicio/menuIzquierdo.xhtml"/>
+            </ui:define>
+            <ui:define name="title">#{msg['lbl.usuario']}</ui:define>
+            <ui:define name="content">
+                <p:growl id="msm"/>
+                <p:panel toggleable="true">
+                    <!--<f:facet name="header">
+                        <h:panelGrid>
+                            <p:commandButton value="#{msg['lbl.historial']}" icon="ui-icon-document-w"
+                                             action="#{administrarLogs.historico('Usuario',usuarioCRUDDM.usuario.id)}"/>
+                        </h:panelGrid>
+                    </f:facet>-->
+                    <p:panel header="#{msg['lbl.editar']} #{msg['lbl.usuario']}" toggleable="true">
+                        <h:panelGrid styleClass="panelgrid" rowClasses="rowpanelgrid"
+                                     columnClasses="col-sm-3,col-sm-8,col-sm-1" columns="3">
+                            <h:outputLabel value="#{msg['lbl.usuario']}:"/>
+                            <p:inputText id="username" style="text-transform: none" value="#{usuarioCRUDDM.usuario.username}" 
+                                         title="#{msg['lbl.usuario']}" required="true" requiredMessage="#{msg['lbl.usuario']} #{msg['lbl.obligatorio']}">
+                                <p:ajax event="keyup" update="msmNombre"/>
+                                <p:ajax event="change" update="@this"/>
+                                <f:validateRegex pattern="^[A-Za-z0-9]{1,}([\s][A-Za-z0-9]{1,})*$" />
+                            </p:inputText>
+                            <p:message id="msmNombre" display="icon" for="username"/>
+                            <h:outputLabel value="#{msg['lbl.clave']}:"/>
+                            <p:commandLink  value="#{msg['lbl.cambiar']} #{msg['lbl.clave']}" action="pretty:cambiarClave"/>
+                        </h:panelGrid>
+                    </p:panel>   
+                    <br/>
+                    <p:panel header="#{msg['lbl.datos']} #{msg['lbl.usuario']}" toggleable="true">
+                        <ui:include src="datosPersonalesUsuario.xhtml"/>
+                    </p:panel> 
+                    <br/>
+                    <p:panel header="#{msg['lbl.roles']}" toggleable="true">
+                        <ui:include src="rolesUsuario.xhtml"/>
+                    </p:panel>
+                    <br/>
+                    <p:panel header="#{msg['lbl.permisos']}" toggleable="true">
+                        <ui:include src="permisosUsuario.xhtml"/>
+                    </p:panel>
+                    <br/>
+                    <p:panel header="#{msg['lbl.carreras']}" toggleable="true">
+                        <ui:include src="carrerasUsuario.xhtml"/>
+                    </p:panel>   
+                    <f:facet name="footer">
+                        <ui:include src="botonesEditarUsuario.xhtml"/>
+                    </f:facet>
+                </p:panel>
+               
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

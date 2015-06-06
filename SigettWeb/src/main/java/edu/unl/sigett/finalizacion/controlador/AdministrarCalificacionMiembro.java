@@ -9,7 +9,6 @@ import com.jlmallas.comun.dao.ConfiguracionDao;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 import com.ocpsoft.pretty.faces.annotation.URLMappings;
 import edu.unl.sigett.finalizacion.managed.session.SessionCalificacionMiembro;
-import edu.unl.sigett.seguridad.managed.session.SessionDocenteUsuario;
 import edu.unl.sigett.entity.CalificacionMiembro;
 import edu.unl.sigett.entity.CalificacionParametro;
 import edu.jlmallas.academico.entity.Docente;
@@ -58,8 +57,6 @@ public class AdministrarCalificacionMiembro implements Serializable {
     private AdministrarTribunales administrarTribunales;
     @Inject
     private AdministrarEvaluacionesTribunal administrarEvaluacionesTribunal;
-    @Inject
-    private SessionDocenteUsuario sessionDocenteUsuario;
     @Inject
     private AdministrarSugerenciaCalificacionMiembro administrarSugerenciaCalificacionMiembro;
 
@@ -181,9 +178,9 @@ public class AdministrarCalificacionMiembro implements Serializable {
                     }
                 }
                 evaluacionTribunalFacadeLocal.edit(calificacionMiembro.getEvaluacionTribunalId());
-                if (sessionDocenteUsuario.getDocenteUsuario().getDocenteId() != null) {
-                    administrarTribunales.buscarPorDocente(sessionDocenteUsuario.getDocenteUsuario().getDocenteId(), "");
-                }
+//                if (sessionDocenteUsuario.getDocenteUsuario().getDocenteId() != null) {
+//                    administrarTribunales.buscarPorDocente(sessionDocenteUsuario.getDocenteUsuario().getDocenteId(), "");
+//                }
                 if (param.equalsIgnoreCase("grabar")) {
                     navegacion = "pretty:tribunalesDocente";
                     sessionCalificacionMiembro.setCalificacionMiembro(new CalificacionMiembro());

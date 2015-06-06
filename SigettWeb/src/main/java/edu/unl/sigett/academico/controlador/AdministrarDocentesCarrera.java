@@ -57,7 +57,6 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 import org.primefaces.event.TransferEvent;
 import org.primefaces.model.DualListModel;
-import com.jlmallas.comun.dao.ConfiguracionDao;
 import com.jlmallas.comun.dao.NacionalidadFacadeLocal;
 import edu.unl.sigett.dao.DirectorDao;
 import edu.jlmallas.academico.dao.DocenteCarreraDao;

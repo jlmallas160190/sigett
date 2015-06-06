@@ -19,10 +19,6 @@
         <pattern value="/loginEstudiante" />
         <view-id value="faces/loginEstudiante.xhtml"/>       
     </url-mapping>
-    <url-mapping id="loginDocente">
-        <pattern value="/loginDocente" />
-        <view-id value="faces/loginDocente.xhtml"/>       
-    </url-mapping>
     <url-mapping id="principalAdmin">
         <pattern value="/admin" />
         <view-id value="faces/pages/admin/principal.xhtml"/>       
@@ -30,10 +26,6 @@
     <url-mapping id="principalEstudiante">
         <pattern value="/principalEstudiante" />
         <view-id value="faces/principalEstudiante.xhtml"/>       
-    </url-mapping>
-    <url-mapping id="principalDocente">
-        <pattern value="/principalDocente" />
-        <view-id value="faces/principalDocente.xhtml"/>       
     </url-mapping>
     <url-mapping id="principal">
         <pattern value="/principal"/>

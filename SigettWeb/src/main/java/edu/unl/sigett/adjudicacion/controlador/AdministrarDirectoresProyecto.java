@@ -50,7 +50,6 @@ import org.jlmallas.seguridad.dao.UsuarioDao;
 import edu.jlmallas.academico.entity.DocenteCarrera;
 import edu.jlmallas.academico.dao.DocenteCarreraDao;
 import edu.jlmallas.academico.dao.EstudianteCarreraDao;
-import edu.unl.sigett.comun.managed.session.SessionOficioCarrera;
 import edu.unl.sigett.enumeration.CatalogoDocumentoCarreraEnum;
 import edu.unl.sigett.dao.UsuarioCarreraDao;
 import java.util.HashMap;
@@ -72,8 +71,7 @@ public class AdministrarDirectoresProyecto implements Serializable {
     private SessionProyecto sessionProyecto;
     @Inject
     private SessionRenunciaDirector sessionRenunciaDirector;
-    @Inject
-    private SessionOficioCarrera sessionOficioCarrera;
+
 
     @EJB
     private DirectorDao directorFacadeLocal;

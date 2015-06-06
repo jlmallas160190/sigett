@@ -10,8 +10,6 @@ import edu.unl.sigett.seguimiento.session.SessionActividad;
 import edu.unl.sigett.seguimiento.session.SessionDocumentoActividad;
 import edu.unl.sigett.seguimiento.session.SessionProyectosAutor;
 import edu.unl.sigett.seguimiento.session.SessionProyectosDirector;
-import edu.unl.sigett.seguridad.managed.session.SessionDocenteUsuario;
-import edu.unl.sigett.seguridad.managed.session.SessionEstudianteUsuario;
 import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
 import edu.unl.sigett.entity.Actividad;
 import edu.unl.sigett.entity.DocumentoActividad;
@@ -47,11 +45,8 @@ public class AdministrarDocumentosActividad implements Serializable {
     @Inject
     private SessionUsuario sessionUsuario;
     @Inject
-    private SessionEstudianteUsuario sessionEstudianteUsuario;
-    @Inject
     private SessionActividad sessionActividad;
-    @Inject
-    private SessionDocenteUsuario sessionDocenteUsuario;
+
     @Inject
     private SessionProyecto sessionProyecto;
     @Inject
@@ -430,21 +425,6 @@ public class AdministrarDocumentosActividad implements Serializable {
         this.sessionUsuario = sessionUsuario;
     }
 
-    public SessionEstudianteUsuario getSessionEstudianteUsuario() {
-        return sessionEstudianteUsuario;
-    }
-
-    public void setSessionEstudianteUsuario(SessionEstudianteUsuario sessionEstudianteUsuario) {
-        this.sessionEstudianteUsuario = sessionEstudianteUsuario;
-    }
-
-    public SessionDocenteUsuario getSessionDocenteUsuario() {
-        return sessionDocenteUsuario;
-    }
-
-    public void setSessionDocenteUsuario(SessionDocenteUsuario sessionDocenteUsuario) {
-        this.sessionDocenteUsuario = sessionDocenteUsuario;
-    }
 
     public boolean isRenderedEditar() {
         return renderedEditar;

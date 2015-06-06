@@ -99,7 +99,6 @@ public class CabeceraController implements Serializable {
         String clave = this.secureService.decrypt(new SecureDTO(this.getConfiguracionGeneralDTO().getSecureKey(),
                 configuracionDao.buscar(new Configuracion(ServidorCorreoEnum.CLAVE.getTipo())).get(0).getValor()));
         mailDTO = new MailDTO(smtp, puerto, usuario, clave, null, null, null, null);
-
     }
 
     private void fijarConfiguraciones() {

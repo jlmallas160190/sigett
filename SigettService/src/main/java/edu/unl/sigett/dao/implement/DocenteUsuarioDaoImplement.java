@@ -25,28 +25,24 @@ public class DocenteUsuarioDaoImplement extends AbstractDao<DocenteUsuario> impl
         super(DocenteUsuario.class);
     }
 
-//    @Override
-//    public DocenteUsuario buscarPorDocente(Long id) {
-//        List<DocenteUsuario> docenteUsuarios = new ArrayList<>();
-//        try {
-//            Query query = em.createQuery("Select d from DocenteUsuario d where " + "d.docenteId=:id");
-//            query.setParameter("id", id);
-//            docenteUsuarios = query.getResultList();
-//            return !docenteUsuarios.isEmpty() ? docenteUsuarios.get(0) : null;
-//        } catch (Exception e) {
-//            System.out.println(e);
-//        }
-//        return null;
-//    }
-
     @Override
     public List<DocenteUsuario> buscar(DocenteUsuario docenteUsuario) {
         StringBuilder sql = new StringBuilder();
         HashMap<String, Object> parametros = new HashMap<>();
+        Boolean existeFiltro = Boolean.FALSE;
         sql.append("Select d from DocenteUsuario d WHERE 1=1 ");
-        if (docenteUsuario.getDocenteId() != 0) {
+        if (docenteUsuario.getDocenteId() != null) {
             sql.append(" and d.docenteId=:docenteId");
             parametros.put("docenteId", docenteUsuario.getDocenteId());
+            existeFiltro = Boolean.TRUE;
+        }
+        if (docenteUsuario.getId() != null) {
+            sql.append(" and d.usuarioId=:usuarioId");
+            parametros.put("usuarioId", docenteUsuario.getId());
+            existeFiltro = Boolean.TRUE;
+        }
+        if (!existeFiltro) {
+            return new ArrayList<>();
         }
         final Query q = em.createQuery(sql.toString());
         for (String key : parametros.keySet()) {

@@ -1,0 +1,135 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <h:outputStylesheet name="./css/default.css"/>
+        <h:outputStylesheet name="./css/cssLayout.css"/>
+        <h:outputStylesheet name="./css/bootstrap.css" />
+        <h:outputScript name="./js/bootstrap.js"/>
+        <h:outputScript name="./js/calendarEs.js"/>
+        <h:outputScript name="./js/panel.js"/>
+        <f:view>
+            <h:form id="tittle">
+                <title>
+                    <ui:insert name="title">
+                    </ui:insert>
+                </title>
+            </h:form>
+        </f:view>
+        <ui:insert name="favicon"><link rel="shortcut icon" type="image/x-icon" href="#{resource['img/favicon.ico']}"/></ui:insert> 
+    </h:head>
+
+    <h:body>
+        <div id="top">
+            <!--Carousel-->
+            <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+                <ol class="carousel-indicators">
+                    <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+                    <li data-target="#carousel-example-generic" data-slide-to="1"></li>
+                </ol>
+                <div class="carousel-inner">
+                    <div class="item active">
+                        <div class="carousel-caption">
+                            <p:commandLink value="SIGETT"/>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="carousel-caption">
+                            <h3>SIGETT</h3>
+                        </div>
+                    </div>
+                </div>
+                <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+                    <span class="glyphicon glyphicon-chevron-left"></span>
+                </a>
+                <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+                    <span class="glyphicon glyphicon-chevron-right"></span>
+                </a>
+            </div>
+            <!--Carousel-->
+            <h:form id="superior">
+                <ui:insert name="top">
+                </ui:insert>
+            </h:form>
+        </div>
+
+        <div  class="container-fluid">
+            <div class="row-fluid">
+                <div class="col-md-2">
+                    <h:form id="izquierda">
+                        <ui:insert name="left">
+                        </ui:insert>
+                    </h:form>
+                </div>
+                <div class="col-md-8">
+                    <h:form id="contenido">
+                        <ui:insert name="content">
+                        </ui:insert>
+                    </h:form>
+                    <p:dialog id="dlgLoading" styleClass="load"  draggable="false" closable="false" resizable="false"  showHeader="false"  widgetVar="dlgLoading" modal="true" >
+                        <h:panelGrid columns="2" >
+                            <h:outputLabel value="#{msg['lbl.cargando']}"/>
+                            <h:graphicImage   height="50" width="50" value="/resources/img/ajax-loader-green.gif" />
+                        </h:panelGrid>
+                    </p:dialog>
+                </div>
+                <div class="col-md-2">
+                    <f:view >
+                        <h:form id="derecha">
+                            <ui:insert name="right"></ui:insert>
+                        </h:form>
+                    </f:view>
+                </div>
+            </div>
+        </div>
+        <f:view>
+            <h:form id="inferior">
+                <nav class="navbar navbar-inverse navbar-bottom" style="padding:0 0 100px 0;margin-top:50px">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-4">
+                            </div>
+                            <div class="col-md-4">
+                                <br/>
+                                <p:panel header="#{msg['lbl.informacion']}">
+                                    <center>
+                                        <span ><b> Universidad Nacional de Loja </b></span><br/>
+                                        <span>Carrera de Ingenieria en Sistemas</span> <br/>
+                                        <span>Loja - Ecuador</span>
+                                    </center>
+                                </p:panel>
+                            </div>
+                            <div class="col-md-4">
+                                <br/>
+                                <p:panel header="#{msg['lbl.lenguajes']}">
+                                    <h:panelGrid styleClass="panelGroup" rowClasses="rowpanelgrid" columns="2">
+                                        <p:commandLink update=":tittle,:contenido,:superior,:derecha,:inferior,:izquierda,:dlgLoading"  title="Spanish"  action="#{localizacion.localeChanged()}">
+                                            <f:param value="es" name="locale"/>
+                                            <p:graphicImage width="20" height="20" value="/resources/img/icon_spain.jpg"/>
+                                        </p:commandLink>
+                                        <p:commandLink title="English" update=":tittle,:contenido,:superior,:derecha,:inferior,:izquierda,:dlgLoading"  action="#{localizacion.localeChanged()}">
+                                            <f:param value="en" name="locale"/>
+                                            <p:graphicImage width="20" height="20" value="/resources/img/icon_british.png"/>
+                                        </p:commandLink>
+                                    </h:panelGrid>
+                                </p:panel>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+            </h:form>
+            <h:form id="form-data" enctype="multipart/form-data">
+                <ui:insert name="data">
+                </ui:insert>
+            </h:form>
+        </f:view>
+
+    </h:body>
+
+</html>

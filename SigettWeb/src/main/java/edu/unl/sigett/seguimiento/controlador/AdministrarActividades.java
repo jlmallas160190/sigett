@@ -11,8 +11,6 @@ import edu.unl.sigett.proyecto.SessionProyecto;
 import edu.unl.sigett.seguimiento.session.SessionActividad;
 import edu.unl.sigett.seguimiento.session.SessionProyectosAutor;
 import edu.unl.sigett.seguimiento.session.SessionProyectosDirector;
-import edu.unl.sigett.seguridad.managed.session.SessionDocenteUsuario;
-import edu.unl.sigett.seguridad.managed.session.SessionEstudianteUsuario;
 import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
 import edu.unl.sigett.entity.Actividad;
 import edu.unl.sigett.entity.CatalogoEvento;
@@ -79,10 +77,7 @@ public class AdministrarActividades implements Serializable {
     private AdministrarDocumentosActividad administrarDocumentosActividad;
     @Inject
     private SessionUsuario sessionUsuario;
-    @Inject
-    private SessionDocenteUsuario sessionDocenteUsuario;
-    @Inject
-    private SessionEstudianteUsuario sessionEstudianteUsuario;
+   
     @Inject
     private SessionProyectosAutor sessionProyectosAutor;
     @Inject
@@ -160,31 +155,31 @@ public class AdministrarActividades implements Serializable {
                 administrarDocumentosActividad.buscar(sessionActividad.getActividad(), sessionUsuario.getUsuario());
                 break;
             case "tabDocumentos-autor":
-                administrarDocumentosActividad.renderedCrear(sessionEstudianteUsuario.getUsuario(), sessionProyectosAutor.getAutorProyecto().getProyectoId());
-                administrarDocumentosActividad.renderedEditar(sessionEstudianteUsuario.getUsuario(), sessionProyectosAutor.getAutorProyecto().getProyectoId());
-                administrarDocumentosActividad.renderedSeleccionar(sessionEstudianteUsuario.getUsuario(), sessionProyectosAutor.getAutorProyecto().getProyectoId());
-                administrarDocumentosActividad.renderedEliminar(sessionEstudianteUsuario.getUsuario(), sessionProyectosAutor.getAutorProyecto().getProyectoId());
-                administrarDocumentosActividad.buscar(sessionActividad.getActividad(), sessionEstudianteUsuario.getUsuario());
+//                administrarDocumentosActividad.renderedCrear(sessionEstudianteUsuario.getUsuario(), sessionProyectosAutor.getAutorProyecto().getProyectoId());
+//                administrarDocumentosActividad.renderedEditar(sessionEstudianteUsuario.getUsuario(), sessionProyectosAutor.getAutorProyecto().getProyectoId());
+//                administrarDocumentosActividad.renderedSeleccionar(sessionEstudianteUsuario.getUsuario(), sessionProyectosAutor.getAutorProyecto().getProyectoId());
+//                administrarDocumentosActividad.renderedEliminar(sessionEstudianteUsuario.getUsuario(), sessionProyectosAutor.getAutorProyecto().getProyectoId());
+//                administrarDocumentosActividad.buscar(sessionActividad.getActividad(), sessionEstudianteUsuario.getUsuario());
                 break;
             case "tabDocumentos-director":
-                administrarDocumentosActividad.renderedCrear(sessionDocenteUsuario.getUsuario(), sessionProyectosDirector.getDirectorProyecto().getProyectoId());
-                administrarDocumentosActividad.renderedEditar(sessionDocenteUsuario.getUsuario(), sessionProyectosDirector.getDirectorProyecto().getProyectoId());
-                administrarDocumentosActividad.renderedSeleccionar(sessionDocenteUsuario.getUsuario(), sessionProyectosDirector.getDirectorProyecto().getProyectoId());
-                administrarDocumentosActividad.renderedEliminar(sessionDocenteUsuario.getUsuario(), sessionProyectosDirector.getDirectorProyecto().getProyectoId());
-                administrarDocumentosActividad.buscar(sessionActividad.getActividad(), sessionDocenteUsuario.getUsuario());
+//                administrarDocumentosActividad.renderedCrear(sessionDocenteUsuario.getUsuario(), sessionProyectosDirector.getDirectorProyecto().getProyectoId());
+//                administrarDocumentosActividad.renderedEditar(sessionDocenteUsuario.getUsuario(), sessionProyectosDirector.getDirectorProyecto().getProyectoId());
+//                administrarDocumentosActividad.renderedSeleccionar(sessionDocenteUsuario.getUsuario(), sessionProyectosDirector.getDirectorProyecto().getProyectoId());
+//                administrarDocumentosActividad.renderedEliminar(sessionDocenteUsuario.getUsuario(), sessionProyectosDirector.getDirectorProyecto().getProyectoId());
+//                administrarDocumentosActividad.buscar(sessionActividad.getActividad(), sessionDocenteUsuario.getUsuario());
                 break;
             case "tabRevisiones-autor":
-                administrarRevisiones.buscar(sessionEstudianteUsuario.getUsuario(), sessionActividad.getActividad());
+//                administrarRevisiones.buscar(sessionEstudianteUsuario.getUsuario(), sessionActividad.getActividad());
                 break;
             case "tabRevisiones-director":
-                administrarRevisiones.buscar(sessionDocenteUsuario.getUsuario(), sessionActividad.getActividad());
+//                administrarRevisiones.buscar(sessionDocenteUsuario.getUsuario(), sessionActividad.getActividad());
                 break;
             case "tabDocumentos-autor1":
-                administrarDocumentosActividad.renderedCrear(sessionEstudianteUsuario.getUsuario(), sessionActividad.getActividad().getCronogramaId().getProyecto());
-                administrarDocumentosActividad.renderedEditar(sessionEstudianteUsuario.getUsuario(), sessionActividad.getActividad().getCronogramaId().getProyecto());
-                administrarDocumentosActividad.renderedSeleccionar(sessionEstudianteUsuario.getUsuario(), sessionActividad.getActividad().getCronogramaId().getProyecto());
-                administrarDocumentosActividad.renderedEliminar(sessionEstudianteUsuario.getUsuario(), sessionActividad.getActividad().getCronogramaId().getProyecto());
-                administrarDocumentosActividad.buscar(sessionActividad.getActividad(), sessionEstudianteUsuario.getUsuario());
+//                administrarDocumentosActividad.renderedCrear(sessionEstudianteUsuario.getUsuario(), sessionActividad.getActividad().getCronogramaId().getProyecto());
+//                administrarDocumentosActividad.renderedEditar(sessionEstudianteUsuario.getUsuario(), sessionActividad.getActividad().getCronogramaId().getProyecto());
+//                administrarDocumentosActividad.renderedSeleccionar(sessionEstudianteUsuario.getUsuario(), sessionActividad.getActividad().getCronogramaId().getProyecto());
+//                administrarDocumentosActividad.renderedEliminar(sessionEstudianteUsuario.getUsuario(), sessionActividad.getActividad().getCronogramaId().getProyecto());
+//                administrarDocumentosActividad.buscar(sessionActividad.getActividad(), sessionEstudianteUsuario.getUsuario());
 
                 break;
 
@@ -263,7 +258,7 @@ public class AdministrarActividades implements Serializable {
             ScheduleEvent event = (ScheduleEvent) selectEvent.getObject();
             sessionActividad.setActividad((Actividad) event.getData());
             renderedDlgRevisar = true;
-            administrarRevisiones.renderedCrear(sessionDocenteUsuario.getUsuario());
+//            administrarRevisiones.renderedCrear(sessionDocenteUsuario.getUsuario());
             RequestContext.getCurrentInstance().execute("PF('dlgRevisarActividad').show()");
         } catch (Exception e) {
             System.out.println(e);
@@ -275,10 +270,10 @@ public class AdministrarActividades implements Serializable {
             ScheduleEvent event = (ScheduleEvent) selectEvent.getObject();
             sessionActividad.setActividad((Actividad) event.getData());
             renderedDlgEditar = true;
-            administrarDocumentosActividad.buscar(sessionActividad.getActividad(), sessionEstudianteUsuario.getUsuario());
-            administrarDocumentosActividad.renderedCrear(sessionEstudianteUsuario.getUsuario(), sessionActividad.getActividad().getCronogramaId().getProyecto());
-            administrarDocumentosActividad.renderedEditar(sessionEstudianteUsuario.getUsuario(), sessionActividad.getActividad().getCronogramaId().getProyecto());
-            administrarDocumentosActividad.renderedEliminar(sessionEstudianteUsuario.getUsuario(), sessionActividad.getActividad().getCronogramaId().getProyecto());
+//            administrarDocumentosActividad.buscar(sessionActividad.getActividad(), sessionEstudianteUsuario.getUsuario());
+//            administrarDocumentosActividad.renderedCrear(sessionEstudianteUsuario.getUsuario(), sessionActividad.getActividad().getCronogramaId().getProyecto());
+//            administrarDocumentosActividad.renderedEditar(sessionEstudianteUsuario.getUsuario(), sessionActividad.getActividad().getCronogramaId().getProyecto());
+//            administrarDocumentosActividad.renderedEliminar(sessionEstudianteUsuario.getUsuario(), sessionActividad.getActividad().getCronogramaId().getProyecto());
             RequestContext.getCurrentInstance().execute("PF(dlgEditarActividad').show()");
         } catch (Exception e) {
             System.out.println(e);
@@ -1492,21 +1487,8 @@ public class AdministrarActividades implements Serializable {
         this.sessionUsuario = sessionUsuario;
     }
 
-    public SessionDocenteUsuario getSessionDocenteUsuario() {
-        return sessionDocenteUsuario;
-    }
+  
 
-    public void setSessionDocenteUsuario(SessionDocenteUsuario sessionDocenteUsuario) {
-        this.sessionDocenteUsuario = sessionDocenteUsuario;
-    }
-
-    public SessionEstudianteUsuario getSessionEstudianteUsuario() {
-        return sessionEstudianteUsuario;
-    }
-
-    public void setSessionEstudianteUsuario(SessionEstudianteUsuario sessionEstudianteUsuario) {
-        this.sessionEstudianteUsuario = sessionEstudianteUsuario;
-    }
 
 //</editor-fold>
 }

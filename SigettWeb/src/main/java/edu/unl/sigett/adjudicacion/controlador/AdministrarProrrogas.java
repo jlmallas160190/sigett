@@ -54,7 +54,6 @@ import edu.jlmallas.academico.entity.EstudianteCarrera;
 import edu.jlmallas.academico.dao.DocenteCarreraDao;
 import edu.jlmallas.academico.dao.DocenteDao;
 import edu.jlmallas.academico.dao.EstudianteCarreraDao;
-import edu.unl.sigett.comun.managed.session.SessionOficioCarrera;
 import edu.unl.sigett.enumeration.CatalogoDocumentoCarreraEnum;
 import edu.unl.sigett.enumeration.EstadoAutorEnum;
 import edu.unl.sigett.enumeration.EstadoProyectoEnum;
@@ -75,8 +74,6 @@ public class AdministrarProrrogas implements Serializable {
     private SessionProyecto sessionProyecto;
     @Inject
     private SessionProrroga sessionProrroga;
-    @Inject
-    private SessionOficioCarrera sessionOficioCarrera;
 
     @EJB
     private ConfiguracionGeneralDao configuracionGeneralFacadeLocal;

@@ -6,7 +6,7 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core">
     <body>
         <p:dataTable id="tblDocentesProyecto" value="#{sessionProyecto.docentesProyectoDTO}" var="item" rows="20" paginator="true"
-                     rowIndexVar="rowIx" editable="true" rowKey="#{item.director.id}" selectionMode="single" selection="#{item}" editMode="cell"
+                     rowIndexVar="rowIx" editable="true" rowKey="#{item.docenteProyecto.id}" selectionMode="single" selection="#{item}" editMode="cell"
                      filteredValue="#{sessionProyecto.filterDocentesProyectoDTO}" widgetVar="tblDPFilter"
                      rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'even-row' : 'odd-row'}" emptyMessage="#{msg['lbl.table.empty']}">
             <p:column  sortBy="#{item.persona.apellidos}" 

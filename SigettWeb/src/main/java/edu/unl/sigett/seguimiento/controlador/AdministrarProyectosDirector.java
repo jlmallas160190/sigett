@@ -12,8 +12,6 @@ import com.ocpsoft.pretty.faces.annotation.URLMappings;
 import edu.unl.sigett.adjudicacion.controlador.AdministrarProrrogas;
 import edu.unl.sigett.finalizacion.controlador.AdministrarInformesProyecto;
 import edu.unl.sigett.seguimiento.session.SessionProyectosDirector;
-import edu.unl.sigett.comun.controlador.AdministrarConfiguraciones;
-import edu.unl.sigett.seguridad.managed.session.SessionDocenteUsuario;
 import edu.unl.sigett.entity.DirectorProyecto;
 import edu.jlmallas.academico.entity.Docente;
 import edu.jlmallas.academico.entity.DocenteCarrera;
@@ -66,8 +64,6 @@ public class AdministrarProyectosDirector implements Serializable {
     @Inject
     private SessionProyectosDirector sessionProyectosDirector;
     @Inject
-    private SessionDocenteUsuario sessionDocenteUsuario;
-    @Inject
     private AdministrarActividades administrarActividades;
     @Inject
     private AdministrarRevisiones administrarRevisiones;
@@ -75,8 +71,6 @@ public class AdministrarProyectosDirector implements Serializable {
     private AdministrarInformesProyecto administrarInformesProyecto;
     @Inject
     private AdministrarProrrogas administrarProrrogas;
-    @Inject
-    private AdministrarConfiguraciones administrarConfiguraciones;
     @EJB
     private UsuarioDao usuarioFacadeLocal;
     @EJB
@@ -161,7 +155,7 @@ public class AdministrarProyectosDirector implements Serializable {
             for (OfertaAcademica of : ofertasAcademicas) {
                 SimpleDateFormat formatoFecha = new SimpleDateFormat("yyyy-MM-dd");
                 String fechaCreate = formatoFecha.format(of.getFechaInicio());
-                buscar(fechaCreate, sessionDocenteUsuario.getDocente());
+//                buscar(fechaCreate, sessionDocenteUsuario.getDocente());
             }
         } catch (Exception e) {
         }
@@ -176,21 +170,21 @@ public class AdministrarProyectosDirector implements Serializable {
                     administrarInformesProyecto.setRenderedDlgCertificado(false);
                     break;
                 case "prorrogas":
-                    administrarProrrogas.setRenderedDlgOficio(false);
-                    administrarProrrogas.buscar(sessionProyectosDirector.getDirectorProyecto().getProyectoId().getCronograma(), sessionDocenteUsuario.getUsuario(), "");
-                    administrarProrrogas.renderedCrear(sessionDocenteUsuario.getUsuario(), sessionProyectosDirector.getDirectorProyecto().getProyectoId());
-                    administrarProrrogas.renderedBuscar(sessionDocenteUsuario.getUsuario(), sessionProyectosDirector.getDirectorProyecto().getProyectoId());
-                    administrarProrrogas.renderedEditar(sessionDocenteUsuario.getUsuario(), sessionProyectosDirector.getDirectorProyecto().getProyectoId());
-                    administrarProrrogas.renderedEliminar(sessionDocenteUsuario.getUsuario(), sessionProyectosDirector.getDirectorProyecto().getProyectoId());
-                    administrarProrrogas.renderedImprimirOficio(sessionDocenteUsuario.getUsuario());
-                    administrarProrrogas.renderedAceptar(sessionDocenteUsuario.getUsuario(), sessionProyectosDirector.getDirectorProyecto().getProyectoId());
+//                    administrarProrrogas.setRenderedDlgOficio(false);
+//                    administrarProrrogas.buscar(sessionProyectosDirector.getDirectorProyecto().getProyectoId().getCronograma(), sessionDocenteUsuario.getUsuario(), "");
+//                    administrarProrrogas.renderedCrear(sessionDocenteUsuario.getUsuario(), sessionProyectosDirector.getDirectorProyecto().getProyectoId());
+//                    administrarProrrogas.renderedBuscar(sessionDocenteUsuario.getUsuario(), sessionProyectosDirector.getDirectorProyecto().getProyectoId());
+//                    administrarProrrogas.renderedEditar(sessionDocenteUsuario.getUsuario(), sessionProyectosDirector.getDirectorProyecto().getProyectoId());
+//                    administrarProrrogas.renderedEliminar(sessionDocenteUsuario.getUsuario(), sessionProyectosDirector.getDirectorProyecto().getProyectoId());
+//                    administrarProrrogas.renderedImprimirOficio(sessionDocenteUsuario.getUsuario());
+//                    administrarProrrogas.renderedAceptar(sessionDocenteUsuario.getUsuario(), sessionProyectosDirector.getDirectorProyecto().getProyectoId());
                     administrarProrrogas.setRenderedDlgOficio(false);
                     administrarProrrogas.setRenderedDlgEditar(false);
                     administrarInformesProyecto.setRenderedDlgEditar(false);
                     administrarInformesProyecto.setRenderedDlgCertificado(false);
                     break;
                 case "actividades":
-                    administrarActividades.buscarPorDirector("", sessionDocenteUsuario.getUsuario(), sessionProyectosDirector.getDirectorProyecto().getProyectoId());
+//                    administrarActividades.buscarPorDirector("", sessionDocenteUsuario.getUsuario(), sessionProyectosDirector.getDirectorProyecto().getProyectoId());
                     administrarInformesProyecto.setRenderedDlgEditar(false);
                     administrarInformesProyecto.setRenderedDlgCertificado(false);
                     break;
@@ -201,10 +195,10 @@ public class AdministrarProyectosDirector implements Serializable {
 //                            sessionDocenteUsuario.getUsuario());
                     administrarInformesProyecto.setRenderedDlgCertificado(false);
                 case "informes":
-                    administrarInformesProyecto.buscar("", sessionProyectosDirector.getDirectorProyecto().getProyectoId(), sessionDocenteUsuario.getUsuario());
-                    administrarInformesProyecto.renderedCrear(sessionDocenteUsuario.getUsuario(), sessionProyectosDirector.getDirectorProyecto().getProyectoId());
-                    administrarInformesProyecto.renderedEditar(sessionDocenteUsuario.getUsuario(), sessionProyectosDirector.getDirectorProyecto().getProyectoId());
-                    administrarInformesProyecto.renderedEliminar(sessionDocenteUsuario.getUsuario(), sessionProyectosDirector.getDirectorProyecto().getProyectoId());
+//                    administrarInformesProyecto.buscar("", sessionProyectosDirector.getDirectorProyecto().getProyectoId(), sessionDocenteUsuario.getUsuario());
+//                    administrarInformesProyecto.renderedCrear(sessionDocenteUsuario.getUsuario(), sessionProyectosDirector.getDirectorProyecto().getProyectoId());
+//                    administrarInformesProyecto.renderedEditar(sessionDocenteUsuario.getUsuario(), sessionProyectosDirector.getDirectorProyecto().getProyectoId());
+//                    administrarInformesProyecto.renderedEliminar(sessionDocenteUsuario.getUsuario(), sessionProyectosDirector.getDirectorProyecto().getProyectoId());
             }
         }
     }
@@ -213,7 +207,7 @@ public class AdministrarProyectosDirector implements Serializable {
         try {
             SimpleDateFormat formatoFecha = new SimpleDateFormat("yyyy-MM-dd");
             String fechaCreate = formatoFecha.format(ofertaAcademica.getFechaInicio());
-            buscar(fechaCreate, sessionDocenteUsuario.getDocente());
+//            buscar(fechaCreate, sessionDocenteUsuario.getDocente());
         } catch (Exception e) {
         }
     }
@@ -267,22 +261,22 @@ public class AdministrarProyectosDirector implements Serializable {
                 /*---------------------------------------------------------Autores-----------------------------------------------------------*/
 //                administrarAutoresProyecto.buscarAutoresDesdeDirectorProyecto("", sessionProyectosDirector.getDirectorProyecto().getProyectoId());
                 /*---------------------------------------------Prorrogas------------------------------------------------------------------*/
-                administrarProrrogas.setRenderedDlgOficio(false);
-                administrarProrrogas.buscar(sessionProyectosDirector.getDirectorProyecto().getProyectoId().getCronograma(), sessionDocenteUsuario.getUsuario(), criterio);
-                administrarProrrogas.renderedCrear(sessionDocenteUsuario.getUsuario(), sessionProyectosDirector.getDirectorProyecto().getProyectoId());
-                administrarProrrogas.renderedBuscar(sessionDocenteUsuario.getUsuario(), sessionProyectosDirector.getDirectorProyecto().getProyectoId());
-                administrarProrrogas.renderedEditar(sessionDocenteUsuario.getUsuario(), sessionProyectosDirector.getDirectorProyecto().getProyectoId());
-                administrarProrrogas.renderedEliminar(sessionDocenteUsuario.getUsuario(), sessionProyectosDirector.getDirectorProyecto().getProyectoId());
-                administrarProrrogas.renderedImprimirOficio(sessionDocenteUsuario.getUsuario());
-                administrarProrrogas.renderedAceptar(sessionDocenteUsuario.getUsuario(), sessionProyectosDirector.getDirectorProyecto().getProyectoId());
-                administrarProrrogas.setRenderedDlgOficio(false);
-                administrarProrrogas.setRenderedDlgEditar(false);
+//                administrarProrrogas.setRenderedDlgOficio(false);
+//                administrarProrrogas.buscar(sessionProyectosDirector.getDirectorProyecto().getProyectoId().getCronograma(), sessionDocenteUsuario.getUsuario(), criterio);
+//                administrarProrrogas.renderedCrear(sessionDocenteUsuario.getUsuario(), sessionProyectosDirector.getDirectorProyecto().getProyectoId());
+//                administrarProrrogas.renderedBuscar(sessionDocenteUsuario.getUsuario(), sessionProyectosDirector.getDirectorProyecto().getProyectoId());
+//                administrarProrrogas.renderedEditar(sessionDocenteUsuario.getUsuario(), sessionProyectosDirector.getDirectorProyecto().getProyectoId());
+//                administrarProrrogas.renderedEliminar(sessionDocenteUsuario.getUsuario(), sessionProyectosDirector.getDirectorProyecto().getProyectoId());
+//                administrarProrrogas.renderedImprimirOficio(sessionDocenteUsuario.getUsuario());
+//                administrarProrrogas.renderedAceptar(sessionDocenteUsuario.getUsuario(), sessionProyectosDirector.getDirectorProyecto().getProyectoId());
+//                administrarProrrogas.setRenderedDlgOficio(false);
+//                administrarProrrogas.setRenderedDlgEditar(false);
                 /*--------------------------------------------------------------Actividades----------------------------------------------------------------*/
-                administrarActividades.buscarPorDirector("", sessionDocenteUsuario.getUsuario(), sessionProyectosDirector.getDirectorProyecto().getProyectoId());
-                /*--------------------------------------------------------------Revisiones------------------------------------------------------------------------*/
-                administrarRevisiones.renderedCrear(sessionDocenteUsuario.getUsuario());
-                administrarRevisiones.renderedEditar(sessionDocenteUsuario.getUsuario());
-                administrarRevisiones.renderedEliminar(sessionDocenteUsuario.getUsuario());
+//                administrarActividades.buscarPorDirector("", sessionDocenteUsuario.getUsuario(), sessionProyectosDirector.getDirectorProyecto().getProyectoId());
+//                /*--------------------------------------------------------------Revisiones------------------------------------------------------------------------*/
+//                administrarRevisiones.renderedCrear(sessionDocenteUsuario.getUsuario());
+//                administrarRevisiones.renderedEditar(sessionDocenteUsuario.getUsuario());
+//                administrarRevisiones.renderedEliminar(sessionDocenteUsuario.getUsuario());
 //                intervalo = administrarConfiguraciones.intervaloActualizaciones();
                 navegacion = "pretty:editarDirectorProyecto";
             } else {
@@ -357,13 +351,7 @@ public class AdministrarProyectosDirector implements Serializable {
         this.criterio = criterio;
     }
 
-    public SessionDocenteUsuario getSessionDocenteUsuario() {
-        return sessionDocenteUsuario;
-    }
-
-    public void setSessionDocenteUsuario(SessionDocenteUsuario sessionDocenteUsuario) {
-        this.sessionDocenteUsuario = sessionDocenteUsuario;
-    }
+   
 
     public List<DirectorProyecto> getDirectorProyectos() {
         return directorProyectos;

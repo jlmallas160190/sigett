@@ -10,7 +10,7 @@ import com.jlmallas.comun.dao.ItemDao;
 import com.jlmallas.comun.dao.PersonaDao;
 import com.jlmallas.comun.entity.Item;
 import com.jlmallas.comun.enumeration.CatalogoEnum;
-import com.jlmallas.comun.enumeration.TipoValorEnum;
+import com.jlmallas.comun.enumeration.TipoConfiguracionEnum;
 import com.jlmallas.comun.service.ItemService;
 import edu.unl.sigett.academico.controlador.AdministrarEstudiantesCarrera;
 import com.lowagie.text.Document;
@@ -30,7 +30,6 @@ import com.ocpsoft.pretty.faces.annotation.URLMappings;
 import edu.unl.sigett.adjudicacion.controlador.AdministrarDirectoresProyecto;
 import edu.unl.sigett.adjudicacion.controlador.AdministrarProrrogas;
 import edu.unl.sigett.comun.controlador.AdministrarNotificaciones;
-import edu.unl.sigett.academico.managed.session.SessionPeriodoAcademico;
 import edu.unl.sigett.finalizacion.controlador.AdministrarActas;
 import edu.unl.sigett.finalizacion.controlador.AdministrarEvaluacionesTribunal;
 import edu.unl.sigett.finalizacion.controlador.AdministrarMiembrosTribunal;
@@ -118,8 +117,6 @@ import edu.unl.sigett.dao.LineaInvestigacionDocenteDao;
 import edu.unl.sigett.dto.ProyectoDTO;
 import edu.unl.sigett.entity.Tema;
 import edu.unl.sigett.enumeration.ConfiguracionProyectoEnum;
-import edu.unl.sigett.postulacion.controlador.AdministrarDocumentosExpediente;
-import edu.unl.sigett.documentoProyecto.AdministrarDocumentosProyecto;
 import edu.unl.sigett.service.AutorProyectoService;
 import edu.unl.sigett.service.LineaInvestigacionProyectoService;
 import edu.unl.sigett.service.LineaInvestigacionService;
@@ -141,8 +138,6 @@ class AdministrarProyectos implements Serializable {
     @Inject
     SessionProyecto sessionProyecto;
     @Inject
-    private SessionPeriodoAcademico sessionPeriodoAcademico;
-    @Inject
     private AdministrarProrrogas administrarProrrogas;
 //    @Inject
 //    private AdministrarDirectoresProyecto administrarDirectoresProyecto
@@ -154,8 +149,6 @@ class AdministrarProyectos implements Serializable {
     private AdministrarEvaluacionesTribunal administrarEvaluacionesTribunal;
     @Inject
     private AdministrarEstudiantesCarrera administrarEstudiantesCarrera;
-    @Inject
-    private AdministrarDocumentosExpediente administrarDocumentosExpediente;
     @Inject
     private AdministrarNotificaciones administrarNotificaciones;
     @Inject
@@ -791,7 +784,7 @@ class AdministrarProyectos implements Serializable {
                     administrarActividades.setRenderedDlgEditar(false);
                     administrarActividades.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
                     /*-----------------------------------Documentos Expediente-------------------------------------------------------------*/
-                    administrarDocumentosExpediente.setRenderedDlgEditar(false);
+//                    administrarDocumentosExpediente.setRenderedDlgEditar(false);
                     break;
                 case "tabAutores":
                     /*------------------------------------------Autores------------------------------------------------------------------------------*/
@@ -830,7 +823,7 @@ class AdministrarProyectos implements Serializable {
                     administrarActividades.setRenderedDlgEditar(false);
                     administrarActividades.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
                     /*------------------------------------------------------Documentos Expediente----------------------------------------------*/
-                    administrarDocumentosExpediente.setRenderedDlgEditar(false);
+//                    administrarDocumentosExpediente.setRenderedDlgEditar(false);
                     break;
                 case "tabDocentesProyecto":
                     /*------------------------------DOCENTES---------------------------------------------------*/
@@ -873,7 +866,7 @@ class AdministrarProyectos implements Serializable {
                     administrarActividades.setRenderedDlgEditar(false);
                     administrarActividades.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
                     /*------------------------------------------------------Documentos Expediente----------------------------------------------*/
-                    administrarDocumentosExpediente.setRenderedDlgEditar(false);
+//                    administrarDocumentosExpediente.setRenderedDlgEditar(false);
                     break;
                 case "tabDocumentosProyecto":
                     /*----------------------------------------------Documentos-------------------------------------------------------*/
@@ -940,7 +933,7 @@ class AdministrarProyectos implements Serializable {
                     administrarMiembrosTribunal.setRenderedDlgDocentesDisponibles(false);
                     administrarMiembrosTribunal.setRenderedDlgOficio(false);
                     /*----------------------------------------------Documentos Expediente-------------------------------------------------------*/
-                    administrarDocumentosExpediente.setRenderedDlgEditar(false);
+//                    administrarDocumentosExpediente.setRenderedDlgEditar(false);
                     /*------------------------------------METODOS PRORROGAS-------------------------------------------------------------------*/
                     administrarProrrogas.setRenderedDlgOficio(false);
                     administrarProrrogas.setRenderedDlgEditar(false);
@@ -1013,7 +1006,7 @@ class AdministrarProyectos implements Serializable {
                     /*----------------------------------------------Tribunales-------------------------------------------------------*/
                     administrarTribunales.setRenderedDlgEditar(false);
                     /*----------------------------------------------Documentos expediente-------------------------------------------------------*/
-                    administrarDocumentosExpediente.setRenderedDlgEditar(false);
+//                    administrarDocumentosExpediente.setRenderedDlgEditar(false);
                     /*----------------------------------------------Prorrogas-------------------------------------------------------*/
                     administrarProrrogas.setRenderedDlgOficio(false);
                     administrarProrrogas.setRenderedDlgEditar(false);
@@ -1048,7 +1041,7 @@ class AdministrarProyectos implements Serializable {
                     administrarProrrogas.setRenderedDlgRespuestaAutorProyecto(false);
                     administrarProrrogas.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
                     /*----------------------------------------------Documentos expediente-------------------------------------------------------*/
-                    administrarDocumentosExpediente.setRenderedDlgEditar(false);
+//                    administrarDocumentosExpediente.setRenderedDlgEditar(false);
                 case "tabDatosInicio":
                     /*----------------------------------------------Datos Proyectos-------------------------------------------------------*/
 //                    renderedEditarDatosProyecto(sessionProyecto.getProyecto());
@@ -1078,7 +1071,7 @@ class AdministrarProyectos implements Serializable {
                     administrarMiembrosTribunal.setRenderedDlgDocentesDisponibles(false);
                     administrarMiembrosTribunal.setRenderedDlgOficio(false);
                     /*----------------------------------------------Documentos expediente-------------------------------------------------------*/
-                    administrarDocumentosExpediente.setRenderedDlgEditar(false);
+//                    administrarDocumentosExpediente.setRenderedDlgEditar(false);
                     /*----------------------------------------------Prorrogas-------------------------------------------------------*/
                     administrarProrrogas.setRenderedDlgOficio(false);
                     administrarProrrogas.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
@@ -1130,7 +1123,7 @@ class AdministrarProyectos implements Serializable {
                     administrarProrrogas.setRenderedDlgEditar(false);
                     administrarProrrogas.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
                     /*----------------------------------------------Docuementos Expediente-------------------------------------------------------*/
-                    administrarDocumentosExpediente.setRenderedDlgEditar(false);
+//                    administrarDocumentosExpediente.setRenderedDlgEditar(false);
                     /*----------------------------------------------Actividades-------------------------------------------------------*/
                     administrarActividades.setRenderedDlgEditar(false);
                     administrarActividades.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
@@ -1160,7 +1153,7 @@ class AdministrarProyectos implements Serializable {
                     administrarMiembrosTribunal.setRenderedDlgDocentesDisponibles(false);
                     administrarMiembrosTribunal.setRenderedDlgOficio(false);
                     /*----------------------------------------------Documentos expediente-------------------------------------------------------*/
-                    administrarDocumentosExpediente.setRenderedDlgEditar(false);
+//                    administrarDocumentosExpediente.setRenderedDlgEditar(false);
                     /*----------------------------------------------Prorrogas-------------------------------------------------------*/
                     administrarProrrogas.setRenderedDlgOficio(false);
                     administrarProrrogas.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
@@ -2350,15 +2343,15 @@ class AdministrarProyectos implements Serializable {
         }
         ConfiguracionProyecto configuracionProyectoDS = new ConfiguracionProyecto(
                 sessionProyecto.getProyectoSeleccionado(), ConfiguracionProyectoEnum.DIASSEMANA.getTipo(), "7",
-                ConfiguracionProyectoEnum.DIASSEMANA.getTipo(), TipoValorEnum.NUMERICO.getTipo());
+                ConfiguracionProyectoEnum.DIASSEMANA.getTipo(), TipoConfiguracionEnum.NUMERICO.getTipo());
         sessionProyecto.getConfiguracionProyectos().add(configuracionProyectoDS);
         ConfiguracionProyecto configuracionProyectoHD = new ConfiguracionProyecto(
                 sessionProyecto.getProyectoSeleccionado(), ConfiguracionProyectoEnum.HORASDIARIAS.getTipo(), "8",
-                ConfiguracionProyectoEnum.HORASDIARIAS.getTipo(), TipoValorEnum.NUMERICO.getTipo());
+                ConfiguracionProyectoEnum.HORASDIARIAS.getTipo(), TipoConfiguracionEnum.NUMERICO.getTipo());
         sessionProyecto.getConfiguracionProyectos().add(configuracionProyectoHD);
         ConfiguracionProyecto configuracionProyectoCD = new ConfiguracionProyecto(
                 sessionProyecto.getProyectoSeleccionado(), ConfiguracionProyectoEnum.CATALOGODURACION.getTipo(), "1",
-                ConfiguracionProyectoEnum.CATALOGODURACION.getTipo(), TipoValorEnum.SELECCIONMULTIPLE.getTipo());
+                ConfiguracionProyectoEnum.CATALOGODURACION.getTipo(), TipoConfiguracionEnum.SELECCIONMULTIPLE.getTipo());
         sessionProyecto.getConfiguracionProyectos().add(configuracionProyectoCD);
     }
 
@@ -2609,14 +2602,6 @@ class AdministrarProyectos implements Serializable {
         this.autorRequisitos = autorRequisitos;
     }
 
-    public SessionPeriodoAcademico getSessionPeriodoAcademico() {
-        return sessionPeriodoAcademico;
-    }
-
-    public void setSessionPeriodoAcademico(SessionPeriodoAcademico sessionPeriodoAcademico) {
-        this.sessionPeriodoAcademico = sessionPeriodoAcademico;
-    }
-
     public List<Proyecto> getProyectosPorWS() {
         return proyectosPorWS;
     }
@@ -2664,14 +2649,6 @@ class AdministrarProyectos implements Serializable {
 
     public void setAdministrarEstudiantesCarrera(AdministrarEstudiantesCarrera administrarEstudiantesCarrera) {
         this.administrarEstudiantesCarrera = administrarEstudiantesCarrera;
-    }
-
-    public AdministrarDocumentosExpediente getAdministrarDocumentosExpediente() {
-        return administrarDocumentosExpediente;
-    }
-
-    public void setAdministrarDocumentosExpediente(AdministrarDocumentosExpediente administrarDocumentosExpediente) {
-        this.administrarDocumentosExpediente = administrarDocumentosExpediente;
     }
     //</editor-fold>
 

@@ -7,7 +7,7 @@
         <h:panelGrid columns="1" >
             <p:fileUpload multiple="false" fileUploadListener="#{administrarUsuarioCarrera.handleFileUpload}"  
                                       update=":contenido:msm,:contenido:logo,dlgLogo"  mode="advanced"  
-                                      allowTypes="/(\.|\/)(gif|jpe?g|png)$/" sizeLimit="#{sessionConfiguracion.tamanioPermitidoImagenes}"
+                                      allowTypes="/(\.|\/)(gif|jpe?g|png)$/" sizeLimit="#{cabeceraController.configuracionGeneralDTO.tamanioArchivo}"
                                       invalidFileMessage="#{msg['lbl.invalidTypeFileMessage']}"
                                       invalidSizeMessage="#{msg['lbl.fileLimitMessage']}"
                                       cancelLabel="#{msg['lbl.cancelar']}"  label="#{msg['lbl.seleccionar']}" oncomplete="dlgFoto.hide()" 

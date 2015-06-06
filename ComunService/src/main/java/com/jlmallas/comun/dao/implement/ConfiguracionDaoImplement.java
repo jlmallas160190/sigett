@@ -7,20 +7,9 @@ package com.jlmallas.comun.dao.implement;
 
 import com.jlmallas.comun.dao.ConfiguracionDao;
 import com.jlmallas.comun.entity.Configuracion;
-import com.jlmallas.comun.enumeration.ConfiguracionEnum;
 import com.jlmallas.comun.dao.AbstractDao;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.security.spec.KeySpec;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.StringTokenizer;
-import javax.crypto.Cipher;
-import javax.crypto.SecretKey;
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.DESKeySpec;
 import javax.ejb.Stateless;
 import javax.persistence.Query;
 
@@ -31,8 +20,6 @@ import javax.persistence.Query;
 @Stateless
 public class ConfiguracionDaoImplement extends AbstractDao<Configuracion> implements ConfiguracionDao {
 
-    private static Cipher encrypt;
-    private static Cipher decrypt;
 
     public ConfiguracionDaoImplement() {
         super(Configuracion.class);

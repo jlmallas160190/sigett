@@ -8,10 +8,7 @@ package edu.unl.sigett.seguimiento.controlador;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 import com.ocpsoft.pretty.faces.annotation.URLMappings;
 import edu.unl.sigett.adjudicacion.controlador.AdministrarDirectoresProyecto;
-import edu.unl.sigett.documentoProyecto.AdministrarDocumentosProyecto;
 import edu.unl.sigett.seguimiento.session.SessionProyectosAutor;
-import edu.unl.sigett.comun.controlador.AdministrarConfiguraciones;
-import edu.unl.sigett.seguridad.managed.session.SessionEstudianteUsuario;
 import edu.unl.sigett.entity.AutorProyecto;
 import edu.jlmallas.academico.entity.Estudiante;
 import org.jlmallas.seguridad.entity.Usuario;
@@ -53,17 +50,11 @@ public class AdministrarProyectosAutor implements Serializable {
     @Inject
     private SessionProyectosAutor sessionProyectosAutor;
     @Inject
-    private SessionEstudianteUsuario sessionEstudianteUsuario;
-    @Inject
-    private AdministrarDocumentosProyecto administrarDocumentosProyecto;
-    @Inject
     private AdministrarActividades administrarActividades;
     @Inject
     private AdministrarRevisiones administrarRevisiones;
     @Inject
     private AdministrarDirectoresProyecto administrarDirectoresProyecto;
-    @Inject
-    private AdministrarConfiguraciones administrarConfiguraciones;
 
     @EJB
     private AutorProyectoDao autorProyectoFacadeLocal;
@@ -108,20 +99,20 @@ public class AdministrarProyectosAutor implements Serializable {
     public void onTabChange(TabChangeEvent event) {
         switch (event.getTab().getId()) {
             case "documentos":
-                administrarDocumentosProyecto.buscarPorAutor(sessionProyectosAutor.getAutorProyecto().getProyectoId());
-                administrarDocumentosProyecto.renderedCrear(sessionEstudianteUsuario.getUsuario());
-                administrarDocumentosProyecto.renderedEditar(sessionEstudianteUsuario.getUsuario());
-                administrarDocumentosProyecto.renderedEliminar(sessionEstudianteUsuario.getUsuario());
+//                administrarDocumentosProyecto.buscarPorAutor(sessionProyectosAutor.getAutorProyecto().getProyectoId());
+//                administrarDocumentosProyecto.renderedCrear(sessionEstudianteUsuario.getUsuario());
+//                administrarDocumentosProyecto.renderedEditar(sessionEstudianteUsuario.getUsuario());
+//                administrarDocumentosProyecto.renderedEliminar(sessionEstudianteUsuario.getUsuario());
                 break;
             case "directores":
                 administrarDirectoresProyecto.historialDirectoresProyecto("", sessionProyectosAutor.getAutorProyecto().getProyectoId());
                 break;
             case "actividades":
-                administrarActividades.renderedBuscar(sessionEstudianteUsuario.getUsuario(), sessionProyectosAutor.getAutorProyecto().getProyectoId());
-                administrarActividades.buscarPorAutorProyecto("", sessionEstudianteUsuario.getUsuario(), sessionProyectosAutor.getAutorProyecto().getProyectoId().getCronograma());
-                administrarActividades.renderedEditar(sessionEstudianteUsuario.getUsuario(), sessionProyectosAutor.getAutorProyecto().getProyectoId());
-                administrarActividades.renderedCrear(sessionEstudianteUsuario.getUsuario(), sessionProyectosAutor.getAutorProyecto().getProyectoId());
-                administrarActividades.setRenderedEditar(false);
+//                administrarActividades.renderedBuscar(sessionEstudianteUsuario.getUsuario(), sessionProyectosAutor.getAutorProyecto().getProyectoId());
+//                administrarActividades.buscarPorAutorProyecto("", sessionEstudianteUsuario.getUsuario(), sessionProyectosAutor.getAutorProyecto().getProyectoId().getCronograma());
+//                administrarActividades.renderedEditar(sessionEstudianteUsuario.getUsuario(), sessionProyectosAutor.getAutorProyecto().getProyectoId());
+//                administrarActividades.renderedCrear(sessionEstudianteUsuario.getUsuario(), sessionProyectosAutor.getAutorProyecto().getProyectoId());
+//                administrarActividades.setRenderedEditar(false);
                 break;
             case "inicio":
 //                administrarCronograma.calculaAvanceFaltanteCronograma(sessionProyectosAutor.getAutorProyecto().getProyectoId().getCronograma(),
@@ -140,17 +131,17 @@ public class AdministrarProyectosAutor implements Serializable {
                 sessionProyectosAutor.setAutorProyecto(autorProyecto);
 //                intervalo = administrarConfiguraciones.intervaloActualizaciones();
                 /*----------------------------------------Documentos-------------------------------------------------*/
-                administrarDocumentosProyecto.buscarPorAutor(sessionProyectosAutor.getAutorProyecto().getProyectoId());
-                administrarDocumentosProyecto.renderedCrear(sessionEstudianteUsuario.getUsuario());
-                administrarDocumentosProyecto.renderedEditar(sessionEstudianteUsuario.getUsuario());
-                administrarDocumentosProyecto.renderedEliminar(sessionEstudianteUsuario.getUsuario());
-                /*------------------------------------------------Directores--------------------------------------------*/
+//                administrarDocumentosProyecto.buscarPorAutor(sessionProyectosAutor.getAutorProyecto().getProyectoId());
+//                administrarDocumentosProyecto.renderedCrear(sessionEstudianteUsuario.getUsuario());
+//                administrarDocumentosProyecto.renderedEditar(sessionEstudianteUsuario.getUsuario());
+//                administrarDocumentosProyecto.renderedEliminar(sessionEstudianteUsuario.getUsuario());
+//                /*------------------------------------------------Directores--------------------------------------------*/
                 administrarDirectoresProyecto.historialDirectoresProyecto("", autorProyecto.getProyectoId());
                 /*---------------------------------------------------Actividades---------------------------------------------------*/
-                administrarActividades.buscarPorAutorProyecto("", sessionEstudianteUsuario.getUsuario(), sessionProyectosAutor.getAutorProyecto().getProyectoId().getCronograma());
-                administrarActividades.renderedEditar(sessionEstudianteUsuario.getUsuario(), sessionProyectosAutor.getAutorProyecto().getProyectoId());
-                administrarActividades.renderedCrear(sessionEstudianteUsuario.getUsuario(), sessionProyectosAutor.getAutorProyecto().getProyectoId());
-                administrarActividades.setRenderedEditar(false);
+//                administrarActividades.buscarPorAutorProyecto("", sessionEstudianteUsuario.getUsuario(), sessionProyectosAutor.getAutorProyecto().getProyectoId().getCronograma());
+//                administrarActividades.renderedEditar(sessionEstudianteUsuario.getUsuario(), sessionProyectosAutor.getAutorProyecto().getProyectoId());
+//                administrarActividades.renderedCrear(sessionEstudianteUsuario.getUsuario(), sessionProyectosAutor.getAutorProyecto().getProyectoId());
+//                administrarActividades.setRenderedEditar(false);
                 navegacion = "pretty:editarAutorProyecto";
             } else {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_editar") + ". " + bundle.getString("lbl.msm_consulte"), "");
@@ -210,14 +201,6 @@ public class AdministrarProyectosAutor implements Serializable {
         this.renderedNoEditar = renderedNoEditar;
     }
 
-    public AdministrarDocumentosProyecto getAdministrarDocumentosProyecto() {
-        return administrarDocumentosProyecto;
-    }
-
-    public void setAdministrarDocumentosProyecto(AdministrarDocumentosProyecto administrarDocumentosProyecto) {
-        this.administrarDocumentosProyecto = administrarDocumentosProyecto;
-    }
-
     public List<AutorProyecto> getAutorProyectos() {
         return autorProyectos;
     }
@@ -242,12 +225,5 @@ public class AdministrarProyectosAutor implements Serializable {
         this.administrarRevisiones = administrarRevisiones;
     }
 
-    public SessionEstudianteUsuario getSessionEstudianteUsuario() {
-        return sessionEstudianteUsuario;
-    }
-
-    public void setSessionEstudianteUsuario(SessionEstudianteUsuario sessionEstudianteUsuario) {
-        this.sessionEstudianteUsuario = sessionEstudianteUsuario;
-    }
 //</editor-fold>
 }

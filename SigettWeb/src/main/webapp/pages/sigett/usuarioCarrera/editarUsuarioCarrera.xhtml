@@ -39,9 +39,6 @@
                 <p:dialog id="dlgLogo" header="#{msg['lbl.subir']} #{msg['lbl.logo']}" widgetVar="dlgLogo" modal="true" >
                     <ui:include src="subirLogo.xhtml"/>  
                 </p:dialog>
-                <f:metadata>
-                    <f:event type="preRenderView" listener="#{administrarConfiguraciones.obtenerTamanioPermitidoFotos()}"/>
-                </f:metadata>
             </ui:define>
             <ui:define name="right">
                 <p:panel header="#{sessionUsuarioCarrera.usuarioCarreraDTO.carrera.nombre}">

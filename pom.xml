@@ -15,5 +15,7 @@
         <module>ComunService</module>
         <module>AcademicoService</module>
         <module>SigettWebSemantica</module>
+        <module>SigettDocenteWeb</module>
+        <module>SigettSeguridadWeb</module>
     </modules>
 </project>

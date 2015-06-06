@@ -28,14 +28,6 @@ public interface DocenteProyectoDao {
 
     List<DocenteProyecto> findRange(int[] range);
 
-    DocenteProyecto buscarOficioInformeDocenteProyeecto(Long docenteProyectoId);
-
-    List<DocenteProyecto> buscarSinPertinencia(Integer carreraId);
-
-    List<DocenteProyecto> buscarDocenteProyectoParaPertinencia(String ci);
-
-    List<DocenteProyecto> buscarPorDocentePeriodo(String ci, Long ofertaId);
-
     List<DocenteProyecto> buscar(final DocenteProyecto docenteProyecto);
 
     @Override

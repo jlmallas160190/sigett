@@ -9,7 +9,6 @@ import com.jlmallas.comun.dao.PersonaDao;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 import com.ocpsoft.pretty.faces.annotation.URLMappings;
 import edu.unl.sigett.adjudicacion.controlador.AdministrarDirectoresProyecto;
-import edu.unl.sigett.postulacion.managed.session.SessionConsultarProyecto;
 import edu.jlmallas.academico.entity.Area;
 import edu.unl.sigett.entity.AutorProyecto;
 import edu.jlmallas.academico.entity.Carrera;
@@ -62,8 +61,6 @@ public class ViewProyectos implements Serializable {
 
     @Inject
     private AdministrarDirectoresProyecto directoresProyecto;
-    @Inject
-    private SessionConsultarProyecto sessionConsultarProyecto;
 
     private String filtro;
     private Carrera carrera;
@@ -199,7 +196,7 @@ public class ViewProyectos implements Serializable {
     public String editar(Proyecto proyecto) {
         String navegacion = "";
         try {
-            sessionConsultarProyecto.setProyecto(proyecto);
+//            sessionConsultarProyecto.setProyecto(proyecto);
 //            autoresProyecto.listadoAutores("", proyecto);
             directoresProyecto.historialDirectoresProyecto("", proyecto);
             navegacion = "pretty:viewProject";
@@ -400,13 +397,6 @@ public class ViewProyectos implements Serializable {
         this.criterioCarrera = criterioCarrera;
     }
 
-    public SessionConsultarProyecto getSessionConsultarProyecto() {
-        return sessionConsultarProyecto;
-    }
-
-    public void setSessionConsultarProyecto(SessionConsultarProyecto sessionConsultarProyecto) {
-        this.sessionConsultarProyecto = sessionConsultarProyecto;
-    }
 
     public AdministrarDirectoresProyecto getDirectoresProyecto() {
         return directoresProyecto;

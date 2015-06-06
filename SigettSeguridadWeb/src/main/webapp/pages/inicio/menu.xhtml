@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+        <script>
+            function regresar() {
+                window.history.back();
+            }
+        </script>
+        <p:menubar>
+            <p:submenu icon="ui-icon-document" label="#{msg['lbl.administracion']}" >
+                <p:menuitem value="#{msg['lbl.areas']}" icon="ui-icon-area"  action="pretty:areas"/>
+                <p:menuitem value="#{msg['lbl.periodosAcademicos']}" icon="ui-icon-calendar" action="#{administrarPeriodosAcademicos.abrirBuscarPeriodosAcademicos(usuarioDM.usuario)}"/>
+            </p:submenu>
+            <!--<p:menuitem value="#{msg['lbl.configuraciones']}" icon="ui-icon-wrench"  ajax="false" action="pretty:configuraciones"/>-->
+            <p:submenu icon="ui-icon-key" label="#{msg['lbl.seguridad']}" >
+                <p:menuitem  value="#{msg['lbl.usuarios']}" icon="ui-icon-user" ajax="false" action="#{usuarioController.abrirBuscarUsuarios(usuarioDM.usuario)}"/>
+                <!--<p:menuitem value="#{msg['lbl.roles']}" ajax="false" icon="ui-icon-rol"  action="#{administrarRoles.abrirBuscarRoles(usuarioDM.usuario)}"/>-->
+                <!--<p:menuitem value="#{msg['lbl.logs']}" icon="ui-icon-document" ajax="false" action="pretty:buscarTodoLogs"/>-->
+
+            </p:submenu>
+            <f:facet name="options">
+                <h:panelGrid styleClass="panelGroup" columns="3">
+                    <p:outputLabel style="font-weight: bold;color: #D20005" value="#{msg['lbl.saludo']}: #{usuarioDM.usuario}"></p:outputLabel>
+                    <p:commandButton value="#{msg['lbl.regresar']}" icon="ui-icon-arrowreturnthick-1-w" onclick="regresar()"/>
+                    <p:commandButton value="#{msg['lbl.salir']}" ajax="false" icon="ui-icon-power"  action="#{loginController.logout()}" />
+                </h:panelGrid>
+            </f:facet>
+        </p:menubar>
+    </body>
+
+</html>
