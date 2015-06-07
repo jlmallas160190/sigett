@@ -38,16 +38,18 @@ public class CabeceraController implements Serializable {
     private MessageView messageView;
     private SecureService secureService;
     private UtilService utilService;
-    private String secureKey;
+    private ConfiguracionGeneralDTO configuracionGeneralDTO;
     private static final Logger LOG = Logger.getLogger(CabeceraController.class.getName());
 
     public CabeceraController() {
     }
 
     public void preRenderView() {
+        this.configuracionGeneralDTO=new ConfiguracionGeneralDTO();
         this.secureService = new SecureServiceImplement();
         this.messageView = new MessageView();
         fijarSecretKey();
+        fijarConfiguraciones();
     }
 
     private void fijarSecretKey() {
@@ -74,7 +76,12 @@ public class CabeceraController implements Serializable {
         } catch (IOException e) {
             System.out.println(e);
         }
-        this.secureKey = secretKey;
+        this.configuracionGeneralDTO.setSecureKey(secretKey);
+    }
+
+    private void fijarConfiguraciones() {
+        configuracionGeneralDTO.setTamanioArchivo(Double.parseDouble(configuracionDao.buscar(
+                new Configuracion(ConfiguracionEnum.TAMANIOARCHIVO.getTipo())).get(0).getValor()));
     }
 
     public String getValueFromProperties(final PropertiesFileEnum file,
@@ -117,12 +124,12 @@ public class CabeceraController implements Serializable {
         this.utilService = utilService;
     }
 
-    public String getSecureKey() {
-        return secureKey;
+    public ConfiguracionGeneralDTO getConfiguracionGeneralDTO() {
+        return configuracionGeneralDTO;
     }
 
-    public void setSecureKey(String secureKey) {
-        this.secureKey = secureKey;
+    public void setConfiguracionGeneralDTO(ConfiguracionGeneralDTO configuracionGeneralDTO) {
+        this.configuracionGeneralDTO = configuracionGeneralDTO;
     }
 
 }

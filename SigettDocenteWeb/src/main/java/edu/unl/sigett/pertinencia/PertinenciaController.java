@@ -26,7 +26,9 @@ import edu.unl.sigett.service.DocumentoCarreraService;
 import edu.unl.sigett.service.PertinenciaService;
 import edu.unl.sigett.service.ProyectoService;
 import edu.unl.sigett.util.CabeceraController;
+import edu.unl.sigett.util.DocumentoCarreraDTO;
 import edu.unl.sigett.util.PropertiesFileEnum;
+import java.io.File;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
@@ -40,6 +42,7 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import org.jlmallas.seguridad.dao.LogDao;
+import org.primefaces.event.FileUploadEvent;
 
 /**
  *
@@ -84,6 +87,7 @@ public class PertinenciaController implements Serializable {
 
     public void preRenderView() {
         this.buscar();
+        this.renderedCrud();
     }
 
     public void crear() {
@@ -95,7 +99,7 @@ public class PertinenciaController implements Serializable {
 
                 pertinenciaDM.setPertinencia(new Pertinencia(null, null, "S/N", Boolean.FALSE, Boolean.TRUE,
                         docenteProyectoDM.getDocenteProyectoDTOSeleccionado().getDocenteProyecto()));
-                pertinenciaDM.setRenderedDialogoCrud(Boolean.TRUE);
+                pertinenciaDM.setRenderedPanelCrud(Boolean.TRUE);
             } else {
                 this.cabeceraController.getMessageView().message(FacesMessage.SEVERITY_ERROR, bundle.getString(
                         "lbl.msm_permiso_denegado_crear") + ". " + bundle.getString("lbl.msm_consulte"), "");
@@ -112,7 +116,7 @@ public class PertinenciaController implements Serializable {
             if (docenteProyectoDM.getEstadoActualProyecto().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.INICIO.getTipo())
                     || docenteProyectoDM.getEstadoActualProyecto().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.PERTINENTE.getTipo())) {
                 pertinenciaDM.setPertinencia(pertinencia);
-                pertinenciaDM.setRenderedDialogoCrud(Boolean.TRUE);
+                pertinenciaDM.setRenderedPanelCrud(Boolean.TRUE);
             } else {
                 this.cabeceraController.getMessageView().message(FacesMessage.SEVERITY_ERROR, bundle.getString(
                         "lbl.msm_permiso_denegado_editar") + ". " + bundle.getString("lbl.msm_consulte"), "");
@@ -139,7 +143,7 @@ public class PertinenciaController implements Serializable {
                 actualizarEstadoProyecto();
                 cabeceraController.getMessageView().message(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_grabar"), "");
                 pertinenciaDM.setPertinencia(new Pertinencia());
-                pertinenciaDM.setRenderedDialogoCrud(Boolean.FALSE);
+                pertinenciaDM.setRenderedPanelCrud(Boolean.FALSE);
                 return;
             }
             this.pertinenciaService.actualizar(pertinenciaDM.getPertinencia());
@@ -150,7 +154,7 @@ public class PertinenciaController implements Serializable {
             actualizarEstadoProyecto();
             cabeceraController.getMessageView().message(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_editar"), "");
             pertinenciaDM.setPertinencia(new Pertinencia());
-            pertinenciaDM.setRenderedDialogoCrud(Boolean.FALSE);
+            pertinenciaDM.setRenderedPanelCrud(Boolean.FALSE);
         } catch (Exception e) {
             LOG.warning(e.getMessage());
         }
@@ -171,9 +175,15 @@ public class PertinenciaController implements Serializable {
         proyectoService.actualizar(docenteProyectoDM.getDocenteProyectoDTOSeleccionado().getDocenteProyecto().getProyectoId());
     }
 
-    public void cancelar() {
+    public void cancelarEdicion() {
         this.pertinenciaDM.setPertinencia(new Pertinencia());
-        this.pertinenciaDM.setRenderedDialogoCrud(Boolean.FALSE);
+        this.pertinenciaDM.setRenderedPanelCrud(Boolean.FALSE);
+    }
+
+    public void cancelarImprimirInforme() {
+        pertinenciaDM.setDocumentoCarreraDTO(new DocumentoCarreraDTO());
+        pertinenciaDM.setPertinencia(new Pertinencia());
+        pertinenciaDM.setRenderedMediaInforme(Boolean.FALSE);
     }
 
     public void remover(Pertinencia pertinencia) {
@@ -207,7 +217,7 @@ public class PertinenciaController implements Serializable {
      *
      * @return
      */
-    public Boolean existePertinencias() {
+    private Boolean existePertinencias() {
         List<Pertinencia> pertinencias = pertinenciaService.buscar(new Pertinencia(
                 null, null, null, null, Boolean.TRUE, docenteProyectoDM.getDocenteProyectoDTOSeleccionado().getDocenteProyecto()));
         if (pertinencias == null) {
@@ -235,30 +245,43 @@ public class PertinenciaController implements Serializable {
         }
     }
 
-    public void imprimirOficio(Pertinencia pertinencia) {
+    public void imprimirInforme(Pertinencia pertinencia) {
         try {
-            FacesContext facesContext = FacesContext.getCurrentInstance();
-            ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            if (pertinencia.getId() != null) {
-                Item item = itemService.buscarPorCatalogoCodigo(CatalogoEnum.CATALOGOINFORME.getTipo(),
-                        CatalogoDocumentoCarreraEnum.PERTINENCIA.getTipo());
-                this.pertinenciaDM.setRenderedDialogoOficio(Boolean.TRUE);
-                Documento documentoBuscar = documentoService.buscarPorCatalogo(new Documento(null, null, item.getId(), null, null, null, null, null));
-                List<DocumentoCarrera> documentoCarreras = documentoCarreraService.buscar(new DocumentoCarrera(
-                        null, documentoBuscar != null ? documentoBuscar.getId() : null, Boolean.TRUE, null, pertinencia.getId()));
-                if (documentoCarreras == null) {
-//                    generarOficioPertinencia(docenteProyectoDTO);
-                    return;
-                }
-            } else {
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_imprimir") + ". " + bundle.getString("lbl.msm_consulte"), "");
-                FacesContext.getCurrentInstance().addMessage(null, message);
+            if (pertinencia.getId() == null) {
+                return;
             }
+            Item item = itemService.buscarPorCatalogoCodigo(CatalogoEnum.CATALOGOINFORME.getTipo(),
+                    CatalogoDocumentoCarreraEnum.PERTINENCIA.getTipo());
+            this.pertinenciaDM.setRenderedMediaInforme(Boolean.TRUE);
+            Documento documentoBuscar = documentoService.buscarPorCatalogo(new Documento(null, null, item.getId(), null, null, null, null, null));
+            List<DocumentoCarrera> documentoCarreras = documentoCarreraService.buscar(new DocumentoCarrera(
+                    null, documentoBuscar != null ? documentoBuscar.getId() : null, Boolean.TRUE, null, pertinencia.getId()));
+            if (documentoCarreras == null) {
+                generarInformePertinencia(pertinencia);
+                return;
+            }
+            DocumentoCarrera documentoCarrera = !documentoCarreras.isEmpty() ? documentoCarreras.get(0) : null;
+            if (documentoCarrera != null) {
+                pertinenciaDM.setDocumentoCarreraDTO(new DocumentoCarreraDTO(
+                        documentoCarrera, documentoService.buscarPorId(new Documento(documentoCarrera.getDocumentoId())),
+                        docenteProyectoDM.getDocenteProyectoDTOSeleccionado().getDocenteCarrera().getCarreraId()));
+                File file = new File(pertinenciaDM.getDocumentoCarreraDTO().getDocumento().getRuta());
+                pertinenciaDM.getDocumentoCarreraDTO().getDocumento().setContents(cabeceraController.getUtilService().obtenerBytes(file));
+                pertinenciaDM.setRenderedMediaInforme(Boolean.TRUE);
+                return;
+            }
+            generarInformePertinencia(pertinencia);
+
         } catch (Exception e) {
             LOG.warning(e.getMessage());
         }
     }
 
+    /**
+     * GENERAR INFORME DE PERTINENCIA
+     *
+     * @param pertinencia
+     */
     private void generarInformePertinencia(Pertinencia pertinencia) {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         HttpServletRequest request = (HttpServletRequest) facesContext.getExternalContext().getRequest();
@@ -275,26 +298,105 @@ public class PertinenciaController implements Serializable {
                         PropertiesFileEnum.CONTENIDOREPORTE, "nombre_institucion"), cabeceraController.getValueFromProperties(
                         PropertiesFileEnum.CONTENIDOREPORTE, "oficio") + " " + carrera.getSigla() + "-" + cabeceraController.getValueFromProperties(
                         PropertiesFileEnum.CONTENIDOREPORTE, "sigla_institucion"), carrera.getLugar(), cabeceraController.getUtilService().formatoFecha(
-                        fechaActual.getTime(), "EEEEE dd MMMMM yyyy"), null, cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "docente_carrera") + " "
-                + carrera.getNombre(), docenteProyectoDM.getDocenteProyectoDTOSeleccionado().getDocenteCarrera().getDocenteId().getTituloDocenteId().getTituloId().getAbreviacion() + "<br/>"
-                + docenteProyectoDM.getDocenteProyectoDTOSeleccionado().getPersona().getNombres() + " " + docenteProyectoDM.getDocenteProyectoDTOSeleccionado().getPersona().getApellidos(), cabeceraController.getValueFromProperties(
-                        PropertiesFileEnum.CONTENIDOREPORTE, "coordinador_carrera") + " " + carrera.getNombre(), docenteProyectoDM.getCoordinadorPeriodoDTO().getDocente().getTituloDocenteId().
-                getTituloId().getAbreviacion() + "<br/>" + docenteProyectoDM.getCoordinadorPeriodoDTO().getPersona().getNombres() + " " + docenteProyectoDM.getCoordinadorPeriodoDTO().getPersona().getApellidos(), rutaReporte,
-                rutaReporte, rutaReporte, rutaReporte, rutaReporte, rutaReporte, rutaReporte, rutaReporte));
+                        fechaActual.getTime(), "EEEEE dd MMMMM yyyy"), null, cabeceraController.getValueFromProperties(
+                        PropertiesFileEnum.CONTENIDOREPORTE, "coordinador_carrera") + " " + carrera.getNombre(),
+                docenteProyectoDM.getCoordinadorPeriodoDTO().getDocente().getTituloDocenteId().
+                getTituloId().getAbreviacion() + "<br/>" + docenteProyectoDM.getCoordinadorPeriodoDTO().getPersona().getNombres() + " "
+                + docenteProyectoDM.getCoordinadorPeriodoDTO().getPersona().getApellidos(),
+                cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "docente_carrera") + " "
+                + carrera.getNombre(), docenteProyectoDM.getDocenteProyectoDTOSeleccionado().getDocenteCarrera().getDocenteId().getTituloDocenteId().
+                getTituloId().getAbreviacion() + "<br/>" + docenteProyectoDM.getDocenteProyectoDTOSeleccionado().getPersona().getNombres() + " "
+                + docenteProyectoDM.getDocenteProyectoDTOSeleccionado().getPersona().getApellidos(), cuerpoInforme(pertinencia),
+                referenciaInforme(fechaActual), "", cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE,
+                        "infPer_despedida_a"), "", "pdf", "", rutaReporte));
         if (resultado == null) {
             return;
         }
-//        Integer numeracionNext = Integer.parseInt(numeracion) + 1;
-//        String ruta = configuracionDao.buscar(new Configuracion(ConfiguracionEnum.RUTAOFICIO.getTipo())).get(0).getValor() + "/oficio" + docenteProyectoDTO.getDocenteProyecto().getId() + ".pdf";
-//        Documento documento = new Documento(null, ruta, itemService.buscarPorCatalogoCodigo(CatalogoEnum.CATALOGOOFICIO.getTipo(),
-//                CatalogoDocumentoCarreraEnum.PERTINENCIA.getTipo()).getId(), Double.parseDouble(resultado.length + ""), fechaActual.getTime(), resultado, null, "pdf");
-//        documentoService.guardar(documento);
-//        sessionDocenteProyecto.setDocumentoCarreraDTO(new DocumentoCarreraDTO(new DocumentoCarrera(
-//                numeracionNext + "", documento.getId(), Boolean.TRUE, carrera.getId(), docenteProyectoDTO.getDocenteProyecto().getId()), documento, carrera));
-//        documentoCarreraService.guardar(sessionDocenteProyecto.getDocumentoCarreraDTO().getDocumentoCarrera());
-//        sessionDocenteProyecto.setRenderedMediaOficio(Boolean.TRUE);
-//        cabeceraController.getUtilService().generaDocumento(new File(ruta), documento.getContents());
-  
+        String ruta = configuracionDao.buscar(new Configuracion(ConfiguracionEnum.RUTAINFORME.getTipo())).get(0).getValor()
+                + "/informe_" + pertinencia.getId() + ".pdf";
+        Documento documento = new Documento(null, ruta, itemService.buscarPorCatalogoCodigo(CatalogoEnum.CATALOGOOFICIO.getTipo(),
+                CatalogoDocumentoCarreraEnum.PERTINENCIA.getTipo()).getId(), Double.parseDouble(resultado.length + ""), fechaActual.getTime(), resultado, null, "pdf");
+        documentoService.guardar(documento);
+        pertinenciaDM.setDocumentoCarreraDTO(new DocumentoCarreraDTO(new DocumentoCarrera(
+                "", documento.getId(), Boolean.TRUE, carrera.getId(), pertinencia.getId()), documento, carrera));
+        documentoCarreraService.guardar(pertinenciaDM.getDocumentoCarreraDTO().getDocumentoCarrera());
+        pertinenciaDM.setRenderedMediaInforme(Boolean.TRUE);
+        cabeceraController.getUtilService().generaDocumento(new File(ruta), documento.getContents());
+
     }
 
+    /**
+     * GENERAR EL CUERPO DEL INFORME DE PERTINENCIA
+     *
+     * @param pertinencia
+     * @return
+     */
+    private String cuerpoInforme(final Pertinencia pertinencia) {
+        String resolucion = cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "negar_pertinecia");
+        if (pertinencia.getEsAceptado()) {
+            resolucion = cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "otorgar_pertinecia");
+        }
+        return (cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "infPer_cu_a") + " " + resolucion);
+    }
+
+    /**
+     * GENERAR LA REFERENCIA DEL INFORME DE PERTINENCIA
+     *
+     * @param pertinencia
+     * @return
+     */
+    @SuppressWarnings("UnusedAssignment")
+    private String referenciaInforme(final Calendar fechaActual) {
+        String numeracion = null;
+        Item item = itemService.buscarPorCatalogoCodigo(CatalogoEnum.CATALOGOOFICIO.getTipo(),
+                CatalogoDocumentoCarreraEnum.PERTINENCIA.getTipo());
+        Documento documentoBuscar = documentoService.buscarPorCatalogo(new Documento(null, null, item.getId(), null, null, null, null, null));
+        List<DocumentoCarrera> documentoCarreras = documentoCarreraService.buscar(new DocumentoCarrera(
+                null, documentoBuscar != null ? documentoBuscar.getId() : null, Boolean.TRUE, null, docenteProyectoDM.getDocenteProyectoDTOSeleccionado().
+                getDocenteProyecto().getId()));
+        if (documentoCarreras == null) {
+            numeracion = "";
+        }
+        DocumentoCarrera documentoCarrera = !documentoCarreras.isEmpty() ? documentoCarreras.get(0) : null;
+        numeracion = documentoCarrera.getNumeracion() + "-" + docenteProyectoDM.getDocenteProyectoDTOSeleccionado().getDocenteCarrera().getCarreraId().getSigla() + ""
+                + "-" + docenteProyectoDM.getDocenteProyectoDTOSeleccionado().getDocenteCarrera().getCarreraId().getAreaId().getSigla() + "-"
+                + cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "sigla_institucion");
+        return (cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "infPer_ref_a") + " " + numeracion + ", "
+                + cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "infPer_ref_b") + " " + cabeceraController.getUtilService()
+                .formatoFecha(fechaActual.getTime(), "EEEEE dd MMMMM yyyy") + ", " + cabeceraController.getValueFromProperties(
+                        PropertiesFileEnum.CONTENIDOREPORTE, "infPer_ref_c") + " <b>" + docenteProyectoDM.getDocenteProyectoDTOSeleccionado().
+                getDocenteProyecto().getProyectoId().getTemaActual() + "</b>, " + cabeceraController.getValueFromProperties(
+                        PropertiesFileEnum.CONTENIDOREPORTE, "infPer_ref_d") + " " + docenteProyectoDM.getDocenteProyectoDTOSeleccionado().
+                getDocenteProyecto().getProyectoId().getAutores() + " " + cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE,
+                        "infPer_ref_e"));
+    }
+
+    /**
+     *
+     * @param event
+     */
+    public void handleFileUpload(FileUploadEvent event) {
+        try {
+            FacesContext facesContext = FacesContext.getCurrentInstance();
+            ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
+            pertinenciaDM.getDocumentoCarreraDTO().getDocumento().setContents(event.getFile().getContents());
+            Long size = event.getFile().getSize();
+            pertinenciaDM.getDocumentoCarreraDTO().getDocumento().setTamanio(size.doubleValue());
+            cabeceraController.getUtilService().generaDocumento(new File(pertinenciaDM.getDocumentoCarreraDTO().getDocumento().getRuta()),
+                    pertinenciaDM.getDocumentoCarreraDTO().getDocumento().getContents());
+            documentoService.actualizar(pertinenciaDM.getDocumentoCarreraDTO().getDocumento());
+            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.uploaded"), "");
+            FacesContext.getCurrentInstance().addMessage(null, message);
+        } catch (Exception e) {
+            cabeceraController.getMessageView().message(FacesMessage.SEVERITY_INFO, e.getMessage(), "");
+        }
+    }
+
+    private void renderedCrud() {
+        pertinenciaDM.setRenderedCrud(Boolean.FALSE);
+        if (docenteProyectoDM.getEstadoActualProyecto().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.INICIO.getTipo())
+                || docenteProyectoDM.getEstadoActualProyecto().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.PERTINENTE.getTipo())) {
+            pertinenciaDM.setRenderedCrud(Boolean.TRUE);
+        }
+    }
 }

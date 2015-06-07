@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.unl.sigett.autor;
+package edu.unl.sigett.autorProyecto;
 
-import edu.unl.sigett.autor.dto.AspiranteDTO;
+import edu.unl.sigett.autorProyecto.AspiranteDTO;
 import edu.unl.sigett.entity.AutorProyecto;
 import java.io.Serializable;
 import java.util.ArrayList;

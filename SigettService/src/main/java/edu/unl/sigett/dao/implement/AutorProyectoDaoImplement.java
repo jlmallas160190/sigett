@@ -61,7 +61,7 @@ public class AutorProyectoDaoImplement extends AbstractDao<AutorProyecto> implem
             existeFiltro = Boolean.TRUE;
         }
         if (autorProyecto.getEstadoAutorId() != null) {
-            sql.append(" and a.estadoAutorId!=:estado ");
+            sql.append(" and a.estadoAutorId=:estado ");
             parametros.put("estado", autorProyecto.getEstadoAutorId());
             existeFiltro = Boolean.TRUE;
         }

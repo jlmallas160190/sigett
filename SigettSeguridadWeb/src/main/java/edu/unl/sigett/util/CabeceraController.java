@@ -26,8 +26,9 @@ import org.jlmallas.email.MailDTO;
 import org.jlmallas.email.MailService;
 import org.jlmallas.secure.SecureService;
 import org.jlmallas.secure.SecureServiceImplement;
-import org.jlmallas.util.UtilService;
-import org.jlmallas.util.UtilServiceImplement;
+import org.jlmallas.util.service.UtilService;
+import org.jlmallas.util.service.UtilServiceImplement;
+
 
 /**
  *

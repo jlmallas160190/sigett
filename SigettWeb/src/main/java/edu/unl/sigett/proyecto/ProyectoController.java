@@ -34,7 +34,7 @@ import edu.jlmallas.academico.service.CoordinadorPeriodoService;
 import edu.jlmallas.academico.service.DocenteService;
 import edu.jlmallas.academico.service.OfertaAcademicaService;
 import edu.unl.sigett.academico.dto.CoordinadorPeriodoDTO;
-import edu.unl.sigett.autor.AutorProyectoDTO;
+import edu.unl.sigett.autorProyecto.AutorProyectoDTO;
 import edu.unl.sigett.dao.ConfiguracionProyectoDao;
 import edu.unl.sigett.dao.DirectorDao;
 import edu.unl.sigett.dao.ProyectoOfertaCarreraDao;
@@ -267,13 +267,8 @@ public class ProyectoController implements Serializable {
 
     public String editar(final Proyecto proyecto) {
         try {
-            Calendar fechaActual = Calendar.getInstance();
             sessionProyecto.setProyectoSeleccionado(proyecto);
-            sessionProyecto.getCronograma().setProyecto(sessionProyecto.getProyectoSeleccionado());
-            sessionProyecto.getCronograma().setFechaInicio(fechaActual.getTime());
-            sessionProyecto.getCronograma().setFechaFin(fechaActual.getTime());
-            sessionProyecto.getCronograma().setFechaProrroga(fechaActual.getTime());
-            sessionProyecto.getCronograma().setDuracion(0.0);
+            sessionProyecto.setCronograma(proyecto.getCronograma());
             iniciar();
             sessionProyecto.setCategoriaSeleccionada(itemService.buscarPorId(proyecto.getCatalogoProyectoId()));
             sessionProyecto.setTipoSeleccionado(itemService.buscarPorId(proyecto.getTipoProyectoId()));
@@ -1087,6 +1082,7 @@ public class ProyectoController implements Serializable {
 
             sessionProyecto.setFilterDocumentosProyectoDTO(sessionProyecto.getDocumentosProyectoDTO());
         } catch (Exception e) {
+            LOG.warning(e.getMessage());
         }
     }
 
@@ -1096,11 +1092,12 @@ public class ProyectoController implements Serializable {
             for (DocumentoProyectoDTO documentoProyectoDTO : sessionProyecto.getDocumentosProyectosDTOAgregados()) {
                 if (documentoProyectoDTO.getDocumentoProyecto().getId() == null) {
                     documentoProyectoDTO.getDocumento().setRuta(ruta);
-                    cabeceraController.getUtilService().generaDocumento(new File(ruta + "/" + documentoProyectoDTO.getDocumento().getId()),
-                            documentoProyectoDTO.getDocumento().getContents());
                     documentoService.guardar(documentoProyectoDTO.getDocumento());
                     documentoProyectoDTO.getDocumentoProyecto().setDocumentoId(documentoProyectoDTO.getDocumento().getId());
                     documentoProyectoService.guardar(documentoProyectoDTO.getDocumentoProyecto());
+                     cabeceraController.getUtilService().generaDocumento(new File(ruta + "/documento" + documentoProyectoDTO.getDocumento().getId()),
+                            documentoProyectoDTO.getDocumento().getContents());
+                     documentoService.actualizar(documentoProyectoDTO.getDocumento());
                     continue;
                 }
                 documentoProyectoService.actualizar(documentoProyectoDTO.getDocumentoProyecto());

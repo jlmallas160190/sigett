@@ -7,7 +7,7 @@
     <body>
         <p:dialog id="dlgFePertinencia" widgetVar="dlgFePertinencia" header="#{lbl['fe_presentacion']}" styleClass="modal-md"  modal="true" 
                   closable="false" >
-            <p:panel  id="pnlFePertinencia">
+            <p:panel id="pnlFePertinencia">
                 <p:media rendered="#{sessionDocenteProyecto.renderedMediaFePresentacion}" value="/AppServlet?entity=fePertinencia" player="pdf" width="100%" height="400"/>
                 <f:facet name="footer">
                     <h:panelGrid styleClass="pnl-botones" columns="2">
@@ -15,7 +15,7 @@
                                          value="#{btn['upload']}" icon="ui-icon-circle-arrow-n" />
                         <p:commandButton action="#{docenteProyectoController.cancelarImprimirFe()}" update=":contenido:pnlFePertinencia"
                                          onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide(),PF('dlgFePertinencia').hide()"
-                                         value="#{btn['cancelar']}"/> 
+                                         icon="ui-icon-circle-arrow-w" value="#{btn['cancelar']}"/> 
                     </h:panelGrid>
                 </f:facet>
             </p:panel>

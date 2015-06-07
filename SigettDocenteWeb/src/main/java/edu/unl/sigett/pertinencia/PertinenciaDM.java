@@ -27,8 +27,9 @@ public class PertinenciaDM implements Serializable {
     private List<Pertinencia> pertinencias;
     private List<Pertinencia> filterPertinencias;
 
-    private Boolean renderedDialogoCrud;
-    private Boolean renderedDialogoOficio;
+    private Boolean renderedPanelCrud;
+    private Boolean renderedMediaInforme;
+    private Boolean renderedCrud;
 
     public PertinenciaDM() {
         this.pertinencias = new ArrayList<>();
@@ -60,20 +61,20 @@ public class PertinenciaDM implements Serializable {
         this.filterPertinencias = filterPertinencias;
     }
 
-    public Boolean getRenderedDialogoCrud() {
-        return renderedDialogoCrud;
+    public Boolean getRenderedPanelCrud() {
+        return renderedPanelCrud;
     }
 
-    public void setRenderedDialogoCrud(Boolean renderedDialogoCrud) {
-        this.renderedDialogoCrud = renderedDialogoCrud;
+    public void setRenderedPanelCrud(Boolean renderedPanelCrud) {
+        this.renderedPanelCrud = renderedPanelCrud;
     }
 
-    public Boolean getRenderedDialogoOficio() {
-        return renderedDialogoOficio;
+    public Boolean getRenderedMediaInforme() {
+        return renderedMediaInforme;
     }
 
-    public void setRenderedDialogoOficio(Boolean renderedDialogoOficio) {
-        this.renderedDialogoOficio = renderedDialogoOficio;
+    public void setRenderedMediaInforme(Boolean renderedMediaInforme) {
+        this.renderedMediaInforme = renderedMediaInforme;
     }
 
     public DocumentoCarreraDTO getDocumentoCarreraDTO() {
@@ -82,6 +83,14 @@ public class PertinenciaDM implements Serializable {
 
     public void setDocumentoCarreraDTO(DocumentoCarreraDTO documentoCarreraDTO) {
         this.documentoCarreraDTO = documentoCarreraDTO;
+    }
+
+    public Boolean getRenderedCrud() {
+        return renderedCrud;
+    }
+
+    public void setRenderedCrud(Boolean renderedCrud) {
+        this.renderedCrud = renderedCrud;
     }
 
 }

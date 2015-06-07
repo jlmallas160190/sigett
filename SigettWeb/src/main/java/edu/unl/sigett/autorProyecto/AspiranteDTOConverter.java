@@ -1,4 +1,4 @@
-package edu.unl.sigett.autor;
+package edu.unl.sigett.autorProyecto;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -9,7 +9,7 @@ package edu.unl.sigett.autor;
 
 import edu.unl.sigett.academico.converter.DocenteCarreraDTOConverter;
 import edu.unl.sigett.academico.dto.DocenteCarreraDTO;
-import edu.unl.sigett.autor.dto.AspiranteDTO;
+import edu.unl.sigett.autorProyecto.AspiranteDTO;
 import java.util.List;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;

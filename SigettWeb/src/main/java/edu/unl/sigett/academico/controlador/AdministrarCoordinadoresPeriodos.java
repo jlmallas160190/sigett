@@ -163,6 +163,7 @@ public class AdministrarCoordinadoresPeriodos implements Serializable {
         List<DocenteCarreraDTO> results = new ArrayList<>();
         List<DocenteCarrera> docentesCarrera = new ArrayList<>();
         List<Docente> docentes = new ArrayList<>();
+        @SuppressWarnings("UnusedAssignment")
         List<Persona> personas = new ArrayList<>();
         if (!"".equals(query.trim())) {
             personas = personaDao.buscar(new Persona(null, query.trim(),null, null, null, null));

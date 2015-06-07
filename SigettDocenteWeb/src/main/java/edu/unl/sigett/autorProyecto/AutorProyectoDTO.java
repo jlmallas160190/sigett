@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.unl.sigett.autor;
+package edu.unl.sigett.autorProyecto;
 
 import com.jlmallas.comun.entity.Persona;
 import edu.jlmallas.academico.entity.EstudianteCarrera;

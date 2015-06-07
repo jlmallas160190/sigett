@@ -20,7 +20,7 @@ import edu.jlmallas.academico.entity.Carrera;
 import edu.jlmallas.academico.service.CoordinadorPeriodoService;
 import edu.jlmallas.academico.service.DocenteService;
 import edu.unl.sigett.academico.dto.DocenteCarreraDTO;
-import edu.unl.sigett.autor.AutorProyectoDTO;
+import edu.unl.sigett.autorProyecto.AutorProyectoDTO;
 import edu.unl.sigett.dao.ConfiguracionGeneralDao;
 import edu.unl.sigett.dao.DirectorDao;
 import edu.unl.sigett.dao.LineaInvestigacionDocenteDao;
@@ -132,8 +132,6 @@ public class DocenteProyectoController implements Serializable {
                 return;
             }
             DocumentoCarrera documentoCarrera = !documentoCarreras.isEmpty() ? documentoCarreras.get(0) : null;
-            sessionDocenteProyecto.setDocumentoCarreraDTO(new DocumentoCarreraDTO(new DocumentoCarrera(), new Documento(),
-                    sessionProyecto.getCarreraSeleccionada()));
             if (documentoCarrera != null) {
                 sessionDocenteProyecto.setDocumentoCarreraDTO(new DocumentoCarreraDTO(
                         documentoCarrera, documentoService.buscarPorId(new Documento(documentoCarrera.getDocumentoId())), sessionProyecto.getCarreraSeleccionada()));
@@ -290,8 +288,6 @@ public class DocenteProyectoController implements Serializable {
                 return;
             }
             DocumentoCarrera documentoCarrera = !documentoCarreras.isEmpty() ? documentoCarreras.get(0) : null;
-            sessionDocenteProyecto.setDocumentoCarreraDTO(new DocumentoCarreraDTO(new DocumentoCarrera(), new Documento(),
-                    sessionProyecto.getCarreraSeleccionada()));
             if (documentoCarrera != null) {
                 sessionDocenteProyecto.setDocumentoCarreraDTO(new DocumentoCarreraDTO(
                         documentoCarrera, documentoService.buscarPorId(new Documento(documentoCarrera.getDocumentoId())), sessionProyecto.getCarreraSeleccionada()));

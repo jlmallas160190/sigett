@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package edu.unl.sigett.autor.dto;
+package edu.unl.sigett.autorProyecto;
 
 import com.jlmallas.comun.entity.Persona;
 import edu.jlmallas.academico.entity.EstudianteCarrera;

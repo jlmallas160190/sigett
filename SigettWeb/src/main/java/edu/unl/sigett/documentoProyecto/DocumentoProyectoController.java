@@ -11,6 +11,7 @@ import com.jlmallas.comun.service.ItemService;
 import edu.unl.sigett.entity.DocumentoProyecto;
 import edu.unl.sigett.proyecto.SessionProyecto;
 import edu.unl.sigett.util.CabeceraController;
+import java.io.File;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
@@ -64,6 +65,8 @@ public class DocumentoProyectoController implements Serializable {
         try {
             sessionDocumentoProyecto.setTamanioArchivo(cabeceraController.getConfiguracionGeneralDTO().getTamanioArchivo());
             listarCategorias();
+            File file = new File(documentoProyectoDTO.getDocumento().getRuta());
+            documentoProyectoDTO.getDocumento().setContents(cabeceraController.getUtilService().obtenerBytes(file));
             sessionDocumentoProyecto.setDocumentoProyectoDTOSeleccionado(documentoProyectoDTO);
         } catch (Exception e) {
             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_FATAL, e.getMessage(), "");

@@ -34,7 +34,7 @@ public class DocenteProyectoDaoImplement extends AbstractDao<DocenteProyecto> im
         Boolean existeFiltro = Boolean.FALSE;
         sql.append("SELECT dp FROM DocenteProyecto dp where 1=1");
         if (docenteProyecto.getDocenteCarreraId() != null) {
-            sql.append(" and dp.docenteId=:docenteId ");
+            sql.append(" and dp.docenteCarreraId=:docenteId ");
             parametros.put("docenteId", docenteProyecto.getDocenteCarreraId());
             existeFiltro = Boolean.TRUE;
         }

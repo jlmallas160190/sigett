@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+    <body>
+        <h:panelGrid styleClass="panelgrid" rowClasses="rowpanelgrid" columnClasses="col-sm-2,col-sm-9,col-sm-1" columns="3">
+            <h:outputLabel value="#{msg['lbl.fecha']}:"/>
+            <p:calendar id="fecha" locale="es" navigator="true"  value="#{pertinenciaDM.pertinencia.fecha}" rendered="true" 
+                        requiredMessage="#{msg['lbl.fecha']} #{msg['lbl.obligatorio']}" pattern="dd/MM/yyyy hh:mm:ss">
+                <p:ajax event="dateSelect" update="msmFecha"/>
+                <p:ajax event="change" update="@this,msm"/>
+            </p:calendar>
+            <p:message id="msmFecha" display="icon" for="fecha"/>
+            <h:outputLabel  value="#{msg['lbl.aceptar']}:" for="aceptar"/>
+            <p:selectBooleanCheckbox  value="#{pertinenciaDM.pertinencia.esAceptado}"/>
+            <h:inputHidden />
+            <h:outputLabel value="#{msg['lbl.observacion']}:"/>
+            <p:inputTextarea id="observacion" value="#{pertinenciaDM.pertinencia.observacion}"
+                             required="true" requiredMessage="#{msg['lbl.observacion']} #{msg['lbl.obligatorio']}">
+                <p:ajax event="keyup" update="msmObservacion"/>
+                <p:ajax event="change" update="@this,msm"/>
+            </p:inputTextarea>
+            <p:message id="msmObservacion" display="icon" for="observacion"/>
+        </h:panelGrid>
+    </body>
+
+</html>

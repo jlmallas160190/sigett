@@ -22,7 +22,7 @@ import edu.unl.sigett.dao.RenunciaAutorFacadeLocal;
 import edu.unl.sigett.dao.RenunciaFacadeLocal;
 import org.jlmallas.seguridad.dao.UsuarioDao;
 import edu.unl.sigett.adjudicacion.session.SessionRenunciaAutor;
-import edu.unl.sigett.autor.SessionAutorProyecto;
+import edu.unl.sigett.autorProyecto.SessionAutorProyecto;
 import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
 
 /**

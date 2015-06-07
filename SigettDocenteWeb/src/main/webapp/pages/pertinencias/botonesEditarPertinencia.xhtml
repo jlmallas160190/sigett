@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+    <body>
+        <h:panelGrid class="pnl-botones" columns="2">
+            <p:commandButton value="#{btn.grabar}" icon="ui-icon-disk" onstart="PF('dlgLoading').show()" 
+                             oncomplete="PF('dlgLoading').hide(),PF('tblPertinenciasFilter').filter()"
+                             update=":contenido:tabViewDatosDP:tblPertinencias,:contenido:msm" action="#{pertinenciaController.grabar()}"/>
+            <p:commandButton value="#{btn.cancelar}" icon="ui-icon-circle-arrow-w" onstart="PF('dlgLoading').show()" 
+                             oncomplete="PF('dlgLoading').hide(),PF('tblPertinenciasFilter').filter()" 
+                             update=":contenido:pnlEditarPertinencia" action="#{pertinenciaController.cancelarEdicion()}"/>
+        </h:panelGrid>
+    </body>
+
+</html>

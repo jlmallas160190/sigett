@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.unl.sigett.autor;
+package edu.unl.sigett.autorProyecto;
 
 import com.jlmallas.comun.dao.PersonaDao;
 import com.jlmallas.comun.entity.Item;
@@ -11,7 +11,7 @@ import com.jlmallas.comun.enumeration.CatalogoEnum;
 import com.jlmallas.comun.service.ItemService;
 import edu.jlmallas.academico.dao.EstudianteCarreraDao;
 import edu.unl.sigett.academico.dto.EstudianteCarreraDTO;
-import edu.unl.sigett.autor.dto.AspiranteDTO;
+import edu.unl.sigett.autorProyecto.AspiranteDTO;
 import edu.unl.sigett.entity.Aspirante;
 import edu.unl.sigett.entity.AutorProyecto;
 import edu.unl.sigett.enumeration.EstadoAutorEnum;
@@ -92,13 +92,16 @@ public class AutorProyectoController implements Serializable {
         try {
             Item estado = itemService.buscarPorCatalogoCodigo(CatalogoEnum.ESTADOAUTOR.getTipo(), EstadoAutorEnum.RENUNCIADO.getTipo());
             List<AutorProyecto> autorProyectos = autorProyectoService.buscar(new AutorProyecto(
-                    sessionProyecto.getProyectoSeleccionado().getId() != null ? sessionProyecto.getProyectoSeleccionado() : null, null, estado.getId(),
+                    sessionProyecto.getProyectoSeleccionado().getId() != null ? sessionProyecto.getProyectoSeleccionado() : null, null, null,
                     null, null));
             if (autorProyectos == null) {
                 return;
             }
 
             for (AutorProyecto autorProyecto : autorProyectos) {
+                if (autorProyecto.getEstadoAutorId().equals(estado.getId())) {
+                    continue;
+                }
                 AutorProyectoDTO autorProyectoDTO = new AutorProyectoDTO(autorProyecto, autorProyecto.getAspiranteId(),
                         estudianteCarreraDao.find(autorProyecto.getAspiranteId().getId()), null);
                 autorProyectoDTO.setPersona(personaDao.find(autorProyectoDTO.getEstudianteCarrera().getEstudianteId().getId()));

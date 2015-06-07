@@ -8,6 +8,11 @@ package edu.unl.sigett.docenteProyecto;
 import com.jlmallas.comun.entity.Item;
 import edu.jlmallas.academico.entity.CoordinadorPeriodo;
 import edu.unl.sigett.academico.coordinadorPeriodo.CoordinadorPeriodoDTO;
+import edu.unl.sigett.autorProyecto.AutorProyectoDTO;
+import edu.unl.sigett.documentoProyecto.DocumentoProyectoDTO;
+import edu.unl.sigett.entity.AutorProyecto;
+import edu.unl.sigett.entity.DocumentoProyecto;
+import edu.unl.sigett.entity.LineaInvestigacionProyecto;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
@@ -29,8 +34,20 @@ public class DocenteProyectoDM implements Serializable {
     private List<DocenteProyectoDTO> filterDocentesProyectoDTO;
     private List<DocenteProyectoDTO> historialDocenteProyectosDTO;
     private List<DocenteProyectoDTO> filterHistorialDocenteProyectosDTO;
+    private List<AutorProyectoDTO> autorProyectos;
+    private List<AutorProyectoDTO> filterAutorProyectos;
+    private List<DocumentoProyectoDTO> documentoProyectos;
+    private List<DocumentoProyectoDTO> filterDocumentoProyectos;
+    private List<LineaInvestigacionProyecto> lineasInvestigacionProyecto;
+    private List<LineaInvestigacionProyecto> filterLineasInvestigacionProyecto;
 
     public DocenteProyectoDM() {
+        this.autorProyectos = new ArrayList<>();
+        this.filterAutorProyectos = new ArrayList<>();
+        this.lineasInvestigacionProyecto = new ArrayList<>();
+        this.filterLineasInvestigacionProyecto = new ArrayList<>();
+        this.documentoProyectos = new ArrayList<>();
+        this.filterDocumentoProyectos = new ArrayList<>();
         this.filterHistorialDocenteProyectosDTO = new ArrayList<>();
         this.historialDocenteProyectosDTO = new ArrayList<>();
         this.estadoActualProyecto = new Item();
@@ -93,6 +110,54 @@ public class DocenteProyectoDM implements Serializable {
 
     public void setCoordinadorPeriodoDTO(CoordinadorPeriodoDTO coordinadorPeriodoDTO) {
         this.coordinadorPeriodoDTO = coordinadorPeriodoDTO;
+    }
+
+    public List<AutorProyectoDTO> getAutorProyectos() {
+        return autorProyectos;
+    }
+
+    public void setAutorProyectos(List<AutorProyectoDTO> autorProyectos) {
+        this.autorProyectos = autorProyectos;
+    }
+
+    public List<AutorProyectoDTO> getFilterAutorProyectos() {
+        return filterAutorProyectos;
+    }
+
+    public void setFilterAutorProyectos(List<AutorProyectoDTO> filterAutorProyectos) {
+        this.filterAutorProyectos = filterAutorProyectos;
+    }
+
+    public List<DocumentoProyectoDTO> getDocumentoProyectos() {
+        return documentoProyectos;
+    }
+
+    public void setDocumentoProyectos(List<DocumentoProyectoDTO> documentoProyectos) {
+        this.documentoProyectos = documentoProyectos;
+    }
+
+    public List<DocumentoProyectoDTO> getFilterDocumentoProyectos() {
+        return filterDocumentoProyectos;
+    }
+
+    public void setFilterDocumentoProyectos(List<DocumentoProyectoDTO> filterDocumentoProyectos) {
+        this.filterDocumentoProyectos = filterDocumentoProyectos;
+    }
+
+    public List<LineaInvestigacionProyecto> getLineasInvestigacionProyecto() {
+        return lineasInvestigacionProyecto;
+    }
+
+    public void setLineasInvestigacionProyecto(List<LineaInvestigacionProyecto> lineasInvestigacionProyecto) {
+        this.lineasInvestigacionProyecto = lineasInvestigacionProyecto;
+    }
+
+    public List<LineaInvestigacionProyecto> getFilterLineasInvestigacionProyecto() {
+        return filterLineasInvestigacionProyecto;
+    }
+
+    public void setFilterLineasInvestigacionProyecto(List<LineaInvestigacionProyecto> filterLineasInvestigacionProyecto) {
+        this.filterLineasInvestigacionProyecto = filterLineasInvestigacionProyecto;
     }
 
 }

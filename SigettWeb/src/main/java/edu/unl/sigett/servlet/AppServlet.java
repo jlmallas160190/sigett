@@ -42,9 +42,11 @@ public class AppServlet extends HttpServlet {
             switch (entity) {
                 case "documentoProyecto":
                     if (sessionDocumentoProyecto.getDocumentoProyectoDTOSeleccionado() == null) {
+                         response.sendError(HttpServletResponse.SC_NOT_FOUND); // 404.
                         return;
                     }
                     if (sessionDocumentoProyecto.getDocumentoProyectoDTOSeleccionado().getDocumento() == null) {
+                         response.sendError(HttpServletResponse.SC_NOT_FOUND); // 404.
                         return;
                     }
                     if (sessionDocumentoProyecto.getDocumentoProyectoDTOSeleccionado().getDocumento().getContents() == null) {

@@ -95,7 +95,7 @@ public class DocenteUsuarioController implements Serializable {
         if (value.equals(ValorEnum.NO.getTipo())) {
             int var = usuarioService.logear(docenteUsuarioDM.getDocenteUsuarioDTO().getUsuario().getUsername(),
                     cabeceraController.getSecureService().encrypt(
-                            new SecureDTO(cabeceraController.getSecureKey(), docenteUsuarioDM.getDocenteUsuarioDTO().getUsuario().getPassword())));
+                            new SecureDTO(cabeceraController.getConfiguracionGeneralDTO().getSecureKey(), docenteUsuarioDM.getDocenteUsuarioDTO().getUsuario().getPassword())));
             if (var == 0) {
                 this.cabeceraController.getMessageView().message(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.clave_incorrecta") + "", "");
             }
@@ -139,7 +139,7 @@ public class DocenteUsuarioController implements Serializable {
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
         try {
             docenteUsuarioDM.setValidarDocenteWS(Boolean.FALSE);
-            String passwordService = this.cabeceraController.getSecureService().decrypt(new SecureDTO(cabeceraController.getSecureKey(),
+            String passwordService = this.cabeceraController.getSecureService().decrypt(new SecureDTO(cabeceraController.getConfiguracionGeneralDTO().getSecureKey(),
                     configuracionDao.buscar(new Configuracion(ConfiguracionEnum.CLAVEWS.getTipo())).get(0).getValor()));
             String userService = configuracionDao.buscar(new Configuracion(ConfiguracionEnum.USUARIOWS.getTipo())).get(0).getValor();
             String serviceUrl = configuracionDao.buscar(new Configuracion(URLWSEnum.DATOSDOCENTE.getTipo())).get(0).getValor();

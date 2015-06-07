@@ -46,6 +46,7 @@ public class DocumentoProyectoDaoImplement extends AbstractDao<DocumentoProyecto
             parametros.put("activo", documentoProyecto.getEsActivo());
             existeFiltro = Boolean.TRUE;
         }
+        
         if (!existeFiltro) {
             return new ArrayList<>();
         }

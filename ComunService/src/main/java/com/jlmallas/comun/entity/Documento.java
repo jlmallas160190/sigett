@@ -36,7 +36,6 @@ public class Documento implements Serializable {
     @Column(name = "id")
     private Long id;
     @Basic(optional = false)
-    @NotNull
     @Size(min = 1, max = 500)
     @Column(name = "ruta")
     private String ruta;

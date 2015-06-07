@@ -6,37 +6,41 @@
 package edu.unl.sigett.docenteProyecto;
 
 import com.jlmallas.comun.dao.PersonaDao;
+import com.jlmallas.comun.entity.Documento;
 import com.jlmallas.comun.entity.Item;
 import com.jlmallas.comun.entity.Persona;
 import com.jlmallas.comun.enumeration.CatalogoEnum;
+import com.jlmallas.comun.service.DocumentoService;
 import com.jlmallas.comun.service.ItemService;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 import com.ocpsoft.pretty.faces.annotation.URLMappings;
 import edu.jlmallas.academico.dao.EstudianteCarreraDao;
-import edu.jlmallas.academico.dao.PeriodoCoordinacionDao;
-import edu.jlmallas.academico.dao.implement.CoordinadorPeriodoDaoImplement;
-import edu.jlmallas.academico.entity.Carrera;
 import edu.jlmallas.academico.entity.CoordinadorPeriodo;
 import edu.jlmallas.academico.entity.Docente;
 import edu.jlmallas.academico.entity.DocenteCarrera;
 import edu.jlmallas.academico.entity.EstudianteCarrera;
-import edu.jlmallas.academico.entity.PeriodoCoordinacion;
 import edu.jlmallas.academico.service.CoordinadorPeriodoService;
 import edu.jlmallas.academico.service.DocenteCarreraService;
 import edu.jlmallas.academico.service.DocenteService;
 import edu.unl.sigett.academico.coordinadorPeriodo.CoordinadorPeriodoDTO;
+import edu.unl.sigett.autorProyecto.AutorProyectoDTO;
 import edu.unl.sigett.docenteUsuario.DocenteUsuarioDM;
+import edu.unl.sigett.documentoProyecto.DocumentoProyectoDTO;
 import edu.unl.sigett.entity.AutorProyecto;
 import edu.unl.sigett.entity.DocenteProyecto;
+import edu.unl.sigett.entity.DocumentoProyecto;
 import edu.unl.sigett.entity.Proyecto;
+import edu.unl.sigett.enumeration.CatalogoDocumentoProyectoEnum;
 import edu.unl.sigett.enumeration.EstadoAutorEnum;
 import edu.unl.sigett.enumeration.EstadoProyectoEnum;
 import edu.unl.sigett.service.AutorProyectoService;
 import edu.unl.sigett.service.DocenteProyectoService;
+import edu.unl.sigett.service.DocumentoProyectoService;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
 import java.util.List;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.inject.Inject;
 
@@ -83,20 +87,35 @@ public class DocenteProyectoController implements Serializable {
     private CoordinadorPeriodoService coordinadorPeriodoService;
     @EJB
     private DocenteService docenteService;
+    @EJB
+    private DocumentoProyectoService documentoProyectoService;
+    @EJB
+    private DocumentoService documentoService;
 //</editor-fold>
+    private static final Logger LOG = Logger.getLogger(DocenteProyectoController.class.getName());
 
     public DocenteProyectoController() {
     }
-    
+
     public void preRenderView() {
         this.listadoPertinenciaProyecto();
     }
-    
+
     public void preRenderViewEditar() {
         this.recuperaEstadoActualProyecto();
     }
-    
+
+    private void iniciar() {
+        this.docenteProyectoDM.getAutorProyectos().clear();
+        this.docenteProyectoDM.getFilterAutorProyectos().clear();
+        this.docenteProyectoDM.getDocumentoProyectos().clear();
+        this.docenteProyectoDM.getFilterDocumentoProyectos().clear();
+        this.docenteProyectoDM.getLineasInvestigacionProyecto().clear();
+        this.docenteProyectoDM.getFilterLineasInvestigacionProyecto().clear();
+    }
+
     public String editar(final DocenteProyectoDTO docenteProyectoDTO) {
+        iniciar();
         docenteProyectoDM.setDocenteProyectoDTOSeleccionado(docenteProyectoDTO);
         List<CoordinadorPeriodo> coordinadores = coordinadorPeriodoService.buscar(new CoordinadorPeriodo(Boolean.TRUE, null, null,
                 docenteProyectoDTO.getDocenteCarrera().getCarreraId()));
@@ -108,9 +127,54 @@ public class DocenteProyectoController implements Serializable {
                 coordinadorPeriodo, personaDao.find(coordinadorPeriodo.getCoordinadorId().getId()), null);
         coordinadorPeriodoDTO.setDocente(docenteService.buscarPorId(new Docente(coordinadorPeriodoDTO.getPersona().getId())));
         docenteProyectoDM.setCoordinadorPeriodoDTO(coordinadorPeriodoDTO);
+        listadoDocumentos();
+        listadoAutores();
         return "pretty:editarDocenteProyecto";
     }
-    
+
+    /**
+     * LISTAR ANTEPROYECTO
+     */
+    private void listadoDocumentos() {
+        try {
+            docenteProyectoDM.getDocumentoProyectos().clear();
+            docenteProyectoDM.getFilterDocumentoProyectos().clear();
+            Item catalogoDocumento = itemService.buscarPorCatalogoCodigo(
+                    CatalogoEnum.CATALOGODOCUMENTOPROYECTO.getTipo(), CatalogoDocumentoProyectoEnum.ANTEPROYECTO.getTipo());
+
+            List<DocumentoProyecto> documentoProyectos = this.documentoProyectoService.buscar(
+                    new DocumentoProyecto(Boolean.TRUE, null, docenteProyectoDM.getDocenteProyectoDTOSeleccionado().getDocenteProyecto().getProyectoId()));
+            for (DocumentoProyecto documentoProyecto : documentoProyectos) {
+                DocumentoProyectoDTO documentoProyectoDTO = new DocumentoProyectoDTO(
+                        documentoProyecto, documentoService.buscarPorId(new Documento(
+                                        documentoProyecto.getDocumentoId(), null, catalogoDocumento.getId(), null, null, null, null, null)));
+                documentoProyectoDTO.getDocumento().setCatalogo(itemService.buscarPorId(documentoProyectoDTO.getDocumento().getCatalogoId()).getNombre());
+                docenteProyectoDM.getDocumentoProyectos().add(documentoProyectoDTO);
+            }
+            docenteProyectoDM.setFilterDocumentoProyectos(docenteProyectoDM.getDocumentoProyectos());
+        } catch (Exception e) {
+            LOG.warning(e.getMessage());
+        }
+    }
+
+    private void listadoAutores() {
+        docenteProyectoDM.getAutorProyectos().clear();
+        docenteProyectoDM.getFilterAutorProyectos().clear();
+        Item estadoRenunciado = itemService.buscarPorCatalogoCodigo(CatalogoEnum.ESTADOAUTOR.getTipo(), EstadoAutorEnum.RENUNCIADO.getTipo());
+        for (AutorProyecto autorProyecto : docenteProyectoDM.getDocenteProyectoDTOSeleccionado().getDocenteProyecto().getProyectoId().getAutorProyectoList()) {
+            if (autorProyecto.getEstadoAutorId().equals(estadoRenunciado.getId())) {
+                continue;
+            }
+            AutorProyectoDTO autorProyectoDTO = new AutorProyectoDTO(autorProyecto, autorProyecto.getAspiranteId(),
+                    estudianteCarreraDao.find(autorProyecto.getAspiranteId().getId()), null);
+            autorProyectoDTO.setPersona(personaDao.find(autorProyectoDTO.getEstudianteCarrera().getEstudianteId().getId()));
+            if (!docenteProyectoDM.getAutorProyectos().contains(autorProyectoDTO)) {
+                docenteProyectoDM.getAutorProyectos().add(autorProyectoDTO);
+            }
+        }
+        docenteProyectoDM.setFilterAutorProyectos(docenteProyectoDM.getAutorProyectos());
+    }
+
     private void recuperaEstadoActualProyecto() {
         this.docenteProyectoDM.setEstadoActualProyecto(itemService.buscarPorId(
                 docenteProyectoDM.getDocenteProyectoDTOSeleccionado().getDocenteProyecto().getProyectoId().getEstadoProyectoId()));
