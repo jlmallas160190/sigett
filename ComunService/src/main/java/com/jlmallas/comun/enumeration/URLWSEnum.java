@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.unl.sigett.enumeration;
+package com.jlmallas.comun.enumeration;
 
 /**
  *
@@ -11,7 +11,17 @@ package edu.unl.sigett.enumeration;
  */
 public enum URLWSEnum {
 
+    URLAREAWS("AREAS_WS"),
+    URLOFERTAACADEMICAWS("OFERTAS_WS"),
+    URLCARRERAWS("CARRERAS_WS"),
+    URLPERIODOLECTIVOWS("PERIODOS_WS"),
     DATOSDOCENTE("DATOS_DOCENTE_WS"),
+    VALIDARDOCENTE("VALIDAR_DOCENTE_WS"),
+    PARALELOCARRERA("PARALELO_CARRERA_WS"),
+    MATRICULAESTUDIANTE("MATRICULA_ESTUDIANTE_WS"),
+    REPORTEMATRICULAESTUDIANTE("REPORTE_MATRICULA_ESTUDIANTE_WS"),
+    ESTADOESTUDIANTEPARALELO("ESTADO_ESTUDIANTE_PARALELO_WS"),
+    UNIDADDOCENTEPARALELO("UNIDAD_DOCENTE_PARALELO_WS"),
     DATOSESTUDIANTE("DATOS_ESTUDIANTE_WS");
     String tipo;
 

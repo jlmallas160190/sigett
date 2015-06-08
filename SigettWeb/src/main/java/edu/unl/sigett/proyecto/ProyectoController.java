@@ -60,6 +60,7 @@ import edu.unl.sigett.enumeration.EstadoProyectoEnum;
 import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
 import edu.unl.sigett.service.AutorProyectoService;
 import edu.unl.sigett.service.ConfiguracionCarreraService;
+import edu.unl.sigett.service.ConfiguracionProyectoService;
 import edu.unl.sigett.service.CronogramaService;
 import edu.unl.sigett.service.DocenteProyectoService;
 import edu.unl.sigett.service.DocumentoProyectoService;
@@ -151,7 +152,7 @@ public class ProyectoController implements Serializable {
     @EJB
     private LineaInvestigacionProyectoService lineaInvestigacionProyectoService;
     @EJB
-    private ConfiguracionProyectoDao configuracionProyectoDao;
+    private ConfiguracionProyectoService configuracionProyectoService;
     @EJB
     private CarreraService carreraService;
     @EJB
@@ -196,10 +197,10 @@ public class ProyectoController implements Serializable {
     private DocenteService docenteService;
     //</editor-fold>
     private static final Logger LOG = Logger.getLogger(ProyectoController.class.getName());
-
+    
     public ProyectoController() {
     }
-
+    
     public void preRenderView() {
         this.buscar();
         this.listadoCarreras();
@@ -207,7 +208,7 @@ public class ProyectoController implements Serializable {
         this.renderedCrear();
         this.renderedEditar();
     }
-
+    
     public void preRenderViewEdit() {
         estadoActual();
         this.renderedInicio();
@@ -245,7 +246,7 @@ public class ProyectoController implements Serializable {
         sessionProyecto.getCategorias().clear();
         sessionProyecto.setCategorias(itemService.buscarPorCatalogo(CatalogoEnum.CATALOGOPROYECTO.getTipo()));
     }
-
+    
     private void iniciar() {
         sessionProyecto.getAutoresProyectoDTONuevos().clear();
         sessionProyecto.getCarrerasRemovidasTransfer().clear();
@@ -264,7 +265,7 @@ public class ProyectoController implements Serializable {
         pickListLineasInvestigacionProyecto(sessionProyecto.getProyectoSeleccionado());
         pickListCarreras(sessionProyecto.getProyectoSeleccionado());
     }
-
+    
     public String editar(final Proyecto proyecto) {
         try {
             sessionProyecto.setProyectoSeleccionado(proyecto);
@@ -275,13 +276,14 @@ public class ProyectoController implements Serializable {
             editarTema();
             buscarDocentes();
             this.buscarDocumentos();
+            this.agregarConfiguracionesProyecto();
             return "pretty:editarProyecto";
         } catch (Exception e) {
             Log.info(e.getMessage());
         }
         return "";
     }
-
+    
     public String grabar() {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
@@ -311,7 +313,8 @@ public class ProyectoController implements Serializable {
             grabarLineasInvestigacionProyecto();
             grabarProyectoCarrerasOferta();
             grabarDocumentos();
-
+            grabarConfiguraciones();
+            
             logDao.create(logDao.crearLog("Proyecto", sessionProyecto.getProyectoSeleccionado().getId() + "", "EDITAR", "|Tema= "
                     + sessionProyecto.getProyectoSeleccionado().getTemaActual() + "|Descripción= " + sessionProyecto.getProyectoSeleccionado().getDescripcion()
                     + "|Tipo de Proyecto= " + sessionProyecto.getProyectoSeleccionado().getTipoProyectoId() + "" + "CatalogoProyecto= "
@@ -340,6 +343,7 @@ public class ProyectoController implements Serializable {
         grabarProyectoCarrerasOferta();
         eliminarProyectoCarreras();
         grabarDocumentos();
+        grabarConfiguraciones();
         if (param.equalsIgnoreCase("guardar")) {
             sessionProyecto.setProyectoSeleccionado(new Proyecto());
             return "pretty:proyectos";
@@ -371,7 +375,7 @@ public class ProyectoController implements Serializable {
         cabeceraController.getOntologyService().getProyectoOntService().write(proyectoOntDTO);
         sessionProyecto.setProyectoOntDTO(proyectoOntDTO);
     }
-
+    
     private void estadoActual() {
         if (sessionProyecto.getProyectoSeleccionado().getEstadoProyectoId() == null) {
             return;
@@ -394,7 +398,7 @@ public class ProyectoController implements Serializable {
                                     sessionProyecto.getOfertaAcademicaSeleccionada().getId() != null
                                     ? sessionProyecto.getOfertaAcademicaSeleccionada().getId() : null, Boolean.TRUE),
                             sessionProyecto.getLineaInvestigacionProyectoSeleccionada()));
-
+            
             if (proyectosEncontrados == null) {
                 return;
             }
@@ -491,7 +495,7 @@ public class ProyectoController implements Serializable {
     public void seleccionarCarrera(SelectEvent event) {
         try {
             sessionProyecto.setCarreraSeleccionada((Carrera) event.getObject());
-
+            
             List<CoordinadorPeriodo> coordinadores = coordinadorPeriodoService.buscar(new CoordinadorPeriodo(Boolean.TRUE, null, null,
                     sessionProyecto.getCarreraSeleccionada()));
             if (coordinadores == null) {
@@ -507,12 +511,12 @@ public class ProyectoController implements Serializable {
             System.out.println(e);
         }
     }
-
+    
     public void seleccionarOfertaAcademica(SelectEvent event) {
         sessionProyecto.setOfertaAcademicaSeleccionada((OfertaAcademica) event.getObject());
         buscar();
     }
-
+    
     public void seleccionarLineaInvestigacion(SelectEvent event) {
         sessionProyecto.setLineaInvestigacionProyectoSeleccionada((LineaInvestigacionProyecto) event.getObject());
         buscar();
@@ -637,9 +641,9 @@ public class ProyectoController implements Serializable {
             }
         } catch (Exception e) {
         }
-
+        
     }
-
+    
     private void grabarIndividuoLP(final LineaInvestigacionProyecto lineaInvestigacionProyecto) {
         LineaInvestigacionOntDTO lineaInvestigacionOntDTO = new LineaInvestigacionOntDTO(lineaInvestigacionProyecto.getLineaInvestigacionId().getId(),
                 lineaInvestigacionProyecto.getLineaInvestigacionId().getNombre(),
@@ -651,7 +655,7 @@ public class ProyectoController implements Serializable {
                 lineaInvestigacionProyecto.getId(), lineaInvestigacionOntDTO, sessionProyecto.getProyectoOntDTO(),
                 cabeceraController.getValueFromProperties(PropertiesFileEnum.URI, "linea_investigacion_proyecto")));
     }
-
+    
     public void eliminarLineasInvestigacionProyecto() {
         if (!sessionProyecto.getEstadoActual().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.INICIO.getTipo())) {
             return;
@@ -669,7 +673,7 @@ public class ProyectoController implements Serializable {
             }
         }
     }
-
+    
     public Long devuelveLineaInvestigacion(final LineaInvestigacionProyecto lineaInvestigacionProyecto) {
         for (LineaInvestigacionProyecto lp : sessionProyecto.getLineasInvestigacionRemovidosTransfer()) {
             if (lp.getLineaInvestigacionId().equals(lineaInvestigacionProyecto.getLineaInvestigacionId())) {
@@ -702,7 +706,7 @@ public class ProyectoController implements Serializable {
                     }
                 }
             }
-
+            
             for (Carrera carrera : sessionProyecto.getCarreras()) {
                 if (!usuarioCarreras.contains(carrera)) {
                     usuarioCarreras.add(carrera);
@@ -768,17 +772,14 @@ public class ProyectoController implements Serializable {
      */
     private void grabarProyectoCarrerasOferta() {
         try {
-            if (sessionProyecto.getProyectoSeleccionado().getId() != null) {
-                sessionProyecto.setProyectoSeleccionado(proyectoService.buscarPorId(sessionProyecto.getProyectoSeleccionado()));
+         if (!sessionProyecto.getEstadoActual().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.INICIO.getTipo())) {
+                return;
             }
-            Item estado = itemService.buscarPorCatalogoCodigo(CatalogoEnum.ESTADOPROYECTO.getTipo(), EstadoProyectoEnum.INICIO.getTipo());
-
-            if (sessionProyecto.getProyectoSeleccionado().getEstadoProyectoId().equals(estado.getId())) {
                 for (ProyectoCarreraOferta proyectoCarreraOferta : sessionProyecto.getCarrerasSeleccionadasTransfer()) {
                     Carrera c = carreraService.find(proyectoCarreraOferta.getCarreraId());
                     List<ProyectoCarreraOferta> proyectoCarreraOfertas = proyectoCarreraOfertaService.buscar(
                             new ProyectoCarreraOferta(sessionProyecto.getProyectoSeleccionado(), null, null, Boolean.TRUE));
-
+                    
                     Long pcoId = devuelveProyectoCarreraId(proyectoCarreraOfertas, proyectoCarreraOferta);
                     proyectoCarreraOferta = proyectoCarreraOfertaService.buscarPorId(new ProyectoCarreraOferta(pcoId));
                     if (proyectoCarreraOferta == null) {
@@ -794,7 +795,7 @@ public class ProyectoController implements Serializable {
                         }
                         proyectoCarreraOferta = new ProyectoCarreraOferta(sessionProyecto.getProyectoSeleccionado(), c.getId(), ofertaAcademica.getId(),
                                 Boolean.TRUE);
-
+                        
                         if (contieneCarrera(proyectoCarreraOfertas, proyectoCarreraOferta) == false) {
                             proyectoCarreraOfertaService.guardar(proyectoCarreraOferta);
                             this.grabarIndividuoPCO(proyectoCarreraOferta);
@@ -809,7 +810,6 @@ public class ProyectoController implements Serializable {
                             + proyectoCarreraOferta.getCarreraId() + "|Oferta=" + proyectoCarreraOferta.getOfertaAcademicaId()
                             + "|Proyecto= " + proyectoCarreraOferta.getProyectoId().getId(), sessionUsuario.getUsuario()));
                 }
-            }
         } catch (Exception e) {
             LOG.info(e.getMessage());
         }
@@ -832,7 +832,7 @@ public class ProyectoController implements Serializable {
         }
         return var;
     }
-
+    
     public void eliminarProyectoCarreras() {
         try {
             if (!sessionProyecto.getEstadoActual().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.INICIO.getTipo())) {
@@ -902,7 +902,7 @@ public class ProyectoController implements Serializable {
         /**
          * PROYECTO CARRERA OFERTA ONTOLOGY
          */
-
+        
         ProyectoCarreraOfertaOntDTO proyectoCarreraOfertaOntDTO = new ProyectoCarreraOfertaOntDTO(proyectoCarreraOferta.getId(),
                 ofertaAcademicaOntDTO, sessionProyecto.getProyectoOntDTO(), carreraOntDTO);
         cabeceraController.getOntologyService().getProyectoCarreraOfertaOntService().read(cabeceraController.getCabeceraWebSemantica());
@@ -935,7 +935,7 @@ public class ProyectoController implements Serializable {
             System.out.println(e);
         }
     }
-
+    
     private void grabarIndividuoAutor(final AutorProyectoDTO autorProyectoDTO) {
         AutorOntDTO autorOntDTO = new AutorOntDTO(autorProyectoDTO.getAspirante().getId(),
                 autorProyectoDTO.getPersona().getNombres(), autorProyectoDTO.getPersona().getApellidos(), autorProyectoDTO.getPersona().getFechaNacimiento(),
@@ -948,10 +948,10 @@ public class ProyectoController implements Serializable {
     }
 
     //</editor-fold>
-    //<editor-fold defaultstate="collapsed" desc="CONFIGURACIONES PROYECTO">
+    //<editor-fold defaultstate="collapsed" desc="CONFIGURACIONES">
     private void listadoConfiguracionesProyecto() {
         this.sessionProyecto.getConfiguracionProyectos().clear();
-        this.sessionProyecto.setConfiguracionProyectos(this.configuracionProyectoDao.buscar(
+        this.sessionProyecto.setConfiguracionProyectos(this.configuracionProyectoService.buscar(
                 new ConfiguracionProyecto(sessionProyecto.getProyectoSeleccionado().getId() != null ? sessionProyecto.getProyectoSeleccionado() : null,
                         null, null, null, null)));
     }
@@ -961,7 +961,7 @@ public class ProyectoController implements Serializable {
      *
      */
     private void agregarConfiguracionesProyecto() {
-        List<ConfiguracionProyecto> configuracionProyectos = configuracionProyectoDao.buscar(
+        List<ConfiguracionProyecto> configuracionProyectos = configuracionProyectoService.buscar(
                 new ConfiguracionProyecto(sessionProyecto.getProyectoSeleccionado().getId() != null ? sessionProyecto.getProyectoSeleccionado() : null,
                         null, null, null, null));
         if (configuracionProyectos != null) {
@@ -983,13 +983,21 @@ public class ProyectoController implements Serializable {
                 ConfiguracionProyectoEnum.CATALOGODURACION.getTipo(), TipoConfiguracionEnum.SELECCIONMULTIPLE.getTipo());
         sessionProyecto.getConfiguracionProyectos().add(configuracionProyectoCD);
     }
+    
+    private void grabarConfiguraciones() {
+        for (ConfiguracionProyecto configuracionProyecto : sessionProyecto.getConfiguracionProyectos()) {
+            if (configuracionProyecto.getId() == null) {
+                configuracionProyectoService.guardar(configuracionProyecto);
+            }
+        }
+    }
 
     //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="TEMAS">
     private void crearTema() {
         sessionProyecto.setTemaProyecto(new TemaProyecto(sessionProyecto.getProyectoSeleccionado(), new Tema(null, null, "Ninguna"), Boolean.TRUE));
     }
-
+    
     private void editarTema() {
         List<TemaProyecto> temaProyectos = temaProyectoService.buscar(new TemaProyecto(sessionProyecto.getProyectoSeleccionado().getId() != null
                 ? sessionProyecto.getProyectoSeleccionado() : null, null, Boolean.TRUE));
@@ -1048,10 +1056,10 @@ public class ProyectoController implements Serializable {
                 continue;
             }
             docenteProyectoService.actualizar(docenteProyectoDTO.getDocenteProyecto());
-             enviarEmailDocente(docenteProyectoDTO);
+            enviarEmailDocente(docenteProyectoDTO);
         }
     }
-
+    
     private void enviarEmailDocente(final DocenteProyectoDTO docenteProyectoDTO) {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
@@ -1082,14 +1090,14 @@ public class ProyectoController implements Serializable {
                 documentoProyectoDTO.getDocumento().setCatalogo(itemService.buscarPorId(documentoProyectoDTO.getDocumento().getCatalogoId()).getNombre());
                 sessionProyecto.getDocumentosProyectoDTO().add(documentoProyectoDTO);
             }
-
+            
             sessionProyecto.setFilterDocumentosProyectoDTO(sessionProyecto.getDocumentosProyectoDTO());
             sessionProyecto.getDocumentosProyectosDTOAgregados().addAll(sessionProyecto.getDocumentosProyectoDTO());
         } catch (Exception e) {
             LOG.warning(e.getMessage());
         }
     }
-
+    
     private void grabarDocumentos() {
         try {
             String ruta = configuracionDao.buscar(new Configuracion(ConfiguracionEnum.RUTADOCUMENTOPROYECTO.getTipo())).get(0).getValor();
@@ -1099,7 +1107,7 @@ public class ProyectoController implements Serializable {
                     documentoService.guardar(documentoProyectoDTO.getDocumento());
                     documentoProyectoDTO.getDocumentoProyecto().setDocumentoId(documentoProyectoDTO.getDocumento().getId());
                     documentoProyectoService.guardar(documentoProyectoDTO.getDocumentoProyecto());
-                     documentoProyectoDTO.getDocumento().setRuta(ruta + "/documento" + documentoProyectoDTO.getDocumento().getId() + ".pdf");
+                    documentoProyectoDTO.getDocumento().setRuta(ruta + "/documento" + documentoProyectoDTO.getDocumento().getId() + ".pdf");
                     cabeceraController.getUtilService().generaDocumento(new File(documentoProyectoDTO.getDocumento().getRuta()),
                             documentoProyectoDTO.getDocumento().getContents());
                     documentoService.actualizar(documentoProyectoDTO.getDocumento());
@@ -1110,7 +1118,7 @@ public class ProyectoController implements Serializable {
         } catch (Exception e) {
             LOG.info(e.getMessage());
         }
-
+        
     }
 
     //</editor-fold>
@@ -1122,7 +1130,7 @@ public class ProyectoController implements Serializable {
             sessionProyecto.setRenderedCrear(Boolean.TRUE);
         }
     }
-
+    
     public void renderedEditar() {
         sessionProyecto.setRenderedEditar(Boolean.FALSE);
         int tienePermiso = usuarioDao.tienePermiso(sessionUsuario.getUsuario(), "editar_proyecto");
@@ -1140,5 +1148,6 @@ public class ProyectoController implements Serializable {
             sessionProyecto.setRenderedInicio(Boolean.TRUE);
         }
     }
+
     //</editor-fold>
 }

@@ -50,6 +50,7 @@ public class UtilServiceImplement implements UtilService {
 
     @Override
     public Double calculaDuracion(Date fechaInicio, Date fechaFin, int diasNoContabilizados) {
+        @SuppressWarnings("UnusedAssignment")
         Integer ai, af, mi, mf, di, df = 0;
         ai = fechaInicio.getYear();
         af = fechaFin.getYear();

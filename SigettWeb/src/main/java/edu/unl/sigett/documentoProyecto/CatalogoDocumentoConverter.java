@@ -32,6 +32,9 @@ public class CatalogoDocumentoConverter implements Converter {
     @Override
     public String getAsString(FacesContext context, UIComponent component, Object value) {
         Item item=((Item) value);
+        if(item==null){
+            return "";
+        }
         return item.getCodigo();
     }
 

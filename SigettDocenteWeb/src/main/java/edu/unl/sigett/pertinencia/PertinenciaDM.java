@@ -30,6 +30,7 @@ public class PertinenciaDM implements Serializable {
     private Boolean renderedPanelCrud;
     private Boolean renderedMediaInforme;
     private Boolean renderedCrud;
+    private Boolean renderedCrudCronograma;
 
     public PertinenciaDM() {
         this.pertinencias = new ArrayList<>();
@@ -91,6 +92,14 @@ public class PertinenciaDM implements Serializable {
 
     public void setRenderedCrud(Boolean renderedCrud) {
         this.renderedCrud = renderedCrud;
+    }
+
+    public Boolean getRenderedCrudCronograma() {
+        return renderedCrudCronograma;
+    }
+
+    public void setRenderedCrudCronograma(Boolean renderedCrudCronograma) {
+        this.renderedCrudCronograma = renderedCrudCronograma;
     }
 
 }

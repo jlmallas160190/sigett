@@ -14,7 +14,7 @@
             <p:message id="msmTema" display="icon" for="tema"/>
 
             <h:outputLabel  value="#{msg['lbl.fecha']} #{msg['lbl.inicio']}"/>
-            <p:calendar id="fechaInicio" navigator="true" pattern="dd/MM/yyyy"  rendered="#{sessionProyecto.renderedPertinente}" 
+            <p:calendar id="fechaInicio" navigator="true" pattern="dd/MM/yyyy"  rendered="#{cronogramaDM.renderedCrud}" 
                         locale="es" placeholder="#{msg['lbl.fecha']} #{msg['lbl.inicio']}" required="true"  
                         requiredMessage="#{msg['lbl.fecha']} #{msg['lbl.inicio']} #{msg['lbl.obligatorio']}" 
                         title="#{msg['lbl.fecha']} #{msg['lbl.inicio']}" value="#{sessionProyecto.cronograma.fechaInicio}">
@@ -23,13 +23,13 @@
                         :contenido:tabViewDatosProyecto:tblAutores" process="fechaInicio"
                         listener="#{cronogramaController.calcularDuracion()}"/>     
             </p:calendar>
-            <h:outputText rendered="#{!sessionProyecto.renderedPertinente}" value="#{sessionProyecto.cronograma.fechaInicio}">
+            <h:outputText rendered="#{!cronogramaDM.renderedCrud}" value="#{sessionProyecto.cronograma.fechaInicio}">
                 <f:convertDateTime pattern="EEEEE dd MMMMM yyyy"/>
             </h:outputText>
             <p:message id="msmFechaInicio" display="icon" for="fechaInicio"/>
 
             <h:outputLabel value="#{msg['lbl.fechaCulminación']}"/>
-            <p:calendar  pattern="dd/MM/yyyy" navigator="true" rendered="#{sessionProyecto.renderedPertinente}" id="fechaFin" locale="es"  
+            <p:calendar  pattern="dd/MM/yyyy" navigator="true" rendered="#{cronogramaDM.renderedCrud}" id="fechaFin" locale="es"  
                          placeholder="#{msg['lbl.fechaCulminación']}" title="#{msg['lbl.fechaCulminación']}"  required="true" 
                          requiredMessage="#{msg['lbl.fechaCulminación']} #{msg['lbl.obligatorio']}" value="#{sessionProyecto.cronograma.fechaFin}">
                 <f:param  name="2" value="agregar-cronograma"/>
@@ -38,11 +38,10 @@
                         onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" process="fechaInicio,fechaFin"
                         listener="#{cronogramaController.calcularDuracion()}"/> 
             </p:calendar>
-            <h:outputText value="#{sessionProyecto.cronograma.fechaFin}" rendered="#{!sessionProyecto.renderedPertinente}">
+            <h:outputText value="#{sessionProyecto.cronograma.fechaFin}" rendered="#{!cronogramaDM.renderedCrud}">
                 <f:convertDateTime pattern="EEEEE dd MMMMM yyyy"/>
             </h:outputText>
             <p:message id="msmFechaFin" display="icon" for="fechaFin"/>
-
             <h:outputLabel rendered="#{administrarProrrogas.tieneProrroga}" value="#{msg['lbl.fecha']} #{msg['lbl.prorroga']}"/>
             <h:outputText id="fechaProrroga" rendered="#{administrarProrrogas.tieneProrroga}" value="#{sessionProyecto.cronograma.fechaProrroga}">
                 <f:convertDateTime pattern="EEEEE dd MMMMM yyyy"/>

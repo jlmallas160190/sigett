@@ -45,8 +45,10 @@ import edu.jlmallas.academico.dao.EstudianteDao;
 import org.jlmallas.seguridad.dao.LogDao;
 import edu.jlmallas.academico.service.OfertaAcademicaService;
 import com.jlmallas.comun.dao.PersonaDao;
+import com.jlmallas.comun.entity.Configuracion;
 import com.jlmallas.comun.entity.Nacionalidad;
 import com.jlmallas.comun.entity.Pais;
+import com.jlmallas.comun.enumeration.ConfiguracionEnum;
 import com.jlmallas.comun.enumeration.GeneroEnum;
 import com.jlmallas.comun.enumeration.TipoDocIdentEnum;
 import com.jlmallas.comun.service.ItemService;
@@ -56,6 +58,7 @@ import edu.jlmallas.academico.enumeration.EstadoMatriculaEnum;
 import edu.unl.sigett.academico.dto.EstudianteCarreraDTO;
 import edu.unl.sigett.entity.ConfiguracionCarrera;
 import edu.unl.sigett.entity.EstudianteUsuario;
+import com.jlmallas.comun.enumeration.URLWSEnum;
 import edu.unl.sigett.service.AspiranteService;
 import edu.unl.sigett.service.ConfiguracionCarreraService;
 import edu.unl.sigett.service.EstudianteUsuarioService;
@@ -771,11 +774,13 @@ public class AdministrarEstudiantesCarrera implements Serializable {
             if (configuracionCarrera == null) {
                 return;
             }
+            String passwordService = this.cabeceraController.getSecureService().decrypt(new SecureDTO(cabeceraController.getConfiguracionGeneralDTO().getSecureKey(),
+                    configuracionDao.buscar(new Configuracion(ConfiguracionEnum.CLAVEWS.getTipo())).get(0).getValor()));
+            String userService = configuracionDao.buscar(new Configuracion(ConfiguracionEnum.USUARIOWS.getTipo())).get(0).getValor();
+            String serviceUrl = configuracionDao.buscar(new Configuracion(URLWSEnum.PARALELOCARRERA.getTipo())).get(0).getValor();
             String ofertaIdActual = configuracionCarrera.getValor();
-            String serviceUrl = configuracionGeneralDao.find((int) 41).getValor();
             String s = serviceUrl + "?id_oferta=" + ofertaIdActual + ";id_carrera=" + c.getIdSga();
-            ConexionDTO seguridad = new ConexionDTO(configuracionGeneralDao.find((int) 5).getValor(),
-                    s, configuracionGeneralDao.find((int) 6).getValor());
+            ConexionDTO seguridad = new ConexionDTO(passwordService, s, userService);
             NetClientService conexion = new NetClientServiceImplement();
             String datosJson = conexion.response(seguridad);
             if (!datosJson.equalsIgnoreCase("")) {
@@ -848,11 +853,13 @@ public class AdministrarEstudiantesCarrera implements Serializable {
         MessageView messageView = new MessageView();
         if (usuarioDao.tienePermiso(sessionUsuario.getUsuario(), "sga_ws_datos_docente") == 1) {
             try {
-                String serviceUrl = configuracionGeneralDao.find((int) 25).getValor();
+                String passwordService = this.cabeceraController.getSecureService().decrypt(new SecureDTO(cabeceraController.getConfiguracionGeneralDTO().getSecureKey(),
+                        configuracionDao.buscar(new Configuracion(ConfiguracionEnum.CLAVEWS.getTipo())).get(0).getValor()));
+                String userService = configuracionDao.buscar(new Configuracion(ConfiguracionEnum.USUARIOWS.getTipo())).get(0).getValor();
+                String serviceUrl = configuracionDao.buscar(new Configuracion(URLWSEnum.DATOSESTUDIANTE.getTipo())).get(0).getValor();
                 String s = serviceUrl + "?cedula=" + sessionEstudianteCarrera.getEstudianteCarreraDTOWS().
                         getPersona().getNumeroIdentificacion();
-                ConexionDTO seguridad = new ConexionDTO(configuracionGeneralDao.find((int) 5).getValor(),
-                        s, configuracionGeneralDao.find((int) 6).getValor());
+                ConexionDTO seguridad = new ConexionDTO(passwordService, s, userService);
                 NetClientService conexion = new NetClientServiceImplement();
                 String datosJson = conexion.response(seguridad);
                 if (!datosJson.equalsIgnoreCase("")) {
@@ -912,11 +919,13 @@ public class AdministrarEstudiantesCarrera implements Serializable {
         MessageView messageView = new MessageView();
         if (usuarioDao.tienePermiso(sessionUsuario.getUsuario(), "sga_ws_datos_docente") == 1) {
             try {
-                String serviceUrl = configuracionGeneralDao.find((int) 25).getValor();
+                String passwordService = this.cabeceraController.getSecureService().decrypt(new SecureDTO(cabeceraController.getConfiguracionGeneralDTO().getSecureKey(),
+                        configuracionDao.buscar(new Configuracion(ConfiguracionEnum.CLAVEWS.getTipo())).get(0).getValor()));
+                String userService = configuracionDao.buscar(new Configuracion(ConfiguracionEnum.USUARIOWS.getTipo())).get(0).getValor();
+                String serviceUrl = configuracionDao.buscar(new Configuracion(URLWSEnum.DATOSESTUDIANTE.getTipo())).get(0).getValor();
                 String s = serviceUrl + "?cedula=" + sessionEstudianteCarrera.getEstudianteCarreraDTO().
                         getPersona().getNumeroIdentificacion();
-                ConexionDTO seguridad = new ConexionDTO(configuracionGeneralDao.find((int) 5).getValor(),
-                        s, configuracionGeneralDao.find((int) 6).getValor());
+                ConexionDTO seguridad = new ConexionDTO(passwordService, s, userService);
                 NetClientService conexion = new NetClientServiceImplement();
                 String datosJson = conexion.response(seguridad);
                 if (!datosJson.equalsIgnoreCase("")) {
@@ -1033,12 +1042,14 @@ public class AdministrarEstudiantesCarrera implements Serializable {
         MessageView messageView = new MessageView();
         if (usuarioDao.tienePermiso(sessionUsuario.getUsuario(), "sga_ws_estudiante_carrera") == 1) {
             try {
-                String serviceUrl = configuracionGeneralDao.find((int) 16).getValor();
+                String passwordService = this.cabeceraController.getSecureService().decrypt(new SecureDTO(cabeceraController.getConfiguracionGeneralDTO().getSecureKey(),
+                        configuracionDao.buscar(new Configuracion(ConfiguracionEnum.CLAVEWS.getTipo())).get(0).getValor()));
+                String userService = configuracionDao.buscar(new Configuracion(ConfiguracionEnum.USUARIOWS.getTipo())).get(0).getValor();
+                String serviceUrl = configuracionDao.buscar(new Configuracion(URLWSEnum.MATRICULAESTUDIANTE.getTipo())).get(0).getValor();
                 String s = serviceUrl + "?id_carrera=" + sessionEstudianteCarrera.getEstudianteCarreraDTO().getEstudianteCarrera().
                         getCarreraId().getIdSga() + ";cedula="
                         + sessionEstudianteCarrera.getEstudianteCarreraDTO().getPersona().getNumeroIdentificacion();
-                ConexionDTO seguridad = new ConexionDTO(configuracionGeneralDao.find((int) 5).getValor(),
-                        s, configuracionGeneralDao.find((int) 6).getValor());
+                ConexionDTO seguridad = new ConexionDTO(passwordService, s, userService);
                 NetClientService conexion = new NetClientServiceImplement();
                 String datosJson = conexion.response(seguridad);
                 if (!datosJson.equalsIgnoreCase("")) {
@@ -1064,12 +1075,14 @@ public class AdministrarEstudiantesCarrera implements Serializable {
         if (usuarioDao.tienePermiso(sessionUsuario.getUsuario(), "sga_ws_estudiante_carrera") == 1) {
             try {
                 Persona p = personaDao.find(rm.getEstudianteCarreraId().getEstudianteId().getId());
-                String serviceUrl = configuracionGeneralDao.find((int) 44).getValor();
+                String passwordService = this.cabeceraController.getSecureService().decrypt(new SecureDTO(cabeceraController.getConfiguracionGeneralDTO().getSecureKey(),
+                        configuracionDao.buscar(new Configuracion(ConfiguracionEnum.CLAVEWS.getTipo())).get(0).getValor()));
+                String userService = configuracionDao.buscar(new Configuracion(ConfiguracionEnum.USUARIOWS.getTipo())).get(0).getValor();
+                String serviceUrl = configuracionDao.buscar(new Configuracion(URLWSEnum.REPORTEMATRICULAESTUDIANTE.getTipo())).get(0).getValor();
                 String s = serviceUrl + "?cedula=" + p.getNumeroIdentificacion() + ";id_carrera="
                         + rm.getEstudianteCarreraId().getCarreraId().getIdSga() + ";id_oferta=" + rm.getOfertaAcademicaId().getIdSga();
 
-                ConexionDTO seguridad = new ConexionDTO(configuracionGeneralDao.find((int) 5).getValor(),
-                        s, configuracionGeneralDao.find((int) 6).getValor());
+                ConexionDTO seguridad = new ConexionDTO(passwordService, s, userService);
                 NetClientService conexion = new NetClientServiceImplement();
                 String datosJson = conexion.response(seguridad);
                 if (!datosJson.equalsIgnoreCase("")) {
@@ -1229,11 +1242,13 @@ public class AdministrarEstudiantesCarrera implements Serializable {
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
         MessageView messageView = new MessageView();
         try {
-            String serviceUrl = configuracionGeneralDao.find((int) 42).getValor();
+            String passwordService = this.cabeceraController.getSecureService().decrypt(new SecureDTO(cabeceraController.getConfiguracionGeneralDTO().getSecureKey(),
+                        configuracionDao.buscar(new Configuracion(ConfiguracionEnum.CLAVEWS.getTipo())).get(0).getValor()));
+                String userService = configuracionDao.buscar(new Configuracion(ConfiguracionEnum.USUARIOWS.getTipo())).get(0).getValor();
+                String serviceUrl = configuracionDao.buscar(new Configuracion(URLWSEnum.ESTADOESTUDIANTEPARALELO.getTipo())).get(0).getValor();
             String s = serviceUrl + "?id_paralelo=" + paraleloId;
 
-            ConexionDTO seguridad = new ConexionDTO(configuracionGeneralDao.find((int) 5).getValor(),
-                    s, configuracionGeneralDao.find((int) 6).getValor());
+            ConexionDTO seguridad = new ConexionDTO(passwordService,s,userService);
             NetClientService conexion = new NetClientServiceImplement();
             String datosJson = conexion.response(seguridad);
             if (!datosJson.equalsIgnoreCase("")) {

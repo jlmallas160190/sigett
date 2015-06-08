@@ -81,7 +81,6 @@ public class SessionProyecto implements Serializable {
     private Boolean renderedEditar;
     private Boolean renderedCrear;
     private Boolean renderedInicio;
-    private Boolean renderedPertinente;
     private Boolean renderedDialogoAP;
 
     private DualListModel<LineaInvestigacion> lineasInvestigacionDualList;
@@ -291,14 +290,6 @@ public class SessionProyecto implements Serializable {
 
     public void setTemaProyecto(TemaProyecto temaProyecto) {
         this.temaProyecto = temaProyecto;
-    }
-
-    public Boolean getRenderedPertinente() {
-        return renderedPertinente;
-    }
-
-    public void setRenderedPertinente(Boolean renderedPertinente) {
-        this.renderedPertinente = renderedPertinente;
     }
 
     public List<Item> getEstados() {

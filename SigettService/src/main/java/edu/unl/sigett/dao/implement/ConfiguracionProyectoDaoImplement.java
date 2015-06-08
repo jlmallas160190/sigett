@@ -24,46 +24,6 @@ public class ConfiguracionProyectoDaoImplement extends AbstractDao<Configuracion
     public ConfiguracionProyectoDaoImplement() {
         super(ConfiguracionProyecto.class);
     }
-//
-//    @Override
-//    public ConfiguracionProyecto buscarConfDiasTrabajoAlMes(Long proyectoId) {
-//        List<ConfiguracionProyecto> configuracionProyectos = new ArrayList<>();
-//        try {
-//            Query query = em.createQuery("SELECT c FROM ConfiguracionProyecto c where " + "(c.proyectoId.id=:id AND c.codigo='DM')");
-//            query.setParameter("id", proyectoId);
-//            configuracionProyectos = query.getResultList();
-//            return !configuracionProyectos.isEmpty() ? configuracionProyectos.get(0) : null;
-//        } catch (Exception e) {
-//            System.out.println(e);
-//        }
-//        return null;
-//    }
-//
-//    @Override
-//    public ConfiguracionProyecto buscarConfHorasTrabajoAlDia(Long proyectoId) {
-//        List<ConfiguracionProyecto> configuracionProyectos = new ArrayList<>();
-//        try {
-//            Query query = em.createQuery("SELECT c FROM ConfiguracionProyecto c where " + "(c.proyectoId.id=:id AND c.codigo='HD')");
-//            query.setParameter("id", proyectoId);
-//            configuracionProyectos = query.getResultList();
-//            return !configuracionProyectos.isEmpty() ? configuracionProyectos.get(0) : null;
-//        } catch (Exception e) {
-//        }
-//        return null;
-//    }
-//
-//    @Override
-//    public ConfiguracionProyecto buscarCatalogoDuracion(Long proyectoId) {
-//        List<ConfiguracionProyecto> configuracionProyectos = new ArrayList<>();
-//        try {
-//            Query query = em.createQuery("SELECT c FROM ConfiguracionProyecto c where " + "(c.proyectoId.id=:id AND c.codigo='CD')");
-//            query.setParameter("id", proyectoId);
-//            configuracionProyectos = query.getResultList();
-//            return !configuracionProyectos.isEmpty() ? configuracionProyectos.get(0) : null;
-//        } catch (Exception e) {
-//        }
-//        return null;
-//    }
 
     @Override
     public List<ConfiguracionProyecto> buscar(final ConfiguracionProyecto configuracionProyecto) {

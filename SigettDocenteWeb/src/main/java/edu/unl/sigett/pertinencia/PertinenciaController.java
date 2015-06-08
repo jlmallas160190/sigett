@@ -22,6 +22,7 @@ import edu.unl.sigett.entity.Pertinencia;
 import edu.unl.sigett.enumeration.CatalogoDocumentoCarreraEnum;
 import edu.unl.sigett.enumeration.EstadoProyectoEnum;
 import edu.unl.sigett.reporte.ReporteController;
+import edu.unl.sigett.service.CronogramaService;
 import edu.unl.sigett.service.DocumentoCarreraService;
 import edu.unl.sigett.service.PertinenciaService;
 import edu.unl.sigett.service.ProyectoService;
@@ -79,6 +80,8 @@ public class PertinenciaController implements Serializable {
     private CarreraService carreraService;
     @EJB
     private ConfiguracionDao configuracionDao;
+    @EJB
+    private CronogramaService cronogramaService;
     //</editor-fold>
     private static final Logger LOG = Logger.getLogger(PertinenciaController.class.getName());
 
@@ -117,6 +120,7 @@ public class PertinenciaController implements Serializable {
                     || docenteProyectoDM.getEstadoActualProyecto().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.PERTINENTE.getTipo())) {
                 pertinenciaDM.setPertinencia(pertinencia);
                 pertinenciaDM.setRenderedPanelCrud(Boolean.TRUE);
+                seleccionarAceptar();
             } else {
                 this.cabeceraController.getMessageView().message(FacesMessage.SEVERITY_ERROR, bundle.getString(
                         "lbl.msm_permiso_denegado_editar") + ". " + bundle.getString("lbl.msm_consulte"), "");
@@ -140,7 +144,7 @@ public class PertinenciaController implements Serializable {
                         + pertinenciaDM.getPertinencia().getDocenteProyectoId().getDocenteCarreraId() + "|Proyecto= " + pertinenciaDM.getPertinencia().
                         getDocenteProyectoId().getProyectoId().getId() + "|Fecha= " + pertinenciaDM.getPertinencia().getFecha()
                         + "|EsActivo= " + pertinenciaDM.getPertinencia().getEsActivo(), docenteUsuarioDM.getDocenteUsuarioDTO().getUsuario()));
-                actualizarEstadoProyecto();
+                actualizarProyecto();
                 cabeceraController.getMessageView().message(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_grabar"), "");
                 pertinenciaDM.setPertinencia(new Pertinencia());
                 pertinenciaDM.setRenderedPanelCrud(Boolean.FALSE);
@@ -151,7 +155,7 @@ public class PertinenciaController implements Serializable {
                     + pertinenciaDM.getPertinencia().getDocenteProyectoId().getDocenteCarreraId() + "|Proyecto= " + pertinenciaDM.getPertinencia().
                     getDocenteProyectoId().getProyectoId().getId() + "|Fecha= " + pertinenciaDM.getPertinencia().getFecha()
                     + "|EsActivo= " + pertinenciaDM.getPertinencia().getEsActivo(), docenteUsuarioDM.getDocenteUsuarioDTO().getUsuario()));
-            actualizarEstadoProyecto();
+            actualizarProyecto();
             cabeceraController.getMessageView().message(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_editar"), "");
             pertinenciaDM.setPertinencia(new Pertinencia());
             pertinenciaDM.setRenderedPanelCrud(Boolean.FALSE);
@@ -164,7 +168,11 @@ public class PertinenciaController implements Serializable {
     /**
      * ACTUALIZAR ESTADO DE PROYECTO
      */
-    private void actualizarEstadoProyecto() {
+    private void actualizarProyecto() {
+        docenteProyectoDM.getDocenteProyectoDTOSeleccionado().getDocenteProyecto().getProyectoId().getCronograma().setFechaInicio(
+                pertinenciaDM.getPertinencia().getFecha());
+        docenteProyectoDM.getDocenteProyectoDTOSeleccionado().getDocenteProyecto().getProyectoId().getCronograma().setFechaProrroga(
+                docenteProyectoDM.getDocenteProyectoDTOSeleccionado().getDocenteProyecto().getProyectoId().getCronograma().getFechaFin());
         if (pertinenciaDM.getPertinencia().getEsAceptado()) {
             Item pertinente = itemService.buscarPorCatalogoCodigo(CatalogoEnum.ESTADOPROYECTO.getTipo(), EstadoProyectoEnum.PERTINENTE.getTipo());
             docenteProyectoDM.getDocenteProyectoDTOSeleccionado().getDocenteProyecto().getProyectoId().setEstadoProyectoId(pertinente.getId());
@@ -173,6 +181,7 @@ public class PertinenciaController implements Serializable {
             docenteProyectoDM.getDocenteProyectoDTOSeleccionado().getDocenteProyecto().getProyectoId().setEstadoProyectoId(inicio.getId());
         }
         proyectoService.actualizar(docenteProyectoDM.getDocenteProyectoDTOSeleccionado().getDocenteProyecto().getProyectoId());
+        cronogramaService.actualizar(docenteProyectoDM.getDocenteProyectoDTOSeleccionado().getDocenteProyecto().getProyectoId().getCronograma());
     }
 
     public void cancelarEdicion() {
@@ -184,6 +193,17 @@ public class PertinenciaController implements Serializable {
         pertinenciaDM.setDocumentoCarreraDTO(new DocumentoCarreraDTO());
         pertinenciaDM.setPertinencia(new Pertinencia());
         pertinenciaDM.setRenderedMediaInforme(Boolean.FALSE);
+    }
+
+    /**
+     * SI ES ACEPTADO LA PERTINENCIA SE HABILITA UN CALENDAR PARA SELECCIONAR LA
+     * FECHA DE FINAL DEL CRONOGRAMA DEL PROYECTO
+     */
+    public void seleccionarAceptar() {
+        pertinenciaDM.setRenderedCrudCronograma(Boolean.FALSE);
+        if (pertinenciaDM.getPertinencia().getEsAceptado()) {
+            pertinenciaDM.setRenderedCrudCronograma(Boolean.TRUE);
+        }
     }
 
     public void remover(Pertinencia pertinencia) {

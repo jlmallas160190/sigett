@@ -35,6 +35,8 @@ public class CronogramaController implements Serializable {
     private SessionProyecto sessionProyecto;
     @Inject
     private CabeceraController cabeceraController;
+    @Inject
+    private CronogramaDM cronogramaDM;
 
     //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="SERVICIOS">
@@ -133,13 +135,11 @@ public class CronogramaController implements Serializable {
      * PERTINENCIA
      *
      */
-    public void renderedCronograma() {
+    public void renderedCrudCronograma() {
         try {
-            sessionProyecto.setRenderedPertinente(Boolean.FALSE);
-            Item item = itemService.buscarPorId(sessionProyecto.getProyectoSeleccionado().getEstadoProyectoId() != null
-                    ? sessionProyecto.getProyectoSeleccionado().getEstadoProyectoId() : null);
-            if (item.getCodigo().equalsIgnoreCase(EstadoProyectoEnum.PERTINENTE.getTipo())) {
-                sessionProyecto.setRenderedPertinente(Boolean.TRUE);
+            cronogramaDM.setRenderedCrud(Boolean.FALSE);
+            if(sessionProyecto.getEstadoActual().getCodigo().equals(EstadoProyectoEnum.PERTINENTE.getTipo())){
+                 cronogramaDM.setRenderedCrud(Boolean.TRUE);
             }
         } catch (Exception e) {
         }

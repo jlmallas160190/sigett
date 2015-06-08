@@ -7,7 +7,7 @@
     <body>
         <p:dialog id="dlgEditarPertinencia" widgetVar="dlgEditarPertinencia" header="#{msg['lbl.editar']} #{msg['lbl.pertinencia']}"  styleClass="modal-md" 
                   modal="true" closable="false" >
-            <p:panel rendered="#{pertinenciaDM.renderedPanelCrud}">
+            <p:panel id="panelDatos" rendered="#{pertinenciaDM.renderedPanelCrud}">
                 <ui:include src="datosPertinencia.xhtml"/>
                 <f:facet name="footer">
                     <ui:include src="botonesEditarPertinencia.xhtml"/>   

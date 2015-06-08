@@ -14,6 +14,7 @@ import com.jlmallas.comun.dao.ConfiguracionDao;
 import com.jlmallas.comun.entity.Configuracion;
 import com.jlmallas.comun.enumeration.ConfiguracionEnum;
 import com.jlmallas.comun.enumeration.TipoConfiguracionEnum;
+import com.jlmallas.comun.enumeration.URLWSEnum;
 import org.jlmallas.httpClient.NetClientServiceImplement;
 import org.jlmallas.httpClient.ConexionDTO;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
@@ -416,7 +417,7 @@ public class AdministrarCarreras implements Serializable {
                 String claveWS = this.cabeceraController.getSecureService().decrypt(new SecureDTO(cabeceraController.getConfiguracionGeneralDTO().getSecureKey(),
                         configuracionDao.buscar(new Configuracion(ConfiguracionEnum.CLAVEWS.getTipo())).get(0).getValor()));
                 String usuarioWs = configuracionDao.buscar(new Configuracion(ConfiguracionEnum.USUARIOWS.getTipo())).get(0).getValor();
-                String url = configuracionDao.buscar(new Configuracion(ConfiguracionEnum.URLCARRERAWS.getTipo())).get(0).getValor() + "?siglas=" + area.getSigla();
+                String url = configuracionDao.buscar(new Configuracion(URLWSEnum.URLCARRERAWS.getTipo())).get(0).getValor() + "?siglas=" + area.getSigla();
                 ConexionDTO seguridad = new ConexionDTO(claveWS, url, usuarioWs);
                 NetClientService conexion = new NetClientServiceImplement();
                 String datosJson = conexion.response(seguridad);

@@ -5,20 +5,37 @@
       xmlns:p="http://primefaces.org/ui">
 
     <body>
-        <h:panelGrid styleClass="panelgrid" rowClasses="rowpanelgrid" columnClasses="col-sm-2,col-sm-8,col-sm-1" columns="3">
+        <h:panelGrid  styleClass="panelgrid" rowClasses="rowpanelgrid" columnClasses="col-sm-2,col-sm-8,col-sm-1" columns="3">
+            <h:outputLabel  value="#{msg['lbl.aceptar']}:"/>
+            <p:selectBooleanCheckbox  value="#{pertinenciaDM.pertinencia.esAceptado}">
+                <p:ajax event="change" listener="#{pertinenciaController.seleccionarAceptar()}" 
+                        update="panelDatos"/>
+            </p:selectBooleanCheckbox>
+            <h:inputHidden />
             <h:outputLabel value="#{msg['lbl.fecha']}:"/>
-            <p:calendar id="fecha" locale="es" navigator="true" showOn="button" value="#{pertinenciaDM.pertinencia.fecha}" rendered="true" 
-                        requiredMessage="#{msg['lbl.fecha']} #{msg['lbl.obligatorio']}" pattern="dd/MM/yyyy hh:mm:ss">
+            <p:calendar id="fecha" locale="es" navigator="true" showOn="button" value="#{pertinenciaDM.pertinencia.fecha}"
+                        requiredMessage="#{msg['lbl.fecha']} #{msg['lbl.obligatorio']}" >
+                <p:ajax event="dateSelect" process="@this"/>
+                <p:ajax event="change" process="@this"/>
             </p:calendar>
             <p:message id="msmFecha" display="icon" for="fecha"/>
-            <h:outputLabel  value="#{msg['lbl.aceptar']}:" for="aceptar"/>
-            <p:selectBooleanCheckbox  value="#{pertinenciaDM.pertinencia.esAceptado}"/>
-            <h:inputHidden />
+            <h:outputLabel id="lblFechaFin" rendered="#{pertinenciaDM.renderedCrudCronograma}" value="#{msg['lbl.fechaCulminación']}:"/>
+            <p:calendar id="fechaFin" locale="es" navigator="true" showOn="button" rendered="#{pertinenciaDM.renderedCrudCronograma}"
+                        value="#{docenteProyectoDM.docenteProyectoDTOSeleccionado.docenteProyecto.proyectoId.cronograma.fechaFin}" 
+                        requiredMessage="#{msg['lbl.fechaCulminación']} #{msg['lbl.obligatorio']}" >
+                <p:ajax event="change" listener="#{cronogramaController.calcularDuracion()}" update="panelDatos"/>
+                <p:ajax event="dateSelect" listener="#{cronogramaController.calcularDuracion()}"  update="panelDatos"/>
+            </p:calendar>
+            <p:message id="msmFechaFin" rendered="#{pertinenciaDM.renderedCrudCronograma}" display="icon" for="fechaFin"/>
+            <h:outputLabel id="lblDuracion" rendered="#{pertinenciaDM.renderedCrudCronograma}" value="#{msg['lbl.duracion']}:"/>
+            <h:outputLabel id="duracion"  rendered="#{pertinenciaDM.renderedCrudCronograma}"
+                           value="#{docenteProyectoDM.docenteProyectoDTOSeleccionado.docenteProyecto.proyectoId.cronograma.duracion}"/>
+            <h:inputHidden id="hidden" rendered="#{pertinenciaDM.renderedCrudCronograma}"/>
             <h:outputLabel value="#{msg['lbl.observacion']}:"/>
             <p:editor id="observacion" value="#{pertinenciaDM.pertinencia.observacion}"
-                             required="true" requiredMessage="#{msg['lbl.observacion']} #{msg['lbl.obligatorio']}">
+                      required="true" requiredMessage="#{msg['lbl.observacion']} #{msg['lbl.obligatorio']}">
             </p:editor>
-            
+
         </h:panelGrid>
     </body>
 

@@ -20,7 +20,7 @@ import com.ocpsoft.pretty.faces.annotation.URLMappings;
 import edu.jlmallas.academico.dao.DocenteDao;
 import edu.unl.sigett.dao.DocenteUsuarioDao;
 import edu.unl.sigett.entity.DocenteUsuario;
-import edu.unl.sigett.enumeration.URLWSEnum;
+import com.jlmallas.comun.enumeration.URLWSEnum;
 import edu.unl.sigett.util.CabeceraController;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
@@ -142,7 +142,7 @@ public class DocenteUsuarioController implements Serializable {
             String passwordService = this.cabeceraController.getSecureService().decrypt(new SecureDTO(cabeceraController.getConfiguracionGeneralDTO().getSecureKey(),
                     configuracionDao.buscar(new Configuracion(ConfiguracionEnum.CLAVEWS.getTipo())).get(0).getValor()));
             String userService = configuracionDao.buscar(new Configuracion(ConfiguracionEnum.USUARIOWS.getTipo())).get(0).getValor();
-            String serviceUrl = configuracionDao.buscar(new Configuracion(URLWSEnum.DATOSDOCENTE.getTipo())).get(0).getValor();
+            String serviceUrl = configuracionDao.buscar(new Configuracion(URLWSEnum.VALIDARDOCENTE.getTipo())).get(0).getValor();
             String s = serviceUrl + "?cedula=" + cedula + ";clave=" + passwordService;
             ConexionDTO seguridad = new ConexionDTO(passwordService, s, userService);
             NetClientService conexion = new NetClientServiceImplement();
