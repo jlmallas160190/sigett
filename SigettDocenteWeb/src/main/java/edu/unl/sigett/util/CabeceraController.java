@@ -22,6 +22,7 @@ import javax.ejb.EJB;
 import org.jlmallas.secure.SecureService;
 import org.jlmallas.secure.SecureServiceImplement;
 import org.jlmallas.util.service.UtilService;
+import org.jlmallas.util.service.UtilServiceImplement;
 
 /**
  *
@@ -47,6 +48,7 @@ public class CabeceraController implements Serializable {
     public void preRenderView() {
         this.configuracionGeneralDTO=new ConfiguracionGeneralDTO();
         this.secureService = new SecureServiceImplement();
+        this.utilService=new UtilServiceImplement();
         this.messageView = new MessageView();
         fijarSecretKey();
         fijarConfiguraciones();

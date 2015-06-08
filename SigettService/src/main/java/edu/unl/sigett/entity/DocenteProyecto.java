@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.Cacheable;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -34,7 +35,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @Entity
 @Table(name = "docente_proyecto")
 @XmlRootElement
-
+@Cacheable(value = false)
 public class DocenteProyecto implements Serializable {
 
     private static final long serialVersionUID = 1L;

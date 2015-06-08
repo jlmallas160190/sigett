@@ -421,13 +421,16 @@ public class ProyectoController implements Serializable {
      */
     private String autores(Proyecto proyecto) {
         String resultado = "";
-        List<AutorProyecto> autorProyectos = autorProyectoService.buscar(new AutorProyecto(proyecto, null,
-                itemService.buscarPorCatalogoCodigo(CatalogoEnum.ESTADOAUTOR.getTipo(), EstadoAutorEnum.RENUNCIADO.getTipo()).getId(), null, null));
+        Item estadoRenunciado = itemService.buscarPorCatalogoCodigo(CatalogoEnum.ESTADOAUTOR.getTipo(), EstadoAutorEnum.RENUNCIADO.getTipo());
+        List<AutorProyecto> autorProyectos = autorProyectoService.buscar(new AutorProyecto(proyecto, null, null, null, null));
         if (autorProyectos == null) {
             return "";
         }
         int contador = 0;
         for (AutorProyecto autorProyecto : autorProyectos) {
+            if (estadoRenunciado.getId().equals(autorProyecto.getEstadoAutorId())) {
+                continue;
+            }
             EstudianteCarrera estudianteCarrera = estudianteCarreraDao.find(autorProyecto.getAspiranteId().getId());
             Persona persona = personaDao.find(estudianteCarrera.getEstudianteId().getId());
             if (contador == 0) {
@@ -1045,7 +1048,7 @@ public class ProyectoController implements Serializable {
                 continue;
             }
             docenteProyectoService.actualizar(docenteProyectoDTO.getDocenteProyecto());
-            enviarEmailDocente(docenteProyectoDTO);
+             enviarEmailDocente(docenteProyectoDTO);
         }
     }
 
@@ -1081,6 +1084,7 @@ public class ProyectoController implements Serializable {
             }
 
             sessionProyecto.setFilterDocumentosProyectoDTO(sessionProyecto.getDocumentosProyectoDTO());
+            sessionProyecto.getDocumentosProyectosDTOAgregados().addAll(sessionProyecto.getDocumentosProyectoDTO());
         } catch (Exception e) {
             LOG.warning(e.getMessage());
         }
@@ -1091,13 +1095,14 @@ public class ProyectoController implements Serializable {
             String ruta = configuracionDao.buscar(new Configuracion(ConfiguracionEnum.RUTADOCUMENTOPROYECTO.getTipo())).get(0).getValor();
             for (DocumentoProyectoDTO documentoProyectoDTO : sessionProyecto.getDocumentosProyectosDTOAgregados()) {
                 if (documentoProyectoDTO.getDocumentoProyecto().getId() == null) {
-                    documentoProyectoDTO.getDocumento().setRuta(ruta);
+                    documentoProyectoDTO.getDocumento().setRuta("S/N");
                     documentoService.guardar(documentoProyectoDTO.getDocumento());
                     documentoProyectoDTO.getDocumentoProyecto().setDocumentoId(documentoProyectoDTO.getDocumento().getId());
                     documentoProyectoService.guardar(documentoProyectoDTO.getDocumentoProyecto());
-                     cabeceraController.getUtilService().generaDocumento(new File(ruta + "/documento" + documentoProyectoDTO.getDocumento().getId()),
+                     documentoProyectoDTO.getDocumento().setRuta(ruta + "/documento" + documentoProyectoDTO.getDocumento().getId() + ".pdf");
+                    cabeceraController.getUtilService().generaDocumento(new File(documentoProyectoDTO.getDocumento().getRuta()),
                             documentoProyectoDTO.getDocumento().getContents());
-                     documentoService.actualizar(documentoProyectoDTO.getDocumento());
+                    documentoService.actualizar(documentoProyectoDTO.getDocumento());
                     continue;
                 }
                 documentoProyectoService.actualizar(documentoProyectoDTO.getDocumentoProyecto());

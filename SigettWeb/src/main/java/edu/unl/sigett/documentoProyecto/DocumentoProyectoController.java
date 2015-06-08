@@ -61,6 +61,7 @@ public class DocumentoProyectoController implements Serializable {
         sessionDocumentoProyecto.setDocumentoProyectoDTOSeleccionado(new DocumentoProyectoDTO(
                 new DocumentoProyecto(Boolean.TRUE, null, sessionProyecto.getProyectoSeleccionado()), new Documento()));
     }
+
     public void editar(DocumentoProyectoDTO documentoProyectoDTO) {
         try {
             sessionDocumentoProyecto.setTamanioArchivo(cabeceraController.getConfiguracionGeneralDTO().getTamanioArchivo());
@@ -128,6 +129,7 @@ public class DocumentoProyectoController implements Serializable {
             ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
             if (documentoProyectoDTO.getDocumentoProyecto().getId() != null) {
                 documentoProyectoDTO.getDocumentoProyecto().setEsActivo(Boolean.FALSE);
+                sessionProyecto.getDocumentosProyectoDTO().remove(documentoProyectoDTO);
                 cabeceraController.getMessageView().message(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_eliminar"), "");
                 return;
             }

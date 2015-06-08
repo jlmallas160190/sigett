@@ -33,11 +33,10 @@
                 <f:facet name="header">
                     <h:outputText value="#{msg['lbl.accion']}"/>
                 </f:facet> 
-                <p:panelGrid columns="3">
-                    <p:commandButton onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide(),PF('dlgVerDocProy').show()" 
-                                     icon="ui-icon-pdf" update=":contenido:pnlVerDocumentoProyecto"
-                                     action="#{documentoProyectoController.editar(item)}"/>
-                </p:panelGrid>
+                <p:commandButton onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide(),PF('dlgVerDocProy').show()" 
+                                 icon="ui-icon-pdf" update=":contenido:pnlVerDocumentoProyecto"
+                                 action="#{documentoProyectoController.editar(item)}"/>
+
             </p:column>
         </p:dataTable>
     </body>

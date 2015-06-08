@@ -35,7 +35,7 @@
                                      action="#{documentoProyectoController.editar(item)}"
                                      icon="ui-icon-pencil" title="#{msg['lbl.editar']}"/>
                     <p:commandButton onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide(),PF('dlgVerDocProy').show()" 
-                                     icon="ui-icon-pdf"
+                                     icon="ui-icon-pdf" update=":contenido:pnlVerDocumentoProyecto"
                                      action="#{documentoProyectoController.editar(item)}"/>
                     <p:commandButton icon="ui-icon-trash" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide(),PF('tblDocProyFilter').filter()" 
                                      update=":contenido:tabViewDatosProyecto:tblDocumentosProyecto,:contenido:msm" title="#{msg['lbl.eliminar']}" 

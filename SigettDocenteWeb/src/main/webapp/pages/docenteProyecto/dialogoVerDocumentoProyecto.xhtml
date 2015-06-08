@@ -7,14 +7,14 @@
 
     <body>
         <p:dialog id="dlgVerDocumentoProyecto" widgetVar="dlgVerDocProy"  header="#{msg['lbl.editar']} #{msg['lbl.documento']}" 
-                  styleClass="modal-md" modal="true" >
+                  styleClass="modal-md" modal="true" closable="false" >
             <p:panel id="pnlVerDocumentoProyecto">
                 <p:media rendered="#{documentoProyectoDM.renderedMediaDocumentoProyecto}" styleClass="img-thumbnail" 
                          value="/AppServlet?entity=documentoProyecto"
                          player="pdf" width="100%" height="250"/>
                 <f:facet name="footer">
                     <h:panelGrid>
-                        <p:commandButton value="#{btn.cancelar}" action="#{documentoProyectoController.cancelarEdicion()}" 
+                        <p:commandButton value="#{btn.cancelar}" icon="ui-icon-circle-arrow-w" action="#{documentoProyectoController.cancelarEdicion()}" 
                                          update=":contenido:pnlVerDocumentoProyecto" onstart="PF('dlgLoading').show()" 
                                          oncomplete="PF('dlgLoading').hide(),PF('dlgVerDocProy').hide()" />  
                     </h:panelGrid>

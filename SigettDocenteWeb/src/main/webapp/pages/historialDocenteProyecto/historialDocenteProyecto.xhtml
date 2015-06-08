@@ -24,27 +24,23 @@
                 <p:tabView id="tabViewDatosDP">
                     <p:tab id="pertinencias" title="#{msg['lbl.pertinencias']}">
                         <p:panel>
-                            <ui:include src="tablaPertinencias.xhtml"/>
-                            <f:facet name="footer">
-                                <ui:include src="botonesTablaPertinencia.xhtml"/>
-                            </f:facet>
+                            <ui:include src="./../docenteProyecto/tablaPertinencias.xhtml"/>
                         </p:panel>
                     </p:tab>
                     <p:tab title="#{msg['lbl.documentos']}">
                         <p:panel>
-                            <ui:include src="tablaDocumentosProyecto.xhtml"/>
+                            <ui:include src="./../docenteProyecto/tablaDocumentosProyecto.xhtml"/>
                         </p:panel>
                     </p:tab>
                     <p:tab title="#{msg['lbl.autores']}">
                         <p:panel>
-                            <ui:include src="tablaAutores.xhtml"/>
+                            <ui:include src="./../docenteProyecto/tablaAutores.xhtml"/>
                         </p:panel>
                     </p:tab>
                 </p:tabView>
-                <ui:include src="./../pertinencias/dialogoEditarPertinencia.xhtml"/>
-                <ui:include src="dialogoInformePertinencia.xhtml"/>
-                <ui:include src="dialogoSubirInformePertinencia.xhtml"/>
-                <ui:include src="dialogoVerDocumentoProyecto.xhtml"/>
+                <ui:include src="./../docenteProyecto/dialogoInformePertinencia.xhtml"/>
+                <ui:include src="./../docenteProyecto/dialogoSubirInformePertinencia.xhtml"/>
+                <ui:include src="./../docenteProyecto/dialogoVerDocumentoProyecto.xhtml"/>
                 <f:metadata>
                     <f:event type="preRenderView" listener="#{docenteProyectoController.preRenderViewEditar()}"/>
                     <f:event type="preRenderView" listener="#{pertinenciaController.preRenderView()}"/>

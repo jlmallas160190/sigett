@@ -8,7 +8,7 @@
         <h:panelGrid id="crearPertinencia">
             <p:commandButton value="#{msg['lbl.crear']}" onstart="PF('dlgLoading').show()" 
                              oncomplete="PF('dlgLoading').hide(),PF('dlgEditarPertinencia').show()" 
-                             rendered="#{pertinenciaDM.renderedCrud}" icon="ui-icon-newwin" update=":contenido:pnlEditarPertinencia,:contenido:msm" 
+                             rendered="#{pertinenciaDM.renderedCrud}" icon="ui-icon-newwin" update=":contenido:dlgEditarPertinencia,:contenido:msm" 
                              action="#{pertinenciaController.crear()}"/>
         </h:panelGrid>
     </body>

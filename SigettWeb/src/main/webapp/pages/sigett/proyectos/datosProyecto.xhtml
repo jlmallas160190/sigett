@@ -55,7 +55,7 @@
                 <f:selectItem itemLabel="#{msg['lbl.seleccionar']}"/>
                 <f:selectItems value="#{sessionProyecto.tipos}"/>
             </p:selectOneMenu>
-            <h:outputText rendered="#{!sessionProyecto.renderedInicio}" value="#{sessionProyecto.tipo}"/>
+            <h:outputText rendered="#{!sessionProyecto.renderedInicio}" value="#{sessionProyecto.tipoSeleccionado}"/>
             <h:inputHidden/>
             <h:outputLabel value="#{msg['lbl.categoria']}:" for="catProyecto"/>
             <p:selectOneMenu id="catProyecto" rendered="#{sessionProyecto.renderedInicio}" converter="categoriaProyectoConverter"

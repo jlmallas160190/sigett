@@ -60,7 +60,15 @@ import javax.inject.Inject;
             id = "editarDocenteProyecto",
             pattern = "/editarDocenteProyecto",
             viewId = "/faces/pages/docenteProyecto/editarDocenteProyecto.xhtml"
-    )
+    ),
+    @URLMapping(
+            id = "historial",
+            pattern = "/historial",
+            viewId = "/faces/pages/historialDocenteProyecto/index.xhtml"),
+    @URLMapping(
+            id = "editarHistDocenteProyecto",
+            pattern = "/historialDocenteProyecto",
+            viewId = "/faces/pages/historialDocenteProyecto/historialDocenteProyecto.xhtml")
 })
 public class DocenteProyectoController implements Serializable {
 
@@ -132,6 +140,24 @@ public class DocenteProyectoController implements Serializable {
         return "pretty:editarDocenteProyecto";
     }
 
+    public String verHistorial(final DocenteProyectoDTO docenteProyectoDTO) {
+        iniciar();
+        docenteProyectoDM.setDocenteProyectoDTOSeleccionado(docenteProyectoDTO);
+        List<CoordinadorPeriodo> coordinadores = coordinadorPeriodoService.buscar(new CoordinadorPeriodo(Boolean.TRUE, null, null,
+                docenteProyectoDTO.getDocenteCarrera().getCarreraId()));
+        if (coordinadores == null) {
+            return "";
+        }
+        CoordinadorPeriodo coordinadorPeriodo = !coordinadores.isEmpty() ? coordinadores.get(0) : null;
+        CoordinadorPeriodoDTO coordinadorPeriodoDTO = new CoordinadorPeriodoDTO(
+                coordinadorPeriodo, personaDao.find(coordinadorPeriodo.getCoordinadorId().getId()), null);
+        coordinadorPeriodoDTO.setDocente(docenteService.buscarPorId(new Docente(coordinadorPeriodoDTO.getPersona().getId())));
+        docenteProyectoDM.setCoordinadorPeriodoDTO(coordinadorPeriodoDTO);
+        listadoDocumentos();
+        listadoAutores();
+        return "pretty:editarHistDocenteProyecto";
+    }
+
     /**
      * LISTAR ANTEPROYECTO
      */
@@ -187,13 +213,18 @@ public class DocenteProyectoController implements Serializable {
     private void listadoPertinenciaProyecto() {
         docenteProyectoDM.getDocentesProyectoDTO().clear();
         docenteProyectoDM.getFilterDocentesProyectoDTO().clear();
-        Item estadoProyecto = itemService.buscarPorCatalogoCodigo(CatalogoEnum.ESTADOPROYECTO.getTipo(), EstadoProyectoEnum.INICIO.getTipo());
+        Item inicio = itemService.buscarPorCatalogoCodigo(CatalogoEnum.ESTADOPROYECTO.getTipo(), EstadoProyectoEnum.INICIO.getTipo());
+        Item pertinente = itemService.buscarPorCatalogoCodigo(CatalogoEnum.ESTADOPROYECTO.getTipo(), EstadoProyectoEnum.PERTINENTE.getTipo());
         List<DocenteProyecto> docenteProyectos = this.docenteProyectoService.buscar(new DocenteProyecto(
-                null, null, docenteUsuarioDM.getDocenteUsuarioDTO().getDocente().getId(), Boolean.TRUE, estadoProyecto.getId()));
+                null, null, docenteUsuarioDM.getDocenteUsuarioDTO().getDocente().getId(), Boolean.TRUE, null));
         if (docenteProyectos == null) {
             return;
         }
         for (DocenteProyecto docenteProyecto : docenteProyectos) {
+            if (!(docenteProyecto.getProyectoId().getEstadoProyectoId().equals(inicio.getId())
+                    || docenteProyecto.getProyectoId().getEstadoProyectoId().equals(pertinente.getId()))) {
+                continue;
+            }
             Item estado = itemService.buscarPorId(docenteProyecto.getProyectoId().getEstadoProyectoId());
             Item tipo = itemService.buscarPorId(docenteProyecto.getProyectoId().getTipoProyectoId());
             Item categoria = itemService.buscarPorId(docenteProyecto.getProyectoId().getCatalogoProyectoId());
@@ -211,7 +242,7 @@ public class DocenteProyectoController implements Serializable {
     /**
      * HISTORIAL DE PROYECTOS ASIGNADOS A DOCENTE PARA SU POSTERIOR PERTINENCIA
      */
-    private void historialPertinenciaProyecto() {
+    public void historialPertinenciaProyecto() {
         docenteProyectoDM.getHistorialDocenteProyectosDTO().clear();
         docenteProyectoDM.getFilterHistorialDocenteProyectosDTO().clear();
         List<DocenteProyecto> docenteProyectos = this.docenteProyectoService.buscar(new DocenteProyecto(
@@ -241,13 +272,16 @@ public class DocenteProyectoController implements Serializable {
      */
     private String autores(Proyecto proyecto) {
         String resultado = "";
-        List<AutorProyecto> autorProyectos = autorProyectoService.buscar(new AutorProyecto(proyecto, null,
-                itemService.buscarPorCatalogoCodigo(CatalogoEnum.ESTADOAUTOR.getTipo(), EstadoAutorEnum.RENUNCIADO.getTipo()).getId(), null, null));
+        Item estadoRenunciado = itemService.buscarPorCatalogoCodigo(CatalogoEnum.ESTADOAUTOR.getTipo(), EstadoAutorEnum.RENUNCIADO.getTipo());
+        List<AutorProyecto> autorProyectos = autorProyectoService.buscar(new AutorProyecto(proyecto, null, null, null, null));
         if (autorProyectos == null) {
             return "";
         }
         int contador = 0;
         for (AutorProyecto autorProyecto : autorProyectos) {
+            if (autorProyecto.getEstadoAutorId().equals(estadoRenunciado.getId())) {
+                continue;
+            }
             EstudianteCarrera estudianteCarrera = estudianteCarreraDao.find(autorProyecto.getAspiranteId().getId());
             Persona persona = personaDao.find(estudianteCarrera.getEstudianteId().getId());
             if (contador == 0) {

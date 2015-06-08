@@ -46,6 +46,7 @@ public class ReporteController {
             p.put("cargoQuienFirma", reporteInformePertinencia.getCargoQuienFirma().toUpperCase());
             p.put("cuerpo", reporteInformePertinencia.getCuerpo());
             p.put("despedida", reporteInformePertinencia.getDespedida());
+            p.put("referencia", reporteInformePertinencia.getReferencia());
             p.put("selloInstitucion", reporteInformePertinencia.getRutaLogoIntitucion());
             File fileReport = new File(reporteInformePertinencia.getRuta());
             return JasperRunManager.runReportToPdf(fileReport.getPath(), p, new JREmptyDataSource());

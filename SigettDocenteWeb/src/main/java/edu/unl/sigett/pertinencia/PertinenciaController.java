@@ -286,7 +286,7 @@ public class PertinenciaController implements Serializable {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         HttpServletRequest request = (HttpServletRequest) facesContext.getExternalContext().getRequest();
         ReporteController reporteController = new ReporteController();
-        Carrera carrera = carreraService.find(docenteProyectoDM.getDocenteProyectoDTOSeleccionado().getDocenteCarrera().getCarreraId());
+        Carrera carrera = carreraService.find(docenteProyectoDM.getDocenteProyectoDTOSeleccionado().getDocenteCarrera().getCarreraId().getId());
         Calendar fechaActual = Calendar.getInstance();
 
         String rutaReporte = request.getRealPath("/") + configuracionDao.buscar(new Configuracion(
@@ -314,7 +314,7 @@ public class PertinenciaController implements Serializable {
         }
         String ruta = configuracionDao.buscar(new Configuracion(ConfiguracionEnum.RUTAINFORME.getTipo())).get(0).getValor()
                 + "/informe_" + pertinencia.getId() + ".pdf";
-        Documento documento = new Documento(null, ruta, itemService.buscarPorCatalogoCodigo(CatalogoEnum.CATALOGOOFICIO.getTipo(),
+        Documento documento = new Documento(null, ruta, itemService.buscarPorCatalogoCodigo(CatalogoEnum.CATALOGOINFORME.getTipo(),
                 CatalogoDocumentoCarreraEnum.PERTINENCIA.getTipo()).getId(), Double.parseDouble(resultado.length + ""), fechaActual.getTime(), resultado, null, "pdf");
         documentoService.guardar(documento);
         pertinenciaDM.setDocumentoCarreraDTO(new DocumentoCarreraDTO(new DocumentoCarrera(
@@ -332,9 +332,9 @@ public class PertinenciaController implements Serializable {
      * @return
      */
     private String cuerpoInforme(final Pertinencia pertinencia) {
-        String resolucion = cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "negar_pertinecia");
+        String resolucion = cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "negar_pertinencia");
         if (pertinencia.getEsAceptado()) {
-            resolucion = cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "otorgar_pertinecia");
+            resolucion = cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "otorgar_pertinencia");
         }
         return (cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "infPer_cu_a") + " " + resolucion);
     }
@@ -367,7 +367,7 @@ public class PertinenciaController implements Serializable {
                         PropertiesFileEnum.CONTENIDOREPORTE, "infPer_ref_c") + " <b>" + docenteProyectoDM.getDocenteProyectoDTOSeleccionado().
                 getDocenteProyecto().getProyectoId().getTemaActual() + "</b>, " + cabeceraController.getValueFromProperties(
                         PropertiesFileEnum.CONTENIDOREPORTE, "infPer_ref_d") + " " + docenteProyectoDM.getDocenteProyectoDTOSeleccionado().
-                getDocenteProyecto().getProyectoId().getAutores() + " " + cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE,
+                getDocenteProyecto().getProyectoId().getAutores().toUpperCase() + " " + cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE,
                         "infPer_ref_e"));
     }
 

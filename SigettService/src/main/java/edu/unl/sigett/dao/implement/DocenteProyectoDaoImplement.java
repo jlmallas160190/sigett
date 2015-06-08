@@ -49,7 +49,7 @@ public class DocenteProyectoDaoImplement extends AbstractDao<DocenteProyecto> im
             existeFiltro = Boolean.TRUE;
         }
         if (docenteProyecto.getEstadoProyecto() != null) {
-            sql.append(" and dp.proyectoId.estadoProyectoId=:esatadoProyecto ");
+            sql.append(" and dp.proyectoId.estadoProyectoId=:estadoProyecto ");
             parametros.put("estadoProyecto", docenteProyecto.getEstadoProyecto());
             existeFiltro = Boolean.TRUE;
         }

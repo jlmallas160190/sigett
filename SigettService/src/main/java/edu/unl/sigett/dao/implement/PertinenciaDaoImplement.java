@@ -44,17 +44,17 @@ public class PertinenciaDaoImplement extends AbstractDao<Pertinencia> implements
         Boolean existeFiltro = Boolean.FALSE;
         sql.append("Select p from Pertinencia p where 1=1");
         if (pertinencia.getEsAceptado() != null) {
-            sql.append(" p.esAceptado=:aceptado");
+            sql.append(" and p.esAceptado=:aceptado");
             parametros.put("aceptado", pertinencia.getEsAceptado());
             existeFiltro = Boolean.TRUE;
         }
         if (pertinencia.getEsActivo() != null) {
-            sql.append(" p.esActivo=:activo");
+            sql.append(" and p.esActivo=:activo");
             parametros.put("activo", pertinencia.getEsActivo());
             existeFiltro = Boolean.TRUE;
         }
         if (pertinencia.getDocenteProyectoId() != null) {
-            sql.append(" p.docenteProyectoId=:docenteProyecto");
+            sql.append(" and p.docenteProyectoId=:docenteProyecto");
             parametros.put("docenteProyecto", pertinencia.getDocenteProyectoId());
             existeFiltro = Boolean.TRUE;
         }

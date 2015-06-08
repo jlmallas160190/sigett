@@ -8,7 +8,7 @@
     <body>
         <p:dataTable id="tblPertinencias" value="#{pertinenciaDM.pertinencias}" var="item" rows="10" paginator="true"
                      filteredValue="#{pertinenciaDM.filterPertinencias}" widgetVar="tblPertinenciasFilter"
-                     selection="#{item}" selectionMode="single"
+                     selection="#{item}" selectionMode="single" rowKey="#{item.id}"
                      rowIndexVar="rowIx" editable="true" editMode="cell" rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'even-row' : 'odd-row'}" 
                      emptyMessage="#{msg['lbl.table.empty']}">
             <p:column>
@@ -34,14 +34,16 @@
                 </f:facet>
                 <p:row>
                     <p:column rendered="#{pertinenciaDM.renderedCrud}">
-                        <p:commandButton icon="ui-icon-pencil"  update="tblPertinencias,:contenido:msm" onstart="PF('dlgLoading').show()"
-                                         oncomplete="PF('dlgLoading').hide(),PF('tblPertinenciasFilter').filter()" 
+                        <p:commandButton icon="ui-icon-pencil"  update="tblPertinencias,:contenido:msm,:contenido:dlgEditarPertinencia" 
+                                         onstart="PF('dlgLoading').show()"
+                                         oncomplete="PF('dlgLoading').hide(),PF('tblPertinenciasFilter').filter(),PF('dlgEditarPertinencia').show()" 
                                          action="#{pertinenciaController.editar(item)}"/>
                     </p:column>
                     <p:column >
-                        <p:commandButton onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide(),PF('tblPertinenciasFilter').filter()" 
-                                         icon="ui-icon-print" update=":contenido:msm" 
-                                         action="#{pertinenciaController.imprimirInforme(item)}"
+                        <p:commandButton onstart="PF('dlgLoading').show()" 
+                                         oncomplete="PF('dlgLoading').hide(),PF('tblPertinenciasFilter').filter(),PF('dlgInformePertinencia').show()" 
+                                         icon="ui-icon-print" update=":contenido:msm,:contenido:pnlInformePertinencia" 
+                                         action="#{pertinenciaController.imprimirInforme(item)}"/>
                 </p:column>
                 <p:column rendered="#{pertinenciaDM.renderedCrud}">
                     <p:commandButton icon="ui-icon-trash"  update="tblPertinencias,:contenido:msm" onstart="PF('dlgLoading').show()"
