@@ -20,12 +20,6 @@
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>SoporteService</artifactId>
-            <version>1.0</version>
-            <type>ejb</type>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
             <artifactId>apiJlmallas</artifactId>
             <version>1.0</version>
             <scope>provided</scope>

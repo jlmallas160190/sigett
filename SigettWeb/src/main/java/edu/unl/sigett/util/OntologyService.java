@@ -10,6 +10,8 @@ import edu.unl.sigett.webSemantica.service.AreaAcademicaOntService;
 import edu.unl.sigett.webSemantica.service.AutorOntService;
 import edu.unl.sigett.webSemantica.service.AutorProyectoOntService;
 import edu.unl.sigett.webSemantica.service.CarreraOntService;
+import edu.unl.sigett.webSemantica.service.DirectorProyectoOntService;
+import edu.unl.sigett.webSemantica.service.DocenteOntService;
 import edu.unl.sigett.webSemantica.service.LineaInvestigacionOntService;
 import edu.unl.sigett.webSemantica.service.LineaInvestigacionProyectoOntService;
 import edu.unl.sigett.webSemantica.service.NivelAcademicoOntService;
@@ -36,6 +38,8 @@ public class OntologyService implements Serializable {
     private LineaInvestigacionOntService lineaInvestigacionOntService;
     private LineaInvestigacionProyectoOntService lineaInvestigacionProyectoOntService;
     private ProyectoCarreraOfertaOntService proyectoCarreraOfertaOntService;
+    private DocenteOntService docenteOntService;
+    private DirectorProyectoOntService directorProyectoOntService;
 
     public OntologyService() {
     }
@@ -126,6 +130,22 @@ public class OntologyService implements Serializable {
 
     public void setProyectoCarreraOfertaOntService(ProyectoCarreraOfertaOntService proyectoCarreraOfertaOntService) {
         this.proyectoCarreraOfertaOntService = proyectoCarreraOfertaOntService;
+    }
+
+    public DocenteOntService getDocenteOntService() {
+        return docenteOntService;
+    }
+
+    public void setDocenteOntService(DocenteOntService docenteOntService) {
+        this.docenteOntService = docenteOntService;
+    }
+
+    public DirectorProyectoOntService getDirectorProyectoOntService() {
+        return directorProyectoOntService;
+    }
+
+    public void setDirectorProyectoOntService(DirectorProyectoOntService directorProyectoOntService) {
+        this.directorProyectoOntService = directorProyectoOntService;
     }
 
 }

@@ -14,7 +14,7 @@ import javax.ejb.Local;
  * @author JorgeLuis
  */
 @Local
-public interface DirectorProyectoFacadeLocal {
+public interface DirectorProyectoDao {
 
     void create(DirectorProyecto directorProyecto);
 
@@ -28,13 +28,14 @@ public interface DirectorProyectoFacadeLocal {
 
     List<DirectorProyecto> findRange(int[] range);
 
-    List<DirectorProyecto> buscarPorProyecto(Long proyectoId);
-
-    List<DirectorProyecto> buscarPorDocente(Long docenteId);
-
-    List<DirectorProyecto> buscarPorProyectoEstadoAsignado(Long proyectoId);
-
-    List<DirectorProyecto> buscarPorDocenteOferta(String ci, Long ofertaId);
+//    List<DirectorProyecto> buscarPorProyecto(Long proyectoId);
+//
+//    List<DirectorProyecto> buscarPorDocente(Long docenteId);
+//
+//    List<DirectorProyecto> buscarPorProyectoEstadoAsignado(Long proyectoId);
+//
+//    List<DirectorProyecto> buscarPorDocenteOferta(String ci, Long ofertaId);
+    List<DirectorProyecto> buscar(final DirectorProyecto directorProyecto);
 
     int count();
 

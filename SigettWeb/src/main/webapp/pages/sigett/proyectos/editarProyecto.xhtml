@@ -13,10 +13,8 @@
         </ui:define>
         <ui:define name="content">
             <f:event type="preRenderView" listener="#{proyectoController.preRenderViewEdit()}"/>
-            <f:event type="preRenderView" listener="#{autorProyectoController.initPostulacion()}"/>
-            <f:event type="preRenderView" listener="#{directorProyectoController.renderedBuscarDirectorDisponible()}"/>
-            <f:event type="preRenderView" listener="#{directorProyectoController.renderedBuscar()}"/>
-            <f:event type="preRenderView" listener="#{directorProyectoController.renderedEliminar()}"/>
+            <f:event type="preRenderView" listener="#{autorProyectoController.preRenderView()}"/>
+            <f:event type="preRenderView" listener="#{directorProyectoController.preRenderView()}"/>
             <p:growl id="msm" showDetail="true" /> 
             <p:panel>
                 <p:tabView  id="tabViewDatosProyecto" >
@@ -26,11 +24,12 @@
                         </p:panel>
                         <br/>
                         <p:panel header="#{msg['lbl.lineasInvestigacion']}" toggleable="true">
-                            <ui:include src="visualizarLineasInvestigacionProyecto.xhtml"/>
+                            <ui:include src="dataGridLineasInvestigacion.xhtml"/>
                             <ui:include src="pickListLineasInvestigacion.xhtml"/>
                         </p:panel>
                         <br/>
                         <p:panel header="#{msg['lbl.carreras']}" toggleable="true">
+                            <ui:include src="dataGridCarreras.xhtml"/>
                             <ui:include src="pickListCarreras.xhtml"/>
                         </p:panel>
                     </p:tab>

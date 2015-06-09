@@ -64,7 +64,6 @@ public class SessionProyecto implements Serializable {
     private List<Carrera> filterCarrerasProyecto;
     private List<AutorProyectoDTO> autoresProyectoDTO;
     private List<AutorProyectoDTO> filterAutoresProyectoDTO;
-    private List<AutorProyectoDTO> autoresProyectoDTONuevos;
     private List<LineaInvestigacionProyecto> lineasInvestigacionProyecto;
     private List<LineaInvestigacionProyecto> filterLineasInvestigacionProyecto;
     private List<ConfiguracionProyecto> configuracionProyectos;
@@ -97,7 +96,6 @@ public class SessionProyecto implements Serializable {
         this.filterDocumentosProyectoDTO = new ArrayList<>();
         this.docentesProyectoDTO = new ArrayList<>();
         this.filterDocentesProyectoDTO = new ArrayList<>();
-        this.autoresProyectoDTONuevos = new ArrayList<>();
         this.cronograma = new Cronograma();
         this.lineasInvestigacionSeleccionadas = new ArrayList<>();
         this.lineasInvestigacionSeleccionadasTransfer = new ArrayList<>();
@@ -415,14 +413,6 @@ public class SessionProyecto implements Serializable {
 
     public void setTipoSeleccionado(Item tipoSeleccionado) {
         this.tipoSeleccionado = tipoSeleccionado;
-    }
-
-    public List<AutorProyectoDTO> getAutoresProyectoDTONuevos() {
-        return autoresProyectoDTONuevos;
-    }
-
-    public void setAutoresProyectoDTONuevos(List<AutorProyectoDTO> autoresProyectoDTONuevos) {
-        this.autoresProyectoDTONuevos = autoresProyectoDTONuevos;
     }
 
     public Item getEstadoActual() {

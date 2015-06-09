@@ -18,7 +18,7 @@ public interface ProyectoCarreraOfertaService {
 
     void guardar(final ProyectoCarreraOferta proyectoCarreraOferta);
 
-    void editar(final ProyectoCarreraOferta proyectoCarreraOferta);
+    void actualizar(final ProyectoCarreraOferta proyectoCarreraOferta);
 
     void eliminar(final ProyectoCarreraOferta proyectoCarreraOferta);
 

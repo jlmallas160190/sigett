@@ -91,7 +91,7 @@ import edu.unl.sigett.dao.ConfiguracionCarreraDao;
 import edu.unl.sigett.dao.ConfiguracionGeneralDao;
 import edu.unl.sigett.dao.ConfiguracionProyectoDao;
 import edu.unl.sigett.dao.CronogramaDao;
-import edu.unl.sigett.dao.DirectorProyectoFacadeLocal;
+import edu.unl.sigett.dao.DirectorProyectoDao;
 import edu.jlmallas.academico.dao.DocenteCarreraDao;
 import edu.unl.sigett.dao.DocenteProyectoDao;
 import edu.unl.sigett.dao.DocumentoProyectoDao;
@@ -188,7 +188,7 @@ class AdministrarProyectos implements Serializable {
     @EJB
     private CarreraService carreraService;
     @EJB
-    private DirectorProyectoFacadeLocal directorProyectoFacadeLocal;
+    private DirectorProyectoDao directorProyectoFacadeLocal;
     @EJB
     private ConfiguracionCarreraDao configuracionCarreraFacadeLocal;
     @EJB
@@ -444,7 +444,7 @@ class AdministrarProyectos implements Serializable {
 //                sessionProyecto.getProyectoSeleccionado().getDocenteProyectoList().addAll(docenteProyectoFacadeLocal.buscarPorProyecto(proyecto.getId()));
                 /*Refrescar Directores Proyecto*/
                 sessionProyecto.getProyectoSeleccionado().setDirectorProyectoList(new ArrayList<DirectorProyecto>());
-                sessionProyecto.getProyectoSeleccionado().getDirectorProyectoList().addAll(directorProyectoFacadeLocal.buscarPorProyecto(proyecto.getId()));
+//                sessionProyecto.getProyectoSeleccionado().getDirectorProyectoList().addAll(directorProyectoFacadeLocal.buscarPorProyecto(proyecto.getId()));
                 /*Refrescar Autores Proyecto*/
                 sessionProyecto.getProyectoSeleccionado().setAutorProyectoList(new ArrayList<AutorProyecto>());
                 sessionProyecto.getProyectoSeleccionado().getAutorProyectoList().addAll(autorProyectoFacadeLocal.buscarPorProyecto(proyecto.getId()));
@@ -1038,7 +1038,7 @@ class AdministrarProyectos implements Serializable {
                     administrarProrrogas.setRenderedDlgEditar(false);
                     administrarProrrogas.setRenderedDlgRespuestaAutorProyecto(false);
                     administrarProrrogas.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
-                    /*----------------------------------------------Documentos expediente-------------------------------------------------------*/
+                /*----------------------------------------------Documentos expediente-------------------------------------------------------*/
 //                    administrarDocumentosExpediente.setRenderedDlgEditar(false);
                 case "tabDatosInicio":
                     /*----------------------------------------------Datos Proyectos-------------------------------------------------------*/
@@ -2183,7 +2183,7 @@ class AdministrarProyectos implements Serializable {
         for (UsuarioCarrera usuarioCarrera : usuarioCarreraDao.buscarPorUsuario(usuario.getId())) {
             for (Proyecto proyecto : proyectoDao.buscarPorCarreraEstado(usuarioCarrera.getCarreraId(), EstadoProyectoEnum.PERTINENTE.getTipo())) {
                 List<DirectorProyecto> directorProyectos = new ArrayList<>();
-                directorProyectos = directorProyectoFacadeLocal.buscarPorProyecto(proyecto.getId());
+//                directorProyectos = directorProyectoFacadeLocal.buscarPorProyecto(proyecto.getId());
                 boolean tieneDirectorAsignado = false;
                 if (!directorProyectos.isEmpty()) {
                     for (DirectorProyecto directorProyecto : directorProyectos) {
@@ -2631,7 +2631,6 @@ class AdministrarProyectos implements Serializable {
     public void setAdministrarTribunales(AdministrarTribunales administrarTribunales) {
         this.administrarTribunales = administrarTribunales;
     }
-
 
     public List<ProyectoCarreraOferta> getProyectoCarreraOfertasAgregados() {
         return proyectoCarreraOfertasAgregados;

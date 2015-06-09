@@ -33,7 +33,7 @@ import javax.inject.Named;
 import org.primefaces.event.TabChangeEvent;
 import edu.unl.sigett.dao.ActividadFacadeLocal;
 import edu.unl.sigett.dao.ConfiguracionGeneralDao;
-import edu.unl.sigett.dao.DirectorProyectoFacadeLocal;
+import edu.unl.sigett.dao.DirectorProyectoDao;
 import edu.unl.sigett.dao.ProyectoOfertaCarreraDao;
 import org.jlmallas.seguridad.dao.UsuarioDao;
 import edu.jlmallas.academico.service.OfertaAcademicaService;
@@ -74,7 +74,7 @@ public class AdministrarProyectosDirector implements Serializable {
     @EJB
     private UsuarioDao usuarioFacadeLocal;
     @EJB
-    private DirectorProyectoFacadeLocal directorProyectoFacadeLocal;
+    private DirectorProyectoDao directorProyectoFacadeLocal;
     @EJB
     private ActividadFacadeLocal actividadFacadeLocal;
     @EJB
@@ -243,7 +243,7 @@ public class AdministrarProyectosDirector implements Serializable {
         int count = 0;
         try {
             Persona p = personaFacadeLocal.find(docente.getId());
-            count = count + directorProyectoFacadeLocal.buscarPorDocenteOferta(p.getNumeroIdentificacion(), of.getId()).size();
+//            count = count + directorProyectoFacadeLocal.buscarPorDocenteOferta(p.getNumeroIdentificacion(), of.getId()).size();
         } catch (Exception e) {
             System.out.println(e);
         }

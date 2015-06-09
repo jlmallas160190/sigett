@@ -32,7 +32,7 @@ import org.primefaces.context.RequestContext;
 import edu.unl.sigett.dao.AutorProyectoDao;
 import edu.jlmallas.academico.service.CarreraService;
 import edu.unl.sigett.dao.ConfiguracionGeneralDao;
-import edu.unl.sigett.dao.DirectorProyectoFacadeLocal;
+import edu.unl.sigett.dao.DirectorProyectoDao;
 import edu.unl.sigett.dao.InformeProyectoFacadeLocal;
 import org.jlmallas.seguridad.dao.LogDao;
 import edu.unl.sigett.dao.ProyectoDao;
@@ -69,7 +69,7 @@ public class AdministrarInformesProyecto implements Serializable {
     @EJB
     private CarreraService carreraFacadeLocal;
     @EJB
-    private DirectorProyectoFacadeLocal directorProyectoFacadeLocal;
+    private DirectorProyectoDao directorProyectoFacadeLocal;
     @EJB
     private ConfiguracionGeneralDao configuracionGeneralFacadeLocal;
     @EJB

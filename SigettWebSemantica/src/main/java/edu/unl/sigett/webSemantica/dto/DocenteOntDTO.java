@@ -5,6 +5,7 @@
  */
 package edu.unl.sigett.webSemantica.dto;
 
+import com.hp.hpl.jena.ontology.Individual;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -15,6 +16,9 @@ import java.util.Date;
 public class DocenteOntDTO extends PersonaOntDTO implements Serializable {
 
     private Long id;
+    private Individual individual;
+    private String uri;
+    
 
     public DocenteOntDTO(Long id) {
         this.id = id;
@@ -31,6 +35,22 @@ public class DocenteOntDTO extends PersonaOntDTO implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Individual getIndividual() {
+        return individual;
+    }
+
+    public void setIndividual(Individual individual) {
+        this.individual = individual;
+    }
+
+    public String getUri() {
+        return uri;
+    }
+
+    public void setUri(String uri) {
+        this.uri = uri;
     }
 
 }

@@ -38,7 +38,7 @@
                 <f:facet name="header">
                     <h:outputText value="#{msg['lbl.eliminar']}"/>
                 </f:facet> 
-                <p:commandButton icon="ui-icon-trash" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" 
+                <p:commandButton icon="ui-icon-trash" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide(),PF('tblAPFilter').filter()" 
                                  update=":contenido:tabViewDatosProyecto:tblAutores,:contenido:msm"  
                                  onclick="if (!confirm('¿#{msg['lbl.confirmarEliminar']}?'))
                                              return false;" action="#{autorProyectoController.remover(item)}"/>

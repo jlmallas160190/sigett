@@ -11,7 +11,7 @@
             <p:panel rendered="#{sessionDocenteProyecto.renderedPnlDocentesDisponibles}">
                 <ui:include src="tablaDocentesDisponibles.xhtml"/>
                 <f:facet  name="footer">
-                    <p:commandButton value="#{btn.cancelar}" update=":contenido:dlgDocentesDisponibles"
+                    <p:commandButton value="#{btn.cancelar}" update=":contenido:dlgDocentesDisponibles" icon="ui-icon-circle-arrow-w"
                                      onstart="PF('dlgLoading').show();" oncomplete="PF('dlgLoading').hide(),PF('dlgBuscarDocentesDisponibles').hide()" 
                                      action="#{docenteProyectoController.cancelarDocentesDisponibles()}"/>
                 </f:facet>

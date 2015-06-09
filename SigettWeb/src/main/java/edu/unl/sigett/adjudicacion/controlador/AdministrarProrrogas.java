@@ -43,7 +43,7 @@ import edu.jlmallas.academico.service.CarreraService;
 import edu.unl.sigett.dao.ConfiguracionCarreraDao;
 import edu.unl.sigett.dao.ConfiguracionGeneralDao;
 import edu.jlmallas.academico.dao.CoordinadorPeriodoDao;
-import edu.unl.sigett.dao.DirectorProyectoFacadeLocal;
+import edu.unl.sigett.dao.DirectorProyectoDao;
 import org.jlmallas.seguridad.dao.LogDao;
 import edu.unl.sigett.dao.DocumentoCarreraDao;
 import edu.unl.sigett.dao.ProrrogaFacadeLocal;
@@ -96,7 +96,7 @@ public class AdministrarProrrogas implements Serializable {
     @EJB
     private LogDao logFacadeLocal;
     @EJB
-    private DirectorProyectoFacadeLocal directorProyectoFacadeLocal;
+    private DirectorProyectoDao directorProyectoFacadeLocal;
     @EJB
     private CoordinadorPeriodoDao coordinadorPeriodoFacadeLocal;
     @EJB
@@ -419,12 +419,12 @@ public class AdministrarProrrogas implements Serializable {
         Prorroga prorroga = prorrogaFacadeLocal.find(prorrogaId);
 
         DirectorProyecto dp = null;
-        for (DirectorProyecto directorProyecto : directorProyectoFacadeLocal.buscarPorProyecto(prorroga.getCronogramaId().getProyecto().getId())) {
-//            if (directorProyecto.getEstadoDirectorId().getId() != 2) {
-//                dp = directorProyecto;
-//                break;
-//            }
-        }
+//        for (DirectorProyecto directorProyecto : directorProyectoFacadeLocal.buscarPorProyecto(prorroga.getCronogramaId().getProyecto().getId())) {
+////            if (directorProyecto.getEstadoDirectorId().getId() != 2) {
+////                dp = directorProyecto;
+////                break;
+////            }
+//        }
         Docente docenteDirectorProyecto = docenteCarreraFacadeLocal.find(dp.getDirectorId().getId()).getDocenteId();
         Persona datosDocenteDirector = personaFacadeLocal.find(docenteDirectorProyecto.getId());
 //        CoordinadorPeriodo coordinadorPeriodo = coordinadorPeriodoFacadeLocal.buscarVigente(carrera.getId());

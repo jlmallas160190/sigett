@@ -42,7 +42,7 @@ import edu.unl.sigett.dao.ConfiguracionCarreraDao;
 import edu.unl.sigett.dao.ConfiguracionGeneralDao;
 import edu.jlmallas.academico.dao.CoordinadorPeriodoDao;
 import edu.unl.sigett.dao.DirectorDao;
-import edu.unl.sigett.dao.DirectorProyectoFacadeLocal;
+import edu.unl.sigett.dao.DirectorProyectoDao;
 import edu.unl.sigett.dao.LineaInvestigacionDocenteDao;
 import edu.unl.sigett.dao.DocumentoCarreraDao;
 import org.jlmallas.seguridad.dao.UsuarioDao;
@@ -75,7 +75,7 @@ public class AdministrarDirectoresProyecto implements Serializable {
     @EJB
     private DirectorDao directorFacadeLocal;
     @EJB
-    private DirectorProyectoFacadeLocal directorProyectoFacadeLocal;
+    private DirectorProyectoDao directorProyectoFacadeLocal;
     @EJB
     private ConfiguracionGeneralDao configuracionGeneralFacadeLocal;
     @EJB

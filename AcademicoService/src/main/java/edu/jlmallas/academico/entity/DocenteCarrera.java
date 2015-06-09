@@ -61,6 +61,10 @@ public class DocenteCarrera implements Serializable {
         this.esActivo=esActivo;
     }
 
+    public DocenteCarrera(Long id) {
+        this.id = id;
+    }
+
     public Long getId() {
         return id;
     }

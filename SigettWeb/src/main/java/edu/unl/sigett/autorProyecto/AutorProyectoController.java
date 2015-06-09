@@ -75,81 +75,35 @@ public class AutorProyectoController implements Serializable {
     public AutorProyectoController() {
     }
 
-    public void initPostulacion() {
-        this.buscar();
+    public void preRenderView() {
         this.renderedBuscarAspirantes();
         this.renderedSeleccionar();
         this.buscarAspirantes();
     }
-    //<editor-fold defaultstate="collapsed" desc="POSTULACION">
-    /**
-     * BUSCAR AUTORES DEL PROYECTO SELECCIONADO
-     *
-     */
-    private void buscar() {
-        sessionProyecto.getAutoresProyectoDTO().clear();
-        sessionProyecto.getFilterAutoresProyectoDTO().clear();
-        try {
-            Item estado = itemService.buscarPorCatalogoCodigo(CatalogoEnum.ESTADOAUTOR.getTipo(), EstadoAutorEnum.RENUNCIADO.getTipo());
-            List<AutorProyecto> autorProyectos = autorProyectoService.buscar(new AutorProyecto(
-                    sessionProyecto.getProyectoSeleccionado().getId() != null ? sessionProyecto.getProyectoSeleccionado() : null, null, null,
-                    null, null));
-            if (autorProyectos == null) {
-                return;
-            }
-
-            for (AutorProyecto autorProyecto : autorProyectos) {
-                if (autorProyecto.getEstadoAutorId().equals(estado.getId())) {
-                    continue;
-                }
-                AutorProyectoDTO autorProyectoDTO = new AutorProyectoDTO(autorProyecto, autorProyecto.getAspiranteId(),
-                        estudianteCarreraDao.find(autorProyecto.getAspiranteId().getId()), null);
-                autorProyectoDTO.setPersona(personaDao.find(autorProyectoDTO.getEstudianteCarrera().getEstudianteId().getId()));
-                if (!sessionProyecto.getAutoresProyectoDTO().contains(autorProyectoDTO)) {
-                    sessionProyecto.getAutoresProyectoDTO().add(autorProyectoDTO);
-                }
-            }
-            /**
-             * NUEVOS
-             */
-            for (AutorProyectoDTO autorProyectoDTO : sessionProyecto.getAutoresProyectoDTONuevos()) {
-                sessionProyecto.getAutoresProyectoDTO().add(autorProyectoDTO);
-            }
-            sessionProyecto.setFilterAutoresProyectoDTO(sessionProyecto.getAutoresProyectoDTO());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+    //<editor-fold defaultstate="collapsed" desc="CRUD">
 
     /**
      * QUITAR AUTOR DE UN PROYECTO
      *
      * @param autorProyectoDTO
      */
+    @SuppressWarnings("CallToThreadDumpStack")
     public void remover(AutorProyectoDTO autorProyectoDTO) {
         try {
             FacesContext facesContext = FacesContext.getCurrentInstance();
             ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            int tienePermiso = usuarioDao.tienePermiso(sessionUsuario.getUsuario(), "eliminar_autor_proyecto");
-            if (tienePermiso == 1) {
-                if (autorProyectoDTO.getAutorProyecto().getId() != null) {
-                    Item item = itemService.buscarPorId(sessionProyecto.getProyectoSeleccionado().getEstadoProyectoId());
-                    Item estadoRenunciado = itemService.buscarPorCatalogoCodigo(CatalogoEnum.ESTADOAUTOR.getTipo(), EstadoAutorEnum.RENUNCIADO.getTipo());
-                    if (item.getCodigo().equals(EstadoProyectoEnum.INICIO.getTipo())) {
-                        autorProyectoDTO.getAutorProyecto().setEstadoAutorId(estadoRenunciado.getId());
-                        this.buscar();
-                        cabeceraController.getMessageView().message(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_eliminar") + ". ", "");
-                        return;
-                    }
-                    return;
-                }
-                sessionProyecto.getAutoresProyectoDTONuevos().remove(autorProyectoDTO);
-                this.buscar();
-                cabeceraController.getMessageView().message(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_eliminar"), "");
+            if (!sessionProyecto.getEstadoActual().getCodigo().equals(EstadoProyectoEnum.INICIO.getTipo())) {
                 return;
             }
-            cabeceraController.getMessageView().message(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_eliminar") + ". "
-                    + bundle.getString("lbl.msm_consulte"), "");
+            if (autorProyectoDTO.getAutorProyecto().getId() != null) {
+                Item estadoRenunciado = itemService.buscarPorCatalogoCodigo(CatalogoEnum.ESTADOAUTOR.getTipo(), EstadoAutorEnum.RENUNCIADO.getTipo());
+                autorProyectoDTO.getAutorProyecto().setEstadoAutorId(estadoRenunciado.getId());
+                sessionProyecto.getAutoresProyectoDTO().remove(autorProyectoDTO);
+                cabeceraController.getMessageView().message(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_eliminar") + ". ", "");
+                return;
+            }
+            sessionProyecto.getAutoresProyectoDTO().remove(autorProyectoDTO);
+            cabeceraController.getMessageView().message(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_eliminar"), "");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -223,6 +177,7 @@ public class AutorProyectoController implements Serializable {
      *
      * @param aspiranteDTO
      */
+    @SuppressWarnings("CallToThreadDumpStack")
     public void agregar(AspiranteDTO aspiranteDTO) {
         Calendar fecha = Calendar.getInstance();
         try {
@@ -270,7 +225,7 @@ public class AutorProyectoController implements Serializable {
             autorProyectoDTO.setPersona(personaDao.find(autorProyectoDTO.getEstudianteCarrera().getEstudianteId().getId()));
             AutorProyectoDTO ap = contieneAutorProyecto(autorProyectoDTO);
             if (ap == null) {
-                sessionProyecto.getAutoresProyectoDTONuevos().add(autorProyectoDTO);
+                sessionProyecto.getAutoresProyectoDTO().add(autorProyectoDTO);
                 cabeceraController.getMessageView().message(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.autor") + " "
                         + bundle.getString("lbl.msm_agregar"), "");
                 RequestContext.getCurrentInstance().execute("PF('dlgBuscarAspirantes').hide()");

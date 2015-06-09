@@ -15,7 +15,7 @@
                 <f:facet name="header">
                     <h:outputText value="#{msg['lbl.seleccionar']}"/>
                 </f:facet>
-                <p:commandButton onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" icon="ui-icon-circle-plus" 
+                <p:commandButton onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide(),PF('tblAPFilter').filter()" icon="ui-icon-circle-plus" 
                                  action="#{autorProyectoController.agregar(aspirante)}" 
                                  update=":contenido:tabViewDatosProyecto:tblAutores,:contenido:msm"/>
             </p:column>

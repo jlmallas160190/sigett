@@ -9,13 +9,16 @@
                      rowIndexVar="rowIx" rowKey="#{item.persona.apellidos}" selection="#{item}" selectionMode="single" editable="true"  
                      filteredValue="#{directorDM.filterDirectoresDTO}" widgetVar="tblDocentesFilter"
                      editMode="cell" rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'even-row' : 'odd-row'}" emptyMessage="#{msg['lbl.table.empty']}">
+            <p:column>
+                <h:outputText value="#{rowIx+1}" />
+            </p:column>
             <p:column rendered="#{sessionProyecto.renderedInicio}">
                 <f:facet name="header">
                     <h:outputText value="#{msg['lbl.seleccionar']}"/>
                 </f:facet>
                 <p:commandButton icon="ui-icon-circle-plus" onclick="if (!confirm('¿#{msg['lbl.confirmarSeleccionar']}.?'))
                             return false;" 
-                            action="#{docenteProyectoController.agregar(item)}"
+                                 action="#{docenteProyectoController.agregar(item)}"
                                  onstart="PF('dlgLoading').show();" oncomplete="PF('dlgLoading').hide(),PF('tblDPFilter').filter()" 
                                  update=":contenido:tabViewDatosProyecto:tblDocentesProyecto,:contenido:msm">
                     <f:param name="1" value="seleccionar-dlg"/>

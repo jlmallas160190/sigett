@@ -11,7 +11,7 @@
             <p:panel rendered="#{directorProyectoDM.renderedPnlDirectoresDisponibles}">
                 <ui:include src="tablaDirectoresDisponibles.xhtml"/>
                 <f:facet  name="footer">
-                    <p:commandButton value="#{btn.cancelar}" update=":contenido:dlgDirectoresDisponibles" 
+                    <p:commandButton value="#{btn.cancelar}" update=":contenido:dlgDirectoresDisponibles" icon="ui-icon-circle-arrow-w" 
                                      onstart="PF('dlgLoading').show();" oncomplete="PF('dlgLoading').hide(),PF('dlgDirectoresDisponibles').hide()" 
                                      action="#{directorProyectoController.cancelarDirectoresDisponibles()}"/>
                 </f:facet>

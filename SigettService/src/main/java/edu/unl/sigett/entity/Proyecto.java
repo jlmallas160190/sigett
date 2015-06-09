@@ -19,12 +19,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.NamedStoredProcedureQueries;
-import javax.persistence.NamedStoredProcedureQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import static javax.persistence.ParameterMode.IN;
-import javax.persistence.StoredProcedureParameter;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -42,12 +38,6 @@ import javax.xml.bind.annotation.XmlTransient;
 @Table(name = "proyecto")
 @Cacheable(value = false)
 @XmlRootElement
-@NamedQueries({
-    @NamedQuery(name = "Proyecto.findAll", query = "SELECT p FROM Proyecto p"),
-    @NamedQuery(name = "Proyecto.findById", query = "SELECT p FROM Proyecto p WHERE p.id = :id"),
-    @NamedQuery(name = "Proyecto.findByDescripcion", query = "SELECT p FROM Proyecto p WHERE p.descripcion = :descripcion"),
-    @NamedQuery(name = "Proyecto.findByFechaCreated", query = "SELECT p FROM Proyecto p WHERE p.fechaCreated = :fechaCreated"),
-    @NamedQuery(name = "Proyecto.findByTemaActual", query = "SELECT p FROM Proyecto p WHERE p.temaActual = :temaActual")})
 public class Proyecto implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -110,6 +100,8 @@ public class Proyecto implements Serializable {
     private String catalogo;
     @Transient
     private String autores;
+    @Transient
+    private String directores;
 
     public Proyecto() {
         this.tipo = "";
@@ -328,6 +320,14 @@ public class Proyecto implements Serializable {
         this.autores = autores;
     }
 
+    public String getDirectores() {
+        return directores;
+    }
+
+    public void setDirectores(String directores) {
+        this.directores = directores;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -342,10 +342,7 @@ public class Proyecto implements Serializable {
             return false;
         }
         Proyecto other = (Proyecto) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
+        return (this.id != null || other.id == null) && (this.id == null || this.id.equals(other.id));
     }
 
     @Override

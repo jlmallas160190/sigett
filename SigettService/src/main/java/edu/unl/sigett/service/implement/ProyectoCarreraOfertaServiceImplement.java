@@ -28,7 +28,7 @@ public class ProyectoCarreraOfertaServiceImplement implements ProyectoCarreraOfe
     }
 
     @Override
-    public void editar(final ProyectoCarreraOferta proyectoCarreraOferta) {
+    public void actualizar(final ProyectoCarreraOferta proyectoCarreraOferta) {
         this.proyectoCarreraDao.edit(proyectoCarreraOferta);
     }
 

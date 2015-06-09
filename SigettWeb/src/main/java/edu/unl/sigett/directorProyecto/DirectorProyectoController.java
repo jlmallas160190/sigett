@@ -6,7 +6,6 @@
 package edu.unl.sigett.directorProyecto;
 
 import edu.unl.sigett.director.DirectorDTO;
-import com.jlmallas.comun.dao.ConfiguracionDao;
 import com.jlmallas.comun.entity.Configuracion;
 import com.jlmallas.comun.entity.Item;
 import com.jlmallas.comun.enumeration.CatalogoEnum;
@@ -16,7 +15,6 @@ import com.jlmallas.comun.service.ConfiguracionService;
 import com.jlmallas.comun.service.ItemService;
 import edu.unl.sigett.director.DirectorDM;
 import edu.unl.sigett.entity.DirectorProyecto;
-import edu.unl.sigett.entity.Proyecto;
 import edu.unl.sigett.entity.Renuncia;
 import edu.unl.sigett.entity.RenunciaDirector;
 import edu.unl.sigett.enumeration.EstadoDirectorEnum;
@@ -36,7 +34,6 @@ import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
-import org.jlmallas.seguridad.entity.Usuario;
 import org.jlmallas.seguridad.service.UsuarioService;
 import org.primefaces.context.RequestContext;
 
@@ -75,8 +72,14 @@ public class DirectorProyectoController implements Serializable {
     public DirectorProyectoController() {
     }
 
+    public void preRenderView() {
+        this.renderedBuscar();
+        this.renderedBuscarDirectorDisponible();
+        this.renderedEliminar();
+    }
+
     //<editor-fold defaultstate="collapsed" desc="MÉTODOS RENDERED">
-    public void renderedBuscarDirectorDisponible() {
+    private void renderedBuscarDirectorDisponible() {
         try {
             directorProyectoDM.setRenderedBuscarDirectorDisponible(Boolean.FALSE);
             if (!sessionProyecto.getEstadoActual().getCodigo().equals(EstadoProyectoEnum.PERTINENTE.getTipo())) {
@@ -93,7 +96,7 @@ public class DirectorProyectoController implements Serializable {
 
     }
 
-    public void renderedBuscar() {
+    private void renderedBuscar() {
         try {
             directorProyectoDM.setRenderedBuscar(Boolean.FALSE);
             if (sessionProyecto.getEstadoActual().getCodigo().equals(EstadoProyectoEnum.PERTINENTE.getTipo())) {
@@ -105,7 +108,7 @@ public class DirectorProyectoController implements Serializable {
 
     }
 
-    public void renderedEliminar() {
+    private void renderedEliminar() {
         try {
             directorProyectoDM.setRenderedEliminar(Boolean.FALSE);
             if (!sessionProyecto.getEstadoActual().getCodigo().equals(EstadoProyectoEnum.PERTINENTE.getTipo())) {
@@ -187,7 +190,7 @@ public class DirectorProyectoController implements Serializable {
         try {
             FacesContext facesContext = FacesContext.getCurrentInstance();
             ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            if (!sessionProyecto.getEstadoActual().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.INICIO.getTipo())) {
+            if (!sessionProyecto.getEstadoActual().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.PERTINENTE.getTipo())) {
                 return;
             }
             if (directorProyectoDTO.getDirectorProyecto().getId() != null) {
@@ -203,10 +206,6 @@ public class DirectorProyectoController implements Serializable {
         } catch (Exception e) {
             LOG.warning(e.getMessage());
         }
-    }
-
-    public void renderedPnlDirectoresDisponibles() {
-        directorProyectoDM.setRenderedPnlDirectoresDisponibles(Boolean.TRUE);
     }
 
     public void cancelarDirectoresDisponibles() {

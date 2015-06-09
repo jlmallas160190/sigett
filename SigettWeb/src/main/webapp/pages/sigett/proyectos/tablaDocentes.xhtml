@@ -6,10 +6,13 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core">
     <body>
         <p:dataTable id="tblDocentesProyecto" value="#{sessionProyecto.docentesProyectoDTO}" var="item" rows="20" paginator="true"
-                     rowIndexVar="rowIx" editable="true" rowKey="#{item.docenteProyecto.id}" selectionMode="single" selection="#{item}" editMode="cell"
+                     rowIndexVar="rowIx" editable="true" rowKey="#{item.docenteProyecto}" selectionMode="single" selection="#{item}" editMode="cell"
                      filteredValue="#{sessionProyecto.filterDocentesProyectoDTO}" widgetVar="tblDPFilter"
                      rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'even-row' : 'odd-row'}" emptyMessage="#{msg['lbl.table.empty']}">
-            <p:column  sortBy="#{item.persona.apellidos}" 
+            <p:column width="5%">
+                <h:outputText value="#{rowIx+1}" />
+            </p:column>
+            <p:column  width="40%" sortBy="#{item.persona.apellidos}" 
                        filterBy="#{item.persona.apellidos} #{item.persona.nombres}"
                        filterMatchMode="contains">
                 <f:facet name="header">
@@ -17,7 +20,7 @@
                 </f:facet>
                 <h:outputLabel value="#{item.persona.nombres} #{item.persona.apellidos}"/>
             </p:column>
-            <p:column>
+            <p:column width="15%">
                 <f:facet name="header">
                     <h:outputText value="#{msg['lbl.fecha']} #{msg['lbl.asignacion']}"/>
                 </f:facet>
@@ -25,7 +28,7 @@
                     <f:convertDateTime pattern="EEEEE dd MMMMM yyyy"/>
                 </h:outputText>
             </p:column>
-            <p:column >
+            <p:column width="40%">
                 <f:facet name="header">
                     <h:outputText value="#{msg['lbl.accion']}"/>
                 </f:facet> 
@@ -42,12 +45,12 @@
                     <p:column>
                         <p:commandButton onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide(),PF('dlgOficioPertinencia').show()" icon="ui-icon-print"
                                          update=":contenido:msm,:contenido:pnlOficioPertinencia" 
-                                         rendered="#{sessionProyecto.proyectoSeleccionado.id!=null}" value="#{msg['lbl.oficio']}"
+                                         rendered="#{item.docenteProyecto.id!=null}" value="#{msg['lbl.oficio']}"
                                          action="#{docenteProyectoController.imprimirOficioPertinencia(item)}"/>
                     </p:column>
                     <p:column>
                         <p:commandButton onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide(),PF('dlgFePertinencia').show()" icon="ui-icon-print" 
-                                         rendered="#{sessionProyecto.proyectoSeleccionado.id!=null}" iconPos="left" value="#{lbl['fe_presentacion']}"
+                                         rendered="#{item.docenteProyecto.id!=null}" iconPos="left" value="#{lbl['fe_presentacion']}"
                                          update=":contenido:msm,:contenido:pnlFePertinencia" title="#{lbl['fe_presentacion']}"
                                          action="#{docenteProyectoController.imprimirFePresentacion(item)}"/>
                     </p:column>

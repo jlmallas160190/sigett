@@ -10,13 +10,17 @@
                      filteredValue="#{directorDM.filterDirectoresDTO}" widgetVar="tblDirectoresFilter"
                      editMode="cell" rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'even-row' : 'odd-row'}" emptyMessage="#{msg['lbl.table.empty']}">
             <p:column>
+               <h:outputText value="#{rowIx+1}" />
+            </p:column>
+            <p:column>
                 <f:facet name="header">
                     <h:outputText value="#{msg['lbl.seleccionar']}"/>
                 </f:facet>
                 <p:commandButton icon="ui-icon-circle-plus" onclick="if (!confirm('¿#{msg['lbl.confirmarSeleccionar']}.?'))
                             return false;" 
                                  action="#{directorProyectoController.agregar(item)}"
-                                 onstart="PF('dlgLoading').show();" oncomplete="PF('dlgLoading').hide(),PF('tblDirProyFilter').filter()" 
+                                 onstart="PF('dlgLoading').show();" 
+                                 oncomplete="PF('dlgLoading').hide(),PF('tblDirProyFilter').filter(),PF('dlgDirectoresDisponibles').hide()" 
                                  update=":contenido:tabViewDatosProyecto:tblDirectoresProyecto,:contenido:msm"/>
             </p:column>
             <p:column filterBy="#{item.persona.apellidos}" filterMatchMode="contains" sortBy="#{item.persona.apellidos}">
