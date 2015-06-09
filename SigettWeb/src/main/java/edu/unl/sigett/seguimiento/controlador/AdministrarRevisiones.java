@@ -5,7 +5,6 @@
  */
 package edu.unl.sigett.seguimiento.controlador;
 
-import edu.unl.sigett.comun.controlador.AdministrarNotificaciones;
 import edu.unl.sigett.seguimiento.session.SessionActividad;
 import edu.unl.sigett.seguimiento.session.SessionProyectosDirector;
 import edu.unl.sigett.seguimiento.session.SessionRevision;
@@ -49,8 +48,6 @@ public class AdministrarRevisiones implements Serializable {
     private SessionActividad sessionActividad;
     @Inject
     private AdministrarActividades administrarActividades;
-    @Inject
-    private AdministrarNotificaciones administrarNotificaciones;
     @EJB
     private RevisionFacadeLocal revisionFacadeLocal;
     @EJB
@@ -277,7 +274,7 @@ public class AdministrarRevisiones implements Serializable {
                         administrarActividades.calculosActividadObjetivo(actividad);
                         administrarActividades.actualizarPorcentajesDuracionActividades(actividad, actividadFacadeLocal.buscarPorProyecto(proyecto.getCronograma().getId()));
 //                        administrarCronograma.calculaAvanceFaltanteCronograma(proyecto.getCronograma(), actividadFacadeLocal.buscarPorProyecto(proyecto.getCronograma().getId()), usuario);
-                        administrarNotificaciones.notificarRevisionActividad(proyecto.getCronograma());
+//                        administrarNotificaciones.notificarRevisionActividad(proyecto.getCronograma());
                         logFacadeLocal.create(logFacadeLocal.crearLog("Actividad", actividad.getId() + "", "EDITAR", "|Nombre= " + actividad.getNombre() + "|EsActivo= " + actividad.getCronogramaId().getId() + "|Tipo= " + actividad.getTipoActividadId().getId() + "|Estado" + actividad.getEstadoActividadId().getId() + "|ActividadId= " + actividad.getActividadId(), usuario));
                         if (param.equalsIgnoreCase("grabar-dlg")) {
                             sessionRevision.setRevision(new Revision());
@@ -309,7 +306,7 @@ public class AdministrarRevisiones implements Serializable {
                         administrarActividades.actualizarPorcentajesDuracionActividades(actividad, actividadFacadeLocal.buscarPorProyecto(proyecto.getCronograma().getId()));
 //                        administrarCronograma.calculaAvanceFaltanteCronograma(proyecto.getCronograma(), actividadFacadeLocal.buscarPorProyecto(proyecto.getCronograma().getId()), usuario);
                         logFacadeLocal.create(logFacadeLocal.crearLog("Actividad", actividad.getId() + "", "EDITAR", "|Nombre= " + actividad.getNombre() + "|EsActivo= " + actividad.getCronogramaId().getId() + "|Tipo= " + actividad.getTipoActividadId().getId() + "|Estado" + actividad.getEstadoActividadId().getId() + "|ActividadId= " + actividad.getActividadId(), usuario));
-                        administrarNotificaciones.notificarRevisionActividad(proyecto.getCronograma());
+//                        administrarNotificaciones.notificarRevisionActividad(proyecto.getCronograma());
                         if (param.equalsIgnoreCase("grabar-dlg")) {
                             sessionRevision.setRevision(new Revision());
                             RequestContext.getCurrentInstance().execute("PF('dlgEditarRevision').hide()");

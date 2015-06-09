@@ -8,7 +8,7 @@ package edu.unl.sigett.seguimiento.controlador;
 import com.jlmallas.comun.dao.PersonaDao;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 import com.ocpsoft.pretty.faces.annotation.URLMappings;
-import edu.unl.sigett.adjudicacion.controlador.AdministrarDirectoresProyecto;
+import edu.unl.sigett.directorProyecto.AdministrarDirectoresProyecto;
 import edu.jlmallas.academico.entity.Area;
 import edu.unl.sigett.entity.AutorProyecto;
 import edu.jlmallas.academico.entity.Carrera;

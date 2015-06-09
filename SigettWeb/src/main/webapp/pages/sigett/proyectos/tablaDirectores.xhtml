@@ -1,0 +1,59 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <body>
+        <p:dataTable id="tblDirectoresProyecto" value="#{sessionProyecto.directoresProyectoDTO}" var="item" rows="20" paginator="true"
+                     rowIndexVar="rowIx" editable="true" rowKey="#{item.directorProyecto.id}" selectionMode="single" selection="#{item}"
+                     filteredValue="#{sessionProyecto.filterDirectoresProyectoDTO}" widgetVar="tblDirProyFilter"
+                     rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'even-row' : 'odd-row'}" emptyMessage="#{msg['lbl.table.empty']}">
+            <p:column  sortBy="#{item.directorDTO.persona.apellidos}" 
+                       filterBy="#{item.directorDTO.persona.apellidos} #{item.directorDTO.persona.nombres}"
+                       filterMatchMode="contains">
+                <f:facet name="header">
+                    <h:outputText value="#{msg['lbl.docente']}"/>
+                </f:facet>
+                <h:outputLabel value="#{item.directorDTO.persona.nombres} #{item.directorDTO.persona.apellidos}"/>
+            </p:column>
+            <p:column>
+                <f:facet name="header">
+                    <h:outputText value="#{msg['lbl.fecha']} #{msg['lbl.asignacion']}"/>
+                </f:facet>
+                <h:outputText value="#{item.directorProyecto.fechaInicio}">
+                    <f:convertDateTime pattern="EEEEE dd MMMMM yyyy"/>
+                </h:outputText>
+            </p:column>
+            <p:column >
+                <f:facet name="header">
+                    <h:outputText value="#{msg['lbl.accion']}"/>
+                </f:facet> 
+                <p:row>
+                    <p:column>
+                        <p:commandButton  onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide(),PF('tblDirProyFilter').filter()" icon="ui-icon-trash" 
+                                          rendered="#{directorProyectoDM.renderedEliminar}"
+                                          update=":contenido:tabViewDatosProyecto:tblDirectoresProyecto,:contenido:msm,
+                                          :contenido:tabViewDatosProyecto:opcionesDirector"  
+                                          onclick="if (!confirm('¿#{msg['lbl.confirmarEliminar']}?'))
+                                                      return false;"  
+                                                      action="#{directorProyectoController.remover(item)}"/>
+                    </p:column>
+                    <p:column>
+                        <p:commandButton onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide(),PF('dlgOficioPertinencia').show()" icon="ui-icon-print"
+                                         update=":contenido:msm,:contenido:pnlOficioPertinencia" 
+                                         rendered="#{sessionProyecto.proyectoSeleccionado.id!=null}" value="#{msg['lbl.oficio']}"
+                                         action="#{docenteProyectoController.imprimirOficioPertinencia(item)}"/>
+                    </p:column>
+                    <p:column>
+                        <p:commandButton onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide(),PF('dlgFePertinencia').show()" icon="ui-icon-print" 
+                                         rendered="#{sessionProyecto.proyectoSeleccionado.id!=null}" iconPos="left" value="#{lbl['fe_presentacion']}"
+                                         update=":contenido:msm,:contenido:pnlFePertinencia" title="#{lbl['fe_presentacion']}"
+                                         action="#{docenteProyectoController.imprimirFePresentacion(item)}"/>
+                    </p:column>
+                </p:row>
+            </p:column>
+        </p:dataTable>
+    </body>
+
+</html>

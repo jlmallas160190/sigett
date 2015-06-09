@@ -62,7 +62,7 @@ public class UsuarioServiceImplement implements UsuarioService {
 
     @Override
     public Boolean unicoUsername(String username) {
-        Boolean var =Boolean.FALSE;
+        Boolean var = Boolean.FALSE;
         List<Usuario> usuarios = usuarioDao.buscarPorCriterio(new Usuario(Long.MIN_VALUE, null, username, null, null, null, true, true));
         Usuario user = !usuarios.isEmpty() ? usuarios.get(0) : null;
         if (user != null) {
@@ -73,9 +73,8 @@ public class UsuarioServiceImplement implements UsuarioService {
 
     @Override
     public Integer tienePermiso(Usuario usuario, String permiso) {
-        int var = 0;
         if (usuario.getId() == null) {
-            return var;
+            return 0;
         }
         if (usuario.getEsSuperuser()) {
             return 1;
@@ -91,11 +90,10 @@ public class UsuarioServiceImplement implements UsuarioService {
             List<RolPermiso> rolPermisos = rolPermisoDao.buscar(new RolPermiso(rolUsuario.getRolId(), !permisos.isEmpty() ? permisos.get(0) : null));
             RolPermiso rp = !rolPermisos.isEmpty() ? rolPermisos.get(0) : null;
             if (rp != null) {
-                return var;
+                return 1;
             }
         }
-
-        return var;
+        return 0;
     }
 
     @Override

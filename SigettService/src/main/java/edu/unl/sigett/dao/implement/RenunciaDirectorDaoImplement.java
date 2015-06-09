@@ -6,8 +6,8 @@
 package edu.unl.sigett.dao.implement;
 
 import edu.unl.sigett.dao.AbstractDao;
-import edu.unl.sigett.dao.DirectorDao;
-import edu.unl.sigett.entity.Director;
+import edu.unl.sigett.dao.RenunciaDirectorDao;
+import edu.unl.sigett.entity.RenunciaDirector;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,23 +19,26 @@ import javax.persistence.Query;
  * @author JorgeLuis
  */
 @Stateless
-public class DirectorDaoImplement extends AbstractDao<Director> implements DirectorDao {
+public class RenunciaDirectorDaoImplement extends AbstractDao<RenunciaDirector> implements RenunciaDirectorDao {
 
-    public DirectorDaoImplement() {
-        super(Director.class);
+    public RenunciaDirectorDaoImplement() {
+        super(RenunciaDirector.class);
     }
 
-
-
     @Override
-    public List<Director> buscar(final Director director) {
+    public List<RenunciaDirector> buscar(final RenunciaDirector renunciaDirector) {
         StringBuilder sql = new StringBuilder();
         HashMap<String, Object> parametros = new HashMap<>();
         Boolean existeFiltro = Boolean.FALSE;
-        sql.append("SELECT d from Director d WHERE 1=1 ");
-        if (director.getEsActivo() != null) {
-            sql.append(" and d.esActivo=:activo");
-            parametros.put("activo", director.getEsActivo());
+        sql.append("SELECT r FROM RenunciaDirector r WHERE 1=1 ");
+        if (renunciaDirector.getDirectorProyectoId() != null) {
+            sql.append(" and r.directorProyectoId=:directorProyectoId");
+            parametros.put("directorProyectoId", renunciaDirector.getDirectorProyectoId());
+            existeFiltro = Boolean.TRUE;
+        }
+        if (renunciaDirector.getRenuncia() != null) {
+            sql.append(" and r.renuncia=:renuncia");
+            parametros.put("renuncia", renunciaDirector.getRenuncia());
             existeFiltro = Boolean.TRUE;
         }
         if (!existeFiltro) {
@@ -47,4 +50,5 @@ public class DirectorDaoImplement extends AbstractDao<Director> implements Direc
         }
         return q.getResultList();
     }
+
 }

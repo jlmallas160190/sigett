@@ -7,7 +7,7 @@ package edu.unl.sigett.academico.controlador;
 
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 import com.ocpsoft.pretty.faces.annotation.URLMappings;
-import edu.unl.sigett.comun.managed.session.SessionCoordinadorPeriodo;
+import edu.unl.sigett.academico.managed.session.SessionCoordinadorPeriodo;
 import edu.jlmallas.academico.entity.Coordinador;
 import edu.jlmallas.academico.entity.CoordinadorPeriodo;
 import edu.jlmallas.academico.entity.PeriodoCoordinacion;

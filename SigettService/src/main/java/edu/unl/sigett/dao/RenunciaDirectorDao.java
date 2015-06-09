@@ -14,7 +14,7 @@ import javax.ejb.Local;
  * @author JorgeLuis
  */
 @Local
-public interface RenunciaDirectorFacadeLocal {
+public interface RenunciaDirectorDao {
 
     void create(RenunciaDirector renunciaDirector);
 
@@ -28,7 +28,7 @@ public interface RenunciaDirectorFacadeLocal {
 
     List<RenunciaDirector> findRange(int[] range);
 
-    List<RenunciaDirector> buscarPorDirectorProyecto(Long directorProyectoId);
+    List<RenunciaDirector> buscar(final RenunciaDirector renunciaDirector);
 
     int count();
 

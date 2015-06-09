@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.unl.sigett.comun.managed.session;
+package edu.unl.sigett.academico.managed.session;
 
 import edu.jlmallas.academico.entity.PeriodoCoordinacion;
 import edu.unl.sigett.academico.dto.CoordinadorPeriodoDTO;

@@ -3,8 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.unl.sigett.dao;
+package edu.unl.sigett.dao.implement;
 
+import edu.unl.sigett.dao.AbstractDao;
+import edu.unl.sigett.dao.RenunciaDao;
 import edu.unl.sigett.entity.Renuncia;
 import javax.ejb.Stateless;
 
@@ -13,9 +15,9 @@ import javax.ejb.Stateless;
  * @author JorgeLuis
  */
 @Stateless
-public class RenunciaFacade extends AbstractDao<Renuncia> implements RenunciaFacadeLocal {
+public class RenunciaDaoImplement extends AbstractDao<Renuncia> implements RenunciaDao {
 
-    public RenunciaFacade() {
+    public RenunciaDaoImplement() {
         super(Renuncia.class);
     }
 

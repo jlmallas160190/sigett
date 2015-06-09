@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.Cacheable;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -30,14 +31,8 @@ import javax.xml.bind.annotation.XmlTransient;
  */
 @Entity
 @Table(name = "catalogo", schema = "comun")
+@Cacheable(value = false)
 @XmlRootElement
-@NamedQueries({
-    @NamedQuery(name = "Catalogo.findAll", query = "SELECT c FROM Catalogo c"),
-    @NamedQuery(name = "Catalogo.findById", query = "SELECT c FROM Catalogo c WHERE c.id = :id"),
-    @NamedQuery(name = "Catalogo.findByNombre", query = "SELECT c FROM Catalogo c WHERE c.nombre = :nombre"),
-    @NamedQuery(name = "Catalogo.findByCodigo", query = "SELECT c FROM Catalogo c WHERE c.codigo = :codigo"),
-    @NamedQuery(name = "Catalogo.findByEsActivo", query = "SELECT c FROM Catalogo c WHERE c.esActivo = :esActivo"),
-    @NamedQuery(name = "Catalogo.findByIdPadre", query = "SELECT c FROM Catalogo c WHERE c.idPadre = :idPadre")})
 public class Catalogo implements Serializable {
 
     private static final long serialVersionUID = 1L;

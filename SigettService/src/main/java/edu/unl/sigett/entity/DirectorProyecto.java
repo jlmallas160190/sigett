@@ -42,21 +42,6 @@ import javax.xml.bind.annotation.XmlTransient;
 @Table(name = "director_proyecto")
 @Cacheable(value = false)
 @XmlRootElement
-@NamedStoredProcedureQueries({
-    @NamedStoredProcedureQuery(
-            name = "directorProyectoPorDocenteOferta",
-            resultClasses = DirectorProyecto.class,
-            procedureName = "sp_directores_proyecto_periodo",
-            parameters = {
-                @StoredProcedureParameter(mode = IN, name = "ci", type = String.class),
-                @StoredProcedureParameter(mode = IN, name = "ofertaId", type = Long.class)
-            }
-    )})
-@NamedQueries({
-    @NamedQuery(name = "DirectorProyecto.findAll", query = "SELECT d FROM DirectorProyecto d"),
-    @NamedQuery(name = "DirectorProyecto.findById", query = "SELECT d FROM DirectorProyecto d WHERE d.id = :id"),
-    @NamedQuery(name = "DirectorProyecto.findByFechaInicio", query = "SELECT d FROM DirectorProyecto d WHERE d.fechaInicio = :fechaInicio"),
-    @NamedQuery(name = "DirectorProyecto.findByFechaCulminacion", query = "SELECT d FROM DirectorProyecto d WHERE d.fechaCulminacion = :fechaCulminacion")})
 public class DirectorProyecto implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -78,19 +63,16 @@ public class DirectorProyecto implements Serializable {
     @JoinColumn(name = "proyecto_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Proyecto proyectoId;
-    @JoinColumn(name = "estado_director_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private EstadoDirector estadoDirectorId;
+    @Column(name = "estado_director_id")
+    @NotNull
+    private Long estadoDirectorId;
     @JoinColumn(name = "director_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Director directorId;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "directorProyectoId")
     private List<RenunciaDirector> renunciaDirectorList;
-    @Transient
-    private boolean esEditado;
 
     public DirectorProyecto() {
-        esEditado = false;
         this.renunciaDirectorList = new ArrayList<>();
     }
 
@@ -98,10 +80,13 @@ public class DirectorProyecto implements Serializable {
         this.id = id;
     }
 
-    public DirectorProyecto(Long id, Date fechaInicio, Date fechaCulminacion) {
+    public DirectorProyecto(Long id, Date fechaInicio, Date fechaCulminacion, Proyecto proyectoId, Long estadoDirectorId, Director directorId) {
         this.id = id;
         this.fechaInicio = fechaInicio;
         this.fechaCulminacion = fechaCulminacion;
+        this.proyectoId = proyectoId;
+        this.estadoDirectorId = estadoDirectorId;
+        this.directorId = directorId;
     }
 
     public Long getId() {
@@ -136,11 +121,11 @@ public class DirectorProyecto implements Serializable {
         this.proyectoId = proyectoId;
     }
 
-    public EstadoDirector getEstadoDirectorId() {
+    public Long getEstadoDirectorId() {
         return estadoDirectorId;
     }
 
-    public void setEstadoDirectorId(EstadoDirector estadoDirectorId) {
+    public void setEstadoDirectorId(Long estadoDirectorId) {
         this.estadoDirectorId = estadoDirectorId;
     }
 
@@ -159,14 +144,6 @@ public class DirectorProyecto implements Serializable {
 
     public void setRenunciaDirectorList(List<RenunciaDirector> renunciaDirectorList) {
         this.renunciaDirectorList = renunciaDirectorList;
-    }
-
-    public boolean isEsEditado() {
-        return esEditado;
-    }
-
-    public void setEsEditado(boolean esEditado) {
-        this.esEditado = esEditado;
     }
 
     @Override

@@ -10,6 +10,7 @@ import edu.jlmallas.academico.entity.Carrera;
 import edu.jlmallas.academico.entity.OfertaAcademica;
 import edu.unl.sigett.academico.dto.CoordinadorPeriodoDTO;
 import edu.unl.sigett.autorProyecto.AutorProyectoDTO;
+import edu.unl.sigett.directorProyecto.DirectorProyectoDTO;
 import edu.unl.sigett.docenteProyecto.DocenteProyectoDTO;
 import edu.unl.sigett.documentoProyecto.DocumentoProyectoDTO;
 import edu.unl.sigett.entity.ConfiguracionProyecto;
@@ -48,6 +49,8 @@ public class SessionProyecto implements Serializable {
     private Cronograma cronograma;
 
     private List<Proyecto> proyectos;
+    private List<DirectorProyectoDTO> directoresProyectoDTO;
+    private List<DirectorProyectoDTO> filterDirectoresProyectoDTO;
     private List<DocumentoProyectoDTO> documentosProyectoDTO;
     private List<DocumentoProyectoDTO> filterDocumentosProyectoDTO;
     private List<DocumentoProyectoDTO> documentosProyectosDTOAgregados;
@@ -87,6 +90,8 @@ public class SessionProyecto implements Serializable {
     private DualListModel<Carrera> carrerasDualList;
 
     public SessionProyecto() {
+        this.filterDirectoresProyectoDTO=new ArrayList<>();
+        this.directoresProyectoDTO=new ArrayList<>();
         this.documentosProyectosDTOAgregados = new ArrayList<>();
         this.documentosProyectoDTO = new ArrayList<>();
         this.filterDocumentosProyectoDTO = new ArrayList<>();
@@ -490,6 +495,22 @@ public class SessionProyecto implements Serializable {
 
     public void setCoordinadorPeriodoDTOCarreraSeleccionada(CoordinadorPeriodoDTO coordinadorPeriodoDTOCarreraSeleccionada) {
         this.coordinadorPeriodoDTOCarreraSeleccionada = coordinadorPeriodoDTOCarreraSeleccionada;
+    }
+
+    public List<DirectorProyectoDTO> getDirectoresProyectoDTO() {
+        return directoresProyectoDTO;
+    }
+
+    public void setDirectoresProyectoDTO(List<DirectorProyectoDTO> directoresProyectoDTO) {
+        this.directoresProyectoDTO = directoresProyectoDTO;
+    }
+
+    public List<DirectorProyectoDTO> getFilterDirectoresProyectoDTO() {
+        return filterDirectoresProyectoDTO;
+    }
+
+    public void setFilterDirectoresProyectoDTO(List<DirectorProyectoDTO> filterDirectoresProyectoDTO) {
+        this.filterDirectoresProyectoDTO = filterDirectoresProyectoDTO;
     }
 
 }

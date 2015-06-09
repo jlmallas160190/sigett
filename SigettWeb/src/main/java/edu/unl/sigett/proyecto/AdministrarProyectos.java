@@ -27,9 +27,8 @@ import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 import com.ocpsoft.pretty.faces.annotation.URLMappings;
-import edu.unl.sigett.adjudicacion.controlador.AdministrarDirectoresProyecto;
+import edu.unl.sigett.directorProyecto.AdministrarDirectoresProyecto;
 import edu.unl.sigett.adjudicacion.controlador.AdministrarProrrogas;
-import edu.unl.sigett.comun.controlador.AdministrarNotificaciones;
 import edu.unl.sigett.finalizacion.controlador.AdministrarActas;
 import edu.unl.sigett.finalizacion.controlador.AdministrarEvaluacionesTribunal;
 import edu.unl.sigett.finalizacion.controlador.AdministrarMiembrosTribunal;
@@ -149,8 +148,7 @@ class AdministrarProyectos implements Serializable {
     private AdministrarEvaluacionesTribunal administrarEvaluacionesTribunal;
     @Inject
     private AdministrarEstudiantesCarrera administrarEstudiantesCarrera;
-    @Inject
-    private AdministrarNotificaciones administrarNotificaciones;
+
     @Inject
     private AdministrarMiembrosTribunal administrarMiembrosTribunal;
     @Inject
@@ -2189,10 +2187,10 @@ class AdministrarProyectos implements Serializable {
                 boolean tieneDirectorAsignado = false;
                 if (!directorProyectos.isEmpty()) {
                     for (DirectorProyecto directorProyecto : directorProyectos) {
-                        if (directorProyecto.getEstadoDirectorId().getCodigo().equalsIgnoreCase(EstadoDirectorEnum.INICIO.getTipo())) {
-                            tieneDirectorAsignado = true;
-                            break;
-                        }
+//                        if (directorProyecto.getEstadoDirectorId().getCodigo().equalsIgnoreCase(EstadoDirectorEnum.INICIO.getTipo())) {
+//                            tieneDirectorAsignado = true;
+//                            break;
+//                        }
                     }
                     if (tieneDirectorAsignado == false) {
                         proyectosAdjudicacionDirector.add(proyecto);

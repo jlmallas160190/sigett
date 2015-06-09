@@ -14,7 +14,7 @@ import javax.ejb.Local;
  * @author JorgeLuis
  */
 @Local
-public interface RenunciaFacadeLocal {
+public interface RenunciaDao {
 
     void create(Renuncia renuncia);
 

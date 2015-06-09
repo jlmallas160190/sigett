@@ -14,6 +14,9 @@
         <ui:define name="content">
             <f:event type="preRenderView" listener="#{proyectoController.preRenderViewEdit()}"/>
             <f:event type="preRenderView" listener="#{autorProyectoController.initPostulacion()}"/>
+            <f:event type="preRenderView" listener="#{directorProyectoController.renderedBuscarDirectorDisponible()}"/>
+            <f:event type="preRenderView" listener="#{directorProyectoController.renderedBuscar()}"/>
+            <f:event type="preRenderView" listener="#{directorProyectoController.renderedEliminar()}"/>
             <p:growl id="msm" showDetail="true" /> 
             <p:panel>
                 <p:tabView  id="tabViewDatosProyecto" >
@@ -57,12 +60,21 @@
                             </f:facet>  
                         </p:panel>
                     </p:tab>
+                    <p:tab id="tabDirectoresProyecto" rendered="#{directorProyectoDM.renderedBuscar}" title="#{msg['lbl.directores']}">
+                        <p:panel>
+                            <ui:include src="tablaDirectores.xhtml"/>
+                            <f:facet name="footer">
+                                <ui:include src="botonesTablaDirectores.xhtml"/>
+                            </f:facet>    
+                        </p:panel>
+                    </p:tab>
                 </p:tabView>
                 <f:facet name="footer">
                     <ui:include src="botonesEditarProyecto.xhtml"/>
                 </f:facet>
             </p:panel>
             <ui:include src="dialogoDirectoresDisponibles.xhtml"/>
+            <ui:include src="dialogoDocentesDisponibles.xhtml"/>
             <ui:include src="dialogoAspirantes.xhtml"/>
             <ui:include src="dialogoOficioDocenteProyecto.xhtml"/>
             <ui:include src="dialogoFePresentacionPertinencia.xhtml"/>

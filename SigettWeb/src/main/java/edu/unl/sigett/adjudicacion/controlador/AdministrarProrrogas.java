@@ -420,10 +420,10 @@ public class AdministrarProrrogas implements Serializable {
 
         DirectorProyecto dp = null;
         for (DirectorProyecto directorProyecto : directorProyectoFacadeLocal.buscarPorProyecto(prorroga.getCronogramaId().getProyecto().getId())) {
-            if (directorProyecto.getEstadoDirectorId().getId() != 2) {
-                dp = directorProyecto;
-                break;
-            }
+//            if (directorProyecto.getEstadoDirectorId().getId() != 2) {
+//                dp = directorProyecto;
+//                break;
+//            }
         }
         Docente docenteDirectorProyecto = docenteCarreraFacadeLocal.find(dp.getDirectorId().getId()).getDocenteId();
         Persona datosDocenteDirector = personaFacadeLocal.find(docenteDirectorProyecto.getId());

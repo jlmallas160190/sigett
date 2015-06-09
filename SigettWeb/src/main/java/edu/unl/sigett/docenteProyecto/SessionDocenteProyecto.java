@@ -7,8 +7,6 @@ package edu.unl.sigett.docenteProyecto;
 
 import edu.unl.sigett.util.DocumentoCarreraDTO;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Named;
 
@@ -23,9 +21,6 @@ public class SessionDocenteProyecto implements Serializable {
     private DocenteProyectoDTO docenteProyectoDTO;
     private DocumentoCarreraDTO documentoCarreraDTO;
 
-    private List<DirectorDTO> directoresDTO;
-    private List<DirectorDTO> filterDirectoresDTO;
-
     private Boolean renderedBuscar;
     private Boolean renderedBuscarEspecialista;
     private Boolean renderedImprimirOficio;
@@ -33,10 +28,9 @@ public class SessionDocenteProyecto implements Serializable {
     private Boolean renderedEliminar;
     private Boolean renderedMediaOficio;
     private Boolean renderedMediaFePresentacion;
+    private Boolean renderedPnlDocentesDisponibles;
 
     public SessionDocenteProyecto() {
-        this.filterDirectoresDTO = new ArrayList<>();
-        this.directoresDTO = new ArrayList<>();
         this.docenteProyectoDTO = new DocenteProyectoDTO();
     }
 
@@ -80,28 +74,12 @@ public class SessionDocenteProyecto implements Serializable {
         this.renderedSeleccionarEspecialista = renderedSeleccionarEspecialista;
     }
 
-    public Boolean isRenderedEliminar() {
+    public Boolean getRenderedEliminar() {
         return renderedEliminar;
     }
 
     public void setRenderedEliminar(Boolean renderedEliminar) {
         this.renderedEliminar = renderedEliminar;
-    }
-
-    public List<DirectorDTO> getDirectoresDTO() {
-        return directoresDTO;
-    }
-
-    public void setDirectoresDTO(List<DirectorDTO> directoresDTO) {
-        this.directoresDTO = directoresDTO;
-    }
-
-    public List<DirectorDTO> getFilterDirectoresDTO() {
-        return filterDirectoresDTO;
-    }
-
-    public void setFilterDirectoresDTO(List<DirectorDTO> filterDirectoresDTO) {
-        this.filterDirectoresDTO = filterDirectoresDTO;
     }
 
     public Boolean getRenderedMediaOficio() {
@@ -126,6 +104,14 @@ public class SessionDocenteProyecto implements Serializable {
 
     public void setRenderedMediaFePresentacion(Boolean renderedMediaFePresentacion) {
         this.renderedMediaFePresentacion = renderedMediaFePresentacion;
+    }
+
+    public Boolean getRenderedPnlDocentesDisponibles() {
+        return renderedPnlDocentesDisponibles;
+    }
+
+    public void setRenderedPnlDocentesDisponibles(Boolean renderedPnlDocentesDisponibles) {
+        this.renderedPnlDocentesDisponibles = renderedPnlDocentesDisponibles;
     }
 
 }

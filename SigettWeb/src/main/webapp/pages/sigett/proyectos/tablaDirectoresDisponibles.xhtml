@@ -5,21 +5,19 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
     <body>
-        <p:dataTable id="tblDocentes" value="#{sessionDocenteProyecto.directoresDTO}" var="item" rows="5" paginator="true"
+        <p:dataTable id="tblDirectores" value="#{directorDM.directoresDTO}" var="item" rows="5" paginator="true"
                      rowIndexVar="rowIx" rowKey="#{item.persona.apellidos}" selection="#{item}" selectionMode="single" editable="true"  
-                     filteredValue="#{sessionDocenteProyecto.filterDirectoresDTO}" widgetVar="tblDocentesFilter"
+                     filteredValue="#{directorDM.filterDirectoresDTO}" widgetVar="tblDirectoresFilter"
                      editMode="cell" rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'even-row' : 'odd-row'}" emptyMessage="#{msg['lbl.table.empty']}">
-            <p:column rendered="#{sessionProyecto.renderedInicio}">
+            <p:column>
                 <f:facet name="header">
                     <h:outputText value="#{msg['lbl.seleccionar']}"/>
                 </f:facet>
                 <p:commandButton icon="ui-icon-circle-plus" onclick="if (!confirm('¿#{msg['lbl.confirmarSeleccionar']}.?'))
                             return false;" 
-                            action="#{docenteProyectoController.agregar(item)}"
-                                 onstart="PF('dlgLoading').show();" oncomplete="PF('dlgLoading').hide(),PF('tblDPFilter').filter()" 
-                                 update=":contenido:tabViewDatosProyecto:tblDocentesProyecto,:contenido:msm">
-                    <f:param name="1" value="seleccionar-dlg"/>
-                </p:commandButton>
+                                 action="#{directorProyectoController.agregar(item)}"
+                                 onstart="PF('dlgLoading').show();" oncomplete="PF('dlgLoading').hide(),PF('tblDirProyFilter').filter()" 
+                                 update=":contenido:tabViewDatosProyecto:tblDirectoresProyecto,:contenido:msm"/>
             </p:column>
             <p:column filterBy="#{item.persona.apellidos}" filterMatchMode="contains" sortBy="#{item.persona.apellidos}">
                 <f:facet name="header">

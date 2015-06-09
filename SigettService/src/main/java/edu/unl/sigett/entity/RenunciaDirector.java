@@ -12,11 +12,8 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -27,9 +24,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Entity
 @Table(name = "renuncia_director")
 @XmlRootElement
-@NamedQueries({
-    @NamedQuery(name = "RenunciaDirector.findAll", query = "SELECT r FROM RenunciaDirector r"),
-    @NamedQuery(name = "RenunciaDirector.findById", query = "SELECT r FROM RenunciaDirector r WHERE r.id = :id")})
 public class RenunciaDirector implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -44,14 +38,18 @@ public class RenunciaDirector implements Serializable {
     @JoinColumn(name = "director_proyecto_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private DirectorProyecto directorProyectoId;
-    @Transient
-    private boolean esEditado;
 
     public RenunciaDirector() {
     }
 
     public RenunciaDirector(Long id) {
         this.id = id;
+    }
+
+    public RenunciaDirector(Long id, Renuncia renuncia, DirectorProyecto directorProyectoId) {
+        this.id = id;
+        this.renuncia = renuncia;
+        this.directorProyectoId = directorProyectoId;
     }
 
     public Long getId() {
@@ -78,14 +76,6 @@ public class RenunciaDirector implements Serializable {
         this.directorProyectoId = directorProyectoId;
     }
 
-    public boolean isEsEditado() {
-        return esEditado;
-    }
-
-    public void setEsEditado(boolean esEditado) {
-        this.esEditado = esEditado;
-    }
-
     @Override
     public int hashCode() {
         int hash = 0;
@@ -100,10 +90,7 @@ public class RenunciaDirector implements Serializable {
             return false;
         }
         RenunciaDirector other = (RenunciaDirector) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
+        return (this.id != null || other.id == null) && (this.id == null || this.id.equals(other.id));
     }
 
     @Override

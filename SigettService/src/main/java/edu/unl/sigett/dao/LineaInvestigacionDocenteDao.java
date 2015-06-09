@@ -28,8 +28,6 @@ public interface LineaInvestigacionDocenteDao {
 
     List<LineaInvestigacionDocente> findRange(int[] range);
 
-    List<LineaInvestigacionDocente> buscarPorDocenteCi(String numeroIdentificacion);
-
     List<LineaInvestigacionDocente> buscar(LineaInvestigacionDocente lineaInvestigacionDocente);
 
     int count();

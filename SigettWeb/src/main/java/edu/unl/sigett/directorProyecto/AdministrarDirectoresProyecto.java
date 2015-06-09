@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.unl.sigett.adjudicacion.controlador;
+package edu.unl.sigett.directorProyecto;
 
 import com.jlmallas.comun.entity.Persona;
 import com.jlmallas.comun.dao.PersonaDao;
@@ -43,7 +43,6 @@ import edu.unl.sigett.dao.ConfiguracionGeneralDao;
 import edu.jlmallas.academico.dao.CoordinadorPeriodoDao;
 import edu.unl.sigett.dao.DirectorDao;
 import edu.unl.sigett.dao.DirectorProyectoFacadeLocal;
-import edu.unl.sigett.dao.EstadoDirectorFacadeLocal;
 import edu.unl.sigett.dao.LineaInvestigacionDocenteDao;
 import edu.unl.sigett.dao.DocumentoCarreraDao;
 import org.jlmallas.seguridad.dao.UsuarioDao;
@@ -77,8 +76,6 @@ public class AdministrarDirectoresProyecto implements Serializable {
     private DirectorDao directorFacadeLocal;
     @EJB
     private DirectorProyectoFacadeLocal directorProyectoFacadeLocal;
-    @EJB
-    private EstadoDirectorFacadeLocal estadoDirectorFacadeLocal;
     @EJB
     private ConfiguracionGeneralDao configuracionGeneralFacadeLocal;
     @EJB
@@ -356,7 +353,7 @@ public class AdministrarDirectoresProyecto implements Serializable {
             String param = (String) facesContext.getExternalContext().getRequestParameterMap().get("1");
             int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "editar_director_proyecto");
             if (tienePermiso == 1) {
-                directorProyecto.setEsEditado(true);
+//                directorProyecto.setEsEditado(true);
                 sessionDirectorProyecto.setDirectorProyecto(directorProyecto);
                 if (param.equalsIgnoreCase("editar-dlg")) {
                     renderedDlgEditar = true;
@@ -374,23 +371,23 @@ public class AdministrarDirectoresProyecto implements Serializable {
 
     public boolean permiteAgregarDirector(Proyecto proyecto) {
         boolean var = false;
-        String val = configuracionGeneralFacadeLocal.find((int) 20).getValor();
-        if (!proyecto.getDirectorProyectoList().isEmpty()) {
-            for (DirectorProyecto dp : proyecto.getDirectorProyectoList()) {
-                if (dp.getEstadoDirectorId().getId() == 1) {
-                    if (val.equalsIgnoreCase("SI")) {
-                        var = true;
-                    } else {
-                        var = false;
-                        break;
-                    }
-                } else {
-                    var = true;
-                }
-            }
-        } else {
-            var = true;
-        }
+//        String val = configuracionGeneralFacadeLocal.find((int) 20).getValor();
+//        if (!proyecto.getDirectorProyectoList().isEmpty()) {
+//            for (DirectorProyecto dp : proyecto.getDirectorProyectoList()) {
+//                if (dp.getEstadoDirectorId().getId() == 1) {
+//                    if (val.equalsIgnoreCase("SI")) {
+//                        var = true;
+//                    } else {
+//                        var = false;
+//                        break;
+//                    }
+//                } else {
+//                    var = true;
+//                }
+//            }
+//        } else {
+//            var = true;
+//        }
         return var;
     }
 
@@ -572,18 +569,18 @@ public class AdministrarDirectoresProyecto implements Serializable {
     public List<Director> listadoDirectoresSorteo(List<LineaInvestigacion> lineaInvestigacions) {
         List<Director> directors = new ArrayList<>();
         try {
-            for (UsuarioCarrera usuarioCarrera : usuarioCarreraFacadeLocal.buscarPorUsuario(sessionUsuario.getUsuario().getId())) {
-                for (Director director : directorFacadeLocal.buscarAptos(usuarioCarrera.getCarreraId())) {
-                    DocenteCarrera dc = docenteCarreraFacadeLocal.find(director.getId());
-                    for (LineaInvestigacion li : lineaInvestigacions) {
-//                        for (LineaInvestigacionDocente lid : lineaInvestigacionDocenteFacadeLocal.buscarPorDocenteId(dc.getDocenteId().getId())) {
-//                            if (lid.getLineaInvestigacionId().equals(li)) {
-//                                directors.add(director);
-//                            }
-//                        }
-                    }
-                }
-            }
+//            for (UsuarioCarrera usuarioCarrera : usuarioCarreraFacadeLocal.buscarPorUsuario(sessionUsuario.getUsuario().getId())) {
+//                for (Director director : directorFacadeLocal.buscarAptos(usuarioCarrera.getCarreraId())) {
+//                    DocenteCarrera dc = docenteCarreraFacadeLocal.find(director.getId());
+//                    for (LineaInvestigacion li : lineaInvestigacions) {
+////                        for (LineaInvestigacionDocente lid : lineaInvestigacionDocenteFacadeLocal.buscarPorDocenteId(dc.getDocenteId().getId())) {
+////                            if (lid.getLineaInvestigacionId().equals(li)) {
+////                                directors.add(director);
+////                            }
+////                        }
+//                    }
+//                }
+//            }
 
         } catch (Exception e) {
         }
@@ -591,37 +588,37 @@ public class AdministrarDirectoresProyecto implements Serializable {
     }
 
     public void listadoDirectoresAptos(String criterio, List<LineaInvestigacion> lineaInvestigacions, Usuario usuario) {
-        this.directoresDisponibles = new ArrayList<>();
-        try {
-            FacesContext facesContext = FacesContext.getCurrentInstance();
-            ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "buscar_director");
-            if (tienePermiso == 1) {
-                for (UsuarioCarrera usuarioCarrera : usuarioCarreraFacadeLocal.buscarPorUsuario(sessionUsuario.getUsuario().getId())) {
-                    for (Director director : directorFacadeLocal.buscarAptos(usuarioCarrera.getCarreraId())) {
-                        DocenteCarrera dc = docenteCarreraFacadeLocal.find(director.getId());
-                        Persona p = personaFacadeLocal.find(dc.getDocenteId().getId());
-                        for (LineaInvestigacion li : lineaInvestigacions) {
-//                            for (LineaInvestigacionDocente lid : lineaInvestigacionDocenteFacadeLocal.buscarPorDocenteId(dc.getDocenteId().getId())) {
-//                                if (lid.getLineaInvestigacionId().equals(li)) {
-//                                    if (p.getApellidos().toUpperCase().contains(criterio.toUpperCase()) || p.getNombres().toUpperCase().contains(criterio.toUpperCase())
-//                                            || p.getNumeroIdentificacion().contains(criterio)) {
-//                                        if (!directoresDisponibles.contains(director)) {
-//                                            directoresDisponibles.add(director);
-//                                        }
-//                                    }
-//                                }
-//                            }
-                        }
-                    }
-                }
-            } else {
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_buscar") + ". " + bundle.getString("lbl.msm_consulte"), "");
-                FacesContext.getCurrentInstance().addMessage(null, message);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        this.directoresDisponibles = new ArrayList<>();
+//        try {
+//            FacesContext facesContext = FacesContext.getCurrentInstance();
+//            ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
+//            int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "buscar_director");
+//            if (tienePermiso == 1) {
+//                for (UsuarioCarrera usuarioCarrera : usuarioCarreraFacadeLocal.buscarPorUsuario(sessionUsuario.getUsuario().getId())) {
+//                    for (Director director : directorFacadeLocal.buscarAptos(usuarioCarrera.getCarreraId())) {
+//                        DocenteCarrera dc = docenteCarreraFacadeLocal.find(director.getId());
+//                        Persona p = personaFacadeLocal.find(dc.getDocenteId().getId());
+//                        for (LineaInvestigacion li : lineaInvestigacions) {
+////                            for (LineaInvestigacionDocente lid : lineaInvestigacionDocenteFacadeLocal.buscarPorDocenteId(dc.getDocenteId().getId())) {
+////                                if (lid.getLineaInvestigacionId().equals(li)) {
+////                                    if (p.getApellidos().toUpperCase().contains(criterio.toUpperCase()) || p.getNombres().toUpperCase().contains(criterio.toUpperCase())
+////                                            || p.getNumeroIdentificacion().contains(criterio)) {
+////                                        if (!directoresDisponibles.contains(director)) {
+////                                            directoresDisponibles.add(director);
+////                                        }
+////                                    }
+////                                }
+////                            }
+//                        }
+//                    }
+//                }
+//            } else {
+//                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_buscar") + ". " + bundle.getString("lbl.msm_consulte"), "");
+//                FacesContext.getCurrentInstance().addMessage(null, message);
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 
     public void buscar(String criterio, Usuario usuario, Proyecto proyecto) {

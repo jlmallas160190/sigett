@@ -28,17 +28,6 @@ public class LineaInvestigacionDocenteDaoImplement extends AbstractDao<LineaInve
     }
 
     @Override
-    public List<LineaInvestigacionDocente> buscarPorDocenteCi(String numeroIdentificacion) {
-        try {
-            Query query = em.createQuery("SELECT ld FROM LineaInvestigacionDocente ld WHERE " + "(ld.docenteId.persona.numeroIdentificacion=:numeroIdentificacion)");
-            query.setParameter("numeroIdentificacion", numeroIdentificacion);
-            return query.getResultList();
-        } catch (Exception e) {
-        }
-        return null;
-    }
-
-    @Override
     public List<LineaInvestigacionDocente> buscar(LineaInvestigacionDocente lid) {
         StringBuilder sql = new StringBuilder();
         HashMap<String, Object> parametros = new HashMap<>();

@@ -52,7 +52,6 @@ import edu.unl.sigett.dao.ProyectoDao;
 import org.jlmallas.seguridad.dao.UsuarioDao;
 import edu.jlmallas.academico.entity.EstudianteCarrera;
 import edu.jlmallas.academico.dao.EstudianteCarreraDao;
-import edu.unl.sigett.comun.controlador.AdministrarNotificaciones;
 import edu.unl.sigett.enumeration.CatalogoDocumentoCarreraEnum;
 import edu.unl.sigett.enumeration.EstadoAutorEnum;
 import edu.unl.sigett.enumeration.EstadoProyectoEnum;
@@ -73,8 +72,6 @@ public class AdministrarMiembrosTribunal implements Serializable {
     private AdministrarEvaluacionesTribunal administrarEvaluacionesTribunal;
     @Inject
     private SessionProyecto sessionProyecto;
-    @Inject
-    private AdministrarNotificaciones administrarNotificaciones;
 
     @EJB
     private UsuarioDao usuarioFacadeLocal;

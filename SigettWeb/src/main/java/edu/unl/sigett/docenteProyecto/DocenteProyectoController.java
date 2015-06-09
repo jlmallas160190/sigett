@@ -5,6 +5,7 @@
  */
 package edu.unl.sigett.docenteProyecto;
 
+import edu.unl.sigett.director.DirectorDTO;
 import edu.unl.sigett.util.DocumentoCarreraDTO;
 import com.jlmallas.comun.dao.ConfiguracionDao;
 import com.jlmallas.comun.dao.PersonaDao;
@@ -13,17 +14,17 @@ import com.jlmallas.comun.entity.Documento;
 import com.jlmallas.comun.entity.Item;
 import com.jlmallas.comun.enumeration.CatalogoEnum;
 import com.jlmallas.comun.enumeration.ConfiguracionEnum;
+import com.jlmallas.comun.enumeration.ValorEnum;
+import com.jlmallas.comun.service.ConfiguracionService;
 import com.jlmallas.comun.service.DocumentoService;
 import com.jlmallas.comun.service.ItemService;
-import edu.jlmallas.academico.dao.PeriodoCoordinacionDao;
 import edu.jlmallas.academico.entity.Carrera;
-import edu.jlmallas.academico.service.CoordinadorPeriodoService;
-import edu.jlmallas.academico.service.DocenteService;
 import edu.unl.sigett.academico.dto.DocenteCarreraDTO;
 import edu.unl.sigett.autorProyecto.AutorProyectoDTO;
 import edu.unl.sigett.dao.ConfiguracionGeneralDao;
 import edu.unl.sigett.dao.DirectorDao;
 import edu.unl.sigett.dao.LineaInvestigacionDocenteDao;
+import edu.unl.sigett.director.DirectorDM;
 import edu.unl.sigett.entity.ConfiguracionCarrera;
 import edu.unl.sigett.entity.DocenteProyecto;
 import edu.unl.sigett.entity.DocumentoCarrera;
@@ -72,22 +73,14 @@ public class DocenteProyectoController implements Serializable {
     @Inject
     private SessionDocenteProyecto sessionDocenteProyecto;
     @Inject
-    private SessionUsuarioCarrera sessionUsuarioCarrera;
-    @Inject
     private CabeceraController cabeceraController;
+    @Inject
+    private DirectorDM directorDM;
 
     //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="SERVICIOS">
     @EJB
-    private ConfiguracionDao configuracionDao;
-    @EJB
-    private ConfiguracionGeneralDao configuracionGeneralDao;
-    @EJB
-    private LineaInvestigacionDocenteDao lineaInvestigacionDocenteDao;
-    @EJB
-    private DirectorDao directorDao;
-    @EJB
-    private PersonaDao personaDao;
+    private ConfiguracionService configuracionService;
     @EJB
     private DocumentoCarreraService documentoCarreraService;
     @EJB
@@ -96,19 +89,13 @@ public class DocenteProyectoController implements Serializable {
     private DocumentoService documentoService;
     @EJB
     private ConfiguracionCarreraService configuracionCarreraService;
-    @EJB
-    private CoordinadorPeriodoService coordinadorPeriodoService;
-    @EJB
-    private PeriodoCoordinacionDao periodoCoordinacionDao;
-    @EJB
-    private DocenteService docenteService;
     //</editor-fold>
     private static final Logger LOG = Logger.getLogger(DocenteProyectoController.class.getName());
 
     public DocenteProyectoController() {
     }
 
-    //<editor-fold defaultstate="collapsed" desc="INICIO">
+    //<editor-fold defaultstate="collapsed" desc="CRUD">
     /**
      * IMPRIMIR OFICIO AL DOCENTE NOTIFICANDO SU DESIGNACIÓN PARA DAR
      * PERTIENENCIA AL PROYECTO SELECCIONADO.
@@ -163,10 +150,10 @@ public class DocenteProyectoController implements Serializable {
             return;
         }
         String numeracion = configuracionCarrera.getValor();
-        String rutaReporte = request.getRealPath("/") + configuracionDao.buscar(new Configuracion(ConfiguracionEnum.RUTAREPORTEPERTINENCIA.getTipo())).get(0).getValor();
+        String rutaReporte = request.getRealPath("/") + configuracionService.buscar(new Configuracion(ConfiguracionEnum.RUTAREPORTEPERTINENCIA.getTipo())).get(0).getValor();
 
         byte[] resultado = reporteController.oficioPertinencia(new ReporteOficioPertinencia(carrera.getLogo() != null ? carrera.getLogo() : null,
-                request.getRealPath("/") + "" + configuracionDao.buscar(new Configuracion(ConfiguracionEnum.RUTALOGOINSTITUCION.getTipo())).get(0).getValor(), carrera.getNombre(),
+                request.getRealPath("/") + "" + configuracionService.buscar(new Configuracion(ConfiguracionEnum.RUTALOGOINSTITUCION.getTipo())).get(0).getValor(), carrera.getNombre(),
                 carrera.getAreaId().getNombre(), carrera.getSigla(), cabeceraController.getValueFromProperties(
                         PropertiesFileEnum.CONTENIDOREPORTE, "nro_oficio"), cabeceraController.getValueFromProperties(
                         PropertiesFileEnum.CONTENIDOREPORTE, "nombre_institucion"), cabeceraController.getValueFromProperties(
@@ -186,7 +173,7 @@ public class DocenteProyectoController implements Serializable {
             return;
         }
         Integer numeracionNext = Integer.parseInt(numeracion) + 1;
-        String ruta = configuracionDao.buscar(new Configuracion(ConfiguracionEnum.RUTAOFICIO.getTipo())).get(0).getValor() + "/oficio" + docenteProyectoDTO.getDocenteProyecto().getId() + ".pdf";
+        String ruta = configuracionService.buscar(new Configuracion(ConfiguracionEnum.RUTAOFICIO.getTipo())).get(0).getValor() + "/oficio" + docenteProyectoDTO.getDocenteProyecto().getId() + ".pdf";
         Documento documento = new Documento(null, ruta, itemService.buscarPorCatalogoCodigo(CatalogoEnum.CATALOGOOFICIO.getTipo(),
                 CatalogoDocumentoCarreraEnum.PERTINENCIA.getTipo()).getId(), Double.parseDouble(resultado.length + ""), fechaActual.getTime(), resultado, null, "pdf");
         documentoService.guardar(documento);
@@ -200,7 +187,7 @@ public class DocenteProyectoController implements Serializable {
     }
 
     private String generarCuerpoOficioPertinencia(final DocenteProyectoDTO docenteProyectoDTO, final Carrera carrera) {
-        String tiempoMaximo = configuracionDao.buscar(new Configuracion(ConfiguracionEnum.TIEMPOPERTINENCIA.getTipo())).get(0).getValor() + " "
+        String tiempoMaximo = configuracionService.buscar(new Configuracion(ConfiguracionEnum.TIEMPOPERTINENCIA.getTipo())).get(0).getValor() + " "
                 + cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "dias_laborables");
         return (cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "articulos_pertinencia") + ", " + cabeceraController.
                 getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "pre_plazo") + " " + tiempoMaximo + ", " + cabeceraController.
@@ -228,10 +215,10 @@ public class DocenteProyectoController implements Serializable {
             return;
         }
         String numeracion = configuracionCarrera.getValor();
-        String rutaReporte = request.getRealPath("/") + configuracionDao.buscar(new Configuracion(ConfiguracionEnum.RUTAREPORTEPERTINENCIA.getTipo())).get(0).getValor();
+        String rutaReporte = request.getRealPath("/") + configuracionService.buscar(new Configuracion(ConfiguracionEnum.RUTAREPORTEPERTINENCIA.getTipo())).get(0).getValor();
 
         reporteController.oficioPertinencia(new ReporteOficioPertinencia(carrera.getLogo() != null ? carrera.getLogo() : null,
-                request.getRealPath("/") + "" + configuracionDao.buscar(new Configuracion(ConfiguracionEnum.RUTALOGOINSTITUCION.getTipo())).get(0).getValor(), carrera.getNombre(),
+                request.getRealPath("/") + "" + configuracionService.buscar(new Configuracion(ConfiguracionEnum.RUTALOGOINSTITUCION.getTipo())).get(0).getValor(), carrera.getNombre(),
                 carrera.getAreaId().getNombre(), carrera.getSigla(), cabeceraController.getValueFromProperties(
                         PropertiesFileEnum.CONTENIDOREPORTE, "nro_oficio"), cabeceraController.getValueFromProperties(
                         PropertiesFileEnum.CONTENIDOREPORTE, "nombre_institucion"), cabeceraController.getValueFromProperties(
@@ -312,7 +299,7 @@ public class DocenteProyectoController implements Serializable {
         ReporteController reporteController = new ReporteController();
         Carrera carrera = sessionProyecto.getCarreraSeleccionada();
         Calendar fechaActual = Calendar.getInstance();
-        String rutaReporte = request.getRealPath("/") + configuracionDao.buscar(new Configuracion(ConfiguracionEnum.RUTAREPORTEFEPERTINENCIA.getTipo())).get(0).getValor();
+        String rutaReporte = request.getRealPath("/") + configuracionService.buscar(new Configuracion(ConfiguracionEnum.RUTAREPORTEFEPERTINENCIA.getTipo())).get(0).getValor();
 
         byte[] resultado = reporteController.fepertinencia(new ReporteFePresentacionPertinencia(rutaReporte,
                 "", generaReferenciaFePresentacion(fechaActual, carrera), generaCuerpoFePresentacion(docenteProyectoDTO, fechaActual, carrera),
@@ -321,7 +308,7 @@ public class DocenteProyectoController implements Serializable {
         if (resultado == null) {
             return;
         }
-        String ruta = configuracionDao.buscar(new Configuracion(ConfiguracionEnum.RUTAFEPRESENTACION.getTipo())).get(0).getValor() + "/fePertinencia"
+        String ruta = configuracionService.buscar(new Configuracion(ConfiguracionEnum.RUTAFEPRESENTACION.getTipo())).get(0).getValor() + "/fePertinencia"
                 + docenteProyectoDTO.getDocenteProyecto().getId() + ".pdf";
         Documento documento = new Documento(null, ruta, itemService.buscarPorCatalogoCodigo(CatalogoEnum.FEPRESENTACION.getTipo(),
                 CatalogoDocumentoCarreraEnum.PERTINENCIA.getTipo()).getId(), Double.parseDouble(resultado.length + ""), fechaActual.getTime(),
@@ -423,6 +410,16 @@ public class DocenteProyectoController implements Serializable {
         sessionDocenteProyecto.setRenderedMediaFePresentacion(Boolean.FALSE);
     }
 
+    public void renderedPnlDocentesDisponibles() {
+        sessionDocenteProyecto.setRenderedPnlDocentesDisponibles(Boolean.TRUE);
+    }
+
+    public void cancelarDocentesDisponibles() {
+        this.directorDM.getDirectoresDTO().clear();
+        this.directorDM.getFilterDirectoresDTO().clear();
+        sessionDocenteProyecto.setRenderedPnlDocentesDisponibles(Boolean.FALSE);
+    }
+
     /**
      * SUBIR Y ACTUALIZAR DOCUMENTO YA SEA DE OFICIO, FE DE PRESENTACIÓN
      * PERTINENCIA
@@ -452,58 +449,15 @@ public class DocenteProyectoController implements Serializable {
      *
      * @return
      */
-    public boolean permitirAgregarDocente() {
-        boolean var = false;
-        String val = configuracionGeneralDao.find((int) 19).getValor();
+    public Boolean permitirAgregarDocente() {
+        String val = configuracionService.buscar(new Configuracion(ConfiguracionEnum.AGREGARDOCENTEPROYECTO.getTipo())).get(0).getValor();
         if (sessionProyecto.getDocentesProyectoDTO().isEmpty()) {
-            return true;
+            return Boolean.TRUE;
         }
-        for (DocenteProyectoDTO docenteProyectoDTO : sessionProyecto.getDocentesProyectoDTO()) {
-            if (docenteProyectoDTO.getDocenteProyecto().getEsActivo()) {
-                if (val.equalsIgnoreCase("SI")) {
-                    var = true;
-                } else {
-                    var = false;
-                    break;
-                }
-            } else {
-                var = true;
-            }
+        if (val.equals(ValorEnum.SI.getTipo())) {
+            return Boolean.TRUE;
         }
-        return var;
-    }
-
-    /**
-     * LISTADO DE DIRECTORES DISPONIBLES DE ACUERDO A LAS LINEAS DE
-     * INVESTIGACIÓN SELECCIONADAS EN EL PROYECTO.
-     */
-    public void listadoDirectoresDiponibles() {
-        try {
-            this.sessionDocenteProyecto.getDirectoresDTO().clear();
-            this.sessionDocenteProyecto.getFilterDirectoresDTO().clear();
-            for (DocenteCarreraDTO docenteCarreraDTO : sessionUsuarioCarrera.getDocentesCarreraDTO()) {
-                List<LineaInvestigacionDocente> lineaInvestigacionDocentes = lineaInvestigacionDocenteDao.buscar(
-                        new LineaInvestigacionDocente(docenteCarreraDTO.getDocenteCarrera().getDocenteId().getId(), null));
-                if (lineaInvestigacionDocentes.isEmpty()) {
-                    continue;
-                }
-                for (LineaInvestigacion lineaInvestigacion : sessionProyecto.getLineasInvestigacionSeleccionadas()) {
-                    for (LineaInvestigacionDocente lid : lineaInvestigacionDocentes) {
-                        if (lineaInvestigacion.equals(lid.getLineaInvestigacionId())) {
-                            DirectorDTO directorDTO = new DirectorDTO(directorDao.find(
-                                    docenteCarreraDTO.getDocenteCarrera().getId()), docenteCarreraDTO.getDocenteCarrera(), personaDao.find(
-                                            docenteCarreraDTO.getDocenteCarrera().getDocenteId().getId()));
-                            if (!sessionDocenteProyecto.getDirectoresDTO().contains(directorDTO)) {
-                                sessionDocenteProyecto.getDirectoresDTO().add(directorDTO);
-                            }
-                        }
-                    }
-                }
-            }
-            sessionDocenteProyecto.setFilterDirectoresDTO(sessionDocenteProyecto.getDirectoresDTO());
-        } catch (Exception e) {
-            LOG.info(e.getMessage());
-        }
+        return Boolean.FALSE;
     }
 
     /**
@@ -521,22 +475,23 @@ public class DocenteProyectoController implements Serializable {
                         + bundle.getString("lbl.msm_consulte"), "");
                 return;
             }
-            if (permitirAgregarDocente()) {
-                DocenteProyectoDTO dp = devuelveDocenteProyecto(directorDTO);
-                if (dp == null) {
-                    DocenteProyecto docenteProyecto = new DocenteProyecto(sessionProyecto.getProyectoSeleccionado(), fecha.getTime(),
-                            directorDTO.getDocenteCarrera().getId(), Boolean.TRUE,null);
-                    DocenteProyectoDTO docenteProyectoDTO = new DocenteProyectoDTO(docenteProyecto, directorDTO.getPersona(),
-                            directorDTO.getDocenteCarrera());
-                    sessionProyecto.getDocentesProyectoDTO().add(docenteProyectoDTO);
-                    RequestContext.getCurrentInstance().execute("PF('dlgBuscarDocentesDisponibles').hide()");
-                    cabeceraController.getMessageView().message(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.docente") + " "
-                            + bundle.getString("lbl.msm_agregar"), "");
-                }
-            } else {
+            if (!permitirAgregarDocente()) {
                 cabeceraController.getMessageView().message(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_existe") + " "
                         + bundle.getString("lbl.docente"), "");
+                return;
             }
+            DocenteProyectoDTO dp = devuelveDocenteProyecto(directorDTO);
+            if (dp != null) {
+                return;
+            }
+            DocenteProyecto docenteProyecto = new DocenteProyecto(sessionProyecto.getProyectoSeleccionado(), fecha.getTime(),
+                    directorDTO.getDocenteCarrera().getId(), Boolean.TRUE, null);
+            DocenteProyectoDTO docenteProyectoDTO = new DocenteProyectoDTO(docenteProyecto, directorDTO.getPersona(),
+                    directorDTO.getDocenteCarrera());
+            sessionProyecto.getDocentesProyectoDTO().add(docenteProyectoDTO);
+            RequestContext.getCurrentInstance().execute("PF('dlgBuscarDocentesDisponibles').hide()");
+            cabeceraController.getMessageView().message(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.docente") + " "
+                    + bundle.getString("lbl.msm_agregar"), "");
         } catch (Exception e) {
             LOG.info(e.getMessage());
         }

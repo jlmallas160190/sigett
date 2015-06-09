@@ -7,6 +7,7 @@ package com.jlmallas.comun.entity;
 
 import java.io.Serializable;
 import javax.persistence.Basic;
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -28,12 +29,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Entity
 @Table(name = "item", schema = "comun")
 @XmlRootElement
-@NamedQueries({
-    @NamedQuery(name = "Item.findAll", query = "SELECT i FROM Item i"),
-    @NamedQuery(name = "Item.findById", query = "SELECT i FROM Item i WHERE i.id = :id"),
-    @NamedQuery(name = "Item.findByNombre", query = "SELECT i FROM Item i WHERE i.nombre = :nombre"),
-    @NamedQuery(name = "Item.findByCodigo", query = "SELECT i FROM Item i WHERE i.codigo = :codigo"),
-    @NamedQuery(name = "Item.findByEsActivo", query = "SELECT i FROM Item i WHERE i.esActivo = :esActivo")})
+@Cacheable(value = false)
 public class Item implements Serializable {
 
     private static final long serialVersionUID = 1L;

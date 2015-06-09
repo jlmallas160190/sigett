@@ -2,12 +2,20 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:p="http://primefaces.org/ui"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
 
     <body>
-        <p:dialog id="dlgDocentesDisponibles" header="#{msg['lbl.docentes']} #{msg['lbl.disponibles']}"  widgetVar="dlgBuscarDocentesDisponibles" 
-                  styleClass="modal-md"  modal="true" >
-             <ui:include src="tablaDirectoresDisponibles.xhtml"/>
+        <p:dialog id="dlgDirectoresDisponibles" header="#{msg['lbl.directores']} #{msg['lbl.disponibles']}"  widgetVar="dlgDirectoresDisponibles" 
+                  styleClass="modal-md"  modal="true" closable="false" >
+            <p:panel rendered="#{directorProyectoDM.renderedPnlDirectoresDisponibles}">
+                <ui:include src="tablaDirectoresDisponibles.xhtml"/>
+                <f:facet  name="footer">
+                    <p:commandButton value="#{btn.cancelar}" update=":contenido:dlgDirectoresDisponibles" 
+                                     onstart="PF('dlgLoading').show();" oncomplete="PF('dlgLoading').hide(),PF('dlgDirectoresDisponibles').hide()" 
+                                     action="#{directorProyectoController.cancelarDirectoresDisponibles()}"/>
+                </f:facet>
+            </p:panel>
         </p:dialog>
     </body>
 

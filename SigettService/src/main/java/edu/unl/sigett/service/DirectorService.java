@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.unl.sigett.dao;
+package edu.unl.sigett.service;
 
 import edu.unl.sigett.entity.Director;
 import java.util.List;
@@ -11,25 +11,18 @@ import javax.ejb.Local;
 
 /**
  *
- * @author JorgeLuis
+ * @author jorge-luis
  */
 @Local
-public interface DirectorDao {
+public interface DirectorService {
 
-    void create(Director director);
+    void guardar(final Director director);
 
-    void edit(Director director);
+    void actualizar(final Director director);
 
-    void remove(Director director);
+    void eliminar(final Director director);
 
-    Director find(Object id);
-
-    List<Director> findAll();
-
-    List<Director> findRange(int[] range);
+    Director buscarPorId(final Director director);
 
     List<Director> buscar(final Director director);
-
-    int count();
-
 }

@@ -19,7 +19,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import edu.unl.sigett.dao.AutorProyectoDao;
 import edu.unl.sigett.dao.RenunciaAutorFacadeLocal;
-import edu.unl.sigett.dao.RenunciaFacadeLocal;
+import edu.unl.sigett.dao.RenunciaDao;
 import org.jlmallas.seguridad.dao.UsuarioDao;
 import edu.unl.sigett.adjudicacion.session.SessionRenunciaAutor;
 import edu.unl.sigett.autorProyecto.SessionAutorProyecto;
@@ -43,7 +43,7 @@ public class AdministrarRenunciasAutor implements Serializable {
     @EJB
     private RenunciaAutorFacadeLocal renunciaAutorFacadeLocal;
     @EJB
-    private RenunciaFacadeLocal renunciaFacadeLocal;
+    private RenunciaDao renunciaFacadeLocal;
     @EJB
     private UsuarioDao usuarioFacadeLocal;
     @EJB

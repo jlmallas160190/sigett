@@ -35,7 +35,6 @@ import edu.jlmallas.academico.service.DocenteService;
 import edu.jlmallas.academico.service.OfertaAcademicaService;
 import edu.unl.sigett.academico.dto.CoordinadorPeriodoDTO;
 import edu.unl.sigett.autorProyecto.AutorProyectoDTO;
-import edu.unl.sigett.dao.ConfiguracionProyectoDao;
 import edu.unl.sigett.dao.DirectorDao;
 import edu.unl.sigett.dao.ProyectoOfertaCarreraDao;
 import edu.unl.sigett.docenteProyecto.DocenteProyectoDTO;
