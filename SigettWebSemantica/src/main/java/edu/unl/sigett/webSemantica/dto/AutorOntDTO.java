@@ -8,7 +8,6 @@ package edu.unl.sigett.webSemantica.dto;
 import com.hp.hpl.jena.ontology.Individual;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.logging.Logger;
 
 /**
  *
@@ -17,15 +16,14 @@ import java.util.logging.Logger;
 public class AutorOntDTO extends PersonaOntDTO implements Serializable {
 
     private Long id;
-    private static final Logger LOG = Logger.getLogger(AutorOntDTO.class.getName());
     private Individual individual;
 
     public AutorOntDTO(Long id) {
         this.id = id;
     }
 
-    public AutorOntDTO(Long id, String nombres, String apellidos, Date fechaNacimiento, String genero, String email) {
-        super(nombres, apellidos, fechaNacimiento, genero, email);
+    public AutorOntDTO(Long id, String nombres, String apellidos, Date fechaNacimiento, String genero, String email,String uri) {
+        super(nombres, apellidos, fechaNacimiento, genero, email,uri);
         this.id = id;
     }
 

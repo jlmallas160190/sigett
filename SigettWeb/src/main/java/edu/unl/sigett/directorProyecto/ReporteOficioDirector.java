@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.unl.sigett.docenteProyecto;
+package edu.unl.sigett.directorProyecto;
 
 import edu.unl.sigett.reporte.ReporteOficio;
 
@@ -11,17 +11,17 @@ import edu.unl.sigett.reporte.ReporteOficio;
  *
  * @author jorge-luis
  */
-public class ReporteOficioPertinencia extends ReporteOficio {
+public class ReporteOficioDirector extends ReporteOficio {
 
     private String autores;
 
-    public ReporteOficioPertinencia(byte[] logoCarrera, String rutaLogoIntitucion, String nombreCarrera, String nombreArea, String carreraSigla,
+    public ReporteOficioDirector(byte[] logoCarrera, String rutaLogoIntitucion, String nombreCarrera, String nombreArea, String carreraSigla,
             String etiquetaNO, String cabecera1, String cabecera2, String lugar, String fecha, String numeracion, String cargoDestinatario,
             String destinatario, String cargoQuienFirma, String datosQuienFirma, String cuerpo, String referencia, String asunto, String despedida,
-            String saludo, String tipoArchivo, String responsable, String autores, String ruta) {
-        super(logoCarrera, rutaLogoIntitucion, nombreCarrera, nombreArea, carreraSigla, etiquetaNO, cabecera1, cabecera2, lugar, fecha, numeracion,
-                cargoDestinatario, destinatario, cargoQuienFirma, datosQuienFirma, cuerpo, referencia, asunto, despedida, saludo, tipoArchivo,
-                responsable, ruta);
+            String saludo, String tipoArchivo, String responsable, String ruta, String autores) {
+        super(logoCarrera, rutaLogoIntitucion, nombreCarrera, nombreArea, carreraSigla, etiquetaNO, cabecera1, cabecera2, lugar,
+                fecha, numeracion, cargoDestinatario, destinatario, cargoQuienFirma, datosQuienFirma, cuerpo, referencia, asunto,
+                despedida, saludo, tipoArchivo, responsable, ruta);
         this.autores = autores;
     }
 

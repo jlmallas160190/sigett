@@ -8,7 +8,6 @@ package edu.unl.sigett.seguimiento.controlador;
 import com.jlmallas.comun.dao.PersonaDao;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 import com.ocpsoft.pretty.faces.annotation.URLMappings;
-import edu.unl.sigett.directorProyecto.AdministrarDirectoresProyecto;
 import edu.jlmallas.academico.entity.Area;
 import edu.unl.sigett.entity.AutorProyecto;
 import edu.jlmallas.academico.entity.Carrera;
@@ -59,9 +58,8 @@ import java.util.Map;
 })
 public class ViewProyectos implements Serializable {
 
-    @Inject
-    private AdministrarDirectoresProyecto directoresProyecto;
-
+//    @Inject
+//    private AdministrarDirectoresProyecto directoresProyecto;
     private String filtro;
     private Carrera carrera;
     private PeriodoAcademico periodoAcademico;
@@ -198,7 +196,7 @@ public class ViewProyectos implements Serializable {
         try {
 //            sessionConsultarProyecto.setProyecto(proyecto);
 //            autoresProyecto.listadoAutores("", proyecto);
-            directoresProyecto.historialDirectoresProyecto("", proyecto);
+//            directoresProyecto.historialDirectoresProyecto("", proyecto);
             navegacion = "pretty:viewProject";
         } catch (Exception e) {
         }
@@ -210,14 +208,14 @@ public class ViewProyectos implements Serializable {
         int contador = 0;
         for (AutorProyecto autorProyecto : proyecto.getAutorProyectoList()) {
             EstudianteCarrera estudianteCarrera = estudianteCarreraFacadeLocal.find(autorProyecto.getAspiranteId().getId());
-            if (autorProyecto.getRenunciaAutorList().isEmpty()) {
-                if (contador == 0) {
-                    autores += estudianteCarrera.getEstudianteId() + " ";
-                } else {
-                    autores += ", " + estudianteCarrera.getEstudianteId();
-                }
-                contador++;
-            }
+//            if (autorProyecto.getRenunciaAutorList().isEmpty()) {
+//                if (contador == 0) {
+//                    autores += estudianteCarrera.getEstudianteId() + " ";
+//                } else {
+//                    autores += ", " + estudianteCarrera.getEstudianteId();
+//                }
+//                contador++;
+//            }
         }
         return autores;
     }
@@ -257,7 +255,6 @@ public class ViewProyectos implements Serializable {
             System.out.println(e);
         }
     }
-
 
     public void buscarWebSemantica(String filtro) {
         try {
@@ -395,15 +392,6 @@ public class ViewProyectos implements Serializable {
 
     public void setCriterioCarrera(String criterioCarrera) {
         this.criterioCarrera = criterioCarrera;
-    }
-
-
-    public AdministrarDirectoresProyecto getDirectoresProyecto() {
-        return directoresProyecto;
-    }
-
-    public void setDirectoresProyecto(AdministrarDirectoresProyecto directoresProyecto) {
-        this.directoresProyecto = directoresProyecto;
     }
 
 }

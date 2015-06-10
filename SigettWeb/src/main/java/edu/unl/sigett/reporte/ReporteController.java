@@ -5,6 +5,8 @@
  */
 package edu.unl.sigett.reporte;
 
+import edu.unl.sigett.directorProyecto.ReporteFePresentacionDirector;
+import edu.unl.sigett.directorProyecto.ReporteOficioDirector;
 import edu.unl.sigett.docenteProyecto.ReporteFePresentacionPertinencia;
 import edu.unl.sigett.docenteProyecto.ReporteOficioPertinencia;
 import java.io.ByteArrayInputStream;
@@ -63,6 +65,43 @@ public class ReporteController {
     }
 
     /**
+     * REPORTE OFICIO DE DIRECTOR
+     *
+     * @param reporteOficioDirector
+     * @return
+     */
+    public byte[] oficioDirector(final ReporteOficioDirector reporteOficioDirector) {
+        byte[] bytes = null;
+        try {
+            Map p = new HashMap();
+            InputStream is = new ByteArrayInputStream(reporteOficioDirector.getLogoCarrera());
+            p.put("lugarFecha", reporteOficioDirector.getLugar() + ", " + reporteOficioDirector.getFecha());
+            p.put("carrera", reporteOficioDirector.getNombreCarrera().toUpperCase());
+            p.put("numeracion", reporteOficioDirector.getNumeracion());
+            p.put("etiquetaNO", reporteOficioDirector.getEtiquetaNO());
+            p.put("cabecera1", reporteOficioDirector.getCabecera1());
+            p.put("cabecera2", reporteOficioDirector.getCabecera2());
+            p.put("saludo", reporteOficioDirector.getSaludo());
+            p.put("logoCarrera", is);
+            p.put("area", reporteOficioDirector.getNombreArea());
+            p.put("cargoDestinatario", reporteOficioDirector.getCargoDestinatario().toUpperCase());
+            p.put("destinatario", reporteOficioDirector.getDestinatario().toUpperCase());
+            p.put("quienFirma", reporteOficioDirector.getDatosQuienFirma().toUpperCase());
+            p.put("cargoQuienFirma", reporteOficioDirector.getCargoQuienFirma().toUpperCase());
+            p.put("cuerpo", reporteOficioDirector.getCuerpo());
+            p.put("despedida", reporteOficioDirector.getDespedida());
+            p.put("logoInstitucion", reporteOficioDirector.getRutaLogoIntitucion());
+            p.put("responsable", reporteOficioDirector.getResponsable());
+            p.put("autores", reporteOficioDirector.getAutores());
+            File fileReport = new File(reporteOficioDirector.getRuta());
+            return JasperRunManager.runReportToPdf(fileReport.getPath(), p, new JREmptyDataSource());
+        } catch (JRException ex) {
+            LOG.info(ex.getMessage());
+        }
+        return bytes;
+    }
+
+    /**
      * Reporte fe de presentación de pertinencia
      *
      * @param reporteFePresentacionPertinencia
@@ -78,6 +117,28 @@ public class ReporteController {
             p.put("firmaInvolucrados", reporteFePresentacionPertinencia.getFirmaInvolucrados());
             p.put("responsable", reporteFePresentacionPertinencia.getResponsable());
             File fileReport = new File(reporteFePresentacionPertinencia.getRuta());
+            return JasperRunManager.runReportToPdf(fileReport.getPath(), p, new JREmptyDataSource());
+        } catch (JRException ex) {
+            LOG.info(ex.getMessage());
+        }
+        return bytes;
+    }
+    /**
+     * Reporte fe de presentación de pertinencia
+     *
+     * @param reporteFePresentacionDirector
+     * @return
+     */
+    public byte[] feDirector(final ReporteFePresentacionDirector reporteFePresentacionDirector) {
+        byte[] bytes = null;
+        try {
+            Map p = new HashMap();
+            p.put("referencia", reporteFePresentacionDirector.getReferencia());
+            p.put("cuerpo", reporteFePresentacionDirector.getCuerpo());
+            p.put("final", reporteFePresentacionDirector.getParteFinal());
+            p.put("firmaInvolucrados", reporteFePresentacionDirector.getFirmaInvolucrados());
+            p.put("responsable", reporteFePresentacionDirector.getResponsable());
+            File fileReport = new File(reporteFePresentacionDirector.getRuta());
             return JasperRunManager.runReportToPdf(fileReport.getPath(), p, new JREmptyDataSource());
         } catch (JRException ex) {
             LOG.info(ex.getMessage());

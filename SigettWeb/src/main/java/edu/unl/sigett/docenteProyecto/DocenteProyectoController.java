@@ -7,8 +7,6 @@ package edu.unl.sigett.docenteProyecto;
 
 import edu.unl.sigett.director.DirectorDTO;
 import edu.unl.sigett.util.DocumentoCarreraDTO;
-import com.jlmallas.comun.dao.ConfiguracionDao;
-import com.jlmallas.comun.dao.PersonaDao;
 import com.jlmallas.comun.entity.Configuracion;
 import com.jlmallas.comun.entity.Documento;
 import com.jlmallas.comun.entity.Item;
@@ -19,17 +17,10 @@ import com.jlmallas.comun.service.ConfiguracionService;
 import com.jlmallas.comun.service.DocumentoService;
 import com.jlmallas.comun.service.ItemService;
 import edu.jlmallas.academico.entity.Carrera;
-import edu.unl.sigett.academico.dto.DocenteCarreraDTO;
-import edu.unl.sigett.autorProyecto.AutorProyectoDTO;
-import edu.unl.sigett.dao.ConfiguracionGeneralDao;
-import edu.unl.sigett.dao.DirectorDao;
-import edu.unl.sigett.dao.LineaInvestigacionDocenteDao;
 import edu.unl.sigett.director.DirectorDM;
 import edu.unl.sigett.entity.ConfiguracionCarrera;
 import edu.unl.sigett.entity.DocenteProyecto;
 import edu.unl.sigett.entity.DocumentoCarrera;
-import edu.unl.sigett.entity.LineaInvestigacion;
-import edu.unl.sigett.entity.LineaInvestigacionDocente;
 import edu.unl.sigett.enumeration.CatalogoDocumentoCarreraEnum;
 import edu.unl.sigett.enumeration.EstadoProyectoEnum;
 import edu.unl.sigett.proyecto.SessionProyecto;
@@ -37,7 +28,6 @@ import edu.unl.sigett.reporte.ReporteController;
 import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
 import edu.unl.sigett.service.ConfiguracionCarreraService;
 import edu.unl.sigett.service.DocumentoCarreraService;
-import edu.unl.sigett.usuarioCarrera.SessionUsuarioCarrera;
 import edu.unl.sigett.util.CabeceraController;
 import edu.unl.sigett.util.PropertiesFileEnum;
 import java.io.File;
@@ -53,7 +43,6 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 
@@ -140,7 +129,6 @@ public class DocenteProyectoController implements Serializable {
      */
     private void generarOficioPertinencia(final DocenteProyectoDTO docenteProyectoDTO) {
         FacesContext facesContext = FacesContext.getCurrentInstance();
-        HttpServletResponse response = (HttpServletResponse) facesContext.getExternalContext().getResponse();
         HttpServletRequest request = (HttpServletRequest) facesContext.getExternalContext().getRequest();
         ReporteController reporteController = new ReporteController();
         Carrera carrera = sessionProyecto.getCarreraSeleccionada();
@@ -151,7 +139,6 @@ public class DocenteProyectoController implements Serializable {
         }
         String numeracion = configuracionCarrera.getValor();
         String rutaReporte = request.getRealPath("/") + configuracionService.buscar(new Configuracion(ConfiguracionEnum.RUTAREPORTEPERTINENCIA.getTipo())).get(0).getValor();
-
         byte[] resultado = reporteController.oficioPertinencia(new ReporteOficioPertinencia(carrera.getLogo() != null ? carrera.getLogo() : null,
                 request.getRealPath("/") + "" + configuracionService.buscar(new Configuracion(ConfiguracionEnum.RUTALOGOINSTITUCION.getTipo())).get(0).getValor(), carrera.getNombre(),
                 carrera.getAreaId().getNombre(), carrera.getSigla(), cabeceraController.getValueFromProperties(
@@ -168,12 +155,13 @@ public class DocenteProyectoController implements Serializable {
                 generarCuerpoOficioPertinencia(docenteProyectoDTO, carrera), "", "", cabeceraController.getValueFromProperties(
                         PropertiesFileEnum.CONTENIDOREPORTE, "despedida_pertinencia"), cabeceraController.getValueFromProperties(
                         PropertiesFileEnum.CONTENIDOREPORTE, "saludo"), "", sessionUsuario.getUsuario().getNombres().toUpperCase() + " "
-                + sessionUsuario.getUsuario().getApellidos().toUpperCase(), autores().toUpperCase(), rutaReporte, response));
+                + sessionUsuario.getUsuario().getApellidos().toUpperCase(), sessionProyecto.getProyectoSeleccionado().getAutores().toUpperCase(),
+                rutaReporte));
         if (resultado == null) {
             return;
         }
         Integer numeracionNext = Integer.parseInt(numeracion) + 1;
-        String ruta = configuracionService.buscar(new Configuracion(ConfiguracionEnum.RUTAOFICIO.getTipo())).get(0).getValor() + "/oficio" + docenteProyectoDTO.getDocenteProyecto().getId() + ".pdf";
+        String ruta = configuracionService.buscar(new Configuracion(ConfiguracionEnum.RUTAOFICIO.getTipo())).get(0).getValor() + "/oficio" +numeracionNext + ".pdf";
         Documento documento = new Documento(null, ruta, itemService.buscarPorCatalogoCodigo(CatalogoEnum.CATALOGOOFICIO.getTipo(),
                 CatalogoDocumentoCarreraEnum.PERTINENCIA.getTipo()).getId(), Double.parseDouble(resultado.length + ""), fechaActual.getTime(), resultado, null, "pdf");
         documentoService.guardar(documento);
@@ -194,64 +182,9 @@ public class DocenteProyectoController implements Serializable {
                 getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "asunto_pertinencia") + ", " + cabeceraController.
                 getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "pre_temaProyecto") + ": <b>" + docenteProyectoDTO.
                 getDocenteProyecto().getProyectoId().getTemaActual() + "</b> " + cabeceraController.getValueFromProperties(
-                        PropertiesFileEnum.CONTENIDOREPORTE, "pre_datosAutor") + " <b>" + autores().toUpperCase() + "</b> " + cabeceraController.
-                getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "aspirante") + " <b>" + carrera.getNombreTitulo().toUpperCase() + "</b>");
-    }
-
-    /**
-     * IMPRIME UN DOCUMENTO EN FORMATO DOC,PDF, ODT
-     *
-     * @param paramTipoDocumento
-     */
-    public void generarDocOficioPertinencia(String paramTipoDocumento) {
-        FacesContext facesContext = FacesContext.getCurrentInstance();
-        HttpServletResponse response = (HttpServletResponse) facesContext.getExternalContext().getResponse();
-        HttpServletRequest request = (HttpServletRequest) facesContext.getExternalContext().getRequest();
-        ReporteController reporteController = new ReporteController();
-        Carrera carrera = sessionProyecto.getCarreraSeleccionada();
-        Calendar fechaActual = Calendar.getInstance();
-        ConfiguracionCarrera configuracionCarrera = configuracionCarreraService.buscarPrimero(new ConfiguracionCarrera(carrera.getId(), "NO"));
-        if (configuracionCarrera == null) {
-            return;
-        }
-        String numeracion = configuracionCarrera.getValor();
-        String rutaReporte = request.getRealPath("/") + configuracionService.buscar(new Configuracion(ConfiguracionEnum.RUTAREPORTEPERTINENCIA.getTipo())).get(0).getValor();
-
-        reporteController.oficioPertinencia(new ReporteOficioPertinencia(carrera.getLogo() != null ? carrera.getLogo() : null,
-                request.getRealPath("/") + "" + configuracionService.buscar(new Configuracion(ConfiguracionEnum.RUTALOGOINSTITUCION.getTipo())).get(0).getValor(), carrera.getNombre(),
-                carrera.getAreaId().getNombre(), carrera.getSigla(), cabeceraController.getValueFromProperties(
-                        PropertiesFileEnum.CONTENIDOREPORTE, "nro_oficio"), cabeceraController.getValueFromProperties(
-                        PropertiesFileEnum.CONTENIDOREPORTE, "nombre_institucion"), cabeceraController.getValueFromProperties(
-                        PropertiesFileEnum.CONTENIDOREPORTE, "oficio") + " " + carrera.getSigla() + "-" + cabeceraController.getValueFromProperties(
-                        PropertiesFileEnum.CONTENIDOREPORTE, "sigla_institucion"), carrera.getLugar(), cabeceraController.getUtilService().formatoFecha(
-                        fechaActual.getTime(), "EEEEE dd MMMMM yyyy"), numeracion, cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE,
-                        "docente_carrera") + " " + carrera.getNombre(), sessionDocenteProyecto.getDocenteProyectoDTO().getDocenteCarrera().
-                getDocenteId().getTituloDocenteId().getTituloId().getAbreviacion() + "<br/>" + sessionDocenteProyecto.
-                getDocenteProyectoDTO().getPersona().getNombres() + " " + sessionDocenteProyecto.getDocenteProyectoDTO().getPersona().getApellidos(),
-                cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "coordinador_carrera") + " " + carrera.getNombre(),
-                sessionProyecto.getCoordinadorPeriodoDTOCarreraSeleccionada().getDocente().getTituloDocenteId().getTituloId().getAbreviacion() + "<br/>"
-                + sessionProyecto.getCoordinadorPeriodoDTOCarreraSeleccionada().getPersona().getNombres() + " " + sessionProyecto.
-                getCoordinadorPeriodoDTOCarreraSeleccionada().getPersona().getApellidos(), generarCuerpoOficioPertinencia(
-                        sessionDocenteProyecto.getDocenteProyectoDTO(), carrera), "", "", cabeceraController.getValueFromProperties(
-                        PropertiesFileEnum.CONTENIDOREPORTE, "despedida_pertinencia"), cabeceraController.getValueFromProperties(
-                        PropertiesFileEnum.CONTENIDOREPORTE, "saludo"), paramTipoDocumento, sessionUsuario.getUsuario().getNombres().toUpperCase() + " "
-                + sessionUsuario.getUsuario().getApellidos().toUpperCase(), autores().toUpperCase(), rutaReporte, response));
-        facesContext.responseComplete();
-    }
-
-    private String autores() {
-        String resultado = "";
-        int contador = 0;
-        for (AutorProyectoDTO autorProyecto : sessionProyecto.getAutoresProyectoDTO()) {
-            if (contador == 0) {
-
-                resultado = (autorProyecto.getPersona().getApellidos() + " " + autorProyecto.getPersona().getNombres());
-            } else {
-                resultado = (resultado + ", " + autorProyecto.getPersona().getApellidos() + " " + autorProyecto.getPersona().getNombres());
-            }
-            contador++;
-        }
-        return resultado;
+                        PropertiesFileEnum.CONTENIDOREPORTE, "pre_datosAutor") + " <b>" + sessionProyecto.getProyectoSeleccionado().getAutores().toUpperCase()
+                + "</b> " + cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "aspirante") + " <b>"
+                + carrera.getNombreTitulo().toUpperCase() + "</b>");
     }
 
     /**
@@ -408,10 +341,6 @@ public class DocenteProyectoController implements Serializable {
         sessionDocenteProyecto.setDocumentoCarreraDTO(new DocumentoCarreraDTO());
         sessionDocenteProyecto.setDocenteProyectoDTO(new DocenteProyectoDTO());
         sessionDocenteProyecto.setRenderedMediaFePresentacion(Boolean.FALSE);
-    }
-
-    public void renderedPnlDocentesDisponibles() {
-        sessionDocenteProyecto.setRenderedPnlDocentesDisponibles(Boolean.TRUE);
     }
 
     public void cancelarDocentesDisponibles() {

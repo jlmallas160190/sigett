@@ -17,15 +17,15 @@ public class DocenteOntDTO extends PersonaOntDTO implements Serializable {
 
     private Long id;
     private Individual individual;
-    private String uri;
+   
     
 
     public DocenteOntDTO(Long id) {
         this.id = id;
     }
 
-    public DocenteOntDTO(Long id, String nombres, String apellidos, Date fechaNacimiento, String genero, String email) {
-        super(nombres, apellidos, fechaNacimiento, genero, email);
+    public DocenteOntDTO(Long id, String nombres, String apellidos, Date fechaNacimiento, String genero, String email,String uri) {
+        super(nombres, apellidos, fechaNacimiento, genero, email,uri);
         this.id = id;
     }
 
@@ -44,13 +44,4 @@ public class DocenteOntDTO extends PersonaOntDTO implements Serializable {
     public void setIndividual(Individual individual) {
         this.individual = individual;
     }
-
-    public String getUri() {
-        return uri;
-    }
-
-    public void setUri(String uri) {
-        this.uri = uri;
-    }
-
 }

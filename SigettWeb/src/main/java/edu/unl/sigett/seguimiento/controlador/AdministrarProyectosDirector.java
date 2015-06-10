@@ -9,7 +9,7 @@ import com.jlmallas.comun.entity.Persona;
 import com.jlmallas.comun.dao.PersonaDao;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 import com.ocpsoft.pretty.faces.annotation.URLMappings;
-import edu.unl.sigett.adjudicacion.controlador.AdministrarProrrogas;
+import edu.unl.sigett.prorroga.AdministrarProrrogas;
 import edu.unl.sigett.finalizacion.controlador.AdministrarInformesProyecto;
 import edu.unl.sigett.seguimiento.session.SessionProyectosDirector;
 import edu.unl.sigett.entity.DirectorProyecto;

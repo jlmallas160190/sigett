@@ -6,6 +6,7 @@
 package edu.unl.sigett.directorProyecto;
 
 import edu.unl.sigett.director.DirectorDTO;
+import edu.unl.sigett.util.DocumentoCarreraDTO;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
@@ -24,16 +25,20 @@ public class DirectorProyectoDM implements Serializable {
     private List<DirectorDTO> filterDirectoresDTO;
 
     private DirectorProyectoDTO directorProyectoDTO;
+    private DocumentoCarreraDTO documentoCarreraDTO;
 
     private Boolean renderedCrear;
     private Boolean renderedEliminar;
     private Boolean renderedBuscar;
     private Boolean renderedBuscarDirectorDisponible;
     private Boolean renderedPnlDirectoresDisponibles;
+    private Boolean renderedImprimirOficio;
+    private Boolean renderedMediaOficio;
+    private Boolean renderedMediaFePresentacion;
 
     public DirectorProyectoDM() {
-        this.directoresDTO=new ArrayList<>();
-        this.filterDirectoresDTO=new ArrayList<>();
+        this.directoresDTO = new ArrayList<>();
+        this.filterDirectoresDTO = new ArrayList<>();
         this.directorProyectoDTO = new DirectorProyectoDTO();
     }
 
@@ -60,7 +65,6 @@ public class DirectorProyectoDM implements Serializable {
     public void setRenderedPnlDirectoresDisponibles(Boolean renderedPnlDirectoresDisponibles) {
         this.renderedPnlDirectoresDisponibles = renderedPnlDirectoresDisponibles;
     }
-
 
     public Boolean getRenderedCrear() {
         return renderedCrear;
@@ -100,6 +104,38 @@ public class DirectorProyectoDM implements Serializable {
 
     public void setFilterDirectoresDTO(List<DirectorDTO> filterDirectoresDTO) {
         this.filterDirectoresDTO = filterDirectoresDTO;
+    }
+
+    public DocumentoCarreraDTO getDocumentoCarreraDTO() {
+        return documentoCarreraDTO;
+    }
+
+    public void setDocumentoCarreraDTO(DocumentoCarreraDTO documentoCarreraDTO) {
+        this.documentoCarreraDTO = documentoCarreraDTO;
+    }
+
+    public Boolean isRenderedImprimirOficio() {
+        return renderedImprimirOficio;
+    }
+
+    public void setRenderedImprimirOficio(Boolean renderedImprimirOficio) {
+        this.renderedImprimirOficio = renderedImprimirOficio;
+    }
+
+    public Boolean getRenderedMediaOficio() {
+        return renderedMediaOficio;
+    }
+
+    public void setRenderedMediaOficio(Boolean renderedMediaOficio) {
+        this.renderedMediaOficio = renderedMediaOficio;
+    }
+
+    public Boolean getRenderedMediaFePresentacion() {
+        return renderedMediaFePresentacion;
+    }
+
+    public void setRenderedMediaFePresentacion(Boolean renderedMediaFePresentacion) {
+        this.renderedMediaFePresentacion = renderedMediaFePresentacion;
     }
 
 }

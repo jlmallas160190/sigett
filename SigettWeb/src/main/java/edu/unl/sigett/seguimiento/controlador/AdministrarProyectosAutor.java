@@ -7,7 +7,6 @@ package edu.unl.sigett.seguimiento.controlador;
 
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 import com.ocpsoft.pretty.faces.annotation.URLMappings;
-import edu.unl.sigett.directorProyecto.AdministrarDirectoresProyecto;
 import edu.unl.sigett.seguimiento.session.SessionProyectosAutor;
 import edu.unl.sigett.entity.AutorProyecto;
 import edu.jlmallas.academico.entity.Estudiante;
@@ -53,8 +52,6 @@ public class AdministrarProyectosAutor implements Serializable {
     private AdministrarActividades administrarActividades;
     @Inject
     private AdministrarRevisiones administrarRevisiones;
-    @Inject
-    private AdministrarDirectoresProyecto administrarDirectoresProyecto;
 
     @EJB
     private AutorProyectoDao autorProyectoFacadeLocal;
@@ -105,8 +102,8 @@ public class AdministrarProyectosAutor implements Serializable {
 //                administrarDocumentosProyecto.renderedEliminar(sessionEstudianteUsuario.getUsuario());
                 break;
             case "directores":
-                administrarDirectoresProyecto.historialDirectoresProyecto("", sessionProyectosAutor.getAutorProyecto().getProyectoId());
-                break;
+//                administrarDirectoresProyecto.historialDirectoresProyecto("", sessionProyectosAutor.getAutorProyecto().getProyectoId());
+//                break;
             case "actividades":
 //                administrarActividades.renderedBuscar(sessionEstudianteUsuario.getUsuario(), sessionProyectosAutor.getAutorProyecto().getProyectoId());
 //                administrarActividades.buscarPorAutorProyecto("", sessionEstudianteUsuario.getUsuario(), sessionProyectosAutor.getAutorProyecto().getProyectoId().getCronograma());
@@ -136,7 +133,7 @@ public class AdministrarProyectosAutor implements Serializable {
 //                administrarDocumentosProyecto.renderedEditar(sessionEstudianteUsuario.getUsuario());
 //                administrarDocumentosProyecto.renderedEliminar(sessionEstudianteUsuario.getUsuario());
 //                /*------------------------------------------------Directores--------------------------------------------*/
-                administrarDirectoresProyecto.historialDirectoresProyecto("", autorProyecto.getProyectoId());
+//                administrarDirectoresProyecto.historialDirectoresProyecto("", autorProyecto.getProyectoId());
                 /*---------------------------------------------------Actividades---------------------------------------------------*/
 //                administrarActividades.buscarPorAutorProyecto("", sessionEstudianteUsuario.getUsuario(), sessionProyectosAutor.getAutorProyecto().getProyectoId().getCronograma());
 //                administrarActividades.renderedEditar(sessionEstudianteUsuario.getUsuario(), sessionProyectosAutor.getAutorProyecto().getProyectoId());

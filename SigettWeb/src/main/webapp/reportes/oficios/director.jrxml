@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="d7dea40f-9bd7-4a93-a2c8-fb90dff99124">
+	<property name="ireport.zoom" value="1.3310000000000004"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="cabecera1" class="java.lang.String"/>
+	<parameter name="cabecera2" class="java.lang.String"/>
+	<parameter name="carrera" class="java.lang.String"/>
+	<parameter name="area" class="java.lang.String"/>
+	<parameter name="etiquetaNO" class="java.lang.String"/>
+	<parameter name="lugarFecha" class="java.lang.String"/>
+	<parameter name="destinatario" class="java.lang.String"/>
+	<parameter name="cargoDestinatario" class="java.lang.String"/>
+	<parameter name="saludo" class="java.lang.String"/>
+	<parameter name="numeracion" class="java.lang.String"/>
+	<parameter name="cuerpo" class="java.lang.String"/>
+	<parameter name="despedida" class="java.lang.String"/>
+	<parameter name="quienFirma" class="java.lang.String"/>
+	<parameter name="cargoQuienFirma" class="java.lang.String"/>
+	<parameter name="logoInstitucion" class="java.lang.String"/>
+	<parameter name="logoCarrera" class="java.io.InputStream"/>
+	<parameter name="responsable" class="java.lang.String"/>
+	<parameter name="autores" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="245" splitType="Stretch">
+			<textField isStretchWithOverflow="true">
+				<reportElement x="0" y="102" width="555" height="25" uuid="640a1b6e-b3a7-4f8d-a08c-9594db119c90"/>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{carrera}]]></textFieldExpression>
+			</textField>
+			<image isUsingCache="true">
+				<reportElement x="505" y="20" width="50" height="50" uuid="07c3def8-a128-4605-81cf-a675710d84e0"/>
+				<imageExpression><![CDATA[$P{logoCarrera}]]></imageExpression>
+			</image>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="0" y="77" width="555" height="25" uuid="5a35593f-d9dd-4052-9073-3c47b8e5b882"/>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="14" isBold="true" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{area}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="455" y="-1" width="100" height="20" uuid="e3be5724-08af-4559-aa54-f321cb0fae07"/>
+				<textElement textAlignment="Center" markup="styled"/>
+				<textFieldExpression><![CDATA[$P{cabecera2}]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="0" y="-1" width="50" height="50" uuid="2e43dbb1-4497-492b-be2b-7400bce856b7"/>
+				<imageExpression><![CDATA[$P{logoInstitucion}]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="51" y="0" width="100" height="49" uuid="f8544a82-b27e-453f-aba3-f7fa873d2861"/>
+				<textElement markup="styled"/>
+				<textFieldExpression><![CDATA[$P{cabecera1}]]></textFieldExpression>
+			</textField>
+			<line direction="BottomUp">
+				<reportElement positionType="FixRelativeToBottom" x="50" y="-1" width="1" height="50" uuid="0ad9341c-bf4e-4e1f-a9e3-9ec5ab29f764"/>
+				<graphicElement>
+					<pen lineWidth="1.5"/>
+				</graphicElement>
+			</line>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+				<reportElement stretchType="RelativeToBandHeight" x="0" y="146" width="555" height="99" uuid="32d8ebb8-0501-458f-b1de-6d3ab98cd614"/>
+				<textElement textAlignment="Justified" verticalAlignment="Top" markup="html">
+					<font fontName="SansSerif" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{etiquetaNO}+": "+$P{numeracion}+"<br/>"+$P{lugarFecha}+"<br/>"+$P{destinatario}+"<br/>"+$P{cargoDestinatario}+"<br/>"+$P{saludo}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<detail>
+		<band height="102" splitType="Stretch">
+			<textField isStretchWithOverflow="true">
+				<reportElement x="0" y="0" width="555" height="100" uuid="4a07cf58-009f-4ec3-b27c-143d85922d03"/>
+				<textElement textAlignment="Justified" markup="html">
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{cuerpo}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="97" splitType="Stretch">
+			<textField isStretchWithOverflow="true">
+				<reportElement x="0" y="0" width="555" height="97" uuid="ff7c7a83-8a8a-4108-b85e-fef98e4bd4ce"/>
+				<textElement textAlignment="Justified" markup="html">
+					<font fontName="SansSerif" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{autores}+"<br/>"+$P{responsable}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="101" splitType="Stretch">
+			<textField isStretchWithOverflow="true">
+				<reportElement x="0" y="0" width="555" height="101" uuid="97075d01-9cf0-45c0-9456-4f461e87aaf6"/>
+				<textElement textAlignment="Justified" markup="html">
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{despedida}+"<br/>"+$P{quienFirma}+"<br/>"+$P{cargoQuienFirma}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

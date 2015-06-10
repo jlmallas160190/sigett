@@ -68,8 +68,6 @@ public class AutorProyecto implements Serializable {
     @ManyToOne
     private Aspirante aspiranteId;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "autorProyectoId")
-    private List<RenunciaAutor> renunciaAutorList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "autorProyectoId")
     private List<Expediente> expedienteList;
     @Transient
     private Boolean esEditado;
@@ -77,16 +75,15 @@ public class AutorProyecto implements Serializable {
     public AutorProyecto() {
         this.esEditado = false;
         this.expedienteList = new ArrayList<>();
-        this.renunciaAutorList = new ArrayList<>();
     }
 
     public AutorProyecto(Long id) {
         this.id = id;
     }
 
-    public AutorProyecto(Proyecto proyecto, Aspirante aspirante,Long estado, Date fechaInicio, Date fechaCulminacion) {
+    public AutorProyecto(Proyecto proyecto, Aspirante aspirante, Long estado, Date fechaInicio, Date fechaCulminacion) {
         this.proyectoId = proyecto;
-        this.estadoAutorId=estado;
+        this.estadoAutorId = estado;
         this.aspiranteId = aspirante;
         this.fechaInicio = fechaInicio;
         this.fechaCulminacion = fechaCulminacion;
@@ -138,15 +135,6 @@ public class AutorProyecto implements Serializable {
 
     public void setAspiranteId(Aspirante aspiranteId) {
         this.aspiranteId = aspiranteId;
-    }
-
-    @XmlTransient
-    public List<RenunciaAutor> getRenunciaAutorList() {
-        return renunciaAutorList;
-    }
-
-    public void setRenunciaAutorList(List<RenunciaAutor> renunciaAutorList) {
-        this.renunciaAutorList = renunciaAutorList;
     }
 
     @XmlTransient

@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package edu.unl.sigett.entity;
 
 import java.io.Serializable;
@@ -32,13 +31,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Entity
 @Table(name = "renuncia")
 @XmlRootElement
-@NamedQueries({
-    @NamedQuery(name = "Renuncia.findAll", query = "SELECT r FROM Renuncia r"),
-    @NamedQuery(name = "Renuncia.findById", query = "SELECT r FROM Renuncia r WHERE r.id = :id"),
-    @NamedQuery(name = "Renuncia.findByFecha", query = "SELECT r FROM Renuncia r WHERE r.fecha = :fecha"),
-    @NamedQuery(name = "Renuncia.findByNumeroResolucion", query = "SELECT r FROM Renuncia r WHERE r.numeroResolucion = :numeroResolucion"),
-    @NamedQuery(name = "Renuncia.findByMotivo", query = "SELECT r FROM Renuncia r WHERE r.motivo = :motivo")})
 public class Renuncia implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -60,8 +54,6 @@ public class Renuncia implements Serializable {
     @Size(min = 1, max = 500)
     @Column(name = "motivo")
     private String motivo;
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "renuncia")
-    private RenunciaAutor renunciaAutor;
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "renuncia")
     private RenunciaDirector renunciaDirector;
 
@@ -111,14 +103,6 @@ public class Renuncia implements Serializable {
         this.motivo = motivo;
     }
 
-    public RenunciaAutor getRenunciaAutor() {
-        return renunciaAutor;
-    }
-
-    public void setRenunciaAutor(RenunciaAutor renunciaAutor) {
-        this.renunciaAutor = renunciaAutor;
-    }
-
     public RenunciaDirector getRenunciaDirector() {
         return renunciaDirector;
     }
@@ -151,5 +135,5 @@ public class Renuncia implements Serializable {
     public String toString() {
         return "edu.unl.sigett.entity.Renuncia[ id=" + id + " ]";
     }
-    
+
 }

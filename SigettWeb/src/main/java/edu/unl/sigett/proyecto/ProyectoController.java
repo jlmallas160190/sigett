@@ -18,7 +18,6 @@ import com.jlmallas.comun.service.DocumentoService;
 import com.jlmallas.comun.service.ItemService;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 import com.ocpsoft.pretty.faces.annotation.URLMappings;
-import edu.jlmallas.academico.dao.DocenteCarreraDao;
 import edu.jlmallas.academico.dao.EstudianteCarreraDao;
 import edu.jlmallas.academico.entity.Carrera;
 import edu.jlmallas.academico.entity.CoordinadorPeriodo;
@@ -341,6 +340,7 @@ public class ProyectoController implements Serializable {
         this.cronogramaService.actualizar(sessionProyecto.getCronograma());
         this.temaService.actualizar(sessionProyecto.getTemaProyecto().getTemaId());
         this.temaProyectoService.actualizar(sessionProyecto.getTemaProyecto());
+        this.grabarIndividuoProyecto();
         grabarAutores();
         grabarDocentes();
         grabarLineasInvestigacionProyecto();
@@ -530,6 +530,7 @@ public class ProyectoController implements Serializable {
     private void pickListLineasInvestigacionProyecto(Proyecto proyecto) {
         this.sessionProyecto.getLineasInvestigacionDualList().getSource().clear();
         this.sessionProyecto.getLineasInvestigacionDualList().getTarget().clear();
+        @SuppressWarnings("UnusedAssignment")
         List<LineaInvestigacion> lineasInvestigacionProyecto = new ArrayList<>();
         List<LineaInvestigacion> lineasInvestigacionCarrera = new ArrayList<>();
         try {
@@ -936,7 +937,8 @@ public class ProyectoController implements Serializable {
     private void grabarIndividuoAutor(final AutorProyectoDTO autorProyectoDTO) {
         AutorOntDTO autorOntDTO = new AutorOntDTO(autorProyectoDTO.getAspirante().getId(),
                 autorProyectoDTO.getPersona().getNombres(), autorProyectoDTO.getPersona().getApellidos(), autorProyectoDTO.getPersona().getFechaNacimiento(),
-                itemService.buscarPorId(autorProyectoDTO.getPersona().getGeneroId()).getNombre(), autorProyectoDTO.getPersona().getEmail());
+                itemService.buscarPorId(autorProyectoDTO.getPersona().getGeneroId()).getNombre(), autorProyectoDTO.getPersona().getEmail(),
+                cabeceraController.getValueFromProperties(PropertiesFileEnum.URI, "autor"));
         cabeceraController.getOntologyService().getAutorOntService().read(cabeceraController.getCabeceraWebSemantica());
         cabeceraController.getOntologyService().getAutorOntService().write(autorOntDTO);
         cabeceraController.getOntologyService().getAutorProyectoOntService().read(cabeceraController.getCabeceraWebSemantica());
@@ -1207,10 +1209,12 @@ public class ProyectoController implements Serializable {
             for (DirectorProyectoDTO directorProyectoDTO : sessionProyecto.getDirectoresProyectoDTO()) {
                 if (directorProyectoDTO.getDirectorProyecto().getId() == null) {
                     directorProyectoService.guardar(directorProyectoDTO.getDirectorProyecto());
+                    grabarIndividuoDirector(directorProyectoDTO);
                     enviarEmailDirector(directorProyectoDTO);
                     continue;
                 }
                 directorProyectoService.actualizar(directorProyectoDTO.getDirectorProyecto());
+                grabarIndividuoDirector(directorProyectoDTO);
                 enviarEmailDirector(directorProyectoDTO);
             }
             for (AutorProyectoDTO autorProyectoDTO : sessionProyecto.getAutoresProyectoDTO()) {
@@ -1241,10 +1245,15 @@ public class ProyectoController implements Serializable {
         DocenteOntDTO docenteOntDTO = new DocenteOntDTO(directorProyecto.getDirectorDTO().getDocenteCarrera().getId(),
                 directorProyecto.getDirectorDTO().getPersona().getNombres(), directorProyecto.getDirectorDTO().getPersona().getApellidos(),
                 directorProyecto.getDirectorDTO().getPersona().getFechaNacimiento(), itemService.buscarPorId(
-                        directorProyecto.getDirectorDTO().getPersona().getGeneroId()).getNombre(), directorProyecto.getDirectorDTO().getPersona().getEmail());
+                        directorProyecto.getDirectorDTO().getPersona().getGeneroId()).getNombre(), directorProyecto.getDirectorDTO().getPersona().getEmail(),
+                cabeceraController.getValueFromProperties(PropertiesFileEnum.URI, "docente"));
         cabeceraController.getOntologyService().getDocenteOntService().read(cabeceraController.getCabeceraWebSemantica());
         cabeceraController.getOntologyService().getDocenteOntService().write(docenteOntDTO);
 
+        DirectorProyectoOntDTO directorProyectoOntDTO = new DirectorProyectoOntDTO(directorProyecto.getDirectorProyecto().getId(), docenteOntDTO,
+                sessionProyecto.getProyectoOntDTO(), cabeceraController.getValueFromProperties(PropertiesFileEnum.URI, "director"));
+        cabeceraController.getOntologyService().getDirectorProyectoOntService().read(cabeceraController.getCabeceraWebSemantica());
+        cabeceraController.getOntologyService().getDirectorProyectoOntService().write(directorProyectoOntDTO);
     }
 
     /**

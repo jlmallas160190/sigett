@@ -170,57 +170,23 @@ public class AdministrarEstudiantesCarrera implements Serializable {
 
     //<editor-fold defaultstate="collapsed" desc="MÉTODOS CRUD">
     public String crear() {
-        try {
-            FacesContext facesContext = FacesContext.getCurrentInstance();
-            ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            int tienePermiso = usuarioDao.tienePermiso(sessionUsuario.getUsuario(), "crear_estudiante_carrera");
-            if (tienePermiso == 1) {
-                sessionEstudianteCarrera.setEstudianteCarreraDTO(new EstudianteCarreraDTO(new EstudianteCarrera(sessionUsuarioCarrera.getUsuarioCarreraDTO().getCarrera(), new Estudiante(Boolean.TRUE), Boolean.TRUE, itemService.buscarPorCatalogoCodigo(
-                        CatalogoEnum.ESTADOESTUDIANTECARRERA.getTipo(), EstadoEstudianteCarreraEnum.ESTUDIANTE.getTipo()).getId()), new Persona(), new Aspirante(null, Boolean.FALSE)));
-                sessionEstudianteCarrera.setRenderedInformacionEstudio(false);
-                habilitaCampoEsAptoAspirante(sessionUsuario.getUsuario());
-                return "pretty:crearEstudianteCarrera";
-            }
-            if (tienePermiso == 2) {
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_crear")
-                        + ". " + bundle.getString("lbl.msm_consulte"), "");
-                FacesContext.getCurrentInstance().addMessage(null, message);
-                return "";
-            }
-            return "pretty:login";
+        sessionEstudianteCarrera.setEstudianteCarreraDTO(new EstudianteCarreraDTO(new EstudianteCarrera(sessionUsuarioCarrera.getUsuarioCarreraDTO().getCarrera(), new Estudiante(Boolean.TRUE), Boolean.TRUE, itemService.buscarPorCatalogoCodigo(
+                CatalogoEnum.ESTADOESTUDIANTECARRERA.getTipo(), EstadoEstudianteCarreraEnum.ESTUDIANTE.getTipo()).getId()), new Persona(), new Aspirante(null, Boolean.FALSE)));
+        sessionEstudianteCarrera.setRenderedInformacionEstudio(false);
+        habilitaCampoEsAptoAspirante(sessionUsuario.getUsuario());
+        return "pretty:crearEstudianteCarrera";
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return "";
     }
 
     public String editar(EstudianteCarreraDTO estudianteCarreraDTO) {
-        String navegacion = "";
-        try {
-            FacesContext facesContext = FacesContext.getCurrentInstance();
-            ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            int tienePermiso = usuarioDao.tienePermiso(sessionUsuario.getUsuario(), "editar_estudiante_carrera");
-            if (tienePermiso == 1) {
-                sessionEstudianteCarrera.setEstudianteCarreraDTO(estudianteCarreraDTO);
-                habilitaCampoEsAptoAspirante(sessionUsuario.getUsuario());
-                this.renderedInformacionEstudio(estudianteCarreraDTO.getEstudianteCarrera().getEstudianteId());
-                sessionEstudianteCarrera.setTipoDocumento(itemService.buscarPorId(estudianteCarreraDTO.getPersona().
-                        getTipoDocumentoIdentificacionId()).toString());
-                sessionEstudianteCarrera.setGenero(itemService.buscarPorId(estudianteCarreraDTO.getPersona().
-                        getGeneroId()).toString());
-                navegacion = "pretty:editarEstudianteCarrera";
-            } else {
-                if (tienePermiso == 2) {
-                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_editar") + ". " + bundle.getString("lbl.msm_consulte"), "");
-                    FacesContext.getCurrentInstance().addMessage(null, message);
-                } else {
-                    navegacion = "pretty:login";
-                }
-            }
-        } catch (Exception e) {
-        }
-        return navegacion;
+        sessionEstudianteCarrera.setEstudianteCarreraDTO(estudianteCarreraDTO);
+        habilitaCampoEsAptoAspirante(sessionUsuario.getUsuario());
+        this.renderedInformacionEstudio(estudianteCarreraDTO.getEstudianteCarrera().getEstudianteId());
+        sessionEstudianteCarrera.setTipoDocumento(itemService.buscarPorId(estudianteCarreraDTO.getPersona().
+                getTipoDocumentoIdentificacionId()).toString());
+        sessionEstudianteCarrera.setGenero(itemService.buscarPorId(estudianteCarreraDTO.getPersona().
+                getGeneroId()).toString());
+        return "pretty:editarEstudianteCarrera";
     }
 
     public void listadoGeneros() {
@@ -243,29 +209,19 @@ public class AdministrarEstudiantesCarrera implements Serializable {
         this.sessionEstudianteCarrera.getEstudiantesCarreraDTO().clear();
         this.sessionEstudianteCarrera.getFilterEstudiantesCarreraDTO().clear();
         try {
-            FacesContext facesContext = FacesContext.getCurrentInstance();
-            ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            int tienePermiso = usuarioDao.tienePermiso(sessionUsuario.getUsuario(), "buscar_estudiante_carrera");
-            if (tienePermiso == 1) {
-                List<EstudianteCarrera> estudianteCarreras = this.estudianteCarreraDao.buscar(new EstudianteCarrera(
-                        sessionUsuarioCarrera.getUsuarioCarreraDTO().getCarrera(), null, null, null));
-                if (estudianteCarreras == null) {
-                    return;
-                }
-                for (EstudianteCarrera estudianteCarrera : estudianteCarreras) {
-                    estudianteCarrera.setEstado(itemService.buscarPorId(estudianteCarrera.getEstadoId()).getNombre());
-                    EstudianteCarreraDTO estudianteCarreraDTO = new EstudianteCarreraDTO(estudianteCarrera,
-                            personaDao.find(estudianteCarrera.getEstudianteId().getId()),
-                            aspiranteService.buscarPorId(estudianteCarrera.getId()));
-                    sessionEstudianteCarrera.getEstudiantesCarreraDTO().add(estudianteCarreraDTO);
-                }
-                sessionEstudianteCarrera.setFilterEstudiantesCarreraDTO(sessionEstudianteCarrera.getEstudiantesCarreraDTO());
-            } else {
-                if (tienePermiso == 2) {
-                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_buscar") + ". " + bundle.getString("lbl.msm_consulte"), "");
-                    FacesContext.getCurrentInstance().addMessage(null, message);
-                }
+            List<EstudianteCarrera> estudianteCarreras = this.estudianteCarreraDao.buscar(new EstudianteCarrera(
+                    sessionUsuarioCarrera.getUsuarioCarreraDTO().getCarrera(), null, null, null));
+            if (estudianteCarreras == null) {
+                return;
             }
+            for (EstudianteCarrera estudianteCarrera : estudianteCarreras) {
+                estudianteCarrera.setEstado(itemService.buscarPorId(estudianteCarrera.getEstadoId()).getNombre());
+                EstudianteCarreraDTO estudianteCarreraDTO = new EstudianteCarreraDTO(estudianteCarrera,
+                        personaDao.find(estudianteCarrera.getEstudianteId().getId()),
+                        aspiranteService.buscarPorId(estudianteCarrera.getId()));
+                sessionEstudianteCarrera.getEstudiantesCarreraDTO().add(estudianteCarreraDTO);
+            }
+            sessionEstudianteCarrera.setFilterEstudiantesCarreraDTO(sessionEstudianteCarrera.getEstudiantesCarreraDTO());
         } catch (Exception e) {
         }
     }
@@ -280,34 +236,17 @@ public class AdministrarEstudiantesCarrera implements Serializable {
                     CatalogoEnum.ESTADOESTUDIANTECARRERA.getTipo(), EstadoEstudianteCarreraEnum.ESTUDIANTE.getTipo()).getId());
         }
     }
-//
-//    public void activarDesactivar(EstudianteCarrera estudianteCarrera) {
-//        try {
-//            int tienePermiso = usuarioFacadeLocal.tienePermiso(sessionUsuario.getUsuario(), "eliminar_estudiante_carrera");
-//            if (tienePermiso == 1) {
-//                estudianteCarreraDao.edit(estudianteCarrera);
-//                logFacadeLocal.create(logFacadeLocal.crearLog("EstudianteCarrera", estudianteCarrera.getId() + "", "EDITAR", "|Carrera=" + estudianteCarrera.getCarreraId() + "|Estudiante=" + estudianteCarrera.getEstudianteId() + "|EsActivo= " + sessionEstudianteCarrera.getEstudianteCarrera().getEsActivo(), sessionUsuario.getUsuario()));
-//            }
-//        } catch (Exception e) {
-//        }
-//    }
 
     public String grabar() {
         try {
             FacesContext facesContext = FacesContext.getCurrentInstance();
             ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
             String param = (String) facesContext.getExternalContext().getRequestParameterMap().get("1");
-            /**
-             * GENERO
-             */
             Item g = itemService.buscarPorCatalogoCodigo(CatalogoEnum.GENERO.getTipo(), sessionEstudianteCarrera.getGenero());
             if (g != null) {
                 sessionEstudianteCarrera.getEstudianteCarreraDTO().getPersona().
                         setGeneroId(g.getId());
             }
-            /**
-             * Tipo de documento de identificación
-             */
             Item tdi = itemService.buscarPorCatalogoCodigo(CatalogoEnum.TIPODOCUMENTOIDENTIFICACION.getTipo(),
                     sessionEstudianteCarrera.getTipoDocumento());
             if (tdi != null) {
@@ -315,114 +254,79 @@ public class AdministrarEstudiantesCarrera implements Serializable {
                         setTipoDocumentoIdentificacionId(tdi.getId());
             }
             if (sessionEstudianteCarrera.getEstudianteCarreraDTO().getEstudianteCarrera().getId() == null) {
-                int tienePermiso = usuarioDao.tienePermiso(sessionUsuario.getUsuario(), "crear_estudiante_carrera");
-                if (tienePermiso == 1) {
-                    if (personaDao.esUnico(sessionEstudianteCarrera.getEstudianteCarreraDTO().getPersona().getNumeroIdentificacion(),
-                            sessionEstudianteCarrera.getEstudianteCarreraDTO().getPersona().getId())) {
-                        /**
-                         * GRABAR PERSONA
-                         */
-                        personaDao.create(sessionEstudianteCarrera.getEstudianteCarreraDTO().getPersona());
-                        /**
-                         * GRABAR ESTUDIANTE
-                         */
-                        sessionEstudianteCarrera.getEstudianteCarreraDTO().
-                                getEstudianteCarrera().getEstudianteId().setId(sessionEstudianteCarrera.getEstudianteCarreraDTO().getPersona().getId());
-                        estudianteDao.create(sessionEstudianteCarrera.getEstudianteCarreraDTO().getEstudianteCarrera().getEstudianteId());
-
-                        logFacadeLocal.create(logFacadeLocal.crearLog("Estudiante", sessionEstudianteCarrera.getEstudianteCarreraDTO().getEstudianteCarrera().getEstudianteId().getId()
-                                + "", "CREAR", "|Nombres= " + sessionEstudianteCarrera.getEstudianteCarreraDTO().getPersona().getNombres()
-                                + "|Apellidos= " + sessionEstudianteCarrera.getEstudianteCarreraDTO().getPersona().getApellidos()
-                                + "|Cédula= " + sessionEstudianteCarrera.getEstudianteCarreraDTO().getPersona().getNumeroIdentificacion() + "|Email= "
-                                + sessionEstudianteCarrera.getEstudianteCarreraDTO().getPersona().getEmail(), sessionUsuario.getUsuario()));
-                        /**
-                         * GRABAR ESTUDIANTE CARRERA
-                         */
-                        fijarEstadoEstudianteCarrera();
-                        estudianteCarreraDao.create(sessionEstudianteCarrera.getEstudianteCarreraDTO().getEstudianteCarrera());
-                        /**
-                         * GRABAR ASPIRANTE
-                         */
-                        sessionEstudianteCarrera.getEstudianteCarreraDTO().getAspirante().setId(
-                                sessionEstudianteCarrera.getEstudianteCarreraDTO().getEstudianteCarrera().getId());
-                        aspiranteService.guardar(sessionEstudianteCarrera.getEstudianteCarreraDTO().getAspirante());
-                        /**
-                         * GRABAR USUARIO
-                         */
-                        this.grabarUsuarioEstudiante(sessionEstudianteCarrera.getEstudianteCarreraDTO().getEstudianteCarrera().getEstudianteId());
-                        this.renderedInformacionEstudio(sessionEstudianteCarrera.getEstudianteCarreraDTO().getEstudianteCarrera().getEstudianteId());
-                        logFacadeLocal.create(logFacadeLocal.crearLog("EstudianteCarrera",
-                                sessionEstudianteCarrera.getEstudianteCarreraDTO().getEstudianteCarrera().getId() + "", "CREAR", "|Carrera="
-                                + sessionEstudianteCarrera.getEstudianteCarreraDTO().getEstudianteCarrera().getCarreraId().getId()
-                                + "|Estudiante=" + sessionEstudianteCarrera.getEstudianteCarreraDTO().getEstudianteCarrera().getEstudianteId().getId()
-                                + "|EsActivo= " + sessionEstudianteCarrera.getEstudianteCarreraDTO().getEstudianteCarrera().getEsActivo(),
-                                sessionUsuario.getUsuario()));
-                        if (param.equalsIgnoreCase("grabar")) {
-                            sessionEstudianteCarrera.setEstudianteCarreraDTO(new EstudianteCarreraDTO(new EstudianteCarrera(sessionUsuarioCarrera.getUsuarioCarreraDTO().getCarrera(), new Estudiante(), Boolean.TRUE, null), new Persona(), new Aspirante()));
-                            return "pretty:estudiantesCarrera";
-                        }
-                        if (param.equalsIgnoreCase("grabar-editar")) {
-                            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.estudiante") + " " + bundle.getString("lbl.msm_grabar"), "");
-                            FacesContext.getCurrentInstance().addMessage(null, message);
-                            return "";
-                        }
-                        return "";
-                    }
-                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.estudiante") + " " + bundle.getString("lbl.msm_existe"), "");
-                    FacesContext.getCurrentInstance().addMessage(null, message);
-                    return "";
-                }
-                if (tienePermiso == 2) {
-                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_crear") + ". " + bundle.getString("lbl.msm_consulte"), "");
-                    FacesContext.getCurrentInstance().addMessage(null, message);
-                    return "";
-                }
-            }
-            int tienePermiso = usuarioDao.tienePermiso(sessionUsuario.getUsuario(), "editar_estudiante_carrera");
-            if (tienePermiso == 1) {
                 if (personaDao.esUnico(sessionEstudianteCarrera.getEstudianteCarreraDTO().getPersona().getNumeroIdentificacion(),
                         sessionEstudianteCarrera.getEstudianteCarreraDTO().getPersona().getId())) {
-                    /**
-                     * EDITAR PERSONA
-                     */
-                    personaDao.edit(sessionEstudianteCarrera.getEstudianteCarreraDTO().getPersona());
-                    /**
-                     * EDITAR ESTUDIANTE
-                     */
-                    sessionEstudianteCarrera.getEstudianteCarreraDTO().getEstudianteCarrera().getEstudianteId().
-                            setId(sessionEstudianteCarrera.getEstudianteCarreraDTO().getPersona().getId());
-                    estudianteDao.edit(sessionEstudianteCarrera.getEstudianteCarreraDTO().getEstudianteCarrera().getEstudianteId());
-                    logFacadeLocal.create(logFacadeLocal.crearLog("Estudiante",
-                            sessionEstudianteCarrera.getEstudianteCarreraDTO().getEstudianteCarrera().getEstudianteId().getId() + "", "EDITAR", "|Nombres= "
-                            + sessionEstudianteCarrera.getEstudianteCarreraDTO().getPersona().getNombres()
+
+                    personaDao.create(sessionEstudianteCarrera.getEstudianteCarreraDTO().getPersona());
+                    sessionEstudianteCarrera.getEstudianteCarreraDTO().
+                            getEstudianteCarrera().getEstudianteId().setId(sessionEstudianteCarrera.getEstudianteCarreraDTO().getPersona().getId());
+                    estudianteDao.create(sessionEstudianteCarrera.getEstudianteCarreraDTO().getEstudianteCarrera().getEstudianteId());
+
+                    logFacadeLocal.create(logFacadeLocal.crearLog("Estudiante", sessionEstudianteCarrera.getEstudianteCarreraDTO().getEstudianteCarrera().getEstudianteId().getId()
+                            + "", "CREAR", "|Nombres= " + sessionEstudianteCarrera.getEstudianteCarreraDTO().getPersona().getNombres()
                             + "|Apellidos= " + sessionEstudianteCarrera.getEstudianteCarreraDTO().getPersona().getApellidos()
                             + "|Cédula= " + sessionEstudianteCarrera.getEstudianteCarreraDTO().getPersona().getNumeroIdentificacion() + "|Email= "
                             + sessionEstudianteCarrera.getEstudianteCarreraDTO().getPersona().getEmail(), sessionUsuario.getUsuario()));
+
                     fijarEstadoEstudianteCarrera();
-                    estudianteCarreraDao.edit(sessionEstudianteCarrera.getEstudianteCarreraDTO().getEstudianteCarrera());
+                    estudianteCarreraDao.create(sessionEstudianteCarrera.getEstudianteCarreraDTO().getEstudianteCarrera());
+                    sessionEstudianteCarrera.getEstudianteCarreraDTO().getAspirante().setId(
+                            sessionEstudianteCarrera.getEstudianteCarreraDTO().getEstudianteCarrera().getId());
+                    aspiranteService.guardar(sessionEstudianteCarrera.getEstudianteCarreraDTO().getAspirante());
+                    this.grabarUsuarioEstudiante(sessionEstudianteCarrera.getEstudianteCarreraDTO().getEstudianteCarrera().getEstudianteId());
                     this.renderedInformacionEstudio(sessionEstudianteCarrera.getEstudianteCarreraDTO().getEstudianteCarrera().getEstudianteId());
+                    logFacadeLocal.create(logFacadeLocal.crearLog("EstudianteCarrera",
+                            sessionEstudianteCarrera.getEstudianteCarreraDTO().getEstudianteCarrera().getId() + "", "CREAR", "|Carrera="
+                            + sessionEstudianteCarrera.getEstudianteCarreraDTO().getEstudianteCarrera().getCarreraId().getId()
+                            + "|Estudiante=" + sessionEstudianteCarrera.getEstudianteCarreraDTO().getEstudianteCarrera().getEstudianteId().getId()
+                            + "|EsActivo= " + sessionEstudianteCarrera.getEstudianteCarreraDTO().getEstudianteCarrera().getEsActivo(),
+                            sessionUsuario.getUsuario()));
                     if (param.equalsIgnoreCase("grabar")) {
                         sessionEstudianteCarrera.setEstudianteCarreraDTO(new EstudianteCarreraDTO(new EstudianteCarrera(sessionUsuarioCarrera.getUsuarioCarreraDTO().getCarrera(), new Estudiante(), Boolean.TRUE, null), new Persona(), new Aspirante()));
                         return "pretty:estudiantesCarrera";
                     }
                     if (param.equalsIgnoreCase("grabar-editar")) {
-                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.estudiante") + " "
-                                + bundle.getString("lbl.msm_editar"), "");
+                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.estudiante") + " " + bundle.getString("lbl.msm_grabar"), "");
                         FacesContext.getCurrentInstance().addMessage(null, message);
                         return "";
                     }
                     return "";
                 }
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.estudiante") + " " + bundle.getString(
-                        "lbl.msm_existe"), "");
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.estudiante") + " " + bundle.getString("lbl.msm_existe"), "");
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return "";
             }
-            if (tienePermiso == 2) {
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_editar") + ". " + bundle.getString("lbl.msm_consulte"), "");
-                FacesContext.getCurrentInstance().addMessage(null, message);
+            if (personaDao.esUnico(sessionEstudianteCarrera.getEstudianteCarreraDTO().getPersona().getNumeroIdentificacion(),
+                    sessionEstudianteCarrera.getEstudianteCarreraDTO().getPersona().getId())) {
+                personaDao.edit(sessionEstudianteCarrera.getEstudianteCarreraDTO().getPersona());
+                sessionEstudianteCarrera.getEstudianteCarreraDTO().getEstudianteCarrera().getEstudianteId().
+                        setId(sessionEstudianteCarrera.getEstudianteCarreraDTO().getPersona().getId());
+                estudianteDao.edit(sessionEstudianteCarrera.getEstudianteCarreraDTO().getEstudianteCarrera().getEstudianteId());
+                logFacadeLocal.create(logFacadeLocal.crearLog("Estudiante",
+                        sessionEstudianteCarrera.getEstudianteCarreraDTO().getEstudianteCarrera().getEstudianteId().getId() + "", "EDITAR", "|Nombres= "
+                        + sessionEstudianteCarrera.getEstudianteCarreraDTO().getPersona().getNombres()
+                        + "|Apellidos= " + sessionEstudianteCarrera.getEstudianteCarreraDTO().getPersona().getApellidos()
+                        + "|Cédula= " + sessionEstudianteCarrera.getEstudianteCarreraDTO().getPersona().getNumeroIdentificacion() + "|Email= "
+                        + sessionEstudianteCarrera.getEstudianteCarreraDTO().getPersona().getEmail(), sessionUsuario.getUsuario()));
+                fijarEstadoEstudianteCarrera();
+                estudianteCarreraDao.edit(sessionEstudianteCarrera.getEstudianteCarreraDTO().getEstudianteCarrera());
+                this.renderedInformacionEstudio(sessionEstudianteCarrera.getEstudianteCarreraDTO().getEstudianteCarrera().getEstudianteId());
+                if (param.equalsIgnoreCase("grabar")) {
+                    sessionEstudianteCarrera.setEstudianteCarreraDTO(new EstudianteCarreraDTO(new EstudianteCarrera(sessionUsuarioCarrera.getUsuarioCarreraDTO().getCarrera(), new Estudiante(), Boolean.TRUE, null), new Persona(), new Aspirante()));
+                    return "pretty:estudiantesCarrera";
+                }
+                if (param.equalsIgnoreCase("grabar-editar")) {
+                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.estudiante") + " "
+                            + bundle.getString("lbl.msm_editar"), "");
+                    FacesContext.getCurrentInstance().addMessage(null, message);
+                    return "";
+                }
                 return "";
             }
+            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.estudiante") + " " + bundle.getString(
+                    "lbl.msm_existe"), "");
+            FacesContext.getCurrentInstance().addMessage(null, message);
+            return "";
 
         } catch (Exception e) {
             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), "");
@@ -507,6 +411,7 @@ public class AdministrarEstudiantesCarrera implements Serializable {
     }
 
     public void obtenerMatriculaUltima() {
+        @SuppressWarnings("UnusedAssignment")
         ReporteMatricula rm = new ReporteMatricula();
         try {
             rm = reporteMatriculaDao.buscarUltimaMatriculaEstudiante(sessionEstudianteCarrera.getEstudianteCarreraDTO().getEstudianteCarrera().getId());
@@ -520,6 +425,7 @@ public class AdministrarEstudiantesCarrera implements Serializable {
     }
 
     public void obtenerPrimerMatricula() {
+        @SuppressWarnings("UnusedAssignment")
         ReporteMatricula rm = new ReporteMatricula();
         try {
             rm = reporteMatriculaDao.buscarPrimerMatriculaEstudiante(sessionEstudianteCarrera.getEstudianteCarreraDTO().getEstudianteCarrera().getId());
@@ -537,6 +443,7 @@ public class AdministrarEstudiantesCarrera implements Serializable {
      *
      * @param usuario
      */
+    @SuppressWarnings("CallToThreadDumpStack")
     public void habilitaCampoEsAptoAspirante(Usuario usuario) {
         try {
             sessionEstudianteCarrera.setRenderedEsAptoAspirante(Boolean.FALSE);
@@ -652,78 +559,6 @@ public class AdministrarEstudiantesCarrera implements Serializable {
         }
     }
 
-//    public void crearPdf(Carrera carrera) throws IOException, DocumentException {
-//        Document pdf = new Document();
-//        ServletContext servletContext = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
-//        String logo = servletContext.getRealPath("") + File.separator + "resources/img" + File.separator + "selloInstitucion.png";
-//        Image image = Image.getInstance(logo);
-//        image.scaleToFit(50, 50);
-//        image.setAbsolutePosition(50f, 775f);
-//        Image carreraLogo = Image.getInstance(carrera.getLogo());
-//        carreraLogo.scaleToFit(50, 50);
-//        carreraLogo.setAbsolutePosition(450f, 775f);
-//        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-//        PdfWriter.getInstance(pdf, baos);
-//        FacesContext facesContext = FacesContext.getCurrentInstance();
-//        HttpServletResponse response = (HttpServletResponse) facesContext.getExternalContext().getResponse();
-//        response.setContentType("application/pdf");
-//        response.addHeader("Content-disposition", "attachment; filename=Estudiantes.pdf");
-//        ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-//        pdf.setPageSize(PageSize.A4.rotate());
-//        pdf.setMargins(20f, 20f, 20f, 20f);
-//        pdf.setPageSize(PageSize.A4);
-//        Font fontHeader = new Font(Font.TIMES_ROMAN, 16, Font.BOLD);
-//        Font fontTitle = FontFactory.getFont("Times-Roman", 18, Font.BOLD);
-//        Paragraph title = new Paragraph(bundle.getString("lbl.listado") + " " + bundle.getString("lbl.de") + " " + bundle.getString("lbl.estudiantes"), fontTitle);
-//        Paragraph titleCarrera = new Paragraph(bundle.getString("lbl.carrera") + " " + bundle.getString("lbl.de") + " " + carrera.getNombre(), fontTitle);
-//        Paragraph titleArea = new Paragraph(carrera.getAreaId().getNombre(), fontTitle);
-//        title.setSpacingAfter(20);
-//        title.setAlignment(1);
-//        titleArea.setSpacingAfter(20);
-//        titleArea.setAlignment(1);
-//        titleCarrera.setSpacingAfter(20);
-//        titleCarrera.setAlignment(1);
-//        pdf.open();
-//        pdf.add(image);
-//        pdf.add(carreraLogo);
-//        pdf.add(title);
-//        pdf.add(titleArea);
-//        pdf.add(titleCarrera);
-//        PdfPTable pdfTable = new PdfPTable(4);
-//        pdfTable.setWidthPercentage(100f);
-//        pdfTable.setHorizontalAlignment(0);
-//        PdfPCell cell1 = new PdfPCell(new Phrase(bundle.getString("lbl.nombres"), fontHeader));
-//        cell1.setHorizontalAlignment(Element.ALIGN_CENTER);
-//        pdfTable.addCell(cell1);
-//        cell1 = new PdfPCell(new Phrase(bundle.getString("lbl.apellidos"), fontHeader));
-//        cell1.setHorizontalAlignment(Element.ALIGN_CENTER);
-//        pdfTable.addCell(cell1);
-//
-//        cell1 = new PdfPCell(new Phrase(bundle.getString("lbl.ci"), fontHeader));
-//        cell1.setHorizontalAlignment(Element.ALIGN_CENTER);
-//        pdfTable.addCell(cell1);
-//
-//        cell1 = new PdfPCell(new Phrase(bundle.getString("lbl.email"), fontHeader));
-//        cell1.setHorizontalAlignment(Element.ALIGN_CENTER);
-//        pdfTable.addCell(cell1);
-//        pdfTable.setHeaderRows(1);
-//        for (EstudianteCarrera estudianteCarrera : estudianteCarreras) {
-//            Persona persona = personaDao.find(estudianteCarrera.getEstudianteId().getId());
-//            pdfTable.addCell(persona.getNombres());
-//            pdfTable.addCell(persona.getApellidos());
-//            pdfTable.addCell(persona.getNumeroIdentificacion());
-//            pdfTable.addCell(persona.getEmail());
-//        }
-//        pdf.add(pdfTable);
-//        pdf.close();
-//        // the contentlength
-//        response.setContentLength(baos.size());
-//        // write ByteArrayOutputStream to the ServletOutputStream
-//        OutputStream os = response.getOutputStream();
-//        baos.writeTo(os);
-//        os.flush();
-//        os.close();
-//    }
     //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="MÉTODOS RENDERED">
     public void renderedInformacionEstudio(Estudiante estudiante) {
@@ -1243,12 +1078,12 @@ public class AdministrarEstudiantesCarrera implements Serializable {
         MessageView messageView = new MessageView();
         try {
             String passwordService = this.cabeceraController.getSecureService().decrypt(new SecureDTO(cabeceraController.getConfiguracionGeneralDTO().getSecureKey(),
-                        configuracionDao.buscar(new Configuracion(ConfiguracionEnum.CLAVEWS.getTipo())).get(0).getValor()));
-                String userService = configuracionDao.buscar(new Configuracion(ConfiguracionEnum.USUARIOWS.getTipo())).get(0).getValor();
-                String serviceUrl = configuracionDao.buscar(new Configuracion(URLWSEnum.ESTADOESTUDIANTEPARALELO.getTipo())).get(0).getValor();
+                    configuracionDao.buscar(new Configuracion(ConfiguracionEnum.CLAVEWS.getTipo())).get(0).getValor()));
+            String userService = configuracionDao.buscar(new Configuracion(ConfiguracionEnum.USUARIOWS.getTipo())).get(0).getValor();
+            String serviceUrl = configuracionDao.buscar(new Configuracion(URLWSEnum.ESTADOESTUDIANTEPARALELO.getTipo())).get(0).getValor();
             String s = serviceUrl + "?id_paralelo=" + paraleloId;
 
-            ConexionDTO seguridad = new ConexionDTO(passwordService,s,userService);
+            ConexionDTO seguridad = new ConexionDTO(passwordService, s, userService);
             NetClientService conexion = new NetClientServiceImplement();
             String datosJson = conexion.response(seguridad);
             if (!datosJson.equalsIgnoreCase("")) {

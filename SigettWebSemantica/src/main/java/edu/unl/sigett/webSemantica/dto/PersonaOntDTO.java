@@ -19,16 +19,18 @@ public class PersonaOntDTO implements Serializable {
     private Date fechaNacimiento;
     private String genero;
     private String email;
+     private String uri;
 
     public PersonaOntDTO() {
     }
 
-    public PersonaOntDTO(String nombres, String apellidos, Date fechaNacimiento, String genero, String email) {
+    public PersonaOntDTO(String nombres, String apellidos, Date fechaNacimiento, String genero, String email,String uri) {
         this.nombres = nombres;
         this.apellidos = apellidos;
         this.fechaNacimiento = fechaNacimiento;
         this.genero = genero;
         this.email = email;
+        this.uri=uri;
     }
 
     public String getNombres() {
@@ -69,6 +71,14 @@ public class PersonaOntDTO implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getUri() {
+        return uri;
+    }
+
+    public void setUri(String uri) {
+        this.uri = uri;
     }
 
     @Override
