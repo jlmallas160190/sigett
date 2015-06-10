@@ -280,6 +280,8 @@ public class ProyectoController implements Serializable {
             editarTema();
             buscarDocentes();
             this.buscarDocumentos();
+            this.buscarAutores();
+            this.buscarDirectores();
             this.agregarConfiguracionesProyecto();
             return "pretty:editarProyecto";
         } catch (Exception e) {
@@ -318,6 +320,7 @@ public class ProyectoController implements Serializable {
             grabarProyectoCarrerasOferta();
             grabarDocumentos();
             grabarConfiguraciones();
+            this.grabarDirectores();
 
             logDao.create(logDao.crearLog("Proyecto", sessionProyecto.getProyectoSeleccionado().getId() + "", "EDITAR", "|Tema= "
                     + sessionProyecto.getProyectoSeleccionado().getTemaActual() + "|Descripción= " + sessionProyecto.getProyectoSeleccionado().getDescripcion()
@@ -349,6 +352,7 @@ public class ProyectoController implements Serializable {
         eliminarProyectoCarreras();
         grabarDocumentos();
         grabarConfiguraciones();
+        grabarDirectores();
         if (param.equalsIgnoreCase("guardar")) {
             sessionProyecto.setProyectoSeleccionado(new Proyecto());
             return "pretty:proyectos";
@@ -374,8 +378,8 @@ public class ProyectoController implements Serializable {
      */
     private void grabarIndividuoProyecto() {
         ProyectoOntDTO proyectoOntDTO = new ProyectoOntDTO(sessionProyecto.getProyectoSeleccionado().getId(), sessionProyecto.getProyectoSeleccionado().getTemaActual(),
-                sessionProyecto.getProyectoSeleccionado().getFechaCreated().toString(), sessionProyecto.getTipoSeleccionado().getNombre(), sessionProyecto.getEstadoActual().getNombre(),
-                cabeceraController.getValueFromProperties(PropertiesFileEnum.URI, "proyecto"));
+                cabeceraController.getUtilService().parserFecha(cabeceraController.getUtilService().formatoFecha(sessionProyecto.getProyectoSeleccionado().getFechaCreated(), "yyyy-MMM-dd"), "yyyy-MMM-dd"), sessionProyecto.getTipoSeleccionado().getNombre(), sessionProyecto.getEstadoActual().
+                getNombre(), cabeceraController.getValueFromProperties(PropertiesFileEnum.URI, "proyecto"));
         cabeceraController.getOntologyService().getProyectoOntService().read(cabeceraController.getCabeceraWebSemantica());
         cabeceraController.getOntologyService().getProyectoOntService().write(proyectoOntDTO);
         sessionProyecto.setProyectoOntDTO(proyectoOntDTO);
@@ -384,6 +388,8 @@ public class ProyectoController implements Serializable {
     private void estadoActual() {
         if (sessionProyecto.getProyectoSeleccionado().getId() != null) {
             sessionProyecto.setProyectoSeleccionado(proyectoService.buscarPorId(sessionProyecto.getProyectoSeleccionado()));
+            sessionProyecto.getProyectoSeleccionado().setAutores(autores(sessionProyecto.getProyectoSeleccionado()));
+            sessionProyecto.getProyectoSeleccionado().setDirectores(directores(sessionProyecto.getProyectoSeleccionado()));
         }
         if (sessionProyecto.getProyectoSeleccionado().getEstadoProyectoId() == null) {
             return;
@@ -704,7 +710,6 @@ public class ProyectoController implements Serializable {
                     }
                 }
             }
-
             for (Carrera carrera : sessionProyecto.getCarreras()) {
                 if (!usuarioCarreras.contains(carrera)) {
                     usuarioCarreras.add(carrera);
@@ -862,14 +867,18 @@ public class ProyectoController implements Serializable {
         OfertaAcademica ofertaAcademica = ofertaAcademicaService.find(proyectoCarreraOferta.getOfertaAcademicaId());
         PeriodoAcademico periodoAcademico = ofertaAcademica.getPeriodoAcademicoId();
         PeriodoAcademicoOntDTO periodoAcademicoOntDTO = new PeriodoAcademicoOntDTO(periodoAcademico.getId(), "S/N",
-                periodoAcademico.getFechaInicio(), periodoAcademico.getFechaFin());
+                cabeceraController.getUtilService().parserFecha(cabeceraController.getUtilService().formatoFecha(periodoAcademico.getFechaInicio(),
+                                "yyyy-MMM-dd"), "yyyy-MMM-dd"), cabeceraController.getUtilService().parserFecha(cabeceraController.getUtilService().
+                        formatoFecha(periodoAcademico.getFechaFin(), "yyyy-MMM-dd"), "yyyy-MMM-dd"));
         cabeceraController.getOntologyService().getPeriodoAcademicoOntService().read(cabeceraController.getCabeceraWebSemantica());
         cabeceraController.getOntologyService().getPeriodoAcademicoOntService().write(periodoAcademicoOntDTO);
         /**
          * OFERTA ACADEMICA ONTOLOGÍA
          */
         OfertaAcademicaOntDTO ofertaAcademicaOntDTO = new OfertaAcademicaOntDTO(ofertaAcademica.getId(), ofertaAcademica.getNombre(),
-                ofertaAcademica.getFechaInicio(), ofertaAcademica.getFechaFin(), periodoAcademicoOntDTO);
+                cabeceraController.getUtilService().parserFecha(cabeceraController.getUtilService().formatoFecha(ofertaAcademica.getFechaInicio(),
+                                "yyyy-MMM-dd"), "yyyy-MMM-dd"), cabeceraController.getUtilService().parserFecha(cabeceraController.getUtilService().
+                        formatoFecha(ofertaAcademica.getFechaFin(), "yyyy-MMM-dd"), "yyyy-MMM-dd"), periodoAcademicoOntDTO);
         cabeceraController.getOntologyService().getOfertaAcademicoOntService().read(cabeceraController.getCabeceraWebSemantica());
         cabeceraController.getOntologyService().getOfertaAcademicoOntService().write(ofertaAcademicaOntDTO);
 
@@ -963,7 +972,7 @@ public class ProyectoController implements Serializable {
     }
 
     /**
-     * BUSCAR LOS AUTORES DE UN PROYECTO
+     * DEVULEVE CADENA DE AUTORES DE UN PROYECTO
      *
      * @param proyecto
      * @return
@@ -971,19 +980,16 @@ public class ProyectoController implements Serializable {
     private String autores(Proyecto proyecto) {
         String resultado = "";
         Item estadoRenunciado = itemService.buscarPorCatalogoCodigo(CatalogoEnum.ESTADOAUTOR.getTipo(), EstadoAutorEnum.RENUNCIADO.getTipo());
-        List<AutorProyecto> autorProyectos = autorProyectoService.buscar(new AutorProyecto(proyecto, null, null, null, null));
-        if (autorProyectos == null) {
+        if (proyecto.getAutorProyectoList() == null) {
             return "";
         }
         int contador = 0;
-        for (AutorProyecto autorProyecto : autorProyectos) {
+        for (AutorProyecto autorProyecto : proyecto.getAutorProyectoList()) {
             if (estadoRenunciado.getId().equals(autorProyecto.getEstadoAutorId())) {
                 continue;
             }
             EstudianteCarrera estudianteCarrera = estudianteCarreraDao.find(autorProyecto.getAspiranteId().getId());
             Persona persona = personaDao.find(estudianteCarrera.getEstudianteId().getId());
-            AutorProyectoDTO autorProyectoDTO = new AutorProyectoDTO(autorProyecto, autorProyecto.getAspiranteId(), estudianteCarrera, persona);
-            sessionProyecto.getAutoresProyectoDTO().add(autorProyectoDTO);
             if (contador == 0) {
                 if (persona == null) {
                     continue;
@@ -994,8 +1000,30 @@ public class ProyectoController implements Serializable {
             }
             contador++;
         }
-        sessionProyecto.setFilterAutoresProyectoDTO(sessionProyecto.getAutoresProyectoDTO());
         return resultado;
+    }
+
+    /**
+     * BUSCAR AUTORES
+     */
+    private void buscarAutores() {
+        Item estadoRenunciado = itemService.buscarPorCatalogoCodigo(CatalogoEnum.ESTADOAUTOR.getTipo(), EstadoAutorEnum.RENUNCIADO.getTipo());
+        List<AutorProyecto> autorProyectos = autorProyectoService.buscar(new AutorProyecto(sessionProyecto.getProyectoSeleccionado(), null, null, null, null));
+        if (autorProyectos == null) {
+            return;
+        }
+        for (AutorProyecto autorProyecto : autorProyectos) {
+            if (estadoRenunciado.getId().equals(autorProyecto.getEstadoAutorId())) {
+                continue;
+            }
+            EstudianteCarrera estudianteCarrera = estudianteCarreraDao.find(autorProyecto.getAspiranteId().getId());
+            Persona persona = personaDao.find(estudianteCarrera.getEstudianteId().getId());
+            AutorProyectoDTO autorProyectoDTO = new AutorProyectoDTO(autorProyecto, autorProyecto.getAspiranteId(), estudianteCarrera, persona);
+            if (!sessionProyecto.getAutoresProyectoDTO().contains(autorProyectoDTO)) {
+                sessionProyecto.getAutoresProyectoDTO().add(autorProyectoDTO);
+            }
+        }
+        sessionProyecto.setFilterAutoresProyectoDTO(sessionProyecto.getAutoresProyectoDTO());
     }
 
     //</editor-fold>
@@ -1198,7 +1226,7 @@ public class ProyectoController implements Serializable {
 
     //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="DIRECTORES">
-    public void grabarDirectoresProyecto() {
+    public void grabarDirectores() {
         try {
             if (!sessionProyecto.getEstadoActual().getCodigo().equals(EstadoProyectoEnum.PERTINENTE.getTipo())) {
                 return;
@@ -1220,7 +1248,9 @@ public class ProyectoController implements Serializable {
             for (AutorProyectoDTO autorProyectoDTO : sessionProyecto.getAutoresProyectoDTO()) {
                 enviarEmailAutor(autorProyectoDTO);
             }
-
+            Item estadoProyecto = itemService.buscarPorCatalogoCodigo(CatalogoEnum.ESTADOPROYECTO.getTipo(), EstadoProyectoEnum.SEGUIMIENTO.getTipo());
+            sessionProyecto.getProyectoSeleccionado().setEstadoProyectoId(estadoProyecto.getId());
+            proyectoService.actualizar(sessionProyecto.getProyectoSeleccionado());
         } catch (Exception e) {
             LOG.warning(e.getMessage());
         }
@@ -1257,18 +1287,42 @@ public class ProyectoController implements Serializable {
     }
 
     /**
-     * BUSCAR LOS DIRECTORES DE UN PROYECTO
+     * DEVUELVE CADENA DE DIRECTORES DE UN PROYECTO
      *
      * @return
      */
     private String directores(Proyecto proyecto) {
         String resultado = "";
         Item estadoRenunciado = itemService.buscarPorCatalogoCodigo(CatalogoEnum.ESTADODIRECTOR.getTipo(), EstadoDirectorEnum.RENUNCIADO.getTipo());
-        List<DirectorProyecto> directorProyectos = directorProyectoService.buscar(new DirectorProyecto(null, null, null, proyecto, null, null));
-        if (directorProyectos == null) {
+        if (proyecto.getDirectorProyectoList() == null) {
             return "";
         }
         int contador = 0;
+        for (DirectorProyecto directorProyecto : proyecto.getDirectorProyectoList()) {
+            if (estadoRenunciado.getId().equals(directorProyecto.getEstadoDirectorId())) {
+                continue;
+            }
+            DocenteCarrera docenteCarrera = docenteCarreraService.buscarPorId(new DocenteCarrera(directorProyecto.getDirectorId().getId()));
+            Persona persona = personaDao.find(docenteCarrera.getDocenteId().getId());
+            if (contador == 0) {
+                resultado = (persona.getApellidos() + " " + persona.getNombres());
+            } else {
+                resultado = (resultado + ", " + persona.getApellidos() + " " + persona.getNombres());
+            }
+            contador++;
+        }
+        return resultado;
+    }
+
+    /**
+     * BUSCAR DIRECTORES
+     */
+    private void buscarDirectores() {
+        Item estadoRenunciado = itemService.buscarPorCatalogoCodigo(CatalogoEnum.ESTADODIRECTOR.getTipo(), EstadoDirectorEnum.RENUNCIADO.getTipo());
+        List<DirectorProyecto> directorProyectos = directorProyectoService.buscar(new DirectorProyecto(null, null, null, sessionProyecto.getProyectoSeleccionado(), null, null));
+        if (directorProyectos == null) {
+            return;
+        }
         for (DirectorProyecto directorProyecto : directorProyectos) {
             if (estadoRenunciado.getId().equals(directorProyecto.getEstadoDirectorId())) {
                 continue;
@@ -1277,18 +1331,11 @@ public class ProyectoController implements Serializable {
             Persona persona = personaDao.find(docenteCarrera.getDocenteId().getId());
             DirectorProyectoDTO directorProyectoDTO = new DirectorProyectoDTO(directorProyecto,
                     new DirectorDTO(directorProyecto.getDirectorId(), docenteCarrera, persona));
-            sessionProyecto.getDirectoresProyectoDTO().add(directorProyectoDTO);
-            if (contador == 0) {
-                resultado = (directorProyectoDTO.getDirectorDTO().getPersona().getApellidos() + " " + directorProyectoDTO.getDirectorDTO()
-                        .getPersona().getNombres());
-            } else {
-                resultado = (resultado + ", " + directorProyectoDTO.getDirectorDTO().getPersona().getApellidos() + " "
-                        + directorProyectoDTO.getDirectorDTO().getPersona().getNombres());
+            if (!sessionProyecto.getDirectoresProyectoDTO().contains(directorProyectoDTO)) {
+                sessionProyecto.getDirectoresProyectoDTO().add(directorProyectoDTO);
             }
-            contador++;
         }
         sessionProyecto.setFilterDirectoresProyectoDTO(sessionProyecto.getDirectoresProyectoDTO());
-        return resultado;
     }
 
     //</editor-fold>

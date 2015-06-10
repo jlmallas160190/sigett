@@ -43,16 +43,16 @@
                                           action="#{directorProyectoController.remover(item)}"/>
                     </p:column>
                     <p:column>
-                        <p:commandButton onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide(),PF('dlgOficioPertinencia').show()" icon="ui-icon-print"
-                                         update=":contenido:msm,:contenido:pnlOficioPertinencia" 
+                        <p:commandButton onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide(),PF('dlgOficioDirector').show()" icon="ui-icon-print"
+                                         update=":contenido:msm,:contenido:pnlOficioDirector" 
                                          rendered="#{item.directorProyecto.id!=null}" value="#{msg['lbl.oficio']}"
-                                         action="#{docenteProyectoController.imprimirOficioPertinencia(item)}"/>
+                                         action="#{directorProyectoController.imprimirOficio(item)}"/>
                     </p:column>
                     <p:column>
-                        <p:commandButton onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide(),PF('dlgFePertinencia').show()" icon="ui-icon-print" 
+                        <p:commandButton onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide(),PF('dlgFeDirector').show()" icon="ui-icon-print" 
                                          rendered="#{item.directorProyecto.id!=null}" iconPos="left" value="#{lbl['fe_presentacion']}"
-                                         update=":contenido:msm,:contenido:pnlFePertinencia" title="#{lbl['fe_presentacion']}"
-                                         action="#{docenteProyectoController.imprimirFePresentacion(item)}"/>
+                                         update=":contenido:msm,:contenido:pnlFeDirector" title="#{lbl['fe_presentacion']}"
+                                         action="#{directorProyectoController.imprimirFePresentacion(item)}"/>
                     </p:column>
                 </p:row>
             </p:column>

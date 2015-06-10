@@ -14,6 +14,8 @@ import edu.unl.sigett.webSemantica.service.implement.AreaAcademicaOntServiceImpl
 import edu.unl.sigett.webSemantica.service.implement.AutorOntServiceImplement;
 import edu.unl.sigett.webSemantica.service.implement.AutorProyectoOntServiceImplement;
 import edu.unl.sigett.webSemantica.service.implement.CarreraOntServiceImplement;
+import edu.unl.sigett.webSemantica.service.implement.DirectorProyectonOntServiceImplement;
+import edu.unl.sigett.webSemantica.service.implement.DocenteOntServiceImplement;
 import edu.unl.sigett.webSemantica.service.implement.LineaInvestigacionOntServiceImplement;
 import edu.unl.sigett.webSemantica.service.implement.LineaInvestigacionProyectoOntServiceImplement;
 import edu.unl.sigett.webSemantica.service.implement.NivelAcademicoOntServiceImplement;
@@ -109,6 +111,7 @@ public class CabeceraController implements Serializable {
     }
 
     private void fijarSecretKey() {
+        @SuppressWarnings("UnusedAssignment")
         BufferedReader br = null;
         String secretKey = "";
         try {
@@ -159,6 +162,8 @@ public class CabeceraController implements Serializable {
         this.ontologyService.setNivelAcademicoOntService(new NivelAcademicoOntServiceImplement());
         this.ontologyService.setOfertaAcademicoOntService(new OfertaAcademicaOntServiceImplement());
         this.ontologyService.setProyectoCarreraOfertaOntService(new ProyectoCarreraOfertaOntServiceImplement());
+        this.ontologyService.setDocenteOntService(new DocenteOntServiceImplement());
+        this.ontologyService.setDirectorProyectoOntService(new DirectorProyectonOntServiceImplement());
     }
 
     public String getValueFromProperties(final PropertiesFileEnum file,

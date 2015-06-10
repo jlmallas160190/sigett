@@ -7,6 +7,7 @@ package edu.unl.sigett.webSemantica.dto;
 
 import com.hp.hpl.jena.ontology.Individual;
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  *
@@ -16,7 +17,7 @@ public class ProyectoOntDTO implements Serializable {
 
     private Long id;
     private String tema;
-    private String fechaCreacion;
+    private Date fechaCreacion;
     private String tipo;
     private String estado;
     private Individual individual;
@@ -25,7 +26,7 @@ public class ProyectoOntDTO implements Serializable {
     public ProyectoOntDTO() {
     }
 
-    public ProyectoOntDTO(Long id, String tema, String fechaCreacion, String tipo, String estado, String uri) {
+    public ProyectoOntDTO(Long id, String tema, Date fechaCreacion, String tipo, String estado, String uri) {
         this.id = id;
         this.tema = tema;
         this.fechaCreacion = fechaCreacion;
@@ -50,11 +51,11 @@ public class ProyectoOntDTO implements Serializable {
         this.tema = tema;
     }
 
-    public String getFechaCreacion() {
+    public Date getFechaCreacion() {
         return fechaCreacion;
     }
 
-    public void setFechaCreacion(String fechaCreacion) {
+    public void setFechaCreacion(Date fechaCreacion) {
         this.fechaCreacion = fechaCreacion;
     }
 

@@ -5,7 +5,7 @@
  */
 package edu.unl.sigett.docenteProyecto;
 
-import edu.unl.sigett.util.DocumentoCarreraDTO;
+import edu.unl.sigett.documentoCarrera.DocumentoCarreraDTO;
 import java.io.Serializable;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Named;
@@ -19,7 +19,6 @@ import javax.inject.Named;
 public class SessionDocenteProyecto implements Serializable {
 
     private DocenteProyectoDTO docenteProyectoDTO;
-    private DocumentoCarreraDTO documentoCarreraDTO;
 
     private Boolean renderedBuscar;
     private Boolean renderedBuscarEspecialista;
@@ -88,14 +87,6 @@ public class SessionDocenteProyecto implements Serializable {
 
     public void setRenderedMediaOficio(Boolean renderedMediaOficio) {
         this.renderedMediaOficio = renderedMediaOficio;
-    }
-
-    public DocumentoCarreraDTO getDocumentoCarreraDTO() {
-        return documentoCarreraDTO;
-    }
-
-    public void setDocumentoCarreraDTO(DocumentoCarreraDTO documentoCarreraDTO) {
-        this.documentoCarreraDTO = documentoCarreraDTO;
     }
 
     public Boolean getRenderedMediaFePresentacion() {

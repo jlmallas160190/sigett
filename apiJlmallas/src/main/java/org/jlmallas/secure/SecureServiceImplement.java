@@ -5,8 +5,16 @@
  */
 package org.jlmallas.secure;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
+import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESKeySpec;
@@ -30,7 +38,7 @@ public class SecureServiceImplement implements SecureService {
             encryptC.init(Cipher.ENCRYPT_MODE, ky);
             return encrypt(secureDTO.getPassword());
 
-        } catch (Exception e) {
+        } catch (UnsupportedEncodingException | InvalidKeyException | NoSuchAlgorithmException | InvalidKeySpecException | NoSuchPaddingException e) {
             System.out.println(e);
         }
 
@@ -46,7 +54,7 @@ public class SecureServiceImplement implements SecureService {
             SecretKey ky = kf.generateSecret(ks);
             decryptC.init(Cipher.DECRYPT_MODE, ky);
             return decrypt(secureDTO.getPassword());
-        } catch (Exception e) {
+        } catch (UnsupportedEncodingException | InvalidKeyException | NoSuchAlgorithmException | InvalidKeySpecException | NoSuchPaddingException e) {
             System.out.println(e);
         }
         return null;
@@ -58,7 +66,7 @@ public class SecureServiceImplement implements SecureService {
             byte[] enc = encryptC.doFinal(utf8);
             return new sun.misc.BASE64Encoder().encode(enc);
 
-        } catch (Exception e) {
+        } catch (UnsupportedEncodingException | BadPaddingException | IllegalBlockSizeException e) {
             System.out.println(e);
         }
         return null;
@@ -70,7 +78,7 @@ public class SecureServiceImplement implements SecureService {
             byte[] dec = new sun.misc.BASE64Decoder().decodeBuffer(password);
             byte[] utf8 = decryptC.doFinal(dec);
             return new String(utf8, "UTF8");
-        } catch (Exception e) {
+        } catch (IOException | BadPaddingException | IllegalBlockSizeException e) {
             System.out.println(e);
         }
         return null;

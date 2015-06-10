@@ -9,10 +9,10 @@
                      rowIndexVar="rowIx" rowKey="#{item.persona.apellidos}" selection="#{item}" selectionMode="single" editable="true"  
                      filteredValue="#{directorDM.filterDirectoresDTO}" widgetVar="tblDirectoresFilter"
                      editMode="cell" rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'even-row' : 'odd-row'}" emptyMessage="#{msg['lbl.table.empty']}">
-            <p:column>
+            <p:column width="5%">
                <h:outputText value="#{rowIx+1}" />
             </p:column>
-            <p:column>
+            <p:column width="15%">
                 <f:facet name="header">
                     <h:outputText value="#{msg['lbl.seleccionar']}"/>
                 </f:facet>
@@ -23,19 +23,19 @@
                                  oncomplete="PF('dlgLoading').hide(),PF('tblDirProyFilter').filter(),PF('dlgDirectoresDisponibles').hide()" 
                                  update=":contenido:tabViewDatosProyecto:tblDirectoresProyecto,:contenido:msm"/>
             </p:column>
-            <p:column filterBy="#{item.persona.apellidos}" filterMatchMode="contains" sortBy="#{item.persona.apellidos}">
+            <p:column width="40%" filterBy="#{item.persona.apellidos}" filterMatchMode="contains" sortBy="#{item.persona.apellidos}">
                 <f:facet name="header">
                     <h:outputText value="#{msg['lbl.docente']}"/>
                 </f:facet>
                 <h:outputText value="#{item.persona.apellidos} #{item.persona.nombres} "/>
             </p:column>
-            <p:column filterBy="#{item.persona.numeroIdentificacion}" filterMatchMode="contains" sortBy="#{item.persona.numeroIdentificacion}">
+            <p:column width="20%" filterBy="#{item.persona.numeroIdentificacion}" filterMatchMode="contains" sortBy="#{item.persona.numeroIdentificacion}">
                 <f:facet name="header">
                     <h:outputText value="#{msg['lbl.ci']}"/>
                 </f:facet>
                 <h:outputText value="#{item.persona.numeroIdentificacion}"/>
             </p:column>
-            <p:column filterBy="#{item.persona.email}" filterMatchMode="contains" sortBy="#{item.persona.email}">
+            <p:column width="20%" filterBy="#{item.persona.email}" filterMatchMode="contains" sortBy="#{item.persona.email}">
                 <f:facet name="header">
                     <h:outputText value="#{msg['lbl.email']}"/>
                 </f:facet>

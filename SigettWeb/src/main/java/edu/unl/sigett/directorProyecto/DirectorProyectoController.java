@@ -18,7 +18,7 @@ import com.jlmallas.comun.service.ItemService;
 import edu.jlmallas.academico.entity.Carrera;
 import edu.unl.sigett.autorProyecto.AutorProyectoDTO;
 import edu.unl.sigett.director.DirectorDM;
-import edu.unl.sigett.entity.AutorProyecto;
+import edu.unl.sigett.documentoCarrera.DocumentoCarreraDM;
 import edu.unl.sigett.entity.ConfiguracionCarrera;
 import edu.unl.sigett.entity.DirectorProyecto;
 import edu.unl.sigett.entity.DocumentoCarrera;
@@ -34,7 +34,7 @@ import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
 import edu.unl.sigett.service.ConfiguracionCarreraService;
 import edu.unl.sigett.service.DocumentoCarreraService;
 import edu.unl.sigett.util.CabeceraController;
-import edu.unl.sigett.util.DocumentoCarreraDTO;
+import edu.unl.sigett.documentoCarrera.DocumentoCarreraDTO;
 import edu.unl.sigett.util.PropertiesFileEnum;
 import java.io.File;
 import javax.inject.Named;
@@ -49,7 +49,6 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import org.jlmallas.seguridad.service.UsuarioService;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
@@ -75,6 +74,8 @@ public class DirectorProyectoController implements Serializable {
     private RenunciaDirectorProyectoDM renunciaDirectorProyectoDM;
     @Inject
     private DirectorDM directorDM;
+    @Inject
+    private DocumentoCarreraDM documentoCarreraDM;
     //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="SERVICIOS">
     @EJB
@@ -122,7 +123,7 @@ public class DirectorProyectoController implements Serializable {
     private void renderedBuscar() {
         try {
             directorProyectoDM.setRenderedBuscar(Boolean.FALSE);
-            if (sessionProyecto.getEstadoActual().getCodigo().equals(EstadoProyectoEnum.PERTINENTE.getTipo())) {
+            if (!sessionProyecto.getEstadoActual().getCodigo().equals(EstadoProyectoEnum.INICIO.getTipo())) {
                 directorProyectoDM.setRenderedBuscar(Boolean.TRUE);
             }
         } catch (Exception e) {
@@ -134,7 +135,7 @@ public class DirectorProyectoController implements Serializable {
     private void renderedEliminar() {
         try {
             directorProyectoDM.setRenderedEliminar(Boolean.FALSE);
-            if (!sessionProyecto.getEstadoActual().getCodigo().equals(EstadoProyectoEnum.PERTINENTE.getTipo())) {
+            if (!sessionProyecto.getEstadoActual().getCodigo().equals(EstadoProyectoEnum.INICIO.getTipo())) {
                 return;
             }
             int permiso = usuarioService.tienePermiso(sessionUsuario.getUsuario(), cabeceraController.getValueFromProperties(
@@ -251,10 +252,10 @@ public class DirectorProyectoController implements Serializable {
             }
             DocumentoCarrera documentoCarrera = !documentoCarreras.isEmpty() ? documentoCarreras.get(0) : null;
             if (documentoCarrera != null) {
-                directorProyectoDM.setDocumentoCarreraDTO(new DocumentoCarreraDTO(
+                documentoCarreraDM.setDocumentoCarreraDTO(new DocumentoCarreraDTO(
                         documentoCarrera, documentoService.buscarPorId(new Documento(documentoCarrera.getDocumentoId())), sessionProyecto.getCarreraSeleccionada()));
-                File file = new File(directorProyectoDM.getDocumentoCarreraDTO().getDocumento().getRuta());
-                directorProyectoDM.getDocumentoCarreraDTO().getDocumento().setContents(cabeceraController.getUtilService().obtenerBytes(file));
+                File file = new File(documentoCarreraDM.getDocumentoCarreraDTO().getDocumento().getRuta());
+                documentoCarreraDM.getDocumentoCarreraDTO().getDocumento().setContents(cabeceraController.getUtilService().obtenerBytes(file));
                 directorProyectoDM.setRenderedMediaOficio(Boolean.TRUE);
                 return;
             }
@@ -307,10 +308,10 @@ public class DirectorProyectoController implements Serializable {
         Documento documento = new Documento(null, ruta, itemService.buscarPorCatalogoCodigo(CatalogoEnum.CATALOGOOFICIO.getTipo(),
                 CatalogoDocumentoCarreraEnum.DIRECTORPROYECTO.getTipo()).getId(), Double.parseDouble(resultado.length + ""), fechaActual.getTime(), resultado, null, "pdf");
         documentoService.guardar(documento);
-        directorProyectoDM.setDocumentoCarreraDTO(new DocumentoCarreraDTO(new DocumentoCarrera(
+        documentoCarreraDM.setDocumentoCarreraDTO(new DocumentoCarreraDTO(new DocumentoCarrera(
                 numeracionNext + "", documento.getId(), Boolean.TRUE, carrera.getId(), directorProyectoDM.getDirectorProyectoDTO().
                 getDirectorProyecto().getId()), documento, carrera));
-        documentoCarreraService.guardar(directorProyectoDM.getDocumentoCarreraDTO().getDocumentoCarrera());
+        documentoCarreraService.guardar(documentoCarreraDM.getDocumentoCarreraDTO().getDocumentoCarrera());
         directorProyectoDM.setRenderedMediaOficio(Boolean.TRUE);
         cabeceraController.getUtilService().generaDocumento(new File(ruta), documento.getContents());
         configuracionCarrera.setValor(numeracionNext + 1 + "");
@@ -343,10 +344,10 @@ public class DirectorProyectoController implements Serializable {
             }
             DocumentoCarrera documentoCarrera = !documentoCarreras.isEmpty() ? documentoCarreras.get(0) : null;
             if (documentoCarrera != null) {
-                directorProyectoDM.setDocumentoCarreraDTO(new DocumentoCarreraDTO(
+                documentoCarreraDM.setDocumentoCarreraDTO(new DocumentoCarreraDTO(
                         documentoCarrera, documentoService.buscarPorId(new Documento(documentoCarrera.getDocumentoId())), sessionProyecto.getCarreraSeleccionada()));
-                File file = new File(directorProyectoDM.getDocumentoCarreraDTO().getDocumento().getRuta());
-                directorProyectoDM.getDocumentoCarreraDTO().getDocumento().setContents(cabeceraController.getUtilService().obtenerBytes(file));
+                File file = new File(documentoCarreraDM.getDocumentoCarreraDTO().getDocumento().getRuta());
+                documentoCarreraDM.getDocumentoCarreraDTO().getDocumento().setContents(cabeceraController.getUtilService().obtenerBytes(file));
                 directorProyectoDM.setRenderedMediaFePresentacion(Boolean.TRUE);
                 return;
             }
@@ -381,10 +382,10 @@ public class DirectorProyectoController implements Serializable {
                 CatalogoDocumentoCarreraEnum.DIRECTORPROYECTO.getTipo()).getId(), Double.parseDouble(resultado.length + ""), fechaActual.getTime(),
                 resultado, null, "pdf");
         documentoService.guardar(documento);
-        directorProyectoDM.setDocumentoCarreraDTO(new DocumentoCarreraDTO(new DocumentoCarrera("", documento.getId(), Boolean.TRUE,
+        documentoCarreraDM.setDocumentoCarreraDTO(new DocumentoCarreraDTO(new DocumentoCarrera("", documento.getId(), Boolean.TRUE,
                 carrera.getId(), directorProyectoDTO.getDirectorProyecto().getId()), documento, carrera));
-        directorProyectoDM.getDocumentoCarreraDTO().getDocumentoCarrera().setNumeracion("");
-        documentoCarreraService.guardar(directorProyectoDM.getDocumentoCarreraDTO().getDocumentoCarrera());
+        documentoCarreraDM.getDocumentoCarreraDTO().getDocumentoCarrera().setNumeracion("");
+        documentoCarreraService.guardar(documentoCarreraDM.getDocumentoCarreraDTO().getDocumentoCarrera());
         directorProyectoDM.setRenderedMediaFePresentacion(Boolean.TRUE);
         cabeceraController.getUtilService().generaDocumento(new File(ruta), documento.getContents());
     }
@@ -401,7 +402,7 @@ public class DirectorProyectoController implements Serializable {
                         PropertiesFileEnum.CONTENIDOREPORTE, "fe_director_ref_b") + " " + cabeceraController.getUtilService().formatoFecha(
                         fechaActual.getTime(), "HH:mm") + ".-" + cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE,
                         "fe_director_ref_c") + "<br/><br/>" + carrera.getAreaId().getSecretario() + "<br/> <b>"
-                + cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "fe_director_ref_c").toUpperCase());
+                + cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "fe_director_ref_d").toUpperCase() + "<br/>");
     }
 
     /**
@@ -413,12 +414,12 @@ public class DirectorProyectoController implements Serializable {
      */
     private String generaCuerpoFePresentacion(final DirectorProyectoDTO directorProyectoDTO, final Calendar fechaActual, final Carrera carrera) {
         return ("<b>" + cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "fe_director_cu_a").toUpperCase() + " "
-                + carrera.getNombre().toUpperCase() + " " + cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "fe_director_cu_h")
+                + carrera.getNombre().toUpperCase() + " " + cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "fe_director_cu_h").toUpperCase()
                 + " " + carrera.getAreaId().getNombre().toUpperCase() + "</b>.-" + carrera.getLugar() + ", " + cabeceraController.getUtilService().formatoFecha(
                         fechaActual.getTime(), "dd MMMM yyyy") + ", " + cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "fe_director_cu_b")
-                + cabeceraController.getUtilService().formatoFecha(fechaActual.getTime(), "HH:mm") + ".-" + cabeceraController.
+                + " " + cabeceraController.getUtilService().formatoFecha(fechaActual.getTime(), "HH:mm") + ".-" + cabeceraController.
                 getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "fe_director_cu_c") + " " + directorProyectoDTO.getDirectorProyecto().getProyectoId().getTemaActual()
-                + " " + cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "fe_director_cu_d") + carrera.getNombreTitulo().toUpperCase()
+                + " " + cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "fe_director_cu_d") + " " + carrera.getNombreTitulo().toUpperCase()
                 + " " + cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "fe_director_cu_e") + " " + sessionProyecto.
                 getProyectoSeleccionado().getAutores() + " " + cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "fe_director_cu_f")
                 + " " + cabeceraController.getUtilService().formatoFecha(directorProyectoDTO.getDirectorProyecto().getFechaInicio(), "dd MMMM yyyy") + " "
@@ -443,17 +444,17 @@ public class DirectorProyectoController implements Serializable {
                 getPersona().getNombres().toUpperCase() + " " + sessionProyecto.getCoordinadorPeriodoDTOCarreraSeleccionada().getPersona().getApellidos().toUpperCase() + ", "
                 + cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "fe_director_final_c")
                 + " " + carrera.getNombre().toUpperCase() + " " + cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE,
-                        "fe_director_final_d") + carrera.getAreaId().getNombre() + " " + cabeceraController.getValueFromProperties(
+                        "fe_director_final_d").toUpperCase() + " " + carrera.getAreaId().getNombre().toUpperCase() + " " + cabeceraController.getValueFromProperties(
                         PropertiesFileEnum.CONTENIDOREPORTE, "fe_director_final_e")
                 + "<br/><br/><p>" + carrera.getAreaId().getSecretario() + "</p><p><b>" + cabeceraController.
-                getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "fe_director_final_f") + "</b></p></br><p>" + carrera.getLugar() + ", " + cabeceraController.getUtilService().
+                getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "fe_director_final_f") + "</b></p><br/>" + carrera.getLugar() + ", " + cabeceraController.getUtilService().
                 formatoFecha(fechaActual.getTime(), "dd MMMM yyyy") + ", " + cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE,
                         "fe_director_final_g") + " " + cabeceraController.getUtilService().formatoFecha(fechaActual.getTime(), "HH:mm") + ".-"
-                + cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "fe_director_final_h") + " " + sessionProyecto.getProyectoSeleccionado().getAutores() + " "
-                + cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "fe_director_final_i") + directorProyectoDTO.getDirectorDTO().
+                + cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "fe_director_final_h") + " " + sessionProyecto.getProyectoSeleccionado().getAutores().toUpperCase()
+                + " "+ cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "fe_director_final_i")+" " + directorProyectoDTO.getDirectorDTO().
                 getDocenteCarrera().getDocenteId().getTituloDocenteId().getTituloId().getAbreviacion().toUpperCase() + " " + ""
                 + directorProyectoDTO.getDirectorDTO().getPersona().getNombres().toUpperCase() + " " + directorProyectoDTO.getDirectorDTO().getPersona().getApellidos().toUpperCase() + " "
-                + cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "fe_director_final_j") + ".</p>");
+                + cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "fe_director_final_j") + ".");
     }
 
     /**
@@ -477,42 +478,19 @@ public class DirectorProyectoController implements Serializable {
         for (AutorProyectoDTO autorProyectoDTO : sessionProyecto.getAutoresProyectoDTO()) {
             firmaAutoresBuilder.append(autorProyectoDTO.getPersona().getNombres()).append(" ").append(autorProyectoDTO.getPersona().getApellidos()).
                     append("<br/>" + "" + "").append(cabeceraController.getValueFromProperties(
-                                    PropertiesFileEnum.CONTENIDOREPORTE, "fe_director_firma_peticionario")).append("<br/><br/>");
+                                    PropertiesFileEnum.CONTENIDOREPORTE, "fe_director_firma_perticionario")).append("<br/><br/>");
         }
         return firmaAutoresBuilder.toString();
     }
 
-    /**
-     * SUBIR Y ACTUALIZAR DOCUMENTO YA SEA DE OFICIO, FE DE PRESENTACIÓN
-     * PERTINENCIA
-     *
-     * @param event
-     */
-    public void handleFileUpload(FileUploadEvent event) {
-        try {
-            FacesContext facesContext = FacesContext.getCurrentInstance();
-            ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            directorProyectoDM.getDocumentoCarreraDTO().getDocumento().setContents(event.getFile().getContents());
-            Long size = event.getFile().getSize();
-            directorProyectoDM.getDocumentoCarreraDTO().getDocumento().setTamanio(size.doubleValue());
-            cabeceraController.getUtilService().generaDocumento(new File(directorProyectoDM.getDocumentoCarreraDTO().getDocumento().getRuta()),
-                    directorProyectoDM.getDocumentoCarreraDTO().getDocumento().getContents());
-            documentoService.actualizar(directorProyectoDM.getDocumentoCarreraDTO().getDocumento());
-            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.uploaded"), "");
-            FacesContext.getCurrentInstance().addMessage(null, message);
-        } catch (Exception e) {
-            cabeceraController.getMessageView().message(FacesMessage.SEVERITY_INFO, e.getMessage(), "");
-        }
-    }
-
     public void cancelarImprimirOficio() {
-        directorProyectoDM.setDocumentoCarreraDTO(new DocumentoCarreraDTO());
+        documentoCarreraDM.setDocumentoCarreraDTO(new DocumentoCarreraDTO());
         directorProyectoDM.setDirectorProyectoDTO(new DirectorProyectoDTO());
         directorProyectoDM.setRenderedMediaOficio(Boolean.FALSE);
     }
 
     public void cancelarImprimirFe() {
-        directorProyectoDM.setDocumentoCarreraDTO(new DocumentoCarreraDTO());
+        documentoCarreraDM.setDocumentoCarreraDTO(new DocumentoCarreraDTO());
         directorProyectoDM.setDirectorProyectoDTO(new DirectorProyectoDTO());
         directorProyectoDM.setRenderedMediaFePresentacion(Boolean.FALSE);
     }

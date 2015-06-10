@@ -5,7 +5,8 @@
  */
 package edu.unl.sigett.servlet;
 
-import edu.unl.sigett.docenteProyecto.SessionDocenteProyecto;
+import edu.unl.sigett.directorProyecto.DirectorProyectoDM;
+import edu.unl.sigett.documentoCarrera.DocumentoCarreraDM;
 import java.io.IOException;
 import javax.inject.Inject;
 import javax.servlet.ServletException;
@@ -29,7 +30,7 @@ public class AppServlet extends HttpServlet {
     @Inject
     private SessionUsuarioCarrera sessionUsuarioCarrera;
     @Inject
-    private SessionDocenteProyecto sessionDocenteProyecto;
+    private DocumentoCarreraDM documentoCarreraDM;
     //</editor-fold>
 
     @Override
@@ -42,11 +43,11 @@ public class AppServlet extends HttpServlet {
             switch (entity) {
                 case "documentoProyecto":
                     if (sessionDocumentoProyecto.getDocumentoProyectoDTOSeleccionado() == null) {
-                         response.sendError(HttpServletResponse.SC_NOT_FOUND); // 404.
+                        response.sendError(HttpServletResponse.SC_NOT_FOUND); // 404.
                         return;
                     }
                     if (sessionDocumentoProyecto.getDocumentoProyectoDTOSeleccionado().getDocumento() == null) {
-                         response.sendError(HttpServletResponse.SC_NOT_FOUND); // 404.
+                        response.sendError(HttpServletResponse.SC_NOT_FOUND); // 404.
                         return;
                     }
                     if (sessionDocumentoProyecto.getDocumentoProyectoDTOSeleccionado().getDocumento().getContents() == null) {
@@ -75,35 +76,69 @@ public class AppServlet extends HttpServlet {
                     response.getOutputStream().close();
                     break;
                 case "pertinencia":
-                    if (sessionDocenteProyecto.getDocumentoCarreraDTO() == null) {
+                    if (documentoCarreraDM.getDocumentoCarreraDTO() == null) {
                         response.sendError(HttpServletResponse.SC_NOT_FOUND);
                         return;
                     }
-                    if (sessionDocenteProyecto.getDocumentoCarreraDTO().getDocumento().getContents() == null) {
+                    if (documentoCarreraDM.getDocumentoCarreraDTO().getDocumento().getContents() == null) {
                         response.sendError(HttpServletResponse.SC_NOT_FOUND);
                         return;
                     }
                     response.setCharacterEncoding("ISO-8859-1");
                     response.setContentType("application/pdf");
-                    response.setContentLength(sessionDocenteProyecto.getDocumentoCarreraDTO().getDocumento().getContents().length);
-                    response.getOutputStream().write(sessionDocenteProyecto.getDocumentoCarreraDTO().getDocumento().getContents(), 0, sessionDocenteProyecto.getDocumentoCarreraDTO().getDocumento().getContents().length);
+                    response.setContentLength(documentoCarreraDM.getDocumentoCarreraDTO().getDocumento().getContents().length);
+                    response.getOutputStream().write(documentoCarreraDM.getDocumentoCarreraDTO().getDocumento().getContents(), 0, documentoCarreraDM.getDocumentoCarreraDTO().getDocumento().getContents().length);
                     response.getOutputStream().flush();
                     response.getOutputStream().close();
                     break;
                 case "fePertinencia":
-                    if (sessionDocenteProyecto.getDocumentoCarreraDTO() == null) {
+                    if (documentoCarreraDM.getDocumentoCarreraDTO() == null) {
                         response.sendError(HttpServletResponse.SC_NOT_FOUND);
                         return;
                     }
-                    if (sessionDocenteProyecto.getDocumentoCarreraDTO().getDocumento().getContents() == null) {
+                    if (documentoCarreraDM.getDocumentoCarreraDTO().getDocumento().getContents() == null) {
                         response.sendError(HttpServletResponse.SC_NOT_FOUND);
                         return;
                     }
 
                     response.setCharacterEncoding("ISO-8859-1");
                     response.setContentType("application/pdf");
-                    response.setContentLength(sessionDocenteProyecto.getDocumentoCarreraDTO().getDocumento().getContents().length);
-                    response.getOutputStream().write(sessionDocenteProyecto.getDocumentoCarreraDTO().getDocumento().getContents(), 0, sessionDocenteProyecto.getDocumentoCarreraDTO().getDocumento().getContents().length);
+                    response.setContentLength(documentoCarreraDM.getDocumentoCarreraDTO().getDocumento().getContents().length);
+                    response.getOutputStream().write(documentoCarreraDM.getDocumentoCarreraDTO().getDocumento().getContents(), 0, documentoCarreraDM.getDocumentoCarreraDTO().getDocumento().getContents().length);
+                    response.getOutputStream().flush();
+                    response.getOutputStream().close();
+                    break;
+                case "feDirector":
+                    if (documentoCarreraDM.getDocumentoCarreraDTO() == null) {
+                        response.sendError(HttpServletResponse.SC_NOT_FOUND);
+                        return;
+                    }
+                    if (documentoCarreraDM.getDocumentoCarreraDTO().getDocumento().getContents() == null) {
+                        response.sendError(HttpServletResponse.SC_NOT_FOUND);
+                        return;
+                    }
+                    response.setCharacterEncoding("ISO-8859-1");
+                    response.setContentType("application/pdf");
+                    response.setContentLength(documentoCarreraDM.getDocumentoCarreraDTO().getDocumento().getContents().length);
+                    response.getOutputStream().write(documentoCarreraDM.getDocumentoCarreraDTO().getDocumento().getContents(), 0,
+                            documentoCarreraDM.getDocumentoCarreraDTO().getDocumento().getContents().length);
+                    response.getOutputStream().flush();
+                    response.getOutputStream().close();
+                    break;
+                case "oficioDirector":
+                    if (documentoCarreraDM.getDocumentoCarreraDTO() == null) {
+                        response.sendError(HttpServletResponse.SC_NOT_FOUND);
+                        return;
+                    }
+                    if (documentoCarreraDM.getDocumentoCarreraDTO().getDocumento().getContents() == null) {
+                        response.sendError(HttpServletResponse.SC_NOT_FOUND);
+                        return;
+                    }
+                    response.setCharacterEncoding("ISO-8859-1");
+                    response.setContentType("application/pdf");
+                    response.setContentLength(documentoCarreraDM.getDocumentoCarreraDTO().getDocumento().getContents().length);
+                    response.getOutputStream().write(documentoCarreraDM.getDocumentoCarreraDTO().getDocumento().getContents(), 0,
+                            documentoCarreraDM.getDocumentoCarreraDTO().getDocumento().getContents().length);
                     response.getOutputStream().flush();
                     response.getOutputStream().close();
                     break;

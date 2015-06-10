@@ -6,7 +6,7 @@
 package edu.unl.sigett.directorProyecto;
 
 import edu.unl.sigett.director.DirectorDTO;
-import edu.unl.sigett.util.DocumentoCarreraDTO;
+import edu.unl.sigett.documentoCarrera.DocumentoCarreraDTO;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
@@ -25,7 +25,6 @@ public class DirectorProyectoDM implements Serializable {
     private List<DirectorDTO> filterDirectoresDTO;
 
     private DirectorProyectoDTO directorProyectoDTO;
-    private DocumentoCarreraDTO documentoCarreraDTO;
 
     private Boolean renderedCrear;
     private Boolean renderedEliminar;
@@ -104,14 +103,6 @@ public class DirectorProyectoDM implements Serializable {
 
     public void setFilterDirectoresDTO(List<DirectorDTO> filterDirectoresDTO) {
         this.filterDirectoresDTO = filterDirectoresDTO;
-    }
-
-    public DocumentoCarreraDTO getDocumentoCarreraDTO() {
-        return documentoCarreraDTO;
-    }
-
-    public void setDocumentoCarreraDTO(DocumentoCarreraDTO documentoCarreraDTO) {
-        this.documentoCarreraDTO = documentoCarreraDTO;
     }
 
     public Boolean isRenderedImprimirOficio() {
