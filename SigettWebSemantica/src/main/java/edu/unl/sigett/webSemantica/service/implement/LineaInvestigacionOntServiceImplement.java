@@ -36,7 +36,7 @@ public class LineaInvestigacionOntServiceImplement implements LineaInvestigacion
             if (lineaInvestigacionDTO.getIndividual() == null) {
                 lineaInvestigacionDTO.setIndividual(cabeceraWebSemantica.getVocabulario().getModel().createIndividual(
                         cabeceraWebSemantica.getVocabulario().getNS() + lineaInvestigacionDTO.getUri() + "/" + lineaInvestigacionDTO.getId(),
-                        cabeceraWebSemantica.getVocabulario().editarAutorOnt()));
+                        cabeceraWebSemantica.getVocabulario().editarLineaInvestigacionOnt()));
             }
 
             lineaInvestigacionDTO.getIndividual().setPropertyValue(cabeceraWebSemantica.getVocabulario().editarPropiedadId(),

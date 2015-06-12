@@ -10,6 +10,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.Cacheable;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -33,15 +34,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @Entity
 @Table(name = "cronograma")
 @XmlRootElement
-@NamedQueries({
-    @NamedQuery(name = "Cronograma.findAll", query = "SELECT c FROM Cronograma c"),
-    @NamedQuery(name = "Cronograma.findById", query = "SELECT c FROM Cronograma c WHERE c.id = :id"),
-    @NamedQuery(name = "Cronograma.findByFechaInicio", query = "SELECT c FROM Cronograma c WHERE c.fechaInicio = :fechaInicio"),
-    @NamedQuery(name = "Cronograma.findByFechaFin", query = "SELECT c FROM Cronograma c WHERE c.fechaFin = :fechaFin"),
-    @NamedQuery(name = "Cronograma.findByDuracion", query = "SELECT c FROM Cronograma c WHERE c.duracion = :duracion"),
-    @NamedQuery(name = "Cronograma.findByAvance", query = "SELECT c FROM Cronograma c WHERE c.avance = :avance"),
-    @NamedQuery(name = "Cronograma.findByFaltante", query = "SELECT c FROM Cronograma c WHERE c.faltante = :faltante"),
-    @NamedQuery(name = "Cronograma.findByFechaProrroga", query = "SELECT c FROM Cronograma c WHERE c.fechaProrroga = :fechaProrroga")})
+@Cacheable(value = false)
 public class Cronograma implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id

@@ -17,14 +17,16 @@ public class ReporteFePresentacion implements Serializable {
     private String cuerpo;
     private String firmaInvolucrados;
     private String parteFinal;
+    private String ruta;
     private String responsable;
 
-    public ReporteFePresentacion(String referencia, String cuerpo, String firmaInvolucrados, String parteFinal,String responsable) {
+    public ReporteFePresentacion(String referencia, String cuerpo, String firmaInvolucrados, String parteFinal,String responsable,String ruta) {
         this.referencia = referencia;
         this.cuerpo = cuerpo;
         this.firmaInvolucrados = firmaInvolucrados;
         this.parteFinal = parteFinal;
         this.responsable=responsable;
+        this.ruta=ruta;
     }
 
     public ReporteFePresentacion() {
@@ -68,6 +70,14 @@ public class ReporteFePresentacion implements Serializable {
 
     public void setResponsable(String responsable) {
         this.responsable = responsable;
+    }
+
+    public String getRuta() {
+        return ruta;
+    }
+
+    public void setRuta(String ruta) {
+        this.ruta = ruta;
     }
 
 }

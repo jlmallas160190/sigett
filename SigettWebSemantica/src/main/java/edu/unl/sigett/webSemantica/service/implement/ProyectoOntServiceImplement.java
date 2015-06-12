@@ -38,7 +38,7 @@ public class ProyectoOntServiceImplement implements ProyectoOntService {
             if (proyectoDTO.getIndividual() == null) {
                 proyectoDTO.setIndividual(cabecera.getVocabulario().getModel().createIndividual(
                         cabecera.getVocabulario().getNS() + "proyecto/" + proyectoDTO.getId(),
-                        cabecera.getVocabulario().editarAutorOnt()));
+                        cabecera.getVocabulario().editarProyectoOnt()));
             }
             proyectoDTO.getIndividual().setPropertyValue(cabecera.getVocabulario().editarPropiedadId(),
                     cabecera.getVocabulario().getModel().createTypedLiteral(proyectoDTO.getId()));

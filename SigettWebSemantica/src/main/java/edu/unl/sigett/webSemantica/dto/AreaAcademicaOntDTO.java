@@ -29,6 +29,7 @@ public class AreaAcademicaOntDTO implements Serializable {
         this.institucion = institucion;
         this.nombre = nombre;
         this.sigla = sigla;
+        this.uri=uri;
     }
 
     public Integer getId() {

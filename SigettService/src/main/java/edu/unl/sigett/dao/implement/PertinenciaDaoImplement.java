@@ -25,18 +25,6 @@ public class PertinenciaDaoImplement extends AbstractDao<Pertinencia> implements
         super(Pertinencia.class);
     }
 
-//    @Override
-//    public List<Pertinencia> buscarPertinenciasPorDocenteProyecto(Long docenteProyectoId) {
-//        try {
-//            Query query = em.createQuery("Select p from Pertinencia p WHERE " + "(p.docenteProyectoId.id=:id AND p.esActivo=TRUE)");
-//            query.setParameter("id", docenteProyectoId);
-//            return query.getResultList();
-//        } catch (Exception e) {
-//            System.out.println(e);
-//        }
-//        return null;
-//    }
-
     @Override
     public List<Pertinencia> buscar(Pertinencia pertinencia) {
         StringBuilder sql = new StringBuilder();

@@ -5,7 +5,6 @@
  */
 package edu.unl.sigett.docenteProyecto;
 
-import edu.unl.sigett.documentoCarrera.DocumentoCarreraDTO;
 import java.io.Serializable;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Named;

@@ -5,7 +5,6 @@
  */
 package edu.unl.sigett.servlet;
 
-import edu.unl.sigett.directorProyecto.DirectorProyectoDM;
 import edu.unl.sigett.documentoCarrera.DocumentoCarreraDM;
 import java.io.IOException;
 import javax.inject.Inject;
@@ -75,57 +74,8 @@ public class AppServlet extends HttpServlet {
                     response.getOutputStream().write(sessionUsuarioCarrera.getUsuarioCarreraDTO().getCarrera().getLogo());
                     response.getOutputStream().close();
                     break;
-                case "pertinencia":
-                    if (documentoCarreraDM.getDocumentoCarreraDTO() == null) {
-                        response.sendError(HttpServletResponse.SC_NOT_FOUND);
-                        return;
-                    }
-                    if (documentoCarreraDM.getDocumentoCarreraDTO().getDocumento().getContents() == null) {
-                        response.sendError(HttpServletResponse.SC_NOT_FOUND);
-                        return;
-                    }
-                    response.setCharacterEncoding("ISO-8859-1");
-                    response.setContentType("application/pdf");
-                    response.setContentLength(documentoCarreraDM.getDocumentoCarreraDTO().getDocumento().getContents().length);
-                    response.getOutputStream().write(documentoCarreraDM.getDocumentoCarreraDTO().getDocumento().getContents(), 0, documentoCarreraDM.getDocumentoCarreraDTO().getDocumento().getContents().length);
-                    response.getOutputStream().flush();
-                    response.getOutputStream().close();
-                    break;
-                case "fePertinencia":
-                    if (documentoCarreraDM.getDocumentoCarreraDTO() == null) {
-                        response.sendError(HttpServletResponse.SC_NOT_FOUND);
-                        return;
-                    }
-                    if (documentoCarreraDM.getDocumentoCarreraDTO().getDocumento().getContents() == null) {
-                        response.sendError(HttpServletResponse.SC_NOT_FOUND);
-                        return;
-                    }
 
-                    response.setCharacterEncoding("ISO-8859-1");
-                    response.setContentType("application/pdf");
-                    response.setContentLength(documentoCarreraDM.getDocumentoCarreraDTO().getDocumento().getContents().length);
-                    response.getOutputStream().write(documentoCarreraDM.getDocumentoCarreraDTO().getDocumento().getContents(), 0, documentoCarreraDM.getDocumentoCarreraDTO().getDocumento().getContents().length);
-                    response.getOutputStream().flush();
-                    response.getOutputStream().close();
-                    break;
-                case "feDirector":
-                    if (documentoCarreraDM.getDocumentoCarreraDTO() == null) {
-                        response.sendError(HttpServletResponse.SC_NOT_FOUND);
-                        return;
-                    }
-                    if (documentoCarreraDM.getDocumentoCarreraDTO().getDocumento().getContents() == null) {
-                        response.sendError(HttpServletResponse.SC_NOT_FOUND);
-                        return;
-                    }
-                    response.setCharacterEncoding("ISO-8859-1");
-                    response.setContentType("application/pdf");
-                    response.setContentLength(documentoCarreraDM.getDocumentoCarreraDTO().getDocumento().getContents().length);
-                    response.getOutputStream().write(documentoCarreraDM.getDocumentoCarreraDTO().getDocumento().getContents(), 0,
-                            documentoCarreraDM.getDocumentoCarreraDTO().getDocumento().getContents().length);
-                    response.getOutputStream().flush();
-                    response.getOutputStream().close();
-                    break;
-                case "oficioDirector":
+                case "documentoCarrera":
                     if (documentoCarreraDM.getDocumentoCarreraDTO() == null) {
                         response.sendError(HttpServletResponse.SC_NOT_FOUND);
                         return;

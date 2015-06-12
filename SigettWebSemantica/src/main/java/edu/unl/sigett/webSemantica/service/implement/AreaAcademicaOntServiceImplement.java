@@ -23,18 +23,20 @@ public class AreaAcademicaOntServiceImplement implements AreaAcademicaOntService
     private CabeceraWebSemantica cabecera;
     private static final Logger LOG = Logger.getLogger(AreaAcademicaOntServiceImplement.class.getName());
 
+    @Override
     public void read(CabeceraWebSemantica cabecera) {
         this.cabecera = cabecera;
     }
 
+    @Override
     public void write(final AreaAcademicaOntDTO areaAcademicaDTO) {
         try {
             areaAcademicaDTO.setIndividual(cabecera.getVocabulario().getModel().getIndividual(
-                    cabecera.getVocabulario().getNS() + areaAcademicaDTO.getUri() + "/" + areaAcademicaDTO));
+                    cabecera.getVocabulario().getNS() + areaAcademicaDTO.getUri() + "/" + areaAcademicaDTO.getId()));
             if (areaAcademicaDTO.getIndividual() == null) {
                 areaAcademicaDTO.setIndividual(cabecera.getVocabulario().getModel().createIndividual(
                         cabecera.getVocabulario().getNS() + areaAcademicaDTO.getUri() + "/" + areaAcademicaDTO.getId(),
-                        cabecera.getVocabulario().editarAutorOnt()));
+                        cabecera.getVocabulario().editarAreaOnt()));
             }
             areaAcademicaDTO.getIndividual().setPropertyValue(cabecera.getVocabulario().editarPropiedadId(),
                     cabecera.getVocabulario().getModel().createTypedLiteral(areaAcademicaDTO.getId()));

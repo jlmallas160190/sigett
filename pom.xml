@@ -17,5 +17,6 @@
         <module>SigettWebSemantica</module>
         <module>SigettDocenteWeb</module>
         <module>SigettSeguridadWeb</module>
+        <module>SigettEstudiante</module>
     </modules>
 </project>

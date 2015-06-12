@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+    <body>
+        <h:panelGrid id="panelDatos" columns="3" styleClass="panelgrid" rowClasses="rowpanelgrid" columnClasses="col-sm-3,col-sm-8,col-sm-1">
+            <h:outputLabel value="#{msg['lbl.fecha']}:"/>
+            <p:calendar id="fechaProrroga"  navigator="true" locale="es" pattern="dd/MM/yyyy" value="#{sessionProrroga.prorroga.fecha}" 
+                        title="#{msg['lbl.fecha']}" required="true" requiredMessage="#{msg['lbl.fecha']} #{msg['lbl.obligatorio']}.">
+                <p:ajax event="change" listener="#{prorrogaController.calculaFechas()}" update="panelDatos"/>
+                <p:ajax event="dateSelect" listener="#{prorrogaController.calculaFechas()}"  update="panelDatos"/>
+            </p:calendar>
+            <p:message id="msmFechaProrroga" display="icon" for="fechaProrroga"/>
+            <h:outputLabel  value="#{msg['lbl.motivo']}:" for="motivo" />
+            <p:editor id="motivoProrroga" value="#{sessionProrroga.prorroga.motivo}" required="true" 
+                              requiredMessage="#{msg['lbl.motivo']} #{msg['lbl.obligatorio']}."/>
+            <p:message id="msmMotivoProrroga" display="icon" for="motivoProrroga"/>
+            <h:outputLabel rendered="#{administrarProrrogas.renderedAceptarProrroga}" value="#{msg['lbl.aceptar']}:" for="aceptar" />
+            <p:selectBooleanCheckbox rendered="#{administrarProrrogas.renderedAceptarProrroga}" value="#{sessionProrroga.prorroga.esAceptado}"/>
+            <h:inputHidden/>
+            <h:outputLabel rendered="#{administrarProrrogas.renderedAceptarProrroga}" value="#{msg['lbl.observacion']}:" for="observacion" />
+            <p:inputTextarea id="observacionProrroga" rendered="#{administrarProrrogas.renderedAceptarProrroga}" value="#{sessionProrroga.prorroga.observacion}" 
+                             title="#{msg['lbl.observacion']}" required="true" requiredMessage="#{msg['lbl.observacion']} #{msg['lbl.obligatorio']}.">
+               
+            </p:inputTextarea>
+            <p:message id="msmObservacionProrroga" display="icon" for="observacionProrroga"/>
+        </h:panelGrid>
+    </body>
+</html>

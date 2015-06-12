@@ -15,8 +15,8 @@
             <h:outputLabel value="#{msg['lbl.fecha']}:"/>
             <p:calendar id="fecha" locale="es" navigator="true" showOn="button" value="#{pertinenciaDM.pertinencia.fecha}"
                         requiredMessage="#{msg['lbl.fecha']} #{msg['lbl.obligatorio']}" >
-                <p:ajax event="dateSelect" process="@this"/>
-                <p:ajax event="change" process="@this"/>
+                <p:ajax event="change" listener="#{cronogramaController.calcularDuracion()}" update="panelDatos"/>
+                <p:ajax event="dateSelect" listener="#{cronogramaController.calcularDuracion()}"  update="panelDatos"/>
             </p:calendar>
             <p:message id="msmFecha" display="icon" for="fecha"/>
             <h:outputLabel id="lblFechaFin" rendered="#{pertinenciaDM.renderedCrudCronograma}" value="#{msg['lbl.fechaCulminación']}:"/>

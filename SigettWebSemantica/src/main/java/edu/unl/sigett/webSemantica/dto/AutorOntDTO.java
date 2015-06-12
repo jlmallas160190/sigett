@@ -7,7 +7,6 @@ package edu.unl.sigett.webSemantica.dto;
 
 import com.hp.hpl.jena.ontology.Individual;
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  *
@@ -22,7 +21,7 @@ public class AutorOntDTO extends PersonaOntDTO implements Serializable {
         this.id = id;
     }
 
-    public AutorOntDTO(Long id, String nombres, String apellidos, Date fechaNacimiento, String genero, String email,String uri) {
+    public AutorOntDTO(Long id, String nombres, String apellidos, String fechaNacimiento, String genero, String email,String uri) {
         super(nombres, apellidos, fechaNacimiento, genero, email,uri);
         this.id = id;
     }

@@ -7,6 +7,7 @@ package edu.unl.sigett.entity;
 
 import java.io.Serializable;
 import javax.persistence.Basic;
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -28,13 +29,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Entity
 @Table(name = "configuracion_proyecto")
 @XmlRootElement
-@NamedQueries({
-    @NamedQuery(name = "ConfiguracionProyecto.findAll", query = "SELECT c FROM ConfiguracionProyecto c"),
-    @NamedQuery(name = "ConfiguracionProyecto.findById", query = "SELECT c FROM ConfiguracionProyecto c WHERE c.id = :id"),
-    @NamedQuery(name = "ConfiguracionProyecto.findByNombre", query = "SELECT c FROM ConfiguracionProyecto c WHERE c.nombre = :nombre"),
-    @NamedQuery(name = "ConfiguracionProyecto.findByValor", query = "SELECT c FROM ConfiguracionProyecto c WHERE c.valor = :valor"),
-    @NamedQuery(name = "ConfiguracionProyecto.findByCodigo", query = "SELECT c FROM ConfiguracionProyecto c WHERE c.codigo = :codigo"),
-    @NamedQuery(name = "ConfiguracionProyecto.findByTipo", query = "SELECT c FROM ConfiguracionProyecto c WHERE c.tipo = :tipo")})
 public class ConfiguracionProyecto implements Serializable {
 
     private static final long serialVersionUID = 1L;

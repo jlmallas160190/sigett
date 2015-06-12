@@ -7,7 +7,6 @@ package edu.unl.sigett.webSemantica.dto;
 
 import com.hp.hpl.jena.ontology.Individual;
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  *
@@ -17,12 +16,12 @@ public class OfertaAcademicaOntDTO implements Serializable {
 
     private Long id;
     private String nombre;
-    private Date fechaInicio;
-    private Date fechaFin;
+    private String fechaInicio;
+    private String fechaFin;
     private PeriodoAcademicoOntDTO periodoAcademicoDTO;
     private Individual individual;
 
-    public OfertaAcademicaOntDTO(Long id, String nombre, Date fechaInicio, Date fechaFin, PeriodoAcademicoOntDTO periodoAcademicoDTO) {
+    public OfertaAcademicaOntDTO(Long id, String nombre, String fechaInicio, String fechaFin, PeriodoAcademicoOntDTO periodoAcademicoDTO) {
         this.id = id;
         this.nombre = nombre;
         this.fechaInicio = fechaInicio;
@@ -49,19 +48,19 @@ public class OfertaAcademicaOntDTO implements Serializable {
         this.nombre = nombre;
     }
 
-    public Date getFechaInicio() {
+    public String getFechaInicio() {
         return fechaInicio;
     }
 
-    public void setFechaInicio(Date fechaInicio) {
+    public void setFechaInicio(String fechaInicio) {
         this.fechaInicio = fechaInicio;
     }
 
-    public Date getFechaFin() {
+    public String getFechaFin() {
         return fechaFin;
     }
 
-    public void setFechaFin(Date fechaFin) {
+    public void setFechaFin(String fechaFin) {
         this.fechaFin = fechaFin;
     }
 

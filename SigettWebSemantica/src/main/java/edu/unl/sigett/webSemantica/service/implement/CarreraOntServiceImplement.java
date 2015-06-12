@@ -23,10 +23,12 @@ public class CarreraOntServiceImplement implements CarreraOntService {
     private CabeceraWebSemantica cabecera;
     private static final Logger LOG = Logger.getLogger(CarreraOntServiceImplement.class.getName());
 
+    @Override
     public void read(CabeceraWebSemantica cabecera) {
         this.cabecera = cabecera;
     }
 
+    @Override
     public void write(CarreraOntDTO carreraDTO) {
         try {
             carreraDTO.setIndividual(cabecera.getVocabulario().getModel().getIndividual(
@@ -34,7 +36,7 @@ public class CarreraOntServiceImplement implements CarreraOntService {
             if (carreraDTO.getIndividual() == null) {
                 carreraDTO.setIndividual(cabecera.getVocabulario().getModel().createIndividual(
                         cabecera.getVocabulario().getNS() + "carrera/" + carreraDTO.getId(),
-                        cabecera.getVocabulario().editarAutorOnt()));
+                        cabecera.getVocabulario().editarCarreraOnt()));
             }
             carreraDTO.getAreaAcademicaDTO().setIndividual(cabecera.getVocabulario().getModel().getIndividual(
                     cabecera.getVocabulario().getNS() + "area/" + carreraDTO.getAreaAcademicaDTO().getId()));

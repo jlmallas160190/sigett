@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package edu.unl.sigett.entity;
 
 import java.io.Serializable;
@@ -16,8 +15,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -32,16 +29,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Entity
 @Table(name = "prorroga")
 @XmlRootElement
-@NamedQueries({
-    @NamedQuery(name = "Prorroga.findAll", query = "SELECT p FROM Prorroga p"),
-    @NamedQuery(name = "Prorroga.findById", query = "SELECT p FROM Prorroga p WHERE p.id = :id"),
-    @NamedQuery(name = "Prorroga.findByFecha", query = "SELECT p FROM Prorroga p WHERE p.fecha = :fecha"),
-    @NamedQuery(name = "Prorroga.findByMotivo", query = "SELECT p FROM Prorroga p WHERE p.motivo = :motivo"),
-    @NamedQuery(name = "Prorroga.findByEsActivo", query = "SELECT p FROM Prorroga p WHERE p.esActivo = :esActivo"),
-    @NamedQuery(name = "Prorroga.findByFechaInicial", query = "SELECT p FROM Prorroga p WHERE p.fechaInicial = :fechaInicial"),
-    @NamedQuery(name = "Prorroga.findByEsAceptado", query = "SELECT p FROM Prorroga p WHERE p.esAceptado = :esAceptado"),
-    @NamedQuery(name = "Prorroga.findByObservacion", query = "SELECT p FROM Prorroga p WHERE p.observacion = :observacion")})
 public class Prorroga implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -68,7 +57,7 @@ public class Prorroga implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "es_aceptado")
-    private boolean esAceptado;
+    private Boolean esAceptado;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 2147483647)
@@ -85,13 +74,15 @@ public class Prorroga implements Serializable {
         this.id = id;
     }
 
-    public Prorroga(Long id, Date fecha, String motivo, Date fechaInicial, boolean esAceptado, String observacion) {
+    public Prorroga(Long id, Date fecha, String motivo, Date fechaInicial, Boolean esActivo, Boolean esAceptado, String observacion, Cronograma cronograma) {
         this.id = id;
         this.fecha = fecha;
         this.motivo = motivo;
         this.fechaInicial = fechaInicial;
         this.esAceptado = esAceptado;
         this.observacion = observacion;
+        this.esActivo = esActivo;
+        this.cronogramaId = cronograma;
     }
 
     public Long getId() {
@@ -134,11 +125,11 @@ public class Prorroga implements Serializable {
         this.fechaInicial = fechaInicial;
     }
 
-    public boolean getEsAceptado() {
+    public Boolean getEsAceptado() {
         return esAceptado;
     }
 
-    public void setEsAceptado(boolean esAceptado) {
+    public void setEsAceptado(Boolean esAceptado) {
         this.esAceptado = esAceptado;
     }
 
@@ -172,15 +163,12 @@ public class Prorroga implements Serializable {
             return false;
         }
         Prorroga other = (Prorroga) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
+        return (this.id != null || other.id == null) && (this.id == null || this.id.equals(other.id));
     }
 
     @Override
     public String toString() {
         return "edu.unl.sigett.entity.Prorroga[ id=" + id + " ]";
     }
-    
+
 }

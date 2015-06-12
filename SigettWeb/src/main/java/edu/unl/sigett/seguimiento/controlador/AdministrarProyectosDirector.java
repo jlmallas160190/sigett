@@ -9,7 +9,6 @@ import com.jlmallas.comun.entity.Persona;
 import com.jlmallas.comun.dao.PersonaDao;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 import com.ocpsoft.pretty.faces.annotation.URLMappings;
-import edu.unl.sigett.prorroga.AdministrarProrrogas;
 import edu.unl.sigett.finalizacion.controlador.AdministrarInformesProyecto;
 import edu.unl.sigett.seguimiento.session.SessionProyectosDirector;
 import edu.unl.sigett.entity.DirectorProyecto;
@@ -69,8 +68,6 @@ public class AdministrarProyectosDirector implements Serializable {
     private AdministrarRevisiones administrarRevisiones;
     @Inject
     private AdministrarInformesProyecto administrarInformesProyecto;
-    @Inject
-    private AdministrarProrrogas administrarProrrogas;
     @EJB
     private UsuarioDao usuarioFacadeLocal;
     @EJB
@@ -178,8 +175,8 @@ public class AdministrarProyectosDirector implements Serializable {
 //                    administrarProrrogas.renderedEliminar(sessionDocenteUsuario.getUsuario(), sessionProyectosDirector.getDirectorProyecto().getProyectoId());
 //                    administrarProrrogas.renderedImprimirOficio(sessionDocenteUsuario.getUsuario());
 //                    administrarProrrogas.renderedAceptar(sessionDocenteUsuario.getUsuario(), sessionProyectosDirector.getDirectorProyecto().getProyectoId());
-                    administrarProrrogas.setRenderedDlgOficio(false);
-                    administrarProrrogas.setRenderedDlgEditar(false);
+//                    administrarProrrogas.setRenderedDlgOficio(false);
+//                    administrarProrrogas.setRenderedDlgEditar(false);
                     administrarInformesProyecto.setRenderedDlgEditar(false);
                     administrarInformesProyecto.setRenderedDlgCertificado(false);
                     break;
@@ -401,12 +398,6 @@ public class AdministrarProyectosDirector implements Serializable {
         this.administrarInformesProyecto = administrarInformesProyecto;
     }
 
-    public AdministrarProrrogas getAdministrarProrrogas() {
-        return administrarProrrogas;
-    }
-
-    public void setAdministrarProrrogas(AdministrarProrrogas administrarProrrogas) {
-        this.administrarProrrogas = administrarProrrogas;
-    }
+  
 //</editor-fold>
 }

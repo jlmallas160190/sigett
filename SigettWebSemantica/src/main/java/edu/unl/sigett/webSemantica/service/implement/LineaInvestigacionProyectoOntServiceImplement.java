@@ -23,10 +23,12 @@ public class LineaInvestigacionProyectoOntServiceImplement implements LineaInves
     private static final Logger LOG = Logger.getLogger(LineaInvestigacionProyectoOntServiceImplement.class.getName());
     private CabeceraWebSemantica cabeceraWebSemantica;
 
+    @Override
     public void read(CabeceraWebSemantica cabecera) {
         this.cabeceraWebSemantica = cabecera;
     }
 
+    @Override
     public void write(LineaInvestigacionProyectoOntDTO lineaInvestigacionProyectoDTO) {
         try {
             lineaInvestigacionProyectoDTO.setIndividual(cabeceraWebSemantica.getVocabulario().getModel().getIndividual(
@@ -34,7 +36,7 @@ public class LineaInvestigacionProyectoOntServiceImplement implements LineaInves
             if (lineaInvestigacionProyectoDTO.getIndividual() == null) {
                 lineaInvestigacionProyectoDTO.setIndividual(cabeceraWebSemantica.getVocabulario().getModel().createIndividual(
                         cabeceraWebSemantica.getVocabulario().getNS() + lineaInvestigacionProyectoDTO.getUri() + "/" + lineaInvestigacionProyectoDTO.getId(),
-                        cabeceraWebSemantica.getVocabulario().editarAutorOnt()));
+                        cabeceraWebSemantica.getVocabulario().editarLineaInvestigacionProyectoOnt()));
             }
             lineaInvestigacionProyectoDTO.getProyectoDTO().setIndividual(cabeceraWebSemantica.getVocabulario().getModel().getIndividual(
                     cabeceraWebSemantica.getVocabulario().getNS() + lineaInvestigacionProyectoDTO.getProyectoDTO().getUri() + "/"

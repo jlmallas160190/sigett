@@ -5,9 +5,7 @@
  */
 package edu.unl.sigett.reporte;
 
-
 import java.io.Serializable;
-import javax.servlet.http.HttpServletResponse;
 import org.jlmallas.util.Oficio;
 
 /**
@@ -15,6 +13,7 @@ import org.jlmallas.util.Oficio;
  * @author jorge-luis
  */
 public class ReporteOficio extends Oficio implements Serializable {
+
     private byte[] logoCarrera;
     private String rutaLogoIntitucion;
     private String nombreCarrera;
@@ -25,12 +24,12 @@ public class ReporteOficio extends Oficio implements Serializable {
     private String cabecera2;
     private String ruta;
     private String tipoArchivo;
-    private String responsable;
+    private String footer;
 
     public ReporteOficio(byte[] logoCarrera, String rutaLogoIntitucion, String nombreCarrera, String nombreArea, String carreraSigla,
             String etiquetaNO, String cabecera1, String cabecera2, String lugar, String fecha, String numeracion, String cargoDestinatario, String destinatario,
             String cargoQuienFirma, String datosQuienFirma, String cuerpo, String referencia, String asunto, String despedida, String saludo, String tipoArchivo,
-            String responsable, String ruta) {
+            String footer, String ruta) {
         super(lugar, fecha, numeracion, cargoDestinatario, destinatario, cargoQuienFirma, datosQuienFirma, cuerpo, referencia, asunto, despedida, saludo);
         this.logoCarrera = logoCarrera;
         this.rutaLogoIntitucion = rutaLogoIntitucion;
@@ -42,7 +41,7 @@ public class ReporteOficio extends Oficio implements Serializable {
         this.cabecera2 = cabecera2;
         this.ruta = ruta;
         this.tipoArchivo = tipoArchivo;
-        this.responsable = responsable;
+        this.footer = footer;
     }
 
     public ReporteOficio(byte[] logoCarrera, String rutaLogoIntitucion, String nombreCarrera, String nombreArea, String carreraSigla,
@@ -137,11 +136,12 @@ public class ReporteOficio extends Oficio implements Serializable {
         this.tipoArchivo = tipoArchivo;
     }
 
-    public String getResponsable() {
-        return responsable;
+    public String getFooter() {
+        return footer;
     }
 
-    public void setResponsable(String responsable) {
-        this.responsable = responsable;
+    public void setFooter(String footer) {
+        this.footer = footer;
     }
+
 }

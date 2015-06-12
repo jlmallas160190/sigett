@@ -27,7 +27,6 @@ import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 import com.ocpsoft.pretty.faces.annotation.URLMappings;
-import edu.unl.sigett.prorroga.AdministrarProrrogas;
 import edu.unl.sigett.finalizacion.controlador.AdministrarActas;
 import edu.unl.sigett.finalizacion.controlador.AdministrarEvaluacionesTribunal;
 import edu.unl.sigett.finalizacion.controlador.AdministrarMiembrosTribunal;
@@ -134,8 +133,7 @@ class AdministrarProyectos implements Serializable {
     private SessionUsuario sessionUsuario;
     @Inject
     SessionProyecto sessionProyecto;
-    @Inject
-    private AdministrarProrrogas administrarProrrogas;
+
 //    @Inject
 //    private AdministrarDirectoresProyecto administrarDirectoresProyecto
     @Inject
@@ -290,13 +288,13 @@ class AdministrarProyectos implements Serializable {
                 administrarActividades.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
 //                administrarDirectoresProyecto.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
 //                administrarDocumentosProyecto.renderedBuscar(sessionUsuario.getUsuario());
-                administrarProrrogas.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
+//                administrarProrrogas.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
 //                administrarTemaProyectos.renderedBuscar(sessionUsuario.getUsuario());
                 administrarTribunales.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
 //                administrarDocentesProyecto.renderedBuscar(sessionUsuario.getUsuario());
 //                administrarConfiguracionesProyecto.renderedBuscar(sessionUsuario.getUsuario());
 //                administrarCronograma.renderedCronograma(sessionProyecto.getProyectoSeleccionado());
-                administrarProrrogas.tieneProrroga(sessionProyecto.getProyectoSeleccionado());
+//                administrarProrrogas.tieneProrroga(sessionProyecto.getProyectoSeleccionado());
                 /*LISTADOS*/
                 this.lineaInvestigacionProyectosRemovidos = new ArrayList<>();
                 this.lineaInvestigacionProyectosAgregados = new ArrayList<>();
@@ -452,12 +450,12 @@ class AdministrarProyectos implements Serializable {
 //                administrarDirectoresProyecto.renderedBuscar(sessionUsuario.getUsuario(), proyecto);
 //                administrarAutoresProyecto.renderedBuscar(sessionUsuario.getUsuario());
 //                administrarDocumentosProyecto.renderedBuscar(sessionUsuario.getUsuario());
-                administrarProrrogas.renderedBuscar(sessionUsuario.getUsuario(), proyecto);
+//                administrarProrrogas.renderedBuscar(sessionUsuario.getUsuario(), proyecto);
                 administrarTribunales.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
 //                administrarDocentesProyecto.renderedBuscar(sessionUsuario.getUsuario());
 //                administrarCronograma.renderedCronograma(sessionProyecto.getProyectoSeleccionado());
 //                administrarConfiguracionesProyecto.renderedBuscar(sessionUsuario.getUsuario());
-                administrarProrrogas.tieneProrroga(proyecto);
+//                administrarProrrogas.tieneProrroga(proyecto);
                 renderedCaducado(proyecto);
                 navegacion = "pretty:editarProyecto";
             } else {
@@ -772,10 +770,10 @@ class AdministrarProyectos implements Serializable {
                     administrarMiembrosTribunal.setRenderedDlgDocentesDisponibles(false);
                     administrarMiembrosTribunal.setRenderedDlgOficio(false);
                     /*------------------------------------------MÉTODOS PRÓRROGAS---------------------------------------------------*/
-                    administrarProrrogas.setRenderedDlgOficio(false);
-                    administrarProrrogas.setRenderedDlgEditar(false);
-                    administrarProrrogas.setRenderedDlgRespuestaAutorProyecto(false);
-                    administrarProrrogas.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
+//                    administrarProrrogas.setRenderedDlgOficio(false);
+//                    administrarProrrogas.setRenderedDlgEditar(false);
+//                    administrarProrrogas.setRenderedDlgRespuestaAutorProyecto(false);
+//                    administrarProrrogas.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
                     /*----------------------------------------------Actividades-------------------------------------------------------*/
                     administrarActividades.setRenderedDlgEditar(false);
                     administrarActividades.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
@@ -811,10 +809,10 @@ class AdministrarProyectos implements Serializable {
                     administrarMiembrosTribunal.setRenderedDlgDocentesDisponibles(false);
                     administrarMiembrosTribunal.setRenderedDlgOficio(false);
                     /*--------------------------------------------MÉTODOS PRÓRROGAS--------------------------------------------------------*/
-                    administrarProrrogas.setRenderedDlgOficio(false);
-                    administrarProrrogas.setRenderedDlgEditar(false);
-                    administrarProrrogas.setRenderedDlgRespuestaAutorProyecto(false);
-                    administrarProrrogas.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
+//                    administrarProrrogas.setRenderedDlgOficio(false);
+//                    administrarProrrogas.setRenderedDlgEditar(false);
+//                    administrarProrrogas.setRenderedDlgRespuestaAutorProyecto(false);
+//                    administrarProrrogas.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
                     /*----------------------------------------------Actividades-------------------------------------------------------*/
                     administrarActividades.setRenderedDlgEditar(false);
                     administrarActividades.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
@@ -854,10 +852,10 @@ class AdministrarProyectos implements Serializable {
                     administrarMiembrosTribunal.setRenderedDlgDocentesDisponibles(false);
                     administrarMiembrosTribunal.setRenderedDlgOficio(false);
                     /*--------------------------------PRÓRROGAS----------------------------------------------------------*/
-                    administrarProrrogas.setRenderedDlgOficio(false);
-                    administrarProrrogas.setRenderedDlgEditar(false);
-                    administrarProrrogas.setRenderedDlgRespuestaAutorProyecto(false);
-                    administrarProrrogas.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
+//                    administrarProrrogas.setRenderedDlgOficio(false);
+//                    administrarProrrogas.setRenderedDlgEditar(false);
+//                    administrarProrrogas.setRenderedDlgRespuestaAutorProyecto(false);
+//                    administrarProrrogas.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
                     /*----------------------------------------------Actividades-------------------------------------------------------*/
                     administrarActividades.setRenderedDlgEditar(false);
                     administrarActividades.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
@@ -894,10 +892,10 @@ class AdministrarProyectos implements Serializable {
                     administrarActividades.setRenderedDlgEditar(false);
                     administrarActividades.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
                     /*-----------------------------------------METODOS PRORROGAS-------------------------------------------------*/
-                    administrarProrrogas.setRenderedDlgOficio(false);
-                    administrarProrrogas.setRenderedDlgEditar(false);
-                    administrarProrrogas.setRenderedDlgRespuestaAutorProyecto(false);
-                    administrarProrrogas.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
+//                    administrarProrrogas.setRenderedDlgOficio(false);
+//                    administrarProrrogas.setRenderedDlgEditar(false);
+//                    administrarProrrogas.setRenderedDlgRespuestaAutorProyecto(false);
+//                    administrarProrrogas.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
                     break;
                 case "tabDirectoresProyecto":
                     /*----------------------------------------------Directores-------------------------------------------------------*/
@@ -931,25 +929,25 @@ class AdministrarProyectos implements Serializable {
                     /*----------------------------------------------Documentos Expediente-------------------------------------------------------*/
 //                    administrarDocumentosExpediente.setRenderedDlgEditar(false);
                     /*------------------------------------METODOS PRORROGAS-------------------------------------------------------------------*/
-                    administrarProrrogas.setRenderedDlgOficio(false);
-                    administrarProrrogas.setRenderedDlgEditar(false);
-                    administrarProrrogas.setRenderedDlgRespuestaAutorProyecto(false);
-                    administrarProrrogas.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
+//                    administrarProrrogas.setRenderedDlgOficio(false);
+//                    administrarProrrogas.setRenderedDlgEditar(false);
+//                    administrarProrrogas.setRenderedDlgRespuestaAutorProyecto(false);
+//                    administrarProrrogas.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
                     /*----------------------------------------------Actividades-------------------------------------------------------*/
                     administrarActividades.setRenderedDlgEditar(false);
                     administrarActividades.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
                     break;
                 case "tabProrrogas":
                     /*-------------------------------------------------MÉTODOS PRÓRROGAS---------------------------------------------------------*/
-                    administrarProrrogas.buscar(sessionProyecto.getProyectoSeleccionado().getCronograma(), sessionUsuario.getUsuario(), "");
-                    administrarProrrogas.renderedCrear(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
-                    administrarProrrogas.renderedEditar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
-                    administrarProrrogas.renderedEliminar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
-                    administrarProrrogas.renderedImprimirOficio(sessionUsuario.getUsuario());
-                    administrarProrrogas.renderedAceptar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
-                    administrarProrrogas.setRenderedDlgOficio(false);
-                    administrarProrrogas.setRenderedDlgEditar(false);
-                    administrarProrrogas.setRenderedDlgRespuestaAutorProyecto(false);
+//                    administrarProrrogas.buscar(sessionProyecto.getProyectoSeleccionado().getCronograma(), sessionUsuario.getUsuario(), "");
+//                    administrarProrrogas.renderedCrear(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
+//                    administrarProrrogas.renderedEditar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
+//                    administrarProrrogas.renderedEliminar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
+//                    administrarProrrogas.renderedImprimirOficio(sessionUsuario.getUsuario());
+//                    administrarProrrogas.renderedAceptar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
+//                    administrarProrrogas.setRenderedDlgOficio(false);
+//                    administrarProrrogas.setRenderedDlgEditar(false);
+//                    administrarProrrogas.setRenderedDlgRespuestaAutorProyecto(false);
                     /*----------------------------------------------Documentos-------------------------------------------------------*/
 //                    administrarDocumentosProyecto.setRenderedDlgEditar(false);
 //                    /*----------------------------------------------Directores-------------------------------------------------------*/
@@ -1004,10 +1002,10 @@ class AdministrarProyectos implements Serializable {
                     /*----------------------------------------------Documentos expediente-------------------------------------------------------*/
 //                    administrarDocumentosExpediente.setRenderedDlgEditar(false);
                     /*----------------------------------------------Prorrogas-------------------------------------------------------*/
-                    administrarProrrogas.setRenderedDlgOficio(false);
-                    administrarProrrogas.setRenderedDlgEditar(false);
-                    administrarProrrogas.setRenderedDlgRespuestaAutorProyecto(false);
-                    administrarProrrogas.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
+//                    administrarProrrogas.setRenderedDlgOficio(false);
+//                    administrarProrrogas.setRenderedDlgEditar(false);
+//                    administrarProrrogas.setRenderedDlgRespuestaAutorProyecto(false);
+//                    administrarProrrogas.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
                     break;
 
                 case "tabHistorialDirectores":
@@ -1032,10 +1030,10 @@ class AdministrarProyectos implements Serializable {
                     administrarActividades.setRenderedDlgEditar(false);
                     administrarActividades.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
                     /*----------------------------------------------Prorrogas-------------------------------------------------------*/
-                    administrarProrrogas.setRenderedDlgOficio(false);
-                    administrarProrrogas.setRenderedDlgEditar(false);
-                    administrarProrrogas.setRenderedDlgRespuestaAutorProyecto(false);
-                    administrarProrrogas.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
+//                    administrarProrrogas.setRenderedDlgOficio(false);
+//                    administrarProrrogas.setRenderedDlgEditar(false);
+//                    administrarProrrogas.setRenderedDlgRespuestaAutorProyecto(false);
+//                    administrarProrrogas.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
                 /*----------------------------------------------Documentos expediente-------------------------------------------------------*/
 //                    administrarDocumentosExpediente.setRenderedDlgEditar(false);
                 case "tabDatosInicio":
@@ -1069,11 +1067,11 @@ class AdministrarProyectos implements Serializable {
                     /*----------------------------------------------Documentos expediente-------------------------------------------------------*/
 //                    administrarDocumentosExpediente.setRenderedDlgEditar(false);
                     /*----------------------------------------------Prorrogas-------------------------------------------------------*/
-                    administrarProrrogas.setRenderedDlgOficio(false);
-                    administrarProrrogas.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
-                    administrarProrrogas.setRenderedDlgEditar(false);
-                    administrarProrrogas.setRenderedDlgRespuestaAutorProyecto(false);
-                    administrarProrrogas.tieneProrroga(sessionProyecto.getProyectoSeleccionado());
+//                    administrarProrrogas.setRenderedDlgOficio(false);
+//                    administrarProrrogas.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
+//                    administrarProrrogas.setRenderedDlgEditar(false);
+//                    administrarProrrogas.setRenderedDlgRespuestaAutorProyecto(false);
+//                    administrarProrrogas.tieneProrroga(sessionProyecto.getProyectoSeleccionado());
                     /*----------------------------------------------Actividades-------------------------------------------------------*/
                     administrarActividades.setRenderedDlgEditar(false);
                     administrarActividades.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
@@ -1114,10 +1112,10 @@ class AdministrarProyectos implements Serializable {
 //                    administrarAutoresProyecto.setRenderedDlgEditarAutorProyecto(false);
 //                    administrarEstudiantes.setRenderedDlgEditar(false);
                     /*----------------------------------------------Prorrogas-------------------------------------------------------*/
-                    administrarProrrogas.setRenderedDlgOficio(false);
-                    administrarProrrogas.setRenderedDlgRespuestaAutorProyecto(false);
-                    administrarProrrogas.setRenderedDlgEditar(false);
-                    administrarProrrogas.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
+//                    administrarProrrogas.setRenderedDlgOficio(false);
+//                    administrarProrrogas.setRenderedDlgRespuestaAutorProyecto(false);
+//                    administrarProrrogas.setRenderedDlgEditar(false);
+//                    administrarProrrogas.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
                     /*----------------------------------------------Docuementos Expediente-------------------------------------------------------*/
 //                    administrarDocumentosExpediente.setRenderedDlgEditar(false);
                     /*----------------------------------------------Actividades-------------------------------------------------------*/
@@ -1151,10 +1149,10 @@ class AdministrarProyectos implements Serializable {
                     /*----------------------------------------------Documentos expediente-------------------------------------------------------*/
 //                    administrarDocumentosExpediente.setRenderedDlgEditar(false);
                     /*----------------------------------------------Prorrogas-------------------------------------------------------*/
-                    administrarProrrogas.setRenderedDlgOficio(false);
-                    administrarProrrogas.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
-                    administrarProrrogas.setRenderedDlgEditar(false);
-                    administrarProrrogas.setRenderedDlgRespuestaAutorProyecto(false);
+//                    administrarProrrogas.setRenderedDlgOficio(false);
+//                    administrarProrrogas.renderedBuscar(sessionUsuario.getUsuario(), sessionProyecto.getProyectoSeleccionado());
+//                    administrarProrrogas.setRenderedDlgEditar(false);
+//                    administrarProrrogas.setRenderedDlgRespuestaAutorProyecto(false);
 
                     break;
             }
@@ -2606,13 +2604,7 @@ class AdministrarProyectos implements Serializable {
         this.proyectosPorWS = proyectosPorWS;
     }
 
-    public AdministrarProrrogas getAdministrarProrrogas() {
-        return administrarProrrogas;
-    }
-
-    public void setAdministrarProrrogas(AdministrarProrrogas administrarProrrogas) {
-        this.administrarProrrogas = administrarProrrogas;
-    }
+   
 
     public AdministrarActividades getAdministrarActividades() {
         return administrarActividades;

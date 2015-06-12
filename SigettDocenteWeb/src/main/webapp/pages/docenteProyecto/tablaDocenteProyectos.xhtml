@@ -10,10 +10,10 @@
                      rowIndexVar="rowIx" editable="true" rowKey="#{item.docenteProyecto.id}" selection="#{item}" selectionMode="single" editMode="cell" 
                      filteredValue="#{docenteProyectoDM.filterDocentesProyectoDTO}" widgetVar="tblDPFilter"
                      rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'even-row' : 'odd-row'}" emptyMessage="#{msg['lbl.table.empty']}">
-            <p:column>
+            <p:column width="5%">
                 <h:outputText value="#{rowIx+1}" />
             </p:column>
-            <p:column>
+            <p:column width="15%">
                 <f:facet name="header">
                     <h:outputText value="#{msg['lbl.fecha']} #{msg['lbl.asignacion']}"/>
                 </f:facet>
@@ -21,7 +21,7 @@
                     <f:convertDateTime pattern="EEEEE dd MMMMM yyyy HH:mm:ss"/>
                 </h:outputText>
             </p:column>
-            <p:column id="tema" filterBy="#{item.docenteProyecto.proyectoId.temaActual}" sortBy="#{item.docenteProyecto.proyectoId.temaActual}">
+            <p:column width="30%" id="tema" filterBy="#{item.docenteProyecto.proyectoId.temaActual}" sortBy="#{item.docenteProyecto.proyectoId.temaActual}">
                 <f:facet name="header">
                     <h:outputText value="#{msg['lbl.tema']}"/>
                 </f:facet>
@@ -29,25 +29,25 @@
                                action="#{docenteProyectoController.editar(item)}">
                 </p:commandLink>
             </p:column>
-            <p:column  filterBy="#{item.docenteProyecto.proyectoId.autores}" sortBy="#{item.docenteProyecto.proyectoId.autores}">
+            <p:column width="20%" filterBy="#{item.docenteProyecto.proyectoId.autores}" sortBy="#{item.docenteProyecto.proyectoId.autores}">
                 <f:facet name="header">
                     <h:outputText value="#{msg['lbl.autores']}"/>
                 </f:facet>
                 <h:outputText value="#{item.docenteProyecto.proyectoId.autores}"/>
             </p:column>
-            <p:column filterBy="#{item.docenteProyecto.proyectoId.tipo}" sortBy="#{item.docenteProyecto.proyectoId.tipo}">
+            <p:column width="10%" filterBy="#{item.docenteProyecto.proyectoId.tipo}" sortBy="#{item.docenteProyecto.proyectoId.tipo}">
                 <f:facet name="header">
                     <h:outputText value="#{msg['lbl.tipoProyecto']}"/>
                 </f:facet>
                 <h:outputText value="#{item.docenteProyecto.proyectoId.tipo}"/>
             </p:column>
-            <p:column filterBy="#{item.docenteProyecto.proyectoId.catalogo}" sortBy="#{item.docenteProyecto.proyectoId.catalogo}">
+            <p:column width="10%" filterBy="#{item.docenteProyecto.proyectoId.catalogo}" sortBy="#{item.docenteProyecto.proyectoId.catalogo}">
                 <f:facet name="header">
                     <h:outputText value="#{msg['lbl.categoria']}"/>
                 </f:facet>
                 <h:outputText value="#{item.docenteProyecto.proyectoId.catalogo}"/>
             </p:column>
-            <p:column filterBy="#{item.docenteProyecto.proyectoId.estado}" sortBy="#{item.docenteProyecto.proyectoId.estado}">
+            <p:column width="10%" filterBy="#{item.docenteProyecto.proyectoId.estado}" sortBy="#{item.docenteProyecto.proyectoId.estado}">
                 <f:facet name="header">
                     <h:outputText value="#{msg['lbl.estado']}"/>
                 </f:facet>

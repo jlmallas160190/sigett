@@ -35,7 +35,7 @@ public class DirectorProyectonOntServiceImplement implements DirectorProyectoOnt
             if (directorProyectoOntDTO.getIndividual() == null) {
                 directorProyectoOntDTO.setIndividual(cabecera.getVocabulario().getModel().createIndividual(
                         cabecera.getVocabulario().getNS() + directorProyectoOntDTO.getUri() + "/" + directorProyectoOntDTO.getId(),
-                        cabecera.getVocabulario().editarAutorOnt()));
+                        cabecera.getVocabulario().editarDirectorProyectoOnt()));
             }
             directorProyectoOntDTO.getDocenteDTO().setIndividual(cabecera.getVocabulario().getModel().getIndividual(
                     cabecera.getVocabulario().getNS() + directorProyectoOntDTO.getDocenteDTO().getUri() + "/" + directorProyectoOntDTO

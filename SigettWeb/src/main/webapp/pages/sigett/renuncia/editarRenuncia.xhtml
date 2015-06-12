@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+    <body>
+        <h:panelGrid rowClasses="rowpanelgrid" styleClass="panelgrid" columnClasses="col-sm-3,col-sm-8,col-sm-1" columns="3">
+            <h:outputLabel value="#{msg['lbl.fecha']}:" for="fecha" />
+            <p:calendar  id="fecha"  navigator="true" locale="es" pattern="dd/MM/yyyy HH:mm:ss" 
+                         value="#{sessionRenuncia.renuncia.fecha}" title="#{lbl.fecha}" required="true" 
+                         requiredMessage="#{msg.fecha_obligatoria}.">
+                <p:ajax event="dateSelect" update="msmFecha"/>
+            </p:calendar>
+            <p:message id="msmFecha" for="fecha"/>
+            <h:outputLabel  value="#{msg['lbl.numero']}:" for="resolucion" />
+            <p:inputText id="resolucion" value="#{sessionRenuncia.renuncia.numeroResolucion}" title="#{msg['lbl.numero']}"
+                         required="true" requiredMessage="#{msg.resolucion_obligatoria}.">
+                <p:ajax event="keyup" update="msmResolucion"/>
+            </p:inputText>
+            <p:message id="msmResolucion" for="resolucion"/>
+            <h:outputLabel  value="#{msg['lbl.motivo']}:" for="motivo" />
+            <p:inputTextarea  id="motivo" value="#{sessionRenuncia.renuncia.motivo}" title="#{msg['lbl.motivo']}" 
+                              required="true" requiredMessage="#{msg['lbl.motivo']} #{msg['lbl.obligatorio']}.">
+                <p:ajax event="keyup" update="msmMotivo"/>
+            </p:inputTextarea>
+            <p:message id="msmMotivo" for="motivo"/>
+        </h:panelGrid>
+    </body>
+
+</html>

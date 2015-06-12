@@ -33,7 +33,7 @@ public class AutorProyectoOntServiceImplement implements AutorProyectoOntService
             if (autorProyectoDTO.getIndividual() == null) {
                 autorProyectoDTO.setIndividual(cabecera.getVocabulario().getModel().createIndividual(
                         cabecera.getVocabulario().getNS() + "autorProyecto/" + autorProyectoDTO.getId(),
-                        cabecera.getVocabulario().editarAutorOnt()));
+                        cabecera.getVocabulario().editarAutorProyectoOnt()));
             }
             autorProyectoDTO.getAutorDTO().setIndividual(cabecera.getVocabulario().getModel().getIndividual(
                     cabecera.getVocabulario().getNS() + "autor/" + autorProyectoDTO.getAutorDTO().getId()));

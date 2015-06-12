@@ -84,7 +84,7 @@ public class Vocabulario {
         this.ofertaAcademicaOnt = model.createClass(getNS() + "ofertaAcademica");
     }
 
-    public OntClass editarClaseOfertaAcademica() {
+    public OntClass editarOfertaAcademicaOnt() {
         this.ofertaAcademicaOnt = model.getOntClass(getNS() + "ofertaAcademica");
         return this.ofertaAcademicaOnt;
     }

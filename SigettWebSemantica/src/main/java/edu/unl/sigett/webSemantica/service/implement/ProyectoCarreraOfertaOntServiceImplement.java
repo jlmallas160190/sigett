@@ -36,7 +36,7 @@ public class ProyectoCarreraOfertaOntServiceImplement implements ProyectoCarrera
             if (proyectoCarreraOfertaDTO.getIndividual() == null) {
                 proyectoCarreraOfertaDTO.setIndividual(cabecera.getVocabulario().getModel().createIndividual(
                         cabecera.getVocabulario().getNS() + "proyectoCarreraOferta/" + proyectoCarreraOfertaDTO.getId(),
-                        cabecera.getVocabulario().editarAutorOnt()));
+                        cabecera.getVocabulario().editarProyectoCarreraOfertaOnt()));
             }
             proyectoCarreraOfertaDTO.getCarreraDTO().setIndividual(cabecera.getVocabulario().getModel().getIndividual(
                     cabecera.getVocabulario().getNS() + "carrera/" +proyectoCarreraOfertaDTO.getCarreraDTO().getId()));

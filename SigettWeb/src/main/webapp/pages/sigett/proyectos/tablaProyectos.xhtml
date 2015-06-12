@@ -11,22 +11,15 @@
                      draggableColumns="true" rowsPerPageTemplate="5,10,15,20,25,30,35,40,45,50" emptyMessage="#{msg['lbl.table.empty']}" 
                      rowIndexVar="rowIx" rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'even-row' : 'odd-row'}" 
                      rowKey="#{sessionProyecto.proyectoSeleccionado}" selectionMode="single">
-            <!-- <f:facet name="header">
-                 <h:commandLink action="{administrarProyectos.crearPDF()}">
-                     <p:graphicImage name="./img/pdf.png" />
-                 </h:commandLink>
-                 <p:commandButton id="toggler" type="button" value="Columns" style="float:right" icon="ui-icon-calculator" />
-                 <p:columnToggler datasource="tblProyectos" trigger="toggler" />
-             </f:facet>-->
             <f:facet name="header">
                 <h:panelGrid styleClass="panelgrid" rowClasses="rowpanelgrid" columns="1">
                     <p:inputText id="globalFilter" onkeyup="PF('tblProyectosFilter').filter()" style="width:150px" placeholder="#{msg['lbl.buscar']}"/>
                 </h:panelGrid>
             </f:facet>
-            <p:column>
+            <p:column width="5%">
                <h:outputText value="#{rowIx+1}" />
             </p:column>
-            <p:column sortBy="#{item.fechaCreated}">
+            <p:column width="15%" sortBy="#{item.fechaCreated}">
                 <f:facet name="header">
                     <h:outputText value="#{msg['lbl.creacion']}"/>
                 </f:facet>
@@ -34,7 +27,7 @@
                     <f:convertDateTime pattern="EEEEE dd MMMMM yyyy HH:mm:ss"/>
                 </h:outputText>
             </p:column>
-            <p:column  rendered="#{sessionProyecto.renderedEditar}" 
+            <p:column width="35%"  rendered="#{sessionProyecto.renderedEditar}" 
                        filterBy="#{item.temaActual}"
                        sortBy="#{item.temaActual}" >
                 <f:facet name="header">
@@ -43,7 +36,7 @@
                 <p:commandLink  value="#{item.temaActual}" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide(),PF('tblProyectosFilter').filter()" 
                                 action="#{proyectoController.editar(item)}"/>
             </p:column>
-            <p:column  rendered="#{!sessionProyecto.renderedEditar}" 
+            <p:column  width="35%" rendered="#{!sessionProyecto.renderedEditar}" 
                        filterBy="#{item.temaActual}"
                        sortBy="#{item.temaActual}" >
                 <f:facet name="header">
@@ -51,25 +44,25 @@
                 </f:facet>
                 <h:outputText value="#{item.temaActual}"/>
             </p:column>
-            <p:column  filterBy="#{item.autores}" sortBy="#{item.autores}">
+            <p:column width="25%" filterBy="#{item.autores}" sortBy="#{item.autores}">
                 <f:facet name="header">
                     <h:outputText value="#{msg['lbl.autores']}"/>
                 </f:facet>
                 <h:outputText value="#{item.autores}"/>
             </p:column>
-            <p:column filterBy="#{item.tipo}" sortBy="#{item.tipo}">
+            <p:column width="10%" filterBy="#{item.tipo}" sortBy="#{item.tipo}">
                 <f:facet name="header">
                     <h:outputText value="#{msg['lbl.tipo']}"/>
                 </f:facet>
                 <h:outputText value="#{item.tipo}"/>
             </p:column>
-            <p:column sortBy="#{item.catalogo}" filterBy="#{item.catalogo}">
+            <p:column width="10%" sortBy="#{item.catalogo}" filterBy="#{item.catalogo}">
                 <f:facet name="header">
                     <h:outputText value="#{msg['lbl.categoria']}"/>
                 </f:facet>
                 <h:outputText value="#{item.catalogo}"/>
             </p:column>
-            <p:column sortBy="#{item.estado}" filterBy="#{item.estado}">
+            <p:column width="10%" sortBy="#{item.estado}" filterBy="#{item.estado}">
                 <f:facet name="header">
                     <h:outputText value="#{msg['lbl.estado']}"/>
                 </f:facet>

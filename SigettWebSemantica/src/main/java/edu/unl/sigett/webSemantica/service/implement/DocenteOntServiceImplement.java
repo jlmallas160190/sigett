@@ -36,7 +36,7 @@ public class DocenteOntServiceImplement implements DocenteOntService {
             if (docenteOntDTO.getIndividual() == null) {
                 docenteOntDTO.setIndividual(cabecera.getVocabulario().getModel().createIndividual(cabecera.getVocabulario().getNS()
                         + docenteOntDTO.getUri() + "/" + docenteOntDTO.getId(),
-                        cabecera.getVocabulario().editarAutorOnt()));
+                        cabecera.getVocabulario().editarDocenteOnt()));
             }
             docenteOntDTO.getIndividual().setPropertyValue(cabecera.getVocabulario().editarPropiedadId(),
                     cabecera.getVocabulario().getModel().createTypedLiteral(docenteOntDTO.getId()));

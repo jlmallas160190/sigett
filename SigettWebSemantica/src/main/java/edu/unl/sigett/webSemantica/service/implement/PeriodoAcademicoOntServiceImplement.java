@@ -24,10 +24,12 @@ public class PeriodoAcademicoOntServiceImplement implements PeriodoAcademicoOntS
 
     private CabeceraWebSemantica cabecera;
 
+    @Override
     public void read(CabeceraWebSemantica cabecera) {
         this.cabecera = cabecera;
     }
 
+    @Override
     public void write(PeriodoAcademicoOntDTO periodoAcademicoDTO) {
         try {
             periodoAcademicoDTO.setIndividual(cabecera.getVocabulario().getModel().getIndividual(
@@ -35,7 +37,7 @@ public class PeriodoAcademicoOntServiceImplement implements PeriodoAcademicoOntS
             if (periodoAcademicoDTO.getIndividual() == null) {
                 periodoAcademicoDTO.setIndividual(cabecera.getVocabulario().getModel().createIndividual(
                         cabecera.getVocabulario().getNS() + "periodo/" + periodoAcademicoDTO.getId(),
-                        cabecera.getVocabulario().editarAutorOnt()));
+                        cabecera.getVocabulario().editarPeriodoAcademicoOnt()));
             }
             periodoAcademicoDTO.getIndividual().setPropertyValue(cabecera.getVocabulario().editarPropiedadId(),
                     cabecera.getVocabulario().getModel().createTypedLiteral(periodoAcademicoDTO.getId()));

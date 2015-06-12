@@ -7,7 +7,7 @@
 
     <body>
         <p:dialog id="dlgDirectoresDisponibles" header="#{msg['lbl.directores']} #{msg['lbl.disponibles']}"  widgetVar="dlgDirectoresDisponibles" 
-                  styleClass="modal-md"  modal="true" closable="false" >
+                  styleClass="modal-md"  modal="true" closable="false" draggable="false" position="center">
             <p:panel rendered="#{directorProyectoDM.renderedPnlDirectoresDisponibles}">
                 <ui:include src="tablaDirectoresDisponibles.xhtml"/>
                 <f:facet  name="footer">

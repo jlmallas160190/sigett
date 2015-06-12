@@ -24,10 +24,12 @@ public class OfertaAcademicaOntServiceImplement implements OfertaAcademicoOntSer
 
     private CabeceraWebSemantica cabecera;
 
+    @Override
     public void read(CabeceraWebSemantica cabecera) {
         this.cabecera = cabecera;
     }
 
+    @Override
     public void write(OfertaAcademicaOntDTO ofertaAcademicaDTO) {
         try {
             ofertaAcademicaDTO.setIndividual(cabecera.getVocabulario().getModel().getIndividual(
@@ -35,7 +37,7 @@ public class OfertaAcademicaOntServiceImplement implements OfertaAcademicoOntSer
             if (ofertaAcademicaDTO.getIndividual() == null) {
                 ofertaAcademicaDTO.setIndividual(cabecera.getVocabulario().getModel().createIndividual(
                         cabecera.getVocabulario().getNS() + "ofertaAcademica/" + ofertaAcademicaDTO.getId(),
-                        cabecera.getVocabulario().editarAutorOnt()));
+                        cabecera.getVocabulario().editarOfertaAcademicaOnt()));
             }
             ofertaAcademicaDTO.getPeriodoAcademicoDTO().setIndividual(cabecera.getVocabulario().getModel().getIndividual(
                     cabecera.getVocabulario().getNS() + "periodo/" + ofertaAcademicaDTO.getPeriodoAcademicoDTO().getId()));

@@ -5,7 +5,7 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
     <body>
-        <p:dataTable id="tblDirectoresProyecto" value="#{sessionProyecto.directoresProyectoDTO}" var="item" rows="20" paginator="true"
+        <p:dataTable id="tblDirectores" value="#{sessionProyecto.directoresProyectoDTO}" var="item" rows="20" paginator="true"
                      rowIndexVar="rowIx" rowKey="#{item.directorProyecto}" selectionMode="single" selection="#{item}"
                      filteredValue="#{sessionProyecto.filterDirectoresProyectoDTO}" widgetVar="tblDirProyFilter"
                      rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'even-row' : 'odd-row'}" emptyMessage="#{msg['lbl.table.empty']}">
@@ -36,8 +36,8 @@
                     <p:column>
                         <p:commandButton  onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide(),PF('tblDirProyFilter').filter()" icon="ui-icon-trash" 
                                           rendered="#{directorProyectoDM.renderedEliminar}"
-                                          update=":contenido:tabViewDatosProyecto:tblDirectoresProyecto,:contenido:msm,
-                                          :contenido:tabViewDatosProyecto:opcionesDirector"  
+                                          update=":contenido:tabViewDatosProyecto:tblDirectores,:contenido:msm,
+                                          :contenido:tabViewDatosProyecto:opcionesDirector,:contenido:dlgEditarRenunciaDirector"  
                                           onclick="if (!confirm('¿#{msg['lbl.confirmarEliminar']}?'))
                                                       return false;"  
                                           action="#{directorProyectoController.remover(item)}"/>

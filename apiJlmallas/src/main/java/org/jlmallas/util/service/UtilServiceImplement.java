@@ -51,63 +51,67 @@ public class UtilServiceImplement implements UtilService {
     @Override
     public Double calculaDuracion(Date fechaInicio, Date fechaFin, int diasNoContabilizados) {
         @SuppressWarnings("UnusedAssignment")
-        Integer ai, af, mi, mf, di, df = 0;
-        ai = fechaInicio.getYear();
-        af = fechaFin.getYear();
-        mi = fechaInicio.getMonth();
-        mf = fechaFin.getMonth();
-        di = fechaInicio.getDate();
-        df = fechaFin.getDate();
-        Integer mesActual = mi;
-        Integer anio = ai;
+        Integer anioInicio, anioFin, mesInicio, mesFin, diaInicio, diaFin = 0;
+        anioInicio = fechaInicio.getYear();
+        anioFin = fechaFin.getYear();
+        mesInicio = fechaInicio.getMonth();
+        mesFin = fechaFin.getMonth();
+        diaInicio = fechaInicio.getDate();
+        diaFin = fechaFin.getDate();
+        Integer mesActual = mesInicio;
+        Integer anio = anioInicio;
         Double dias = 0.0;
         boolean fin = true;
         while (fin) {
-            if (mesActual == mi && ai == anio) {
-                if (mi == mf && ai == af && df > di) {
-                    dias += (df - di) - diasNoContabilizados;
+            if (mesActual == mesInicio && anioInicio == anio) {
+                if (mesInicio == mesFin && anioInicio == anioFin && diaFin > diaInicio) {
+                    dias += (diaFin - diaInicio) - diasNoContabilizados;
                     fin = false;
-                } else {
-                    if ((af == ai && mf > mi) || (af > ai)) {
-                        Calendar cal = new GregorianCalendar(anio, mesActual, 01);
-                        dias += (cal.getActualMaximum(Calendar.DAY_OF_MONTH) - di) - diasNoContabilizados;
-                        if (mesActual == 11) {
-                            mesActual = 0;
-                            anio++;
-                        } else {
-                            mesActual++;
-                        }
-                    } else {
-                        fin = false;
-                    }
+                    continue;
                 }
-            } else {
-                if (((mesActual > mi && anio >= ai) || (mesActual < mi && anio > ai)) && ((mesActual < mf && anio <= af) || (mesActual > mf && anio < af))) {
+                if ((anioFin == anioInicio && mesFin > mesInicio) || (anioFin > anioInicio)) {
                     Calendar cal = new GregorianCalendar(anio, mesActual, 01);
-                    dias += cal.getActualMaximum(Calendar.DAY_OF_MONTH) - diasNoContabilizados;
+                    dias += (cal.getActualMaximum(Calendar.DAY_OF_MONTH) - diaInicio) - diasNoContabilizados;
                     if (mesActual == 11) {
                         mesActual = 0;
                         anio++;
-                    } else {
-                        mesActual++;
+                        continue;
                     }
-                } else {
-                    if (mesActual == mf && anio == af) {
-                        dias += df - diasNoContabilizados;
-                        fin = false;
-                    } else {
-                        Calendar cal = new GregorianCalendar(anio, mesActual, 01);
-                        dias += cal.getActualMaximum(Calendar.DAY_OF_MONTH) - diasNoContabilizados;
-                        if (mesActual == 11) {
-                            mesActual = 0;
-                            anio++;
-                        } else {
-                            mesActual++;
-                        }
-                    }
+                    mesActual++;
+                    continue;
                 }
+                fin = false;
+                continue;
             }
 
+            if (((mesActual > mesInicio && anio >= anioInicio) || (mesActual < mesInicio && anio > anioInicio)) && ((mesActual < mesFin && anio <= anioFin) || (mesActual > mesFin && anio < anioFin))) {
+                Calendar cal = new GregorianCalendar(anio, mesActual, 01);
+                dias += cal.getActualMaximum(Calendar.DAY_OF_MONTH) - diasNoContabilizados;
+                if (mesActual == 11) {
+                    mesActual = 0;
+                    anio++;
+                    continue;
+                }
+                mesActual++;
+                continue;
+            }
+
+            if (mesActual == mesFin && anio == anioFin) {
+                dias += diaFin - diasNoContabilizados;
+                fin = false;
+                continue;
+            }
+            Calendar cal = new GregorianCalendar(anio, mesActual, 01);
+            dias += cal.getActualMaximum(Calendar.DAY_OF_MONTH) - diasNoContabilizados;
+            if (mesActual == 11) {
+                mesActual = 0;
+                anio++;
+            } else {
+                mesActual++;
+            }
+        }
+        if (dias < 0) {
+            return 0.0;
         }
         return dias;
     }

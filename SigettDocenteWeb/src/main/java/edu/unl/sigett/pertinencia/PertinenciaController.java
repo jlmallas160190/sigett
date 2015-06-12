@@ -22,6 +22,7 @@ import edu.unl.sigett.entity.Pertinencia;
 import edu.unl.sigett.enumeration.CatalogoDocumentoCarreraEnum;
 import edu.unl.sigett.enumeration.EstadoProyectoEnum;
 import edu.unl.sigett.reporte.ReporteController;
+import edu.unl.sigett.reporte.ReporteOficio;
 import edu.unl.sigett.service.CronogramaService;
 import edu.unl.sigett.service.DocumentoCarreraService;
 import edu.unl.sigett.service.PertinenciaService;
@@ -273,6 +274,7 @@ public class PertinenciaController implements Serializable {
             Item item = itemService.buscarPorCatalogoCodigo(CatalogoEnum.CATALOGOINFORME.getTipo(),
                     CatalogoDocumentoCarreraEnum.PERTINENCIA.getTipo());
             this.pertinenciaDM.setRenderedMediaInforme(Boolean.TRUE);
+            pertinenciaDM.setPertinencia(pertinencia);
             Documento documentoBuscar = documentoService.buscarPorCatalogo(new Documento(null, null, item.getId(), null, null, null, null, null));
             List<DocumentoCarrera> documentoCarreras = documentoCarreraService.buscar(new DocumentoCarrera(
                     null, documentoBuscar != null ? documentoBuscar.getId() : null, Boolean.TRUE, null, pertinencia.getId()));
@@ -312,7 +314,7 @@ public class PertinenciaController implements Serializable {
         String rutaReporte = request.getRealPath("/") + configuracionDao.buscar(new Configuracion(
                 ConfiguracionEnum.RUTAINFORMEPERTINENCIA.getTipo())).get(0).getValor();
 
-        byte[] resultado = reporteController.informePertinencia(new ReporteInformePertinencia(null, carrera.getLogo() != null ? carrera.getLogo() : null,
+        byte[] resultado = reporteController.informePertinencia(new ReporteOficio(carrera.getLogo() != null ? carrera.getLogo() : null,
                 request.getRealPath("/") + "" + configuracionDao.buscar(new Configuracion(ConfiguracionEnum.RUTALOGOINSTITUCION.getTipo())).get(0).getValor(),
                 carrera.getNombre(), carrera.getAreaId().getNombre(), carrera.getSigla(), null, cabeceraController.getValueFromProperties(
                         PropertiesFileEnum.CONTENIDOREPORTE, "nombre_institucion"), cabeceraController.getValueFromProperties(
@@ -385,10 +387,10 @@ public class PertinenciaController implements Serializable {
                 + cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "infPer_ref_b") + " " + cabeceraController.getUtilService()
                 .formatoFecha(fechaActual.getTime(), "EEEEE dd MMMMM yyyy") + ", " + cabeceraController.getValueFromProperties(
                         PropertiesFileEnum.CONTENIDOREPORTE, "infPer_ref_c") + " <b>" + docenteProyectoDM.getDocenteProyectoDTOSeleccionado().
-                getDocenteProyecto().getProyectoId().getTemaActual() + "</b>, " + cabeceraController.getValueFromProperties(
+                getDocenteProyecto().getProyectoId().getTemaActual() + "<b/>, " + cabeceraController.getValueFromProperties(
                         PropertiesFileEnum.CONTENIDOREPORTE, "infPer_ref_d") + " " + docenteProyectoDM.getDocenteProyectoDTOSeleccionado().
                 getDocenteProyecto().getProyectoId().getAutores().toUpperCase() + " " + cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE,
-                        "infPer_ref_e"));
+                        "infPer_ref_e")+" <br/>"+pertinenciaDM.getPertinencia().getObservacion());
     }
 
     /**

@@ -24,10 +24,12 @@ public class NivelAcademicoOntServiceImplement implements NivelAcademicoOntServi
 
     private CabeceraWebSemantica cabecera;
 
+    @Override
     public void read(CabeceraWebSemantica cabecera) {
         this.cabecera = cabecera;
     }
 
+    @Override
     public void write(NivelAcademicoOntDTO nivelDTO) {
         try {
             nivelDTO.setIndividual(cabecera.getVocabulario().getModel().getIndividual(
@@ -35,7 +37,7 @@ public class NivelAcademicoOntServiceImplement implements NivelAcademicoOntServi
             if (nivelDTO.getIndividual() == null) {
                 nivelDTO.setIndividual(cabecera.getVocabulario().getModel().createIndividual(
                         cabecera.getVocabulario().getNS() + nivelDTO.getUri() + "/" + nivelDTO.getId(),
-                        cabecera.getVocabulario().editarAutorOnt()));
+                        cabecera.getVocabulario().editarNivelAcademicoOnt()));
             }
             nivelDTO.getIndividual().setPropertyValue(cabecera.getVocabulario().editarPropiedadId(),
                     cabecera.getVocabulario().getModel().createTypedLiteral(nivelDTO.getId()));

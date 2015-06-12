@@ -5,7 +5,6 @@
  */
 package edu.unl.sigett.reporte;
 
-import edu.unl.sigett.pertinencia.ReporteInformePertinencia;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
@@ -27,28 +26,28 @@ public class ReporteController {
     /**
      * Reporte oficio de pertinencia
      *
-     * @param reporteInformePertinencia
+     * @param reporteOficio
      * @return
      */
-    public byte[] informePertinencia(final ReporteInformePertinencia reporteInformePertinencia) {
+    public byte[] informePertinencia(final ReporteOficio reporteOficio) {
         byte[] bytes = null;
         try {
             Map p = new HashMap();
-            InputStream is = new ByteArrayInputStream(reporteInformePertinencia.getLogoCarrera());
-            p.put("lugarFecha", reporteInformePertinencia.getLugar() + ", " + reporteInformePertinencia.getFecha());
-            p.put("cabecera1", reporteInformePertinencia.getCabecera1());
-            p.put("cabecera2", reporteInformePertinencia.getCabecera2());
-            p.put("saludo", reporteInformePertinencia.getSaludo());
+            InputStream is = new ByteArrayInputStream(reporteOficio.getLogoCarrera());
+            p.put("lugarFecha", reporteOficio.getLugar() + ", " + reporteOficio.getFecha());
+            p.put("cabecera1", reporteOficio.getCabecera1());
+            p.put("cabecera2", reporteOficio.getCabecera2());
+            p.put("saludo", reporteOficio.getSaludo());
             p.put("carreraLogo", is);
-            p.put("cargoDestinatario", reporteInformePertinencia.getCargoDestinatario().toUpperCase());
-            p.put("destinatario", reporteInformePertinencia.getDestinatario().toUpperCase());
-            p.put("quienFirma", reporteInformePertinencia.getDatosQuienFirma().toUpperCase());
-            p.put("cargoQuienFirma", reporteInformePertinencia.getCargoQuienFirma().toUpperCase());
-            p.put("cuerpo", reporteInformePertinencia.getCuerpo());
-            p.put("despedida", reporteInformePertinencia.getDespedida());
-            p.put("referencia", reporteInformePertinencia.getReferencia());
-            p.put("selloInstitucion", reporteInformePertinencia.getRutaLogoIntitucion());
-            File fileReport = new File(reporteInformePertinencia.getRuta());
+            p.put("cargoDestinatario", reporteOficio.getCargoDestinatario().toUpperCase());
+            p.put("destinatario", reporteOficio.getDestinatario().toUpperCase());
+            p.put("quienFirma", reporteOficio.getDatosQuienFirma().toUpperCase());
+            p.put("cargoQuienFirma", reporteOficio.getCargoQuienFirma().toUpperCase());
+            p.put("cuerpo", reporteOficio.getCuerpo());
+            p.put("despedida", reporteOficio.getDespedida());
+            p.put("referencia", reporteOficio.getReferencia());
+            p.put("selloInstitucion", reporteOficio.getRutaLogoIntitucion());
+            File fileReport = new File(reporteOficio.getRuta());
             return JasperRunManager.runReportToPdf(fileReport.getPath(), p, new JREmptyDataSource());
         } catch (JRException ex) {
             LOG.info(ex.getMessage());

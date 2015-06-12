@@ -12,10 +12,12 @@ import edu.unl.sigett.docenteProyecto.DocenteProyectoDM;
 import edu.unl.sigett.entity.ConfiguracionProyecto;
 import edu.unl.sigett.enumeration.ConfiguracionProyectoEnum;
 import edu.unl.sigett.pertinencia.PertinenciaDM;
+import edu.unl.sigett.service.ConfiguracionProyectoService;
 import edu.unl.sigett.util.CabeceraController;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
+import java.util.List;
 import java.util.ResourceBundle;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
@@ -42,6 +44,8 @@ public class CronogramaController implements Serializable {
     //<editor-fold defaultstate="collapsed" desc="SERVICIOS">
     @EJB
     private ConfiguracionDao configuracionDao;
+    @EJB
+    private ConfiguracionProyectoService configuracionProyectoService;
 
     //</editor-fold>
     public CronogramaController() {
@@ -59,11 +63,21 @@ public class CronogramaController implements Serializable {
         if (pertinenciaDM.getPertinencia().getFecha() == null || docenteProyectoDM.getDocenteProyectoDTOSeleccionado().getDocenteProyecto().
                 getProyectoId().getCronograma().getFechaFin() == null) {
             cabeceraController.getMessageView().message(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_fechas_cronograma_invalidas"), "");
+            docenteProyectoDM.getDocenteProyectoDTOSeleccionado().getDocenteProyecto().getProyectoId().getCronograma().
+                    setFechaFin(pertinenciaDM.getPertinencia().getFecha());
+            docenteProyectoDM.getDocenteProyectoDTOSeleccionado().getDocenteProyecto().getProyectoId().getCronograma().
+                    setFechaProrroga(pertinenciaDM.getPertinencia().getFecha());
+            docenteProyectoDM.getDocenteProyectoDTOSeleccionado().getDocenteProyecto().getProyectoId().getCronograma().setDuracion(0.0);
             return;
         }
         if (pertinenciaDM.getPertinencia().getFecha().after(docenteProyectoDM.getDocenteProyectoDTOSeleccionado().getDocenteProyecto().
                 getProyectoId().getCronograma().getFechaFin())) {
             cabeceraController.getMessageView().message(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_fechas_cronograma_invalidas"), "");
+            docenteProyectoDM.getDocenteProyectoDTOSeleccionado().getDocenteProyecto().getProyectoId().getCronograma().
+                    setFechaFin(pertinenciaDM.getPertinencia().getFecha());
+            docenteProyectoDM.getDocenteProyectoDTOSeleccionado().getDocenteProyecto().getProyectoId().getCronograma().
+                    setFechaProrroga(pertinenciaDM.getPertinencia().getFecha());
+            docenteProyectoDM.getDocenteProyectoDTOSeleccionado().getDocenteProyecto().getProyectoId().getCronograma().setDuracion(0.0);
             return;
         }
         duracionDias = cabeceraController.getUtilService().calculaDuracion(pertinenciaDM.getPertinencia().getFecha(),
@@ -90,24 +104,14 @@ public class CronogramaController implements Serializable {
      */
     private Integer calculaDiasSemanaTrabajoProyecto() {
         Integer dias = 0;
-        for (ConfiguracionProyecto cf : docenteProyectoDM.getDocenteProyectoDTOSeleccionado().getDocenteProyecto().
-                getProyectoId().getConfiguracionProyectoList()) {
-            if (cf.getCodigo().equals(ConfiguracionProyectoEnum.DIASSEMANA.getTipo())) {
-                dias = Integer.parseInt(cf.getValor());
-                break;
-            }
+        List<ConfiguracionProyecto> configuracionProyectos = configuracionProyectoService.buscar(new ConfiguracionProyecto(
+                docenteProyectoDM.getDocenteProyectoDTOSeleccionado().getDocenteProyecto().getProyectoId(), null, null,
+                ConfiguracionProyectoEnum.DIASSEMANA.getTipo(), null));
+        for (ConfiguracionProyecto cf : configuracionProyectos) {
+            dias = Integer.parseInt(cf.getValor());
+            break;
         }
         return dias;
     }
 
-//    public int calculahorasTrabajoProyecto() {
-//        int dias = 0;
-//        for (ConfiguracionProyecto cf : sessionProyecto.getConfiguracionProyectos()) {
-//            if (cf.getCodigo().equals(ConfiguracionProyectoEnum.HORASDIARIAS.getTipo())) {
-//                dias = Integer.parseInt(cf.getValor());
-//                break;
-//            }
-//        }
-//        return dias;
-//    }
 }

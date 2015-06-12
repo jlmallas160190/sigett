@@ -6,7 +6,7 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core">
     <body>
         <p:dialog id="dlgEditarPertinencia" widgetVar="dlgEditarPertinencia" header="#{msg['lbl.editar']} #{msg['lbl.pertinencia']}"  styleClass="modal-md" 
-                  modal="true" closable="false" >
+                  modal="true" closable="false" position="center" draggable="false" >
             <p:panel id="panelDatos" rendered="#{pertinenciaDM.renderedPanelCrud}">
                 <ui:include src="datosPertinencia.xhtml"/>
                 <f:facet name="footer">

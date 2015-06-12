@@ -28,13 +28,16 @@ import edu.unl.sigett.enumeration.CatalogoDocumentoCarreraEnum;
 import edu.unl.sigett.enumeration.EstadoDirectorEnum;
 import edu.unl.sigett.enumeration.EstadoProyectoEnum;
 import edu.unl.sigett.proyecto.SessionProyecto;
-import edu.unl.sigett.renunciaDirectorProyecto.RenunciaDirectorProyectoDM;
+import edu.unl.sigett.renunciaDirectorProyecto.SessionRenunciaDirectorProyecto;
 import edu.unl.sigett.reporte.ReporteController;
 import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
 import edu.unl.sigett.service.ConfiguracionCarreraService;
 import edu.unl.sigett.service.DocumentoCarreraService;
 import edu.unl.sigett.util.CabeceraController;
 import edu.unl.sigett.documentoCarrera.DocumentoCarreraDTO;
+import edu.unl.sigett.renuncia.SessionRenuncia;
+import edu.unl.sigett.reporte.ReporteFePresentacion;
+import edu.unl.sigett.reporte.ReporteOficio;
 import edu.unl.sigett.util.PropertiesFileEnum;
 import java.io.File;
 import javax.inject.Named;
@@ -51,7 +54,6 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import org.jlmallas.seguridad.service.UsuarioService;
 import org.primefaces.context.RequestContext;
-import org.primefaces.event.FileUploadEvent;
 
 /**
  *
@@ -71,11 +73,13 @@ public class DirectorProyectoController implements Serializable {
     @Inject
     private CabeceraController cabeceraController;
     @Inject
-    private RenunciaDirectorProyectoDM renunciaDirectorProyectoDM;
+    private SessionRenunciaDirectorProyecto sessionRenunciaDirectorProyecto;
     @Inject
     private DirectorDM directorDM;
     @Inject
     private DocumentoCarreraDM documentoCarreraDM;
+    @Inject
+    private SessionRenuncia sessionRenuncia;
     //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="SERVICIOS">
     @EJB
@@ -106,11 +110,12 @@ public class DirectorProyectoController implements Serializable {
     private void renderedBuscarDirectorDisponible() {
         try {
             directorProyectoDM.setRenderedBuscarDirectorDisponible(Boolean.FALSE);
-            if (!sessionProyecto.getEstadoActual().getCodigo().equals(EstadoProyectoEnum.PERTINENTE.getTipo())) {
+            if (!(sessionProyecto.getEstadoActual().getCodigo().equals(EstadoProyectoEnum.PERTINENTE.getTipo())
+                    || sessionProyecto.getEstadoActual().getCodigo().equals(EstadoProyectoEnum.SEGUIMIENTO.getTipo()))) {
                 return;
             }
             int permiso = usuarioService.tienePermiso(sessionUsuario.getUsuario(), cabeceraController.getValueFromProperties(
-                    PropertiesFileEnum.PERMISOS, "seleccionar_director_proyecto"));
+                    PropertiesFileEnum.PERMISOS, "seleccionar_director_proyecto").trim());
             if (permiso == 1) {
                 directorProyectoDM.setRenderedBuscarDirectorDisponible(Boolean.TRUE);
             }
@@ -135,11 +140,12 @@ public class DirectorProyectoController implements Serializable {
     private void renderedEliminar() {
         try {
             directorProyectoDM.setRenderedEliminar(Boolean.FALSE);
-            if (!sessionProyecto.getEstadoActual().getCodigo().equals(EstadoProyectoEnum.INICIO.getTipo())) {
+            if (!(sessionProyecto.getEstadoActual().getCodigo().equals(EstadoProyectoEnum.PERTINENTE.getTipo())
+                    || sessionProyecto.getEstadoActual().getCodigo().equals(EstadoProyectoEnum.SEGUIMIENTO.getTipo()))) {
                 return;
             }
             int permiso = usuarioService.tienePermiso(sessionUsuario.getUsuario(), cabeceraController.getValueFromProperties(
-                    PropertiesFileEnum.PERMISOS, "eliminar_director_proyecto"));
+                    PropertiesFileEnum.PERMISOS, "eliminar_director_proyecto").trim());
             if (permiso == 1) {
                 directorProyectoDM.setRenderedEliminar(Boolean.TRUE);
             }
@@ -171,12 +177,14 @@ public class DirectorProyectoController implements Serializable {
         try {
             FacesContext facesContext = FacesContext.getCurrentInstance();
             ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            if (!sessionProyecto.getEstadoActual().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.PERTINENTE.getTipo())) {
+            if (!(sessionProyecto.getEstadoActual().getCodigo().equals(EstadoProyectoEnum.PERTINENTE.getTipo())
+                   || sessionProyecto.getEstadoActual().getCodigo().equals(EstadoProyectoEnum.SEGUIMIENTO.getTipo()))) {
                 return;
             }
             if (!permiteAgregarDirector()) {
                 cabeceraController.getMessageView().message(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_existe") + " "
                         + bundle.getString("lbl.director"), "");
+                return;
             }
             DirectorProyectoDTO dp = devuelveDirectorProyecto(directorDTO);
             if (dp != null) {
@@ -214,15 +222,16 @@ public class DirectorProyectoController implements Serializable {
         try {
             FacesContext facesContext = FacesContext.getCurrentInstance();
             ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            if (!sessionProyecto.getEstadoActual().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.PERTINENTE.getTipo())) {
+             if (!(sessionProyecto.getEstadoActual().getCodigo().equals(EstadoProyectoEnum.PERTINENTE.getTipo())
+                   || sessionProyecto.getEstadoActual().getCodigo().equals(EstadoProyectoEnum.SEGUIMIENTO.getTipo()))) {
                 return;
             }
             if (directorProyectoDTO.getDirectorProyecto().getId() != null) {
-                directorProyectoDTO.getDirectorProyecto().setEstadoDirectorId(Long.MIN_VALUE);
                 Calendar fechaActual = Calendar.getInstance();
-                renunciaDirectorProyectoDM.setRenunciaDirector(new RenunciaDirector(null, new Renuncia(null, fechaActual.getTime(), "S/N", "S/N"),
-                        directorProyectoDTO.getDirectorProyecto()));
-                RequestContext.getCurrentInstance().execute("PF('dlgEditarRenunciaDirectorProyecto').show()");
+                sessionRenunciaDirectorProyecto.setRenunciaDirector(new RenunciaDirector(null, null, directorProyectoDTO.getDirectorProyecto()));
+                sessionRenuncia.setRenuncia(new Renuncia(null, fechaActual.getTime(), "S/N", "S/N"));
+                sessionRenunciaDirectorProyecto.setRenderedCrud(Boolean.TRUE);
+                RequestContext.getCurrentInstance().execute("PF('dlgEditarRenunciaDirector').show()");
                 return;
             }
             sessionProyecto.getDirectoresProyectoDTO().remove(directorProyectoDTO);
@@ -276,8 +285,8 @@ public class DirectorProyectoController implements Serializable {
             return;
         }
         String numeracion = configuracionCarrera.getValor();
-        String rutaReporte = request.getRealPath("/") + configuracionService.buscar(new Configuracion(ConfiguracionEnum.RUTAREPORTEPERTINENCIA.getTipo())).get(0).getValor();
-        byte[] resultado = reporteController.oficioDirector(new ReporteOficioDirector(carrera.getLogo() != null ? carrera.getLogo() : null,
+        String rutaReporte = request.getRealPath("/") + configuracionService.buscar(new Configuracion(ConfiguracionEnum.RUTAREPORTEOFICIO.getTipo())).get(0).getValor();
+        byte[] resultado = reporteController.oficio(new ReporteOficio(carrera.getLogo() != null ? carrera.getLogo() : null,
                 request.getRealPath("/") + "" + configuracionService.buscar(new Configuracion(ConfiguracionEnum.RUTALOGOINSTITUCION.getTipo())).get(0).getValor(), carrera.getNombre(),
                 carrera.getAreaId().getNombre(), carrera.getSigla(), cabeceraController.getValueFromProperties(
                         PropertiesFileEnum.CONTENIDOREPORTE, "nro_oficio"), cabeceraController.getValueFromProperties(
@@ -293,7 +302,7 @@ public class DirectorProyectoController implements Serializable {
                         PropertiesFileEnum.CONTENIDOREPORTE, "oficio_director_despedida"), cabeceraController.getValueFromProperties(
                         PropertiesFileEnum.CONTENIDOREPORTE, "oficio_director_saludo"), "", sessionUsuario.getUsuario().getNombres().toUpperCase() + " "
                 + sessionUsuario.getUsuario().getApellidos().toUpperCase(),
-                rutaReporte, sessionProyecto.getProyectoSeleccionado().getAutores().toUpperCase()));
+                rutaReporte));
         if (resultado == null) {
             return;
         }
@@ -322,7 +331,7 @@ public class DirectorProyectoController implements Serializable {
         return (cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "oficio_director_cuerpo_a") + " " + directorProyectoDTO.
                 getDirectorProyecto().getProyectoId().getTemaActual() + " " + cabeceraController.getValueFromProperties(
                         PropertiesFileEnum.CONTENIDOREPORTE, "oficio_director_cuerpo_b") + " <b>" + sessionProyecto.getProyectoSeleccionado().getAutores()
-                + "</b> " + cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "oficio_director_cuerpo_c"));
+                + "<b/> " + cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "oficio_director_cuerpo_c"));
     }
 
     /**
@@ -367,12 +376,11 @@ public class DirectorProyectoController implements Serializable {
         ReporteController reporteController = new ReporteController();
         Carrera carrera = sessionProyecto.getCarreraSeleccionada();
         Calendar fechaActual = Calendar.getInstance();
-        String rutaReporte = request.getRealPath("/") + configuracionService.buscar(new Configuracion(ConfiguracionEnum.RUTAREPORTEFEPERTINENCIA.getTipo())).get(0).getValor();
+        String rutaReporte = request.getRealPath("/") + configuracionService.buscar(new Configuracion(ConfiguracionEnum.RUTAREPORTEFEPRESENTACION.getTipo())).get(0).getValor();
 
-        byte[] resultado = reporteController.feDirector(new ReporteFePresentacionDirector(rutaReporte,
-                "", generaReferenciaFePresentacion(fechaActual, carrera), generaCuerpoFePresentacion(directorProyectoDTO, fechaActual, carrera),
+        byte[] resultado = reporteController.fePresentacion(new ReporteFePresentacion(generaReferenciaFePresentacion(fechaActual, carrera), generaCuerpoFePresentacion(directorProyectoDTO, fechaActual, carrera),
                 generaFirmasInvolucrados(directorProyectoDTO, carrera), generaFinalFePresentacion(directorProyectoDTO, fechaActual, carrera),
-                sessionUsuario.getUsuario().getNombres().toUpperCase() + " " + sessionUsuario.getUsuario().getApellidos()));
+                sessionUsuario.getUsuario().getNombres().toUpperCase() + " " + sessionUsuario.getUsuario().getApellidos(), rutaReporte));
         if (resultado == null) {
             return;
         }
@@ -402,7 +410,7 @@ public class DirectorProyectoController implements Serializable {
                         PropertiesFileEnum.CONTENIDOREPORTE, "fe_director_ref_b") + " " + cabeceraController.getUtilService().formatoFecha(
                         fechaActual.getTime(), "HH:mm") + ".-" + cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE,
                         "fe_director_ref_c") + "<br/><br/>" + carrera.getAreaId().getSecretario() + "<br/> <b>"
-                + cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "fe_director_ref_d").toUpperCase() + "<br/>");
+                + cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "fe_director_ref_d").toUpperCase() + "<b/>");
     }
 
     /**
@@ -415,7 +423,7 @@ public class DirectorProyectoController implements Serializable {
     private String generaCuerpoFePresentacion(final DirectorProyectoDTO directorProyectoDTO, final Calendar fechaActual, final Carrera carrera) {
         return ("<b>" + cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "fe_director_cu_a").toUpperCase() + " "
                 + carrera.getNombre().toUpperCase() + " " + cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "fe_director_cu_h").toUpperCase()
-                + " " + carrera.getAreaId().getNombre().toUpperCase() + "</b>.-" + carrera.getLugar() + ", " + cabeceraController.getUtilService().formatoFecha(
+                + " " + carrera.getAreaId().getNombre().toUpperCase() + "<b/>.-" + carrera.getLugar() + ", " + cabeceraController.getUtilService().formatoFecha(
                         fechaActual.getTime(), "dd MMMM yyyy") + ", " + cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "fe_director_cu_b")
                 + " " + cabeceraController.getUtilService().formatoFecha(fechaActual.getTime(), "HH:mm") + ".-" + cabeceraController.
                 getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "fe_director_cu_c") + " " + directorProyectoDTO.getDirectorProyecto().getProyectoId().getTemaActual()
@@ -436,9 +444,9 @@ public class DirectorProyectoController implements Serializable {
     private String generaFinalFePresentacion(final DirectorProyectoDTO directorProyectoDTO, final Calendar fechaActual, final Carrera carrera) {
         return (sessionProyecto.getCoordinadorPeriodoDTOCarreraSeleccionada().getDocente().getTituloDocenteId().getTituloId().getAbreviacion().toUpperCase()
                 + " <br/><b>" + sessionProyecto.getCoordinadorPeriodoDTOCarreraSeleccionada().getPersona().getNombres().toUpperCase() + " " + sessionProyecto.
-                getCoordinadorPeriodoDTOCarreraSeleccionada().getPersona().getApellidos().toUpperCase() + "</b>"
+                getCoordinadorPeriodoDTOCarreraSeleccionada().getPersona().getApellidos().toUpperCase() + "<b/>"
                 + "<p><b>" + cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "fe_director_final_a").toUpperCase() + " "
-                + carrera.getNombre().toUpperCase() + " " + "</b></p><br/>" + cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE,
+                + carrera.getNombre().toUpperCase() + " " + "</b><p/><br/>" + cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE,
                         "fe_director_final_b") + " " + sessionProyecto.getCoordinadorPeriodoDTOCarreraSeleccionada().getDocente().getTituloDocenteId().
                 getTituloId().getAbreviacion().toUpperCase() + " " + sessionProyecto.getCoordinadorPeriodoDTOCarreraSeleccionada().
                 getPersona().getNombres().toUpperCase() + " " + sessionProyecto.getCoordinadorPeriodoDTOCarreraSeleccionada().getPersona().getApellidos().toUpperCase() + ", "
@@ -446,12 +454,12 @@ public class DirectorProyectoController implements Serializable {
                 + " " + carrera.getNombre().toUpperCase() + " " + cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE,
                         "fe_director_final_d").toUpperCase() + " " + carrera.getAreaId().getNombre().toUpperCase() + " " + cabeceraController.getValueFromProperties(
                         PropertiesFileEnum.CONTENIDOREPORTE, "fe_director_final_e")
-                + "<br/><br/><p>" + carrera.getAreaId().getSecretario() + "</p><p><b>" + cabeceraController.
-                getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "fe_director_final_f") + "</b></p><br/>" + carrera.getLugar() + ", " + cabeceraController.getUtilService().
+                + "<br/><p>" + carrera.getAreaId().getSecretario() + "<p/><b><p>" + cabeceraController.
+                getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "fe_director_final_f") + "<p/><b/><br/><br/>" + carrera.getLugar() + ", " + cabeceraController.getUtilService().
                 formatoFecha(fechaActual.getTime(), "dd MMMM yyyy") + ", " + cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE,
                         "fe_director_final_g") + " " + cabeceraController.getUtilService().formatoFecha(fechaActual.getTime(), "HH:mm") + ".-"
                 + cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "fe_director_final_h") + " " + sessionProyecto.getProyectoSeleccionado().getAutores().toUpperCase()
-                + " "+ cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "fe_director_final_i")+" " + directorProyectoDTO.getDirectorDTO().
+                + " " + cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "fe_director_final_i") + " " + directorProyectoDTO.getDirectorDTO().
                 getDocenteCarrera().getDocenteId().getTituloDocenteId().getTituloId().getAbreviacion().toUpperCase() + " " + ""
                 + directorProyectoDTO.getDirectorDTO().getPersona().getNombres().toUpperCase() + " " + directorProyectoDTO.getDirectorDTO().getPersona().getApellidos().toUpperCase() + " "
                 + cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "fe_director_final_j") + ".");
@@ -464,13 +472,13 @@ public class DirectorProyectoController implements Serializable {
      * @return
      */
     private String generaFirmasInvolucrados(final DirectorProyectoDTO directorProyectoDTO, final Carrera carrera) {
-        return (directorProyectoDTO.getDirectorDTO().getDocenteCarrera().getDocenteId().getTituloDocenteId().getTituloId().getAbreviacion().toUpperCase()
+        return ("<p>"+directorProyectoDTO.getDirectorDTO().getDocenteCarrera().getDocenteId().getTituloDocenteId().getTituloId().getAbreviacion().toUpperCase()
                 + " " + directorProyectoDTO.getDirectorDTO().getPersona().getNombres().toUpperCase() + " " + directorProyectoDTO.getDirectorDTO().
-                getPersona().getApellidos().toUpperCase() + "</p><p>" + cabeceraController
-                .getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "fe_director_firma_a") + "</p><br/><br/>"
+                getPersona().getApellidos().toUpperCase() + "<p/><p>" + cabeceraController
+                .getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "fe_director_firma_a") + "<p/><br/><br/>"
                 + firmaPeticionarios()
-                + "<p>" + carrera.getAreaId().getSecretario().toUpperCase() + "</p>" + "<p><b> " + cabeceraController
-                .getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "fe_director_firma_b") + "</b>");
+                + "<p>" + carrera.getAreaId().getSecretario().toUpperCase() + "<p/>" + "<b><p>" + cabeceraController
+                .getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "fe_director_firma_b") + "<p/><b/>");
     }
 
     private String firmaPeticionarios() {

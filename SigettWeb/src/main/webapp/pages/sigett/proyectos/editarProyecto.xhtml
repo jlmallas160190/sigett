@@ -15,6 +15,7 @@
             <f:event type="preRenderView" listener="#{proyectoController.preRenderViewEdit()}"/>
             <f:event type="preRenderView" listener="#{autorProyectoController.preRenderView()}"/>
             <f:event type="preRenderView" listener="#{directorProyectoController.preRenderView()}"/>
+            <f:event type="preRenderView" listener="#{prorrogaController.preRenderView()}"/>
             <p:growl id="msm" showDetail="true" /> 
             <p:panel>
                 <p:tabView  id="tabViewDatosProyecto" >
@@ -67,11 +68,20 @@
                             </f:facet>    
                         </p:panel>
                     </p:tab>
+                    <p:tab id="tabProrrogas" rendered="#{sessionProrroga.renderedBuscar}" title="#{msg['lbl.prorrogas']}">
+                        <p:panel>
+                            <ui:include src="tablaProrrogas.xhtml"/>
+                            <f:facet name="footer">
+                                <ui:include src="botonesTablaProrroga.xhtml"/>
+                            </f:facet>    
+                        </p:panel>
+                    </p:tab>
                 </p:tabView>
                 <f:facet name="footer">
                     <ui:include src="botonesEditarProyecto.xhtml"/>
                 </f:facet>
             </p:panel>
+            <ui:include src="./../prorroga/dialogoEditarProrroga.xhtml"/>
             <ui:include src="dialogoDirectoresDisponibles.xhtml"/>
             <ui:include src="dialogoDocentesDisponibles.xhtml"/>
             <ui:include src="dialogoAspirantes.xhtml"/>
@@ -83,6 +93,7 @@
             <ui:include src="dialogoVerDocumentoProyecto.xhtml"/>
             <ui:include src="dialogoEditarDocumentoProyecto.xhtml"/>
             <ui:include src="./../documentosProyecto/dialogoUpload.xhtml"/>
+            <ui:include src="./../renunciaDirector/dialogoEditarRenunciaDirector.xhtml"/>
         </ui:define>
     </ui:composition>
 </html>

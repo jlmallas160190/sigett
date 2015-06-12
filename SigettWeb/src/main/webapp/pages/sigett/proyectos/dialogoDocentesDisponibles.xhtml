@@ -7,7 +7,7 @@
 
     <body>
         <p:dialog id="dlgDocentesDisponibles" header="#{msg['lbl.docentes']} #{msg['lbl.disponibles']}"  widgetVar="dlgBuscarDocentesDisponibles" 
-                  styleClass="modal-md"  modal="true" closable="false" >
+                  styleClass="modal-md"  modal="true" closable="false" draggable="false" position="center" >
             <p:panel rendered="#{sessionDocenteProyecto.renderedPnlDocentesDisponibles}">
                 <ui:include src="tablaDocentesDisponibles.xhtml"/>
                 <f:facet  name="footer">

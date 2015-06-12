@@ -16,7 +16,7 @@ public class PersonaOntDTO implements Serializable {
 
     private String nombres;
     private String apellidos;
-    private Date fechaNacimiento;
+    private String fechaNacimiento;
     private String genero;
     private String email;
      private String uri;
@@ -24,7 +24,7 @@ public class PersonaOntDTO implements Serializable {
     public PersonaOntDTO() {
     }
 
-    public PersonaOntDTO(String nombres, String apellidos, Date fechaNacimiento, String genero, String email,String uri) {
+    public PersonaOntDTO(String nombres, String apellidos, String fechaNacimiento, String genero, String email,String uri) {
         this.nombres = nombres;
         this.apellidos = apellidos;
         this.fechaNacimiento = fechaNacimiento;
@@ -49,14 +49,15 @@ public class PersonaOntDTO implements Serializable {
         this.apellidos = apellidos;
     }
 
-    public Date getFechaNacimiento() {
+    public String getFechaNacimiento() {
         return fechaNacimiento;
     }
 
-    public void setFechaNacimiento(Date fechaNacimiento) {
+    public void setFechaNacimiento(String fechaNacimiento) {
         this.fechaNacimiento = fechaNacimiento;
     }
 
+  
     public String getGenero() {
         return genero;
     }

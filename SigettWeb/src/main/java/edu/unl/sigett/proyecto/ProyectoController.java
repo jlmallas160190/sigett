@@ -333,7 +333,7 @@ public class ProyectoController implements Serializable {
             }
             if (param.equalsIgnoreCase("guardar-editar")) {
                 this.cabeceraController.getMessageView().message(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.proyecto") + " "
-                        + bundle.getString("lbl.msm_egrabar"), "");
+                        + bundle.getString("lbl.msm_grabar"), "");
                 return "";
             }
             return "";
@@ -378,7 +378,7 @@ public class ProyectoController implements Serializable {
      */
     private void grabarIndividuoProyecto() {
         ProyectoOntDTO proyectoOntDTO = new ProyectoOntDTO(sessionProyecto.getProyectoSeleccionado().getId(), sessionProyecto.getProyectoSeleccionado().getTemaActual(),
-                cabeceraController.getUtilService().parserFecha(cabeceraController.getUtilService().formatoFecha(sessionProyecto.getProyectoSeleccionado().getFechaCreated(), "yyyy-MMM-dd"), "yyyy-MMM-dd"), sessionProyecto.getTipoSeleccionado().getNombre(), sessionProyecto.getEstadoActual().
+                cabeceraController.getUtilService().formatoFecha(sessionProyecto.getProyectoSeleccionado().getFechaCreated(), "yyyy-MM-dd"), sessionProyecto.getTipoSeleccionado().getNombre(), sessionProyecto.getEstadoActual().
                 getNombre(), cabeceraController.getValueFromProperties(PropertiesFileEnum.URI, "proyecto"));
         cabeceraController.getOntologyService().getProyectoOntService().read(cabeceraController.getCabeceraWebSemantica());
         cabeceraController.getOntologyService().getProyectoOntService().write(proyectoOntDTO);
@@ -867,18 +867,17 @@ public class ProyectoController implements Serializable {
         OfertaAcademica ofertaAcademica = ofertaAcademicaService.find(proyectoCarreraOferta.getOfertaAcademicaId());
         PeriodoAcademico periodoAcademico = ofertaAcademica.getPeriodoAcademicoId();
         PeriodoAcademicoOntDTO periodoAcademicoOntDTO = new PeriodoAcademicoOntDTO(periodoAcademico.getId(), "S/N",
-                cabeceraController.getUtilService().parserFecha(cabeceraController.getUtilService().formatoFecha(periodoAcademico.getFechaInicio(),
-                                "yyyy-MMM-dd"), "yyyy-MMM-dd"), cabeceraController.getUtilService().parserFecha(cabeceraController.getUtilService().
-                        formatoFecha(periodoAcademico.getFechaFin(), "yyyy-MMM-dd"), "yyyy-MMM-dd"));
+                cabeceraController.getUtilService().formatoFecha(periodoAcademico.getFechaInicio(), "yyyy-MM-dd"),
+                cabeceraController.getUtilService().formatoFecha(periodoAcademico.getFechaFin(), "yyyy-MM-dd"));
         cabeceraController.getOntologyService().getPeriodoAcademicoOntService().read(cabeceraController.getCabeceraWebSemantica());
         cabeceraController.getOntologyService().getPeriodoAcademicoOntService().write(periodoAcademicoOntDTO);
         /**
          * OFERTA ACADEMICA ONTOLOGÍA
          */
         OfertaAcademicaOntDTO ofertaAcademicaOntDTO = new OfertaAcademicaOntDTO(ofertaAcademica.getId(), ofertaAcademica.getNombre(),
-                cabeceraController.getUtilService().parserFecha(cabeceraController.getUtilService().formatoFecha(ofertaAcademica.getFechaInicio(),
-                                "yyyy-MMM-dd"), "yyyy-MMM-dd"), cabeceraController.getUtilService().parserFecha(cabeceraController.getUtilService().
-                        formatoFecha(ofertaAcademica.getFechaFin(), "yyyy-MMM-dd"), "yyyy-MMM-dd"), periodoAcademicoOntDTO);
+                cabeceraController.getUtilService().formatoFecha(ofertaAcademica.getFechaInicio(),
+                        "yyyy-MM-dd"), cabeceraController.getUtilService().formatoFecha(ofertaAcademica.getFechaFin(), "yyyy-MM-dd"),
+                periodoAcademicoOntDTO);
         cabeceraController.getOntologyService().getOfertaAcademicoOntService().read(cabeceraController.getCabeceraWebSemantica());
         cabeceraController.getOntologyService().getOfertaAcademicoOntService().write(ofertaAcademicaOntDTO);
 
@@ -945,7 +944,8 @@ public class ProyectoController implements Serializable {
 
     private void grabarIndividuoAutor(final AutorProyectoDTO autorProyectoDTO) {
         AutorOntDTO autorOntDTO = new AutorOntDTO(autorProyectoDTO.getAspirante().getId(),
-                autorProyectoDTO.getPersona().getNombres(), autorProyectoDTO.getPersona().getApellidos(), autorProyectoDTO.getPersona().getFechaNacimiento(),
+                autorProyectoDTO.getPersona().getNombres(), autorProyectoDTO.getPersona().getApellidos(), cabeceraController.getUtilService().
+                formatoFecha(autorProyectoDTO.getPersona().getFechaNacimiento(), "YYYY-MM-dd"),
                 itemService.buscarPorId(autorProyectoDTO.getPersona().getGeneroId()).getNombre(), autorProyectoDTO.getPersona().getEmail(),
                 cabeceraController.getValueFromProperties(PropertiesFileEnum.URI, "autor"));
         cabeceraController.getOntologyService().getAutorOntService().read(cabeceraController.getCabeceraWebSemantica());
@@ -1274,7 +1274,7 @@ public class ProyectoController implements Serializable {
     private void grabarIndividuoDirector(final DirectorProyectoDTO directorProyecto) {
         DocenteOntDTO docenteOntDTO = new DocenteOntDTO(directorProyecto.getDirectorDTO().getDocenteCarrera().getId(),
                 directorProyecto.getDirectorDTO().getPersona().getNombres(), directorProyecto.getDirectorDTO().getPersona().getApellidos(),
-                directorProyecto.getDirectorDTO().getPersona().getFechaNacimiento(), itemService.buscarPorId(
+                cabeceraController.getUtilService().formatoFecha(directorProyecto.getDirectorDTO().getPersona().getFechaNacimiento(), "YYYY-MM-dd"), itemService.buscarPorId(
                         directorProyecto.getDirectorDTO().getPersona().getGeneroId()).getNombre(), directorProyecto.getDirectorDTO().getPersona().getEmail(),
                 cabeceraController.getValueFromProperties(PropertiesFileEnum.URI, "docente"));
         cabeceraController.getOntologyService().getDocenteOntService().read(cabeceraController.getCabeceraWebSemantica());
