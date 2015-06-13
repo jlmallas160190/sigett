@@ -330,17 +330,17 @@ public class AdministrarTribunales implements Serializable {
     public boolean comprobarAutoresAptosSustentacion(Proyecto proyecto) {
         boolean var = false;
         try {
-            for (AutorProyecto autorProyecto : autorProyectoFacadeLocal.buscarPorProyecto(proyecto.getId())) {
-                EstudianteCarrera estudianteCarrera = estudianteCarreraFacadeLocal.find(autorProyecto.getAspiranteId().getId());
-//                if (autorProyecto.getEstadoAutorId().getId() != 10) {
-//                    if (estudianteCarrera.getEstadoId().getCodigo().equalsIgnoreCase(EstadoEstudianteCarreraEnum.EGRESADO.getTipo())) {
-//                        var = true;
-//                    } else {
-//                        var = false;
-//                        break;
-//                    }
-//                }
-            }
+//            for (AutorProyecto autorProyecto : autorProyectoFacadeLocal.buscarPorProyecto(proyecto.getId())) {
+//                EstudianteCarrera estudianteCarrera = estudianteCarreraFacadeLocal.find(autorProyecto.getAspiranteId().getId());
+////                if (autorProyecto.getEstadoAutorId().getId() != 10) {
+////                    if (estudianteCarrera.getEstadoId().getCodigo().equalsIgnoreCase(EstadoEstudianteCarreraEnum.EGRESADO.getTipo())) {
+////                        var = true;
+////                    } else {
+////                        var = false;
+////                        break;
+////                    }
+////                }
+//            }
         } catch (Exception e) {
         }
         return var;

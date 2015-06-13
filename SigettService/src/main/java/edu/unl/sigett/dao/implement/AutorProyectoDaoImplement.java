@@ -25,30 +25,7 @@ public class AutorProyectoDaoImplement extends AbstractDao<AutorProyecto> implem
         super(AutorProyecto.class);
     }
 
-    @Override
-    public List<AutorProyecto> buscarPorProyecto(Long proyectoId) {
-        try {
-            Query query = em.createQuery("SELECT a FROM AutorProyecto a WHERE " + "(a.estadoAutorId.id!=10 AND a.proyectoId.id=:id)");
-            query.setParameter("id", proyectoId);
-            return query.getResultList();
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-        return null;
-    }
-
-    @Override
-    public List<AutorProyecto> buscarPorEstudiante(Long estudianteId) {
-        try {
-            Query query = em.createQuery("SELECT a FROM AutorProyecto a WHERE " + "(a.aspiranteId.estudianteCarrera.estudianteId.id=:id)");
-            query.setParameter("id", estudianteId);
-            return query.getResultList();
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-        return null;
-    }
-
+ 
     @Override
     public List<AutorProyecto> buscar(AutorProyecto autorProyecto) {
         StringBuilder sql = new StringBuilder();

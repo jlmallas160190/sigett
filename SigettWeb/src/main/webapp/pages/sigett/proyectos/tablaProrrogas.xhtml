@@ -50,11 +50,16 @@
                                           action="#{prorrogaController.eliminar(item)}"/>  
                     </p:column>
                     <p:column>
-                        <p:commandButton onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide(),PF('dlgFePertinencia').show()"
+                        <p:commandButton onstart="PF('dlgLoading').show()" value="#{msg['lbl.oficio']}"
+                                         oncomplete="PF('dlgLoading').hide(),PF('dlgOficioProrroga').show()"
+                                         update=":contenido:pnlOficioProrroga"
                                          icon="ui-icon-print" action="#{prorrogaController.imprimirOficio(item)}"/>
                     </p:column>
                     <p:column>
-                        <p:commandButton onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" icon="ui-icon-print"/>   
+                        <p:commandButton onstart="PF('dlgLoading').show()" value="#{btn.respuesta}"
+                                         oncomplete="PF('dlgLoading').hide(),PF('dlgOficioInfProrroga').show()"
+                                         update=":contenido:pnlOficioInfProrroga"
+                                         icon="ui-icon-print" action="#{prorrogaController.imprimirOficioInf(item)}"/>
                     </p:column>
                 </p:row>
             </p:column>

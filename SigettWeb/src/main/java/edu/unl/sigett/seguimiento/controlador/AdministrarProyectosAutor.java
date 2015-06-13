@@ -78,13 +78,13 @@ public class AdministrarProyectosAutor implements Serializable {
             ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
             int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "buscar_autor_proyecto");
             if (tienePermiso == 1) {
-                for (AutorProyecto autorProyecto : autorProyectoFacadeLocal.buscarPorEstudiante(estudiante.getId())) {
-//                    if (autorProyecto.getEstadoAutorId().getId() != 4) {
-//                        if (autorProyecto.getProyectoId().getTemaActual().toLowerCase().contains(criterio.toLowerCase())) {
-//                            autorProyectos.add(autorProyecto);
-//                        }
-//                    }
-                }
+//                for (AutorProyecto autorProyecto : autorProyectoFacadeLocal.buscarPorEstudiante(estudiante.getId())) {
+////                    if (autorProyecto.getEstadoAutorId().getId() != 4) {
+////                        if (autorProyecto.getProyectoId().getTemaActual().toLowerCase().contains(criterio.toLowerCase())) {
+////                            autorProyectos.add(autorProyecto);
+////                        }
+////                    }
+//                }
             } else {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_buscar") + ". " + bundle.getString("lbl.msm_consulte"), "");
                 FacesContext.getCurrentInstance().addMessage(null, message);

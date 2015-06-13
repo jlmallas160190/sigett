@@ -16,5 +16,5 @@ import javax.ejb.Local;
 @Local
 public interface NivelDao {
 
-    List<Nivel> buscarPorNombre(Nivel nivel);
+    List<Nivel> buscar(Nivel nivel);
 }

@@ -207,7 +207,7 @@ public class AdministrarInformesProyecto implements Serializable {
             HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
             datosReporte.put("tituloDirector", datosDirector.getNombres().toUpperCase() + " " + datosDirector.getApellidos().toUpperCase());
             datosReporte.put("razon", bundle.getString("lbl.razon_certificacion_director"));
-            datosReporte.put("autores", getAutores(autorProyectoFacadeLocal.buscarPorProyecto(directorProyecto.getProyectoId().getId())));
+//            datosReporte.put("autores", getAutores(autorProyectoFacadeLocal.buscarPorProyecto(directorProyecto.getProyectoId().getId())));
 //            reportes.certificacionDirector("docx", fechaFormateada1, response, datosReporte, carrera, path, pathSetting);
         } catch (Exception e) {
 

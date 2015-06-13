@@ -13,15 +13,11 @@ import edu.unl.sigett.seguimiento.session.SessionProyectosAutor;
 import edu.unl.sigett.seguimiento.session.SessionProyectosDirector;
 import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
 import edu.unl.sigett.entity.Actividad;
-import edu.unl.sigett.entity.CatalogoEvento;
 import edu.unl.sigett.entity.ConfiguracionProyecto;
 import edu.unl.sigett.entity.Cronograma;
 import edu.jlmallas.academico.entity.Docente;
-import edu.unl.sigett.entity.EstadoActividad;
 import edu.jlmallas.academico.entity.Estudiante;
-import edu.unl.sigett.entity.Evento;
 import edu.unl.sigett.entity.Proyecto;
-import edu.unl.sigett.entity.TipoActividad;
 import org.jlmallas.seguridad.entity.Usuario;
 import java.io.ByteArrayInputStream;
 import java.io.Serializable;
@@ -52,12 +48,8 @@ import org.primefaces.model.ScheduleEvent;
 import org.primefaces.model.ScheduleModel;
 import org.primefaces.model.TreeNode;
 import edu.unl.sigett.dao.ActividadFacadeLocal;
-import edu.unl.sigett.dao.CatalogoEventoFacadeLocal;
-import edu.unl.sigett.dao.EstadoActividadFacadeLocal;
-import edu.unl.sigett.dao.EventoFacadeLocal;
 import org.jlmallas.seguridad.dao.LogDao;
 import edu.unl.sigett.dao.ProyectoDao;
-import edu.unl.sigett.dao.TipoActividadFacadeLocal;
 import org.jlmallas.seguridad.dao.UsuarioDao;
 import edu.unl.sigett.enumeration.EstadoProyectoEnum;
 
@@ -90,17 +82,9 @@ public class AdministrarActividades implements Serializable {
     @EJB
     private ActividadFacadeLocal actividadFacadeLocal;
     @EJB
-    private TipoActividadFacadeLocal tipoActividadFacadeLocal;
-    @EJB
-    private EstadoActividadFacadeLocal estadoActividadFacadeLocal;
-    @EJB
     private UsuarioDao usuarioFacadeLocal;
     @EJB
     private ProyectoDao proyectoFacadeLocal;
-    @EJB
-    private EventoFacadeLocal eventoFacadeLocal;
-    @EJB
-    private CatalogoEventoFacadeLocal catalogoEventoFacadeLocal;
     @EJB
     private PersonaDao personaFacadeLocal;
 
@@ -219,36 +203,36 @@ public class AdministrarActividades implements Serializable {
 
     public void notificacionActividadesPorRevisar(Docente docente) {
         try {
-            Persona persona = personaFacadeLocal.find(docente.getId());
-            eventModelDirector = new DefaultScheduleModel();
-            for (Actividad actividad : actividadFacadeLocal.buscarPorRevisarDirectorProyecto(persona.getNumeroIdentificacion())) {
-                if (actividad.getTipoActividadId().getId() == 2) {
-                    eventModelDirector.addEvent(new DefaultScheduleEvent(actividad.getNombre(), actividad.getFechaInicioRevision(), actividad.getFechaFinRevision(), actividad));
-                }
-            }
+//            Persona persona = personaFacadeLocal.find(docente.getId());
+//            eventModelDirector = new DefaultScheduleModel();
+//            for (Actividad actividad : actividadFacadeLocal.buscarPorRevisarDirectorProyecto(persona.getNumeroIdentificacion())) {
+//                if (actividad.getTipoActividadId().getId() == 2) {
+//                    eventModelDirector.addEvent(new DefaultScheduleEvent(actividad.getNombre(), actividad.getFechaInicioRevision(), actividad.getFechaFinRevision(), actividad));
+//                }
+//            }
         } catch (Exception e) {
         }
     }
 
     public void notificacionActividadesAutorProyecto(Estudiante estudiante) {
         try {
-            eventModelAutorProyecto = new DefaultScheduleModel();
-            Persona persona = personaFacadeLocal.find(estudiante.getId());
-            for (Actividad actividad : actividadFacadeLocal.buscarPorAutorProyecto(persona.getNumeroIdentificacion())) {
-                if (actividad.getTipoActividadId().getId() == 2) {
-                    DefaultScheduleEvent evento = new DefaultScheduleEvent();
-                    evento.setTitle(actividad.getNombre());
-                    evento.setStartDate(actividad.getFechaInicioRevision());
-                    evento.setEndDate(actividad.getFechaFinRevision());
-                    evento.setData(actividad);
-                    if (actividad.getEstadoActividadId().getId() == 1) {
-                        evento.setStyleClass("porRevisar");
-                    } else {
-                        evento.setStyleClass("revisado");
-                    }
-                    eventModelAutorProyecto.addEvent(evento);
-                }
-            }
+//            eventModelAutorProyecto = new DefaultScheduleModel();
+//            Persona persona = personaFacadeLocal.find(estudiante.getId());
+//            for (Actividad actividad : actividadFacadeLocal.buscarPorAutorProyecto(persona.getNumeroIdentificacion())) {
+//                if (actividad.getTipoActividadId().getId() == 2) {
+//                    DefaultScheduleEvent evento = new DefaultScheduleEvent();
+//                    evento.setTitle(actividad.getNombre());
+//                    evento.setStartDate(actividad.getFechaInicioRevision());
+//                    evento.setEndDate(actividad.getFechaFinRevision());
+//                    evento.setData(actividad);
+//                    if (actividad.getEstadoActividadId().getId() == 1) {
+//                        evento.setStyleClass("porRevisar");
+//                    } else {
+//                        evento.setStyleClass("revisado");
+//                    }
+//                    eventModelAutorProyecto.addEvent(evento);
+//                }
+//            }
         } catch (Exception e) {
         }
     }
@@ -298,23 +282,23 @@ public class AdministrarActividades implements Serializable {
 
     public void seleccionarEstadoActividad(Actividad actividad) {
         int posTipo = estadoActividad.indexOf(":");
-        EstadoActividad ea = estadoActividadFacadeLocal.find(Integer.parseInt(estadoActividad.substring(0, posTipo)));
-        if (ea != null) {
-            actividad.setEstadoActividadId(ea);
-            estadoEsSeleccionado = true;
-        }
+//        EstadoActividad ea = estadoActividadFacadeLocal.find(Integer.parseInt(estadoActividad.substring(0, posTipo)));
+//        if (ea != null) {
+//            actividad.setEstadoActividadId(ea);
+//            estadoEsSeleccionado = true;
+//        }
     }
 
     public String styleEstadoActividad(Actividad actividad) {
         String style = "";
         try {
-            if (actividad.getEstadoActividadId().getId() == 1) {
-                style = "actividadDesarrollo";
-            } else {
-                if (actividad.getEstadoActividadId().getId() == 2) {
-                    style = "actividadRevisada";
-                }
-            }
+//            if (actividad.getEstadoActividadId().getId() == 1) {
+//                style = "actividadDesarrollo";
+//            } else {
+//                if (actividad.getEstadoActividadId().getId() == 2) {
+//                    style = "actividadRevisada";
+//                }
+//            }
         } catch (Exception e) {
         }
         return style;
@@ -504,21 +488,21 @@ public class AdministrarActividades implements Serializable {
     public int validaFechas(Actividad actividad, Cronograma cronograma) {
         int var = -1;
         try {
-            if (actividad.getFechaInicio().before(actividad.getFechaCulminacion()) || actividad.getFechaInicio().equals(actividad.getFechaCulminacion())) {
-                if (actividad.isTienePadre()) {
-                    if ((actividad.getFechaInicio().equals(fechaInicioActividadPadre) || actividad.getFechaInicio().after(fechaInicioActividadPadre)) && (actividad.getFechaCulminacion().equals(fechaFinActividadPadre) || actividad.getFechaCulminacion().before(fechaFinActividadPadre))) {
-                        var = 1;
-                    } else {
-                        var = 0;
-                    }
-                } else {
-                    if ((actividad.getFechaInicio().equals(cronograma.getFechaInicio()) || actividad.getFechaInicio().after(cronograma.getFechaInicio())) && (actividad.getFechaCulminacion().equals(cronograma.getFechaProrroga()) || actividad.getFechaCulminacion().before(cronograma.getFechaProrroga()))) {
-                        var = 1;
-                    } else {
-                        var = 2;
-                    }
-                }
-            }
+//            if (actividad.getFechaInicio().before(actividad.getFechaCulminacion()) || actividad.getFechaInicio().equals(actividad.getFechaCulminacion())) {
+//                if (actividad.isTienePadre()) {
+//                    if ((actividad.getFechaInicio().equals(fechaInicioActividadPadre) || actividad.getFechaInicio().after(fechaInicioActividadPadre)) && (actividad.getFechaCulminacion().equals(fechaFinActividadPadre) || actividad.getFechaCulminacion().before(fechaFinActividadPadre))) {
+//                        var = 1;
+//                    } else {
+//                        var = 0;
+//                    }
+//                } else {
+//                    if ((actividad.getFechaInicio().equals(cronograma.getFechaInicio()) || actividad.getFechaInicio().after(cronograma.getFechaInicio())) && (actividad.getFechaCulminacion().equals(cronograma.getFechaProrroga()) || actividad.getFechaCulminacion().before(cronograma.getFechaProrroga()))) {
+//                        var = 1;
+//                    } else {
+//                        var = 2;
+//                    }
+//                }
+//            }
         } catch (Exception e) {
             var = -1;
         }
@@ -577,53 +561,53 @@ public class AdministrarActividades implements Serializable {
     }
 
     public void obtenerEstadoActividad(Actividad actividad, String param) {
-        if (estadoEsSeleccionado == false) {
-            EstadoActividad estadoActividad = estadoActividadFacadeLocal.find((int) 1);
-            if (estadoActividad != null) {
-                actividad.setEstadoActividadId(estadoActividad);
-            }
-        } else {
-            int pos = estadoActividad.indexOf(":");
-            EstadoActividad ea = estadoActividadFacadeLocal.find(Integer.parseInt(estadoActividad.substring(0, pos)));
-            if (ea != null) {
-                actividad.setEstadoActividadId(ea);
-            }
-        }
+//        if (estadoEsSeleccionado == false) {
+//            EstadoActividad estadoActividad = estadoActividadFacadeLocal.find((int) 1);
+//            if (estadoActividad != null) {
+//                actividad.setEstadoActividadId(estadoActividad);
+//            }
+//        } else {
+//            int pos = estadoActividad.indexOf(":");
+//            EstadoActividad ea = estadoActividadFacadeLocal.find(Integer.parseInt(estadoActividad.substring(0, pos)));
+//            if (ea != null) {
+//                actividad.setEstadoActividadId(ea);
+//            }
+//        }
     }
 
     public void calculosActividadObjetivo(Actividad actividad) {
         try {
-            double avance = 0;
-            EstadoActividad estadoActividad = null;
-            if (actividad.getActividadId() != null) {
-                Actividad actividadPadre = actividadFacadeLocal.find(actividad.getActividadId());
-                if (actividadPadre != null) {
-                    for (Actividad a : actividadFacadeLocal.buscarSubActividades(actividadPadre.getId())) {
-                        if (a.getEsActivo()) {
-                            if (a.getEstadoActividadId().getId() == 2 && a.getId() != a.getActividadId()) {
-                                avance += a.getPorcentajeDuracion();
-                            }
-                        }
-                    }
-                    double valor = avance;
-                    valor = Math.round(valor * 100);
-                    valor = valor / 100;
-                    actividadPadre.setAvance(valor);
-                    actividadPadre.setFaltante(100 - valor);
-                    if (actividadPadre.getAvance() == 100.00) {
-                        estadoActividad = estadoActividadFacadeLocal.find(2);
-                        if (estadoActividad != null) {
-                            actividadPadre.setEstadoActividadId(estadoActividad);
-                        }
-                    } else {
-                        estadoActividad = estadoActividadFacadeLocal.find(1);
-                        if (estadoActividad != null) {
-                            actividadPadre.setEstadoActividadId(estadoActividad);
-                        }
-                    }
-                    actividadFacadeLocal.edit(actividadPadre);
-                }
-            }
+//            double avance = 0;
+//            EstadoActividad estadoActividad = null;
+//            if (actividad.getActividadId() != null) {
+//                Actividad actividadPadre = actividadFacadeLocal.find(actividad.getActividadId());
+//                if (actividadPadre != null) {
+//                    for (Actividad a : actividadFacadeLocal.buscarSubActividades(actividadPadre.getId())) {
+//                        if (a.getEsActivo()) {
+//                            if (a.getEstadoActividadId().getId() == 2 && a.getId() != a.getActividadId()) {
+//                                avance += a.getPorcentajeDuracion();
+//                            }
+//                        }
+//                    }
+//                    double valor = avance;
+//                    valor = Math.round(valor * 100);
+//                    valor = valor / 100;
+//                    actividadPadre.setAvance(valor);
+//                    actividadPadre.setFaltante(100 - valor);
+//                    if (actividadPadre.getAvance() == 100.00) {
+//                        estadoActividad = estadoActividadFacadeLocal.find(2);
+//                        if (estadoActividad != null) {
+//                            actividadPadre.setEstadoActividadId(estadoActividad);
+//                        }
+//                    } else {
+//                        estadoActividad = estadoActividadFacadeLocal.find(1);
+//                        if (estadoActividad != null) {
+//                            actividadPadre.setEstadoActividadId(estadoActividad);
+//                        }
+//                    }
+//                    actividadFacadeLocal.edit(actividadPadre);
+//                }
+//            }
         } catch (Exception e) {
         }
     }
@@ -810,57 +794,57 @@ public class AdministrarActividades implements Serializable {
 
     public void actualizarPorcentajesDuracionActividades(Actividad actividad, List<Actividad> actividades) {
         try {
-            double sum = 0;
-            double sumSubActividades = 0;
-            sum = actividadFacadeLocal.sumatoriaActividades((long) 0, actividad.getCronogramaId().getId());
-            for (Actividad a : actividades) {
-                if (a.getId() == a.getActividadId()) {
-                    if (a.getId() != null) {
-                        double valor = ((a.getDuracion() / sum) * 100);
-                        valor = Math.round(valor * 100);
-                        valor = valor / 100;
-                        a.setPorcentajeDuracion(valor);
-                        actividadFacadeLocal.edit(a);
-                    }
-                } else {
-                    if (a.getId() != null) {
-                        sumSubActividades = actividadFacadeLocal.sumatoriaSubActividades((long) 0, a.getActividadId());
-                        double valor = ((a.getDuracion() / sumSubActividades) * 100);
-                        valor = Math.round(valor * 100);
-                        valor = valor / 100;
-                        a.setPorcentajeDuracion(valor);
-                        actividadFacadeLocal.edit(a);
-                    }
-                }
-            }
+//            double sum = 0;
+//            double sumSubActividades = 0;
+//            sum = actividadFacadeLocal.sumatoriaActividades((long) 0, actividad.getCronogramaId().getId());
+//            for (Actividad a : actividades) {
+//                if (a.getId() == a.getActividadId()) {
+//                    if (a.getId() != null) {
+//                        double valor = ((a.getDuracion() / sum) * 100);
+//                        valor = Math.round(valor * 100);
+//                        valor = valor / 100;
+//                        a.setPorcentajeDuracion(valor);
+//                        actividadFacadeLocal.edit(a);
+//                    }
+//                } else {
+//                    if (a.getId() != null) {
+//                        sumSubActividades = actividadFacadeLocal.sumatoriaSubActividades((long) 0, a.getActividadId());
+//                        double valor = ((a.getDuracion() / sumSubActividades) * 100);
+//                        valor = Math.round(valor * 100);
+//                        valor = valor / 100;
+//                        a.setPorcentajeDuracion(valor);
+//                        actividadFacadeLocal.edit(a);
+//                    }
+//                }
+//            }
         } catch (Exception e) {
         }
     }
 
     public void calculaPorcentajeDuracion(Actividad actividad) {
         try {
-            double sum = 0;
-            if (actividad.getId() == actividad.getActividadId()) {
-                if (actividad.getId() != null) {
-                    sum = actividadFacadeLocal.sumatoriaActividades(actividad.getId(), actividad.getCronogramaId().getId());
-                    sum += actividad.getDuracion();
-                } else {
-                    sum = actividadFacadeLocal.sumatoriaActividades((long) 0, actividad.getCronogramaId().getId());
-                    sum += actividad.getDuracion();
-                }
-            } else {
-                if (actividad.getId() != null) {
-                    sum = actividadFacadeLocal.sumatoriaSubActividades(actividad.getId(), actividad.getActividadId());
-                    sum += actividad.getDuracion();
-                } else {
-                    sum = actividadFacadeLocal.sumatoriaSubActividades((long) 0, actividad.getActividadId());
-                    sum += actividad.getDuracion();
-                }
-            }
-            double valor = ((actividad.getDuracion() / sum) * 100);
-            valor = Math.round(valor * 100);
-            valor = valor / 100;
-            actividad.setPorcentajeDuracion(valor);
+//            double sum = 0;
+//            if (actividad.getId() == actividad.getActividadId()) {
+//                if (actividad.getId() != null) {
+//                    sum = actividadFacadeLocal.sumatoriaActividades(actividad.getId(), actividad.getCronogramaId().getId());
+//                    sum += actividad.getDuracion();
+//                } else {
+//                    sum = actividadFacadeLocal.sumatoriaActividades((long) 0, actividad.getCronogramaId().getId());
+//                    sum += actividad.getDuracion();
+//                }
+//            } else {
+//                if (actividad.getId() != null) {
+//                    sum = actividadFacadeLocal.sumatoriaSubActividades(actividad.getId(), actividad.getActividadId());
+//                    sum += actividad.getDuracion();
+//                } else {
+//                    sum = actividadFacadeLocal.sumatoriaSubActividades((long) 0, actividad.getActividadId());
+//                    sum += actividad.getDuracion();
+//                }
+//            }
+//            double valor = ((actividad.getDuracion() / sum) * 100);
+//            valor = Math.round(valor * 100);
+//            valor = valor / 100;
+//            actividad.setPorcentajeDuracion(valor);
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -985,21 +969,21 @@ public class AdministrarActividades implements Serializable {
 
     public void confirmarBajarNivel(Actividad actividad, Cronograma cronograma, Usuario usuario) {
         try {
-            FacesContext facesContext = FacesContext.getCurrentInstance();
-            String param = (String) facesContext.getExternalContext().getRequestParameterMap().get("1");
-            int pos = actividadPadre.indexOf(":");
-            sessionActividad.getActividad().setActividadId(Long.parseLong(actividadPadre.substring(0, pos)));
-            calculaPorcentajeDuracion(actividad);
-            actividadFacadeLocal.edit(actividad);
-            logFacadeLocal.create(logFacadeLocal.crearLog("Actividad", actividad.getId() + "", "EDITAR", "|Nombre= " + actividad.getNombre() + "|EsActivo= " + actividad.getCronogramaId().getId() + "|Tipo= " + actividad.getTipoActividadId().getId() + "|ActividadId= " + actividad.getActividadId(), usuario));
-            if (param.equalsIgnoreCase("autor")) {
-                buscarPorAutorProyecto(criterio, usuario, cronograma);
-            } else {
-                buscarPorCronograma(criterio, cronograma, usuario);
-            }
-            actualizarPorcentajesDuracionActividades(actividad, actividades);
-            calculosActividadObjetivo(actividad);
-            RequestContext.getCurrentInstance().execute("PF('dlgBajarNivelActividad').hide()");
+//            FacesContext facesContext = FacesContext.getCurrentInstance();
+//            String param = (String) facesContext.getExternalContext().getRequestParameterMap().get("1");
+//            int pos = actividadPadre.indexOf(":");
+//            sessionActividad.getActividad().setActividadId(Long.parseLong(actividadPadre.substring(0, pos)));
+//            calculaPorcentajeDuracion(actividad);
+//            actividadFacadeLocal.edit(actividad);
+//            logFacadeLocal.create(logFacadeLocal.crearLog("Actividad", actividad.getId() + "", "EDITAR", "|Nombre= " + actividad.getNombre() + "|EsActivo= " + actividad.getCronogramaId().getId() + "|Tipo= " + actividad.getTipoActividadId().getId() + "|ActividadId= " + actividad.getActividadId(), usuario));
+//            if (param.equalsIgnoreCase("autor")) {
+//                buscarPorAutorProyecto(criterio, usuario, cronograma);
+//            } else {
+//                buscarPorCronograma(criterio, cronograma, usuario);
+//            }
+//            actualizarPorcentajesDuracionActividades(actividad, actividades);
+//            calculosActividadObjetivo(actividad);
+//            RequestContext.getCurrentInstance().execute("PF('dlgBajarNivelActividad').hide()");
         } catch (Exception e) {
         }
     }
@@ -1018,15 +1002,15 @@ public class AdministrarActividades implements Serializable {
                 root = new DefaultTreeNode("Root", null);
                 for (Actividad actividad : actividades) {
                     TreeNode node = null;
-                    if (actividad.getActividadId() == actividad.getId()) {
+                    if (actividad.getPadreId() == actividad.getId()) {
                         node = new DefaultTreeNode(actividad, root);
                     }
                 }
                 for (Actividad actividad : actividades) {
                     for (TreeNode nodoPadre : root.getChildren()) {
-                        if (actividad.getActividadId() != actividad.getId()) {
+                        if (actividad.getPadreId() != actividad.getId()) {
                             Actividad actividadPadre = (Actividad) nodoPadre.getData();
-                            if (actividadPadre.getId() == actividad.getActividadId()) {
+                            if (actividadPadre.getId() == actividad.getPadreId()) {
                                 nodoPadre.getChildren().add(new DefaultTreeNode(actividad));
                             }
                         }
@@ -1056,15 +1040,15 @@ public class AdministrarActividades implements Serializable {
                 rootPorDirectorProyecto = new DefaultTreeNode("Root", null);
                 for (Actividad actividad : actividadesPorDirectorProyecto) {
                     TreeNode node = null;
-                    if (actividad.getActividadId() == actividad.getId()) {
+                    if (actividad.getPadreId() == actividad.getId()) {
                         node = new DefaultTreeNode(actividad, rootPorDirectorProyecto);
                     }
                 }
                 for (Actividad actividad : actividadesPorDirectorProyecto) {
                     for (TreeNode nodoPadre : rootPorDirectorProyecto.getChildren()) {
-                        if (actividad.getActividadId() != actividad.getId()) {
+                        if (actividad.getPadreId() != actividad.getId()) {
                             Actividad actividadPadre = (Actividad) nodoPadre.getData();
-                            if (actividadPadre.getId() == actividad.getActividadId()) {
+                            if (actividadPadre.getId() == actividad.getPadreId()) {
                                 nodoPadre.getChildren().add(new DefaultTreeNode(actividad));
                             }
                         }
@@ -1131,7 +1115,7 @@ public class AdministrarActividades implements Serializable {
     public boolean renderedSubirNivel(Actividad actividad) {
         boolean var = false;
         try {
-            if (actividad.getActividadId() != actividad.getId()) {
+            if (actividad.getPadreId() != actividad.getId()) {
                 var = true;
             }
         } catch (Exception e) {
@@ -1142,7 +1126,7 @@ public class AdministrarActividades implements Serializable {
     public boolean renderedBajarNivel(Actividad actividad) {
         boolean var = false;
         try {
-            if (actividad.getActividadId() == actividad.getId()) {
+            if (actividad.getPadreId() == actividad.getId()) {
                 var = true;
             }
         } catch (Exception e) {

@@ -31,7 +31,7 @@ public class SessionProrroga implements Serializable {
     private Boolean renderedEliminar;
     private Boolean renderedBuscar;
     private Boolean renderedMediaOficio;
-    private Boolean renderedMediaFePresentacion;
+    private Boolean renderedMediaOficioInf;
 
     public SessionProrroga() {
         this.prorrogas = new ArrayList<>();
@@ -63,7 +63,7 @@ public class SessionProrroga implements Serializable {
         this.filterProrrogas = filterProrrogas;
     }
 
-    public Boolean isRenderedCrud() {
+    public Boolean getRenderedCrud() {
         return renderedCrud;
     }
 
@@ -111,12 +111,12 @@ public class SessionProrroga implements Serializable {
         this.renderedMediaOficio = renderedMediaOficio;
     }
 
-    public Boolean getRenderedMediaFePresentacion() {
-        return renderedMediaFePresentacion;
+    public Boolean getRenderedMediaOficioInf() {
+        return renderedMediaOficioInf;
     }
 
-    public void setRenderedMediaFePresentacion(Boolean renderedMediaFePresentacion) {
-        this.renderedMediaFePresentacion = renderedMediaFePresentacion;
+    public void setRenderedMediaOficioInf(Boolean renderedMediaOficioInf) {
+        this.renderedMediaOficioInf = renderedMediaOficioInf;
     }
 
 }

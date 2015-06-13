@@ -7,13 +7,10 @@ package edu.unl.sigett.entity;
 
 import java.io.Serializable;
 import javax.persistence.Basic;
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -25,10 +22,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Entity
 @Table(name = "estudiante_usuario")
 @XmlRootElement
-@NamedQueries({
-    @NamedQuery(name = "EstudianteUsuario.findAll", query = "SELECT e FROM EstudianteUsuario e"),
-    @NamedQuery(name = "EstudianteUsuario.findById", query = "SELECT e FROM EstudianteUsuario e WHERE e.id = :id"),
-    @NamedQuery(name = "EstudianteUsuario.findByEstudianteId", query = "SELECT e FROM EstudianteUsuario e WHERE e.estudianteId = :estudianteId")})
+@Cacheable(value = false)
 public class EstudianteUsuario implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -49,7 +43,7 @@ public class EstudianteUsuario implements Serializable {
         this.estudianteId = estudianteId;
     }
 
-    public EstudianteUsuario(Long id, long estudianteId) {
+    public EstudianteUsuario(Long id, Long estudianteId) {
         this.id = id;
         this.estudianteId = estudianteId;
     }
@@ -84,10 +78,7 @@ public class EstudianteUsuario implements Serializable {
             return false;
         }
         EstudianteUsuario other = (EstudianteUsuario) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
+        return (this.id != null || other.id == null) && (this.id == null || this.id.equals(other.id));
     }
 
     @Override

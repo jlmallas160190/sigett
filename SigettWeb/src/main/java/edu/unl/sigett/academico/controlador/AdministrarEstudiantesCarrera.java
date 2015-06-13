@@ -356,7 +356,7 @@ public class AdministrarEstudiantesCarrera implements Serializable {
                 usuario.setEsSuperuser(false);
                 usuario.setEsActivo(true);
                 usuario.setPassword(cabeceraController.getSecureService().encrypt(
-                        new SecureDTO(cabeceraController.getConfiguracionGeneralDTO().getSecureKey(), personaEstudiante.getNumeroIdentificacion())));
+                        new SecureDTO(cabeceraController.getConfiguracionGeneralUtil().getSecureKey(), personaEstudiante.getNumeroIdentificacion())));
                 usuario.setUsername(personaEstudiante.getNumeroIdentificacion());
                 if (usuarioService.unicoUsername(usuario.getUsername()) == false) {
                     usuarioDao.create(usuario);
@@ -376,7 +376,7 @@ public class AdministrarEstudiantesCarrera implements Serializable {
             } else {
                 if (usuarioService.unicoUsername(usuario.getUsername()) == false) {
                     usuario.setPassword(cabeceraController.getSecureService().encrypt(
-                            new SecureDTO(cabeceraController.getConfiguracionGeneralDTO().getSecureKey(), personaEstudiante.getNumeroIdentificacion())));
+                            new SecureDTO(cabeceraController.getConfiguracionGeneralUtil().getSecureKey(), personaEstudiante.getNumeroIdentificacion())));
                     usuarioDao.edit(usuario);
                 }
             }
@@ -609,7 +609,7 @@ public class AdministrarEstudiantesCarrera implements Serializable {
             if (configuracionCarrera == null) {
                 return;
             }
-            String passwordService = this.cabeceraController.getSecureService().decrypt(new SecureDTO(cabeceraController.getConfiguracionGeneralDTO().getSecureKey(),
+            String passwordService = this.cabeceraController.getSecureService().decrypt(new SecureDTO(cabeceraController.getConfiguracionGeneralUtil().getSecureKey(),
                     configuracionDao.buscar(new Configuracion(ConfiguracionEnum.CLAVEWS.getTipo())).get(0).getValor()));
             String userService = configuracionDao.buscar(new Configuracion(ConfiguracionEnum.USUARIOWS.getTipo())).get(0).getValor();
             String serviceUrl = configuracionDao.buscar(new Configuracion(URLWSEnum.PARALELOCARRERA.getTipo())).get(0).getValor();
@@ -688,7 +688,7 @@ public class AdministrarEstudiantesCarrera implements Serializable {
         MessageView messageView = new MessageView();
         if (usuarioDao.tienePermiso(sessionUsuario.getUsuario(), "sga_ws_datos_docente") == 1) {
             try {
-                String passwordService = this.cabeceraController.getSecureService().decrypt(new SecureDTO(cabeceraController.getConfiguracionGeneralDTO().getSecureKey(),
+                String passwordService = this.cabeceraController.getSecureService().decrypt(new SecureDTO(cabeceraController.getConfiguracionGeneralUtil().getSecureKey(),
                         configuracionDao.buscar(new Configuracion(ConfiguracionEnum.CLAVEWS.getTipo())).get(0).getValor()));
                 String userService = configuracionDao.buscar(new Configuracion(ConfiguracionEnum.USUARIOWS.getTipo())).get(0).getValor();
                 String serviceUrl = configuracionDao.buscar(new Configuracion(URLWSEnum.DATOSESTUDIANTE.getTipo())).get(0).getValor();
@@ -754,7 +754,7 @@ public class AdministrarEstudiantesCarrera implements Serializable {
         MessageView messageView = new MessageView();
         if (usuarioDao.tienePermiso(sessionUsuario.getUsuario(), "sga_ws_datos_docente") == 1) {
             try {
-                String passwordService = this.cabeceraController.getSecureService().decrypt(new SecureDTO(cabeceraController.getConfiguracionGeneralDTO().getSecureKey(),
+                String passwordService = this.cabeceraController.getSecureService().decrypt(new SecureDTO(cabeceraController.getConfiguracionGeneralUtil().getSecureKey(),
                         configuracionDao.buscar(new Configuracion(ConfiguracionEnum.CLAVEWS.getTipo())).get(0).getValor()));
                 String userService = configuracionDao.buscar(new Configuracion(ConfiguracionEnum.USUARIOWS.getTipo())).get(0).getValor();
                 String serviceUrl = configuracionDao.buscar(new Configuracion(URLWSEnum.DATOSESTUDIANTE.getTipo())).get(0).getValor();
@@ -877,7 +877,7 @@ public class AdministrarEstudiantesCarrera implements Serializable {
         MessageView messageView = new MessageView();
         if (usuarioDao.tienePermiso(sessionUsuario.getUsuario(), "sga_ws_estudiante_carrera") == 1) {
             try {
-                String passwordService = this.cabeceraController.getSecureService().decrypt(new SecureDTO(cabeceraController.getConfiguracionGeneralDTO().getSecureKey(),
+                String passwordService = this.cabeceraController.getSecureService().decrypt(new SecureDTO(cabeceraController.getConfiguracionGeneralUtil().getSecureKey(),
                         configuracionDao.buscar(new Configuracion(ConfiguracionEnum.CLAVEWS.getTipo())).get(0).getValor()));
                 String userService = configuracionDao.buscar(new Configuracion(ConfiguracionEnum.USUARIOWS.getTipo())).get(0).getValor();
                 String serviceUrl = configuracionDao.buscar(new Configuracion(URLWSEnum.MATRICULAESTUDIANTE.getTipo())).get(0).getValor();
@@ -910,7 +910,7 @@ public class AdministrarEstudiantesCarrera implements Serializable {
         if (usuarioDao.tienePermiso(sessionUsuario.getUsuario(), "sga_ws_estudiante_carrera") == 1) {
             try {
                 Persona p = personaDao.find(rm.getEstudianteCarreraId().getEstudianteId().getId());
-                String passwordService = this.cabeceraController.getSecureService().decrypt(new SecureDTO(cabeceraController.getConfiguracionGeneralDTO().getSecureKey(),
+                String passwordService = this.cabeceraController.getSecureService().decrypt(new SecureDTO(cabeceraController.getConfiguracionGeneralUtil().getSecureKey(),
                         configuracionDao.buscar(new Configuracion(ConfiguracionEnum.CLAVEWS.getTipo())).get(0).getValor()));
                 String userService = configuracionDao.buscar(new Configuracion(ConfiguracionEnum.USUARIOWS.getTipo())).get(0).getValor();
                 String serviceUrl = configuracionDao.buscar(new Configuracion(URLWSEnum.REPORTEMATRICULAESTUDIANTE.getTipo())).get(0).getValor();
@@ -1077,7 +1077,7 @@ public class AdministrarEstudiantesCarrera implements Serializable {
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
         MessageView messageView = new MessageView();
         try {
-            String passwordService = this.cabeceraController.getSecureService().decrypt(new SecureDTO(cabeceraController.getConfiguracionGeneralDTO().getSecureKey(),
+            String passwordService = this.cabeceraController.getSecureService().decrypt(new SecureDTO(cabeceraController.getConfiguracionGeneralUtil().getSecureKey(),
                     configuracionDao.buscar(new Configuracion(ConfiguracionEnum.CLAVEWS.getTipo())).get(0).getValor()));
             String userService = configuracionDao.buscar(new Configuracion(ConfiguracionEnum.USUARIOWS.getTipo())).get(0).getValor();
             String serviceUrl = configuracionDao.buscar(new Configuracion(URLWSEnum.ESTADOESTUDIANTEPARALELO.getTipo())).get(0).getValor();

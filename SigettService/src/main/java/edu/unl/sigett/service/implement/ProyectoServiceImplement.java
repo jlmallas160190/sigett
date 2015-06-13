@@ -5,15 +5,9 @@
  */
 package edu.unl.sigett.service.implement;
 
-import edu.unl.sigett.dao.LineaInvestigacionProyectoDao;
-import edu.unl.sigett.dao.ProyectoOfertaCarreraDao;
 import edu.unl.sigett.dao.ProyectoDao;
-import edu.unl.sigett.dto.ProyectoDTO;
-import edu.unl.sigett.entity.LineaInvestigacionProyecto;
 import edu.unl.sigett.entity.Proyecto;
-import edu.unl.sigett.entity.ProyectoCarreraOferta;
 import edu.unl.sigett.service.ProyectoService;
-import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -27,10 +21,6 @@ public class ProyectoServiceImplement implements ProyectoService {
 
     @EJB
     private ProyectoDao proyectoDao;
-    @EJB
-    private ProyectoOfertaCarreraDao proyectoOfertaCarreraDao;
-    @EJB
-    private LineaInvestigacionProyectoDao lineaInvestigacionProyectoDao;
 
     @Override
     public void guardar(final Proyecto proyecto) {
@@ -53,36 +43,8 @@ public class ProyectoServiceImplement implements ProyectoService {
     }
 
     @Override
-    public List<Proyecto> buscar(final ProyectoDTO proyectoDTO) {
-        List<Proyecto> proyectos = new ArrayList<>();
-        List<ProyectoCarreraOferta> pcos = proyectoOfertaCarreraDao.buscar(
-                proyectoDTO.getProyectoCarreraOferta() != null ? proyectoDTO.getProyectoCarreraOferta() : new ProyectoCarreraOferta());
-        List<LineaInvestigacionProyecto> lips = lineaInvestigacionProyectoDao.buscar(
-                proyectoDTO.getLineaInvestigacionProyecto() != null ? proyectoDTO.getLineaInvestigacionProyecto() :new LineaInvestigacionProyecto());
-        if (pcos == null) {
-            return proyectos;
-        }
-        for (ProyectoCarreraOferta pco : pcos) {
-            if (!proyectos.contains(pco.getProyectoId())) {
-                if (proyectoDTO.getProyecto().getEstado() != null) {
-                    if (pco.getProyectoId().getEstado().equals(proyectoDTO.getProyecto().getEstado())) {
-                        proyectos.add(pco.getProyectoId());
-                        continue;
-                    }
-                    continue;
-                }
-                proyectos.add(pco.getProyectoId());
-            }
-        }
-        if (lips == null) {
-            return proyectos;
-        }
-        for (LineaInvestigacionProyecto lp : lips) {
-            if (!proyectos.contains(lp.getProyectoId())) {
-                proyectos.add(lp.getProyectoId());
-            }
-        }
-        return proyectos;
+    public List<Proyecto> buscar(final Proyecto proyecto) {
+      return this.proyectoDao.buscar(proyecto);
     }
 
 }

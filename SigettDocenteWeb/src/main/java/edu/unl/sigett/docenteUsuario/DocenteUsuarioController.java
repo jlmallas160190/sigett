@@ -18,9 +18,10 @@ import com.jlmallas.comun.enumeration.ValorEnum;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 import com.ocpsoft.pretty.faces.annotation.URLMappings;
 import edu.jlmallas.academico.dao.DocenteDao;
-import edu.unl.sigett.dao.DocenteUsuarioDao;
 import edu.unl.sigett.entity.DocenteUsuario;
 import com.jlmallas.comun.enumeration.URLWSEnum;
+import com.jlmallas.comun.service.ConfiguracionService;
+import edu.unl.sigett.service.DocenteUsuarioService;
 import edu.unl.sigett.util.CabeceraController;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
@@ -68,11 +69,11 @@ public class DocenteUsuarioController implements Serializable {
     //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="SERVICIOS">
     @EJB
-    private ConfiguracionDao configuracionDao;
+    private ConfiguracionService configuracionService;
     @EJB
     private UsuarioService usuarioService;
     @EJB
-    private DocenteUsuarioDao docenteUsuarioDao;
+    private DocenteUsuarioService docenteUsuarioDao;
     @EJB
     private DocenteDao docenteDao;
     @EJB
@@ -91,7 +92,7 @@ public class DocenteUsuarioController implements Serializable {
     public String logear() {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-        String value = configuracionDao.buscar(new Configuracion(ConfiguracionEnum.LOGINDOCENTEWS.getTipo())).get(0).getValor();
+        String value = configuracionService.buscar(new Configuracion(ConfiguracionEnum.LOGINDOCENTEWS.getTipo())).get(0).getValor();
         if (value.equals(ValorEnum.NO.getTipo())) {
             int var = usuarioService.logear(docenteUsuarioDM.getDocenteUsuarioDTO().getUsuario().getUsername(),
                     cabeceraController.getSecureService().encrypt(
@@ -105,7 +106,7 @@ public class DocenteUsuarioController implements Serializable {
                 if (usuarios == null) {
                     return "";
                 }
-                DocenteUsuario docenteUsuario = docenteUsuarioDao.find(!usuarios.isEmpty() ? usuarios.get(0).getId() : null);
+                DocenteUsuario docenteUsuario = docenteUsuarioDao.buscarPorId(!usuarios.isEmpty() ? usuarios.get(0).getId() : null);
                 if (docenteUsuario == null) {
                     this.cabeceraController.getMessageView().message(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.datos_incorrectos"), "");
                     return "";
@@ -140,9 +141,9 @@ public class DocenteUsuarioController implements Serializable {
         try {
             docenteUsuarioDM.setValidarDocenteWS(Boolean.FALSE);
             String passwordService = this.cabeceraController.getSecureService().decrypt(new SecureDTO(cabeceraController.getConfiguracionGeneralDTO().getSecureKey(),
-                    configuracionDao.buscar(new Configuracion(ConfiguracionEnum.CLAVEWS.getTipo())).get(0).getValor()));
-            String userService = configuracionDao.buscar(new Configuracion(ConfiguracionEnum.USUARIOWS.getTipo())).get(0).getValor();
-            String serviceUrl = configuracionDao.buscar(new Configuracion(URLWSEnum.VALIDARDOCENTE.getTipo())).get(0).getValor();
+                    configuracionService.buscar(new Configuracion(ConfiguracionEnum.CLAVEWS.getTipo())).get(0).getValor()));
+            String userService = configuracionService.buscar(new Configuracion(ConfiguracionEnum.USUARIOWS.getTipo())).get(0).getValor();
+            String serviceUrl = configuracionService.buscar(new Configuracion(URLWSEnum.VALIDARDOCENTE.getTipo())).get(0).getValor();
             String s = serviceUrl + "?cedula=" + cedula + ";clave=" + passwordService;
             ConexionDTO seguridad = new ConexionDTO(passwordService, s, userService);
             NetClientService conexion = new NetClientServiceImplement();

@@ -29,17 +29,14 @@ public class NivelServiceImplement extends AbstractDao<Nivel> implements NivelSe
         super(Nivel.class);
     }
 
-    public Nivel buscarPorNombre(Nivel nivel) {
+    @Override
+    public Nivel buscarPorNombre(final Nivel nivel) {
+        @SuppressWarnings("UnusedAssignment")
         List<Nivel> niveles = new ArrayList<>();
-        try {
-            niveles = nivelDao.buscarPorNombre(nivel);
-            if (niveles == null) {
-                return null;
-            }
-            return !niveles.isEmpty() ? niveles.get(0) : null;
-        } catch (Exception e) {
-            e.printStackTrace();
+        niveles = nivelDao.buscar(nivel);
+        if (niveles == null) {
+            return null;
         }
-        return null;
+        return !niveles.isEmpty() ? niveles.get(0) : null;
     }
 }

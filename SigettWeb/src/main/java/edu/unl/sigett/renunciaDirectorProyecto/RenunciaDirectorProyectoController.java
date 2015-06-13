@@ -9,6 +9,7 @@ import com.jlmallas.comun.entity.Item;
 import com.jlmallas.comun.enumeration.CatalogoEnum;
 import com.jlmallas.comun.service.ItemService;
 import edu.unl.sigett.directorProyecto.DirectorProyectoDM;
+import edu.unl.sigett.directorProyecto.DirectorProyectoDTO;
 import edu.unl.sigett.entity.Renuncia;
 import edu.unl.sigett.entity.RenunciaDirector;
 import edu.unl.sigett.enumeration.EstadoDirectorEnum;
@@ -77,6 +78,7 @@ public class RenunciaDirectorProyectoController implements Serializable {
                 directorProyectoService.actualizar(sessionRenunciaDirectorProyecto.getRenunciaDirector().getDirectorProyectoId());
                 sessionProyecto.getDirectoresProyectoDTO().remove(directorProyectoDM.getDirectorProyectoDTO());
                 cabeceraController.getMessageView().message(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_grabar"), "");
+                cancelarEdicion();
             }
         } catch (Exception e) {
             LOG.warning(e.getMessage());
@@ -86,6 +88,7 @@ public class RenunciaDirectorProyectoController implements Serializable {
     public void cancelarEdicion() {
         this.sessionRenuncia.setRenuncia(new Renuncia());
         this.sessionRenunciaDirectorProyecto.setRenunciaDirector(new RenunciaDirector());
+        this.directorProyectoDM.setDirectorProyectoDTO(new DirectorProyectoDTO());
         this.sessionRenunciaDirectorProyecto.setRenderedCrud(Boolean.FALSE);
     }
 }

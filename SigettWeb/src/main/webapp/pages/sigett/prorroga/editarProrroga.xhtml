@@ -9,22 +9,23 @@
             <h:outputLabel value="#{msg['lbl.fecha']}:"/>
             <p:calendar id="fechaProrroga"  navigator="true" locale="es" pattern="dd/MM/yyyy" value="#{sessionProrroga.prorroga.fecha}" 
                         title="#{msg['lbl.fecha']}" required="true" requiredMessage="#{msg['lbl.fecha']} #{msg['lbl.obligatorio']}.">
-                <p:ajax event="change" listener="#{prorrogaController.calculaFechas()}" update="panelDatos"/>
-                <p:ajax event="dateSelect" listener="#{prorrogaController.calculaFechas()}"  update="panelDatos"/>
+                <p:ajax event="change" listener="#{prorrogaController.calculaFechas()}" update="panelDatos,:contenido:msm"/>
+                <p:ajax event="dateSelect" listener="#{prorrogaController.calculaFechas()}"  update="panelDatos,:contenido:msm"/>
             </p:calendar>
-            <p:message id="msmFechaProrroga" display="icon" for="fechaProrroga"/>
+             <p:message id="msmFechaProrroga" display="icon" for="fechaProrroga"/>
+            <h:outputLabel value="#{sessionProyecto.cronograma.duracion} #{msg['lbl.dias']}"/>
+            <h:inputHidden/>
+            <h:inputHidden/>
             <h:outputLabel  value="#{msg['lbl.motivo']}:" for="motivo" />
             <p:editor id="motivoProrroga" value="#{sessionProrroga.prorroga.motivo}" required="true" 
                               requiredMessage="#{msg['lbl.motivo']} #{msg['lbl.obligatorio']}."/>
             <p:message id="msmMotivoProrroga" display="icon" for="motivoProrroga"/>
-            <h:outputLabel rendered="#{administrarProrrogas.renderedAceptarProrroga}" value="#{msg['lbl.aceptar']}:" for="aceptar" />
-            <p:selectBooleanCheckbox rendered="#{administrarProrrogas.renderedAceptarProrroga}" value="#{sessionProrroga.prorroga.esAceptado}"/>
-            <h:inputHidden/>
-            <h:outputLabel rendered="#{administrarProrrogas.renderedAceptarProrroga}" value="#{msg['lbl.observacion']}:" for="observacion" />
-            <p:inputTextarea id="observacionProrroga" rendered="#{administrarProrrogas.renderedAceptarProrroga}" value="#{sessionProrroga.prorroga.observacion}" 
-                             title="#{msg['lbl.observacion']}" required="true" requiredMessage="#{msg['lbl.observacion']} #{msg['lbl.obligatorio']}.">
-               
-            </p:inputTextarea>
+           <!-- <h:outputLabel  value="#{msg['lbl.aceptar']}:" for="aceptar" />
+            <p:selectBooleanCheckbox  value="{sessionProrroga.prorroga.esAceptado}"/>
+            <h:inputHidden/>-->
+            <h:outputLabel value="#{msg['lbl.observacion']}:" for="observacion" />
+            <p:editor id="observacionProrroga"  value="#{sessionProrroga.prorroga.observacion}" 
+                              required="true" requiredMessage="#{msg['lbl.observacion']} #{msg['lbl.obligatorio']}."/>
             <p:message id="msmObservacionProrroga" display="icon" for="observacionProrroga"/>
         </h:panelGrid>
     </body>

@@ -12,6 +12,7 @@ package com.jlmallas.comun.enumeration;
 public enum ValorEnum {
 
     SI("SI"),
+    DIASSEMANA("7"),
     NO("NO");
     String tipo;
 

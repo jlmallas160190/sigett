@@ -137,18 +137,18 @@ public class AdministrarProyectosDirector implements Serializable {
                     this.directorProyectos.add(dp);
                 }
             }
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
             System.out.println(e);
         }
     }
 
     public void buscarPorPeriodos(OfertaAcademica ofertaAcademica) {
         try {
-            if (!ofertasAcademicas.contains(ofertaAcademica)) {
-                if (ofertaAcademica.isEsSeleccionado()) {
-                    this.ofertasAcademicas.add(ofertaAcademica);
-                }
-            }
+//            if (!ofertasAcademicas.contains(ofertaAcademica)) {
+//                if (ofertaAcademica.isEsSeleccionado()) {
+//                    this.ofertasAcademicas.add(ofertaAcademica);
+//                }
+//            }
             for (OfertaAcademica of : ofertasAcademicas) {
                 SimpleDateFormat formatoFecha = new SimpleDateFormat("yyyy-MM-dd");
                 String fechaCreate = formatoFecha.format(of.getFechaInicio());

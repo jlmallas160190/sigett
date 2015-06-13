@@ -38,7 +38,6 @@ import edu.unl.sigett.director.DirectorDTO;
 import edu.unl.sigett.directorProyecto.DirectorProyectoDTO;
 import edu.unl.sigett.docenteProyecto.DocenteProyectoDTO;
 import edu.unl.sigett.documentoProyecto.DocumentoProyectoDTO;
-import edu.unl.sigett.dto.ProyectoDTO;
 import edu.unl.sigett.entity.AutorProyecto;
 import edu.unl.sigett.entity.ConfiguracionCarrera;
 import edu.unl.sigett.entity.ConfiguracionProyecto;
@@ -202,6 +201,9 @@ public class ProyectoController implements Serializable {
     }
 
     public void preRenderView() {
+        this.listadoTipos();
+        this.listadoCategorias();
+        this.listadoEstados();
         this.buscar();
         this.listadoCarreras();
         this.listadoOfertasAcademicas();
@@ -213,8 +215,6 @@ public class ProyectoController implements Serializable {
         estadoActual();
         this.renderedInicio();
         this.listadoConfiguracionesProyecto();
-        this.listadoTipos();
-        this.listadoCategorias();
     }
     //<editor-fold defaultstate="collapsed" desc="PROYECTO">
 
@@ -245,6 +245,14 @@ public class ProyectoController implements Serializable {
     private void listadoCategorias() {
         sessionProyecto.getCategorias().clear();
         sessionProyecto.setCategorias(itemService.buscarPorCatalogo(CatalogoEnum.CATALOGOPROYECTO.getTipo()));
+    }
+
+    /**
+     * LISTAR ESTADO DE PROYECTO
+     */
+    private void listadoEstados() {
+        sessionProyecto.getEstados().clear();
+        sessionProyecto.setEstados(itemService.buscarPorCatalogo(CatalogoEnum.ESTADOPROYECTO.getTipo()));
     }
 
     private void iniciar() {
@@ -426,24 +434,25 @@ public class ProyectoController implements Serializable {
         sessionProyecto.getProyectos().clear();
         sessionProyecto.getFilterProyectos().clear();
         try {
-            List<Proyecto> proyectosEncontrados = proyectoService.buscar(
-                    new ProyectoDTO(new Proyecto(sessionProyecto.getEstadoSeleccionado() != null ? sessionProyecto.getEstadoSeleccionado().getId() : null, null, null, null, null, null),
-                            new ProyectoCarreraOferta(null, sessionProyecto.getCarreraSeleccionada() != null ? sessionProyecto.getCarreraSeleccionada().getId() : null,
-                                    sessionProyecto.getOfertaAcademicaSeleccionada().getId() != null
-                                    ? sessionProyecto.getOfertaAcademicaSeleccionada().getId() : null, Boolean.TRUE),
-                            sessionProyecto.getLineaInvestigacionProyectoSeleccionada()));
+            List<ProyectoCarreraOferta> proyectoCarreraOfertas = proyectoCarreraOfertaService.buscar(
+                    new ProyectoCarreraOferta(null, sessionProyecto.getCarreraSeleccionada().getId() != null
+                            ? sessionProyecto.getCarreraSeleccionada().getId() : null, null, Boolean.TRUE));
 
-            if (proyectosEncontrados == null) {
+            if (proyectoCarreraOfertas == null) {
                 return;
             }
-            for (Proyecto proyecto : proyectosEncontrados) {
-                proyecto.setEstado(itemService.buscarPorId(proyecto.getEstadoProyectoId()).getNombre());
-                proyecto.setCatalogo(itemService.buscarPorId(proyecto.getCatalogoProyectoId()).getNombre());
-                proyecto.setTipo(itemService.buscarPorId(proyecto.getTipoProyectoId()).getNombre());
-                proyecto.setAutores(autores(proyecto));
-                proyecto.setDirectores(directores(proyecto));
-                if (!this.sessionProyecto.getProyectos().contains(proyecto)) {
-                    this.sessionProyecto.getProyectos().add(proyecto);
+            for (ProyectoCarreraOferta proyectoCarreraOferta : proyectoCarreraOfertas) {
+                proyectoCarreraOferta.getProyectoId().setEstado(itemService.buscarPorId(proyectoCarreraOferta.getProyectoId().
+                        getEstadoProyectoId()).getNombre());
+                proyectoCarreraOferta.getProyectoId().setCatalogo(itemService.buscarPorId(proyectoCarreraOferta.getProyectoId().
+                        getCatalogoProyectoId()).getNombre());
+                proyectoCarreraOferta.getProyectoId().setTipo(itemService.buscarPorId(proyectoCarreraOferta.getProyectoId().
+                        getTipoProyectoId()).getNombre());
+                proyectoCarreraOferta.getProyectoId().setAutores(autores(proyectoCarreraOferta.getProyectoId()));
+                proyectoCarreraOferta.getProyectoId().setDirectores(directores(proyectoCarreraOferta.getProyectoId()));
+                proyectoCarreraOferta.getProyectoId().setNombreOferta(ofertaAcademicaService.find(proyectoCarreraOferta.getOfertaAcademicaId()).getNombre());
+                if (!this.sessionProyecto.getProyectos().contains(proyectoCarreraOferta.getProyectoId())) {
+                    this.sessionProyecto.getProyectos().add(proyectoCarreraOferta.getProyectoId());
                 }
             }
             sessionProyecto.setFilterProyectos(sessionProyecto.getProyectos());
@@ -1146,7 +1155,7 @@ public class ProyectoController implements Serializable {
                 + docenteProyectoDTO.getPersona().getNombres() + " " + docenteProyectoDTO.getPersona().getApellidos() + " "
                 + bundle.getString("lbl.msm_asignacion_docente") + " " + docenteProyectoDTO.getDocenteProyecto().getProyectoId().getTemaActual() + ""
                 + "  " + ";" + bundle.getString("lbl.msm_nota_asignacion_docente") + " "
-                + cabeceraController.getConfiguracionGeneralDTO().getTiempoMaximoPertinencia() + " " + bundle.getString("lbl.dias"));
+                + cabeceraController.getConfiguracionGeneralUtil().getTiempoMaximoPertinencia() + " " + bundle.getString("lbl.dias"));
         enviarEmail(docenteProyectoDTO.getPersona(), mensaje);
     }
 
@@ -1228,7 +1237,8 @@ public class ProyectoController implements Serializable {
     //<editor-fold defaultstate="collapsed" desc="DIRECTORES">
     public void grabarDirectores() {
         try {
-            if (!sessionProyecto.getEstadoActual().getCodigo().equals(EstadoProyectoEnum.PERTINENTE.getTipo())) {
+            if (!(sessionProyecto.getEstadoActual().getCodigo().equals(EstadoProyectoEnum.PERTINENTE.getTipo())
+                    || sessionProyecto.getEstadoActual().getCodigo().equals(EstadoProyectoEnum.SEGUIMIENTO.getTipo()))) {
                 return;
             }
             if (sessionProyecto.getDirectoresProyectoDTO().isEmpty()) {

@@ -28,7 +28,7 @@ public interface EstudianteDao {
 
     List<Estudiante> findRange(int[] range);
 
-    List<Estudiante> buscarPorCriterio(String criterio);
+    List<Estudiante> buscar(Estudiante estudiante);
 
     int count();
 

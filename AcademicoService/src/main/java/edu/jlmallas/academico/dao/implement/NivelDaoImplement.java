@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package edu.jlmallas.academico.dao.implement;
 
 import edu.jlmallas.academico.dao.AbstractDao;
@@ -26,13 +25,13 @@ public class NivelDaoImplement extends AbstractDao<Nivel> implements NivelDao {
     }
 
     @Override
-    public List<Nivel> buscarPorNombre(Nivel nivel) {
-         StringBuilder sql = new StringBuilder();
-        HashMap<String, Object> parametros = new HashMap<String, Object>();
+    public List<Nivel> buscar(Nivel nivel) {
+        StringBuilder sql = new StringBuilder();
+        HashMap<String, Object> parametros = new HashMap<>();
         sql.append("Select n from Nivel n where 1=1 ");
         if (nivel.getNombre() != null) {
             sql.append(" and n.nombre=:nombre");
-            parametros.put("nombre",nivel.getNombre());
+            parametros.put("nombre", nivel.getNombre());
         }
         sql.append(" order by n.nombre asc ");
         final Query q = em.createQuery(sql.toString());

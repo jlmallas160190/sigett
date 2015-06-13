@@ -6,12 +6,9 @@
 package edu.unl.sigett.dao;
 
 import edu.unl.sigett.entity.CargoMiembro;
-import edu.unl.sigett.entity.CatalogoEvento;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 /**

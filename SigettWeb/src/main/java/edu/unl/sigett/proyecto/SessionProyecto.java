@@ -47,6 +47,7 @@ public class SessionProyecto implements Serializable {
     private Item estadoActual;
     private OfertaAcademica ofertaAcademicaSeleccionada;
     private Cronograma cronograma;
+    private ProyectoOntDTO proyectoOntDTO;
 
     private List<Proyecto> proyectos;
     private List<DirectorProyectoDTO> directoresProyectoDTO;
@@ -78,8 +79,6 @@ public class SessionProyecto implements Serializable {
     private List<DocenteProyectoDTO> docentesProyectoDTO;
     private List<DocenteProyectoDTO> filterDocentesProyectoDTO;
 
-    private ProyectoOntDTO proyectoOntDTO;
-
     private Boolean renderedEditar;
     private Boolean renderedCrear;
     private Boolean renderedInicio;
@@ -89,8 +88,8 @@ public class SessionProyecto implements Serializable {
     private DualListModel<Carrera> carrerasDualList;
 
     public SessionProyecto() {
-        this.filterDirectoresProyectoDTO=new ArrayList<>();
-        this.directoresProyectoDTO=new ArrayList<>();
+        this.filterDirectoresProyectoDTO = new ArrayList<>();
+        this.directoresProyectoDTO = new ArrayList<>();
         this.documentosProyectosDTOAgregados = new ArrayList<>();
         this.documentosProyectoDTO = new ArrayList<>();
         this.filterDocumentosProyectoDTO = new ArrayList<>();
@@ -447,14 +446,6 @@ public class SessionProyecto implements Serializable {
         this.lineasInvestigacionSeleccionadas = lineasInvestigacionSeleccionadas;
     }
 
-    public ProyectoOntDTO getProyectoOntDTO() {
-        return proyectoOntDTO;
-    }
-
-    public void setProyectoOntDTO(ProyectoOntDTO proyectoOntDTO) {
-        this.proyectoOntDTO = proyectoOntDTO;
-    }
-
     public List<DocumentoProyectoDTO> getDocumentosProyectoDTO() {
         return documentosProyectoDTO;
     }
@@ -501,6 +492,14 @@ public class SessionProyecto implements Serializable {
 
     public void setFilterDirectoresProyectoDTO(List<DirectorProyectoDTO> filterDirectoresProyectoDTO) {
         this.filterDirectoresProyectoDTO = filterDirectoresProyectoDTO;
+    }
+
+    public ProyectoOntDTO getProyectoOntDTO() {
+        return proyectoOntDTO;
+    }
+
+    public void setProyectoOntDTO(ProyectoOntDTO proyectoOntDTO) {
+        this.proyectoOntDTO = proyectoOntDTO;
     }
 
 }

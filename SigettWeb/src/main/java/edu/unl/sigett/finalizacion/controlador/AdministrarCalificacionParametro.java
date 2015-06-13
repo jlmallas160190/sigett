@@ -23,7 +23,6 @@ import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
-import edu.unl.sigett.dao.CalificacionMiembroFacadeLocal;
 import edu.unl.sigett.dao.CalificacionParametroFacadeLocal;
 import edu.unl.sigett.dao.EvaluacionTribunalFacadeLocal;
 import edu.unl.sigett.dao.ParametroCatalogoEvaluacionFacadeLocal;
@@ -46,8 +45,8 @@ public class AdministrarCalificacionParametro implements Serializable {
     private CalificacionParametroFacadeLocal calificacionParametroFacadeLocal;
     @EJB
     private ParametroCatalogoEvaluacionFacadeLocal parametroCatalogoEvaluacionFacadeLocal;
-    @EJB
-    private CalificacionMiembroFacadeLocal calificacionMiembroFacadeLocal;
+//    @EJB
+//    private CalificacionMiembroFacadeLocal calificacionMiembroFacadeLocal;
     @EJB
     private EvaluacionTribunalFacadeLocal evaluacionTribunalFacadeLocal;
     @EJB
@@ -94,52 +93,52 @@ public class AdministrarCalificacionParametro implements Serializable {
 
     public void grabar(CalificacionParametro calificacionParametro, CalificacionMiembro calificacionMiembro, String param) {
         try {
-            FacesContext facesContext = FacesContext.getCurrentInstance();
-            ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            Calendar fechaActual = Calendar.getInstance();
-            if (calificacionParametro.getId() == null) {
-                calificacionParametroFacadeLocal.create(calificacionParametro);
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_grabar"), "");
-                FacesContext.getCurrentInstance().addMessage(null, message);
-            } else {
-
-                if (calificacionMiembro.getEvaluacionTribunalId() != null) {
-                    if (calificacionMiembro.getEvaluacionTribunalId().getFechaInicio().before(fechaActual.getTime()) && 
-                            calificacionMiembro.getEvaluacionTribunalId().getFechaPlazo().after(fechaActual.getTime())) {
-                        calificacionParametroFacadeLocal.edit(calificacionParametro);
-                        if (param.equalsIgnoreCase("grabar-cp")) {
-                            administrarCalificacionMiembro.calculaNota(calificacionMiembro);
-                            calificacionMiembroFacadeLocal.edit(calificacionMiembro);
-                            if (calificacionMiembro.getEvaluacionTribunalId()!= null) {
-                                administrarEvaluacionesTribunal.calculaNota(calificacionMiembro.getEvaluacionTribunalId().getTribunalId(), 
-                                        calificacionMiembro.getEvaluacionTribunalId());
-                                RangoNota rn = null;
-                                if (calificacionMiembro.getEvaluacionTribunalId().getRangoNotaId() != null) {
-                                    rn = calificacionMiembro.getEvaluacionTribunalId().getRangoNotaId();
-                                }
-                                if (rn != null) {
-                                    calificacionMiembro.getEvaluacionTribunalId().setRangoNotaId(rn);
-                                    for (RangoEquivalencia rangoEquivalencia : rangoEquivalenciaFacadeLocal.buscarPorRangoNota(rn.getId())) {
-                                        if (calificacionMiembro.getEvaluacionTribunalId().getNota() >= rangoEquivalencia.getNotaInicio() &&
-                                                calificacionMiembro.getEvaluacionTribunalId().getNota() <= rangoEquivalencia.getNotaFin()) {
-                                            calificacionMiembro.getEvaluacionTribunalId().setRangoEquivalenciaId(rangoEquivalencia);
-                                            break;
-                                        }
-                                    }
-                                }
-                                evaluacionTribunalFacadeLocal.edit(calificacionMiembro.getEvaluacionTribunalId());
-                            }
-                        }
-                        if (param.equalsIgnoreCase("grabar-cp")) {
-                            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_editar"), "");
-                            FacesContext.getCurrentInstance().addMessage(null, message);
-                        }
-                    } else {
-                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_editar"), "");
-                        FacesContext.getCurrentInstance().addMessage(null, message);
-                    }
-                }
-            }
+//            FacesContext facesContext = FacesContext.getCurrentInstance();
+//            ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
+//            Calendar fechaActual = Calendar.getInstance();
+//            if (calificacionParametro.getId() == null) {
+//                calificacionParametroFacadeLocal.create(calificacionParametro);
+//                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_grabar"), "");
+//                FacesContext.getCurrentInstance().addMessage(null, message);
+//            } else {
+//
+//                if (calificacionMiembro.getEvaluacionTribunalId() != null) {
+//                    if (calificacionMiembro.getEvaluacionTribunalId().getFechaInicio().before(fechaActual.getTime()) && 
+//                            calificacionMiembro.getEvaluacionTribunalId().getFechaPlazo().after(fechaActual.getTime())) {
+//                        calificacionParametroFacadeLocal.edit(calificacionParametro);
+//                        if (param.equalsIgnoreCase("grabar-cp")) {
+//                            administrarCalificacionMiembro.calculaNota(calificacionMiembro);
+//                            calificacionMiembroFacadeLocal.edit(calificacionMiembro);
+//                            if (calificacionMiembro.getEvaluacionTribunalId()!= null) {
+//                                administrarEvaluacionesTribunal.calculaNota(calificacionMiembro.getEvaluacionTribunalId().getTribunalId(), 
+//                                        calificacionMiembro.getEvaluacionTribunalId());
+//                                RangoNota rn = null;
+//                                if (calificacionMiembro.getEvaluacionTribunalId().getRangoNotaId() != null) {
+//                                    rn = calificacionMiembro.getEvaluacionTribunalId().getRangoNotaId();
+//                                }
+//                                if (rn != null) {
+//                                    calificacionMiembro.getEvaluacionTribunalId().setRangoNotaId(rn);
+//                                    for (RangoEquivalencia rangoEquivalencia : rangoEquivalenciaFacadeLocal.buscarPorRangoNota(rn.getId())) {
+//                                        if (calificacionMiembro.getEvaluacionTribunalId().getNota() >= rangoEquivalencia.getNotaInicio() &&
+//                                                calificacionMiembro.getEvaluacionTribunalId().getNota() <= rangoEquivalencia.getNotaFin()) {
+//                                            calificacionMiembro.getEvaluacionTribunalId().setRangoEquivalenciaId(rangoEquivalencia);
+//                                            break;
+//                                        }
+//                                    }
+//                                }
+//                                evaluacionTribunalFacadeLocal.edit(calificacionMiembro.getEvaluacionTribunalId());
+//                            }
+//                        }
+//                        if (param.equalsIgnoreCase("grabar-cp")) {
+//                            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_editar"), "");
+//                            FacesContext.getCurrentInstance().addMessage(null, message);
+//                        }
+//                    } else {
+//                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_editar"), "");
+//                        FacesContext.getCurrentInstance().addMessage(null, message);
+//                    }
+//                }
+//            }
         } catch (Exception e) {
         }
     }

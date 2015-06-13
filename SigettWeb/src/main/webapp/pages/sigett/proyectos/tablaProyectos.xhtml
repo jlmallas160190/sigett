@@ -12,14 +12,13 @@
                      rowIndexVar="rowIx" rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'even-row' : 'odd-row'}" 
                      rowKey="#{sessionProyecto.proyectoSeleccionado}" selectionMode="single">
             <f:facet name="header">
-                <h:panelGrid styleClass="panelgrid" rowClasses="rowpanelgrid" columns="1">
-                    <p:inputText id="globalFilter" onkeyup="PF('tblProyectosFilter').filter()" style="width:150px" placeholder="#{msg['lbl.buscar']}"/>
-                </h:panelGrid>
+               <!-- <p:commandButton id="toggler" type="button" value="Columns"  icon="ui-icon-calculator" />
+                <p:columnToggler datasource="tblProyectos" trigger="toggler" />-->
             </f:facet>
-            <p:column width="5%">
-               <h:outputText value="#{rowIx+1}" />
+            <p:column width="3%">
+                <h:outputText value="#{rowIx+1}" />
             </p:column>
-            <p:column width="15%" sortBy="#{item.fechaCreated}">
+            <p:column width="12%" sortBy="#{item.fechaCreated}">
                 <f:facet name="header">
                     <h:outputText value="#{msg['lbl.creacion']}"/>
                 </f:facet>
@@ -27,44 +26,62 @@
                     <f:convertDateTime pattern="EEEEE dd MMMMM yyyy HH:mm:ss"/>
                 </h:outputText>
             </p:column>
-            <p:column width="35%"  rendered="#{sessionProyecto.renderedEditar}" 
-                       filterBy="#{item.temaActual}"
-                       sortBy="#{item.temaActual}" >
+            <p:column width="30%"  rendered="#{sessionProyecto.renderedEditar}" 
+                      filterBy="#{item.temaActual}"
+                      sortBy="#{item.temaActual}" filterMatchMode="contains" >
                 <f:facet name="header">
                     <h:outputText value="#{msg['lbl.tema']}"/>
                 </f:facet>
                 <p:commandLink  value="#{item.temaActual}" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide(),PF('tblProyectosFilter').filter()" 
                                 action="#{proyectoController.editar(item)}"/>
             </p:column>
-            <p:column  width="35%" rendered="#{!sessionProyecto.renderedEditar}" 
+            <p:column  width="30%" rendered="#{!sessionProyecto.renderedEditar}" 
                        filterBy="#{item.temaActual}"
-                       sortBy="#{item.temaActual}" >
+                       sortBy="#{item.temaActual}" filterMatchMode="contains">
                 <f:facet name="header">
                     <h:outputText value="#{msg['lbl.tema']}"/>
                 </f:facet>
                 <h:outputText value="#{item.temaActual}"/>
             </p:column>
-            <p:column width="25%" filterBy="#{item.autores}" sortBy="#{item.autores}">
+            <p:column width="12%" filterBy="#{item.autores}" sortBy="#{item.autores}" filterMatchMode="contains">
                 <f:facet name="header">
                     <h:outputText value="#{msg['lbl.autores']}"/>
                 </f:facet>
                 <h:outputText value="#{item.autores}"/>
             </p:column>
-            <p:column width="10%" filterBy="#{item.tipo}" sortBy="#{item.tipo}">
-                <f:facet name="header">
-                    <h:outputText value="#{msg['lbl.tipo']}"/>
+            <p:column width="17%" filterBy="#{item.nombreOferta}"  filterMatchMode="in">
+                <f:facet name="filter">
+                    <p:selectCheckboxMenu label="#{msg['lbl.periodosAcademicos']}"  onchange="PF('tblProyectosFilter').filter()" >
+                        <f:selectItems  value="#{sessionProyecto.ofertaAcademicas}" />
+                        <p:ajax onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()"/>
+                    </p:selectCheckboxMenu>
+                </f:facet>
+                <h:outputText value="#{item.nombreOferta}"/>
+            </p:column>
+            <p:column width="12%" filterBy="#{item.tipo}" filterMatchMode="in" >
+                <f:facet name="filter" >
+                   <p:selectCheckboxMenu label="#{msg['lbl.tipo']}"  onchange="PF('tblProyectosFilter').filter()" >
+                       <f:selectItems var="tipo" itemLabel="#{tipo.nombre}" itemValue="#{tipo.nombre}" value="#{sessionProyecto.tipos}"/>
+                        <p:ajax event="change" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()"/>
+                    </p:selectCheckboxMenu>
                 </f:facet>
                 <h:outputText value="#{item.tipo}"/>
             </p:column>
-            <p:column width="10%" sortBy="#{item.catalogo}" filterBy="#{item.catalogo}">
-                <f:facet name="header">
-                    <h:outputText value="#{msg['lbl.categoria']}"/>
+            <p:column width="12%" filterBy="#{item.catalogo}" filterMatchMode="in">
+                <f:facet name="filter">
+                    <p:selectCheckboxMenu label="#{msg['lbl.categoria']}"  onchange="PF('tblProyectosFilter').filter()"  scrollHeight="150">
+                        <f:selectItems var="cat" itemLabel="#{cat.nombre}" itemValue="#{cat.nombre}" value="#{sessionProyecto.categorias}" />
+                        <p:ajax event="change" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()"/>
+                    </p:selectCheckboxMenu>
                 </f:facet>
                 <h:outputText value="#{item.catalogo}"/>
             </p:column>
-            <p:column width="10%" sortBy="#{item.estado}" filterBy="#{item.estado}">
-                <f:facet name="header">
-                    <h:outputText value="#{msg['lbl.estado']}"/>
+            <p:column width="12%" filterBy="#{item.estado}" filterMatchMode="in">
+                <f:facet name="filter">
+                    <p:selectCheckboxMenu label="#{msg['lbl.estado']}" onchange="PF('tblProyectosFilter').filter()">
+                        <f:selectItems var="estado" itemLabel="#{estado.nombre}" itemValue="#{estado.nombre}" value="#{sessionProyecto.estados}"/>
+                         <p:ajax event="change" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()"/>
+                    </p:selectCheckboxMenu>
                 </f:facet>
                 <h:outputText value="#{item.estado}"/>
             </p:column>

@@ -5,9 +5,9 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
     <body>
-        <p:dialog id="dlgEditarProrroga" header="#{msg['lbl.editar']} #{msg['lbl.prorroga']}"  styleClass="modal-sm" widgetVar="dlgEditarProrroga" 
-                  modal="true" closable="false">
-            <p:panel rendered="#{sessionProrroga.renderedCrear}">
+        <p:dialog id="dlgEditarProrroga" header="#{msg['lbl.editar']} #{msg['lbl.prorroga']}"  styleClass="modal-md" widgetVar="dlgEditarProrroga" 
+                  modal="true" closable="false" position="center" draggable="false">
+            <p:panel rendered="#{sessionProrroga.renderedCrud}">
                 <ui:include src="editarProrroga.xhtml"/>
                 <f:facet name="footer">
                     <ui:include src="botonesEditarProrroga.xhtml"/>

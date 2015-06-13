@@ -102,6 +102,8 @@ public class Proyecto implements Serializable {
     private String autores;
     @Transient
     private String directores;
+    @Transient
+    private String nombreOferta;
 
     public Proyecto() {
         this.tipo = "";
@@ -326,6 +328,14 @@ public class Proyecto implements Serializable {
 
     public void setDirectores(String directores) {
         this.directores = directores;
+    }
+
+    public String getNombreOferta() {
+        return nombreOferta;
+    }
+
+    public void setNombreOferta(String nombreOferta) {
+        this.nombreOferta = nombreOferta;
     }
 
     @Override

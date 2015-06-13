@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.Cacheable;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -37,13 +38,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @Entity
 @Table(name = "oferta_academica", schema = "academico")
 @XmlRootElement
-@NamedQueries({
-    @NamedQuery(name = "OfertaAcademica.findAll", query = "SELECT o FROM OfertaAcademica o"),
-    @NamedQuery(name = "OfertaAcademica.findById", query = "SELECT o FROM OfertaAcademica o WHERE o.id = :id"),
-    @NamedQuery(name = "OfertaAcademica.findByNombre", query = "SELECT o FROM OfertaAcademica o WHERE o.nombre = :nombre"),
-    @NamedQuery(name = "OfertaAcademica.findByIdSga", query = "SELECT o FROM OfertaAcademica o WHERE o.idSga = :idSga"),
-    @NamedQuery(name = "OfertaAcademica.findByFechaInicio", query = "SELECT o FROM OfertaAcademica o WHERE o.fechaInicio = :fechaInicio"),
-    @NamedQuery(name = "OfertaAcademica.findByFechaFin", query = "SELECT o FROM OfertaAcademica o WHERE o.fechaFin = :fechaFin")})
+@Cacheable(value = false)
 public class OfertaAcademica implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -76,11 +71,8 @@ public class OfertaAcademica implements Serializable {
     private PeriodoAcademico periodoAcademicoId;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "ofertaAcademicaId")
     private List<ReporteMatricula> reporteMatriculaList;
-    @Transient
-    private boolean esSeleccionado;
 
     public OfertaAcademica() {
-        this.esSeleccionado = false;
         this.reporteMatriculaList = new ArrayList<>();
     }
 
@@ -144,14 +136,6 @@ public class OfertaAcademica implements Serializable {
         this.periodoAcademicoId = periodoAcademicoId;
     }
 
-    public boolean isEsSeleccionado() {
-        return esSeleccionado;
-    }
-
-    public void setEsSeleccionado(boolean esSeleccionado) {
-        this.esSeleccionado = esSeleccionado;
-    }
-
     @XmlTransient
     public List<ReporteMatricula> getReporteMatriculaList() {
         return reporteMatriculaList;
@@ -175,15 +159,12 @@ public class OfertaAcademica implements Serializable {
             return false;
         }
         OfertaAcademica other = (OfertaAcademica) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
+        return (this.id != null || other.id == null) && (this.id == null || this.id.equals(other.id));
     }
 
     @Override
     public String toString() {
-        return "edu.jlmallas.academico.entity.OfertaAcademica[ id=" + id + " ]";
+        return this.nombre;
     }
 
 }

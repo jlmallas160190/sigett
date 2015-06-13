@@ -57,14 +57,14 @@ public class DocumentoProyectoController implements Serializable {
     //<editor-fold defaultstate="collapsed" desc="INICIO">
     public void crear() {
         listarCategorias();
-        sessionDocumentoProyecto.setTamanioArchivo(cabeceraController.getConfiguracionGeneralDTO().getTamanioArchivo());
+        sessionDocumentoProyecto.setTamanioArchivo(cabeceraController.getConfiguracionGeneralUtil().getTamanioArchivo());
         sessionDocumentoProyecto.setDocumentoProyectoDTOSeleccionado(new DocumentoProyectoDTO(
                 new DocumentoProyecto(Boolean.TRUE, null, sessionProyecto.getProyectoSeleccionado()), new Documento()));
     }
 
     public void editar(DocumentoProyectoDTO documentoProyectoDTO) {
         try {
-            sessionDocumentoProyecto.setTamanioArchivo(cabeceraController.getConfiguracionGeneralDTO().getTamanioArchivo());
+            sessionDocumentoProyecto.setTamanioArchivo(cabeceraController.getConfiguracionGeneralUtil().getTamanioArchivo());
             listarCategorias();
             File file = new File(documentoProyectoDTO.getDocumento().getRuta());
             documentoProyectoDTO.getDocumento().setContents(cabeceraController.getUtilService().obtenerBytes(file));

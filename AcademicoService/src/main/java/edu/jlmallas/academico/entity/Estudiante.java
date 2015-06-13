@@ -14,8 +14,6 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -30,9 +28,6 @@ import javax.xml.bind.annotation.XmlTransient;
 @Table(name = "estudiante", schema = "academico")
 @Cacheable(value = false)
 @XmlRootElement
-@NamedQueries({
-    @NamedQuery(name = "Estudiante.findAll", query = "SELECT e FROM Estudiante e"),
-    @NamedQuery(name = "Estudiante.findById", query = "SELECT e FROM Estudiante e WHERE e.id = :id")})
 public class Estudiante implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -76,7 +71,7 @@ public class Estudiante implements Serializable {
         this.estudianteCarreraList = estudianteCarreraList;
     }
 
-    public Boolean isEsActivo() {
+    public Boolean getEsActivo() {
         return esActivo;
     }
 
@@ -99,10 +94,7 @@ public class Estudiante implements Serializable {
             return false;
         }
         Estudiante other = (Estudiante) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
+        return (this.id != null || other.id == null) && (this.id == null || this.id.equals(other.id));
     }
 
     @Override

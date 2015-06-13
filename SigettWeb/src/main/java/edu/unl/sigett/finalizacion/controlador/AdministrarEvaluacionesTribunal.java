@@ -15,10 +15,8 @@ import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
 import edu.unl.sigett.entity.AutorProyecto;
 import edu.unl.sigett.entity.CalificacionMiembro;
 import edu.unl.sigett.entity.CatalogoEvaluacion;
-import edu.unl.sigett.entity.CatalogoEvento;
 import edu.jlmallas.academico.entity.Docente;
 import edu.unl.sigett.entity.EvaluacionTribunal;
-import edu.unl.sigett.entity.Evento;
 import edu.unl.sigett.entity.Miembro;
 import edu.unl.sigett.entity.Proyecto;
 import edu.unl.sigett.entity.RangoEquivalencia;
@@ -47,13 +45,10 @@ import org.primefaces.model.DefaultScheduleModel;
 import org.primefaces.model.ScheduleEvent;
 import org.primefaces.model.ScheduleModel;
 import edu.unl.sigett.dao.AutorProyectoDao;
-import edu.unl.sigett.dao.CalificacionMiembroFacadeLocal;
 import edu.unl.sigett.dao.CatalogoEvaluacionFacadeLocal;
-import edu.unl.sigett.dao.CatalogoEventoFacadeLocal;
 import edu.unl.sigett.dao.ConfiguracionGeneralDao;
 import edu.jlmallas.academico.dao.EstudianteCarreraDao;
 import edu.unl.sigett.dao.EvaluacionTribunalFacadeLocal;
-import edu.unl.sigett.dao.EventoFacadeLocal;
 import edu.unl.sigett.dao.MiembroFacadeLocal;
 import edu.unl.sigett.dao.ProyectoDao;
 import edu.unl.sigett.dao.RangoEquivalenciaFacadeLocal;
@@ -108,17 +103,11 @@ public class AdministrarEvaluacionesTribunal implements Serializable {
     @EJB
     private MiembroFacadeLocal miembroFacadeLocal;
     @EJB
-    private CalificacionMiembroFacadeLocal calificacionMiembroFacadeLocal;
-    @EJB
     private ConfiguracionGeneralDao configuracionGeneralFacadeLocal;
     @EJB
     private AutorProyectoDao autorProyectoFacadeLocal;
     @EJB
     private EstudianteCarreraDao estudianteCarreraFacadeLocal;
-    @EJB
-    private CatalogoEventoFacadeLocal catalogoEventoFacadeLocal;
-    @EJB
-    private EventoFacadeLocal eventoFacadeLocal;
     @EJB
     private PersonaDao personaFacadeLocal;
     @EJB
@@ -218,22 +207,22 @@ public class AdministrarEvaluacionesTribunal implements Serializable {
 
     public void calculaNota(Tribunal tribunal, EvaluacionTribunal evaluacionTribunal) {
         try {
-            double nota = 0.0;
-            int numeroMiembros = 0;
-            List<Miembro> miembros = new ArrayList<>();
-            miembros = miembroFacadeLocal.buscarPorTribunal(tribunal.getId());
-            if (miembros != null) {
-                numeroMiembros = !miembros.isEmpty() ? miembros.size() : 0;
-            }
-            for (CalificacionMiembro cm : calificacionMiembroFacadeLocal.buscarPorEvaluacionTribunal(evaluacionTribunal.getId())) {
-                if (cm.getEsActivo()) {
-                    nota += cm.getNota();
-                }
-            }
-            nota = nota / numeroMiembros;
-            nota = Math.round(nota * 100);
-            nota = nota / 100;
-            evaluacionTribunal.setNota(nota);
+//            double nota = 0.0;
+//            int numeroMiembros = 0;
+//            List<Miembro> miembros = new ArrayList<>();
+//            miembros = miembroFacadeLocal.buscarPorTribunal(tribunal.getId());
+//            if (miembros != null) {
+//                numeroMiembros = !miembros.isEmpty() ? miembros.size() : 0;
+//            }
+//            for (CalificacionMiembro cm : calificacionMiembroFacadeLocal.buscarPorEvaluacionTribunal(evaluacionTribunal.getId())) {
+//                if (cm.getEsActivo()) {
+//                    nota += cm.getNota();
+//                }
+//            }
+//            nota = nota / numeroMiembros;
+//            nota = Math.round(nota * 100);
+//            nota = nota / 100;
+//            evaluacionTribunal.setNota(nota);
         } catch (Exception e) {
         }
     }

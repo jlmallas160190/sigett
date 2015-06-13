@@ -28,10 +28,6 @@ public interface AutorProyectoDao {
 
     List<AutorProyecto> findRange(int[] range);
 
-    List<AutorProyecto> buscarPorProyecto(Long proyectoId);
-
-    List<AutorProyecto> buscarPorEstudiante(Long estudianteId);
-
     List<AutorProyecto> buscar(AutorProyecto autorProyecto);
 
     int count();

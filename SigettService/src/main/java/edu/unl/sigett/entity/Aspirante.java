@@ -3,17 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package edu.unl.sigett.entity;
 
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -26,12 +24,10 @@ import javax.xml.bind.annotation.XmlTransient;
  */
 @Entity
 @Table(name = "aspirante")
+@Cacheable(value = false)
 @XmlRootElement
-@NamedQueries({
-    @NamedQuery(name = "Aspirante.findAll", query = "SELECT a FROM Aspirante a"),
-    @NamedQuery(name = "Aspirante.findById", query = "SELECT a FROM Aspirante a WHERE a.id = :id"),
-    @NamedQuery(name = "Aspirante.findByEsApto", query = "SELECT a FROM Aspirante a WHERE a.esApto = :esApto")})
 public class Aspirante implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
@@ -103,5 +99,5 @@ public class Aspirante implements Serializable {
     public String toString() {
         return "edu.unl.sigett.entity.Aspirante[ id=" + id + " ]";
     }
-    
+
 }

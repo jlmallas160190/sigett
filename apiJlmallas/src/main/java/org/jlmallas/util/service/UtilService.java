@@ -18,7 +18,7 @@ public interface UtilService {
 
     void generaDocumento(final File file, final byte[] bytes);
 
-    Double calculaDuracion(Date fechaInicio, Date fechaFin, int diasNoContabilizados);
+    Double calculaDuracion(Date fechaInicio, Date fechaFin, Integer diasNoContabilizados);
 
     Date parserFecha(final String fecha, String formato);
 

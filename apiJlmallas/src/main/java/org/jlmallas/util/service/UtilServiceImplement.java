@@ -31,11 +31,13 @@ public class UtilServiceImplement implements UtilService {
     @Override
     public byte[] obtenerBytes(File file) {
         ByteArrayOutputStream ous = null;
+        @SuppressWarnings("UnusedAssignment")
         InputStream ios = null;
         try {
             byte[] buffer = new byte[4096];
             ous = new ByteArrayOutputStream();
             ios = new FileInputStream(file);
+            @SuppressWarnings("UnusedAssignment")
             int read = 0;
             while ((read = ios.read(buffer)) != -1) {
                 ous.write(buffer, 0, read);
@@ -49,7 +51,7 @@ public class UtilServiceImplement implements UtilService {
     }
 
     @Override
-    public Double calculaDuracion(Date fechaInicio, Date fechaFin, int diasNoContabilizados) {
+    public Double calculaDuracion(Date fechaInicio, Date fechaFin,Integer diasNoContabilizados) {
         @SuppressWarnings("UnusedAssignment")
         Integer anioInicio, anioFin, mesInicio, mesFin, diaInicio, diaFin = 0;
         anioInicio = fechaInicio.getYear();
@@ -83,7 +85,6 @@ public class UtilServiceImplement implements UtilService {
                 fin = false;
                 continue;
             }
-
             if (((mesActual > mesInicio && anio >= anioInicio) || (mesActual < mesInicio && anio > anioInicio)) && ((mesActual < mesFin && anio <= anioFin) || (mesActual > mesFin && anio < anioFin))) {
                 Calendar cal = new GregorianCalendar(anio, mesActual, 01);
                 dias += cal.getActualMaximum(Calendar.DAY_OF_MONTH) - diasNoContabilizados;

@@ -7,7 +7,7 @@
     <body>
         <h:panelGrid id="buscarAspirantes">
             <p:commandButton icon="ui-icon-search" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide(),PF('dlgBuscarAspirantes').show()"
-                             value="#{msg['lbl.buscar']} #{msg['lbl.aspirantes']}" update=":contenido:tblAspirantes,:contenido:dlgAspirantes" 
+                             value="#{msg['lbl.buscar']} #{msg['lbl.aspirantes']}" update=":contenido:tblAspirantes,:contenido:dlgAspirantes" process="@this"
                              rendered="#{sessionAutorProyecto.renderedBuscarAspirantes}"/>
         </h:panelGrid>
     </body>

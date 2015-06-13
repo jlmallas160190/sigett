@@ -5,7 +5,6 @@
  */
 package edu.unl.sigett.service;
 
-import edu.unl.sigett.dto.ProyectoDTO;
 import edu.unl.sigett.entity.Proyecto;
 import java.util.List;
 import javax.ejb.Local;
@@ -25,6 +24,6 @@ public interface ProyectoService {
 
     Proyecto buscarPorId(final Proyecto proyecto);
 
-    List<Proyecto> buscar(final ProyectoDTO proyectoDTO);
+    List<Proyecto> buscar(final Proyecto proyecto);
 
 }

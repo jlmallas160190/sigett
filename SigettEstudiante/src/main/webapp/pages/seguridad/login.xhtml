@@ -1,0 +1,46 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <body>
+        <ui:composition template="./../../template.xhtml">
+            <ui:define name="title">
+                <h:outputText value="#{lbl.ingresar}"/>
+            </ui:define>
+
+            <ui:define name="content">
+                <f:metadata>
+                    <f:event type="preRenderView" listener="#{cabeceraController.preRenderViewInit()}"/>
+                </f:metadata>
+                <p:panel id="header" header="#{lbl.ingresar}">
+                    <p:messages id="msm" showDetail="true"/>
+                    <h:panelGrid id="pnl" rowClasses="rowpanelgrid" styleClass="panelgrid" columnClasses="col-sm-2,col-sm-9,col-sm-1" columns="3">
+                        <h:outputLabel value="#{lbl.usuario}"></h:outputLabel>
+                        <p:inputText id="nombre" placeholder="#{lbl.usuario}" style="text-transform: none" value="#{sessionEstudianteUsuario.estudianteUsuarioDTO.usuario.username}">
+                            <p:ajax event="keyup" update="msmNombre"/>
+                        </p:inputText>
+                        <p:message id="msmNombre" display="icon" for="nombre"/>
+                        <h:outputLabel value="#{lbl.clave}"></h:outputLabel>
+                        <p:password id="clave" placeholder="#{lbl.clave}" style="text-transform: none" value="#{sessionEstudianteUsuario.estudianteUsuarioDTO.usuario.password}">
+                            <p:ajax event="keyup" update="msmClave"/>
+                        </p:password>
+                        <p:message id="msmClave" display="icon" for="clave"/>
+                    </h:panelGrid>
+                    <br/>
+                    <f:facet name="footer">
+                        <h:panelGrid columns="1">
+                            <p:commandButton id="btn" value="#{lbl.ingresar}"  update="@form" onstart="PF('dlgLoading').show();" 
+                                             oncomplete="PF('dlgLoading').hide()" icon="ui-icon-locked" 
+                                             action="#{estudianteUsuarioController.logear()}"/>
+                        </h:panelGrid>
+                    </f:facet>
+                </p:panel>
+            </ui:define>
+        </ui:composition>
+    </body>
+
+</html>

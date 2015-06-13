@@ -8,6 +8,7 @@ package edu.unl.sigett.cronograma;
 import com.jlmallas.comun.dao.ConfiguracionDao;
 import com.jlmallas.comun.entity.Configuracion;
 import com.jlmallas.comun.enumeration.ConfiguracionEnum;
+import com.jlmallas.comun.enumeration.ValorEnum;
 import edu.unl.sigett.docenteProyecto.DocenteProyectoDM;
 import edu.unl.sigett.entity.ConfiguracionProyecto;
 import edu.unl.sigett.enumeration.ConfiguracionProyectoEnum;
@@ -82,7 +83,7 @@ public class CronogramaController implements Serializable {
         }
         duracionDias = cabeceraController.getUtilService().calculaDuracion(pertinenciaDM.getPertinencia().getFecha(),
                 docenteProyectoDM.getDocenteProyectoDTOSeleccionado().getDocenteProyecto().getProyectoId().getCronograma().getFechaFin(),
-                7 - calculaDiasSemanaTrabajoProyecto());
+                Integer.parseInt(ValorEnum.DIASSEMANA.getTipo()) - calculaDiasSemanaTrabajoProyecto());
         if (tiempoMax < duracionDias) {
             docenteProyectoDM.getDocenteProyectoDTOSeleccionado().getDocenteProyecto().getProyectoId().getCronograma().
                     setFechaFin(pertinenciaDM.getPertinencia().getFecha());

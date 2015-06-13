@@ -9,6 +9,7 @@ import edu.jlmallas.academico.dao.AbstractDao;
 import edu.jlmallas.academico.dao.AbstractDao;
 import edu.jlmallas.academico.dao.EstudianteDao;
 import edu.jlmallas.academico.entity.Estudiante;
+import java.util.HashMap;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.Query;
@@ -25,15 +26,18 @@ public class EstudianteDaoImplement extends AbstractDao<Estudiante> implements E
     }
 
     @Override
-    public List<Estudiante> buscarPorCriterio(String criterio) {
-        try {
-            Query query = em.createQuery("Select e from Estudiante e where " + "(LOWER(e.persona.apellidos) like concat('%',LOWER(:criterio),'%')"
-                    + " or LOWER(e.persona.nombres) like concat('%',LOWER(:criterio),'%') or e.persona.numeroIdentificacion like concat('%',:criterio,'%') ) order by e.persona.apellidos");
-            query.setParameter("criterio", criterio);
-            return query.getResultList();
-        } catch (Exception e) {
-            System.out.println(e);
+    public List<Estudiante> buscar(final Estudiante estudiante) {
+        StringBuilder sql = new StringBuilder();
+        HashMap<String, Object> parametros = new HashMap<>();
+        sql.append("Select e from Estudiante e where 1=1 ");
+        if (estudiante.getEsActivo() != null) {
+            sql.append(" and e.esActivo=:activo");
+            parametros.put("activo", estudiante.getEsActivo());
         }
-        return null;
+        final Query q = em.createQuery(sql.toString());
+        for (String key : parametros.keySet()) {
+            q.setParameter(key, parametros.get(key));
+        }
+        return q.getResultList();
     }
 }

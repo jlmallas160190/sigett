@@ -164,7 +164,7 @@ public class DirectorProyectoController implements Serializable {
      */
     private Boolean permiteAgregarDirector() {
         String value = configuracionService.buscar(new Configuracion(ConfiguracionEnum.AGREGARDIRECTORPROYECTO.getTipo())).get(0).getValor();
-        if (sessionProyecto.getProyectoSeleccionado().getDirectorProyectoList().isEmpty()) {
+        if (sessionProyecto.getDirectoresProyectoDTO().isEmpty()) {
             return Boolean.TRUE;
         }
         if (value.equals(ValorEnum.SI.getTipo())) {
@@ -227,6 +227,7 @@ public class DirectorProyectoController implements Serializable {
                 return;
             }
             if (directorProyectoDTO.getDirectorProyecto().getId() != null) {
+                directorProyectoDM.setDirectorProyectoDTO(directorProyectoDTO);
                 Calendar fechaActual = Calendar.getInstance();
                 sessionRenunciaDirectorProyecto.setRenunciaDirector(new RenunciaDirector(null, null, directorProyectoDTO.getDirectorProyecto()));
                 sessionRenuncia.setRenuncia(new Renuncia(null, fechaActual.getTime(), "S/N", "S/N"));

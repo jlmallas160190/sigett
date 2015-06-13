@@ -4,11 +4,15 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:p="http://primefaces.org/ui">
     <body>
-        <h:panelGrid styleClass="pnl-botones" columns="1">
+        <h:panelGrid styleClass="pnl-botones" columns="2">
             <p:commandButton  value="#{msg['lbl.grabar']}" icon="ui-icon-disk" onstart="PF('dlgLoading').show()" 
                               oncomplete="PF('dlgLoading').hide(),PF('dlgEditarProrroga').hide()" 
                               update=":contenido:tabViewDatosProyecto:tblProrrogas,:contenido:msm"
                               action="#{prorrogaController.grabar()}"/>
+            <p:commandButton  value="#{btn.cancelar}" icon="ui-icon-disk" onstart="PF('dlgLoading').show()" 
+                              oncomplete="PF('dlgLoading').hide(),PF('dlgEditarProrroga').hide()" 
+                              update=":contenido:msm" process="@this"
+                              action="#{prorrogaController.cancelarEdicion()}"/>
         </h:panelGrid>
     </body>
 

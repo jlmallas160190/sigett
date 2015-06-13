@@ -20,10 +20,8 @@
             </p:inputText>
             <p:message id="msmResolucion" for="resolucion"/>
             <h:outputLabel  value="#{msg['lbl.motivo']}:" for="motivo" />
-            <p:inputTextarea  id="motivo" value="#{sessionRenuncia.renuncia.motivo}" title="#{msg['lbl.motivo']}" 
-                              required="true" requiredMessage="#{msg['lbl.motivo']} #{msg['lbl.obligatorio']}.">
-                <p:ajax event="keyup" update="msmMotivo"/>
-            </p:inputTextarea>
+            <p:editor id="motivo" value="#{sessionRenuncia.renuncia.motivo}" 
+                              required="true" requiredMessage="#{msg['lbl.motivo']} #{msg['lbl.obligatorio']}."/>
             <p:message id="msmMotivo" for="motivo"/>
         </h:panelGrid>
     </body>

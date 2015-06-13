@@ -7,7 +7,7 @@
     <body>
         <h:panelGrid styleClass="pnl-botones" columns="2">
             <p:commandButton value="#{msg['lbl.grabar']}" onstart="PF('dlgLoading').show()"
-                             oncomplete="PF('dlgLoading').hide(),PF('dlgEditarRenunciaDirector').hide()" 
+                             oncomplete="PF('dlgLoading').hide(),PF('dlgEditarRenunciaDirector').hide(),PF('tblDirProyFilter').filter()" 
                              update=":contenido:tabViewDatosProyecto:tblDirectores" 
                              action="#{renunciaDirectorProyectoController.guardar()}" icon="ui-icon-disk"/>
             <p:commandButton action="#{renunciaDirectorProyectoController.cancelarEdicion()}" update=":contenido:dlgEditarRenunciaDirector"

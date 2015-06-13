@@ -7,6 +7,7 @@ package edu.unl.sigett.entity;
 
 import java.io.Serializable;
 import javax.persistence.Basic;
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,8 +15,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -27,12 +26,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Entity
 @Table(name = "proyecto_carrera_oferta")
 @XmlRootElement
-@NamedQueries({
-    @NamedQuery(name = "ProyectoCarreraOferta.findAll", query = "SELECT p FROM ProyectoCarreraOferta p"),
-    @NamedQuery(name = "ProyectoCarreraOferta.findById", query = "SELECT p FROM ProyectoCarreraOferta p WHERE p.id = :id"),
-    @NamedQuery(name = "ProyectoCarreraOferta.findByOfertaAcademicaId", query = "SELECT p FROM ProyectoCarreraOferta p WHERE p.ofertaAcademicaId = :ofertaAcademicaId"),
-    @NamedQuery(name = "ProyectoCarreraOferta.findByCarreraId", query = "SELECT p FROM ProyectoCarreraOferta p WHERE p.carreraId = :carreraId"),
-    @NamedQuery(name = "ProyectoCarreraOferta.findByEsActivo", query = "SELECT p FROM ProyectoCarreraOferta p WHERE p.esActivo = :esActivo")})
+@Cacheable(value = false)
 public class ProyectoCarreraOferta implements Serializable {
 
     private static final long serialVersionUID = 1L;

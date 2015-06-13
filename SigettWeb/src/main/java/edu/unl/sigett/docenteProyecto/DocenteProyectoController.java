@@ -284,7 +284,7 @@ public class DocenteProyectoController implements Serializable {
                 getDocenteId().getTituloDocenteId().getTituloId().getNombre().toUpperCase() + " " + "" + docenteProyectoDTO.getPersona().
                 getNombres().toUpperCase() + " " + docenteProyectoDTO.getPersona().getApellidos().toUpperCase() + " "
                 + "<b>" + cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "fper_cu_d") + " "
-                + cabeceraController.getConfiguracionGeneralDTO().getTiempoMaximoPertinencia() + " " + "" + cabeceraController.getValueFromProperties(
+                + cabeceraController.getConfiguracionGeneralUtil().getTiempoMaximoPertinencia() + " " + "" + cabeceraController.getValueFromProperties(
                         PropertiesFileEnum.CONTENIDOREPORTE, "fper_cu_e") + "<b/> " + cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "fper_cu_f"));
     }
 

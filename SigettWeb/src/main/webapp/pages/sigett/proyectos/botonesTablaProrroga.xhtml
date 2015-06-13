@@ -7,7 +7,8 @@
     <body>
         <h:panelGrid id="crearProrroga">
             <p:commandButton onstart="PF('dlgLoading').show()" 
-                             oncomplete="PF('dlgLoading').hide(),PF('dlgEditarProrroga').show()" rendered="#{sessionProrroga.renderedCrear}" value="#{msg['lbl.crear']}"  
+                             oncomplete="PF('dlgLoading').hide()" rendered="#{sessionProrroga.renderedCrear}" 
+                             value="#{msg['lbl.crear']}"  update=":contenido:dlgEditarProrroga"
                              action="#{prorrogaController.crear()}" icon="ui-icon-newwin"/>
         </h:panelGrid>
     </body>

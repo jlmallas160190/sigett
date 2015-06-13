@@ -235,7 +235,7 @@ public class AdministrarMiembrosTribunal implements Serializable {
             datosReporte.put("cargoMiembro", miembro.getCargoId().getNombre().toUpperCase());
             datosReporte.put("tituloMiembro", docenteMiembroPublica.getTituloDocenteId().getTituloId().getAbreviacion().toUpperCase());
 //            datosReporte.put("tituloCoordinador", docenteCoordinador.getTituloDocenteId().getTituloId().getAbreviacion());
-            datosReporte.put("autores", getAutores(autorProyectoFacadeLocal.buscarPorProyecto(miembro.getTribunalId().getProyectoId().getId())));
+//            datosReporte.put("autores", getAutores(autorProyectoFacadeLocal.buscarPorProyecto(miembro.getTribunalId().getProyectoId().getId())));
             datosReporte.put("abreviacion_oficio", resourceBundle.getString("lbl.abreviacion_oficio"));
             datosReporte.put("articulos_sustentacion_publica", resourceBundle.getString("lbl.articulos_sustentacion_publica"));
 
@@ -322,7 +322,7 @@ public class AdministrarMiembrosTribunal implements Serializable {
             datosReporte.put("tituloMiembro", docenteMiembro.getTituloDocenteId().getTituloId().getAbreviacion().toUpperCase());
             datosReporte.put("cargoMiembro", miembro.getCargoId().getNombre().toUpperCase());
 //            datosReporte.put("tituloCoordinador", docenteCoordinador.getTituloDocenteId().getTituloId().getAbreviacion());
-            datosReporte.put("autores", getAutores(autorProyectoFacadeLocal.buscarPorProyecto(miembro.getTribunalId().getProyectoId().getId())));
+//            datosReporte.put("autores", getAutores(autorProyectoFacadeLocal.buscarPorProyecto(miembro.getTribunalId().getProyectoId().getId())));
             datosReporte.put("abreviacion_oficio", resourceBundle.getString("lbl.abreviacion_oficio"));
             datosReporte.put("articulos_designar_miembro_tribunal", resourceBundle.getString("lbl.articulos_designar_miembro_tribunal"));
             datosReporte.put("asunto_designar_miembro_tribunal", resourceBundle.getString("lbl.asunto_designar_miembro_tribunal"));

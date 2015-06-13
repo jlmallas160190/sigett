@@ -6,10 +6,11 @@
 package edu.unl.sigett.entity;
 
 import java.io.Serializable;
-import java.math.BigInteger;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.Cacheable;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,13 +19,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -37,22 +35,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @Entity
 @Table(name = "actividad")
 @XmlRootElement
-@NamedQueries({
-    @NamedQuery(name = "Actividad.findAll", query = "SELECT a FROM Actividad a"),
-    @NamedQuery(name = "Actividad.findById", query = "SELECT a FROM Actividad a WHERE a.id = :id"),
-    @NamedQuery(name = "Actividad.findByNombre", query = "SELECT a FROM Actividad a WHERE a.nombre = :nombre"),
-    @NamedQuery(name = "Actividad.findByFechaInicio", query = "SELECT a FROM Actividad a WHERE a.fechaInicio = :fechaInicio"),
-    @NamedQuery(name = "Actividad.findByDuracion", query = "SELECT a FROM Actividad a WHERE a.duracion = :duracion"),
-    @NamedQuery(name = "Actividad.findByActividadId", query = "SELECT a FROM Actividad a WHERE a.actividadId = :actividadId"),
-    @NamedQuery(name = "Actividad.findByFechaCulminacion", query = "SELECT a FROM Actividad a WHERE a.fechaCulminacion = :fechaCulminacion"),
-    @NamedQuery(name = "Actividad.findByEsActivo", query = "SELECT a FROM Actividad a WHERE a.esActivo = :esActivo"),
-    @NamedQuery(name = "Actividad.findByPorcentajeDuracion", query = "SELECT a FROM Actividad a WHERE a.porcentajeDuracion = :porcentajeDuracion"),
-    @NamedQuery(name = "Actividad.findByAvance", query = "SELECT a FROM Actividad a WHERE a.avance = :avance"),
-    @NamedQuery(name = "Actividad.findByFaltante", query = "SELECT a FROM Actividad a WHERE a.faltante = :faltante"),
-    @NamedQuery(name = "Actividad.findByObservacion", query = "SELECT a FROM Actividad a WHERE a.observacion = :observacion"),
-    @NamedQuery(name = "Actividad.findByFechaInicioRevision", query = "SELECT a FROM Actividad a WHERE a.fechaInicioRevision = :fechaInicioRevision"),
-    @NamedQuery(name = "Actividad.findByFechaFinRevision", query = "SELECT a FROM Actividad a WHERE a.fechaFinRevision = :fechaFinRevision"),
-    @NamedQuery(name = "Actividad.findByLugarRevision", query = "SELECT a FROM Actividad a WHERE a.lugarRevision = :lugarRevision")})
+@Cacheable(value = false)
 public class Actividad implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -74,9 +57,9 @@ public class Actividad implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "duracion")
-    private double duracion;
-    @Column(name = "actividad_id")
-    private Long actividadId;
+    private Double duracion;
+    @Column(name = "padre_id")
+    private Long padreId;
     @Basic(optional = false)
     @NotNull
     @Column(name = "fecha_culminacion")
@@ -85,45 +68,29 @@ public class Actividad implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "es_activo")
-    private boolean esActivo;
+    private Boolean esActivo;
     @Basic(optional = false)
     @NotNull
     @Column(name = "porcentaje_duracion")
-    private double porcentajeDuracion;
+    private BigDecimal porcentajeDuracion;
     @Basic(optional = false)
     @NotNull
     @Column(name = "avance")
-    private double avance;
+    private BigDecimal avance;
     @Basic(optional = false)
     @NotNull
     @Column(name = "faltante")
-    private double faltante;
+    private BigDecimal faltante;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 500)
     @Column(name = "observacion")
     private String observacion;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "fecha_inicio_revision")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date fechaInicioRevision;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "fecha_fin_revision")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date fechaFinRevision;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 500)
-    @Column(name = "lugar_revision")
-    private String lugarRevision;
-    @JoinColumn(name = "tipo_actividad_id", referencedColumnName = "id")
+    @Column(name = "tipo_id")
+    private Long tipoId;
+    @Column(name = "estado_id")
     @ManyToOne(optional = false)
-    private TipoActividad tipoActividadId;
-    @JoinColumn(name = "estado_actividad_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private EstadoActividad estadoActividadId;
+    private Long estadoId;
     @JoinColumn(name = "cronograma_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Cronograma cronogramaId;
@@ -131,8 +98,6 @@ public class Actividad implements Serializable {
     private List<Revision> revisionList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "actividadId")
     private List<DocumentoActividad> documentoActividadList;
-    @Transient
-    private boolean tienePadre;
 
     public Actividad() {
     }
@@ -141,20 +106,20 @@ public class Actividad implements Serializable {
         this.id = id;
     }
 
-    public Actividad(Long id, String nombre, Date fechaInicio, double duracion, Date fechaCulminacion, boolean esActivo, double porcentajeDuracion, double avance, double faltante, String observacion, Date fechaInicioRevision, Date fechaFinRevision, String lugarRevision) {
+    public Actividad(Long id, String nombre, Date fechaInicio, Double duracion, Long actividadId, Boolean esActivo, BigDecimal porcentajeDuracion,
+            BigDecimal avance, BigDecimal faltante, String observacion, Long tipoId, Long estadoId) {
         this.id = id;
         this.nombre = nombre;
         this.fechaInicio = fechaInicio;
         this.duracion = duracion;
-        this.fechaCulminacion = fechaCulminacion;
+        this.padreId = actividadId;
         this.esActivo = esActivo;
         this.porcentajeDuracion = porcentajeDuracion;
         this.avance = avance;
         this.faltante = faltante;
         this.observacion = observacion;
-        this.fechaInicioRevision = fechaInicioRevision;
-        this.fechaFinRevision = fechaFinRevision;
-        this.lugarRevision = lugarRevision;
+        this.tipoId = tipoId;
+        this.estadoId = estadoId;
     }
 
     public Long getId() {
@@ -181,20 +146,20 @@ public class Actividad implements Serializable {
         this.fechaInicio = fechaInicio;
     }
 
-    public double getDuracion() {
+    public Double getDuracion() {
         return duracion;
     }
 
-    public void setDuracion(double duracion) {
+    public void setDuracion(Double duracion) {
         this.duracion = duracion;
     }
 
-    public Long getActividadId() {
-        return actividadId;
+    public Long getPadreId() {
+        return padreId;
     }
 
-    public void setActividadId(Long actividadId) {
-        this.actividadId = actividadId;
+    public void setPadreId(Long padreId) {
+        this.padreId = padreId;
     }
 
     public Date getFechaCulminacion() {
@@ -205,38 +170,6 @@ public class Actividad implements Serializable {
         this.fechaCulminacion = fechaCulminacion;
     }
 
-    public boolean getEsActivo() {
-        return esActivo;
-    }
-
-    public void setEsActivo(boolean esActivo) {
-        this.esActivo = esActivo;
-    }
-
-    public double getPorcentajeDuracion() {
-        return porcentajeDuracion;
-    }
-
-    public void setPorcentajeDuracion(double porcentajeDuracion) {
-        this.porcentajeDuracion = porcentajeDuracion;
-    }
-
-    public double getAvance() {
-        return avance;
-    }
-
-    public void setAvance(double avance) {
-        this.avance = avance;
-    }
-
-    public double getFaltante() {
-        return faltante;
-    }
-
-    public void setFaltante(double faltante) {
-        this.faltante = faltante;
-    }
-
     public String getObservacion() {
         return observacion;
     }
@@ -245,60 +178,12 @@ public class Actividad implements Serializable {
         this.observacion = observacion;
     }
 
-    public Date getFechaInicioRevision() {
-        return fechaInicioRevision;
-    }
-
-    public void setFechaInicioRevision(Date fechaInicioRevision) {
-        this.fechaInicioRevision = fechaInicioRevision;
-    }
-
-    public Date getFechaFinRevision() {
-        return fechaFinRevision;
-    }
-
-    public void setFechaFinRevision(Date fechaFinRevision) {
-        this.fechaFinRevision = fechaFinRevision;
-    }
-
-    public String getLugarRevision() {
-        return lugarRevision;
-    }
-
-    public void setLugarRevision(String lugarRevision) {
-        this.lugarRevision = lugarRevision;
-    }
-
-    public TipoActividad getTipoActividadId() {
-        return tipoActividadId;
-    }
-
-    public void setTipoActividadId(TipoActividad tipoActividadId) {
-        this.tipoActividadId = tipoActividadId;
-    }
-
-    public EstadoActividad getEstadoActividadId() {
-        return estadoActividadId;
-    }
-
-    public void setEstadoActividadId(EstadoActividad estadoActividadId) {
-        this.estadoActividadId = estadoActividadId;
-    }
-
     public Cronograma getCronogramaId() {
         return cronogramaId;
     }
 
     public void setCronogramaId(Cronograma cronogramaId) {
         this.cronogramaId = cronogramaId;
-    }
-
-    public boolean isTienePadre() {
-        return tienePadre;
-    }
-
-    public void setTienePadre(boolean tienePadre) {
-        this.tienePadre = tienePadre;
     }
 
     @XmlTransient
@@ -319,6 +204,54 @@ public class Actividad implements Serializable {
         this.documentoActividadList = documentoActividadList;
     }
 
+    public Boolean getEsActivo() {
+        return esActivo;
+    }
+
+    public void setEsActivo(Boolean esActivo) {
+        this.esActivo = esActivo;
+    }
+
+    public BigDecimal getPorcentajeDuracion() {
+        return porcentajeDuracion;
+    }
+
+    public void setPorcentajeDuracion(BigDecimal porcentajeDuracion) {
+        this.porcentajeDuracion = porcentajeDuracion;
+    }
+
+    public BigDecimal getAvance() {
+        return avance;
+    }
+
+    public void setAvance(BigDecimal avance) {
+        this.avance = avance;
+    }
+
+    public BigDecimal getFaltante() {
+        return faltante;
+    }
+
+    public void setFaltante(BigDecimal faltante) {
+        this.faltante = faltante;
+    }
+
+    public Long getTipoId() {
+        return tipoId;
+    }
+
+    public void setTipoId(Long tipoId) {
+        this.tipoId = tipoId;
+    }
+
+    public Long getEstadoId() {
+        return estadoId;
+    }
+
+    public void setEstadoId(Long estadoId) {
+        this.estadoId = estadoId;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -333,10 +266,7 @@ public class Actividad implements Serializable {
             return false;
         }
         Actividad other = (Actividad) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
+        return (this.id != null || other.id == null) && (this.id == null || this.id.equals(other.id));
     }
 
     @Override

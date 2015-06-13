@@ -55,29 +55,26 @@ import org.jlmallas.util.service.UtilServiceImplement;
 @SessionScoped
 public class CabeceraController implements Serializable {
 
-    //<editor-fold defaultstate="collapsed" desc="MANAGED BEANS">
-    @Inject
-    private SessionUsuario sessionUsuario;
-    //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="SERVICIOS">
-
     @EJB
     private ConfiguracionDao configuracionDao;
 //</editor-fold>
     private MessageView messageView;
     private MailService mailService;
     private MailDTO mailDTO;
-    private ConfiguracionGeneralDTO configuracionGeneralDTO;
+    private ConfiguracionGeneralUtil configuracionGeneralUtil;
     private SecureService secureService;
     private CabeceraWebSemantica cabeceraWebSemantica;
     private OntologyService ontologyService;
-    private PermisoAdministrarProyecto permisoAdministrarProyecto;
     private UtilService utilService;
     private static final Logger LOG = Logger.getLogger(CabeceraController.class.getName());
 
     public CabeceraController() {
     }
 
+    /**
+     * SE INICIA EN LA PÁGINA PRINCIPAL
+     */
     public void preRenderView() {
         inicarOntologias();
         this.fijarParametrosWebSemantica();
@@ -85,8 +82,11 @@ public class CabeceraController implements Serializable {
         this.fijarConfiguraciones();
     }
 
+    /**
+     * SE INICIA EN LOGIN
+     */
     public void preRenderViewInit() {
-        this.configuracionGeneralDTO = new ConfiguracionGeneralDTO();
+        this.configuracionGeneralUtil = new ConfiguracionGeneralUtil();
         this.secureService = new SecureServiceImplement();
         this.mailService = new MailServiceImplement();
         this.messageView = new MessageView();
@@ -98,15 +98,15 @@ public class CabeceraController implements Serializable {
         String puerto = configuracionDao.buscar(new Configuracion(ServidorCorreoEnum.PUERTO.getTipo())).get(0).getValor();
         String smtp = configuracionDao.buscar(new Configuracion(ServidorCorreoEnum.SMTP.getTipo())).get(0).getValor();
         String usuario = configuracionDao.buscar(new Configuracion(ServidorCorreoEnum.USUARIO.getTipo())).get(0).getValor();
-        String clave = this.secureService.decrypt(new SecureDTO(this.getConfiguracionGeneralDTO().getSecureKey(),
+        String clave = this.secureService.decrypt(new SecureDTO(this.getConfiguracionGeneralUtil().getSecureKey(),
                 configuracionDao.buscar(new Configuracion(ServidorCorreoEnum.CLAVE.getTipo())).get(0).getValor()));
         mailDTO = new MailDTO(smtp, puerto, usuario, clave, null, null, null, null);
     }
 
     private void fijarConfiguraciones() {
-        configuracionGeneralDTO.setTiempoMaximoPertinencia(configuracionDao.buscar(
+        configuracionGeneralUtil.setTiempoMaximoPertinencia(configuracionDao.buscar(
                 new Configuracion(ConfiguracionEnum.TIEMPOPERTINENCIA.getTipo())).get(0).getValor());
-        configuracionGeneralDTO.setTamanioArchivo(Double.parseDouble(configuracionDao.buscar(
+        configuracionGeneralUtil.setTamanioArchivo(Double.parseDouble(configuracionDao.buscar(
                 new Configuracion(ConfiguracionEnum.TAMANIOARCHIVO.getTipo())).get(0).getValor()));
     }
 
@@ -135,7 +135,7 @@ public class CabeceraController implements Serializable {
         } catch (IOException e) {
             System.out.println(e);
         }
-        this.configuracionGeneralDTO.setSecureKey(secretKey);
+        this.configuracionGeneralUtil.setSecureKey(secretKey);
     }
 
     private void fijarParametrosWebSemantica() {
@@ -206,12 +206,12 @@ public class CabeceraController implements Serializable {
         this.mailDTO = mailDTO;
     }
 
-    public ConfiguracionGeneralDTO getConfiguracionGeneralDTO() {
-        return configuracionGeneralDTO;
+    public ConfiguracionGeneralUtil getConfiguracionGeneralUtil() {
+        return configuracionGeneralUtil;
     }
 
-    public void setConfiguracionGeneralDTO(ConfiguracionGeneralDTO configuracionGeneralDTO) {
-        this.configuracionGeneralDTO = configuracionGeneralDTO;
+    public void setConfiguracionGeneralUtil(ConfiguracionGeneralUtil configuracionGeneralUtil) {
+        this.configuracionGeneralUtil = configuracionGeneralUtil;
     }
 
     public SecureService getSecureService() {
@@ -236,14 +236,6 @@ public class CabeceraController implements Serializable {
 
     public void setOntologyService(OntologyService ontologyService) {
         this.ontologyService = ontologyService;
-    }
-
-    public PermisoAdministrarProyecto getPermisoAdministrarProyecto() {
-        return permisoAdministrarProyecto;
-    }
-
-    public void setPermisoAdministrarProyecto(PermisoAdministrarProyecto permisoAdministrarProyecto) {
-        this.permisoAdministrarProyecto = permisoAdministrarProyecto;
     }
 
     public UtilService getUtilService() {

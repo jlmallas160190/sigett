@@ -28,7 +28,6 @@ import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
-import edu.unl.sigett.dao.CalificacionMiembroFacadeLocal;
 import edu.unl.sigett.dao.CalificacionParametroFacadeLocal;
 import edu.unl.sigett.dao.EvaluacionTribunalFacadeLocal;
 import edu.unl.sigett.dao.MiembroFacadeLocal;
@@ -61,8 +60,6 @@ public class AdministrarCalificacionMiembro implements Serializable {
     private AdministrarSugerenciaCalificacionMiembro administrarSugerenciaCalificacionMiembro;
 
     @EJB
-    private CalificacionMiembroFacadeLocal calificacionMiembroFacadeLocal;
-    @EJB
     private MiembroFacadeLocal miembroFacadeLocal;
     @EJB
     private CalificacionParametroFacadeLocal calificacionParametroFacadeLocal;
@@ -85,16 +82,16 @@ public class AdministrarCalificacionMiembro implements Serializable {
     public String editar(CalificacionMiembro calificacionMiembro, Docente docente, EvaluacionTribunal evaluacionTribunal) {
         String navegacion = "";
         try {
-            boolean encontrado = false;
-            if (calificacionMiembro.getId() != null) {
-                calificacionMiembro = calificacionMiembroFacadeLocal.find(calificacionMiembro.getId());
-                sessionCalificacionMiembro.setCalificacionMiembro(calificacionMiembro);
-            }
-            FacesContext facesContext = FacesContext.getCurrentInstance();
-            ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            String param = (String) facesContext.getExternalContext().getRequestParameterMap().get("1");
-            List<Miembro> miembros = new ArrayList<>();
-            miembros = miembroFacadeLocal.buscarPorDocente(docente.getId());
+//            boolean encontrado = false;
+//            if (calificacionMiembro.getId() != null) {
+//                calificacionMiembro = calificacionMiembroFacadeLocal.find(calificacionMiembro.getId());
+//                sessionCalificacionMiembro.setCalificacionMiembro(calificacionMiembro);
+//            }
+//            FacesContext facesContext = FacesContext.getCurrentInstance();
+//            ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
+//            String param = (String) facesContext.getExternalContext().getRequestParameterMap().get("1");
+//            List<Miembro> miembros = new ArrayList<>();
+//            miembros = miembroFacadeLocal.buscarPorDocente(docente.getId());
 //            if (miembros != null && evaluacionTribunal != null) {
 //                for (Miembro miembro : miembros) {
 //                    if (encontrado == false) {
@@ -130,24 +127,24 @@ public class AdministrarCalificacionMiembro implements Serializable {
     }
 
     public void buscar(EvaluacionTribunal evaluacionTribunal) {
-        this.calificacionMiembros = new ArrayList<>();
-        try {
-            for (CalificacionMiembro cm : calificacionMiembroFacadeLocal.buscarPorEvaluacionTribunal(evaluacionTribunal.getId())) {
-                if (!calificacionMiembros.contains(cm)) {
-                    calificacionMiembros.add(cm);
-                }
-            }
-        } catch (Exception e) {
-            System.out.println(e);
-        }
+//        this.calificacionMiembros = new ArrayList<>();
+//        try {
+//            for (CalificacionMiembro cm : calificacionMiembroFacadeLocal.buscarPorEvaluacionTribunal(evaluacionTribunal.getId())) {
+//                if (!calificacionMiembros.contains(cm)) {
+//                    calificacionMiembros.add(cm);
+//                }
+//            }
+//        } catch (Exception e) {
+//            System.out.println(e);
+//        }
     }
 
     public List<CalificacionMiembro> calificaciones(EvaluacionTribunal evaluacionTribunal) {
         try {
             List<CalificacionMiembro> calificaciones = new ArrayList<>();
-            for (CalificacionMiembro cm : calificacionMiembroFacadeLocal.buscarPorEvaluacionTribunal(evaluacionTribunal.getId())) {
-                calificaciones.add(cm);
-            }
+//            for (CalificacionMiembro cm : calificacionMiembroFacadeLocal.buscarPorEvaluacionTribunal(evaluacionTribunal.getId())) {
+//                calificaciones.add(cm);
+//            }
             return calificaciones;
         } catch (Exception e) {
         }
@@ -160,23 +157,23 @@ public class AdministrarCalificacionMiembro implements Serializable {
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
         try {
             if (calificacionMiembro.getId() != null) {
-                administrarCalificacionParametro.grabarListado(param, calificacionMiembro);
-                calculaNota(calificacionMiembro);
-                calificacionMiembroFacadeLocal.edit(calificacionMiembro);
-                administrarEvaluacionesTribunal.calculaNota(calificacionMiembro.getEvaluacionTribunalId().getTribunalId(), calificacionMiembro.getEvaluacionTribunalId());
-                RangoNota rn = null;
-                if (calificacionMiembro.getEvaluacionTribunalId().getRangoNotaId() != null) {
-                    rn = calificacionMiembro.getEvaluacionTribunalId().getRangoNotaId();
-                }
-                if (rn != null) {
-                    calificacionMiembro.getEvaluacionTribunalId().setRangoNotaId(rn);
-                    for (RangoEquivalencia rangoEquivalencia : rangoEquivalenciaFacadeLocal.buscarPorRangoNota(rn.getId())) {
-                        if (calificacionMiembro.getEvaluacionTribunalId().getNota() >= rangoEquivalencia.getNotaInicio() && calificacionMiembro.getEvaluacionTribunalId().getNota() <= rangoEquivalencia.getNotaFin()) {
-                            calificacionMiembro.getEvaluacionTribunalId().setRangoEquivalenciaId(rangoEquivalencia);
-                            break;
-                        }
-                    }
-                }
+//                administrarCalificacionParametro.grabarListado(param, calificacionMiembro);
+//                calculaNota(calificacionMiembro);
+//                calificacionMiembroFacadeLocal.edit(calificacionMiembro);
+//                administrarEvaluacionesTribunal.calculaNota(calificacionMiembro.getEvaluacionTribunalId().getTribunalId(), calificacionMiembro.getEvaluacionTribunalId());
+//                RangoNota rn = null;
+//                if (calificacionMiembro.getEvaluacionTribunalId().getRangoNotaId() != null) {
+//                    rn = calificacionMiembro.getEvaluacionTribunalId().getRangoNotaId();
+//                }
+//                if (rn != null) {
+//                    calificacionMiembro.getEvaluacionTribunalId().setRangoNotaId(rn);
+//                    for (RangoEquivalencia rangoEquivalencia : rangoEquivalenciaFacadeLocal.buscarPorRangoNota(rn.getId())) {
+//                        if (calificacionMiembro.getEvaluacionTribunalId().getNota() >= rangoEquivalencia.getNotaInicio() && calificacionMiembro.getEvaluacionTribunalId().getNota() <= rangoEquivalencia.getNotaFin()) {
+//                            calificacionMiembro.getEvaluacionTribunalId().setRangoEquivalenciaId(rangoEquivalencia);
+//                            break;
+//                        }
+//                    }
+//                }
                 evaluacionTribunalFacadeLocal.edit(calificacionMiembro.getEvaluacionTribunalId());
 //                if (sessionDocenteUsuario.getDocenteUsuario().getDocenteId() != null) {
 //                    administrarTribunales.buscarPorDocente(sessionDocenteUsuario.getDocenteUsuario().getDocenteId(), "");
@@ -255,11 +252,11 @@ public class AdministrarCalificacionMiembro implements Serializable {
     public void buscarConsulta(EvaluacionTribunal evaluacionTribunal) {
         this.calificacionMiembrosConsulta = new ArrayList<>();
         try {
-            for (CalificacionMiembro cm : calificacionMiembroFacadeLocal.buscarPorEvaluacionTribunal(evaluacionTribunal.getId())) {
-                if (!calificacionMiembrosConsulta.contains(cm)) {
-                    calificacionMiembrosConsulta.add(cm);
-                }
-            }
+//            for (CalificacionMiembro cm : calificacionMiembroFacadeLocal.buscarPorEvaluacionTribunal(evaluacionTribunal.getId())) {
+//                if (!calificacionMiembrosConsulta.contains(cm)) {
+//                    calificacionMiembrosConsulta.add(cm);
+//                }
+//            }
         } catch (Exception e) {
             System.out.println(e);
         }
