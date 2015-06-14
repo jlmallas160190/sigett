@@ -8,6 +8,7 @@ package edu.unl.sigett.estudianteUsuario;
 import java.io.Serializable;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Named;
+import org.jlmallas.seguridad.entity.Usuario;
 
 /**
  *
@@ -22,7 +23,7 @@ public class SessionEstudianteUsuario implements Serializable {
     private Boolean validarEstudianteWS;
 
     public SessionEstudianteUsuario() {
-        this.estudianteUsuarioDTO = new EstudianteUsuarioDTO();
+        this.estudianteUsuarioDTO = new EstudianteUsuarioDTO(new Usuario(), null, null, null);
     }
 
     public EstudianteUsuarioDTO getEstudianteUsuarioDTO() {

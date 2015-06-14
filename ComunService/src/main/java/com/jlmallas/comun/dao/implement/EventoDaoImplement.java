@@ -6,8 +6,8 @@
 package com.jlmallas.comun.dao.implement;
 
 import com.jlmallas.comun.dao.AbstractDao;
-import com.jlmallas.comun.dao.DocumentoDao;
-import com.jlmallas.comun.entity.Documento;
+import com.jlmallas.comun.dao.EventoDao;
+import com.jlmallas.comun.entity.Evento;
 import java.util.HashMap;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -18,23 +18,24 @@ import javax.persistence.Query;
  * @author jorge-luis
  */
 @Stateless
-public class DocumentoDaoImplement extends AbstractDao<Documento> implements DocumentoDao {
+public class EventoDaoImplement extends AbstractDao<Evento> implements EventoDao {
 
-    public DocumentoDaoImplement() {
-        super(Documento.class);
+    public EventoDaoImplement() {
+        super(Evento.class);
     }
 
     @Override
-    public List<Documento> buscar(final Documento documento) {
+    public List<Evento> buscar(Evento evento) {
         StringBuilder sql = new StringBuilder();
         HashMap<String, Object> parametros = new HashMap<>();
         Boolean existeFiltro = Boolean.FALSE;
-        sql.append("SELECT d FROM Documento d  WHERE 1=1 ");
-        if (documento.getCatalogoId() != null) {
-            sql.append(" and d.catalogoId=:catalogoId");
-            parametros.put("catalogoId", documento.getCatalogoId());
+        sql.append("SELECT e FROM Evento e  WHERE 1=1 ");
+        if (evento.getCatalogoId() != null) {
+            sql.append(" and e.catalogoId=:catalogoId");
+            parametros.put("catalogoId", evento.getCatalogoId());
             existeFiltro = Boolean.TRUE;
         }
+
         if (!existeFiltro) {
             return null;
         }

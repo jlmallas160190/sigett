@@ -54,7 +54,7 @@ public class DocumentoProyectoController implements Serializable {
         sessionDocumentoProyecto.getCatalogosDocumento().addAll(itemService.buscarPorCatalogo(CatalogoEnum.CATALOGODOCUMENTOPROYECTO.getTipo()));
     }
 
-    //<editor-fold defaultstate="collapsed" desc="INICIO">
+    //<editor-fold defaultstate="collapsed" desc="CRUD">
     public void crear() {
         listarCategorias();
         sessionDocumentoProyecto.setTamanioArchivo(cabeceraController.getConfiguracionGeneralUtil().getTamanioArchivo());
@@ -67,7 +67,8 @@ public class DocumentoProyectoController implements Serializable {
             sessionDocumentoProyecto.setTamanioArchivo(cabeceraController.getConfiguracionGeneralUtil().getTamanioArchivo());
             listarCategorias();
             File file = new File(documentoProyectoDTO.getDocumento().getRuta());
-            documentoProyectoDTO.getDocumento().setContents(cabeceraController.getUtilService().obtenerBytes(file));
+            byte[] contents=cabeceraController.getUtilService().obtenerBytes(file);
+            documentoProyectoDTO.getDocumento().setContents(contents!=null?contents:null);
             sessionDocumentoProyecto.setDocumentoProyectoDTOSeleccionado(documentoProyectoDTO);
         } catch (Exception e) {
             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_FATAL, e.getMessage(), "");

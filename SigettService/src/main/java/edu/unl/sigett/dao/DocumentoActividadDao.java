@@ -14,7 +14,7 @@ import javax.ejb.Local;
  * @author JorgeLuis
  */
 @Local
-public interface DocumentoActividadFacadeLocal {
+public interface DocumentoActividadDao {
 
     void create(DocumentoActividad documentoActividad);
 
@@ -28,9 +28,7 @@ public interface DocumentoActividadFacadeLocal {
 
     List<DocumentoActividad> findRange(int[] range);
 
-    List<DocumentoActividad> buscarPorActividad(Long actividadId);
-
-    DocumentoActividad documentoActual(Long actividadId);
+    List<DocumentoActividad> buscar(DocumentoActividad documentoActividad);
 
     int count();
 

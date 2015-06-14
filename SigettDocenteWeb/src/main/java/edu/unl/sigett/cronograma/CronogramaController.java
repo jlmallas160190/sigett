@@ -52,6 +52,28 @@ public class CronogramaController implements Serializable {
     public CronogramaController() {
     }
 
+    private Boolean validarFechas() {
+        if (pertinenciaDM.getPertinencia().getFecha() == null || docenteProyectoDM.getDocenteProyectoDTOSeleccionado().getDocenteProyecto().
+                getProyectoId().getCronograma().getFechaFin() == null) {
+            docenteProyectoDM.getDocenteProyectoDTOSeleccionado().getDocenteProyecto().getProyectoId().getCronograma().
+                    setFechaFin(pertinenciaDM.getPertinencia().getFecha());
+            docenteProyectoDM.getDocenteProyectoDTOSeleccionado().getDocenteProyecto().getProyectoId().getCronograma().
+                    setFechaProrroga(pertinenciaDM.getPertinencia().getFecha());
+            docenteProyectoDM.getDocenteProyectoDTOSeleccionado().getDocenteProyecto().getProyectoId().getCronograma().setDuracion(0.0);
+            return Boolean.FALSE;
+        }
+        if (pertinenciaDM.getPertinencia().getFecha().after(docenteProyectoDM.getDocenteProyectoDTOSeleccionado().getDocenteProyecto().
+                getProyectoId().getCronograma().getFechaFin())) {
+            docenteProyectoDM.getDocenteProyectoDTOSeleccionado().getDocenteProyecto().getProyectoId().getCronograma().
+                    setFechaFin(pertinenciaDM.getPertinencia().getFecha());
+            docenteProyectoDM.getDocenteProyectoDTOSeleccionado().getDocenteProyecto().getProyectoId().getCronograma().
+                    setFechaProrroga(pertinenciaDM.getPertinencia().getFecha());
+            docenteProyectoDM.getDocenteProyectoDTOSeleccionado().getDocenteProyecto().getProyectoId().getCronograma().setDuracion(0.0);
+            return Boolean.FALSE;
+        }
+        return Boolean.TRUE;
+    }
+
     /**
      * CALCULAR DURACIÓN DE CRONOGRAMA
      */
@@ -61,25 +83,8 @@ public class CronogramaController implements Serializable {
         Double tiempoMax = Double.parseDouble(configuracionDao.buscar(new Configuracion(ConfiguracionEnum.TIEMPODESARROLLOTT.getTipo())).get(0).getValor());
         @SuppressWarnings("UnusedAssignment")
         Double duracionDias = 0.0;
-        if (pertinenciaDM.getPertinencia().getFecha() == null || docenteProyectoDM.getDocenteProyectoDTOSeleccionado().getDocenteProyecto().
-                getProyectoId().getCronograma().getFechaFin() == null) {
+        if (!validarFechas()) {
             cabeceraController.getMessageView().message(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_fechas_cronograma_invalidas"), "");
-            docenteProyectoDM.getDocenteProyectoDTOSeleccionado().getDocenteProyecto().getProyectoId().getCronograma().
-                    setFechaFin(pertinenciaDM.getPertinencia().getFecha());
-            docenteProyectoDM.getDocenteProyectoDTOSeleccionado().getDocenteProyecto().getProyectoId().getCronograma().
-                    setFechaProrroga(pertinenciaDM.getPertinencia().getFecha());
-            docenteProyectoDM.getDocenteProyectoDTOSeleccionado().getDocenteProyecto().getProyectoId().getCronograma().setDuracion(0.0);
-            return;
-        }
-        if (pertinenciaDM.getPertinencia().getFecha().after(docenteProyectoDM.getDocenteProyectoDTOSeleccionado().getDocenteProyecto().
-                getProyectoId().getCronograma().getFechaFin())) {
-            cabeceraController.getMessageView().message(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_fechas_cronograma_invalidas"), "");
-            docenteProyectoDM.getDocenteProyectoDTOSeleccionado().getDocenteProyecto().getProyectoId().getCronograma().
-                    setFechaFin(pertinenciaDM.getPertinencia().getFecha());
-            docenteProyectoDM.getDocenteProyectoDTOSeleccionado().getDocenteProyecto().getProyectoId().getCronograma().
-                    setFechaProrroga(pertinenciaDM.getPertinencia().getFecha());
-            docenteProyectoDM.getDocenteProyectoDTOSeleccionado().getDocenteProyecto().getProyectoId().getCronograma().setDuracion(0.0);
-            return;
         }
         duracionDias = cabeceraController.getUtilService().calculaDuracion(pertinenciaDM.getPertinencia().getFecha(),
                 docenteProyectoDM.getDocenteProyectoDTOSeleccionado().getDocenteProyecto().getProyectoId().getCronograma().getFechaFin(),

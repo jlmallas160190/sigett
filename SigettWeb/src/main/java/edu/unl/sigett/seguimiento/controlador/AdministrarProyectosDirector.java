@@ -5,6 +5,7 @@
  */
 package edu.unl.sigett.seguimiento.controlador;
 
+
 import com.jlmallas.comun.entity.Persona;
 import com.jlmallas.comun.dao.PersonaDao;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
@@ -30,7 +31,7 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import org.primefaces.event.TabChangeEvent;
-import edu.unl.sigett.dao.ActividadFacadeLocal;
+import edu.unl.sigett.dao.ActividadDao;
 import edu.unl.sigett.dao.ConfiguracionGeneralDao;
 import edu.unl.sigett.dao.DirectorProyectoDao;
 import edu.unl.sigett.dao.ProyectoOfertaCarreraDao;
@@ -63,8 +64,6 @@ public class AdministrarProyectosDirector implements Serializable {
     @Inject
     private SessionProyectosDirector sessionProyectosDirector;
     @Inject
-    private AdministrarActividades administrarActividades;
-    @Inject
     private AdministrarRevisiones administrarRevisiones;
     @Inject
     private AdministrarInformesProyecto administrarInformesProyecto;
@@ -73,7 +72,7 @@ public class AdministrarProyectosDirector implements Serializable {
     @EJB
     private DirectorProyectoDao directorProyectoFacadeLocal;
     @EJB
-    private ActividadFacadeLocal actividadFacadeLocal;
+    private ActividadDao actividadFacadeLocal;
     @EJB
     private ConfiguracionGeneralDao configuracionGeneralFacadeLocal;
     @EJB
@@ -374,13 +373,7 @@ public class AdministrarProyectosDirector implements Serializable {
 //        this.administrarAutoresProyecto = administrarAutoresProyecto;
 //    }
 
-    public AdministrarActividades getAdministrarActividades() {
-        return administrarActividades;
-    }
-
-    public void setAdministrarActividades(AdministrarActividades administrarActividades) {
-        this.administrarActividades = administrarActividades;
-    }
+  
 
     public AdministrarRevisiones getAdministrarRevisiones() {
         return administrarRevisiones;

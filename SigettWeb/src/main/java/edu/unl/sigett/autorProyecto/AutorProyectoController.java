@@ -117,33 +117,23 @@ public class AutorProyectoController implements Serializable {
     public void buscarAspirantes() {
         sessionAutorProyecto.getAspirantesDTO().clear();
         sessionAutorProyecto.getFilterAspirantesDTO().clear();
-        FacesContext facesContext = FacesContext.getCurrentInstance();
-        ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
         try {
-            int tienePermiso = usuarioDao.tienePermiso(sessionUsuario.getUsuario(), "buscar_aspirante");
-            if (tienePermiso == 1) {
-                for (EstudianteCarreraDTO estudianteCarreraDTO : sessionUsuarioCarrera.getEstudiantesCarreraDTO()) {
-                    Item item = itemService.buscarPorId(estudianteCarreraDTO.getEstudianteCarrera().getEstadoId());
-                    estudianteCarreraDTO.getEstudianteCarrera().setEstado(item.getNombre());
-                    List<Aspirante> aspirantes = aspiranteService.buscar(new Aspirante(estudianteCarreraDTO.getEstudianteCarrera().getId(), null));
-                    if (aspirantes == null) {
-                        continue;
-                    }
-                    if (aspirantes.isEmpty()) {
-                        continue;
-                    }
-                    AspiranteDTO aspiranteDTO = new AspiranteDTO(aspirantes.get(0),
-                            estudianteCarreraDTO.getEstudianteCarrera(), personaDao.find(
-                                    estudianteCarreraDTO.getEstudianteCarrera().getEstudianteId().getId()));
-                    sessionAutorProyecto.getAspirantesDTO().add(aspiranteDTO);
+            for (EstudianteCarreraDTO estudianteCarreraDTO : sessionUsuarioCarrera.getEstudiantesCarreraDTO()) {
+                Item item = itemService.buscarPorId(estudianteCarreraDTO.getEstudianteCarrera().getEstadoId());
+                estudianteCarreraDTO.getEstudianteCarrera().setEstado(item.getNombre());
+                List<Aspirante> aspirantes = aspiranteService.buscar(new Aspirante(estudianteCarreraDTO.getEstudianteCarrera().getId(), null));
+                if (aspirantes == null) {
+                    continue;
                 }
-
-                sessionAutorProyecto.setFilterAspirantesDTO(sessionAutorProyecto.getAspirantesDTO());
-            } else {
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_buscar") + ". "
-                        + bundle.getString("lbl.msm_consulte"), "");
-                FacesContext.getCurrentInstance().addMessage(null, message);
+                if (aspirantes.isEmpty()) {
+                    continue;
+                }
+                AspiranteDTO aspiranteDTO = new AspiranteDTO(aspirantes.get(0),
+                        estudianteCarreraDTO.getEstudianteCarrera(), personaDao.find(
+                                estudianteCarreraDTO.getEstudianteCarrera().getEstudianteId().getId()));
+                sessionAutorProyecto.getAspirantesDTO().add(aspiranteDTO);
             }
+            sessionAutorProyecto.setFilterAspirantesDTO(sessionAutorProyecto.getAspirantesDTO());
         } catch (Exception e) {
             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_FATAL, e.getMessage(), "");
             FacesContext.getCurrentInstance().addMessage(null, message);

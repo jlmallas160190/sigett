@@ -3,9 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.unl.sigett.seguimiento.session;
+package edu.unl.sigett.documentoActividad;
 
-import edu.unl.sigett.entity.DocumentoActividad;
 import java.io.Serializable;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Named;
@@ -18,18 +17,18 @@ import javax.inject.Named;
 @SessionScoped
 public class SessionDocumentoActividad implements Serializable {
 
-    private DocumentoActividad documentoActividad;
+    private DocumentoActividadDTO documentoActividadDTO;
 
     public SessionDocumentoActividad() {
-        this.documentoActividad = new DocumentoActividad();
+        this.documentoActividadDTO = new DocumentoActividadDTO();
     }
 
-    public DocumentoActividad getDocumentoActividad() {
-        return documentoActividad;
+    public DocumentoActividadDTO getDocumentoActividadDTO() {
+        return documentoActividadDTO;
     }
 
-    public void setDocumentoActividad(DocumentoActividad documentoActividad) {
-        this.documentoActividad = documentoActividad;
+    public void setDocumentoActividadDTO(DocumentoActividadDTO documentoActividadDTO) {
+        this.documentoActividadDTO = documentoActividadDTO;
     }
 
 }

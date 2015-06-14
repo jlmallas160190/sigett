@@ -53,7 +53,7 @@ import org.jlmallas.seguridad.service.UsuarioService;
     @URLMapping(
             id = "loginEstudiante",
             pattern = "/login",
-            viewId = "/faces/pages/seguridad/login.xhtml"
+            viewId = "/faces/login.xhtml"
     ),
     @URLMapping(
             id = "inicio",
@@ -89,7 +89,7 @@ public class EstudianteUsuarioController implements Serializable {
     public String logout() {
         sessionEstudianteUsuario.setEstudianteUsuarioDTO(new EstudianteUsuarioDTO());
         FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
-        return "pretty:login";
+        return "pretty:loginEstudiante";
     }
 
     public String logear() {
@@ -116,7 +116,7 @@ public class EstudianteUsuarioController implements Serializable {
                 }
                 sessionEstudianteUsuario.setEstudianteUsuarioDTO(new EstudianteUsuarioDTO(!usuarios.isEmpty() ? usuarios.get(0) : null,
                         estudianteService.buscarPorId(new Estudiante(estudianteUsuario.getEstudianteId())),
-                        personaService.buscarPorId(new Persona(estudianteUsuario.getEstudianteId())),new Rol(null,
+                        personaService.buscarPorId(new Persona(estudianteUsuario.getEstudianteId())), new Rol(null,
                                 cabeceraController.getValueFromProperties(PropertiesFileEnum.ETIQUETASES, "estudiante"))));
                 return "pretty:inicio";
             }
@@ -138,7 +138,7 @@ public class EstudianteUsuarioController implements Serializable {
         }
         return "pretty:inicio";
     }
-//<editor-fold defaultstate="collapsed" desc="SERVICIOS WEB">
+    //<editor-fold defaultstate="collapsed" desc="SERVICIOS WEB">
 
     public void sgaWebServicesValidaEstudiante(String cedula, String clave) {
         FacesContext facesContext = FacesContext.getCurrentInstance();

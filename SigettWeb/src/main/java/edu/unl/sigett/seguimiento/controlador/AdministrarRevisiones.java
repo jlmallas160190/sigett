@@ -5,7 +5,6 @@
  */
 package edu.unl.sigett.seguimiento.controlador;
 
-import edu.unl.sigett.seguimiento.session.SessionActividad;
 import edu.unl.sigett.seguimiento.session.SessionProyectosDirector;
 import edu.unl.sigett.seguimiento.session.SessionRevision;
 import edu.unl.sigett.entity.Actividad;
@@ -25,7 +24,7 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import org.primefaces.context.RequestContext;
-import edu.unl.sigett.dao.ActividadFacadeLocal;
+import edu.unl.sigett.dao.ActividadDao;
 import org.jlmallas.seguridad.dao.LogDao;
 import edu.unl.sigett.dao.RevisionFacadeLocal;
 import org.jlmallas.seguridad.dao.UsuarioDao;
@@ -42,16 +41,12 @@ public class AdministrarRevisiones implements Serializable {
     private SessionProyectosDirector sessionProyectosDirector;
     @Inject
     private SessionRevision sessionRevision;
-    @Inject
-    private SessionActividad sessionActividad;
-    @Inject
-    private AdministrarActividades administrarActividades;
     @EJB
     private RevisionFacadeLocal revisionFacadeLocal;
     @EJB
     private LogDao logFacadeLocal;
     @EJB
-    private ActividadFacadeLocal actividadFacadeLocal;
+    private ActividadDao actividadFacadeLocal;
     @EJB
     private UsuarioDao usuarioFacadeLocal;
 
@@ -117,7 +112,7 @@ public class AdministrarRevisiones implements Serializable {
             String param = (String) facesContext.getExternalContext().getRequestParameterMap().get("1");
             int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "crear_revision");
             if (tienePermiso == 1) {
-                sessionActividad.setActividad(actividad);
+//                sessionActividad.setActividad(actividad);
                 sessionRevision.setRevision(new Revision());
                 Calendar fechaActual = Calendar.getInstance();
                 sessionRevision.getRevision().setFecha(fechaActual.getTime());
@@ -152,7 +147,7 @@ public class AdministrarRevisiones implements Serializable {
             int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "editar_revision");
             if (tienePermiso == 1) {
                 sessionRevision.setRevision(revision);
-                sessionActividad.setActividad(revision.getActividadId());
+//                sessionActividad.setActividad(revision.getActividadId());
                 Calendar fechaActual = Calendar.getInstance();
                 sessionRevision.getRevision().setFecha(fechaActual.getTime());
                 sessionRevision.getRevision().setHoraInicio(fechaActual.getTime());
@@ -356,13 +351,7 @@ public class AdministrarRevisiones implements Serializable {
         this.criterio = criterio;
     }
 
-    public SessionActividad getSessionActividad() {
-        return sessionActividad;
-    }
-
-    public void setSessionActividad(SessionActividad sessionActividad) {
-        this.sessionActividad = sessionActividad;
-    }
+  
 
     public boolean isRenderedCrear() {
         return renderedCrear;
@@ -396,14 +385,7 @@ public class AdministrarRevisiones implements Serializable {
         this.renderedEliminar = renderedEliminar;
     }
 
-    public AdministrarActividades getAdministrarActividades() {
-        return administrarActividades;
-    }
-
-    public void setAdministrarActividades(AdministrarActividades administrarActividades) {
-        this.administrarActividades = administrarActividades;
-    }
-
+  
     public SessionProyectosDirector getSessionProyectosDirector() {
         return sessionProyectosDirector;
     }

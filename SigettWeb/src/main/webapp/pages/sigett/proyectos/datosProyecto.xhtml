@@ -26,8 +26,8 @@
             <h:outputLabel value="#{msg['lbl.tipo']}:" />
             <p:selectOneMenu id="tipoProyecto" rendered="#{sessionProyecto.renderedInicio}" converter="tipoProyectoConverter" 
                              value="#{sessionProyecto.tipoSeleccionado}" requiredMessage="#{msg['lbl.tipo']} #{msg['lbl.obligatorio']}.">
-                <f:selectItem itemLabel="#{msg['lbl.seleccionar']}"/>
-                <f:selectItems value="#{sessionProyecto.tipos}"/>
+                <f:selectItem noSelectionOption="true" itemLabel="#{msg['lbl.seleccionar']}"/>
+                <f:selectItems itemLabel="#{tipo.nombre}" itemValue="#{tipo.codigo}"  var="tipo" value="#{sessionProyecto.tipos}"/>
                 <p:ajax listener="#{proyectoController.comprobarTipoProyecto()}" event="change" update=":contenido:tabViewDatosProyecto:tblAutores" 
                         onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide(),PF('tblAPFilter').filter()"/>
             </p:selectOneMenu>
@@ -37,7 +37,7 @@
             <p:selectOneMenu id="catProyecto" rendered="#{sessionProyecto.renderedInicio}" converter="categoriaProyectoConverter"
                              value="#{sessionProyecto.categoriaSeleccionada}"  
                              requiredMessage="#{msg['lbl.categoria']} #{msg['lbl.obligatorio']}.">
-                <f:selectItems value="#{sessionProyecto.categorias}"/>
+                <f:selectItems itemLabel="#{cat.nombre}" itemValue="#{cat.codigo}"  var="cat" value="#{sessionProyecto.categorias}"/>
             </p:selectOneMenu>
             <h:outputText value="#{sessionProyecto.categoriaSeleccionada.nombre}" rendered="#{!sessionProyecto.renderedInicio}"/>
             <h:inputHidden/>

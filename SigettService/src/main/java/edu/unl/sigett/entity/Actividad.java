@@ -57,7 +57,7 @@ public class Actividad implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "duracion")
-    private Double duracion;
+    private BigDecimal duracion;
     @Column(name = "padre_id")
     private Long padreId;
     @Basic(optional = false)
@@ -87,9 +87,10 @@ public class Actividad implements Serializable {
     @Column(name = "observacion")
     private String observacion;
     @Column(name = "tipo_id")
+    @NotNull
     private Long tipoId;
     @Column(name = "estado_id")
-    @ManyToOne(optional = false)
+    @NotNull
     private Long estadoId;
     @JoinColumn(name = "cronograma_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
@@ -106,8 +107,8 @@ public class Actividad implements Serializable {
         this.id = id;
     }
 
-    public Actividad(Long id, String nombre, Date fechaInicio, Double duracion, Long actividadId, Boolean esActivo, BigDecimal porcentajeDuracion,
-            BigDecimal avance, BigDecimal faltante, String observacion, Long tipoId, Long estadoId) {
+    public Actividad(Long id, String nombre, Date fechaInicio, BigDecimal duracion, Long actividadId, Boolean esActivo, BigDecimal porcentajeDuracion,
+            BigDecimal avance, BigDecimal faltante, String observacion, Long tipoId, Long estadoId, Cronograma cronograma) {
         this.id = id;
         this.nombre = nombre;
         this.fechaInicio = fechaInicio;
@@ -120,6 +121,7 @@ public class Actividad implements Serializable {
         this.observacion = observacion;
         this.tipoId = tipoId;
         this.estadoId = estadoId;
+        this.cronogramaId = cronograma;
     }
 
     public Long getId() {
@@ -146,11 +148,11 @@ public class Actividad implements Serializable {
         this.fechaInicio = fechaInicio;
     }
 
-    public Double getDuracion() {
+    public BigDecimal getDuracion() {
         return duracion;
     }
 
-    public void setDuracion(Double duracion) {
+    public void setDuracion(BigDecimal duracion) {
         this.duracion = duracion;
     }
 

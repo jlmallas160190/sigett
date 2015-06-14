@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+        <script>
+            function regresar() {
+                window.history.back();
+            }
+        </script>
+        <p:menubar>
+            <f:facet name="options">
+                <h:panelGrid styleClass="panelGroup" columns="3">
+                    <p:outputLabel style="font-weight: bold;color: #D20005" 
+                                   value="#{lbl.saludo}: #{sessionEstudianteUsuario.estudianteUsuarioDTO.persona.nombres} 
+                                   #{sessionEstudianteUsuario.estudianteUsuarioDTO.persona.apellidos}"/>
+                    <p:commandButton value="#{lbl.regresar}" icon="ui-icon-arrowreturnthick-1-w" onclick="regresar()"/>
+                    <p:commandButton value="#{lbl.salir}" ajax="false" icon="ui-icon-power"  action="#{estudianteUsuarioController.logout()}" />
+                </h:panelGrid>
+            </f:facet>
+        </p:menubar>
+    </body>
+
+</html>

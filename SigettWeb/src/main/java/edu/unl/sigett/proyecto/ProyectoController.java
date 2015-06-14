@@ -1202,7 +1202,6 @@ public class ProyectoController implements Serializable {
         } catch (Exception e) {
             LOG.info(e.getMessage());
         }
-
     }
 
     //</editor-fold>

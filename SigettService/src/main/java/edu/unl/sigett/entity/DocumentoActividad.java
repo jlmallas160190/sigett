@@ -50,6 +50,13 @@ public class DocumentoActividad implements Serializable {
         this.id = id;
     }
 
+    public DocumentoActividad(Long id, Boolean esActual, Long documentoId, Actividad actividadId) {
+        this.id = id;
+        this.esActual = esActual;
+        this.documentoId = documentoId;
+        this.actividadId = actividadId;
+    }
+
     public Long getId() {
         return id;
     }
@@ -96,10 +103,7 @@ public class DocumentoActividad implements Serializable {
             return false;
         }
         DocumentoActividad other = (DocumentoActividad) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
+        return (this.id != null || other.id == null) && (this.id == null || this.id.equals(other.id));
     }
 
     @Override
