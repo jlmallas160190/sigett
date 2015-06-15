@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+        <f:event type="preRenderView" listener="#{actividadController.preRenderView()}"/>
+        <p:tree id="treeActividades" value="#{sessionActividad.rootActividades}" var="node" dynamic="true"  animate="true">
+            <p:treeNode collapsedIcon="ui-icon-folder-collapsed" expandedIcon="ui-icon-folder-open">
+                <h:panelGrid styleClass="panel-group" style="background: #fff;text-overflow: ellipsis!important" >
+                    <h:outputLabel styleClass="#{node.estiloEstado}"/>
+                    <p:commandLink value="#{node.nombre}" action="#{actividadController.editar(node)}"/>
+                    <p:commandLink title="#{btn.agregar_tarea}"  onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" 
+                                   update=":editarActividad,:contenido:msm" action="#{actividadController.crear()}" >
+                        <p:graphicImage value="/resources/img/icon_addlink.gif"/>
+                        <f:param name="tipo" value="#{sessionActividad.tarea}"/>
+                        <f:param name="padreId" value="#{node.id}"/>
+                    </p:commandLink>
+                </h:panelGrid>
+            </p:treeNode>
+        </p:tree>
+    </body>
+
+</html>

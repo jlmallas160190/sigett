@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="./../../../template.xhtml">
+        <ui:define name="title"><h:outputText value="#{lbl.editar_proyecto}"/></ui:define>
+        <ui:define name="top">
+            <ui:include src="./../../inicio/menu.xhtml"/>
+        </ui:define>
+        <ui:define name="content">
+            <p:growl id="msm" showDetail="true" /> 
+            <p:panel>
+                <p:tabView  id="tabViewDatosProyecto">
+                    <p:tab id="tabActividades" title="#{lbl.actividades}" >
+                        <p:panel header="#{lbl.actividades}" toggleable="true">
+                            <ui:include src="./../actividad/treeActividades.xhtml"/>
+                            <f:facet name="footer">
+                                <ui:include src="./../actividad/botonesTreeActividades.xhtml"/>
+                            </f:facet>
+                        </p:panel>
+                    </p:tab>
+                </p:tabView>
+            </p:panel>
+              <ui:include src="./../actividad/dialogoCrudActividad.xhtml"/>
+        </ui:define>
+    </ui:composition>
+</html>

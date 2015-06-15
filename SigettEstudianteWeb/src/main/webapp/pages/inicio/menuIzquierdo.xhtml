@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+    <body>
+        <p:panel header="#{lbl.inicio}">
+            <h:panelGrid styleClass="panelgrid" columns="3" rowClasses="rowpanelgrid" columnClasses="col-sm-1,col-sm-10,col-sm-1">
+                <p:graphicImage width="16" height="16" value="/resources/blacks/16x16/120.png"/>
+                <p:commandLink onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" action="pretty:inicio" 
+                               value="#{lbl.inicio}"/>
+                <h:inputHidden/>
+                 <p:graphicImage width="16" height="16" value="/resources/png/32px/Shape8.png"/>
+                <p:commandLink onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" action="pretty:proyectos" 
+                               value="#{lbl.proyectos}"/>
+                <h:inputHidden/>
+            </h:panelGrid>
+        </p:panel>
+    </body>
+
+</html>

@@ -1,0 +1,64 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+        <p:dataTable id="tblAutorProyectos" value="#{sessionAutorProyecto.autorProyectos}" var="item" rows="20" paginator="true" rowExpandMode="single"
+                     filteredValue="#{sessionAutorProyecto.filterAutorProyectos}" widgetVar="tblAutorProyectosFilter"
+                     draggableColumns="true" rowsPerPageTemplate="5,10,15,20,25,30,35,40,45,50" emptyMessage="#{msg.table_empty}" 
+                     rowIndexVar="rowIx" rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'even-row' : 'odd-row'}" 
+                     rowKey="#{item}" selectionMode="single">
+            <p:column width="3%">
+                <h:outputText value="#{rowIx+1}" />
+            </p:column>
+            <p:column width="12%" sortBy="#{item.autorProyecto.proyectoId.fechaCreated}">
+                <f:facet name="header">
+                    <h:outputText value="#{lbl.fecha}"/>
+                </f:facet>
+                <h:outputText value="#{item.autorProyecto.proyectoId.fechaCreated}">
+                    <f:convertDateTime pattern="EEEEE dd MMMMM yyyy HH:mm:ss"/>
+                </h:outputText>
+            </p:column>
+            <p:column width="30%" filterBy="#{item.autorProyecto.proyectoId.temaActual}" sortBy="#{item.autorProyecto.proyectoId.temaActual}" 
+                      filterMatchMode="contains" >
+                <f:facet name="header">
+                    <h:outputText value="#{lbl.tema}"/>
+                </f:facet>
+                <p:commandLink  value="#{item.autorProyecto.proyectoId.temaActual}" onstart="PF('dlgLoading').show()"
+                                oncomplete="PF('dlgLoading').hide(),PF('tblAutorProyectosFilter').filter()" 
+                                action="#{autorProyectoController.editar(item)}"/>
+            </p:column>
+            <p:column width="12%" filterBy="#{item.autorProyecto.proyectoId.tipo}" filterMatchMode="in" >
+                <f:facet name="filter" >
+                    <p:selectCheckboxMenu label="#{lbl.tipos}"  onchange="PF('tblAutorProyectosFilter').filter()" >
+                        <f:selectItems var="tipo" itemLabel="#{tipo.nombre}" itemValue="#{tipo.nombre}" value="#{sessionAutorProyecto.tipos}"/>
+                        <p:ajax event="change" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()"/>
+                    </p:selectCheckboxMenu>
+                </f:facet>
+                <h:outputText value="#{item.autorProyecto.proyectoId.tipo}"/>
+            </p:column>
+            <p:column width="12%" filterBy="#{item.autorProyecto.proyectoId.catalogo}" filterMatchMode="in">
+                <f:facet name="filter">
+                    <p:selectCheckboxMenu label="#{lbl.categoria}"  onchange="PF('tblAutorProyectosFilter').filter()"  scrollHeight="150">
+                        <f:selectItems var="cat" itemLabel="#{cat.nombre}" itemValue="#{cat.nombre}" value="#{sessionAutorProyecto.categorias}" />
+                        <p:ajax event="change" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()"/>
+                    </p:selectCheckboxMenu>
+                </f:facet>
+                <h:outputText value="#{item.autorProyecto.proyectoId.catalogo}"/>
+            </p:column>
+            <p:column width="12%" filterBy="#{item.autorProyecto.proyectoId.estado}" filterMatchMode="in">
+                <f:facet name="filter">
+                    <p:selectCheckboxMenu label="#{lbl.estado}" onchange="PF('tblAutorProyectosFilter').filter()">
+                        <f:selectItems var="estado" itemLabel="#{estado.nombre}" itemValue="#{estado.nombre}" value="#{sessionAutorProyecto.estados}"/>
+                        <p:ajax event="change" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()"/>
+                    </p:selectCheckboxMenu>
+                </f:facet>
+                <h:outputText value="#{item.autorProyecto.proyectoId.estado}"/>
+            </p:column>
+        </p:dataTable>
+    </body>
+
+</html>

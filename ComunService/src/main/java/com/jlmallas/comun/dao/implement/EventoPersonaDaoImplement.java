@@ -35,9 +35,9 @@ public class EventoPersonaDaoImplement extends AbstractDao<EventoPersona> implem
             parametros.put("personaId", eventoPersona.getPersonaId());
             existeFiltro = Boolean.TRUE;
         }
-        if (eventoPersona.getTabalaId() != null) {
+        if (eventoPersona.getTablaId() != null) {
             sql.append(" and e.tablaId=:tablaId");
-            parametros.put("tablaId", eventoPersona.getTabalaId());
+            parametros.put("tablaId", eventoPersona.getTablaId());
             existeFiltro = Boolean.TRUE;
         }
 

@@ -8,6 +8,7 @@ package com.jlmallas.comun.service.implement;
 import com.jlmallas.comun.dao.EventoPersonaDao;
 import com.jlmallas.comun.entity.EventoPersona;
 import com.jlmallas.comun.service.EventoPersonaService;
+import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -44,7 +45,11 @@ public class EventoPersonaServiceImplement implements EventoPersonaService {
 
     @Override
     public List<EventoPersona> buscar(final EventoPersona eventoPersona) {
-        return this.eventoPersonaDao.buscar(eventoPersona);
+        List<EventoPersona> eventoPersonas = eventoPersonaDao.buscar(eventoPersona);
+        if (eventoPersonas == null) {
+            return new ArrayList<>();
+        }
+        return eventoPersonas;
     }
 
 }

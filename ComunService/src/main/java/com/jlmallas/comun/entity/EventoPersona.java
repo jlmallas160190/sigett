@@ -11,6 +11,7 @@ import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -30,9 +31,10 @@ public class EventoPersona implements Serializable {
     @Basic(optional = false)
     private Long id;
     @ManyToOne
+    @JoinColumn(name = "persona_id", referencedColumnName = "id")
     private Persona personaId;
     @Column(name = "tabla_id")
-    private Long tabalaId;
+    private Long tablaId;
 
     public EventoPersona() {
     }
@@ -41,10 +43,10 @@ public class EventoPersona implements Serializable {
         this.id = id;
     }
 
-    public EventoPersona(Long id, Persona personaId, Long tabalaId) {
+    public EventoPersona(Long id, Persona personaId, Long tablaId) {
         this.id = id;
         this.personaId = personaId;
-        this.tabalaId = tabalaId;
+        this.tablaId = tablaId;
     }
 
     public Persona getPersonaId() {
@@ -55,12 +57,12 @@ public class EventoPersona implements Serializable {
         this.personaId = personaId;
     }
 
-    public Long getTabalaId() {
-        return tabalaId;
+    public Long getTablaId() {
+        return tablaId;
     }
 
-    public void setTabalaId(Long tabalaId) {
-        this.tabalaId = tabalaId;
+    public void setTablaId(Long tablaId) {
+        this.tablaId = tablaId;
     }
 
     public Long getId() {

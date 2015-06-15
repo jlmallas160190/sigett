@@ -1,0 +1,25 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <body>
+        <ui:composition template="./../../../template.xhtml">
+            <ui:define name="title">#{lbl.proyectos}</ui:define>
+            <ui:define name="top">
+                <ui:include src="./../../inicio/menu.xhtml"/>
+            </ui:define>
+            <ui:define name="content">
+                <p:messages id="msm"/>
+                <p:panel header="#{lbl.proyectos}">
+                    <ui:include src="tablaAutorProyectos.xhtml"/>
+                </p:panel>
+                <f:metadata>
+                    <f:event type="preRenderView" listener="#{autorProyectoController.preRenderView()}"/>
+                </f:metadata>
+            </ui:define>
+        </ui:composition>
+    </body>
+
+</html>

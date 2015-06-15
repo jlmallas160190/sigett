@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+    <body>
+        <h:panelGrid columns="3" styleClass="panelgrid" rowClasses="rowpanelgrid" columnClasses="col-sm-3,col-sm-8,col-lg-1">
+            <h:outputLabel value="#{lbl.nombre}:"  />
+            <p:inputTextarea id="nombre" value="#{sessionActividad.actividad.nombre}" onkeyup="this.value=this.value.toUpperCase()"
+                             required="true" requiredMessage="Campo Obligatorio">
+            </p:inputTextarea>
+            <p:message id="msmNombre" display="icon" for="nombre"/>
+            <h:outputLabel  value="#{lbl.descripcion}:"  />
+            <p:editor  id="descripcion" value="#{sessionActividad.actividad.observacion}" 
+                            required="true" requiredMessage="Campo Obligatorio">
+            </p:editor>
+            <p:message id="msmDescripcion" display="icon" for="descripcion"/>
+            <h:outputLabel value="#{lbl.fecha_inicio}"/>
+            <p:calendar  id="fecha"  navigator="true" locale="es"  value="#{sessionActividad.actividad.fechaInicio}" 
+                         title="#{lbl.fecha_inicio}" required="true" requiredMessage="Fecha de Inicio Obligatoria">
+                <p:ajax event="dateSelect"  update="fechaFin,duracion,porcentaje" 
+                        listener="#{actividadController.calcularDuracion()}"/>
+            </p:calendar>
+            <p:message id="msmFecha" display="icon" for="fecha"/>
+            <h:outputLabel value="#{lbl.fecha_fin}"/>
+            <p:calendar  id="fechaFin"  navigator="true" locale="es"  value="#{sessionActividad.actividad.fechaCulminacion}" 
+                         title="#{lbl.fecha_fin}" required="true" requiredMessage="Fecha de Culminación Obligatoria">
+                <p:ajax event="dateSelect" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" 
+                        update=":contenido:msm,fechaFin,fecha,duracion,porcentaje" listener="#{actividadController.calcularDuracion()}"/>
+            </p:calendar>
+            <p:message id="msmFechaFin" display="icon" for="fechaFin"/>
+            <h:outputLabel value="#{lbl.duracion}"/>
+            <h:outputLabel id="duracion" value="#{sessionActividad.actividad.duracion} #{lbl.dias}"/>
+            <h:inputHidden/>
+            <h:outputLabel value="%"/>
+            <h:outputLabel id="porcentaje" value="#{sessionActividad.actividad.porcentajeDuracion}%"/>
+            <h:inputHidden/>
+        </h:panelGrid> 
+    </body>
+
+</html>

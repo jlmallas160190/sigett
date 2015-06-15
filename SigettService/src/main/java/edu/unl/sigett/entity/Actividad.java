@@ -23,6 +23,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -75,12 +76,12 @@ public class Actividad implements Serializable {
     private BigDecimal porcentajeDuracion;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "avance")
-    private BigDecimal avance;
+    @Column(name = "porcentaje_avance")
+    private BigDecimal porcentajeAvance;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "faltante")
-    private BigDecimal faltante;
+    @Column(name = "porcentaje_faltante")
+    private BigDecimal porcentajeFaltante;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 500)
@@ -99,6 +100,8 @@ public class Actividad implements Serializable {
     private List<Revision> revisionList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "actividadId")
     private List<DocumentoActividad> documentoActividadList;
+    @Transient
+    private String estiloEstado;
 
     public Actividad() {
     }
@@ -116,8 +119,8 @@ public class Actividad implements Serializable {
         this.padreId = actividadId;
         this.esActivo = esActivo;
         this.porcentajeDuracion = porcentajeDuracion;
-        this.avance = avance;
-        this.faltante = faltante;
+        this.porcentajeAvance = avance;
+        this.porcentajeFaltante = faltante;
         this.observacion = observacion;
         this.tipoId = tipoId;
         this.estadoId = estadoId;
@@ -222,20 +225,20 @@ public class Actividad implements Serializable {
         this.porcentajeDuracion = porcentajeDuracion;
     }
 
-    public BigDecimal getAvance() {
-        return avance;
+    public BigDecimal getPorcentajeAvance() {
+        return porcentajeAvance;
     }
 
-    public void setAvance(BigDecimal avance) {
-        this.avance = avance;
+    public void setPorcentajeAvance(BigDecimal porcentajeAvance) {
+        this.porcentajeAvance = porcentajeAvance;
     }
 
-    public BigDecimal getFaltante() {
-        return faltante;
+    public BigDecimal getPorcentajeFaltante() {
+        return porcentajeFaltante;
     }
 
-    public void setFaltante(BigDecimal faltante) {
-        this.faltante = faltante;
+    public void setPorcentajeFaltante(BigDecimal porcentajeFaltante) {
+        this.porcentajeFaltante = porcentajeFaltante;
     }
 
     public Long getTipoId() {
@@ -252,6 +255,14 @@ public class Actividad implements Serializable {
 
     public void setEstadoId(Long estadoId) {
         this.estadoId = estadoId;
+    }
+
+    public String getEstiloEstado() {
+        return estiloEstado;
+    }
+
+    public void setEstiloEstado(String estiloEstado) {
+        this.estiloEstado = estiloEstado;
     }
 
     @Override

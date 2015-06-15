@@ -45,6 +45,7 @@ public class ItemServiceImplement implements ItemService {
     @Override
     public Item buscarPorCatalogoCodigo(String codigoCatalogo, String codigo) {
         List<Catalogo> catalogos = catalogoDao.buscar(new Catalogo(null, null, codigoCatalogo, true, null));
+        @SuppressWarnings("UnusedAssignment")
         List<Item> items = new ArrayList<>();
         if (catalogos == null) {
             return null;
