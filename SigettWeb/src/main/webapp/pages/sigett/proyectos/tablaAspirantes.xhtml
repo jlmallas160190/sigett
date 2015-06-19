@@ -16,7 +16,7 @@
                     <h:outputText value="#{msg['lbl.seleccionar']}"/>
                 </f:facet>
                 <p:commandButton onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide(),PF('tblAPFilter').filter()" icon="ui-icon-circle-plus" 
-                                 action="#{autorProyectoController.agregar(aspirante)}" process="@this"
+                                 action="#{autorProyectoController.agregar(aspirante)}" 
                                  update=":contenido:tabViewDatosProyecto:tblAutores,:contenido:msm"/>
             </p:column>
             <p:column  sortBy="#{aspirante.persona.apellidos}" 

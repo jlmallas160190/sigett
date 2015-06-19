@@ -65,6 +65,7 @@ public class ActividadDaoImplement extends AbstractDao<Actividad> implements Act
         if (!existeFiltro) {
             return new ArrayList<>();
         }
+        sql.append(" order by a.fechaInicio ASC");
         final Query q = em.createQuery(sql.toString());
         for (String key : parametros.keySet()) {
             q.setParameter(key, parametros.get(key));

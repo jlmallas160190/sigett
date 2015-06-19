@@ -4,11 +4,14 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:p="http://primefaces.org/ui">
     <body>
-        <h:panelGrid styleClass="pnl-botones" columns="1">
+        <h:panelGrid styleClass="pnl-botones" columns="2">
             <p:commandButton  value="#{msg['lbl.agregar']}" icon="ui-icon-plus" onstart="PF('dlgLoading').show();" 
                               oncomplete="PF('dlgLoading').hide(),PF('dlgEditarDocumentoProyecto').hide(),PF('tblDocProyFilter').filter()"
                               update=":contenido:tabViewDatosProyecto:tblDocumentosProyecto,:contenido:msm"
                               action="#{documentoProyectoController.agregar()}"/>
+            <p:commandButton action="#{documentoProyectoController.cancelarEdicion()}" update=":contenido:pnlEditarDocProy"
+                                         onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide(),PF('dlgEditarDocumentoProyecto').hide()"
+                                         icon="ui-icon-circle-arrow-w" value="#{btn['cancelar']}"/> 
         </h:panelGrid>
     </body>
 

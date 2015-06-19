@@ -3,11 +3,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:p="http://primefaces.org/ui">
-
     <body>
         <h:panelGrid id="crearDocumento" >
             <p:commandButton icon="ui-icon-newwin" value="#{btn.crear}"  onstart="PF('dlgLoading').show()" 
-                             oncomplete="PF('dlgLoading').hide(),PF('dlgSubirDocumentoActividad').show()"
+                             oncomplete="PF('dlgLoading').hide()"
+                             update=":contenido:dlgCrudDocumentoActividad"
                              action="#{documentoActividadController.crear()}"/>
         </h:panelGrid>
     </body>

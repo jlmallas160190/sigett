@@ -24,6 +24,7 @@ public class SessionDocumentoProyecto implements Serializable {
     private Item catalogoSeleccionado;
 
     private Double tamanioArchivo;
+    private Boolean renderedCrud;
 
     private List<Item> catalogosDocumento;
 
@@ -63,6 +64,14 @@ public class SessionDocumentoProyecto implements Serializable {
 
     public void setTamanioArchivo(Double tamanioArchivo) {
         this.tamanioArchivo = tamanioArchivo;
+    }
+
+    public Boolean getRenderedCrud() {
+        return renderedCrud;
+    }
+
+    public void setRenderedCrud(Boolean renderedCrud) {
+        this.renderedCrud = renderedCrud;
     }
 
 }

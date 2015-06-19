@@ -35,21 +35,30 @@
                 </f:facet>
                 <h:outputText value="#{item.docenteProyecto.proyectoId.autores}"/>
             </p:column>
-            <p:column width="10%" filterBy="#{item.docenteProyecto.proyectoId.tipo}" sortBy="#{item.docenteProyecto.proyectoId.tipo}">
-                <f:facet name="header">
-                    <h:outputText value="#{msg['lbl.tipoProyecto']}"/>
+           <p:column width="10%" filterBy="#{item.docenteProyecto.proyectoId.tipo}" filterMatchMode="in">
+                <f:facet name="filter">
+                    <p:selectCheckboxMenu label="#{msg['lbl.tipo']}" onchange="PF('tblDPFilter').filter()">
+                        <f:selectItems var="tipo" itemLabel="#{tipo.nombre}" itemValue="#{tipo.nombre}" value="#{docenteProyectoDM.tipos}"/>
+                        <p:ajax event="change" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()"/>
+                    </p:selectCheckboxMenu>
                 </f:facet>
                 <h:outputText value="#{item.docenteProyecto.proyectoId.tipo}"/>
             </p:column>
-            <p:column width="10%" filterBy="#{item.docenteProyecto.proyectoId.catalogo}" sortBy="#{item.docenteProyecto.proyectoId.catalogo}">
-                <f:facet name="header">
-                    <h:outputText value="#{msg['lbl.categoria']}"/>
+            <p:column width="10%" filterBy="#{item.docenteProyecto.proyectoId.catalogo}" filterMatchMode="in">
+                <f:facet name="filter">
+                    <p:selectCheckboxMenu label="#{msg['lbl.categoria']}" onchange="PF('tblDPFilter').filter()">
+                        <f:selectItems var="cat" itemLabel="#{cat.nombre}" itemValue="#{cat.nombre}" value="#{docenteProyectoDM.categorias}"/>
+                        <p:ajax event="change" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()"/>
+                    </p:selectCheckboxMenu>
                 </f:facet>
                 <h:outputText value="#{item.docenteProyecto.proyectoId.catalogo}"/>
             </p:column>
-            <p:column width="10%" filterBy="#{item.docenteProyecto.proyectoId.estado}" sortBy="#{item.docenteProyecto.proyectoId.estado}">
-                <f:facet name="header">
-                    <h:outputText value="#{msg['lbl.estado']}"/>
+            <p:column width="10%" filterBy="#{item.docenteProyecto.proyectoId.estado}" filterMatchMode="in">
+                <f:facet name="filter">
+                    <p:selectCheckboxMenu label="#{msg['lbl.estado']}" onchange="PF('tblDPFilter').filter()">
+                        <f:selectItems var="estado" itemLabel="#{estado.nombre}" itemValue="#{estado.nombre}" value="#{docenteProyectoDM.estados}"/>
+                        <p:ajax event="change" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()"/>
+                    </p:selectCheckboxMenu>
                 </f:facet>
                 <h:outputText value="#{item.docenteProyecto.proyectoId.estado}"/>
             </p:column>

@@ -8,8 +8,8 @@
     <body>
         <h:panelGrid columns="1">
             <p:commandButton update=":contenido:dlgCrudActividad" onstart="PF('dlgLoading').show()" 
-                             oncomplete="PF('dlgLoading').hide(),PF('dlgCrudActividad').show()"
-                             value="#{btn.crear}" action="#{actividadController.crear()}" icon="ui-icon-newwin" process="@this">
+                             oncomplete="PF('dlgLoading').hide()"
+                             value="#{btn.crear}" action="#{actividadController.crear()}" icon="ui-icon-newwin" >
                 <f:param value="#{sessionActividad.objetivo}" name="tipo"/>
             </p:commandButton>
         </h:panelGrid>  

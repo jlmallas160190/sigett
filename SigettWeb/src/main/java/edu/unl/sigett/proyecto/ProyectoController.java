@@ -214,7 +214,6 @@ public class ProyectoController implements Serializable {
     public void preRenderViewEdit() {
         estadoActual();
         this.renderedInicio();
-        this.listadoConfiguracionesProyecto();
     }
     //<editor-fold defaultstate="collapsed" desc="PROYECTO">
 
@@ -274,6 +273,7 @@ public class ProyectoController implements Serializable {
         sessionProyecto.setProyectoOntDTO(new ProyectoOntDTO());
         sessionProyecto.setCategoriaSeleccionada(new Item());
         sessionProyecto.setTipoSeleccionado(new Item());
+        sessionProyecto.getConfiguracionProyectos().clear();
         pickListLineasInvestigacionProyecto(sessionProyecto.getProyectoSeleccionado());
         pickListCarreras(sessionProyecto.getProyectoSeleccionado());
     }
@@ -514,6 +514,9 @@ public class ProyectoController implements Serializable {
                 return;
             }
             CoordinadorPeriodo coordinadorPeriodo = !coordinadores.isEmpty() ? coordinadores.get(0) : null;
+            if (coordinadorPeriodo == null) {
+                return;
+            }
             CoordinadorPeriodoDTO coordinadorPeriodoDTO = new CoordinadorPeriodoDTO(coordinadorPeriodo, personaDao.find(
                     coordinadorPeriodo.getCoordinadorId().getId()), null);
             coordinadorPeriodoDTO.setDocente(docenteService.buscarPorId(new Docente(coordinadorPeriodoDTO.getPersona().getId())));
@@ -1037,13 +1040,12 @@ public class ProyectoController implements Serializable {
 
     //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="CONFIGURACIONES">
-    private void listadoConfiguracionesProyecto() {
-        this.sessionProyecto.getConfiguracionProyectos().clear();
-        this.sessionProyecto.setConfiguracionProyectos(this.configuracionProyectoService.buscar(
-                new ConfiguracionProyecto(sessionProyecto.getProyectoSeleccionado().getId() != null ? sessionProyecto.getProyectoSeleccionado() : null,
-                        null, null, null, null)));
-    }
-
+//    private void listadoConfiguracionesProyecto() {
+//        this.sessionProyecto.getConfiguracionProyectos().clear();
+//        this.sessionProyecto.setConfiguracionProyectos(this.configuracionProyectoService.buscar(
+//                new ConfiguracionProyecto(sessionProyecto.getProyectoSeleccionado().getId() != null ? sessionProyecto.getProyectoSeleccionado() : null,
+//                        null, null, null, null)));
+//    }
     /**
      * AGREGAR CONFIGURACIONES A PROYECTO
      *

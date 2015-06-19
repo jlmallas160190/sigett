@@ -107,6 +107,10 @@ public class DocenteProyectoController implements Serializable {
 
     public void preRenderView() {
         this.listadoPertinenciaProyecto();
+        this.listadoCategorias();
+        this.listadoEstados();
+        this.listadoTipos();
+
     }
 
     public void preRenderViewEditar() {
@@ -204,6 +208,21 @@ public class DocenteProyectoController implements Serializable {
     private void recuperaEstadoActualProyecto() {
         this.docenteProyectoDM.setEstadoActualProyecto(itemService.buscarPorId(
                 docenteProyectoDM.getDocenteProyectoDTOSeleccionado().getDocenteProyecto().getProyectoId().getEstadoProyectoId()));
+    }
+
+    private void listadoTipos() {
+        docenteProyectoDM.getTipos().clear();
+        docenteProyectoDM.setTipos(itemService.buscarPorCatalogo(CatalogoEnum.TIPOPROYECTO.getTipo()));
+    }
+
+    private void listadoCategorias() {
+        docenteProyectoDM.getCategorias().clear();
+        docenteProyectoDM.setCategorias(itemService.buscarPorCatalogo(CatalogoEnum.CATALOGOPROYECTO.getTipo()));
+    }
+
+    private void listadoEstados() {
+        docenteProyectoDM.getEstados().clear();
+        docenteProyectoDM.setEstados(itemService.buscarPorCatalogo(CatalogoEnum.ESTADOPROYECTO.getTipo()));
     }
 
     /**

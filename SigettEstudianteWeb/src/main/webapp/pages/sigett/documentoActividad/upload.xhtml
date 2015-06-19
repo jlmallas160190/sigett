@@ -5,9 +5,9 @@
     <body>
         <p:fileUpload fileUploadListener="#{documentoActividadController.handleFileUpload}" 
                       multiple="true" allowTypes="/(\.|\/)(pdf)$/" sizeLimit="#{cabeceraController.configuracionGeneralUtil.tamanioArchivo}" 
-                      update=":contenido:tabViewDatosActividad:dgDocumentosActividad"
+                      update=":contenido:panelCrudDocumentoActividad"
                       invalidFileMessage="#{msg.invalidTypeFileMessage}"  invalidSizeMessage="#{msg.fileLimitMessage}" required="true"  
-                      oncomplete="PF('dlgSubirDocumentoActividad').hide()" cancelLabel="#{btn.cancelar}"  label="#{lbl.seleccionar}" 
+                      cancelLabel="#{btn.cancelar}"  label="#{lbl.seleccionar}" 
                       uploadLabel="#{lbl.subir}"/> 
     </body>
 </html>

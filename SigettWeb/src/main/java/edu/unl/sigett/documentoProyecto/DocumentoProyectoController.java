@@ -49,17 +49,13 @@ public class DocumentoProyectoController implements Serializable {
     public DocumentoProyectoController() {
     }
 
-    private void listarCategorias() {
-        sessionDocumentoProyecto.getCatalogosDocumento().clear();
-        sessionDocumentoProyecto.getCatalogosDocumento().addAll(itemService.buscarPorCatalogo(CatalogoEnum.CATALOGODOCUMENTOPROYECTO.getTipo()));
-    }
-
     //<editor-fold defaultstate="collapsed" desc="CRUD">
     public void crear() {
         listarCategorias();
         sessionDocumentoProyecto.setTamanioArchivo(cabeceraController.getConfiguracionGeneralUtil().getTamanioArchivo());
         sessionDocumentoProyecto.setDocumentoProyectoDTOSeleccionado(new DocumentoProyectoDTO(
                 new DocumentoProyecto(Boolean.TRUE, null, sessionProyecto.getProyectoSeleccionado()), new Documento()));
+        sessionDocumentoProyecto.setRenderedCrud(Boolean.TRUE);
     }
 
     public void editar(DocumentoProyectoDTO documentoProyectoDTO) {
@@ -67,9 +63,10 @@ public class DocumentoProyectoController implements Serializable {
             sessionDocumentoProyecto.setTamanioArchivo(cabeceraController.getConfiguracionGeneralUtil().getTamanioArchivo());
             listarCategorias();
             File file = new File(documentoProyectoDTO.getDocumento().getRuta());
-            byte[] contents=cabeceraController.getUtilService().obtenerBytes(file);
-            documentoProyectoDTO.getDocumento().setContents(contents!=null?contents:null);
+            byte[] contents = cabeceraController.getUtilService().obtenerBytes(file);
+            documentoProyectoDTO.getDocumento().setContents(contents != null ? contents : null);
             sessionDocumentoProyecto.setDocumentoProyectoDTOSeleccionado(documentoProyectoDTO);
+            sessionDocumentoProyecto.setRenderedCrud(Boolean.TRUE);
         } catch (Exception e) {
             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_FATAL, e.getMessage(), "");
             FacesContext.getCurrentInstance().addMessage(null, message);
@@ -141,6 +138,19 @@ public class DocumentoProyectoController implements Serializable {
             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), "");
             FacesContext.getCurrentInstance().addMessage(null, message);
         }
+    }
+
+    /**
+     * LISTAR LAS CATEGORIAS DE LOS DOCUMENTOS DEL PROYECTO.
+     */
+    private void listarCategorias() {
+        sessionDocumentoProyecto.getCatalogosDocumento().clear();
+        sessionDocumentoProyecto.getCatalogosDocumento().addAll(itemService.buscarPorCatalogo(CatalogoEnum.CATALOGODOCUMENTOPROYECTO.getTipo()));
+    }
+
+    public void cancelarEdicion() {
+        sessionDocumentoProyecto.setRenderedCrud(Boolean.FALSE);
+        sessionDocumentoProyecto.setDocumentoProyectoDTOSeleccionado(new DocumentoProyectoDTO());
     }
     //</editor-fold>
 }

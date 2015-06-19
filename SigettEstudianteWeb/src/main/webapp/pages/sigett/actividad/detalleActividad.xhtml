@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+    <body>
+
+        <h:panelGrid styleClass="panelgrid" rowClasses="rowpanelgrid" columns="2">
+            <h:outputLabel value="#{lbl.duracion}"/>
+            <h:outputLabel value="#{node.porcentajeDuracion}%"/>
+            <h:outputLabel value="#{lbl.avance}"/>
+            <p:progressBar id="avance" labelTemplate="#{node.porcentajeAvance}%" value="#{node.porcentajeAvance}"/>
+            <h:outputLabel value="#{lbl.faltante}"/>
+            <p:progressBar id="faltante" labelTemplate="#{node.porcentajeFaltante}%" value="#{node.porcentajeFaltante}"/>
+        </h:panelGrid>
+    </body>
+
+</html>

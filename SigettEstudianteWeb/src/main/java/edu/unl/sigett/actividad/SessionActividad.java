@@ -28,6 +28,7 @@ public class SessionActividad implements Serializable {
     private TreeNode rootActividades;
 
     private List<DocumentoActividadDTO> documentosActividadDTO;
+    private List<DocumentoActividadDTO> filterDocumentosActividadDTO;
     private List<Actividad> actividadesPadre;
 
     private Boolean renderedCrud;
@@ -45,6 +46,7 @@ public class SessionActividad implements Serializable {
         this.actividadesPadre = new ArrayList<>();
         this.actividad = new Actividad();
         this.documentosActividadDTO = new ArrayList<>();
+        this.filterDocumentosActividadDTO=new ArrayList<>();
     }
 
     public Actividad getActividad() {
@@ -125,6 +127,14 @@ public class SessionActividad implements Serializable {
 
     public void setFechaFinLimite(String fechaFinLimite) {
         this.fechaFinLimite = fechaFinLimite;
+    }
+
+    public List<DocumentoActividadDTO> getFilterDocumentosActividadDTO() {
+        return filterDocumentosActividadDTO;
+    }
+
+    public void setFilterDocumentosActividadDTO(List<DocumentoActividadDTO> filterDocumentosActividadDTO) {
+        this.filterDocumentosActividadDTO = filterDocumentosActividadDTO;
     }
 
 }

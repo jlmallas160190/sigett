@@ -37,7 +37,7 @@ public class DocumentoActividad implements Serializable {
     @NotNull
     @Column(name = "es_actual")
     private Boolean esActual;
-    @Column(name = "documentoId")
+    @Column(name = "documento_id")
     private Long documentoId;
     @JoinColumn(name = "actividad_id", referencedColumnName = "id")
     @ManyToOne(optional = false)

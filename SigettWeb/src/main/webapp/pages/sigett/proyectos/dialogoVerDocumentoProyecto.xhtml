@@ -5,11 +5,11 @@
 
     <body>
         <p:dialog id="dlgVerDocumentoProyecto" widgetVar="dlgVerDocProy"  header="#{msg['lbl.editar']} #{msg['lbl.documento']}" 
-                  styleClass="modal-md" modal="true" fitViewport="true" draggable="true" position="center">
+                  styleClass="modal-md" modal="true" fitViewport="true" draggable="false" position="center">
             <p:panel >
                 <p:media styleClass="img-thumbnail" 
                          value="/AppServlet?entity=documentoProyecto"
-                         player="pdf" width="100%" height="250"/>
+                         player="pdf" width="100%" height="450"/>
             </p:panel>
         </p:dialog> 
     </body>

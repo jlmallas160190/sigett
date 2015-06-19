@@ -6,11 +6,16 @@
 package edu.unl.sigett.documentoActividad;
 
 import com.jlmallas.comun.entity.Documento;
+import com.jlmallas.comun.entity.Item;
+import com.jlmallas.comun.enumeration.CatalogoEnum;
 import com.jlmallas.comun.service.DocumentoService;
+import com.jlmallas.comun.service.ItemService;
 import edu.unl.sigett.actividad.SessionActividad;
 import edu.unl.sigett.entity.DocumentoActividad;
+import edu.unl.sigett.enumeration.CatalogoDocumentoActividad;
 import edu.unl.sigett.service.DocumentoActividadService;
 import edu.unl.sigett.util.CabeceraController;
+import java.io.File;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
@@ -19,6 +24,7 @@ import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 
 /**
@@ -42,27 +48,35 @@ public class DocumentoActividadController implements Serializable {
     private DocumentoActividadService documentoActividadService;
     @EJB
     private DocumentoService documentoService;
-    
+    @EJB
+    private ItemService itemService;
+
     public DocumentoActividadController() {
     }
-    
+
     public void crear() {
         sessionDocumentoActividad.setDocumentoActividadDTO(new DocumentoActividadDTO(new Documento(),
                 new DocumentoActividad(null, Boolean.TRUE, null, sessionActividad.getActividad())));
+        sessionDocumentoActividad.setRenderedCrud(Boolean.TRUE);
+        RequestContext.getCurrentInstance().execute("PF('dlgCrudDocumentoActividad').show()");
     }
-    
+
     public void editar(DocumentoActividadDTO documentoActividadDTO) {
+        File file = new File(documentoActividadDTO.getDocumento().getRuta());
+        byte[] contents = cabeceraController.getUtilService().obtenerBytes(file);
+        documentoActividadDTO.getDocumento().setContents(contents != null ? contents : null);
         sessionDocumentoActividad.setDocumentoActividadDTO(documentoActividadDTO);
+        sessionDocumentoActividad.setRenderedCrud(Boolean.TRUE);
+        RequestContext.getCurrentInstance().execute("PF('dlgCrudDocumentoActividad').show()");
     }
-    
+
     public void handleFileUpload(FileUploadEvent event) {
         sessionDocumentoActividad.getDocumentoActividadDTO().getDocumento().setTipo("pdf");
         sessionDocumentoActividad.getDocumentoActividadDTO().getDocumento().setContents(event.getFile().getContents());
         Long size = event.getFile().getSize();
         sessionDocumentoActividad.getDocumentoActividadDTO().getDocumento().setTamanio(size.doubleValue());
-        agregar();
     }
-    
+
     public void remover(DocumentoActividadDTO documentoActividadDTO) {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
@@ -76,11 +90,23 @@ public class DocumentoActividadController implements Serializable {
             documentoActividadService.eliminar(documentoActividadDTO.getDocumentoActividad());
         }
     }
-    
+
+    public void cancelarEdicion() {
+        sessionDocumentoActividad.setRenderedCrud(Boolean.FALSE);
+        sessionDocumentoActividad.setDocumentoActividadDTO(new DocumentoActividadDTO());
+        RequestContext.getCurrentInstance().execute("PF('dlgCrudDocumentoActividad').hide()");
+    }
+
     public void agregar() {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-        sessionActividad.getDocumentosActividadDTO().add(sessionDocumentoActividad.getDocumentoActividadDTO());
-        cabeceraController.getMessageView().message(FacesMessage.SEVERITY_INFO, bundle.getString("agregar"), "");
+        Item catalogo = itemService.buscarPorCatalogoCodigo(CatalogoEnum.CATALOGODOCUMENTOCTIVIDAD.getTipo(), CatalogoDocumentoActividad.TAREA.getTipo());
+        sessionDocumentoActividad.getDocumentoActividadDTO().getDocumento().setCatalogoId(catalogo.getId());
+        sessionDocumentoActividad.getDocumentoActividadDTO().getDocumento().setCatalogo(catalogo.getNombre());
+        if (!sessionActividad.getDocumentosActividadDTO().contains(sessionDocumentoActividad.getDocumentoActividadDTO())) {
+            sessionActividad.getDocumentosActividadDTO().add(sessionDocumentoActividad.getDocumentoActividadDTO());
+            cabeceraController.getMessageView().message(FacesMessage.SEVERITY_INFO, bundle.getString("agregar"), "");
+        }
+        cancelarEdicion();
     }
 }

@@ -19,6 +19,8 @@ public class SessionDocumentoActividad implements Serializable {
 
     private DocumentoActividadDTO documentoActividadDTO;
 
+    private Boolean renderedCrud;
+
     public SessionDocumentoActividad() {
         this.documentoActividadDTO = new DocumentoActividadDTO();
     }
@@ -29,6 +31,14 @@ public class SessionDocumentoActividad implements Serializable {
 
     public void setDocumentoActividadDTO(DocumentoActividadDTO documentoActividadDTO) {
         this.documentoActividadDTO = documentoActividadDTO;
+    }
+
+    public Boolean getRenderedCrud() {
+        return renderedCrud;
+    }
+
+    public void setRenderedCrud(Boolean renderedCrud) {
+        this.renderedCrud = renderedCrud;
     }
 
 }

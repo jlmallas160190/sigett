@@ -13,11 +13,11 @@
                     <p:tab id="tabActividad" title="#{lbl.actividad}">
                         <ui:include src="datosActividad.xhtml"/>
                     </p:tab>
-                    <p:tab id="tabDocumentos" title="#{lbl.documentos}">
+                    <p:tab id="tabDocumentos" rendered="#{sessionActividad.actividad.padreId!=null}" title="#{lbl.documentos}">
                         <p:panel>
-                            <ui:include src="dataGridDocumentos.xhtml"/> 
+                            <ui:include src="tablaDocumentosActividad.xhtml"/> 
                             <f:facet name="footer">
-                                <ui:include src="botonesDataGridDocumentos.xhtml"/> 
+                                <ui:include src="botonesTablaDocumentosActividad.xhtml"/>
                             </f:facet>
                         </p:panel>
                     </p:tab>
@@ -26,8 +26,7 @@
                     <ui:include src="botonesCrudActividad.xhtml"/> 
                 </f:facet>
             </p:panel>
-        </p:dialog>
-        <ui:include src="./../documentoActividad/dialogoUpload.xhtml"/> 
+        </p:dialog> 
     </body>
 
 </html>

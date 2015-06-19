@@ -6,6 +6,7 @@
 package edu.unl.sigett.actividad;
 
 import com.jlmallas.comun.entity.Configuracion;
+import com.jlmallas.comun.entity.Documento;
 import com.jlmallas.comun.entity.Evento;
 import com.jlmallas.comun.entity.EventoPersona;
 import com.jlmallas.comun.entity.Item;
@@ -24,6 +25,7 @@ import edu.unl.sigett.documentoActividad.DocumentoActividadDTO;
 import edu.unl.sigett.entity.Actividad;
 import edu.unl.sigett.entity.ConfiguracionProyecto;
 import edu.unl.sigett.entity.Cronograma;
+import edu.unl.sigett.entity.DocumentoActividad;
 import edu.unl.sigett.enumeration.ConfiguracionProyectoEnum;
 import edu.unl.sigett.enumeration.EstadoActividadEnum;
 import edu.unl.sigett.enumeration.TipoActividadEnum;
@@ -45,6 +47,7 @@ import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
+import org.primefaces.context.RequestContext;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
@@ -115,6 +118,8 @@ public class ActividadController implements Serializable {
         }
         fijarFechasLimite();
         sessionActividad.setRenderedCrud(Boolean.TRUE);
+        listadoDocumentos();
+        RequestContext.getCurrentInstance().execute("PF('dlgCrudActividad').show()");
 
     }
 
@@ -142,11 +147,15 @@ public class ActividadController implements Serializable {
         sessionActividad.setActividad(actividad);
         fijarFechasLimite();
         sessionActividad.setRenderedCrud(Boolean.TRUE);
+        listadoDocumentos();
+        RequestContext.getCurrentInstance().execute("PF('dlgCrudActividad').show()");
     }
 
     public void cancelarEdicion() {
         sessionActividad.setActividad(new Actividad());
         sessionActividad.setRenderedCrud(Boolean.FALSE);
+        RequestContext.getCurrentInstance().execute("PF('dlgCrudActividad').hide()");
+
     }
 
     private Boolean validarFechas() {
@@ -199,6 +208,8 @@ public class ActividadController implements Serializable {
         sessionActividad.getActividad().setEstadoId(null);
         sessionActividad.getActividad().setTipoId(null);
         BigDecimal resultado = actividadService.sumatoriaDuracion(sessionActividad.getActividad());
+        sessionActividad.getActividad().setEstadoId(estadoId);
+        sessionActividad.getActividad().setTipoId(tipoId);
         sessionActividad.getActividad().setCronogramaId(sessionAutorProyecto.getAutorProyectoDTO().getAutorProyecto().getProyectoId().getCronograma());
         if (resultado.equals(BigDecimal.ZERO)) {
             sessionActividad.getActividad().setPorcentajeDuracion(new BigDecimal(ValorEnum.DIVISORPORCENTAJE.getTipo()));
@@ -211,8 +222,6 @@ public class ActividadController implements Serializable {
             sessionActividad.getActividad().setPorcentajeDuracion(sessionActividad.getActividad().getDuracion().divide(
                     resultado.add(sessionActividad.getActividad().getDuracion()), 2, RoundingMode.HALF_UP).multiply(new BigDecimal(ValorEnum.DIVISORPORCENTAJE.getTipo())));
         }
-        sessionActividad.getActividad().setEstadoId(estadoId);
-        sessionActividad.getActividad().setTipoId(tipoId);
     }
 
     /**
@@ -329,6 +338,7 @@ public class ActividadController implements Serializable {
                 grabarEventosDirector();
                 cabeceraController.getMessageView().message(FacesMessage.SEVERITY_INFO, bundle.getString("grabar"), "");
                 sessionActividad.setRenderedCrud(Boolean.FALSE);
+                cancelarEdicion();
                 return;
             }
             enviar(param);
@@ -341,10 +351,22 @@ public class ActividadController implements Serializable {
             grabarEventosDirector();
             cabeceraController.getMessageView().message(FacesMessage.SEVERITY_INFO, bundle.getString("editar"), "");
             sessionActividad.setRenderedCrud(Boolean.FALSE);
+            cancelarEdicion();
         } catch (Exception e) {
             LOG.warning(e.getMessage());
         }
 
+    }
+
+    public void remover(Actividad actividad) {
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
+        actividad.setEsActivo(Boolean.FALSE);
+        actividadService.actualizar(actividad);
+        actualizarPorcentajes();
+        calculosObjetivo();
+        calculosCronograma();
+        cabeceraController.getMessageView().message(FacesMessage.SEVERITY_INFO, bundle.getString("eliminar"), "");
     }
 
     private void grabarEventosAutor() {
@@ -395,6 +417,7 @@ public class ActividadController implements Serializable {
         actividadBuscar.setCronogramaId(sessionAutorProyecto.getAutorProyectoDTO().getAutorProyecto() != null
                 ? sessionAutorProyecto.getAutorProyectoDTO().getAutorProyecto().getProyectoId().getCronograma() : null);
         actividadBuscar.setTipoId(itemService.buscarPorCatalogoCodigo(CatalogoEnum.TIPOACTIVIDAD.getTipo(), TipoActividadEnum.OBJETIVO.getTipo()).getId());
+        actividadBuscar.setEsActivo(Boolean.TRUE);
         List<Actividad> actividades = actividadService.buscar(actividadBuscar);
         for (Actividad actividad : actividades) {
             actividad.setEstiloEstado("actividad_desarrollo");
@@ -416,6 +439,7 @@ public class ActividadController implements Serializable {
             Actividad actividadPadre = (Actividad) nodoPadre.getData();
             Actividad actividadBuscar = new Actividad();
             actividadBuscar.setPadreId(actividadPadre.getId());
+            actividadBuscar.setEsActivo(Boolean.TRUE);
             List<Actividad> actividadesHijos = actividadService.buscar(actividadBuscar);
             if (actividadesHijos == null) {
                 continue;
@@ -428,6 +452,21 @@ public class ActividadController implements Serializable {
                 nodoPadre.getChildren().add(new DefaultTreeNode(actividad));
             }
         }
+    }
+
+    //</editor-fold>
+    //<editor-fold defaultstate="collapsed" desc="DOCUMENTOS">
+    private void listadoDocumentos() {
+        sessionActividad.getDocumentosActividadDTO().clear();
+        sessionActividad.getFilterDocumentosActividadDTO().clear();
+        List<DocumentoActividad> documentoActividads = documentoActividadService.buscar(new DocumentoActividad(null, null, null, sessionActividad.getActividad()));
+        for (DocumentoActividad documentoActividad : documentoActividads) {
+            DocumentoActividadDTO documentoActividadDTO = new DocumentoActividadDTO(
+                    documentoService.buscarPorId(new Documento(documentoActividad.getDocumentoId())), documentoActividad);
+            documentoActividadDTO.getDocumento().setCatalogo(itemService.buscarPorId(documentoActividadDTO.getDocumento().getCatalogoId()).getNombre());
+            sessionActividad.getDocumentosActividadDTO().add(documentoActividadDTO);
+        }
+        sessionActividad.setFilterDocumentosActividadDTO(sessionActividad.getDocumentosActividadDTO());
     }
 
     private void grabarDocumentos() {

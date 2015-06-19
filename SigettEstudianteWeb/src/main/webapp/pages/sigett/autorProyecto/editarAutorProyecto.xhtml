@@ -11,6 +11,9 @@
         <ui:define name="top">
             <ui:include src="./../../inicio/menu.xhtml"/>
         </ui:define>
+        <ui:define name="left">
+            <ui:include src="./../../inicio/menuIzquierdo.xhtml"/>
+        </ui:define>
         <ui:define name="content">
             <p:growl id="msm" showDetail="true" /> 
             <p:panel>
@@ -25,7 +28,8 @@
                     </p:tab>
                 </p:tabView>
             </p:panel>
-              <ui:include src="./../actividad/dialogoCrudActividad.xhtml"/>
+            <ui:include src="./../actividad/dialogoCrudActividad.xhtml"/>
+            <ui:include src="./../actividad/dialogoCrudDocumentoActividad.xhtml"/>
         </ui:define>
     </ui:composition>
 </html>
