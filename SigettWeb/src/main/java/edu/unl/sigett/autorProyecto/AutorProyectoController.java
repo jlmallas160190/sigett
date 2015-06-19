@@ -11,7 +11,6 @@ import com.jlmallas.comun.enumeration.CatalogoEnum;
 import com.jlmallas.comun.service.ItemService;
 import edu.jlmallas.academico.dao.EstudianteCarreraDao;
 import edu.unl.sigett.academico.dto.EstudianteCarreraDTO;
-import edu.unl.sigett.autorProyecto.AspiranteDTO;
 import edu.unl.sigett.entity.Aspirante;
 import edu.unl.sigett.entity.AutorProyecto;
 import edu.unl.sigett.enumeration.EstadoAutorEnum;

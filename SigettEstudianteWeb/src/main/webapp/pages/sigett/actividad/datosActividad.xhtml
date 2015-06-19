@@ -18,14 +18,14 @@
             <p:message id="msmDescripcion" display="icon" for="descripcion"/>
             <h:outputLabel value="#{lbl.fecha_inicio}"/>
             <p:calendar  id="fecha"  navigator="true" locale="es"  value="#{sessionActividad.actividad.fechaInicio}" 
-                         title="#{lbl.fecha_inicio}" required="true" requiredMessage="Fecha de Inicio Obligatoria">
+                         title="#{lbl.fecha_inicio}: #{sessionActividad.fechaInicioLimite}" required="true" requiredMessage="Fecha de Inicio Obligatoria">
                 <p:ajax event="dateSelect"  update="fechaFin,duracion,porcentaje" 
                         listener="#{actividadController.calcularDuracion()}"/>
             </p:calendar>
             <p:message id="msmFecha" display="icon" for="fecha"/>
             <h:outputLabel value="#{lbl.fecha_fin}"/>
             <p:calendar  id="fechaFin"  navigator="true" locale="es"  value="#{sessionActividad.actividad.fechaCulminacion}" 
-                         title="#{lbl.fecha_fin}" required="true" requiredMessage="Fecha de Culminación Obligatoria">
+                         title="#{lbl.fecha_fin}: #{sessionActividad.fechaFinLimite}" required="true" requiredMessage="Fecha de Culminación Obligatoria">
                 <p:ajax event="dateSelect" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" 
                         update=":contenido:msm,fechaFin,fecha,duracion,porcentaje" listener="#{actividadController.calcularDuracion()}"/>
             </p:calendar>

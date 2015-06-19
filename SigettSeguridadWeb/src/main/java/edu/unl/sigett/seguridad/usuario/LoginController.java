@@ -18,7 +18,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
-import org.jlmallas.secure.SecureDTO;
+import org.jlmallas.secure.Secure;
 import org.jlmallas.seguridad.dao.UsuarioDao;
 import org.jlmallas.seguridad.service.UsuarioService;
 
@@ -64,7 +64,7 @@ public class LoginController implements Serializable {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
         int var = usuarioService.logear(username, cabeceraController.getSecureService().encrypt(
-                new SecureDTO(cabeceraController.getConfiguracionGeneralDTO().getSecureKey(), password)));
+                new Secure(cabeceraController.getConfiguracionGeneralDTO().getSecureKey(), password)));
         if (var == 1) {
             sessionUsuario.setUsuario(usuarioFacadeLocal.buscarPorUsuario(username));
             if (sessionUsuario.getUsuario().getEsActivo()) {

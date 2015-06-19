@@ -23,11 +23,13 @@ import edu.unl.sigett.directorProyecto.DirectorProyectoDTO;
 import edu.unl.sigett.documentoActividad.DocumentoActividadDTO;
 import edu.unl.sigett.entity.Actividad;
 import edu.unl.sigett.entity.ConfiguracionProyecto;
+import edu.unl.sigett.entity.Cronograma;
 import edu.unl.sigett.enumeration.ConfiguracionProyectoEnum;
 import edu.unl.sigett.enumeration.EstadoActividadEnum;
 import edu.unl.sigett.enumeration.TipoActividadEnum;
 import edu.unl.sigett.service.ActividadService;
 import edu.unl.sigett.service.ConfiguracionProyectoService;
+import edu.unl.sigett.service.CronogramaService;
 import edu.unl.sigett.service.DocumentoActividadService;
 import edu.unl.sigett.util.CabeceraController;
 import java.io.File;
@@ -35,7 +37,7 @@ import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Calendar;
+import java.math.RoundingMode;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
@@ -79,6 +81,8 @@ public class ActividadController implements Serializable {
     private EventoService eventoService;
     @EJB
     private EventoPersonaService eventoPersonaService;
+    @EJB
+    private CronogramaService cronogramaService;
     //</editor-fold>
     private static final Logger LOG = Logger.getLogger(ActividadController.class.getName());
 
@@ -95,6 +99,7 @@ public class ActividadController implements Serializable {
      */
     public void crear() {
         FacesContext facesContext = FacesContext.getCurrentInstance();
+        ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "lbl");
         String param = (String) facesContext.getExternalContext().getRequestParameterMap().get("tipo");
         String padreId = (String) facesContext.getExternalContext().getRequestParameterMap().get("padreId");
         Item estado = itemService.buscarPorCatalogoCodigo(CatalogoEnum.ESTADOACTIVIDAD.getTipo(), EstadoActividadEnum.DESARROLLO.getTipo());
@@ -102,15 +107,41 @@ public class ActividadController implements Serializable {
         sessionActividad.setActividad(new Actividad(null, null, null, BigDecimal.ZERO, padreId != null ? Long.parseLong(padreId) : null, Boolean.TRUE, BigDecimal.ZERO,
                 BigDecimal.ZERO, BigDecimal.ZERO, null, objetivo.getId(), estado.getId(),
                 sessionAutorProyecto.getAutorProyectoDTO().getAutorProyecto().getProyectoId().getCronograma()));
+        sessionActividad.setTitulo(bundle.getString("objetivo"));
         if (param.equalsIgnoreCase(TipoActividadEnum.TAREA.getTipo())) {
+            sessionActividad.setTitulo(bundle.getString("tarea"));
             Item tarea = itemService.buscarPorCatalogoCodigo(CatalogoEnum.TIPOACTIVIDAD.getTipo(), TipoActividadEnum.TAREA.getTipo());
             sessionActividad.getActividad().setTipoId(tarea.getId());
         }
+        fijarFechasLimite();
         sessionActividad.setRenderedCrud(Boolean.TRUE);
+
+    }
+
+    private void fijarFechasLimite() {
+        Actividad actividadPadre = actividadService.buscarPorId(new Actividad(sessionActividad.getActividad().getPadreId() != null ? sessionActividad.getActividad().getPadreId() : 0));
+        if (actividadPadre != null) {
+            sessionActividad.setFechaInicioLimite(cabeceraController.getUtilService().formatoFecha(actividadPadre.getFechaInicio(), "EEEEE dd MMMMM yyyy"));
+            sessionActividad.setFechaFinLimite(cabeceraController.getUtilService().formatoFecha(actividadPadre.getFechaCulminacion(), "EEEEE dd MMMMM yyyy"));
+        } else {
+            sessionActividad.setFechaInicioLimite(cabeceraController.getUtilService().formatoFecha(
+                    sessionAutorProyecto.getAutorProyectoDTO().getAutorProyecto().getProyectoId().getCronograma().getFechaInicio(), "EEEEE dd MMMMM yyyy"));
+            sessionActividad.setFechaFinLimite(cabeceraController.getUtilService().formatoFecha(
+                    sessionAutorProyecto.getAutorProyectoDTO().getAutorProyecto().getProyectoId().getCronograma().getFechaProrroga(), "EEEEE dd MMMMM yyyy"));
+        }
     }
 
     public void editar(Actividad actividad) {
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "lbl");
+        Item tipo = itemService.buscarPorId(actividad.getTipoId());
+        sessionActividad.setTitulo(bundle.getString("objetivo"));
+        if (tipo.getCodigo().equals(TipoActividadEnum.TAREA.getTipo())) {
+            sessionActividad.setTitulo(bundle.getString("tarea"));
+        }
         sessionActividad.setActividad(actividad);
+        fijarFechasLimite();
+        sessionActividad.setRenderedCrud(Boolean.TRUE);
     }
 
     public void cancelarEdicion() {
@@ -162,13 +193,26 @@ public class ActividadController implements Serializable {
         duracionDias = cabeceraController.getUtilService().calculaDuracion(sessionActividad.getActividad().getFechaInicio(),
                 sessionActividad.getActividad().getFechaCulminacion(), Integer.parseInt(ValorEnum.DIASSEMANA.getTipo()) - calculaDiasSemanaTrabajoProyecto());
         sessionActividad.getActividad().setDuracion(new BigDecimal(duracionDias));
+        sessionActividad.getActividad().setCronogramaId(null);
+        Long estadoId = sessionActividad.getActividad().getEstadoId();
+        Long tipoId = sessionActividad.getActividad().getTipoId();
+        sessionActividad.getActividad().setEstadoId(null);
+        sessionActividad.getActividad().setTipoId(null);
+        BigDecimal resultado = actividadService.sumatoriaDuracion(sessionActividad.getActividad());
+        sessionActividad.getActividad().setCronogramaId(sessionAutorProyecto.getAutorProyectoDTO().getAutorProyecto().getProyectoId().getCronograma());
+        if (resultado.equals(BigDecimal.ZERO)) {
+            sessionActividad.getActividad().setPorcentajeDuracion(new BigDecimal(ValorEnum.DIVISORPORCENTAJE.getTipo()));
+            return;
+        }
         sessionActividad.getActividad().setPorcentajeDuracion(sessionActividad.getActividad().getDuracion().divide(
-                sessionActividad.getActividad().getDuracion().add(sumatoriaActividades())).multiply(new BigDecimal(ValorEnum.DIVISORPORCENTAJE.getTipo())));
+                resultado.add(sessionActividad.getActividad().getDuracion()), 2, RoundingMode.HALF_UP).multiply(
+                        new BigDecimal(ValorEnum.DIVISORPORCENTAJE.getTipo())));
         if (sessionActividad.getActividad().getPadreId() != null) {
             sessionActividad.getActividad().setPorcentajeDuracion(sessionActividad.getActividad().getDuracion().divide(
-                    sessionActividad.getActividad().getDuracion().add(sumatoriaSubActividades())).multiply(new BigDecimal(100.0)));
+                    resultado.add(sessionActividad.getActividad().getDuracion()), 2, RoundingMode.HALF_UP).multiply(new BigDecimal(ValorEnum.DIVISORPORCENTAJE.getTipo())));
         }
-        sessionActividad.getActividad().setPorcentajeAvance(BigDecimal.ZERO);
+        sessionActividad.getActividad().setEstadoId(estadoId);
+        sessionActividad.getActividad().setTipoId(tipoId);
     }
 
     /**
@@ -189,58 +233,114 @@ public class ActividadController implements Serializable {
         return dias;
     }
 
-    private BigDecimal sumatoriaActividades() {
-        BigDecimal sum = BigDecimal.ZERO;
-        for (Actividad actividad : sessionActividad.getActividades()) {
-            if (actividad.getPadreId() == null) {
-                sum = sum.add(actividad.getDuracion());
-            }
-        }
-        return sum;
-    }
-
-    private BigDecimal sumatoriaSubActividades() {
-        BigDecimal sum = BigDecimal.ZERO;
-        for (Actividad actividad : sessionActividad.getActividades()) {
+    private void actualizarPorcentajes() {
+        Item estado = itemService.buscarPorCatalogoCodigo(CatalogoEnum.ESTADOACTIVIDAD.getTipo(), EstadoActividadEnum.REVISADO.getTipo());
+        List<Actividad> actividades = actividadService.buscar(new Actividad(null, null, null, null, null, Boolean.TRUE, null, null, null, null, null, null,
+                sessionAutorProyecto.getAutorProyectoDTO().getAutorProyecto().getProyectoId().getCronograma()));
+        for (Actividad actividad : actividades) {
+            Cronograma cronogramaTemp = actividad.getCronogramaId();
+            Long estadoId = actividad.getEstadoId();
+            Long tipoId = actividad.getTipoId();
+            actividad.setEstadoId(null);
+            actividad.setTipoId(null);
             if (actividad.getPadreId() != null) {
-                sum = sum.add(actividad.getDuracion());
+                actividad.setCronogramaId(null);
             }
-        }
-        return sum;
-    }
-
-    private void actualizarCalculos() {
-        for (Actividad actividad : sessionActividad.getActividades()) {
-            if (actividad.getPadreId() == null) {
-                actividad.setPorcentajeDuracion(actividad.getDuracion().divide(
-                        actividad.getDuracion().add(sumatoriaActividades())).multiply(new BigDecimal(ValorEnum.DIVISORPORCENTAJE.getTipo())));
+            BigDecimal resultado = actividadService.sumatoriaDuracion(actividad);
+            actividad.setCronogramaId(cronogramaTemp);
+            actividad.setEstadoId(estadoId);
+            actividad.setTipoId(tipoId);
+            if (actividad.getEstadoId().equals(estado.getId())) {
+                actividad.setPorcentajeAvance(new BigDecimal(ValorEnum.DIVISORPORCENTAJE.getTipo()));
+                actividad.setPorcentajeFaltante(new BigDecimal(ValorEnum.DIVISORPORCENTAJE.getTipo()).subtract(actividad.getPorcentajeAvance()));
+            }
+            if (resultado.equals(BigDecimal.ZERO)) {
+                actividad.setPorcentajeDuracion(new BigDecimal(ValorEnum.DIVISORPORCENTAJE.getTipo()));
                 actividadService.actualizar(actividad);
                 continue;
             }
             actividad.setPorcentajeDuracion(actividad.getDuracion().divide(
-                    actividad.getDuracion().add(sumatoriaSubActividades())).multiply(new BigDecimal(ValorEnum.DIVISORPORCENTAJE.getTipo())));
+                    resultado.add(actividad.getDuracion()), 2, RoundingMode.HALF_UP).multiply(new BigDecimal(ValorEnum.DIVISORPORCENTAJE.getTipo())));
             actividadService.actualizar(actividad);
         }
+    }
+
+    private void enviar(String param) {
+        if (param == null) {
+            return;
+        }
+        Item estado = itemService.buscarPorCatalogoCodigo(CatalogoEnum.ESTADOACTIVIDAD.getTipo(), EstadoActividadEnum.ENVIADO.getTipo());
+        sessionActividad.getActividad().setPorcentajeAvance(new BigDecimal(ValorEnum.DIVISORPORCENTAJE.getTipo()));
+        sessionActividad.getActividad().setPorcentajeFaltante(new BigDecimal(ValorEnum.DIVISORPORCENTAJE.getTipo()).subtract(
+                sessionActividad.getActividad().getPorcentajeDuracion()));
+        sessionActividad.getActividad().setEstadoId(estado.getId());
+    }
+
+    private void calculosObjetivo() {
+        if (sessionActividad.getActividad().getPadreId() == null) {
+            return;
+        }
+        List<Actividad> actividads = actividadService.buscar(new Actividad(null, null, null, null, sessionActividad.getActividad().getPadreId(), Boolean.TRUE, null, null, null, null, null, null,
+                null));
+        BigDecimal sum = BigDecimal.ZERO;
+        Item estado = itemService.buscarPorCatalogoCodigo(CatalogoEnum.ESTADOACTIVIDAD.getTipo(), EstadoActividadEnum.REVISADO.getTipo());
+        for (Actividad a : actividads) {
+            if (a.getEstadoId().equals(estado.getId())) {
+                sum = sum.add(a.getPorcentajeDuracion());
+            }
+        }
+        Actividad actividadPadre = actividadService.buscarPorId(new Actividad(sessionActividad.getActividad().getPadreId()));
+        actividadPadre.setPorcentajeAvance(sum);
+        actividadPadre.setPorcentajeFaltante(new BigDecimal(ValorEnum.DIVISORPORCENTAJE.getTipo()).subtract(sum));
+        if (actividadPadre.getPorcentajeAvance().equals(new BigDecimal(ValorEnum.DIVISORPORCENTAJE.getTipo()))) {
+            actividadPadre.setEstadoId(estado.getId());
+        }
+        actividadService.actualizar(actividadPadre);
+
+    }
+
+    private void calculosCronograma() {
+        Item estado = itemService.buscarPorCatalogoCodigo(CatalogoEnum.ESTADOACTIVIDAD.getTipo(), EstadoActividadEnum.ENVIADO.getTipo());
+        List<Actividad> actividads = actividadService.buscar(new Actividad(null, null, null, null, null, Boolean.TRUE, null, null, null, null, null,
+                estado.getId(), sessionAutorProyecto.getAutorProyectoDTO().getAutorProyecto().getProyectoId().getCronograma()));
+        BigDecimal sum = BigDecimal.ZERO;
+        for (Actividad a : actividads) {
+            sum = sum.add(a.getPorcentajeDuracion());
+        }
+        sessionAutorProyecto.getAutorProyectoDTO().getAutorProyecto().getProyectoId().getCronograma().setAvance(sum.doubleValue());
+        sessionAutorProyecto.getAutorProyectoDTO().getAutorProyecto().getProyectoId().getCronograma().setFaltante(
+                Double.parseDouble(ValorEnum.DIVISORPORCENTAJE.getTipo()) - sum.doubleValue());
+        cronogramaService.actualizar(sessionAutorProyecto.getAutorProyectoDTO().getAutorProyecto().getProyectoId().getCronograma());
     }
 
     public void grabar() {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
+        String param = (String) facesContext.getExternalContext().getRequestParameterMap().get("tipo");
         try {
             if (sessionActividad.getActividad().getId() == null) {
+                enviar(param);
                 actividadService.guardar(sessionActividad.getActividad());
-                actualizarCalculos();
+                actualizarPorcentajes();
+                calculosObjetivo();
+                calculosCronograma();
                 grabarEventosAutor();
                 grabarDocumentos();
                 grabarEventosDirector();
                 cabeceraController.getMessageView().message(FacesMessage.SEVERITY_INFO, bundle.getString("grabar"), "");
+                sessionActividad.setRenderedCrud(Boolean.FALSE);
                 return;
             }
+            enviar(param);
             actividadService.actualizar(sessionActividad.getActividad());
-            actualizarCalculos();
+            actualizarPorcentajes();
+            calculosObjetivo();
+            calculosCronograma();
             grabarEventosAutor();
             grabarDocumentos();
             grabarEventosDirector();
+            cabeceraController.getMessageView().message(FacesMessage.SEVERITY_INFO, bundle.getString("editar"), "");
+            sessionActividad.setRenderedCrud(Boolean.FALSE);
         } catch (Exception e) {
             LOG.warning(e.getMessage());
         }
@@ -289,34 +389,43 @@ public class ActividadController implements Serializable {
     }
 
     private void buscar() {
-        sessionActividad.getActividades().clear();
+        sessionActividad.getActividadesPadre().clear();
         Actividad actividadBuscar = new Actividad();
         Item estado = itemService.buscarPorCatalogoCodigo(CatalogoEnum.ESTADOACTIVIDAD.getTipo(), EstadoActividadEnum.REVISADO.getTipo());
-        actividadBuscar.setCronogramaId(sessionAutorProyecto.getAutorProyectoDTO().getAutorProyecto().getProyectoId().getCronograma());
+        actividadBuscar.setCronogramaId(sessionAutorProyecto.getAutorProyectoDTO().getAutorProyecto() != null
+                ? sessionAutorProyecto.getAutorProyectoDTO().getAutorProyecto().getProyectoId().getCronograma() : null);
+        actividadBuscar.setTipoId(itemService.buscarPorCatalogoCodigo(CatalogoEnum.TIPOACTIVIDAD.getTipo(), TipoActividadEnum.OBJETIVO.getTipo()).getId());
         List<Actividad> actividades = actividadService.buscar(actividadBuscar);
         for (Actividad actividad : actividades) {
             actividad.setEstiloEstado("actividad_desarrollo");
             if (actividad.getEstadoId().equals(estado.getId())) {
                 actividad.setEstiloEstado("actividad_revisada");
             }
-            sessionActividad.getActividades().add(actividad);
+            sessionActividad.getActividadesPadre().add(actividad);
         }
     }
 
     private void generaArbol() {
         this.sessionActividad.setRootActividades(new DefaultTreeNode("Root", null));
-        TreeNode node = null;
-        for (Actividad actividad : sessionActividad.getActividades()) {
+        Item estado = itemService.buscarPorCatalogoCodigo(CatalogoEnum.ESTADOACTIVIDAD.getTipo(), EstadoActividadEnum.REVISADO.getTipo());
+        for (Actividad actividad : sessionActividad.getActividadesPadre()) {
+            TreeNode node = null;
             node = new DefaultTreeNode(actividad, sessionActividad.getRootActividades());
         }
-        for (Actividad actividad : sessionActividad.getActividades()) {
-            for (TreeNode nodoPadre : sessionActividad.getRootActividades().getChildren()) {
-                if (actividad.getPadreId() != actividad.getId()) {
-                    Actividad actividadPadre = (Actividad) nodoPadre.getData();
-                    if (actividadPadre.getId() == actividad.getPadreId()) {
-                        nodoPadre.getChildren().add(new DefaultTreeNode(actividad));
-                    }
+        for (TreeNode nodoPadre : sessionActividad.getRootActividades().getChildren()) {
+            Actividad actividadPadre = (Actividad) nodoPadre.getData();
+            Actividad actividadBuscar = new Actividad();
+            actividadBuscar.setPadreId(actividadPadre.getId());
+            List<Actividad> actividadesHijos = actividadService.buscar(actividadBuscar);
+            if (actividadesHijos == null) {
+                continue;
+            }
+            for (Actividad actividad : actividadesHijos) {
+                actividad.setEstiloEstado("actividad_desarrollo");
+                if (actividad.getEstadoId().equals(estado.getId())) {
+                    actividad.setEstiloEstado("actividad_revisada");
                 }
+                nodoPadre.getChildren().add(new DefaultTreeNode(actividad));
             }
         }
     }

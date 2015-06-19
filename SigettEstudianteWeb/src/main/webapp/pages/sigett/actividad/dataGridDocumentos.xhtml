@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <body>
+        <p:dataGrid value="#{sessionActividad.documentosActividadDTO}"
+                    id="dgDocumentosActividad" var="item" columns="1" rows="2" paginator="true"
+                    paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} "
+                    emptyMessage="#{msg.table_empty}.">
+            <p:panel header="#{lbl.documento}" toggleable="true">
+                <div class="row-fluid">
+                    <div class="col-sm-6">
+                        <p:media width="100%" styleClass="img-thumbnail" height="100%" player="pdf" value="/AppServlet/?entity=documentoActividad"/>
+                    </div>
+                    <div class="col-sm-6">
+                        <h:panelGrid styleClass="panelgrid" style="background: #f4f4f4" rowClasses="rowpanelgrid" columnClasses="col-sm-4,col-sm-8" 
+                                     columns="2">
+                            <h:outputLabel value="#{lbl.size}"/>
+                            <h:outputText value="#{item.documento.tamanio}"/>
+                            <h:outputLabel value="#{lbl.tipo}"/>
+                            <h:outputText value="#{item.documento.tamanio}"/>
+                        </h:panelGrid>
+                    </div>
+                </div>
+                <f:facet name="footer">
+                    <ui:include src="botonesAccionDocumento.xhtml"/>     
+                </f:facet>
+            </p:panel>
+        </p:dataGrid>
+    </body>
+
+</html>

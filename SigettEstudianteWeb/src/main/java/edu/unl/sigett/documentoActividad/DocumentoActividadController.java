@@ -6,13 +6,16 @@
 package edu.unl.sigett.documentoActividad;
 
 import com.jlmallas.comun.entity.Documento;
+import com.jlmallas.comun.service.DocumentoService;
 import edu.unl.sigett.actividad.SessionActividad;
 import edu.unl.sigett.entity.DocumentoActividad;
+import edu.unl.sigett.service.DocumentoActividadService;
 import edu.unl.sigett.util.CabeceraController;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
 import java.util.ResourceBundle;
+import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
@@ -34,43 +37,50 @@ public class DocumentoActividadController implements Serializable {
     @Inject
     private CabeceraController cabeceraController;
     //</editor-fold>
+    //<editor-fold defaultstate="collapsed" desc="SERVICIOS">
+    @EJB
+    private DocumentoActividadService documentoActividadService;
+    @EJB
+    private DocumentoService documentoService;
+    
     public DocumentoActividadController() {
     }
-
+    
     public void crear() {
         sessionDocumentoActividad.setDocumentoActividadDTO(new DocumentoActividadDTO(new Documento(),
                 new DocumentoActividad(null, Boolean.TRUE, null, sessionActividad.getActividad())));
     }
-
+    
     public void editar(DocumentoActividadDTO documentoActividadDTO) {
         sessionDocumentoActividad.setDocumentoActividadDTO(documentoActividadDTO);
     }
-
+    
     public void handleFileUpload(FileUploadEvent event) {
-        FacesContext facesContext = FacesContext.getCurrentInstance();
-        ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
         sessionDocumentoActividad.getDocumentoActividadDTO().getDocumento().setTipo("pdf");
         sessionDocumentoActividad.getDocumentoActividadDTO().getDocumento().setContents(event.getFile().getContents());
         Long size = event.getFile().getSize();
         sessionDocumentoActividad.getDocumentoActividadDTO().getDocumento().setTamanio(size.doubleValue());
-        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("uploaded"), "");
-        FacesContext.getCurrentInstance().addMessage(null, message);
+        agregar();
     }
-
+    
     public void remover(DocumentoActividadDTO documentoActividadDTO) {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
         sessionActividad.getDocumentosActividadDTO().remove(documentoActividadDTO);
         cabeceraController.getMessageView().message(FacesMessage.SEVERITY_INFO, bundle.getString("eliminar"), "");
         if (documentoActividadDTO.getDocumentoActividad().getId() != null) {
-           sessionActividad.getDocumentosActividadEliminadosDTO().add(documentoActividadDTO);
+            Documento documento = documentoService.buscarPorId(new Documento(documentoActividadDTO.getDocumento().getId()));
+            if (documento != null) {
+                documentoService.eliminar(documento);
+            }
+            documentoActividadService.eliminar(documentoActividadDTO.getDocumentoActividad());
         }
     }
-
-    public void agregar(DocumentoActividadDTO documentoActividadDTO) {
+    
+    public void agregar() {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-        sessionActividad.getDocumentosActividadDTO().add(documentoActividadDTO);
+        sessionActividad.getDocumentosActividadDTO().add(sessionDocumentoActividad.getDocumentoActividadDTO());
         cabeceraController.getMessageView().message(FacesMessage.SEVERITY_INFO, bundle.getString("agregar"), "");
     }
 }

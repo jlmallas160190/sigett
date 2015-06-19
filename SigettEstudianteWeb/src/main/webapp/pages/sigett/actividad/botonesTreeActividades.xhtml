@@ -10,7 +10,7 @@
             <p:commandButton update=":contenido:dlgCrudActividad" onstart="PF('dlgLoading').show()" 
                              oncomplete="PF('dlgLoading').hide(),PF('dlgCrudActividad').show()"
                              value="#{btn.crear}" action="#{actividadController.crear()}" icon="ui-icon-newwin" process="@this">
-                <f:param value="TAREA" name="tipo"/>
+                <f:param value="#{sessionActividad.objetivo}" name="tipo"/>
             </p:commandButton>
         </h:panelGrid>  
     </body>

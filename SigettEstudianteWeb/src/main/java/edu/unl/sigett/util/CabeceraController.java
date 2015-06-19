@@ -23,7 +23,7 @@ import javax.ejb.EJB;
 import org.jlmallas.email.MailServiceImplement;
 import org.jlmallas.email.MailDTO;
 import org.jlmallas.email.MailService;
-import org.jlmallas.secure.SecureDTO;
+import org.jlmallas.secure.Secure;
 import org.jlmallas.secure.SecureService;
 import org.jlmallas.secure.SecureServiceImplement;
 import org.jlmallas.util.service.UtilService;
@@ -80,7 +80,7 @@ public class CabeceraController implements Serializable {
         String puerto = configuracionDao.buscar(new Configuracion(ServidorCorreoEnum.PUERTO.getTipo())).get(0).getValor();
         String smtp = configuracionDao.buscar(new Configuracion(ServidorCorreoEnum.SMTP.getTipo())).get(0).getValor();
         String usuario = configuracionDao.buscar(new Configuracion(ServidorCorreoEnum.USUARIO.getTipo())).get(0).getValor();
-        String clave = this.secureService.decrypt(new SecureDTO(this.getConfiguracionGeneralUtil().getSecureKey(),
+        String clave = this.secureService.decrypt(new Secure(this.getConfiguracionGeneralUtil().getSecureKey(),
                 configuracionDao.buscar(new Configuracion(ServidorCorreoEnum.CLAVE.getTipo())).get(0).getValor()));
         mailDTO = new MailDTO(smtp, puerto, usuario, clave, null, null, null, null);
     }

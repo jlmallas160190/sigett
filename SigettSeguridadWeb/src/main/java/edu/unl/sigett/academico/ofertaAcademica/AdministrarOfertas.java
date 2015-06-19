@@ -33,7 +33,7 @@ import javax.inject.Named;
 import edu.unl.sigett.seguridad.usuario.UsuarioDM;
 import edu.unl.sigett.util.CabeceraController;
 import org.jlmallas.httpClient.NetClientService;
-import org.jlmallas.secure.SecureDTO;
+import org.jlmallas.secure.Secure;
 import org.jlmallas.seguridad.dao.UsuarioDao;
 
 /**
@@ -193,7 +193,7 @@ public class AdministrarOfertas implements Serializable {
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
         try {
             if (usuarioFacadeLocal.tienePermiso(usuarioDM.getUsuario(), "sga_ws_oferta_academica") == 1) {
-                String claveWS = this.cabeceraController.getSecureService().decrypt(new SecureDTO(cabeceraController.getConfiguracionGeneralDTO().getSecureKey(),
+                String claveWS = this.cabeceraController.getSecureService().decrypt(new Secure(cabeceraController.getConfiguracionGeneralDTO().getSecureKey(),
                         configuracionDao.buscar(new Configuracion(ConfiguracionEnum.CLAVEWS.getTipo())).get(0).getValor()));
                 String usuarioWs = configuracionDao.buscar(new Configuracion(ConfiguracionEnum.USUARIOWS.getTipo())).get(0).getValor();
                 String url = configuracionDao.buscar(new Configuracion(URLWSEnum.URLOFERTAACADEMICAWS.getTipo())).get(0).getValor() + "?id_periodo=" + periodoId;

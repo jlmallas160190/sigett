@@ -86,12 +86,7 @@ public class ActividadDaoImplement extends AbstractDao<Actividad> implements Act
             existeFiltro = Boolean.TRUE;
         }
         if (actividad.getCronogramaId() != null) {
-            sql.append(" and a.cronogramaId=:cronogramaId");
-            parametros.put("cronogramaId", actividad.getCronogramaId());
-            existeFiltro = Boolean.TRUE;
-        }
-        if (actividad.getCronogramaId() != null) {
-            sql.append(" and a.cronogramaId=:cronogramaId");
+            sql.append(" and a.cronogramaId=:cronogramaId and a.padreId is null");
             parametros.put("cronogramaId", actividad.getCronogramaId());
             existeFiltro = Boolean.TRUE;
         }
@@ -110,7 +105,7 @@ public class ActividadDaoImplement extends AbstractDao<Actividad> implements Act
             parametros.put("padreId", actividad.getPadreId());
             existeFiltro = Boolean.TRUE;
         }
-         if (actividad.getId() != null) {
+        if (actividad.getId() != null) {
             sql.append(" and a.id!=:id");
             parametros.put("id", actividad.getId());
             existeFiltro = Boolean.TRUE;

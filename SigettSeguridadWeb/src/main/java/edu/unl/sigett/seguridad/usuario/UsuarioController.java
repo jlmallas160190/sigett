@@ -34,7 +34,7 @@ import edu.unl.sigett.util.CabeceraController;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
-import org.jlmallas.secure.SecureDTO;
+import org.jlmallas.secure.Secure;
 import org.jlmallas.seguridad.dao.UsuarioDao;
 import org.jlmallas.seguridad.dao.UsuarioPermisoDao;
 import org.jlmallas.seguridad.dao.LogDao;
@@ -309,7 +309,7 @@ public class UsuarioController implements Serializable {
             if (usuarioCRUDDM.getUsuario().getId() == null) {
                 if (usuarioService.unicoUsername(usuarioCRUDDM.getUsuario().getUsername()) == false) {
                     usuarioCRUDDM.getUsuario().setPassword(cabeceraController.getSecureService().encrypt(
-                            new SecureDTO(cabeceraController.getConfiguracionGeneralDTO().getSecureKey(), usuario.getPassword())));
+                            new Secure(cabeceraController.getConfiguracionGeneralDTO().getSecureKey(), usuario.getPassword())));
                     usuarioCRUDDM.getUsuario().setUsuarioPermisoList(new ArrayList<UsuarioPermiso>());
                     usuarioDao.create(usuarioCRUDDM.getUsuario());
                     logDao.create(logDao.crearLog("Usuario", usuarioCRUDDM.getUsuario().getId() + "", "CREAR", "|Username= "
@@ -345,7 +345,7 @@ public class UsuarioController implements Serializable {
                     || usuarioDao.find(usuarioCRUDDM.getUsuario().getId())
                     .equals(usuarioDao.buscarPorUsuario(usuarioCRUDDM.getUsuario().getUsername()))) {
                 usuarioCRUDDM.getUsuario().setPassword(cabeceraController.getSecureService().encrypt(
-                        new SecureDTO(cabeceraController.getConfiguracionGeneralDTO().getSecureKey(), usuarioCRUDDM.getUsuario().getPassword())));
+                        new Secure(cabeceraController.getConfiguracionGeneralDTO().getSecureKey(), usuarioCRUDDM.getUsuario().getPassword())));
                 usuarioCRUDDM.getUsuario().setUsuarioPermisoList(new ArrayList<UsuarioPermiso>());
                 usuarioDao.edit(usuarioCRUDDM.getUsuario());
                 logDao.create(logDao.crearLog("Usuario", usuarioCRUDDM.getUsuario().getId() + "", "EDITAR", "|Username= "

@@ -9,7 +9,7 @@
                      value="#{sessionEstudianteCarrera.reporteMatriculas}"
                      var="rm" rows="5" paginator="true" rowIndexVar="rowIx" rowKey="#{rm.matriculaId}" 
                      selection="#{rm}" selectionMode="single" rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'even-row' : 'odd-row'}"
-                     emptyMessage="No hay Datos Cargados">
+                     emptyMessage="#{msg['lbl.table.empty']}">
             <p:column>
                 <f:facet name="header">
                     <h:outputText value="#{msg['lbl.numero']} #{msg['lbl.matricula']}"/>
@@ -46,8 +46,12 @@
                 <f:facet name="header">
                     <h:outputText value="#{msg['lbl.periodoAcademico']}"/>
                 </f:facet>
-                <h:outputText value="#{rm.ofertaAcademicaId.fechaInicio}- #{rm.ofertaAcademicaId.fechaFin}">
+                <h:outputText value="#{rm.ofertaAcademicaId.fechaInicio}">
                 <f:convertDateTime pattern="EEEEE dd MMMMM yyyy"/>
+                </h:outputText>
+                <h:outputText value="-"/>
+                <h:outputText value="#{rm.ofertaAcademicaId.fechaFin}">
+                   <f:convertDateTime pattern="EEEEE dd MMMMM yyyy"/> 
                 </h:outputText>
             </p:column>
             <p:column>

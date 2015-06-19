@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui">
+    <body>
+        <p:fileUpload fileUploadListener="#{documentoActividadController.handleFileUpload}" 
+                      multiple="true" allowTypes="/(\.|\/)(pdf)$/" sizeLimit="#{cabeceraController.configuracionGeneralUtil.tamanioArchivo}" 
+                      update=":contenido:tabViewDatosActividad:dgDocumentosActividad"
+                      invalidFileMessage="#{msg.invalidTypeFileMessage}"  invalidSizeMessage="#{msg.fileLimitMessage}" required="true"  
+                      oncomplete="PF('dlgSubirDocumentoActividad').hide()" cancelLabel="#{btn.cancelar}"  label="#{lbl.seleccionar}" 
+                      uploadLabel="#{lbl.subir}"/> 
+    </body>
+</html>

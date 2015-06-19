@@ -29,7 +29,7 @@ public class SecureServiceImplement implements SecureService {
     private static Cipher decryptC;
 
     @Override
-    public String encrypt(final SecureDTO secureDTO) {
+    public String encrypt(final Secure secureDTO) {
         try {
             encryptC = Cipher.getInstance("DES");
             KeySpec ks = new DESKeySpec(secureDTO.getKey().getBytes("UTF-8"));
@@ -46,7 +46,7 @@ public class SecureServiceImplement implements SecureService {
     }
 
     @Override
-    public String decrypt(final SecureDTO secureDTO) {
+    public String decrypt(final Secure secureDTO) {
         try {
             decryptC = Cipher.getInstance("DES");
             KeySpec ks = new DESKeySpec(secureDTO.getKey().getBytes("UTF-8"));

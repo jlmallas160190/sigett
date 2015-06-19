@@ -7,9 +7,8 @@
     <body>
         <h:panelGrid id="datosProyecto" styleClass="panelgrid" rowClasses="rowpanelgrid" columnClasses="col-sm-3,col-sm-8,col-sm-1" columns="3">
             <h:outputLabel value="#{msg['lbl.tema']}:" for="tema" />
-            <p:editor id="tema" required="true"  rendered="#{sessionProyecto.renderedInicio}" 
-                      requiredMessage="#{msg['lbl.tema']} #{msg['lbl.obligatorio']}" value="#{sessionProyecto.temaProyecto.temaId.nombre}">
-            </p:editor>
+            <p:inputTextarea id="tema" required="true"  rendered="#{sessionProyecto.renderedInicio}" onkeyup="this.value=this.value.toUpperCase()"
+                      requiredMessage="#{msg['lbl.tema']} #{msg['lbl.obligatorio']}" value="#{sessionProyecto.temaProyecto.temaId.nombre}"/>
             <h:outputText rendered="#{!sessionProyecto.renderedInicio}" value="#{sessionProyecto.temaProyecto.temaId.nombre}"/>
             <p:message id="msmTema" display="icon" for="tema"/>
             <h:outputLabel  value="#{msg['lbl.fecha']} #{msg['lbl.inicio']}"/>
@@ -27,7 +26,7 @@
             <p:selectOneMenu id="tipoProyecto" rendered="#{sessionProyecto.renderedInicio}" converter="tipoProyectoConverter" 
                              value="#{sessionProyecto.tipoSeleccionado}" requiredMessage="#{msg['lbl.tipo']} #{msg['lbl.obligatorio']}.">
                 <f:selectItem noSelectionOption="true" itemLabel="#{msg['lbl.seleccionar']}"/>
-                <f:selectItems itemLabel="#{tipo.nombre}" itemValue="#{tipo.codigo}"  var="tipo" value="#{sessionProyecto.tipos}"/>
+                <f:selectItems itemLabel="#{tipo.nombre}"   var="tipo" value="#{sessionProyecto.tipos}"/>
                 <p:ajax listener="#{proyectoController.comprobarTipoProyecto()}" event="change" update=":contenido:tabViewDatosProyecto:tblAutores" 
                         onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide(),PF('tblAPFilter').filter()"/>
             </p:selectOneMenu>
@@ -37,7 +36,7 @@
             <p:selectOneMenu id="catProyecto" rendered="#{sessionProyecto.renderedInicio}" converter="categoriaProyectoConverter"
                              value="#{sessionProyecto.categoriaSeleccionada}"  
                              requiredMessage="#{msg['lbl.categoria']} #{msg['lbl.obligatorio']}.">
-                <f:selectItems itemLabel="#{cat.nombre}" itemValue="#{cat.codigo}"  var="cat" value="#{sessionProyecto.categorias}"/>
+                <f:selectItems itemLabel="#{cat.nombre}"  var="cat" value="#{sessionProyecto.categorias}"/>
             </p:selectOneMenu>
             <h:outputText value="#{sessionProyecto.categoriaSeleccionada.nombre}" rendered="#{!sessionProyecto.renderedInicio}"/>
             <h:inputHidden/>

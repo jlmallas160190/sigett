@@ -5,7 +5,9 @@
  */
 package edu.unl.sigett.servlet;
 
+import edu.unl.sigett.documentoActividad.SessionDocumentoActividad;
 import java.io.IOException;
+import javax.inject.Inject;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -20,6 +22,9 @@ import javax.servlet.http.HttpServletResponse;
 public class AppServlet extends HttpServlet {
 
     //<editor-fold defaultstate="collapsed" desc="MANAGED BEANS">
+    @Inject
+    private SessionDocumentoActividad sessionDocumentoActividad;
+
     //</editor-fold>
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -28,7 +33,25 @@ public class AppServlet extends HttpServlet {
             return;
         }
         switch (entity) {
-            case "documentoProyecto":
+            case "documentoActividad":
+                if (sessionDocumentoActividad.getDocumentoActividadDTO() == null) {
+                    response.sendError(HttpServletResponse.SC_NOT_FOUND); // 404.
+                    return;
+                }
+                if (sessionDocumentoActividad.getDocumentoActividadDTO().getDocumento() == null) {
+                    response.sendError(HttpServletResponse.SC_NOT_FOUND); // 404.
+                    return;
+                }
+                if (sessionDocumentoActividad.getDocumentoActividadDTO().getDocumento().getContents() == null) {
+                    response.sendError(HttpServletResponse.SC_NOT_FOUND); // 404.
+                    return;
+                }
+                response.setCharacterEncoding("ISO-8859-1");
+                response.setContentType("application/pdf");
+                response.setContentLength(sessionDocumentoActividad.getDocumentoActividadDTO().getDocumento().getContents().length);
+                response.getOutputStream().write(sessionDocumentoActividad.getDocumentoActividadDTO().getDocumento().getContents());
+                response.getOutputStream().flush();
+                response.getOutputStream().close();
                 break;
         }
     }

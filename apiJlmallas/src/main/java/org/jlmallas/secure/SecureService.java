@@ -11,7 +11,7 @@ package org.jlmallas.secure;
  */
 public interface SecureService {
 
-    String encrypt(final SecureDTO secureDTO);
+    String encrypt(final Secure secureDTO);
 
-    String decrypt(final SecureDTO secureDTO);
+    String decrypt(final Secure secureDTO);
 }

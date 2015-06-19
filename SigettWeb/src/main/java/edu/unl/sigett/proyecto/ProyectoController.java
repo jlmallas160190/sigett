@@ -1052,9 +1052,6 @@ public class ProyectoController implements Serializable {
         List<ConfiguracionProyecto> configuracionProyectos = configuracionProyectoService.buscar(
                 new ConfiguracionProyecto(sessionProyecto.getProyectoSeleccionado().getId() != null ? sessionProyecto.getProyectoSeleccionado() : null,
                         null, null, null, null));
-        if (configuracionProyectos != null) {
-            return;
-        }
         if (!configuracionProyectos.isEmpty()) {
             return;
         }

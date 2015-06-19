@@ -39,7 +39,7 @@ import javax.inject.Named;
 import org.jlmallas.httpClient.ConexionDTO;
 import org.jlmallas.httpClient.NetClientService;
 import org.jlmallas.httpClient.NetClientServiceImplement;
-import org.jlmallas.secure.SecureDTO;
+import org.jlmallas.secure.Secure;
 import org.jlmallas.seguridad.entity.Rol;
 import org.jlmallas.seguridad.service.UsuarioService;
 
@@ -98,10 +98,10 @@ public class EstudianteUsuarioController implements Serializable {
         String value = configuracionService.buscar(new Configuracion(ConfiguracionEnum.LOGINESTUDIANTEWS.getTipo())).get(0).getValor();
         if (value.equals(ValorEnum.NO.getTipo())) {
             int var = usuarioService.logear(sessionEstudianteUsuario.getEstudianteUsuarioDTO().getUsuario().getUsername(),
-                    cabeceraController.getSecureService().encrypt(new SecureDTO(cabeceraController.getConfiguracionGeneralUtil().getSecureKey(),
+                    cabeceraController.getSecureService().encrypt(new Secure(cabeceraController.getConfiguracionGeneralUtil().getSecureKey(),
                                     sessionEstudianteUsuario.getEstudianteUsuarioDTO().getUsuario().getPassword())));
             if (var == 0) {
-                this.cabeceraController.getMessageView().message(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.clave_incorrecta") + "", "");
+                this.cabeceraController.getMessageView().message(FacesMessage.SEVERITY_ERROR, bundle.getString("clave_incorrecta") + "", "");
             }
             if (var == 1) {
                 List<Usuario> usuarios = usuarioService.buscar(new Usuario(null, null, sessionEstudianteUsuario.getEstudianteUsuarioDTO().getUsuario().
@@ -111,7 +111,7 @@ public class EstudianteUsuarioController implements Serializable {
                 }
                 EstudianteUsuario estudianteUsuario = estudianteUsuarioService.buscarPorId(!usuarios.isEmpty() ? usuarios.get(0).getId() : null);
                 if (estudianteUsuario == null) {
-                    this.cabeceraController.getMessageView().message(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.datos_incorrectos"), "");
+                    this.cabeceraController.getMessageView().message(FacesMessage.SEVERITY_ERROR, bundle.getString("datos_usuario_incorrectos"), "");
                     return "";
                 }
                 sessionEstudianteUsuario.setEstudianteUsuarioDTO(new EstudianteUsuarioDTO(!usuarios.isEmpty() ? usuarios.get(0) : null,
@@ -121,11 +121,11 @@ public class EstudianteUsuarioController implements Serializable {
                 return "pretty:inicio";
             }
             if (var == 2) {
-                this.cabeceraController.getMessageView().message(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.usuario_incorrecto"), "");
+                this.cabeceraController.getMessageView().message(FacesMessage.SEVERITY_ERROR, bundle.getString("username_incorrecto"), "");
                 return "";
             }
             if (var == 3) {
-                this.cabeceraController.getMessageView().message(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.datos_incorrectos"), "");
+                this.cabeceraController.getMessageView().message(FacesMessage.SEVERITY_ERROR, bundle.getString("datos_usuario_incorrectos"), "");
                 return "";
             }
             return "";
@@ -133,7 +133,7 @@ public class EstudianteUsuarioController implements Serializable {
         sgaWebServicesValidaEstudiante(sessionEstudianteUsuario.getEstudianteUsuarioDTO().getUsuario().
                 getUsername(), sessionEstudianteUsuario.getEstudianteUsuarioDTO().getUsuario().getPassword());
         if (!sessionEstudianteUsuario.getValidarEstudianteWS()) {
-            this.cabeceraController.getMessageView().message(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.usuario_incorrecto"), "");
+            this.cabeceraController.getMessageView().message(FacesMessage.SEVERITY_ERROR, bundle.getString("username_incorrecto"), "");
             return "";
         }
         return "pretty:inicio";
@@ -145,7 +145,7 @@ public class EstudianteUsuarioController implements Serializable {
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
         try {
             sessionEstudianteUsuario.setValidarEstudianteWS(Boolean.FALSE);
-            String passwordService = this.cabeceraController.getSecureService().decrypt(new SecureDTO(cabeceraController.getConfiguracionGeneralUtil().getSecureKey(),
+            String passwordService = this.cabeceraController.getSecureService().decrypt(new Secure(cabeceraController.getConfiguracionGeneralUtil().getSecureKey(),
                     configuracionService.buscar(new Configuracion(ConfiguracionEnum.CLAVEWS.getTipo())).get(0).getValor()));
             String userService = configuracionService.buscar(new Configuracion(ConfiguracionEnum.USUARIOWS.getTipo())).get(0).getValor();
             String serviceUrl = configuracionService.buscar(new Configuracion(URLWSEnum.VALIDARESTUDIANTE.getTipo())).get(0).getValor();

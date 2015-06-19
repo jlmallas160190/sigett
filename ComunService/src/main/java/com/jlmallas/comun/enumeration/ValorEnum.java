@@ -13,7 +13,7 @@ public enum ValorEnum {
 
     SI("SI"),
     DIASSEMANA("7"),
-    DIVISORPORCENTAJE("100.00"),
+    DIVISORPORCENTAJE("100"),
     NO("NO");
     String tipo;
 

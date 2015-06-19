@@ -12,14 +12,14 @@ import java.io.Serializable;
  *
  * @author jorge-luis
  */
-public class SecureDTO implements Serializable{
+public class Secure implements Serializable{
     private String key;
     private String password;
 
-    public SecureDTO() {
+    public Secure() {
     }
 
-    public SecureDTO(String key, String password) {
+    public Secure(String key, String password) {
         this.key = key;
         this.password = password;
     }

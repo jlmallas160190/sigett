@@ -28,20 +28,22 @@ public class SessionActividad implements Serializable {
     private TreeNode rootActividades;
 
     private List<DocumentoActividadDTO> documentosActividadDTO;
-    private List<DocumentoActividadDTO> documentosActividadEliminadosDTO;
-    private List<Actividad> actividades;
+    private List<Actividad> actividadesPadre;
 
     private Boolean renderedCrud;
 
+    private String fechaInicioLimite;
+    private String fechaFinLimite;
+
+    private String titulo;
     private String tarea;
     private String objetivo;
 
     public SessionActividad() {
         this.tarea = TipoActividadEnum.TAREA.getTipo();
         this.objetivo = TipoActividadEnum.OBJETIVO.getTipo();
-        this.actividades = new ArrayList<>();
+        this.actividadesPadre = new ArrayList<>();
         this.actividad = new Actividad();
-        this.documentosActividadEliminadosDTO = new ArrayList<>();
         this.documentosActividadDTO = new ArrayList<>();
     }
 
@@ -61,14 +63,6 @@ public class SessionActividad implements Serializable {
         this.documentosActividadDTO = documentosActividadDTO;
     }
 
-    public List<DocumentoActividadDTO> getDocumentosActividadEliminadosDTO() {
-        return documentosActividadEliminadosDTO;
-    }
-
-    public void setDocumentosActividadEliminadosDTO(List<DocumentoActividadDTO> documentosActividadEliminadosDTO) {
-        this.documentosActividadEliminadosDTO = documentosActividadEliminadosDTO;
-    }
-
     public TreeNode getRootActividades() {
         return rootActividades;
     }
@@ -77,12 +71,12 @@ public class SessionActividad implements Serializable {
         this.rootActividades = rootActividades;
     }
 
-    public List<Actividad> getActividades() {
-        return actividades;
+    public List<Actividad> getActividadesPadre() {
+        return actividadesPadre;
     }
 
-    public void setActividades(List<Actividad> actividades) {
-        this.actividades = actividades;
+    public void setActividadesPadre(List<Actividad> actividadesPadre) {
+        this.actividadesPadre = actividadesPadre;
     }
 
     public Boolean getRenderedCrud() {
@@ -107,6 +101,30 @@ public class SessionActividad implements Serializable {
 
     public void setObjetivo(String objetivo) {
         this.objetivo = objetivo;
+    }
+
+    public String getTitulo() {
+        return titulo;
+    }
+
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
+    }
+
+    public String getFechaInicioLimite() {
+        return fechaInicioLimite;
+    }
+
+    public void setFechaInicioLimite(String fechaInicioLimite) {
+        this.fechaInicioLimite = fechaInicioLimite;
+    }
+
+    public String getFechaFinLimite() {
+        return fechaFinLimite;
+    }
+
+    public void setFechaFinLimite(String fechaFinLimite) {
+        this.fechaFinLimite = fechaFinLimite;
     }
 
 }

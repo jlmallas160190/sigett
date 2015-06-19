@@ -9,11 +9,14 @@
         <f:event type="preRenderView" listener="#{actividadController.preRenderView()}"/>
         <p:tree id="treeActividades" value="#{sessionActividad.rootActividades}" var="node" dynamic="true"  animate="true">
             <p:treeNode collapsedIcon="ui-icon-folder-collapsed" expandedIcon="ui-icon-folder-open">
-                <h:panelGrid styleClass="panel-group" style="background: #fff;text-overflow: ellipsis!important" >
+                <h:panelGrid columns="3" style="background: #fff;text-overflow: ellipsis!important" >
                     <h:outputLabel styleClass="#{node.estiloEstado}"/>
-                    <p:commandLink value="#{node.nombre}" action="#{actividadController.editar(node)}"/>
-                    <p:commandLink title="#{btn.agregar_tarea}"  onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" 
-                                   update=":editarActividad,:contenido:msm" action="#{actividadController.crear()}" >
+                    <p:commandLink value="#{node.nombre}" oncomplete="PF('dlgLoading').hide(),PF('dlgCrudActividad').show()"
+                                   onstart="PF('dlgLoading').show()" update="@form"
+                                   action="#{actividadController.editar(node)}"/>
+                    <p:commandLink title="#{btn.agregar_tarea}" rendered="#{node.padreId==null}"  onstart="PF('dlgLoading').show()" 
+                                   oncomplete="PF('dlgLoading').hide(),PF('dlgCrudActividad').show()" 
+                                   update=":contenido:dlgCrudActividad,:contenido:msm" action="#{actividadController.crear()}" >
                         <p:graphicImage value="/resources/img/icon_addlink.gif"/>
                         <f:param name="tipo" value="#{sessionActividad.tarea}"/>
                         <f:param name="padreId" value="#{node.id}"/>

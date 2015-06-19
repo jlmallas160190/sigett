@@ -39,7 +39,7 @@ import org.jlmallas.seguridad.dao.LogDao;
 import org.jlmallas.seguridad.dao.UsuarioDao;
 import javax.servlet.http.HttpServletRequest;
 import org.jlmallas.httpClient.NetClientService;
-import org.jlmallas.secure.SecureDTO;
+import org.jlmallas.secure.Secure;
 
 /**
  *
@@ -340,7 +340,7 @@ public class AdministrarAreas implements Serializable {
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
         try {
 
-            String claveWS = this.cabeceraController.getSecureService().decrypt(new SecureDTO(cabeceraController.getConfiguracionGeneralDTO().getSecureKey(),
+            String claveWS = this.cabeceraController.getSecureService().decrypt(new Secure(cabeceraController.getConfiguracionGeneralDTO().getSecureKey(),
                     configuracionDao.buscar(new Configuracion(ConfiguracionEnum.CLAVEWS.getTipo())).get(0).getValor()));
             String usuarioWs = configuracionDao.buscar(new Configuracion(ConfiguracionEnum.USUARIOWS.getTipo())).get(0).getValor();
             String url = configuracionDao.buscar(new Configuracion(URLWSEnum.URLAREAWS.getTipo())).get(0).getValor();

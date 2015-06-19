@@ -40,7 +40,7 @@ import org.jlmallas.seguridad.dao.UsuarioDao;
 import edu.unl.sigett.util.CabeceraController;
 import javax.annotation.PostConstruct;
 import org.jlmallas.httpClient.NetClientService;
-import org.jlmallas.secure.SecureDTO;
+import org.jlmallas.secure.Secure;
 
 /**
  *
@@ -323,7 +323,7 @@ public class AdministrarPeriodosAcademicos implements Serializable {
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
         try {
             if (usuarioFacadeLocal.tienePermiso(usuario, "sga_ws_periodo_academico") == 1) {
-                String claveWS = this.cabeceraController.getSecureService().decrypt(new SecureDTO(cabeceraController.getConfiguracionGeneralDTO().getSecureKey(),
+                String claveWS = this.cabeceraController.getSecureService().decrypt(new Secure(cabeceraController.getConfiguracionGeneralDTO().getSecureKey(),
                         configuracionDao.buscar(new Configuracion(ConfiguracionEnum.CLAVEWS.getTipo())).get(0).getValor()));
                 String usuarioWs = configuracionDao.buscar(new Configuracion(ConfiguracionEnum.USUARIOWS.getTipo())).get(0).getValor();
                 String url = configuracionDao.buscar(new Configuracion(URLWSEnum.URLPERIODOLECTIVOWS.getTipo())).get(0).getValor();

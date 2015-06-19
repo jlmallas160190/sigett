@@ -12,11 +12,8 @@ import com.jlmallas.comun.service.ItemService;
 import com.jlmallas.comun.service.PersonaService;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 import com.ocpsoft.pretty.faces.annotation.URLMappings;
-import edu.jlmallas.academico.entity.Carrera;
-import edu.jlmallas.academico.entity.Docente;
 import edu.jlmallas.academico.entity.DocenteCarrera;
 import edu.jlmallas.academico.entity.EstudianteCarrera;
-import edu.jlmallas.academico.entity.OfertaAcademica;
 import edu.jlmallas.academico.service.DocenteCarreraService;
 import edu.jlmallas.academico.service.EstudianteCarreraService;
 import edu.unl.sigett.director.DirectorDTO;
@@ -24,13 +21,11 @@ import edu.unl.sigett.directorProyecto.DirectorProyectoDTO;
 import edu.unl.sigett.entity.Aspirante;
 import edu.unl.sigett.entity.AutorProyecto;
 import edu.unl.sigett.entity.DirectorProyecto;
-import edu.unl.sigett.entity.ProyectoCarreraOferta;
 import edu.unl.sigett.enumeration.EstadoDirectorEnum;
 import edu.unl.sigett.estudianteUsuario.SessionEstudianteUsuario;
 import edu.unl.sigett.service.AspiranteService;
 import edu.unl.sigett.service.AutorProyectoService;
 import edu.unl.sigett.service.DirectorProyectoService;
-import edu.unl.sigett.service.DirectorService;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
@@ -52,7 +47,7 @@ import javax.inject.Inject;
     ),
     @URLMapping(
             id = "editarAutorProyecto",
-            pattern = "/autorProyecto/#{sessionAutorProyecto.autorProyectoDTO.autorProyecto.id}",
+            pattern = "/autorProyecto/",
             viewId = "/faces/pages/sigett/autorProyecto/editarAutorProyecto.xhtml"
     )
 })

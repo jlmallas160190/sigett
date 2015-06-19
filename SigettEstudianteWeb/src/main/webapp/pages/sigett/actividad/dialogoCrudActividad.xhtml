@@ -6,15 +6,28 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core">
 
     <body>
-        <p:dialog id="dlgCrudActividad" header="#{lbl.editar_actividad}"  styleClass="modal-md"  widgetVar="dlgCrudActividad" modal="true"
+        <p:dialog id="dlgCrudActividad" header="#{sessionActividad.titulo}" styleClass="modal-md" widgetVar="dlgCrudActividad" modal="true"
                   closable="false" position="center" draggable="false">
             <p:panel rendered="#{sessionActividad.renderedCrud}">
-                <ui:include src="datosActividad.xhtml"/>
+                <p:tabView  id="tabViewDatosActividad">
+                    <p:tab id="tabActividad" title="#{lbl.actividad}">
+                        <ui:include src="datosActividad.xhtml"/>
+                    </p:tab>
+                    <p:tab id="tabDocumentos" title="#{lbl.documentos}">
+                        <p:panel>
+                            <ui:include src="dataGridDocumentos.xhtml"/> 
+                            <f:facet name="footer">
+                                <ui:include src="botonesDataGridDocumentos.xhtml"/> 
+                            </f:facet>
+                        </p:panel>
+                    </p:tab>
+                </p:tabView>
                 <f:facet name="footer">
                     <ui:include src="botonesCrudActividad.xhtml"/> 
                 </f:facet>
             </p:panel>
         </p:dialog>
+        <ui:include src="./../documentoActividad/dialogoUpload.xhtml"/> 
     </body>
 
 </html>

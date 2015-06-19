@@ -36,7 +36,7 @@ import javax.inject.Inject;
 import org.jlmallas.httpClient.ConexionDTO;
 import org.jlmallas.httpClient.NetClientService;
 import org.jlmallas.httpClient.NetClientServiceImplement;
-import org.jlmallas.secure.SecureDTO;
+import org.jlmallas.secure.Secure;
 import org.jlmallas.seguridad.entity.Usuario;
 import org.jlmallas.seguridad.service.UsuarioService;
 
@@ -96,7 +96,7 @@ public class DocenteUsuarioController implements Serializable {
         if (value.equals(ValorEnum.NO.getTipo())) {
             int var = usuarioService.logear(docenteUsuarioDM.getDocenteUsuarioDTO().getUsuario().getUsername(),
                     cabeceraController.getSecureService().encrypt(
-                            new SecureDTO(cabeceraController.getConfiguracionGeneralDTO().getSecureKey(), docenteUsuarioDM.getDocenteUsuarioDTO().getUsuario().getPassword())));
+                            new Secure(cabeceraController.getConfiguracionGeneralDTO().getSecureKey(), docenteUsuarioDM.getDocenteUsuarioDTO().getUsuario().getPassword())));
             if (var == 0) {
                 this.cabeceraController.getMessageView().message(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.clave_incorrecta") + "", "");
             }
@@ -140,7 +140,7 @@ public class DocenteUsuarioController implements Serializable {
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
         try {
             docenteUsuarioDM.setValidarDocenteWS(Boolean.FALSE);
-            String passwordService = this.cabeceraController.getSecureService().decrypt(new SecureDTO(cabeceraController.getConfiguracionGeneralDTO().getSecureKey(),
+            String passwordService = this.cabeceraController.getSecureService().decrypt(new Secure(cabeceraController.getConfiguracionGeneralDTO().getSecureKey(),
                     configuracionService.buscar(new Configuracion(ConfiguracionEnum.CLAVEWS.getTipo())).get(0).getValor()));
             String userService = configuracionService.buscar(new Configuracion(ConfiguracionEnum.USUARIOWS.getTipo())).get(0).getValor();
             String serviceUrl = configuracionService.buscar(new Configuracion(URLWSEnum.VALIDARDOCENTE.getTipo())).get(0).getValor();

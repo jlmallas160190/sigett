@@ -110,13 +110,13 @@ public class Actividad implements Serializable {
         this.id = id;
     }
 
-    public Actividad(Long id, String nombre, Date fechaInicio, BigDecimal duracion, Long actividadId, Boolean esActivo, BigDecimal porcentajeDuracion,
+    public Actividad(Long id, String nombre, Date fechaInicio, BigDecimal duracion, Long padreId, Boolean esActivo, BigDecimal porcentajeDuracion,
             BigDecimal avance, BigDecimal faltante, String observacion, Long tipoId, Long estadoId, Cronograma cronograma) {
         this.id = id;
         this.nombre = nombre;
         this.fechaInicio = fechaInicio;
         this.duracion = duracion;
-        this.padreId = actividadId;
+        this.padreId = padreId;
         this.esActivo = esActivo;
         this.porcentajeDuracion = porcentajeDuracion;
         this.porcentajeAvance = avance;
