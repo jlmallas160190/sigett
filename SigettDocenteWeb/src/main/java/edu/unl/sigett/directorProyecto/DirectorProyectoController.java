@@ -17,7 +17,6 @@ import edu.jlmallas.academico.entity.EstudianteCarrera;
 import edu.jlmallas.academico.service.DocenteCarreraService;
 import edu.jlmallas.academico.service.EstudianteCarreraService;
 import edu.unl.sigett.director.DirectorDTO;
-import edu.unl.sigett.docenteUsuario.DocenteUsuarioDM;
 import edu.unl.sigett.entity.AutorProyecto;
 import edu.unl.sigett.entity.Director;
 import edu.unl.sigett.entity.DirectorProyecto;
@@ -26,7 +25,6 @@ import edu.unl.sigett.enumeration.EstadoAutorEnum;
 import edu.unl.sigett.service.AutorProyectoService;
 import edu.unl.sigett.service.DirectorProyectoService;
 import edu.unl.sigett.service.DirectorService;
-import edu.unl.sigett.util.SelectItemsController;
 import edu.unl.sigett.util.SessionSelectItems;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
@@ -44,14 +42,14 @@ import javax.inject.Inject;
 @SessionScoped
 @URLMappings(mappings = {
     @URLMapping(
-            id = "docenteProyectos",
+            id = "directorProyectos",
             pattern = "/directorProyectos",
-            viewId = "/faces/pages/directorProyecto/index.xhtml"
+            viewId = "/faces/pages/sigett/directorProyecto/index.xhtml"
     ),
     @URLMapping(
             id = "editarDirectorProyecto",
             pattern = "/editarDirectorProyecto",
-            viewId = "/faces/pages/directorProyecto/editarDirectorProyecto.xhtml"
+            viewId = "/faces/pages/sigett/directorProyecto/editarDirectorProyecto.xhtml"
     )
 })
 public class DirectorProyectoController implements Serializable {

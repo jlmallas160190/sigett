@@ -5,27 +5,23 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
     <body>
-        <p:dataTable id="tblAutores" value="#{docenteProyectoDM.autorProyectos}" var="item" rows="10" paginator="true"
-                     filteredValue="#{docenteProyectoDM.filterAutorProyectos}" widgetVar="tblAutoresFilter"
-
-                     rowIndexVar="rowIx" editable="true" editMode="cell" rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'even-row' : 'odd-row'}" 
-                     emptyMessage="#{msg['lbl.table.empty']}">
+        <p:dataScroller value="#{sessionAutorProyecto.autorProyectos}" var="item" chunkSize="5">
             <p:column filterBy="#{item.persona.apellidos} #{item.persona.nombres}" sortBy="#{item.persona.apellidos}">
                 <f:facet name="header">
                     <h:outputText value="#{msg['lbl.autor']}"/>
                 </f:facet>
-                <p:panel toggleable="true">
-                    <p:panelGrid columns="2" columnClasses="col-sm-4,col-sm-8">
+                <p:fieldset legend="#{item.persona.nombres.toUpperCase()} #{item.persona.apellidos.toUpperCase()}" toggleable="true" toggleSpeed="500">
+                    <h:panelGrid columns="2" styleClass="panelgrid" rowClasses="rowpanelgrid" columnClasses="col-sm-2,col-sm-10">
                         <p:outputLabel value="#{msg['lbl.nombres']}:"/>
                         <p:outputLabel value="#{item.persona.nombres}"/>
                         <p:outputLabel value="#{msg['lbl.apellidos']}:"/>
                         <p:outputLabel value="#{item.persona.apellidos}"/>
                         <p:outputLabel value="#{msg['lbl.email']}:"/>
                         <p:outputLabel value="#{item.persona.email}"/>
-                    </p:panelGrid>
-                </p:panel>
+                    </h:panelGrid>
+                </p:fieldset>
             </p:column>
-        </p:dataTable>
+        </p:dataScroller>
     </body>
 
 </html>

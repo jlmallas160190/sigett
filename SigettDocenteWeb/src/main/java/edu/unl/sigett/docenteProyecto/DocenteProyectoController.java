@@ -24,6 +24,7 @@ import edu.jlmallas.academico.service.DocenteService;
 import edu.jlmallas.academico.service.EstudianteCarreraService;
 import edu.unl.sigett.academico.coordinadorPeriodo.CoordinadorPeriodoDTO;
 import edu.unl.sigett.autorProyecto.AutorProyectoDTO;
+import edu.unl.sigett.autorProyecto.SessionAutorProyecto;
 import edu.unl.sigett.docenteUsuario.DocenteUsuarioDM;
 import edu.unl.sigett.documentoProyecto.DocumentoProyectoDTO;
 import edu.unl.sigett.entity.AutorProyecto;
@@ -57,21 +58,21 @@ import javax.inject.Inject;
     @URLMapping(
             id = "docenteProyectos",
             pattern = "/docenteProyectos",
-            viewId = "/faces/pages/docenteProyecto/index.xhtml"
+            viewId = "/faces/pages/sigett/docenteProyecto/index.xhtml"
     ),
     @URLMapping(
             id = "editarDocenteProyecto",
             pattern = "/editarDocenteProyecto",
-            viewId = "/faces/pages/docenteProyecto/editarDocenteProyecto.xhtml"
+            viewId = "/faces/pages/sigett/docenteProyecto/editarDocenteProyecto.xhtml"
     ),
     @URLMapping(
             id = "historial",
             pattern = "/historial",
-            viewId = "/faces/pages/historialDocenteProyecto/index.xhtml"),
+            viewId = "/faces/pages/sigett/historialDocenteProyecto/index.xhtml"),
     @URLMapping(
             id = "editarHistDocenteProyecto",
             pattern = "/historialDocenteProyecto",
-            viewId = "/faces/pages/historialDocenteProyecto/historialDocenteProyecto.xhtml")
+            viewId = "/faces/pages/sigett/historialDocenteProyecto/historialDocenteProyecto.xhtml")
 })
 public class DocenteProyectoController implements Serializable {
 
@@ -82,6 +83,8 @@ public class DocenteProyectoController implements Serializable {
     private DocenteProyectoDM docenteProyectoDM;
     @Inject
     private SessionSelectItems sessionSelectItems;
+    @Inject
+    private SessionAutorProyecto sessionAutorProyecto;
 //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="SERVICIOS">
     @EJB
@@ -119,8 +122,8 @@ public class DocenteProyectoController implements Serializable {
     }
 
     private void iniciar() {
-        this.docenteProyectoDM.getAutorProyectos().clear();
-        this.docenteProyectoDM.getFilterAutorProyectos().clear();
+        this.sessionAutorProyecto.getAutorProyectos().clear();
+        this.sessionAutorProyecto.getFilterAutorProyectos().clear();
         this.docenteProyectoDM.getDocumentoProyectos().clear();
         this.docenteProyectoDM.getFilterDocumentoProyectos().clear();
         this.docenteProyectoDM.getLineasInvestigacionProyecto().clear();
@@ -189,8 +192,8 @@ public class DocenteProyectoController implements Serializable {
     }
 
     private void listadoAutores() {
-        docenteProyectoDM.getAutorProyectos().clear();
-        docenteProyectoDM.getFilterAutorProyectos().clear();
+        sessionAutorProyecto.getAutorProyectos().clear();
+        sessionAutorProyecto.getFilterAutorProyectos().clear();
         Item estadoRenunciado = itemService.buscarPorCatalogoCodigo(CatalogoEnum.ESTADOAUTOR.getTipo(), EstadoAutorEnum.RENUNCIADO.getTipo());
         for (AutorProyecto autorProyecto : docenteProyectoDM.getDocenteProyectoDTOSeleccionado().getDocenteProyecto().getProyectoId().getAutorProyectoList()) {
             if (autorProyecto.getEstadoAutorId().equals(estadoRenunciado.getId())) {
@@ -199,11 +202,11 @@ public class DocenteProyectoController implements Serializable {
             AutorProyectoDTO autorProyectoDTO = new AutorProyectoDTO(autorProyecto, autorProyecto.getAspiranteId(),
                     estudianteCarreraService.buscarPorId(new EstudianteCarrera(autorProyecto.getAspiranteId().getId())), null);
             autorProyectoDTO.setPersona(personaService.buscarPorId(new Persona(autorProyectoDTO.getEstudianteCarrera().getEstudianteId().getId())));
-            if (!docenteProyectoDM.getAutorProyectos().contains(autorProyectoDTO)) {
-                docenteProyectoDM.getAutorProyectos().add(autorProyectoDTO);
+            if (!sessionAutorProyecto.getAutorProyectos().contains(autorProyectoDTO)) {
+                sessionAutorProyecto.getAutorProyectos().add(autorProyectoDTO);
             }
         }
-        docenteProyectoDM.setFilterAutorProyectos(docenteProyectoDM.getAutorProyectos());
+        sessionAutorProyecto.setFilterAutorProyectos(sessionAutorProyecto.getAutorProyectos());
     }
 
     private void recuperaEstadoActualProyecto() {

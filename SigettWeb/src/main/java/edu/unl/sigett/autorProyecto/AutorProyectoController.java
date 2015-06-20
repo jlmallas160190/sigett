@@ -108,7 +108,12 @@ public class AutorProyectoController implements Serializable {
             e.printStackTrace();
         }
     }
-
+    public void abrirDialogoBuscarAsp() {
+        RequestContext.getCurrentInstance().execute("PF('dlgBuscarAspirantes').show()");
+    }
+    public void cerrarDialogoBuscarAsp() {
+        RequestContext.getCurrentInstance().execute("PF('dlgBuscarAspirantes').hide()");
+    }
     /**
      * BUSCAR ASPIRANTES APTOS PARA ASIGNARLO COMO AUTOR DE TRABAJO DE
      * TITULACION

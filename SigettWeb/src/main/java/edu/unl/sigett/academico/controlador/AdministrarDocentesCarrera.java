@@ -12,18 +12,6 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 import com.jlmallas.comun.dao.ConfiguracionDao;
 import com.jlmallas.comun.entity.Item;
-import com.lowagie.text.Document;
-import com.lowagie.text.DocumentException;
-import com.lowagie.text.Element;
-import com.lowagie.text.Font;
-import com.lowagie.text.FontFactory;
-import com.lowagie.text.Image;
-import com.lowagie.text.PageSize;
-import com.lowagie.text.Paragraph;
-import com.lowagie.text.Phrase;
-import com.lowagie.text.pdf.PdfPCell;
-import com.lowagie.text.pdf.PdfPTable;
-import com.lowagie.text.pdf.PdfWriter;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 import com.ocpsoft.pretty.faces.annotation.URLMappings;
 import edu.unl.sigett.academico.managed.session.SessionDocenteCarrera;
@@ -40,10 +28,6 @@ import com.jlmallas.comun.entity.Persona;
 import com.jlmallas.comun.enumeration.CatalogoEnum;
 import com.jlmallas.comun.dao.ItemDao;
 import edu.jlmallas.academico.entity.TituloDocente;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,8 +38,6 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletResponse;
 import org.primefaces.event.TransferEvent;
 import org.primefaces.model.DualListModel;
 import com.jlmallas.comun.dao.NacionalidadFacadeLocal;
@@ -79,7 +61,6 @@ import edu.jlmallas.academico.dao.TituloDocenteDao;
 import edu.jlmallas.academico.dao.TituloDao;
 import edu.jlmallas.academico.service.EstadoLaboralService;
 import edu.unl.sigett.academico.dto.DocenteCarreraDTO;
-import edu.unl.sigett.dao.ConfiguracionGeneralDao;
 import edu.unl.sigett.entity.ConfiguracionCarrera;
 import edu.unl.sigett.entity.DocenteUsuario;
 import edu.unl.sigett.entity.LineaInvestigacionCarrera;
@@ -140,8 +121,6 @@ public class AdministrarDocentesCarrera implements Serializable {
     //<editor-fold defaultstate="collapsed" desc="INYECCIÓN DE SERVICIOS">
     @EJB
     private LogDao logFacadeLocal;
-    @EJB
-    private ConfiguracionGeneralDao configuracionGeneralDao;
     @EJB
     private TituloDao tituloDao;
     @EJB
@@ -415,7 +394,7 @@ public class AdministrarDocentesCarrera implements Serializable {
                 }
                 this.buscar();
             }
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), "");
             FacesContext.getCurrentInstance().addMessage(null, message);
         }
@@ -468,7 +447,7 @@ public class AdministrarDocentesCarrera implements Serializable {
                     sessionDocenteCarrera.getLineaInvestigacionDocentesRemovidos().remove(lid);
                 }
             }
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
         }
     }
 

@@ -3647,22 +3647,10 @@ table.fc-border-separate {
     text-align: center;
     cursor: s-resize;
 }
-.revisado .fc-event-inner {
+.sustentacion .fc-event-inner {
     background: #006600!important;
 }
-.porRevisar .fc-event-inner {
-    background: #003399 !important;
-}
-.propio .fc-event-inner {
-    background: #006600 !important;
-}
-.privada .fc-event-inner {
-    background: #006600!important;
-}
-.publica .fc-event-inner {
-    background:#cc3300!important;
-}
-.otro .fc-event-inner {
+.actividad .fc-event-inner {
     background: #003399 !important;
 }
 .fc-agenda .ui-resizable-resizing { /* TODO: better selector */

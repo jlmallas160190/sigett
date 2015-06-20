@@ -3,7 +3,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:h="http://xmlns.jcp.org/jsf/html">
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
     <body>
         <p:dialog id="dlgOficioProrroga" widgetVar="dlgOficioProrroga" header="#{msg['lbl.oficio']}" styleClass="modal-md"  modal="true" 
                   closable="false" >
@@ -11,11 +12,10 @@
                 <p:media rendered="#{sessionProrroga.renderedMediaOficio}" value="/AppServlet?entity=documentoCarrera" player="pdf" width="100%" height="400"/>
                 <f:facet name="footer">
                     <h:panelGrid styleClass="pnl-botones" columns="5">
-                        <p:commandButton onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide(),PF('dlgSubirDocumentoCarrera').show()"
-                                         value="#{btn['upload']}" icon="ui-icon-circle-arrow-s"/>
+                        <ui:include src="./../documentoCarrera/upload.xhtml"/>
                         <p:commandButton action="#{prorrogaController.cancelarImprimirOficio()}" update=":contenido:pnlOficioProrroga"
                                          onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide(),PF('dlgOficioProrroga').hide()"
-                                          icon="ui-icon-circle-arrow-w" value="#{btn['cancelar']}"/> 
+                                         icon="ui-icon-circle-arrow-w" value="#{btn['cancelar']}"/> 
                     </h:panelGrid>
                 </f:facet>
             </p:panel>

@@ -40,7 +40,9 @@
         <param-name>com.ocpsoft.pretty.BASE_PACKAGES</param-name>
         <param-value>
             edu.unl.sigett.docenteUsuario,
-            edu.unl.sigett.docenteProyecto
+            edu.unl.sigett.docenteProyecto,
+            edu.unl.sigett.directorProyecto,
+            edu.unl.sigett.lineaInvestigacionDocente
         </param-value>
     </context-param>
     <context-param>

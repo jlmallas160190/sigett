@@ -2,11 +2,19 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
     <body>
         <p:dialog id="dlgAspirantes" widgetVar="dlgBuscarAspirantes" header="#{msg['lbl.buscar']} #{msg['lbl.aspirantes']}" 
                   styleClass="modal-md" showEffect="fade"  modal="true" position="center" draggable="false" >
-            <ui:include src="tablaAspirantes.xhtml"/>
+            <p:fieldset legend="#{msg['lbl.aspirantes']}">
+                <ui:include src="tablaAspirantes.xhtml"/>
+                <f:facet name="footer">
+                    <p:commandButton action="#{autorProyectoController.cerrarDialogoBuscarAsp()}" 
+                                     onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()"
+                                     icon="ui-icon-circle-arrow-w" value="#{btn['cancelar']}"/>
+                </f:facet>
+            </p:fieldset>
         </p:dialog>
     </body>
 

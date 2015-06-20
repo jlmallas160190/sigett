@@ -9,10 +9,10 @@
                      filteredValue="#{docenteProyectoDM.filterDocumentoProyectos}" widgetVar="tblDocFilter"
                      rowIndexVar="rowIx" editable="true" rowKey="#{item.documento}" selectionMode="single" selection="#{item}" 
                      editMode="cell" rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'even-row' : 'odd-row'}" emptyMessage="#{msg['lbl.table.empty']}">
-            <p:column>
+            <p:column width="5%">
                 <h:outputText value="#{rowIx+1}" />
             </p:column>
-            <p:column  sortBy="#{item.documento.catalogo}" 
+            <p:column width="45%" sortBy="#{item.documento.catalogo}" 
                        filterBy="#{item.documento.catalogo}"
                        filterMatchMode="contains">
                 <f:facet name="header">
@@ -21,7 +21,7 @@
                 <h:outputText value="#{item.documento.catalogo}"/>
             </p:column>
 
-            <p:column sortBy="#{item.documento.tipo}" 
+            <p:column width="30%" sortBy="#{item.documento.tipo}" 
                       filterBy="#{item.documento.tipo}"
                       filterMatchMode="contains">
                 <f:facet name="header">
@@ -29,7 +29,7 @@
                 </f:facet>
                 <h:outputText value="#{item.documento.tipo}"/>
             </p:column>
-            <p:column >
+            <p:column width="20%" >
                 <f:facet name="header">
                     <h:outputText value="#{msg['lbl.accion']}"/>
                 </f:facet> 

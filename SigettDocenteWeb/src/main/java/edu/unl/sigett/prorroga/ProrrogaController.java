@@ -10,13 +10,11 @@ import com.jlmallas.comun.service.DocumentoService;
 import com.jlmallas.comun.service.ItemService;
 import edu.unl.sigett.directorProyecto.SessionDirectorProyecto;
 import edu.unl.sigett.entity.Prorroga;
-import edu.unl.sigett.enumeration.EstadoProyectoEnum;
 import edu.unl.sigett.service.ConfiguracionCarreraService;
 import edu.unl.sigett.service.CronogramaService;
 import edu.unl.sigett.service.DocumentoCarreraService;
 import edu.unl.sigett.service.ProrrogaService;
 import edu.unl.sigett.util.CabeceraController;
-import edu.unl.sigett.util.PropertiesFileEnum;
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.ResourceBundle;
@@ -78,6 +76,7 @@ public class ProrrogaController implements Serializable {
     public void editar(Prorroga prorroga) {
         try {
             sessionProrroga.setProrroga(prorroga);
+            sessionProrroga.setRenderedCrud(Boolean.TRUE);
             RequestContext.getCurrentInstance().execute("PF('dlgCrudProrroga').show()");
         } catch (Exception e) {
             LOG.warning(e.getMessage());

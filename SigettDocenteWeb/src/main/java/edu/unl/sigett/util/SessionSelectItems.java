@@ -27,6 +27,7 @@ public class SessionSelectItems implements Serializable {
     private List<DocenteCarrera> docenteCarreras;
 
     public SessionSelectItems() {
+        this.docenteCarreras=new ArrayList<>();
         this.estados = new ArrayList<>();
         this.categorias = new ArrayList<>();
         this.tipos = new ArrayList<>();

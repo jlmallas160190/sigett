@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+        <p:dataTable id="tblProrrogas" value="#{sessionProrroga.prorrogas}" var="item" rows="5" paginator="true"
+                     rowIndexVar="rowIx" rowKey="#{item.fecha}" selectionMode="single" selection="#{item}" editable="true"
+                     filteredValue="#{sessionProrroga.filterProrrogas}" widgetVar="tblProrrogasFilter"
+                     rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'even-row' : 'odd-row'}" emptyMessage="#{msg['lbl.table.empty']}">
+            <p:column sortBy="#{item.fecha}">
+                <f:facet name="header">
+                    <h:outputText value="#{msg['lbl.fecha']} #{msg['lbl.prorroga']}"/>
+                </f:facet>
+                <h:outputText value="#{item.fecha}">
+                    <f:convertDateTime pattern="EEEEE dd MMMMM yyyy"/>
+                </h:outputText>
+            </p:column>
+            <p:column sortBy="#{item.motivo}" >
+                <f:facet name="header">
+                    <h:outputText value="#{msg['lbl.motivo']}"/>
+                </f:facet>
+                <p:commandLink  onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" 
+                                action="#{prorrogaController.editar(item)}" 
+                                update=":contenido:dlgCrudProrroga,:contenido:msm" value="#{item.motivo}"/>
+            </p:column>
+            <p:column>
+                <f:facet name="header">
+                    <h:outputText value="#{msg['lbl.aceptar']}"/>
+                </f:facet>
+                <h:outputText value="#{item.esAceptado}"/>
+            </p:column>
+        </p:dataTable>
+    </body>
+
+</html>

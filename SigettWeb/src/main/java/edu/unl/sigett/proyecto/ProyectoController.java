@@ -103,6 +103,7 @@ import javax.inject.Inject;
 import org.jfree.util.Log;
 import org.jlmallas.seguridad.dao.LogDao;
 import org.jlmallas.seguridad.service.UsuarioService;
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.TransferEvent;
 import org.primefaces.model.DualListModel;
@@ -1037,7 +1038,6 @@ public class ProyectoController implements Serializable {
         }
         sessionProyecto.setFilterAutoresProyectoDTO(sessionProyecto.getAutoresProyectoDTO());
     }
-
     //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="CONFIGURACIONES">
 //    private void listadoConfiguracionesProyecto() {

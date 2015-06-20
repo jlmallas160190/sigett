@@ -2,30 +2,29 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:p="http://primefaces.org/ui"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      xml:lang="es" lang="es">
 
     <body>
-        <ui:composition template="./../../template.xhtml">
-            <ui:define name="title">#{msg['lbl.pertinencias']}</ui:define>
+        <ui:composition template="./../../../template.xhtml">
+            <ui:define name="title">#{lbl.lineas_investigacion}</ui:define>
             <ui:define name="top">
-                <ui:include src="./../inicio/menu.xhtml"/>
+                <ui:include src="./../../inicio/menu.xhtml"/>
             </ui:define>
             <ui:define name="left">
-                <ui:include src="./../inicio/menuIzquierdo.xhtml"/>
+                <ui:include src="./../../inicio/menuIzquierdo.xhtml"/>
             </ui:define>
             <ui:define name="content">
-                <p:messages id="msm"/>
-                <p:panel header="#{msg['lbl.proyectos']}">
-                    <ui:include src="tablaDocenteProyectos.xhtml" /> 
+                <p:messages id="msgs" showDetail="true"/>
+                <p:panel>
+                    <ui:include src="pickListLineasInvestigacion.xhtml" /> 
                     <f:facet name="footer">
+                        <ui:include src="botonesPickListLineasInvestigacion.xhtml" />  
                     </f:facet>
                 </p:panel>
-                <f:metadata>
-                    <f:event type="preRenderView" listener="#{docenteProyectoController.preRenderView()}"/>
-                </f:metadata>
             </ui:define>
         </ui:composition>
+
     </body>
 </html>
-

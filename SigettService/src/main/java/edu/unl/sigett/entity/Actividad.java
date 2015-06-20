@@ -97,7 +97,7 @@ public class Actividad implements Serializable {
     @ManyToOne(optional = false)
     private Cronograma cronogramaId;
     @OneToMany(mappedBy = "actividadId")
-    private List<Revision> revisionList;
+    private List<RevisionActividad> revisionList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "actividadId")
     private List<DocumentoActividad> documentoActividadList;
     @Transient
@@ -191,12 +191,11 @@ public class Actividad implements Serializable {
         this.cronogramaId = cronogramaId;
     }
 
-    @XmlTransient
-    public List<Revision> getRevisionList() {
+    public List<RevisionActividad> getRevisionList() {
         return revisionList;
     }
 
-    public void setRevisionList(List<Revision> revisionList) {
+    public void setRevisionList(List<RevisionActividad> revisionList) {
         this.revisionList = revisionList;
     }
 

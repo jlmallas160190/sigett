@@ -18,11 +18,16 @@
                 <ui:include src="menu.xhtml"/>
                 <ui:include src="panelLogoSistema.xhtml"/>
             </ui:define>
-
+            <ui:define name="content">
+                <ui:include  src="./../eventoPersona/schedule.xhtml"/>
+                <ui:include  src="./../eventoPersona/dialogoEvento.xhtml"/>
+            </ui:define>
             <ui:define name="left">
                 <ui:include  src="menuIzquierdo.xhtml"/>
                 <f:metadata>
+                    <f:event type="preRenderView" listener="#{lineaInvestigacionDocenteController.preRenderView()}"/>
                     <f:event type="preRenderView" listener="#{docenteProyectoController.preRenderView()}"/>
+                    <f:event type="preRenderView" listener="#{directorProyectoController.preRenderView()}"/>
                 </f:metadata>
             </ui:define>
         </ui:composition>

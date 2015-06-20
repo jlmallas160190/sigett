@@ -14,6 +14,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -42,6 +43,9 @@ public class Evento implements Serializable {
     @Size(min = 1, max = 500)
     @Column(name = "nombre")
     private String nombre;
+    @Column(name = "lugar")
+    @Size(max = 500)
+    private String lugar;
     @Basic(optional = false)
     @NotNull
     @Column(name = "fecha_inicio")
@@ -54,6 +58,8 @@ public class Evento implements Serializable {
     private Date fechaFin;
     @Column(name = "catalogo_id")
     private Long catalogoId;
+    @OneToOne(mappedBy = "evento")
+    private EventoPersona eventoPersona;
 
     public Evento() {
     }
@@ -62,9 +68,10 @@ public class Evento implements Serializable {
         this.id = id;
     }
 
-    public Evento(Long id, String nombre, Date fechaInicio, Date fechaFin, Long catalogoId) {
+    public Evento(Long id, String nombre, String lugar, Date fechaInicio, Date fechaFin, Long catalogoId) {
         this.id = id;
         this.nombre = nombre;
+        this.lugar = lugar;
         this.fechaInicio = fechaInicio;
         this.fechaFin = fechaFin;
         this.catalogoId = catalogoId;
@@ -108,6 +115,22 @@ public class Evento implements Serializable {
 
     public void setCatalogoId(Long catalogoId) {
         this.catalogoId = catalogoId;
+    }
+
+    public EventoPersona getEventoPersona() {
+        return eventoPersona;
+    }
+
+    public void setEventoPersona(EventoPersona eventoPersona) {
+        this.eventoPersona = eventoPersona;
+    }
+
+    public String getLugar() {
+        return lugar;
+    }
+
+    public void setLugar(String lugar) {
+        this.lugar = lugar;
     }
 
     @Override

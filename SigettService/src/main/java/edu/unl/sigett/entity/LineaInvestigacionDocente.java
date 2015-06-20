@@ -14,8 +14,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -26,10 +24,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Entity
 @Table(name = "linea_investigacion_docente")
 @XmlRootElement
-@NamedQueries({
-    @NamedQuery(name = "LineaInvestigacionDocente.findAll", query = "SELECT l FROM LineaInvestigacionDocente l"),
-    @NamedQuery(name = "LineaInvestigacionDocente.findById", query = "SELECT l FROM LineaInvestigacionDocente l WHERE l.id = :id"),
-    @NamedQuery(name = "LineaInvestigacionDocente.findByDocenteId", query = "SELECT l FROM LineaInvestigacionDocente l WHERE l.docenteId = :docenteId")})
 public class LineaInvestigacionDocente implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -45,6 +39,10 @@ public class LineaInvestigacionDocente implements Serializable {
     private LineaInvestigacion lineaInvestigacionId;
 
     public LineaInvestigacionDocente() {
+    }
+
+    public LineaInvestigacionDocente(Long id) {
+        this.id = id;
     }
 
     public LineaInvestigacionDocente(Long docenteId, LineaInvestigacion lineaInvestigacion) {

@@ -13,6 +13,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -35,6 +36,9 @@ public class EventoPersona implements Serializable {
     private Persona personaId;
     @Column(name = "tabla_id")
     private Long tablaId;
+    @JoinColumn(name = "id", referencedColumnName = "id", insertable = false, updatable = false)
+    @OneToOne(optional = false)
+    private Evento evento;
 
     public EventoPersona() {
     }
@@ -71,6 +75,14 @@ public class EventoPersona implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Evento getEvento() {
+        return evento;
+    }
+
+    public void setEvento(Evento evento) {
+        this.evento = evento;
     }
 
 }

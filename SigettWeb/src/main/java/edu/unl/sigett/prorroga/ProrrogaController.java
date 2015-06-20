@@ -448,7 +448,7 @@ public class ProrrogaController implements Serializable {
         String meses = "";
         if (sessionProrroga.getProrroga().getEsAceptado()) {
             resolucion = cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "oficio_inf_prorroga_cu_aceptar");
-            meses = tiempo + "" + cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "oficio_inf_prorroga_cu_e");
+            meses = tiempo + " " + cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "oficio_inf_prorroga_cu_e");
         }
         return (cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "oficio_inf_prorroga_cu_a") + ", <b>" + resolucion + "<b/>"
                 + " " + meses + " " + cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "oficio_inf_prorroga_cu_b") + " "

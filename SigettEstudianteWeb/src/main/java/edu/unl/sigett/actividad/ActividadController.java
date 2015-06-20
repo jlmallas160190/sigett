@@ -374,7 +374,7 @@ public class ActividadController implements Serializable {
                 sessionActividad.getActividad().getId()));
         EventoPersona eventoAutor = !eventosAutor.isEmpty() ? eventosAutor.get(0) : null;
         if (eventoAutor == null) {
-            Evento evento = new Evento(null, sessionActividad.getActividad().getNombre(), sessionActividad.getActividad().getFechaInicio(),
+            Evento evento = new Evento(null, sessionActividad.getActividad().getNombre(),"", sessionActividad.getActividad().getFechaInicio(),
                     sessionActividad.getActividad().getFechaCulminacion(),
                     itemService.buscarPorCatalogoCodigo(CatalogoEnum.CATALOGOEVENTO.getTipo(), EventoEnum.ACTIVIDAD.getTipo()).getId());
             eventoService.guardar(evento);
@@ -394,7 +394,7 @@ public class ActividadController implements Serializable {
             List<EventoPersona> eventoDocentes = eventoPersonaService.buscar(new EventoPersona(null, directorProyectoDTO.getDirectorDTO().getPersona(), sessionActividad.getActividad().getId()));
             EventoPersona eventoDocente = !eventoDocentes.isEmpty() ? eventoDocentes.get(0) : null;
             if (eventoDocente == null) {
-                Evento evento = new Evento(null, sessionActividad.getActividad().getNombre(), sessionActividad.getActividad().getFechaInicio(),
+                Evento evento = new Evento(null, sessionActividad.getActividad().getNombre(), "",sessionActividad.getActividad().getFechaInicio(),
                         sessionActividad.getActividad().getFechaCulminacion(),
                         itemService.buscarPorCatalogoCodigo(CatalogoEnum.CATALOGOEVENTO.getTipo(), EventoEnum.ACTIVIDAD.getTipo()).getId());
                 eventoService.guardar(evento);

@@ -20,61 +20,60 @@
             <p:panel>
                 <p:tabView  id="tabViewDatosProyecto" >
                     <p:tab id="tabDatosInicio" title="#{msg['lbl.informacion']} #{msg['lbl.inicio']}" >
-                        <p:panel header="#{msg['lbl.informacion']}" toggleable="true">
+                        <p:fieldset legend="#{msg['lbl.informacion']}" toggleable="true">
                             <ui:include src="datosProyecto.xhtml"/>
-                        </p:panel>
-                        <br/>
-                        <p:panel header="#{msg['lbl.lineasInvestigacion']}" toggleable="true">
+                        </p:fieldset>
+                        <p:fieldset legend="#{msg['lbl.lineasInvestigacion']}" toggleable="true">
                             <ui:include src="dataGridLineasInvestigacion.xhtml"/>
                             <ui:include src="pickListLineasInvestigacion.xhtml"/>
-                        </p:panel>
+                        </p:fieldset>
                         <br/>
-                        <p:panel header="#{msg['lbl.carreras']}" toggleable="true">
+                        <p:fieldset legend="#{msg['lbl.carreras']}" toggleable="true">
                             <ui:include src="dataGridCarreras.xhtml"/>
                             <ui:include src="pickListCarreras.xhtml"/>
-                        </p:panel>
+                        </p:fieldset>
                     </p:tab>
                     <p:tab id="tabAutores" title="#{msg['lbl.autores']}">
-                        <p:panel header="#{msg['lbl.listado']} #{msg['lbl.autores']}">
+                        <p:fieldset legend="#{msg['lbl.listado']} #{msg['lbl.autores']}" toggleable="true">
                             <f:facet name="footer">
                                 <ui:include src="botonesTablaAutores.xhtml"/>
                             </f:facet>
                             <ui:include src="tablaAutores.xhtml"/>
-                        </p:panel>
+                        </p:fieldset>
                     </p:tab>
                     <p:tab id="tabDocentesProyecto" 
                            title="#{msg['lbl.docentes']} #{msg['lbl.pertinencias']}">
-                        <p:panel header="#{msg['lbl.listado']} #{msg['lbl.docentes']}">
+                        <p:fieldset legend="#{msg['lbl.listado']} #{msg['lbl.docentes']}" toggleable="true">
                             <ui:include src="tablaDocentes.xhtml"/>
                             <f:facet name="footer">
                                 <ui:include src="botonesTablaDocentes.xhtml"/>
                             </f:facet>  
-                        </p:panel>
+                        </p:fieldset>
                     </p:tab>
                     <p:tab id="tabDocumentos" 
                            title="#{msg['lbl.documentos']}">
-                        <p:panel header="#{msg['lbl.listado']} #{msg['lbl.documentos']}" toggleable="true">
+                      <p:fieldset legend="#{msg['lbl.listado']} #{msg['lbl.documentos']}" toggleable="true">
                             <ui:include src="tablaDocumentosProyecto.xhtml"/>
                             <f:facet name="footer">
                                 <ui:include src="botonesTablaDocumentosProyecto.xhtml"/>
                             </f:facet>  
-                        </p:panel>
+                      </p:fieldset>
                     </p:tab>
                     <p:tab id="tabDirectoresProyecto" rendered="#{directorProyectoDM.renderedBuscar}" title="#{msg['lbl.directores']}">
-                        <p:panel>
+                        <p:fieldset legend="#{msg['lbl.directores']}" toggleable="true">
                             <ui:include src="tablaDirectores.xhtml"/>
                             <f:facet name="footer">
                                 <ui:include src="botonesTablaDirectores.xhtml"/>
                             </f:facet>    
-                        </p:panel>
+                        </p:fieldset>
                     </p:tab>
                     <p:tab id="tabProrrogas" rendered="#{sessionProrroga.renderedBuscar}" title="#{msg['lbl.prorrogas']}">
-                        <p:panel>
+                        <p:fieldset legend="#{msg['lbl.prorrogas']}" toggleable="true">
                             <ui:include src="tablaProrrogas.xhtml"/>
                             <f:facet name="footer">
                                 <ui:include src="botonesTablaProrroga.xhtml"/>
                             </f:facet>    
-                        </p:panel>
+                        </p:fieldset>
                     </p:tab>
                 </p:tabView>
                 <f:facet name="footer">

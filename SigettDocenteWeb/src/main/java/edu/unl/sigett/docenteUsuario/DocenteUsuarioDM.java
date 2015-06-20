@@ -5,10 +5,15 @@
  */
 package edu.unl.sigett.docenteUsuario;
 
+import edu.unl.sigett.entity.LineaInvestigacion;
+import edu.unl.sigett.entity.LineaInvestigacionDocente;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Named;
 import org.jlmallas.seguridad.entity.Usuario;
+import org.primefaces.model.DualListModel;
 
 /**
  *

@@ -7,30 +7,27 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core">
 
     <body>
-        <ui:composition template="./../../template.xhtml">
+        <ui:composition template="./../../../template.xhtml">
             <ui:define name="title">
-                <h:outputText value="#{msg['lbl.principal']}"/>
+                <h:outputText value="#{lbl.editar_director_proyecto}"/>
             </ui:define>
 
             <ui:define name="top">
-                <ui:include src="./../inicio/menu.xhtml"/>
+                <ui:include src="./../../inicio/menu.xhtml"/>
             </ui:define>
 
             <ui:define name="left">
-                <ui:include src="./../inicio/menuIzquierdo.xhtml"/>
+                <ui:include src="./../../inicio/menuIzquierdo.xhtml"/>
             </ui:define>
             <ui:define name="content">
                 <p:messages id="msm" showDetail="true"/>
                 <p:tabView id="tabViewDatosDP">
-                    <p:tab id="pertinencias" title="#{msg['lbl.pertinencias']}">
+                    <p:tab id="prorrogas" title="#{lbl.prorrogas}">
                         <p:panel>
-                            <ui:include src="tablaPertinencias.xhtml"/>
-                            <f:facet name="footer">
-                                <ui:include src="botonesTablaPertinencia.xhtml"/>
-                            </f:facet>
+                            <ui:include src="tablaProrrogas.xhtml"/>
                         </p:panel>
                     </p:tab>
-                    <p:tab title="#{msg['lbl.documentos']}">
+                    <!--<p:tab title="#{msg['lbl.documentos']}">
                         <p:panel>
                             <ui:include src="tablaDocumentosProyecto.xhtml"/>
                         </p:panel>
@@ -39,15 +36,11 @@
                         <p:panel>
                             <ui:include src="tablaAutores.xhtml"/>
                         </p:panel>
-                    </p:tab>
+                    </p:tab>-->
                 </p:tabView>
-                <ui:include src="./../pertinencias/dialogoEditarPertinencia.xhtml"/>
-                <ui:include src="dialogoInformePertinencia.xhtml"/>
-                <ui:include src="dialogoSubirInformePertinencia.xhtml"/>
-                <ui:include src="dialogoVerDocumentoProyecto.xhtml"/>
+                <ui:include src="./../prorroga/dialogoCrudProrroga.xhtml"/>
                 <f:metadata>
-                    <f:event type="preRenderView" listener="#{docenteProyectoController.preRenderViewEditar()}"/>
-                    <f:event type="preRenderView" listener="#{pertinenciaController.preRenderView()}"/>
+                    <f:event type="preRenderView" listener="#{prorrogaController.preRenderView()}"/>
                 </f:metadata>
             </ui:define>
         </ui:composition>

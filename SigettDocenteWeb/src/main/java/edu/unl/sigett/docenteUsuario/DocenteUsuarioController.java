@@ -10,17 +10,17 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
-import com.jlmallas.comun.dao.ConfiguracionDao;
 import com.jlmallas.comun.dao.PersonaDao;
 import com.jlmallas.comun.entity.Configuracion;
 import com.jlmallas.comun.enumeration.ConfiguracionEnum;
 import com.jlmallas.comun.enumeration.ValorEnum;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 import com.ocpsoft.pretty.faces.annotation.URLMappings;
-import edu.jlmallas.academico.dao.DocenteDao;
 import edu.unl.sigett.entity.DocenteUsuario;
 import com.jlmallas.comun.enumeration.URLWSEnum;
 import com.jlmallas.comun.service.ConfiguracionService;
+import edu.jlmallas.academico.entity.Docente;
+import edu.jlmallas.academico.service.DocenteService;
 import edu.unl.sigett.service.DocenteUsuarioService;
 import edu.unl.sigett.util.CabeceraController;
 import javax.inject.Named;
@@ -75,7 +75,7 @@ public class DocenteUsuarioController implements Serializable {
     @EJB
     private DocenteUsuarioService docenteUsuarioDao;
     @EJB
-    private DocenteDao docenteDao;
+    private DocenteService docenteService;
     @EJB
     private PersonaDao personaDao;
     //</editor-fold>
@@ -84,6 +84,7 @@ public class DocenteUsuarioController implements Serializable {
     public DocenteUsuarioController() {
     }
 
+    //<editor-fold defaultstate="collapsed" desc="MÉTODOS USUARIO">
     /**
      * PERMITE LOGEAR A DOCENTE
      *
@@ -111,7 +112,7 @@ public class DocenteUsuarioController implements Serializable {
                     this.cabeceraController.getMessageView().message(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.datos_incorrectos"), "");
                     return "";
                 }
-                docenteUsuarioDM.setDocenteUsuarioDTO(new DocenteUsuarioDTO(docenteDao.find(docenteUsuario.getDocenteId()),
+                docenteUsuarioDM.setDocenteUsuarioDTO(new DocenteUsuarioDTO(docenteService.buscarPorId(new Docente(docenteUsuario.getDocenteId())),
                         !usuarios.isEmpty() ? usuarios.get(0) : null, personaDao.find(docenteUsuario.getDocenteId())));
                 return "pretty:inicioDocente";
             }
@@ -133,6 +134,13 @@ public class DocenteUsuarioController implements Serializable {
         }
         return "pretty:inicioDocente";
     }
+
+    public String logout() {
+        docenteUsuarioDM.setDocenteUsuarioDTO(new DocenteUsuarioDTO());
+        FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
+        return "pretty:loginDocente";
+    }
+    //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="SERVICIOS WEB">
 
     public void sgaWebServicesValidaDocente(String cedula, String clave) {
@@ -199,11 +207,6 @@ public class DocenteUsuarioController implements Serializable {
             LOG.info(e.getMessage());
         }
     }
-//</editor-fold>
+//</editor-fold>  
 
-    public String logout() {
-        docenteUsuarioDM.setDocenteUsuarioDTO(new DocenteUsuarioDTO());
-        FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
-        return "pretty:loginDocente";
-    }
 }

@@ -471,7 +471,7 @@ button.ui-button-icons-only {
 .ui-datatable .ui-datatable-header{
     border-bottom:0px none;
     background: #e1e1e1 url(../img/nav-bg.gif) top left repeat-x !important;
-    border:1px solid #eee !important;
+    border:none;
 }
 .ui-datatable .ui-datatable-footer{
     border-bottom:0px none;
@@ -3715,7 +3715,7 @@ table.fc-border-separate {
 .ui-autocomplete-panel .ui-autocomplete-table {
     border-collapse:collapse;
     width: 100%;
-    
+
 }
 
 .ui-autocomplete-panel .ui-autocomplete-table th,
@@ -3801,4 +3801,24 @@ table.fc-border-separate {
     font-weight: bold;
     cursor: default;
 }
+.ui-fieldset, .ui-fieldset .ui-fieldset-legend {
+    padding:0.2em 1em;
+    background: white url(../img/nav-bg.gif) 0 100% repeat-x;
+    margin-bottom: 10px;
+    border: none;
+}
+
+.ui-fieldset-toggleable .ui-fieldset-legend {
+    padding: 0.2em 1em 0.5em 0.5em;
+    cursor:pointer;
+}
+
+.ui-fieldset .ui-fieldset-toggler {
+    padding-right: .1em;
+    margin-top: -0.1em;
+    float:left;
+}
+
+
+
 

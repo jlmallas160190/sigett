@@ -10,7 +10,10 @@
                      rowIndexVar="rowIx" rowKey="#{item.fecha}" selectionMode="single" selection="#{item}" editable="true"
                      filteredValue="#{sessionProrroga.filterProrrogas}" widgetVar="tblProrrogasFilter"
                      rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'even-row' : 'odd-row'}" emptyMessage="#{msg['lbl.table.empty']}">
-            <p:column sortBy="#{item.fecha}">
+            <p:column width="5%">
+                <h:outputText value="#{rowIx+1}" />
+            </p:column>
+            <p:column width="15%" sortBy="#{item.fecha}">
                 <f:facet name="header">
                     <h:outputText value="#{msg['lbl.fecha']} #{msg['lbl.prorroga']}"/>
                 </f:facet>
@@ -18,13 +21,13 @@
                     <f:convertDateTime pattern="EEEEE dd MMMMM yyyy"/>
                 </h:outputText>
             </p:column>
-            <p:column sortBy="#{item.motivo}" rendered="#{sessionProrroga.renderedEditar}">
+              <p:column width="30%" sortBy="#{item.motivo}" rendered="#{sessionProrroga.renderedEditar}">
                 <f:facet name="header">
                     <h:outputText value="#{msg['lbl.motivo']}"/>
                 </f:facet>
                 <h:outputText value="#{item.motivo}"/>
             </p:column>
-            <p:column sortBy="#{item.motivo}" rendered="#{!sessionProrroga.renderedEditar}">
+              <p:column width="30%" sortBy="#{item.motivo}" rendered="#{!sessionProrroga.renderedEditar}">
                 <f:facet name="header">
                     <h:outputText value="#{msg['lbl.motivo']}"/>
                 </f:facet>
@@ -32,13 +35,13 @@
                                 action="#{prorrogaController.editar(item)}" 
                                 update=":contenido:dlgEditarProrroga,:contenido:msm" value="#{item.motivo}"/>
             </p:column>
-            <p:column>
+              <p:column width="10%">
                 <f:facet name="header">
                     <h:outputText value="#{msg['lbl.aceptar']}"/>
                 </f:facet>
                 <h:outputText value="#{item.esAceptado}"/>
             </p:column>
-            <p:column>
+              <p:column width="20%">
                 <f:facet name="header">
                     <h:outputText value="#{msg['lbl.accion']}"/>
                 </f:facet> 

@@ -15,16 +15,20 @@
                 <p:commandLink onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()"
                                value="#{lbl['pertinencia_proyectos']}" action="pretty:docenteProyectos"/>
                 <span class="badge">#{docenteProyectoDM.docentesProyectoDTO.size()}</span>
+                <p:graphicImage width="16" height="16" value="/resources/png/32px/Shape86.png"/>
+                <p:commandLink onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()"
+                               value="#{lbl.seguimiento_proyectos}" action="pretty:directorProyectos"/>
+                <span class="badge">#{sessionDirectorProyecto.directoresProyectoDTO.size()}</span>
                 <!--<p:graphicImage width="16" height="16" value="/resources/png/32px/Shape86.png"/>
                 <p:commandLink  onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" />
                 <span class="badge"></span>
                 <p:graphicImage width="16" height="16" value="/resources/png/32px/Shape149.png"/>
                 <p:commandLink  onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" 
                                 value="#{msg['lbl.tribunales']}"/>
-                <span class="badge"></span>
+                <span class="badge"></span>-->
                 <p:graphicImage width="16" height="16" value="/resources/png/32px/Shape102.png"/>
-                <p:commandLink  onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()"
-                                value="#{msg['lbl.lineasInvestigacion']}"/>-->
+                <p:commandLink action="pretty:lineasInvestigacion" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()"
+                                value="#{lbl.lineas_investigacion}"/>
             </h:panelGrid>
         </p:panel>
     </body>

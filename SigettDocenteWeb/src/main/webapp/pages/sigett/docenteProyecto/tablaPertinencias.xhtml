@@ -11,10 +11,10 @@
                      selection="#{item}" selectionMode="single" rowKey="#{item.id}"
                      rowIndexVar="rowIx" editable="true" editMode="cell" rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'even-row' : 'odd-row'}" 
                      emptyMessage="#{msg['lbl.table.empty']}">
-            <p:column>
+            <p:column width="5%">
                 <h:outputText value="#{rowIx+1}" />
             </p:column>
-            <p:column filterBy="#{item.fecha}" sortBy="#{item.fecha}">
+            <p:column width="45%" filterBy="#{item.fecha}" sortBy="#{item.fecha}">
                 <f:facet name="header">
                     <h:outputText value="#{msg['lbl.fecha']}"/>
                 </f:facet>
@@ -22,13 +22,13 @@
                     <f:convertDateTime pattern="EEEEE dd MMMMM yyyy HH:mm:ss"/>
                 </h:outputText>
             </p:column>
-            <p:column>
+            <p:column width="20%">
                 <f:facet name="header">
                     <h:outputText value="#{msg['lbl.aceptar']}"/>
                 </f:facet>
                 <h:outputText value="#{item.esAceptado}" />
             </p:column>
-            <p:column >
+            <p:column width="30%">
                 <f:facet name="header">
                     <h:outputText value="#{msg['lbl.accion']}"/>
                 </f:facet>
