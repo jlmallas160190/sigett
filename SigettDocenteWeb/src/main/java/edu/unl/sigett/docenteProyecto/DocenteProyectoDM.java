@@ -37,14 +37,8 @@ public class DocenteProyectoDM implements Serializable {
     private List<DocumentoProyectoDTO> filterDocumentoProyectos;
     private List<LineaInvestigacionProyecto> lineasInvestigacionProyecto;
     private List<LineaInvestigacionProyecto> filterLineasInvestigacionProyecto;
-    private List<Item> estados;
-    private List<Item> categorias;
-    private List<Item> tipos;
 
     public DocenteProyectoDM() {
-        this.estados = new ArrayList<>();
-        this.categorias = new ArrayList<>();
-        this.tipos = new ArrayList<>();
         this.autorProyectos = new ArrayList<>();
         this.filterAutorProyectos = new ArrayList<>();
         this.lineasInvestigacionProyecto = new ArrayList<>();
@@ -162,29 +156,4 @@ public class DocenteProyectoDM implements Serializable {
     public void setFilterLineasInvestigacionProyecto(List<LineaInvestigacionProyecto> filterLineasInvestigacionProyecto) {
         this.filterLineasInvestigacionProyecto = filterLineasInvestigacionProyecto;
     }
-
-    public List<Item> getEstados() {
-        return estados;
-    }
-
-    public void setEstados(List<Item> estados) {
-        this.estados = estados;
-    }
-
-    public List<Item> getCategorias() {
-        return categorias;
-    }
-
-    public void setCategorias(List<Item> categorias) {
-        this.categorias = categorias;
-    }
-
-    public List<Item> getTipos() {
-        return tipos;
-    }
-
-    public void setTipos(List<Item> tipos) {
-        this.tipos = tipos;
-    }
-
 }

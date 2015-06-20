@@ -5,16 +5,15 @@
  */
 package edu.unl.sigett.docenteProyecto;
 
-import com.jlmallas.comun.dao.PersonaDao;
 import com.jlmallas.comun.entity.Documento;
 import com.jlmallas.comun.entity.Item;
 import com.jlmallas.comun.entity.Persona;
 import com.jlmallas.comun.enumeration.CatalogoEnum;
 import com.jlmallas.comun.service.DocumentoService;
 import com.jlmallas.comun.service.ItemService;
+import com.jlmallas.comun.service.PersonaService;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 import com.ocpsoft.pretty.faces.annotation.URLMappings;
-import edu.jlmallas.academico.dao.EstudianteCarreraDao;
 import edu.jlmallas.academico.entity.CoordinadorPeriodo;
 import edu.jlmallas.academico.entity.Docente;
 import edu.jlmallas.academico.entity.DocenteCarrera;
@@ -22,6 +21,7 @@ import edu.jlmallas.academico.entity.EstudianteCarrera;
 import edu.jlmallas.academico.service.CoordinadorPeriodoService;
 import edu.jlmallas.academico.service.DocenteCarreraService;
 import edu.jlmallas.academico.service.DocenteService;
+import edu.jlmallas.academico.service.EstudianteCarreraService;
 import edu.unl.sigett.academico.coordinadorPeriodo.CoordinadorPeriodoDTO;
 import edu.unl.sigett.autorProyecto.AutorProyectoDTO;
 import edu.unl.sigett.docenteUsuario.DocenteUsuarioDM;
@@ -36,9 +36,12 @@ import edu.unl.sigett.enumeration.EstadoProyectoEnum;
 import edu.unl.sigett.service.AutorProyectoService;
 import edu.unl.sigett.service.DocenteProyectoService;
 import edu.unl.sigett.service.DocumentoProyectoService;
+import edu.unl.sigett.util.SelectItemsController;
+import edu.unl.sigett.util.SessionSelectItems;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
@@ -77,18 +80,20 @@ public class DocenteProyectoController implements Serializable {
     private DocenteUsuarioDM docenteUsuarioDM;
     @Inject
     private DocenteProyectoDM docenteProyectoDM;
+    @Inject
+    private SessionSelectItems sessionSelectItems;
 //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="SERVICIOS">
     @EJB
     private DocenteProyectoService docenteProyectoService;
     @EJB
-    private PersonaDao personaDao;
+    private PersonaService personaService;
     @EJB
     private ItemService itemService;
     @EJB
     private AutorProyectoService autorProyectoService;
     @EJB
-    private EstudianteCarreraDao estudianteCarreraDao;
+    private EstudianteCarreraService estudianteCarreraService;
     @EJB
     private DocenteCarreraService docenteCarreraService;
     @EJB
@@ -106,11 +111,7 @@ public class DocenteProyectoController implements Serializable {
     }
 
     public void preRenderView() {
-        this.listadoPertinenciaProyecto();
-        this.listadoCategorias();
-        this.listadoEstados();
-        this.listadoTipos();
-
+        this.listadoProyectos();
     }
 
     public void preRenderViewEditar() {
@@ -136,7 +137,7 @@ public class DocenteProyectoController implements Serializable {
         }
         CoordinadorPeriodo coordinadorPeriodo = !coordinadores.isEmpty() ? coordinadores.get(0) : null;
         CoordinadorPeriodoDTO coordinadorPeriodoDTO = new CoordinadorPeriodoDTO(
-                coordinadorPeriodo, personaDao.find(coordinadorPeriodo.getCoordinadorId().getId()), null);
+                coordinadorPeriodo, personaService.buscarPorId(new Persona(coordinadorPeriodo.getCoordinadorId().getId())), null);
         coordinadorPeriodoDTO.setDocente(docenteService.buscarPorId(new Docente(coordinadorPeriodoDTO.getPersona().getId())));
         docenteProyectoDM.setCoordinadorPeriodoDTO(coordinadorPeriodoDTO);
         listadoDocumentos();
@@ -154,7 +155,7 @@ public class DocenteProyectoController implements Serializable {
         }
         CoordinadorPeriodo coordinadorPeriodo = !coordinadores.isEmpty() ? coordinadores.get(0) : null;
         CoordinadorPeriodoDTO coordinadorPeriodoDTO = new CoordinadorPeriodoDTO(
-                coordinadorPeriodo, personaDao.find(coordinadorPeriodo.getCoordinadorId().getId()), null);
+                coordinadorPeriodo, personaService.buscarPorId(new Persona(coordinadorPeriodo.getCoordinadorId().getId())), null);
         coordinadorPeriodoDTO.setDocente(docenteService.buscarPorId(new Docente(coordinadorPeriodoDTO.getPersona().getId())));
         docenteProyectoDM.setCoordinadorPeriodoDTO(coordinadorPeriodoDTO);
         listadoDocumentos();
@@ -196,8 +197,8 @@ public class DocenteProyectoController implements Serializable {
                 continue;
             }
             AutorProyectoDTO autorProyectoDTO = new AutorProyectoDTO(autorProyecto, autorProyecto.getAspiranteId(),
-                    estudianteCarreraDao.find(autorProyecto.getAspiranteId().getId()), null);
-            autorProyectoDTO.setPersona(personaDao.find(autorProyectoDTO.getEstudianteCarrera().getEstudianteId().getId()));
+                    estudianteCarreraService.buscarPorId(new EstudianteCarrera(autorProyecto.getAspiranteId().getId())), null);
+            autorProyectoDTO.setPersona(personaService.buscarPorId(new Persona(autorProyectoDTO.getEstudianteCarrera().getEstudianteId().getId())));
             if (!docenteProyectoDM.getAutorProyectos().contains(autorProyectoDTO)) {
                 docenteProyectoDM.getAutorProyectos().add(autorProyectoDTO);
             }
@@ -210,34 +211,21 @@ public class DocenteProyectoController implements Serializable {
                 docenteProyectoDM.getDocenteProyectoDTOSeleccionado().getDocenteProyecto().getProyectoId().getEstadoProyectoId()));
     }
 
-    private void listadoTipos() {
-        docenteProyectoDM.getTipos().clear();
-        docenteProyectoDM.setTipos(itemService.buscarPorCatalogo(CatalogoEnum.TIPOPROYECTO.getTipo()));
-    }
-
-    private void listadoCategorias() {
-        docenteProyectoDM.getCategorias().clear();
-        docenteProyectoDM.setCategorias(itemService.buscarPorCatalogo(CatalogoEnum.CATALOGOPROYECTO.getTipo()));
-    }
-
-    private void listadoEstados() {
-        docenteProyectoDM.getEstados().clear();
-        docenteProyectoDM.setEstados(itemService.buscarPorCatalogo(CatalogoEnum.ESTADOPROYECTO.getTipo()));
-    }
-
     /**
      * LISTADO DE PROYECTO ASIGNADOS A DOCENTE PARA QUE POSTERIORMENTE DE
      * PERTINENCIA.
      */
-    private void listadoPertinenciaProyecto() {
+    private void listadoProyectos() {
         docenteProyectoDM.getDocentesProyectoDTO().clear();
         docenteProyectoDM.getFilterDocentesProyectoDTO().clear();
         Item inicio = itemService.buscarPorCatalogoCodigo(CatalogoEnum.ESTADOPROYECTO.getTipo(), EstadoProyectoEnum.INICIO.getTipo());
         Item pertinente = itemService.buscarPorCatalogoCodigo(CatalogoEnum.ESTADOPROYECTO.getTipo(), EstadoProyectoEnum.PERTINENTE.getTipo());
-        List<DocenteProyecto> docenteProyectos = this.docenteProyectoService.buscar(new DocenteProyecto(
-                null, null, docenteUsuarioDM.getDocenteUsuarioDTO().getDocente().getId(), Boolean.TRUE, null));
-        if (docenteProyectos == null) {
-            return;
+        List<DocenteProyecto> docenteProyectos = new ArrayList<>();
+        for (DocenteCarrera docenteCarrera : sessionSelectItems.getDocenteCarreras()) {
+            List<DocenteProyecto> lista = this.docenteProyectoService.buscar(new DocenteProyecto(null, null, docenteCarrera.getId(), Boolean.TRUE, null));
+            for (DocenteProyecto dp : lista) {
+                docenteProyectos.add(dp);
+            }
         }
         for (DocenteProyecto docenteProyecto : docenteProyectos) {
             if (!(docenteProyecto.getProyectoId().getEstadoProyectoId().equals(inicio.getId())
@@ -251,7 +239,8 @@ public class DocenteProyectoController implements Serializable {
             docenteProyecto.getProyectoId().setTipo(tipo.getNombre());
             docenteProyecto.getProyectoId().setCatalogo(categoria.getNombre());
             docenteProyecto.getProyectoId().setAutores(autores(docenteProyecto.getProyectoId()));
-            DocenteProyectoDTO docenteProyectoDTO = new DocenteProyectoDTO(docenteProyecto, personaDao.find(docenteProyecto.getDocenteCarreraId()),
+            DocenteProyectoDTO docenteProyectoDTO = new DocenteProyectoDTO(docenteProyecto,
+                    personaService.buscarPorId(new Persona(docenteProyecto.getDocenteCarreraId())),
                     docenteCarreraService.buscarPorId(new DocenteCarrera(docenteProyecto.getDocenteCarreraId(), null, null, null)));
             docenteProyectoDM.getDocentesProyectoDTO().add(docenteProyectoDTO);
         }
@@ -277,7 +266,7 @@ public class DocenteProyectoController implements Serializable {
             docenteProyecto.getProyectoId().setTipo(tipo.getNombre());
             docenteProyecto.getProyectoId().setCatalogo(categoria.getNombre());
             docenteProyecto.getProyectoId().setAutores(autores(docenteProyecto.getProyectoId()));
-            DocenteProyectoDTO docenteProyectoDTO = new DocenteProyectoDTO(docenteProyecto, personaDao.find(docenteProyecto.getDocenteCarreraId()),
+            DocenteProyectoDTO docenteProyectoDTO = new DocenteProyectoDTO(docenteProyecto, personaService.buscarPorId(new Persona(docenteProyecto.getDocenteCarreraId())),
                     docenteCarreraService.buscarPorId(new DocenteCarrera(docenteProyecto.getDocenteCarreraId(), null, null, null)));
             docenteProyectoDM.getHistorialDocenteProyectosDTO().add(docenteProyectoDTO);
         }
@@ -301,8 +290,8 @@ public class DocenteProyectoController implements Serializable {
             if (autorProyecto.getEstadoAutorId().equals(estadoRenunciado.getId())) {
                 continue;
             }
-            EstudianteCarrera estudianteCarrera = estudianteCarreraDao.find(autorProyecto.getAspiranteId().getId());
-            Persona persona = personaDao.find(estudianteCarrera.getEstudianteId().getId());
+            EstudianteCarrera estudianteCarrera = estudianteCarreraService.buscarPorId(new EstudianteCarrera(autorProyecto.getAspiranteId().getId()));
+            Persona persona = personaService.buscarPorId(new Persona(estudianteCarrera.getEstudianteId().getId()));
             if (contador == 0) {
                 if (persona == null) {
                     continue;

@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package edu.unl.sigett.entity;
 
 import java.io.Serializable;
@@ -14,10 +13,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -32,15 +27,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Entity
 @Table(name = "revision")
 @XmlRootElement
-@NamedQueries({
-    @NamedQuery(name = "Revision.findAll", query = "SELECT r FROM Revision r"),
-    @NamedQuery(name = "Revision.findById", query = "SELECT r FROM Revision r WHERE r.id = :id"),
-    @NamedQuery(name = "Revision.findByFecha", query = "SELECT r FROM Revision r WHERE r.fecha = :fecha"),
-    @NamedQuery(name = "Revision.findByObservacion", query = "SELECT r FROM Revision r WHERE r.observacion = :observacion"),
-    @NamedQuery(name = "Revision.findBySugerencia", query = "SELECT r FROM Revision r WHERE r.sugerencia = :sugerencia"),
-    @NamedQuery(name = "Revision.findByHoraInicio", query = "SELECT r FROM Revision r WHERE r.horaInicio = :horaInicio"),
-    @NamedQuery(name = "Revision.findByHoraFin", query = "SELECT r FROM Revision r WHERE r.horaFin = :horaFin")})
 public class Revision implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -72,9 +60,6 @@ public class Revision implements Serializable {
     @Column(name = "hora_fin")
     @Temporal(TemporalType.TIME)
     private Date horaFin;
-    @JoinColumn(name = "actividad_id", referencedColumnName = "id")
-    @ManyToOne
-    private Actividad actividadId;
 
     public Revision() {
     }
@@ -140,14 +125,6 @@ public class Revision implements Serializable {
         this.horaFin = horaFin;
     }
 
-    public Actividad getActividadId() {
-        return actividadId;
-    }
-
-    public void setActividadId(Actividad actividadId) {
-        this.actividadId = actividadId;
-    }
-
     @Override
     public int hashCode() {
         int hash = 0;
@@ -162,15 +139,12 @@ public class Revision implements Serializable {
             return false;
         }
         Revision other = (Revision) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
+        return (this.id != null || other.id == null) && (this.id == null || this.id.equals(other.id));
     }
 
     @Override
     public String toString() {
         return "edu.unl.sigett.entity.Revision[ id=" + id + " ]";
     }
-    
+
 }

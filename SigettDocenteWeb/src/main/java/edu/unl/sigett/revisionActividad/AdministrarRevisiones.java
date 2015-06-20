@@ -3,10 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.unl.sigett.seguimiento.controlador;
+package edu.unl.sigett.revisionActividad;
 
-import edu.unl.sigett.seguimiento.session.SessionProyectosDirector;
-import edu.unl.sigett.seguimiento.session.SessionRevision;
 import edu.unl.sigett.entity.Actividad;
 import edu.jlmallas.academico.entity.Docente;
 import edu.unl.sigett.entity.Proyecto;
@@ -37,8 +35,6 @@ import org.jlmallas.seguridad.dao.UsuarioDao;
 @SessionScoped
 public class AdministrarRevisiones implements Serializable {
 
-    @Inject
-    private SessionProyectosDirector sessionProyectosDirector;
     @Inject
     private SessionRevision sessionRevision;
     @EJB
@@ -117,7 +113,7 @@ public class AdministrarRevisiones implements Serializable {
                 Calendar fechaActual = Calendar.getInstance();
                 sessionRevision.getRevision().setFecha(fechaActual.getTime());
                 sessionRevision.getRevision().setHoraInicio(fechaActual.getTime());
-                sessionRevision.getRevision().setActividadId(actividad);
+//                sessionRevision.getRevision().setActividadId(actividad);
                 if (param.equalsIgnoreCase("crear")) {
                     navegacion = "editarRevision?faces-redirect=true";
                 } else {
@@ -384,16 +380,6 @@ public class AdministrarRevisiones implements Serializable {
     public void setRenderedEliminar(boolean renderedEliminar) {
         this.renderedEliminar = renderedEliminar;
     }
-
-  
-    public SessionProyectosDirector getSessionProyectosDirector() {
-        return sessionProyectosDirector;
-    }
-
-    public void setSessionProyectosDirector(SessionProyectosDirector sessionProyectosDirector) {
-        this.sessionProyectosDirector = sessionProyectosDirector;
-    }
-
     public List<Revision> getRevisionesPorAutor() {
         return revisionesPorAutor;
     }

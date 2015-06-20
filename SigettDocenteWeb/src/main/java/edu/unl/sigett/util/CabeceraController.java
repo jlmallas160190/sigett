@@ -39,14 +39,14 @@ public class CabeceraController implements Serializable {
     private MessageView messageView;
     private SecureService secureService;
     private UtilService utilService;
-    private ConfiguracionGeneralDTO configuracionGeneralDTO;
+    private ConfiguracionGeneralUtil configuracionGeneralUtil;
     private static final Logger LOG = Logger.getLogger(CabeceraController.class.getName());
 
     public CabeceraController() {
     }
 
     public void preRenderView() {
-        this.configuracionGeneralDTO=new ConfiguracionGeneralDTO();
+        this.configuracionGeneralUtil=new ConfiguracionGeneralUtil();
         this.secureService = new SecureServiceImplement();
         this.utilService=new UtilServiceImplement();
         this.messageView = new MessageView();
@@ -78,11 +78,11 @@ public class CabeceraController implements Serializable {
         } catch (IOException e) {
             System.out.println(e);
         }
-        this.configuracionGeneralDTO.setSecureKey(secretKey);
+        this.configuracionGeneralUtil.setSecureKey(secretKey);
     }
 
     private void fijarConfiguraciones() {
-        configuracionGeneralDTO.setTamanioArchivo(Double.parseDouble(configuracionDao.buscar(
+        configuracionGeneralUtil.setTamanioArchivo(Double.parseDouble(configuracionDao.buscar(
                 new Configuracion(ConfiguracionEnum.TAMANIOARCHIVO.getTipo())).get(0).getValor()));
     }
 
@@ -126,12 +126,12 @@ public class CabeceraController implements Serializable {
         this.utilService = utilService;
     }
 
-    public ConfiguracionGeneralDTO getConfiguracionGeneralDTO() {
-        return configuracionGeneralDTO;
+    public ConfiguracionGeneralUtil getConfiguracionGeneralUtil() {
+        return configuracionGeneralUtil;
     }
 
-    public void setConfiguracionGeneralDTO(ConfiguracionGeneralDTO configuracionGeneralDTO) {
-        this.configuracionGeneralDTO = configuracionGeneralDTO;
+    public void setConfiguracionGeneralUtil(ConfiguracionGeneralUtil configuracionGeneralUtil) {
+        this.configuracionGeneralUtil = configuracionGeneralUtil;
     }
 
 }

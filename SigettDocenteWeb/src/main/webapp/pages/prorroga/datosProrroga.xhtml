@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+        <h:panelGrid id="panelCrudProrroga" columns="3" styleClass="panelgrid" rowClasses="rowpanelgrid" columnClasses="col-sm-3,col-sm-8,col-sm-1">
+            <h:outputLabel  value="#{msg['lbl.aceptar']}:" for="aceptar" />
+            <p:selectBooleanCheckbox  value="#{sessionProrroga.prorroga.esAceptado}"/>
+            <h:inputHidden/>
+            <h:outputLabel value="#{msg['lbl.fecha']}:"/>
+            <p:outputLabel value="#{sessionProrroga.prorroga.fecha}">
+                <f:convertDateTime pattern="EEEEE dd MMMMM yyyy"/>
+            </p:outputLabel>
+            <h:inputHidden/>
+            <h:outputLabel value="#{msg['lbl.duracion']}:"/>
+            <h:outputLabel value="#{sessionDirectorProyecto.directorProyectoDTO.directorProyecto.proyectoId.cronograma.duracion} #{msg['lbl.dias']}"/>
+            <h:inputHidden/>
+            <h:outputLabel value="#{msg['lbl.observacion']}:" for="observacion" />
+            <p:editor id="observacionProrroga"  value="#{sessionProrroga.prorroga.observacion}" 
+                      required="true" requiredMessage="#{msg['lbl.observacion']} #{msg['lbl.obligatorio']}."/>
+            <p:message id="msmObservacionProrroga" display="icon" for="observacionProrroga"/>
+        </h:panelGrid>
+    </body>
+
+</html>

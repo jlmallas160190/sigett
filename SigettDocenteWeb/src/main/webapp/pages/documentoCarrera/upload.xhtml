@@ -6,7 +6,7 @@
     <body>
         <p:fileUpload fileUploadListener="#{pertinenciaController.handleFileUpload}"
                       update=":contenido:pnlInformePertinencia"
-                      multiple="true" allowTypes="/(\.|\/)(pdf)$/" sizeLimit="#{cabeceraController.configuracionGeneralDTO.tamanioArchivo}" 
+                      multiple="true" allowTypes="/(\.|\/)(pdf)$/" sizeLimit="#{cabeceraController.configuracionGeneralUtil.tamanioArchivo}" 
                       invalidFileMessage="#{msg['lbl.invalidTypeFileMessage']}"  invalidSizeMessage="#{msg['lbl.fileLimitMessage']}" required="true"  
                       oncomplete="PF('dlgSubirInformePertinencia').hide()" cancelLabel="#{btn.cancelar}" label="#{msg['lbl.seleccionar']}" 
                       uploadLabel="#{msg['lbl.subir']}"/>   

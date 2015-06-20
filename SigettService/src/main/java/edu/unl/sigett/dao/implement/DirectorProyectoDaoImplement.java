@@ -25,56 +25,6 @@ public class DirectorProyectoDaoImplement extends AbstractDao<DirectorProyecto> 
         super(DirectorProyecto.class);
     }
 
-//    @Override
-//    public List<DirectorProyecto> buscarPorProyecto(Long proyectoId) {
-//        try {
-//            Query query = em.createQuery("SELECT dp FROM DirectorProyecto dp WHERE " + "(dp.proyectoId.id=:id and dp.estadoDirectorId.id!=2)");
-//            query.setParameter("id", proyectoId);
-//            return query.getResultList();
-//        } catch (Exception e) {
-//            System.out.println(e);
-//        }
-//        return null;
-//    }
-//
-//    @Override
-//    public List<DirectorProyecto> buscarPorProyectoEstadoAsignado(Long proyectoId) {
-//        try {
-//            Query query = em.createQuery("SELECT dp FROM DirectorProyecto dp WHERE " + "(dp.proyectoId.id=:id and dp.estadoDirectorId.id=1)");
-//            query.setParameter("id", proyectoId);
-//            return query.getResultList();
-//        } catch (Exception e) {
-//            System.out.println(e);
-//        }
-//        return null;
-//    }
-//
-//    @Override
-//    public List<DirectorProyecto> buscarPorDocente(Long docenteId) {
-//        try {
-//            Query query = em.createQuery("SELECT dp FROM DirectorProyecto dp WHERE " + "(dp.directorId.docenteCarrera.docenteId.id=:id and dp.estadoDirectorId.id!=2)");
-//            query.setParameter("id", docenteId);
-//            return query.getResultList();
-//        } catch (Exception e) {
-//            System.out.println(e);
-//        }
-//        return null;
-//    }
-//
-//    @Override
-//    public List<DirectorProyecto> buscarPorDocenteOferta(String ci, Long ofertaId) {
-//        try {
-//            StoredProcedureQuery storedProcedureQuery = em.createNamedStoredProcedureQuery("directorProyectoPorDocenteOferta");
-//            storedProcedureQuery.setParameter("ci", ci);
-//            storedProcedureQuery.setParameter("ofertaId", ofertaId);
-//            storedProcedureQuery.execute();
-//            List<DirectorProyecto> result = (List<DirectorProyecto>) storedProcedureQuery.getResultList();
-//            return result;
-//        } catch (Exception e) {
-//            System.out.println(e);
-//        }
-//        return null;
-//    }
     @Override
     public List<DirectorProyecto> buscar(DirectorProyecto directorProyecto) {
         StringBuilder sql = new StringBuilder();

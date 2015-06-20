@@ -15,8 +15,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -29,9 +27,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "docente_carrera", schema = "academico")
 @Cacheable(value = false)
 @XmlRootElement
-@NamedQueries({
-    @NamedQuery(name = "DocenteCarrera.findAll", query = "SELECT d FROM DocenteCarrera d"),
-    @NamedQuery(name = "DocenteCarrera.findById", query = "SELECT d FROM DocenteCarrera d WHERE d.id = :id")})
 public class DocenteCarrera implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -54,11 +49,11 @@ public class DocenteCarrera implements Serializable {
     public DocenteCarrera() {
     }
 
-    public DocenteCarrera(Long id,Docente docente,Carrera carrera,Boolean esActivo) {
+    public DocenteCarrera(Long id, Docente docente, Carrera carrera, Boolean esActivo) {
         this.id = id;
-        this.docenteId=docente;
-        this.carreraId=carrera;
-        this.esActivo=esActivo;
+        this.docenteId = docente;
+        this.carreraId = carrera;
+        this.esActivo = esActivo;
     }
 
     public DocenteCarrera(Long id) {
@@ -96,7 +91,6 @@ public class DocenteCarrera implements Serializable {
     public void setEsActivo(Boolean esActivo) {
         this.esActivo = esActivo;
     }
-
 
     @Override
     public int hashCode() {

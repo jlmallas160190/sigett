@@ -8,6 +8,7 @@ package edu.unl.sigett.service.implement;
 import edu.unl.sigett.dao.DocenteProyectoDao;
 import edu.unl.sigett.entity.DocenteProyecto;
 import edu.unl.sigett.service.DocenteProyectoService;
+import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -44,8 +45,11 @@ public class DocenteProyectoServiceImplement implements DocenteProyectoService {
 
     @Override
     public List<DocenteProyecto> buscar(final DocenteProyecto docenteProyecto) {
-        return this.docenteProyectoDao.buscar(docenteProyecto);
+        List<DocenteProyecto> docenteProyectos = docenteProyectoDao.buscar(docenteProyecto);
+        if (docenteProyectos == null) {
+            return new ArrayList<>();
+        }
+        return docenteProyectos;
     }
-
 
 }

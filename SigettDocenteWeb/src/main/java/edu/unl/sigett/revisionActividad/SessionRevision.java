@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.unl.sigett.seguimiento.session;
+package edu.unl.sigett.revisionActividad;
 
 import edu.unl.sigett.entity.Revision;
 import java.io.Serializable;

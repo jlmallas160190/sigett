@@ -8,6 +8,7 @@ package edu.jlmallas.academico.service.implement;
 import edu.jlmallas.academico.dao.DocenteCarreraDao;
 import edu.jlmallas.academico.entity.DocenteCarrera;
 import edu.jlmallas.academico.service.DocenteCarreraService;
+import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -44,7 +45,11 @@ public class DocenteCarreraServiceImplement implements DocenteCarreraService {
 
     @Override
     public List<DocenteCarrera> buscar(final DocenteCarrera docenteCarrera) {
-        return this.docenteCarreraDao.buscar(docenteCarrera);
+        List<DocenteCarrera> docenteCarreras = docenteCarreraDao.buscar(docenteCarrera);
+        if (docenteCarreras == null) {
+            return new ArrayList<>();
+        }
+        return docenteCarreras;
     }
 
 }

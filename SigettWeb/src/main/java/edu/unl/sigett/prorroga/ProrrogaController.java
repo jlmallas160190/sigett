@@ -175,7 +175,9 @@ public class ProrrogaController implements Serializable {
             if (fechaActual.getTime().before(sessionProyecto.getCronograma().getFechaProrroga())) {
                 return;
             }
-            sessionProyecto.getCronograma().setFechaProrroga(sessionProrroga.getProrroga().getFecha());
+            if (sessionProrroga.getProrroga().getEsAceptado()) {
+                sessionProyecto.getCronograma().setFechaProrroga(sessionProrroga.getProrroga().getFecha());
+            }
             if (sessionProrroga.getProrroga().getId() == null) {
                 prorrogaService.guardar(sessionProrroga.getProrroga());
                 cronogramaService.actualizar(sessionProyecto.getCronograma());
@@ -452,7 +454,7 @@ public class ProrrogaController implements Serializable {
                 + " " + meses + " " + cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "oficio_inf_prorroga_cu_b") + " "
                 + sessionProyecto.getProyectoSeleccionado().getTemaActual() + "<b/>, " + cabeceraController.getValueFromProperties(
                         PropertiesFileEnum.CONTENIDOREPORTE, "oficio_prorroga_cu_c") + " " + cabeceraController.getUtilService().formatoFecha(
-                        fechaActual.getTime(), "EEEEE dd MMMMM yyyy")+", " + cabeceraController.getValueFromProperties(
+                        fechaActual.getTime(), "EEEEE dd MMMMM yyyy") + ", " + cabeceraController.getValueFromProperties(
                         PropertiesFileEnum.CONTENIDOREPORTE, "oficio_inf_prorroga_cu_d"));
     }
 

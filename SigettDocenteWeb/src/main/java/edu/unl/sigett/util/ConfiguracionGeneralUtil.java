@@ -11,12 +11,12 @@ import java.io.Serializable;
  *
  * @author jorge-luis
  */
-public class ConfiguracionGeneralDTO implements Serializable {
+public class ConfiguracionGeneralUtil implements Serializable {
 
     private String secureKey;
     private Double tamanioArchivo;
 
-    public ConfiguracionGeneralDTO() {
+    public ConfiguracionGeneralUtil() {
     }
 
     public String getSecureKey() {

@@ -6,61 +6,61 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core">
 
     <body>
-        <p:dataTable id="tblDocenteProyectos" value="#{docenteProyectoDM.docentesProyectoDTO}" var="item" rows="20" paginator="true"
-                     rowIndexVar="rowIx" editable="true" rowKey="#{item.docenteProyecto.id}" selection="#{item}" selectionMode="single" editMode="cell" 
-                     filteredValue="#{docenteProyectoDM.filterDocentesProyectoDTO}" widgetVar="tblDPFilter"
+        <p:dataTable id="tblDirectorProyectos" value="#{sessionDirectorProyecto.directoresProyectoDTO}" var="item" rows="20" paginator="true"
+                     rowIndexVar="rowIx" editable="true" rowKey="#{item.directorProyecto.id}" selection="#{item}" selectionMode="single" editMode="cell" 
+                     filteredValue="#{sessionDirectorProyecto.filterDirectoresProyectoDTO}" widgetVar="tblDirectoresFilter"
                      rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'even-row' : 'odd-row'}" emptyMessage="#{msg['lbl.table.empty']}">
             <p:column width="5%">
                 <h:outputText value="#{rowIx+1}" />
             </p:column>
             <p:column width="15%">
                 <f:facet name="header">
-                    <h:outputText value="#{msg['lbl.fecha']} #{msg['lbl.asignacion']}"/>
+                    <h:outputText value="#{msg['lbl.fecha']} #{msg['lbl.inicio']}"/>
                 </f:facet>
-                <h:outputText value="#{item.docenteProyecto.fecha}">
+                <h:outputText value="#{item.directorProyecto.fechaInicio}">
                     <f:convertDateTime pattern="EEEEE dd MMMMM yyyy HH:mm:ss"/>
                 </h:outputText>
             </p:column>
-            <p:column width="30%" id="tema" filterBy="#{item.docenteProyecto.proyectoId.temaActual}" sortBy="#{item.docenteProyecto.proyectoId.temaActual}">
+            <p:column width="30%" id="tema" filterBy="#{item.directorProyecto.proyectoId.temaActual}" sortBy="#{item.directorProyecto.proyectoId.temaActual}">
                 <f:facet name="header">
                     <h:outputText value="#{msg['lbl.tema']}"/>
                 </f:facet>
-                <p:commandLink value="#{item.docenteProyecto.proyectoId.temaActual}" 
-                               action="#{docenteProyectoController.editar(item)}">
+                <p:commandLink value="#{item.directorProyecto.proyectoId.temaActual}" 
+                               action="#{directorProyectoController.editar(item)}">
                 </p:commandLink>
             </p:column>
-            <p:column width="20%" filterBy="#{item.docenteProyecto.proyectoId.autores}" sortBy="#{item.docenteProyecto.proyectoId.autores}">
+            <p:column width="20%" filterBy="#{item.directorProyecto.proyectoId.autores}" sortBy="#{item.directorProyecto.proyectoId.autores}">
                 <f:facet name="header">
                     <h:outputText value="#{msg['lbl.autores']}"/>
                 </f:facet>
-                <h:outputText value="#{item.docenteProyecto.proyectoId.autores}"/>
+                <h:outputText value="#{item.directorProyecto.proyectoId.autores}"/>
             </p:column>
-            <p:column width="10%" filterBy="#{item.docenteProyecto.proyectoId.tipo}" filterMatchMode="in">
+            <p:column width="10%" filterBy="#{item.directorProyecto.proyectoId.tipo}" filterMatchMode="in">
                 <f:facet name="filter">
-                    <p:selectCheckboxMenu label="#{msg['lbl.tipo']}" onchange="PF('tblDPFilter').filter()">
+                    <p:selectCheckboxMenu label="#{msg['lbl.tipo']}" onchange="PF('tblDirectoresFilter').filter()">
                         <f:selectItems var="tipo" itemLabel="#{tipo.nombre}" itemValue="#{tipo.nombre}" value="#{sessionSelectItems.tipos}"/>
                         <p:ajax event="change" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()"/>
                     </p:selectCheckboxMenu>
                 </f:facet>
-                <h:outputText value="#{item.docenteProyecto.proyectoId.tipo}"/>
+                <h:outputText value="#{item.directorProyecto.proyectoId.tipo}"/>
             </p:column>
-            <p:column width="10%" filterBy="#{item.docenteProyecto.proyectoId.catalogo}" filterMatchMode="in">
+            <p:column width="10%" filterBy="#{item.directorProyecto.proyectoId.catalogo}" filterMatchMode="in">
                 <f:facet name="filter">
-                    <p:selectCheckboxMenu label="#{msg['lbl.categoria']}" onchange="PF('tblDPFilter').filter()">
+                    <p:selectCheckboxMenu label="#{msg['lbl.categoria']}" onchange="PF('tblDirectoresFilter').filter()">
                         <f:selectItems var="cat" itemLabel="#{cat.nombre}" itemValue="#{cat.nombre}" value="#{sessionSelectItems.categorias}"/>
                         <p:ajax event="change" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()"/>
                     </p:selectCheckboxMenu>
                 </f:facet>
-                <h:outputText value="#{item.docenteProyecto.proyectoId.catalogo}"/>
+                <h:outputText value="#{item.directorProyecto.proyectoId.catalogo}"/>
             </p:column>
-            <p:column width="10%" filterBy="#{item.docenteProyecto.proyectoId.estado}" filterMatchMode="in">
+            <p:column width="10%" filterBy="#{item.directorProyecto.proyectoId.estado}" filterMatchMode="in">
                 <f:facet name="filter">
-                    <p:selectCheckboxMenu label="#{msg['lbl.estado']}" onchange="PF('tblDPFilter').filter()">
+                    <p:selectCheckboxMenu label="#{msg['lbl.estado']}" onchange="PF('tblDirectorFilter').filter()">
                         <f:selectItems var="estado" itemLabel="#{estado.nombre}" itemValue="#{estado.nombre}" value="#{sessionSelectItems.estados}"/>
                         <p:ajax event="change" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()"/>
                     </p:selectCheckboxMenu>
                 </f:facet>
-                <h:outputText value="#{item.docenteProyecto.proyectoId.estado}"/>
+                <h:outputText value="#{item.directorProyecto.proyectoId.estado}"/>
             </p:column>
         </p:dataTable>
     </body>
