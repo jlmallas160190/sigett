@@ -7,7 +7,7 @@
     <body>
         <h:panelGrid columns="3">
             <p:commandButton update=":contenido:msm,:contenido:tabViewDatosActividad:tblDocumentosActividad" onstart="PF('dlgLoading').show()" 
-                             oncomplete="PF('dlgLoading').hide()" 
+                             oncomplete="PF('dlgLoading').hide()"
                              value="#{btn.agregar}" action="#{documentoActividadController.agregar()}" icon="ui-icon-plus"/>
             <p:commandButton  value="#{btn.cancelar}" icon="ui-icon-disk" onstart="PF('dlgLoading').show()" 
                               oncomplete="PF('dlgLoading').hide()"

@@ -6,15 +6,15 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core">
     <body>
         <p:dialog id="dlgAspirantes" widgetVar="dlgBuscarAspirantes" header="#{msg['lbl.buscar']} #{msg['lbl.aspirantes']}" 
-                  styleClass="modal-md" showEffect="fade"  modal="true" position="center" draggable="false" >
-            <p:fieldset legend="#{msg['lbl.aspirantes']}">
+                  styleClass="modal-md" showEffect="fade" modal="true" position="center" draggable="false"  closable="false">
+            <p:panel>
                 <ui:include src="tablaAspirantes.xhtml"/>
                 <f:facet name="footer">
                     <p:commandButton action="#{autorProyectoController.cerrarDialogoBuscarAsp()}" 
                                      onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()"
                                      icon="ui-icon-circle-arrow-w" value="#{btn['cancelar']}"/>
                 </f:facet>
-            </p:fieldset>
+            </p:panel>
         </p:dialog>
     </body>
 

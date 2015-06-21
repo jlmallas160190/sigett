@@ -24,6 +24,7 @@ import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
+import org.primefaces.context.RequestContext;
 
 /**
  *
@@ -98,6 +99,7 @@ public class DirectorController implements Serializable {
                     }
                 }
             }
+            RequestContext.getCurrentInstance().execute("PF('dlgBuscarDocentesDisponibles').show()");
             directorDM.setFilterDirectoresDTO(directorDM.getDirectoresDTO());
         } catch (Exception e) {
             LOG.info(e.getMessage());

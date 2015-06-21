@@ -10,7 +10,7 @@
             <p:commandButton update=":contenido:msm,:contenido:tabViewDatosProyecto:treeActividades" onstart="PF('dlgLoading').show()" 
                              oncomplete="PF('dlgLoading').hide()"
                              value="#{btn.grabar}" action="#{actividadController.grabar()}" icon="ui-icon-disk"/>
-            <p:commandButton update=":contenido:msm,:contenido:tabViewDatosProyecto:treeActividades" onstart="PF('dlgLoading').show()" 
+            <p:commandButton update=":contenido:msm,:contenido:tabViewDatosProyecto:treeActividades,:contenido:dlgCrudActividad" onstart="PF('dlgLoading').show()" 
                              oncomplete="PF('dlgLoading').hide()"
                              value="#{btn.grabar_enviar}" rendered="#{sessionActividad.actividad.padreId!=null}" action="#{actividadController.grabar()}" icon="ui-icon-disk">
                 <f:param name="tipo" value="enviar"/>

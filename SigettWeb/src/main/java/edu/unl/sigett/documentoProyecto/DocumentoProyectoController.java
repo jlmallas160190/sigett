@@ -22,6 +22,7 @@ import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 
 /**
@@ -56,17 +57,16 @@ public class DocumentoProyectoController implements Serializable {
         sessionDocumentoProyecto.setDocumentoProyectoDTOSeleccionado(new DocumentoProyectoDTO(
                 new DocumentoProyecto(Boolean.TRUE, null, sessionProyecto.getProyectoSeleccionado()), new Documento()));
         sessionDocumentoProyecto.setRenderedCrud(Boolean.TRUE);
+        RequestContext.getCurrentInstance().execute("PF('dlgCrudDocumentoProyecto').show()");
     }
 
     public void editar(DocumentoProyectoDTO documentoProyectoDTO) {
         try {
             sessionDocumentoProyecto.setTamanioArchivo(cabeceraController.getConfiguracionGeneralUtil().getTamanioArchivo());
             listarCategorias();
-            File file = new File(documentoProyectoDTO.getDocumento().getRuta());
-            byte[] contents = cabeceraController.getUtilService().obtenerBytes(file);
-            documentoProyectoDTO.getDocumento().setContents(contents != null ? contents : null);
             sessionDocumentoProyecto.setDocumentoProyectoDTOSeleccionado(documentoProyectoDTO);
             sessionDocumentoProyecto.setRenderedCrud(Boolean.TRUE);
+            RequestContext.getCurrentInstance().execute("PF('dlgCrudDocumentoProyecto').show()");
         } catch (Exception e) {
             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_FATAL, e.getMessage(), "");
             FacesContext.getCurrentInstance().addMessage(null, message);
@@ -116,6 +116,7 @@ public class DocumentoProyectoController implements Serializable {
                 sessionProyecto.getDocumentosProyectoDTO().add(sessionDocumentoProyecto.getDocumentoProyectoDTOSeleccionado());
             }
             cabeceraController.getMessageView().message(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_agregar"), "");
+            cancelarEdicion();
         } catch (Exception e) {
             LOG.info(e.getMessage());
         }
@@ -151,6 +152,7 @@ public class DocumentoProyectoController implements Serializable {
     public void cancelarEdicion() {
         sessionDocumentoProyecto.setRenderedCrud(Boolean.FALSE);
         sessionDocumentoProyecto.setDocumentoProyectoDTOSeleccionado(new DocumentoProyectoDTO());
+        RequestContext.getCurrentInstance().execute("PF('dlgCrudDocumentoProyecto').hide()");
     }
     //</editor-fold>
 }

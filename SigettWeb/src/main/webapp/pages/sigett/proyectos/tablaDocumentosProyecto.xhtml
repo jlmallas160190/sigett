@@ -32,9 +32,9 @@
                 </f:facet> 
                 <p:row>
                     <p:column>
-                        <p:commandButton onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide(),PF('dlgEditarDocumentoProyecto').show()" 
+                        <p:commandButton onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide(),PF('dlgCrudDocumentoProyecto').show()" 
                                          action="#{documentoProyectoController.editar(item)}"
-                                         update=":contenido:dlgEditarDocumentoProyecto"
+                                         update=":contenido:dlgCrudDocumentoProyecto"
                                          icon="ui-icon-pencil" title="#{msg['lbl.editar']}"/>
                     </p:column>
                     <p:column>

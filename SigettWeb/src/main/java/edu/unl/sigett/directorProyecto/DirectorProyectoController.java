@@ -178,7 +178,7 @@ public class DirectorProyectoController implements Serializable {
             FacesContext facesContext = FacesContext.getCurrentInstance();
             ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
             if (!(sessionProyecto.getEstadoActual().getCodigo().equals(EstadoProyectoEnum.PERTINENTE.getTipo())
-                   || sessionProyecto.getEstadoActual().getCodigo().equals(EstadoProyectoEnum.SEGUIMIENTO.getTipo()))) {
+                    || sessionProyecto.getEstadoActual().getCodigo().equals(EstadoProyectoEnum.SEGUIMIENTO.getTipo()))) {
                 return;
             }
             if (!permiteAgregarDirector()) {
@@ -197,6 +197,7 @@ public class DirectorProyectoController implements Serializable {
             sessionProyecto.getDirectoresProyectoDTO().add(directorProyectoDTO);
             cabeceraController.getMessageView().message(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.director") + " "
                     + bundle.getString("lbl.msm_agregar"), "");
+             RequestContext.getCurrentInstance().execute("PF('dlgDirectoresDisponibles').hide()");
         } catch (Exception e) {
             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), "");
             FacesContext.getCurrentInstance().addMessage(null, message);
@@ -222,8 +223,8 @@ public class DirectorProyectoController implements Serializable {
         try {
             FacesContext facesContext = FacesContext.getCurrentInstance();
             ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-             if (!(sessionProyecto.getEstadoActual().getCodigo().equals(EstadoProyectoEnum.PERTINENTE.getTipo())
-                   || sessionProyecto.getEstadoActual().getCodigo().equals(EstadoProyectoEnum.SEGUIMIENTO.getTipo()))) {
+            if (!(sessionProyecto.getEstadoActual().getCodigo().equals(EstadoProyectoEnum.PERTINENTE.getTipo())
+                    || sessionProyecto.getEstadoActual().getCodigo().equals(EstadoProyectoEnum.SEGUIMIENTO.getTipo()))) {
                 return;
             }
             if (directorProyectoDTO.getDirectorProyecto().getId() != null) {
@@ -246,6 +247,7 @@ public class DirectorProyectoController implements Serializable {
         this.directorDM.getDirectoresDTO().clear();
         this.directorDM.getFilterDirectoresDTO().clear();
         directorProyectoDM.setRenderedPnlDirectoresDisponibles(Boolean.FALSE);
+        RequestContext.getCurrentInstance().execute("PF('dlgDirectoresDisponibles').hide()");
     }
 
     public void imprimirOficio(DirectorProyectoDTO directorProyectoDTO) {
@@ -473,7 +475,7 @@ public class DirectorProyectoController implements Serializable {
      * @return
      */
     private String generaFirmasInvolucrados(final DirectorProyectoDTO directorProyectoDTO, final Carrera carrera) {
-        return ("<p>"+directorProyectoDTO.getDirectorDTO().getDocenteCarrera().getDocenteId().getTituloDocenteId().getTituloId().getAbreviacion().toUpperCase()
+        return ("<p>" + directorProyectoDTO.getDirectorDTO().getDocenteCarrera().getDocenteId().getTituloDocenteId().getTituloId().getAbreviacion().toUpperCase()
                 + " " + directorProyectoDTO.getDirectorDTO().getPersona().getNombres().toUpperCase() + " " + directorProyectoDTO.getDirectorDTO().
                 getPersona().getApellidos().toUpperCase() + "<p/><p>" + cabeceraController
                 .getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "fe_director_firma_a") + "<p/><br/><br/>"

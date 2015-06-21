@@ -5,11 +5,9 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
     <body>
-        <p:dataGrid  value="#{sessionConfiguracionCarrera.configuracionCarreras}"
-                     id="dgConfiguraciones" var="configuracion" columns="1" rows="5" paginator="true"
-                     paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} "
-                     emptyMessage="#{msg['lbl.table.empty']}">
-            <p:panel header="#{configuracion.nombre} (#{configuracion.codigo})">
+        <p:dataScroller value="#{sessionConfiguracionCarrera.configuracionCarreras}"
+                        id="dgConfiguraciones" var="configuracion"  buffer="10" mode="document"  chunkSize="2">
+            <p:fieldset toggleable="true" style="height:100%" legend="#{configuracion.nombre} (#{configuracion.codigo})">
                 <h:panelGrid rendered="#{sessionConfiguracionCarrera.renderedEditar}" styleClass="panelgrid" rowClasses="rowpanelgrid"
                              columnClasses="col-sm-1,col-sm-9,col-sm-1-col-sm-1" columns="4">
                     <h:outputLabel value="#{msg['lbl.valor']}:"/>
@@ -34,8 +32,8 @@
                     <h:outputLabel value="#{msg['lbl.valor']}:"/>
                     <h:outputText value="#{configuracion.valor}"/>
                 </h:panelGrid>
-            </p:panel>
-        </p:dataGrid>
+            </p:fieldset>
+        </p:dataScroller>
     </body>
 
 </html>

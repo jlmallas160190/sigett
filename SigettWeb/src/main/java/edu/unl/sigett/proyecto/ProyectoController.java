@@ -103,7 +103,6 @@ import javax.inject.Inject;
 import org.jfree.util.Log;
 import org.jlmallas.seguridad.dao.LogDao;
 import org.jlmallas.seguridad.service.UsuarioService;
-import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.TransferEvent;
 import org.primefaces.model.DualListModel;
@@ -1171,9 +1170,11 @@ public class ProyectoController implements Serializable {
                 DocumentoProyectoDTO documentoProyectoDTO = new DocumentoProyectoDTO(
                         documentoProyecto, documentoService.buscarPorId(new Documento(documentoProyecto.getDocumentoId())));
                 documentoProyectoDTO.getDocumento().setCatalogo(itemService.buscarPorId(documentoProyectoDTO.getDocumento().getCatalogoId()).getNombre());
+                File file = new File(documentoProyectoDTO.getDocumento().getRuta());
+                byte[] contents = cabeceraController.getUtilService().obtenerBytes(file);
+                documentoProyectoDTO.getDocumento().setContents(contents != null ? contents : null);
                 sessionProyecto.getDocumentosProyectoDTO().add(documentoProyectoDTO);
             }
-
             sessionProyecto.setFilterDocumentosProyectoDTO(sessionProyecto.getDocumentosProyectoDTO());
             sessionProyecto.getDocumentosProyectosDTOAgregados().addAll(sessionProyecto.getDocumentosProyectoDTO());
         } catch (Exception e) {
@@ -1196,6 +1197,9 @@ public class ProyectoController implements Serializable {
                     documentoService.actualizar(documentoProyectoDTO.getDocumento());
                     continue;
                 }
+                cabeceraController.getUtilService().generaDocumento(new File(documentoProyectoDTO.getDocumento().getRuta()),
+                        documentoProyectoDTO.getDocumento().getContents());
+                documentoService.actualizar(documentoProyectoDTO.getDocumento());
                 documentoProyectoService.actualizar(documentoProyectoDTO.getDocumentoProyecto());
             }
         } catch (Exception e) {

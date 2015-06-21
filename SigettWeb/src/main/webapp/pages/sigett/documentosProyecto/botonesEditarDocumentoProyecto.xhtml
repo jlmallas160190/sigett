@@ -6,11 +6,11 @@
     <body>
         <h:panelGrid styleClass="pnl-botones" columns="2">
             <p:commandButton  value="#{msg['lbl.agregar']}" icon="ui-icon-plus" onstart="PF('dlgLoading').show();" 
-                              oncomplete="PF('dlgLoading').hide(),PF('dlgEditarDocumentoProyecto').hide(),PF('tblDocProyFilter').filter()"
+                              oncomplete="PF('dlgLoading').hide(),PF('tblDocProyFilter').filter()"
                               update=":contenido:tabViewDatosProyecto:tblDocumentosProyecto,:contenido:msm"
                               action="#{documentoProyectoController.agregar()}"/>
             <p:commandButton action="#{documentoProyectoController.cancelarEdicion()}" update=":contenido:pnlEditarDocProy"
-                                         onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide(),PF('dlgEditarDocumentoProyecto').hide()"
+                                         onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()"
                                          icon="ui-icon-circle-arrow-w" value="#{btn['cancelar']}"/> 
         </h:panelGrid>
     </body>

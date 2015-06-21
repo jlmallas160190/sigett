@@ -6,8 +6,8 @@
     <body>
         <h:panelGrid id="crearDocumento" >
             <p:commandButton icon="ui-icon-newwin" value="#{btn.crear}"  onstart="PF('dlgLoading').show()" 
-                             oncomplete="PF('dlgLoading').hide()"
-                             update=":contenido:dlgCrudDocumentoActividad"
+                             oncomplete="PF('dlgLoading').hide()" 
+                             update=":contenido:dlgCrudDocumentoActividad,:contenido:msm"
                              action="#{documentoActividadController.crear()}"/>
         </h:panelGrid>
     </body>

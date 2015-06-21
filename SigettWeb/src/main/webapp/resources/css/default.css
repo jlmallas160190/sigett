@@ -3802,10 +3802,10 @@ table.fc-border-separate {
     cursor: default;
 }
 .ui-fieldset, .ui-fieldset .ui-fieldset-legend {
-    padding:0.2em 1em;
     background: white url(../img/nav-bg.gif) 0 100% repeat-x;
-    margin-bottom: 10px;
+    padding-bottom:  2em;
     border: none;
+    font-size: 16px
 }
 
 .ui-fieldset-toggleable .ui-fieldset-legend {

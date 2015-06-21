@@ -12,7 +12,7 @@
                              value="#{btn.grabar}" action="#{actividadController.grabar()}" icon="ui-icon-disk"/>
             <p:commandButton update=":contenido:msm,:contenido:tabViewDatosDP:actividades" onstart="PF('dlgLoading').show()" 
                              oncomplete="PF('dlgLoading').hide()"
-                             value="#{btn.grabar_enviar}" rendered="#{sessionActividad.actividad.padreId!=null}" action="#{actividadController.grabar()}" icon="ui-icon-disk">
+                             value="#{btn.grabar_revisar}" rendered="#{sessionActividad.actividad.padreId!=null}" action="#{actividadController.grabar()}" icon="ui-icon-disk">
                 <f:param name="tipo" value="enviar"/>
             </p:commandButton>
             <p:commandButton  value="#{btn.cancelar}" icon="ui-icon-disk" onstart="PF('dlgLoading').show()" 

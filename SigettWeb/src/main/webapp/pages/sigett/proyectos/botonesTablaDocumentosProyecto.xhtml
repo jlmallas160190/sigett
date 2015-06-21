@@ -5,9 +5,9 @@
       xmlns:p="http://primefaces.org/ui">
     <body>
         <h:panelGrid styleClass="pnl-botones" id="crearDocumentoProyecto">
-            <p:commandButton value="#{msg['lbl.crear']}" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide(),PF('dlgEditarDocumentoProyecto').show()" 
-                             icon="ui-icon-newwin" 
-                             update=":contenido:dlgEditarDocumentoProyecto,:contenido:msm" 
+            <p:commandButton value="#{msg['lbl.crear']}" onstart="PF('dlgLoading').show()"  icon="ui-icon-newwin" 
+                             oncomplete="PF('dlgLoading').hide()" 
+                             update=":contenido:dlgCrudDocumentoProyecto,:contenido:msm" 
                              action="#{documentoProyectoController.crear()}"/>
         </h:panelGrid>
     </body>

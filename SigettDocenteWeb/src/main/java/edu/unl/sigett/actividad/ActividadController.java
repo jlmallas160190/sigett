@@ -118,6 +118,8 @@ public class ActividadController implements Serializable {
     }
 
     private void revisar(String param) {
+        Item estadoDesarrollo = itemService.buscarPorCatalogoCodigo(CatalogoEnum.ESTADOACTIVIDAD.getTipo(), EstadoActividadEnum.ENVIADO.getTipo());
+        sessionActividad.getActividad().setEstadoId(estadoDesarrollo.getId());
         if (param == null) {
             return;
         }
@@ -145,10 +147,6 @@ public class ActividadController implements Serializable {
             actividad.setCronogramaId(cronogramaTemp);
             actividad.setEstadoId(estadoId);
             actividad.setTipoId(tipoId);
-            if (actividad.getEstadoId().equals(estado.getId())) {
-                actividad.setPorcentajeAvance(new BigDecimal(ValorEnum.DIVISORPORCENTAJE.getTipo()));
-                actividad.setPorcentajeFaltante(new BigDecimal(ValorEnum.DIVISORPORCENTAJE.getTipo()).subtract(actividad.getPorcentajeAvance()));
-            }
             if (resultado.equals(BigDecimal.ZERO)) {
                 actividad.setPorcentajeDuracion(new BigDecimal(ValorEnum.DIVISORPORCENTAJE.getTipo()));
                 actividadService.actualizar(actividad);
@@ -156,6 +154,10 @@ public class ActividadController implements Serializable {
             }
             actividad.setPorcentajeDuracion(actividad.getDuracion().divide(
                     resultado.add(actividad.getDuracion()), 2, RoundingMode.HALF_UP).multiply(new BigDecimal(ValorEnum.DIVISORPORCENTAJE.getTipo())));
+            if (actividad.getEstadoId().equals(estado.getId())) {
+                actividad.setPorcentajeAvance(new BigDecimal(ValorEnum.DIVISORPORCENTAJE.getTipo()));
+                actividad.setPorcentajeFaltante(new BigDecimal(ValorEnum.DIVISORPORCENTAJE.getTipo()).subtract(actividad.getPorcentajeAvance()));
+            }
             actividadService.actualizar(actividad);
         }
     }
@@ -176,7 +178,7 @@ public class ActividadController implements Serializable {
         Actividad actividadPadre = actividadService.buscarPorId(new Actividad(sessionActividad.getActividad().getPadreId()));
         actividadPadre.setPorcentajeAvance(sum);
         actividadPadre.setPorcentajeFaltante(new BigDecimal(ValorEnum.DIVISORPORCENTAJE.getTipo()).subtract(sum));
-        if (actividadPadre.getPorcentajeAvance().equals(new BigDecimal(ValorEnum.DIVISORPORCENTAJE.getTipo()))) {
+        if (actividadPadre.getPorcentajeAvance().floatValue() == (new BigDecimal(ValorEnum.DIVISORPORCENTAJE.getTipo())).floatValue()) {
             actividadPadre.setEstadoId(estado.getId());
         }
         actividadService.actualizar(actividadPadre);
@@ -185,7 +187,8 @@ public class ActividadController implements Serializable {
 
     private void calculosCronograma() {
         Item estado = itemService.buscarPorCatalogoCodigo(CatalogoEnum.ESTADOACTIVIDAD.getTipo(), EstadoActividadEnum.REVISADO.getTipo());
-        List<Actividad> actividads = actividadService.buscar(new Actividad(null, null, null, null, null, Boolean.TRUE, null, null, null, null, null,
+        List<Actividad> actividads = actividadService.buscar(new Actividad(null, null, null, null, null, Boolean.TRUE, null, null, null, null,
+                itemService.buscarPorCatalogoCodigo(CatalogoEnum.TIPOACTIVIDAD.getTipo(), TipoActividadEnum.OBJETIVO.getTipo()).getId(),
                 estado.getId(), sessionDirectorProyecto.getDirectorProyectoDTO().getDirectorProyecto().getProyectoId().getCronograma()));
         BigDecimal sum = BigDecimal.ZERO;
         for (Actividad a : actividads) {
@@ -274,6 +277,9 @@ public class ActividadController implements Serializable {
             DocumentoActividadDTO documentoActividadDTO = new DocumentoActividadDTO(
                     documentoService.buscarPorId(new Documento(documentoActividad.getDocumentoId())), documentoActividad);
             documentoActividadDTO.getDocumento().setCatalogo(itemService.buscarPorId(documentoActividadDTO.getDocumento().getCatalogoId()).getNombre());
+            File file = new File(documentoActividadDTO.getDocumento().getRuta());
+            byte[] contents = cabeceraController.getUtilService().obtenerBytes(file);
+            documentoActividadDTO.getDocumento().setContents(contents != null ? contents : null);
             sessionActividad.getDocumentosActividadDTO().add(documentoActividadDTO);
         }
         sessionActividad.setFilterDocumentosActividadDTO(sessionActividad.getDocumentosActividadDTO());

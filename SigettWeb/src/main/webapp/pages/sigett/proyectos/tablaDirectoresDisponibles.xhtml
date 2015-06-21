@@ -20,7 +20,7 @@
                             return false;" 
                                  action="#{directorProyectoController.agregar(item)}"
                                  onstart="PF('dlgLoading').show();" 
-                                 oncomplete="PF('dlgLoading').hide(),PF('tblDirProyFilter').filter(),PF('dlgDirectoresDisponibles').hide()" 
+                                 oncomplete="PF('dlgLoading').hide(),PF('tblDirProyFilter').filter()" 
                                  update=":contenido:tabViewDatosProyecto:tblDirectores,:contenido:msm"/>
             </p:column>
             <p:column width="40%" filterBy="#{item.persona.apellidos}" filterMatchMode="contains" sortBy="#{item.persona.apellidos}">

@@ -5,6 +5,7 @@
  */
 package edu.unl.sigett.servlet;
 
+import edu.unl.sigett.documentoActividad.SessionDocumentoActividad;
 import edu.unl.sigett.documentoProyecto.DocumentoProyectoDM;
 import edu.unl.sigett.pertinencia.PertinenciaDM;
 import java.io.IOException;
@@ -27,6 +28,8 @@ public class AppServlet extends HttpServlet {
     private PertinenciaDM pertinenciaDM;
     @Inject
     private DocumentoProyectoDM documentoProyectoDM;
+    @Inject
+    private SessionDocumentoActividad sessionDocumentoActividad;
     //</editor-fold>
 
     @Override
@@ -72,6 +75,26 @@ public class AppServlet extends HttpServlet {
                     response.setContentType("application/pdf");
                     response.setContentLength(documentoProyectoDM.getDocumentoProyectoDTOSeleccionado().getDocumento().getContents().length);
                     response.getOutputStream().write(documentoProyectoDM.getDocumentoProyectoDTOSeleccionado().getDocumento().getContents());
+                    response.getOutputStream().flush();
+                    response.getOutputStream().close();
+                    break;
+                case "documentoActividad":
+                    if (sessionDocumentoActividad.getDocumentoActividadDTO() == null) {
+                        response.sendError(HttpServletResponse.SC_NOT_FOUND); // 404.
+                        return;
+                    }
+                    if (sessionDocumentoActividad.getDocumentoActividadDTO().getDocumento() == null) {
+                        response.sendError(HttpServletResponse.SC_NOT_FOUND); // 404.
+                        return;
+                    }
+                    if (sessionDocumentoActividad.getDocumentoActividadDTO().getDocumento().getContents() == null) {
+                        response.sendError(HttpServletResponse.SC_NOT_FOUND); // 404.
+                        return;
+                    }
+                    response.setCharacterEncoding("ISO-8859-1");
+                    response.setContentType("application/pdf");
+                    response.setContentLength(sessionDocumentoActividad.getDocumentoActividadDTO().getDocumento().getContents().length);
+                    response.getOutputStream().write(sessionDocumentoActividad.getDocumentoActividadDTO().getDocumento().getContents());
                     response.getOutputStream().flush();
                     response.getOutputStream().close();
                     break;

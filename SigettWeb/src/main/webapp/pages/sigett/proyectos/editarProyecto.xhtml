@@ -18,11 +18,12 @@
             <f:event type="preRenderView" listener="#{prorrogaController.preRenderView()}"/>
             <p:growl id="msm" showDetail="true" /> 
             <p:panel>
-                <p:tabView scrollable="true"   id="tabViewDatosProyecto" >
+                <p:tabView  id="tabViewDatosProyecto" >
                     <p:tab id="tabDatosInicio" title="#{msg['lbl.informacion']} #{msg['lbl.inicio']}" >
                         <p:fieldset legend="#{msg['lbl.informacion']}" toggleable="true">
                             <ui:include src="datosProyecto.xhtml"/>
                         </p:fieldset>
+                         <br/>
                         <p:fieldset legend="#{msg['lbl.lineasInvestigacion']}" toggleable="true">
                             <ui:include src="dataGridLineasInvestigacion.xhtml"/>
                             <ui:include src="pickListLineasInvestigacion.xhtml"/>
@@ -34,46 +35,46 @@
                         </p:fieldset>
                     </p:tab>
                     <p:tab id="tabAutores" title="#{msg['lbl.autores']}">
-                        <p:fieldset legend="#{msg['lbl.listado']} #{msg['lbl.autores']}" toggleable="true">
+                        <p:panel>
                             <f:facet name="footer">
                                 <ui:include src="botonesTablaAutores.xhtml"/>
                             </f:facet>
                             <ui:include src="tablaAutores.xhtml"/>
-                        </p:fieldset>
+                        </p:panel>
                     </p:tab>
                     <p:tab id="tabDocentesProyecto" 
                            title="#{msg['lbl.docentes']} #{msg['lbl.pertinencias']}">
-                        <p:fieldset legend="#{msg['lbl.listado']} #{msg['lbl.docentes']}" toggleable="true">
+                        <p:panel>
                             <ui:include src="tablaDocentes.xhtml"/>
                             <f:facet name="footer">
                                 <ui:include src="botonesTablaDocentes.xhtml"/>
                             </f:facet>  
-                        </p:fieldset>
+                        </p:panel>
                     </p:tab>
                     <p:tab id="tabDocumentos" 
                            title="#{msg['lbl.documentos']}">
-                      <p:fieldset legend="#{msg['lbl.listado']} #{msg['lbl.documentos']}" toggleable="true">
+                        <p:panel>
                             <ui:include src="tablaDocumentosProyecto.xhtml"/>
                             <f:facet name="footer">
                                 <ui:include src="botonesTablaDocumentosProyecto.xhtml"/>
                             </f:facet>  
-                      </p:fieldset>
+                        </p:panel>
                     </p:tab>
                     <p:tab id="tabDirectoresProyecto" rendered="#{directorProyectoDM.renderedBuscar}" title="#{msg['lbl.directores']}">
-                        <p:fieldset legend="#{msg['lbl.directores']}" toggleable="true">
+                        <p:panel>
                             <ui:include src="tablaDirectores.xhtml"/>
                             <f:facet name="footer">
                                 <ui:include src="botonesTablaDirectores.xhtml"/>
                             </f:facet>    
-                        </p:fieldset>
+                        </p:panel>
                     </p:tab>
                     <p:tab id="tabProrrogas" rendered="#{sessionProrroga.renderedBuscar}" title="#{msg['lbl.prorrogas']}">
-                        <p:fieldset legend="#{msg['lbl.prorrogas']}" toggleable="true">
+                        <p:panel>
                             <ui:include src="tablaProrrogas.xhtml"/>
                             <f:facet name="footer">
                                 <ui:include src="botonesTablaProrroga.xhtml"/>
                             </f:facet>    
-                        </p:fieldset>
+                        </p:panel>
                     </p:tab>
                 </p:tabView>
                 <f:facet name="footer">
@@ -91,8 +92,7 @@
             <ui:include src="dialogoFePresentacionPertinencia.xhtml"/>
             <ui:include src="dialogoFePresentacionDirector.xhtml"/>
             <ui:include src="dialogoVerDocumentoProyecto.xhtml"/>
-            <ui:include src="dialogoEditarDocumentoProyecto.xhtml"/>
-            <ui:include src="./../documentosProyecto/dialogoUpload.xhtml"/>
+            <ui:include src="./../documentosProyecto/dialogoCrudDocumentoProyecto.xhtml"/>
             <ui:include src="./../renunciaDirector/dialogoEditarRenunciaDirector.xhtml"/>
         </ui:define>
     </ui:composition>
