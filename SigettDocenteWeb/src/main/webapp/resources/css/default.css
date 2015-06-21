@@ -2429,7 +2429,7 @@ hr {
     display:none;
     font-weight:bold;
 }
-label.actividadRevisada{
+label.actividad_revisada{
     background: #009933;
     padding: 5px;
     border-radius: 10px;
@@ -2437,8 +2437,16 @@ label.actividadRevisada{
     -moz-border-radius:5px;/*Para Firefox*/
     -o-border-radius:5px;/*Para Opera*/
 }
-label.actividadDesarrollo{
+label.actividad_desarrollo{
     background: #5bc0de;
+    padding: 5px;
+    border-radius: 10px;
+    -webkit-border-radius:5px;/*Para chrome y Safari*/
+    -moz-border-radius:5px;/*Para Firefox*/
+    -o-border-radius:5px;/*Para Opera*/
+}
+label.actividad_enviada{
+    background: #003399;
     padding: 5px;
     border-radius: 10px;
     -webkit-border-radius:5px;/*Para chrome y Safari*/
@@ -3700,4 +3708,20 @@ table.fc-border-separate {
     border-color: inherit;
     padding:4px 4px 4px 4px;
 }
+.ui-fieldset, .ui-fieldset .ui-fieldset-legend {
+    padding:0.2em 1em;
+    background: white url(../img/nav-bg.gif) 0 100% repeat-x;
+    margin-bottom: 10px;
+    border: none;
+}
 
+.ui-fieldset-toggleable .ui-fieldset-legend {
+    padding: 0.2em 1em 0.5em 0.5em;
+    cursor:pointer;
+}
+
+.ui-fieldset .ui-fieldset-toggler {
+    padding-right: .1em;
+    margin-top: -0.1em;
+    float:left;
+}

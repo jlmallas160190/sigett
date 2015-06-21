@@ -28,6 +28,7 @@ import edu.unl.sigett.entity.Cronograma;
 import edu.unl.sigett.entity.DocumentoActividad;
 import edu.unl.sigett.enumeration.ConfiguracionProyectoEnum;
 import edu.unl.sigett.enumeration.EstadoActividadEnum;
+import edu.unl.sigett.enumeration.EstiloTreeNodeEnum;
 import edu.unl.sigett.enumeration.TipoActividadEnum;
 import edu.unl.sigett.service.ActividadService;
 import edu.unl.sigett.service.ConfiguracionProyectoService;
@@ -275,6 +276,8 @@ public class ActividadController implements Serializable {
     }
 
     private void enviar(String param) {
+        Item estadoDesarrollo = itemService.buscarPorCatalogoCodigo(CatalogoEnum.ESTADOACTIVIDAD.getTipo(), EstadoActividadEnum.DESARROLLO.getTipo());
+        sessionActividad.getActividad().setEstadoId(estadoDesarrollo.getId());
         if (param == null) {
             return;
         }
@@ -305,11 +308,10 @@ public class ActividadController implements Serializable {
             actividadPadre.setEstadoId(estado.getId());
         }
         actividadService.actualizar(actividadPadre);
-
     }
 
     private void calculosCronograma() {
-        Item estado = itemService.buscarPorCatalogoCodigo(CatalogoEnum.ESTADOACTIVIDAD.getTipo(), EstadoActividadEnum.ENVIADO.getTipo());
+        Item estado = itemService.buscarPorCatalogoCodigo(CatalogoEnum.ESTADOACTIVIDAD.getTipo(), EstadoActividadEnum.REVISADO.getTipo());
         List<Actividad> actividads = actividadService.buscar(new Actividad(null, null, null, null, null, Boolean.TRUE, null, null, null, null, null,
                 estado.getId(), sessionAutorProyecto.getAutorProyectoDTO().getAutorProyecto().getProyectoId().getCronograma()));
         BigDecimal sum = BigDecimal.ZERO;
@@ -370,11 +372,15 @@ public class ActividadController implements Serializable {
     }
 
     private void grabarEventosAutor() {
+        Item objetivo = itemService.buscarPorCatalogoCodigo(CatalogoEnum.TIPOACTIVIDAD.getTipo(), TipoActividadEnum.OBJETIVO.getTipo());
         List<EventoPersona> eventosAutor = eventoPersonaService.buscar(new EventoPersona(null, sessionAutorProyecto.getAutorProyectoDTO().getPersona(),
                 sessionActividad.getActividad().getId()));
         EventoPersona eventoAutor = !eventosAutor.isEmpty() ? eventosAutor.get(0) : null;
         if (eventoAutor == null) {
-            Evento evento = new Evento(null, sessionActividad.getActividad().getNombre(),"", sessionActividad.getActividad().getFechaInicio(),
+            if (sessionActividad.getActividad().getTipoId().equals(objetivo.getId())) {
+                return;
+            }
+            Evento evento = new Evento(null, sessionActividad.getActividad().getNombre(), "", sessionActividad.getActividad().getFechaCulminacion(),
                     sessionActividad.getActividad().getFechaCulminacion(),
                     itemService.buscarPorCatalogoCodigo(CatalogoEnum.CATALOGOEVENTO.getTipo(), EventoEnum.ACTIVIDAD.getTipo()).getId());
             eventoService.guardar(evento);
@@ -382,7 +388,7 @@ public class ActividadController implements Serializable {
             eventoPersonaService.guardar(eventoAutor);
         } else {
             Evento evento = eventoService.buscarPorId(new Evento(eventoAutor.getId()));
-            evento.setFechaInicio(sessionActividad.getActividad().getFechaInicio());
+            evento.setFechaInicio(sessionActividad.getActividad().getFechaCulminacion());
             evento.setFechaFin(sessionActividad.getActividad().getFechaCulminacion());
             evento.setNombre(sessionActividad.getActividad().getNombre());
             eventoService.actualizar(evento);
@@ -390,11 +396,15 @@ public class ActividadController implements Serializable {
     }
 
     private void grabarEventosDirector() {
+        Item estado = itemService.buscarPorCatalogoCodigo(CatalogoEnum.ESTADOACTIVIDAD.getTipo(), EstadoActividadEnum.DESARROLLO.getTipo());
         for (DirectorProyectoDTO directorProyectoDTO : sessionAutorProyecto.getDirectoresProyectoDTO()) {
+            if (sessionActividad.getActividad().getEstadoId().equals(estado.getId())) {
+                continue;
+            }
             List<EventoPersona> eventoDocentes = eventoPersonaService.buscar(new EventoPersona(null, directorProyectoDTO.getDirectorDTO().getPersona(), sessionActividad.getActividad().getId()));
             EventoPersona eventoDocente = !eventoDocentes.isEmpty() ? eventoDocentes.get(0) : null;
             if (eventoDocente == null) {
-                Evento evento = new Evento(null, sessionActividad.getActividad().getNombre(), "",sessionActividad.getActividad().getFechaInicio(),
+                Evento evento = new Evento(null, sessionActividad.getActividad().getNombre(), "", sessionActividad.getActividad().getFechaCulminacion(),
                         sessionActividad.getActividad().getFechaCulminacion(),
                         itemService.buscarPorCatalogoCodigo(CatalogoEnum.CATALOGOEVENTO.getTipo(), EventoEnum.ACTIVIDAD.getTipo()).getId());
                 eventoService.guardar(evento);
@@ -403,7 +413,7 @@ public class ActividadController implements Serializable {
                 continue;
             }
             Evento evento = eventoService.buscarPorId(new Evento(eventoDocente.getId()));
-            evento.setFechaInicio(sessionActividad.getActividad().getFechaInicio());
+            evento.setFechaInicio(sessionActividad.getActividad().getFechaCulminacion());
             evento.setFechaFin(sessionActividad.getActividad().getFechaCulminacion());
             evento.setNombre(sessionActividad.getActividad().getNombre());
             eventoService.actualizar(evento);
@@ -413,16 +423,18 @@ public class ActividadController implements Serializable {
     private void buscar() {
         sessionActividad.getActividadesPadre().clear();
         Actividad actividadBuscar = new Actividad();
-        Item estado = itemService.buscarPorCatalogoCodigo(CatalogoEnum.ESTADOACTIVIDAD.getTipo(), EstadoActividadEnum.REVISADO.getTipo());
+        Item estadoRevisado = itemService.buscarPorCatalogoCodigo(CatalogoEnum.ESTADOACTIVIDAD.getTipo(), EstadoActividadEnum.REVISADO.getTipo());
         actividadBuscar.setCronogramaId(sessionAutorProyecto.getAutorProyectoDTO().getAutorProyecto() != null
                 ? sessionAutorProyecto.getAutorProyectoDTO().getAutorProyecto().getProyectoId().getCronograma() : null);
         actividadBuscar.setTipoId(itemService.buscarPorCatalogoCodigo(CatalogoEnum.TIPOACTIVIDAD.getTipo(), TipoActividadEnum.OBJETIVO.getTipo()).getId());
         actividadBuscar.setEsActivo(Boolean.TRUE);
         List<Actividad> actividades = actividadService.buscar(actividadBuscar);
         for (Actividad actividad : actividades) {
-            actividad.setEstiloEstado("actividad_desarrollo");
-            if (actividad.getEstadoId().equals(estado.getId())) {
-                actividad.setEstiloEstado("actividad_revisada");
+            actividad.setEstiloEstado(EstiloTreeNodeEnum.ACTIVIDADDESARROLLO.getTipo());
+            if (actividad.getEstadoId().equals(estadoRevisado.getId())) {
+                actividad.setEstiloEstado(EstiloTreeNodeEnum.ACTIVIDADREVISADA.getTipo());
+            } else {
+                actividad.setEstiloEstado(EstiloTreeNodeEnum.ACTIVIDADENVIADA.getTipo());
             }
             sessionActividad.getActividadesPadre().add(actividad);
         }
@@ -445,9 +457,11 @@ public class ActividadController implements Serializable {
                 continue;
             }
             for (Actividad actividad : actividadesHijos) {
-                actividad.setEstiloEstado("actividad_desarrollo");
+                actividad.setEstiloEstado(EstiloTreeNodeEnum.ACTIVIDADDESARROLLO.getTipo());
                 if (actividad.getEstadoId().equals(estado.getId())) {
-                    actividad.setEstiloEstado("actividad_revisada");
+                    actividad.setEstiloEstado(EstiloTreeNodeEnum.ACTIVIDADREVISADA.getTipo());
+                } else {
+                    actividad.setEstiloEstado(EstiloTreeNodeEnum.ACTIVIDADENVIADA.getTipo());
                 }
                 nodoPadre.getChildren().add(new DefaultTreeNode(actividad));
             }
@@ -464,6 +478,9 @@ public class ActividadController implements Serializable {
             DocumentoActividadDTO documentoActividadDTO = new DocumentoActividadDTO(
                     documentoService.buscarPorId(new Documento(documentoActividad.getDocumentoId())), documentoActividad);
             documentoActividadDTO.getDocumento().setCatalogo(itemService.buscarPorId(documentoActividadDTO.getDocumento().getCatalogoId()).getNombre());
+            File file = new File(documentoActividadDTO.getDocumento().getRuta());
+            byte[] contents = cabeceraController.getUtilService().obtenerBytes(file);
+            documentoActividadDTO.getDocumento().setContents(contents != null ? contents : null);
             sessionActividad.getDocumentosActividadDTO().add(documentoActividadDTO);
         }
         sessionActividad.setFilterDocumentosActividadDTO(sessionActividad.getDocumentosActividadDTO());
@@ -483,6 +500,9 @@ public class ActividadController implements Serializable {
                 documentoService.actualizar(documentoActividadDTO.getDocumento());
                 return;
             }
+            cabeceraController.getUtilService().generaDocumento(new File(documentoActividadDTO.getDocumento().getRuta()),
+                    documentoActividadDTO.getDocumento().getContents());
+            documentoService.guardar(documentoActividadDTO.getDocumento());
             documentoActividadService.actualizar(documentoActividadDTO.getDocumentoActividad());
         }
     }

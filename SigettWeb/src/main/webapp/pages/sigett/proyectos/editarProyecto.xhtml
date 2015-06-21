@@ -18,7 +18,7 @@
             <f:event type="preRenderView" listener="#{prorrogaController.preRenderView()}"/>
             <p:growl id="msm" showDetail="true" /> 
             <p:panel>
-                <p:tabView  id="tabViewDatosProyecto" >
+                <p:tabView scrollable="true"   id="tabViewDatosProyecto" >
                     <p:tab id="tabDatosInicio" title="#{msg['lbl.informacion']} #{msg['lbl.inicio']}" >
                         <p:fieldset legend="#{msg['lbl.informacion']}" toggleable="true">
                             <ui:include src="datosProyecto.xhtml"/>

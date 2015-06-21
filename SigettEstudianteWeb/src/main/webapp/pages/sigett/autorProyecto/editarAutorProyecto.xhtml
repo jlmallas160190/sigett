@@ -19,12 +19,14 @@
             <p:panel>
                 <p:tabView  id="tabViewDatosProyecto">
                     <p:tab id="tabActividades" title="#{lbl.actividades}" >
-                        <p:panel header="#{lbl.actividades}" toggleable="true">
+                        <p:fieldset legend="#{lbl.actividades}" toggleable="true">
+                            <p:panel>
                             <ui:include src="./../actividad/treeActividades.xhtml"/>
                             <f:facet name="footer">
                                 <ui:include src="./../actividad/botonesTreeActividades.xhtml"/>
                             </f:facet>
-                        </p:panel>
+                            </p:panel>
+                        </p:fieldset>
                     </p:tab>
                 </p:tabView>
             </p:panel>

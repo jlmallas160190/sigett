@@ -2444,7 +2444,14 @@ label.actividad_desarrollo{
     -moz-border-radius:5px;/*Para Firefox*/
     -o-border-radius:5px;/*Para Opera*/
 }
-
+label.actividad_enviada{
+    background: #003399;
+    padding: 5px;
+    border-radius: 10px;
+    -webkit-border-radius:5px;/*Para chrome y Safari*/
+    -moz-border-radius:5px;/*Para Firefox*/
+    -o-border-radius:5px;/*Para Opera*/
+}
 .ui-dialog.load{
     background:  transparent !important;
 
@@ -3715,7 +3722,7 @@ table.fc-border-separate {
 .ui-autocomplete-panel .ui-autocomplete-table {
     border-collapse:collapse;
     width: 100%;
-    
+
 }
 
 .ui-autocomplete-panel .ui-autocomplete-table th,
@@ -3802,3 +3809,21 @@ table.fc-border-separate {
     cursor: default;
 }
 
+.ui-fieldset, .ui-fieldset .ui-fieldset-legend {
+    padding:4px;
+    font-size: 16px;
+    background: white url(../img/nav-bg.gif) 0 100% repeat-x;
+    margin-bottom: 10px;
+    border: none;
+}
+
+.ui-fieldset-toggleable .ui-fieldset-legend {
+    padding: 4px;
+    cursor:pointer;
+}
+
+.ui-fieldset .ui-fieldset-toggler {
+    padding-right: 4px;
+    margin-top: -0.1em;
+    float:left;
+}

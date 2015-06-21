@@ -10,27 +10,13 @@
         <f:event type="preRenderView" listener="#{actividadController.preRenderView()}"/>
         <p:tree id="treeActividades" value="#{sessionActividad.rootActividades}" var="node" dynamic="true"  animate="true">
             <p:treeNode collapsedIcon="ui-icon-folder-collapsed" expandedIcon="ui-icon-folder-open">
-                <h:panelGrid columns="5" style="background: #fff;text-overflow: ellipsis!important" >
+                <h:panelGrid columns="3" style="background: #fff;text-overflow: ellipsis!important" >
                     <h:outputLabel styleClass="#{node.estiloEstado}"/>
                     <p:commandLink value="#{node.nombre}"  oncomplete="PF('dlgLoading').hide(),PF('tblDocActFilter').filter()"
                                    onstart="PF('dlgLoading').show()" update="@form"
                                    action="#{actividadController.editar(node)}"/>
-                    <p:commandLink title="#{btn.agregar_tarea}" rendered="#{node.padreId==null}"  onstart="PF('dlgLoading').show()" 
-                                   oncomplete="PF('dlgLoading').hide(),PF('dlgCrudActividad').show()" 
-                                   update=":contenido:dlgCrudActividad,:contenido:msm" action="#{actividadController.crear()}" >
-                        <p:graphicImage value="/resources/img/icon_addlink.gif"/>
-                        <f:param name="tipo" value="#{sessionActividad.tarea}"/>
-                        <f:param name="padreId" value="#{node.id}"/>
-                    </p:commandLink>
-                    <p:commandLink   oncomplete="PF('dlgLoading').hide()"
-                                     onstart="PF('dlgLoading').show()" update=":contenido:tabViewDatosProyecto:treeActividades"
-                                     onclick="if (!confirm('¿#{msg.confirmar_remover}?'))
-                                                 return false;"
-                                     action="#{actividadController.remover(node)}">
-                        <p:graphicImage value="/resources/img/icon_deletelink.gif"/>
-                    </p:commandLink>
                     <p:commandLink id="detalleActividad" >
-                     <p:graphicImage value="/resources/img/selector-search.gif"/>
+                        <p:graphicImage value="/resources/img/selector-search.gif"/>
                     </p:commandLink>
                 </h:panelGrid>
 

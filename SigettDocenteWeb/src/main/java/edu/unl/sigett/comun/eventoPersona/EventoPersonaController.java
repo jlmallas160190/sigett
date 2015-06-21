@@ -5,7 +5,6 @@
  */
 package edu.unl.sigett.comun.eventoPersona;
 
-import com.jlmallas.comun.entity.Evento;
 import com.jlmallas.comun.entity.EventoPersona;
 import com.jlmallas.comun.entity.Item;
 import com.jlmallas.comun.enumeration.CatalogoEnum;
@@ -13,7 +12,6 @@ import com.jlmallas.comun.service.EventoPersonaService;
 import com.jlmallas.comun.service.EventoService;
 import com.jlmallas.comun.service.ItemService;
 import edu.unl.sigett.docenteUsuario.DocenteUsuarioDM;
-import edu.unl.sigett.entity.Actividad;
 import edu.unl.sigett.enumeration.CatalogoEventoEnum;
 import edu.unl.sigett.enumeration.EstiloScheduleEnum;
 import edu.unl.sigett.service.ActividadService;
@@ -27,6 +25,7 @@ import org.primefaces.event.ScheduleEntryMoveEvent;
 import org.primefaces.event.ScheduleEntryResizeEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.model.DefaultScheduleEvent;
+import org.primefaces.model.DefaultScheduleModel;
 import org.primefaces.model.ScheduleEvent;
 
 /**
@@ -62,13 +61,20 @@ public class EventoPersonaController implements Serializable {
         this.generaSchedule();
     }
 
+    /**
+     * BUSCAR ACTIVIDADES ASIGANADAS A DIRECTOR.
+     */
     private void buscar() {
         this.sessionEventoPersona.getEventoPersonas().clear();
         sessionEventoPersona.getEventoPersonas().addAll(eventoPersonaService.buscar(new EventoPersona(
                 null, docenteUsuarioDM.getDocenteUsuarioDTO().getPersona(), null)));
     }
 
+    /**
+     * GENERAR CRONOGRAMA DE ACTIVIDADES
+     */
     private void generaSchedule() {
+        sessionEventoPersona.setSchedule(new DefaultScheduleModel());
         Item actividad = itemService.buscarPorCatalogoCodigo(CatalogoEnum.CATALOGOEVENTO.getTipo(), CatalogoEventoEnum.ACTIVIDAD.getTipo());
         for (EventoPersona eventoPersona : sessionEventoPersona.getEventoPersonas()) {
             DefaultScheduleEvent evento = new DefaultScheduleEvent();
@@ -87,7 +93,7 @@ public class EventoPersonaController implements Serializable {
 
     public void onEventSelect(SelectEvent selectEvent) {
         ScheduleEvent event = (ScheduleEvent) selectEvent.getObject();
-        sessionEventoPersona.setEventoPersona((EventoPersona) event);
+        sessionEventoPersona.setEventoPersona((EventoPersona) event.getData());
         sessionEventoPersona.setRenderedCrud(Boolean.TRUE);
         RequestContext.getCurrentInstance().execute("PF('dlgEvento').show()");
     }

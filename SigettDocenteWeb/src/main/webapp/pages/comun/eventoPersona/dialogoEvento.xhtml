@@ -6,12 +6,13 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
     <body>
-        <p:dialog id="dlgEvento" widgetVar="dlgEvento" header="#{lbl.editar_evento}" styleClass="modal-md"  modal="true">
+        <p:dialog id="dlgEvento" widgetVar="dlgEvento" header="#{lbl.editar_evento}" styleClass="modal-md"  modal="true"
+                  position="center" draggable="false" closable="false">
             <p:panel rendered="#{sessionEventoPersona.renderedCrud}">
                  <ui:include src="datosEvento.xhtml"/>
                 <f:facet name="footer">
                     <h:panelGrid styleClass="pnl-botones" columns="1">
-                        <p:commandButton action="#{eventoPersonaController.cancelarEdicion()}" 
+                        <p:commandButton action="#{eventoPersonaController.cancelarEdicion()}"  update=":contenido:dlgEvento,:contenido:schedule"
                                          onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()"
                                          icon="ui-icon-circle-arrow-w" value="#{btn['cancelar']}"/> 
                     </h:panelGrid>

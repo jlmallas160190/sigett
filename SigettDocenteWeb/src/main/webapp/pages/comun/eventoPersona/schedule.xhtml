@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+        <f:metadata>
+            <f:event type="preRenderView" listener="#{eventoPersonaController.preRenderView()}"/>
+        </f:metadata>
+        <p:schedule id="schedule" widgetVar="schedule" value="#{sessionEventoPersona.schedule}" timeZone="GMT-5" view="agendaWeek">
+            <p:ajax event="eventSelect" onstart="PF('dlgLoading').show()" update=":contenido:dlgEvento" oncomplete="PF('dlgLoading').hide()" 
+                    listener="#{eventoPersonaController.onEventSelect}" />                                      
+            <p:ajax event="eventMove" onstart="PF('dlgLoading').show()" update="schedule"  oncomplete="PF('dlgLoading').hide()"
+                    listener="#{eventoPersonaController.onEventMove}"/>                                                                                  
+            <p:ajax event="eventResize" onstart="PF('dlgLoading').show()" update="schedule" process="schedule"  oncomplete="PF('dlgLoading').hide()" 
+                    listener="#{eventoPersonaController.onEventResize}"/>
+        </p:schedule>
+    </body>
+
+</html>

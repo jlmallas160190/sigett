@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+        <h:panelGrid columns="2" styleClass="panelgrid" rowClasses="rowpanelgrid" columnClasses="col-sm-3,col-sm-9">
+            <h:outputLabel value="#{lbl.nombre}:"  />
+            <p:outputLabel id="nombre" value="#{sessionActividad.actividad.nombre}" />
+            <h:outputLabel  value="#{lbl.descripcion}:"  />
+            <p:outputLabel id="descripcion" value="#{sessionActividad.actividad.observacion}"/>
+            <h:outputLabel value="#{lbl.fecha_inicio}"/>
+            <h:outputLabel value="#{sessionActividad.actividad.fechaInicio}">
+                <f:convertDateTime pattern="EEEEE dd MMMMM yyyy HH:mm:ss"/>
+            </h:outputLabel>
+            <h:outputLabel value="#{lbl.fecha_fin}"/>
+            <h:outputLabel value="#{sessionActividad.actividad.fechaInicio}">
+                <f:convertDateTime pattern="EEEEE dd MMMMM yyyy HH:mm:ss"/>
+            </h:outputLabel>
+            <h:outputLabel value="#{lbl.duracion}"/>
+            <h:outputLabel id="duracion" value="#{sessionActividad.actividad.duracion} #{lbl.dias}"/>
+            <h:outputLabel id="porcentaje" value="#{sessionActividad.actividad.porcentajeDuracion}%"/>
+            <h:inputHidden/>
+        </h:panelGrid> 
+    </body>
+
+</html>

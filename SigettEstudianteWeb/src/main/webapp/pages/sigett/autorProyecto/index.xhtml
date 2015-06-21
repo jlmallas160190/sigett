@@ -15,9 +15,9 @@
             </ui:define>
             <ui:define name="content">
                 <p:messages id="msm"/>
-                <p:panel header="#{lbl.proyectos}">
+                <p:fieldset legend="#{lbl.proyectos}" toggleable="true">
                     <ui:include src="tablaAutorProyectos.xhtml"/>
-                </p:panel>
+                </p:fieldset>
                 <f:metadata>
                     <f:event type="preRenderView" listener="#{autorProyectoController.preRenderView()}"/>
                 </f:metadata>

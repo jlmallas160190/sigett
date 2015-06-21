@@ -22,23 +22,20 @@
             <ui:define name="content">
                 <p:messages id="msm" showDetail="true"/>
                 <p:tabView id="tabViewDatosDP">
+                    <p:tab id="actividades" title="#{lbl.actividades}">
+                        <p:panel>
+                            <ui:include src="./../actividad/treeActividades.xhtml"/>
+                        </p:panel>
+                    </p:tab>
                     <p:tab id="prorrogas" title="#{lbl.prorrogas}">
                         <p:panel>
                             <ui:include src="tablaProrrogas.xhtml"/>
                         </p:panel>
                     </p:tab>
-                    <!--<p:tab title="#{msg['lbl.documentos']}">
-                        <p:panel>
-                            <ui:include src="tablaDocumentosProyecto.xhtml"/>
-                        </p:panel>
-                    </p:tab>
-                    <p:tab title="#{msg['lbl.autores']}">
-                        <p:panel>
-                            <ui:include src="tablaAutores.xhtml"/>
-                        </p:panel>
-                    </p:tab>-->
                 </p:tabView>
                 <ui:include src="./../prorroga/dialogoCrudProrroga.xhtml"/>
+                <ui:include src="./../actividad/dialogoCrudActividad.xhtml"/>
+                <ui:include src="./../documentoActividad/dialogoCrudDocumentoActividad.xhtml"/>
                 <f:metadata>
                     <f:event type="preRenderView" listener="#{prorrogaController.preRenderView()}"/>
                 </f:metadata>

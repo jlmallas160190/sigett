@@ -11,11 +11,9 @@ import com.jlmallas.comun.enumeration.CatalogoEnum;
 import com.jlmallas.comun.service.DocumentoService;
 import com.jlmallas.comun.service.ItemService;
 import edu.unl.sigett.actividad.SessionActividad;
-import edu.unl.sigett.entity.DocumentoActividad;
 import edu.unl.sigett.enumeration.CatalogoDocumentoActividad;
 import edu.unl.sigett.service.DocumentoActividadService;
 import edu.unl.sigett.util.CabeceraController;
-import java.io.File;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
@@ -53,14 +51,6 @@ public class DocumentoActividadController implements Serializable {
 
     public DocumentoActividadController() {
     }
-
-    public void crear() {
-        sessionDocumentoActividad.setDocumentoActividadDTO(new DocumentoActividadDTO(new Documento(),
-                new DocumentoActividad(null, Boolean.TRUE, null, sessionActividad.getActividad())));
-        sessionDocumentoActividad.setRenderedCrud(Boolean.TRUE);
-        RequestContext.getCurrentInstance().execute("PF('dlgCrudDocumentoActividad').show()");
-    }
-
     public void editar(DocumentoActividadDTO documentoActividadDTO) {
         sessionDocumentoActividad.setDocumentoActividadDTO(documentoActividadDTO);
         sessionDocumentoActividad.setRenderedCrud(Boolean.TRUE);

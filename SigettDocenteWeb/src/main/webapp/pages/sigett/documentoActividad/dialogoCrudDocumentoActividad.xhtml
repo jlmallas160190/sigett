@@ -2,16 +2,12 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:p="http://primefaces.org/ui"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
     <body>
         <p:dialog id="dlgCrudDocumentoActividad" widgetVar="dlgCrudDocumentoActividad" header="#{lbl.documento}" modal="true" position="center"
                   draggable="false" styleClass="modal-md" closable="false">
             <p:panel rendered="#{sessionDocumentoActividad.renderedCrud}" id="panelCrudDocumentoActividad">
-                <ui:include src="./../documentoActividad/editarDocumentoActividad.xhtml"/>
-                <f:facet name="footer">
-                    <ui:include src="./../documentoActividad/botonesCrudDocumentoActividad.xhtml"/>
-                </f:facet>
+                <ui:include src="editarDocumentoActividad.xhtml"/>
             </p:panel>
         </p:dialog>
     </body>
