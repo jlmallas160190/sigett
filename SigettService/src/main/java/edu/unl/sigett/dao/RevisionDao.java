@@ -14,7 +14,7 @@ import javax.ejb.Local;
  * @author JorgeLuis
  */
 @Local
-public interface RevisionFacadeLocal {
+public interface RevisionDao {
 
     void create(Revision revision);
 
@@ -28,7 +28,7 @@ public interface RevisionFacadeLocal {
 
     List<Revision> findRange(int[] range);
 
-    List<Revision> buscarPorActividad(Long actividadId);
+    List<Revision> buscar(final Revision revision);
 
     int count();
 

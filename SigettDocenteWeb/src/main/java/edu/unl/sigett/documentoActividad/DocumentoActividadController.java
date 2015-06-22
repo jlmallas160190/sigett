@@ -48,7 +48,7 @@ public class DocumentoActividadController implements Serializable {
     private DocumentoService documentoService;
     @EJB
     private ItemService itemService;
-
+//</editor-fold>
     public DocumentoActividadController() {
     }
     public void editar(DocumentoActividadDTO documentoActividadDTO) {

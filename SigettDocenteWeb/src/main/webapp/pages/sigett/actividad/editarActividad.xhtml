@@ -16,6 +16,14 @@
                         <ui:include src="tablaDocumentosActividad.xhtml"/> 
                     </p:panel>
                 </p:tab>
+                <p:tab id="tabRevisiones" rendered="#{sessionActividad.actividad.padreId!=null}" title="#{lbl.revisiones}">
+                    <p:panel>
+                        <ui:include src="tablaRevisiones.xhtml"/> 
+                        <f:facet name="footer">
+                            <ui:include src="botonesTablaRevisiones.xhtml"/> 
+                        </f:facet>
+                    </p:panel>
+                </p:tab>
             </p:tabView>
             <f:facet name="footer">
                 <ui:include src="botonesCrudActividad.xhtml"/> 

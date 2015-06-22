@@ -8,11 +8,13 @@ package edu.unl.sigett.entity;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -37,9 +39,9 @@ public class Revision implements Serializable {
     private Long id;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "fecha")
-    @Temporal(TemporalType.DATE)
-    private Date fecha;
+    @Column(name = "fecha_inicio")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date fechaInicio;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 500)
@@ -52,14 +54,11 @@ public class Revision implements Serializable {
     private String sugerencia;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "hora_inicio")
-    @Temporal(TemporalType.TIME)
-    private Date horaInicio;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "hora_fin")
-    @Temporal(TemporalType.TIME)
-    private Date horaFin;
+    @Column(name = "fecha_fin")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date fechaFin;
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "revision")
+    private RevisionActividad revisionActividad;
 
     public Revision() {
     }
@@ -68,13 +67,13 @@ public class Revision implements Serializable {
         this.id = id;
     }
 
-    public Revision(Long id, Date fecha, String observacion, String sugerencia, Date horaInicio, Date horaFin) {
+    public Revision(Long id, Date fechaInicio, String observacion, String sugerencia, Date fechaFin, Date horaFin, RevisionActividad revisionActividad) {
         this.id = id;
-        this.fecha = fecha;
+        this.fechaInicio = fechaInicio;
         this.observacion = observacion;
         this.sugerencia = sugerencia;
-        this.horaInicio = horaInicio;
-        this.horaFin = horaFin;
+        this.fechaFin = fechaFin;
+        this.revisionActividad = revisionActividad;
     }
 
     public Long getId() {
@@ -85,12 +84,12 @@ public class Revision implements Serializable {
         this.id = id;
     }
 
-    public Date getFecha() {
-        return fecha;
+    public Date getFechaInicio() {
+        return fechaInicio;
     }
 
-    public void setFecha(Date fecha) {
-        this.fecha = fecha;
+    public void setFechaInicio(Date fechaInicio) {
+        this.fechaInicio = fechaInicio;
     }
 
     public String getObservacion() {
@@ -109,20 +108,20 @@ public class Revision implements Serializable {
         this.sugerencia = sugerencia;
     }
 
-    public Date getHoraInicio() {
-        return horaInicio;
+    public Date getFechaFin() {
+        return fechaFin;
     }
 
-    public void setHoraInicio(Date horaInicio) {
-        this.horaInicio = horaInicio;
+    public void setFechaFin(Date fechaFin) {
+        this.fechaFin = fechaFin;
     }
 
-    public Date getHoraFin() {
-        return horaFin;
+    public RevisionActividad getRevisionActividad() {
+        return revisionActividad;
     }
 
-    public void setHoraFin(Date horaFin) {
-        this.horaFin = horaFin;
+    public void setRevisionActividad(RevisionActividad revisionActividad) {
+        this.revisionActividad = revisionActividad;
     }
 
     @Override

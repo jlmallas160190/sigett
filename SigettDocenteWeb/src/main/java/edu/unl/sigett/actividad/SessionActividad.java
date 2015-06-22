@@ -7,6 +7,7 @@ package edu.unl.sigett.actividad;
 
 import edu.unl.sigett.documentoActividad.DocumentoActividadDTO;
 import edu.unl.sigett.entity.Actividad;
+import edu.unl.sigett.entity.RevisionActividad;
 import edu.unl.sigett.enumeration.TipoActividadEnum;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
@@ -30,6 +31,8 @@ public class SessionActividad implements Serializable {
     private List<Actividad> actividadesPadre;
     private List<DocumentoActividadDTO> documentosActividadDTO;
     private List<DocumentoActividadDTO> filterDocumentosActividadDTO;
+    private List<RevisionActividad> revisionesActividad;
+    private List<RevisionActividad> filterRevisionesActividad;
 
     private Boolean renderedCrud;
 
@@ -38,6 +41,8 @@ public class SessionActividad implements Serializable {
     private String objetivo;
 
     public SessionActividad() {
+        this.revisionesActividad = new ArrayList<>();
+        this.filterRevisionesActividad = new ArrayList<>();
         this.tarea = TipoActividadEnum.TAREA.getTipo();
         this.objetivo = TipoActividadEnum.OBJETIVO.getTipo();
         this.actividadesPadre = new ArrayList<>();
@@ -116,6 +121,22 @@ public class SessionActividad implements Serializable {
 
     public void setFilterDocumentosActividadDTO(List<DocumentoActividadDTO> filterDocumentosActividadDTO) {
         this.filterDocumentosActividadDTO = filterDocumentosActividadDTO;
+    }
+
+    public List<RevisionActividad> getRevisionesActividad() {
+        return revisionesActividad;
+    }
+
+    public void setRevisionesActividad(List<RevisionActividad> revisionesActividad) {
+        this.revisionesActividad = revisionesActividad;
+    }
+
+    public List<RevisionActividad> getFilterRevisionesActividad() {
+        return filterRevisionesActividad;
+    }
+
+    public void setFilterRevisionesActividad(List<RevisionActividad> filterRevisionesActividad) {
+        this.filterRevisionesActividad = filterRevisionesActividad;
     }
 
 }

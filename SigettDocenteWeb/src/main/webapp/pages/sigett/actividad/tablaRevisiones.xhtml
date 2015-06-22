@@ -1,0 +1,67 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <body>
+        <p:dataTable id="tblRevisionesActividad" value="#{sessionActividad.revisionesActividad}" var="item" rows="10" paginator="true"
+                     rowIndexVar="rowIx" rowKey="#{item.id}" selectionMode="single" selection="#{item}" 
+                     filteredValue="#{sessionActividad.filterRevisionesActividad}" widgetVar="tblRevisionesFilter"
+                     rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'even-row' : 'odd-row'}" emptyMessage="#{msg.table_empty}">
+            <p:column  sortBy="#{item.revision.fechaInicio}" 
+                       filterBy="#{item.revision.fechaInicio}"
+                       filterMatchMode="contains">
+                <f:facet name="header">
+                    <h:outputText value="#{lbl.fecha_inicio}"/>
+                </f:facet>
+                <h:outputText value="#{item.revision.fechaInicio}"/>
+            </p:column>
+
+            <p:column sortBy="#{item.revision.fechaFin}" 
+                      filterBy="#{item.revision.fechaFin}"
+                      filterMatchMode="contains">
+                <f:facet name="header">
+                    <h:outputText value="#{lbl.fecha_fin}"/>
+                </f:facet>
+                <h:outputText value="#{item.revision.fechaFin}"/>
+            </p:column>
+
+            <p:column sortBy="#{item.revision.observacion}" 
+                      filterBy="#{item.revision.observacion}"
+                      filterMatchMode="contains">
+                <f:facet name="header">
+                    <h:outputText value="#{lbl.observacion}"/>
+                </f:facet>
+                <h:outputText value="#{item.revision.observacion}"/>
+            </p:column>
+            <p:column sortBy="#{item.revision.sugerencia}" 
+                      filterBy="#{item.revision.sugerencia}"
+                      filterMatchMode="contains">
+                <f:facet name="header">
+                    <h:outputText value="#{lbl.sugerencia}"/>
+                </f:facet>
+                <h:outputText value="#{item.revision.sugerencia}"/>
+            </p:column>
+            <p:column >
+                <f:facet name="header">
+                    <h:outputText value="#{lb.accion}"/>
+                </f:facet> 
+                <p:row>
+                    <p:column>
+                        <p:commandButton onstart="PF('dlgLoading').show()" 
+                                         oncomplete="PF('dlgLoading').hide()" 
+                                         update=":contenido:dlgCrudRevisionActividad"
+                                         action="#{revisionActividadController.editar(item)}" icon="ui-icon-pencil"/>
+                    </p:column>
+                    <p:commandButton onstart="PF('dlgLoading').show()" 
+                                     oncomplete="PF('dlgLoading').hide(),PF('tblRevisionesFilter').filter()" 
+                                     update=":contenido:tabViewDatosActividad:tblRevisiones"
+                                     action="#{revisionActividadController.remover(item)}" icon="ui-icon-trash"/>
+            </p:column>
+            </p:row>
+            </p:column>
+        </p:dataTable>
+    </body>
+
+</html>

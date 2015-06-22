@@ -1,0 +1,20 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+    <body>
+        <h:panelGrid columns="3" styleClass="panelgrid" rowClasses="rowpanelgrid" columnClasses="col-sm-3,col-sm-8,col-sm-1">
+            <h:outputLabel value="#{lbl.observacion}:" for="observacion" />
+            <p:editor id="observacion"  value="#{sessionRevisionActividad.revisionActividad.revision.observacion}" 
+                      required="true" requiredMessage="#{msg['lbl.observacion']} #{msg['lbl.obligatorio']}."/>
+            <p:message id="msmObservacion" display="icon" for="observacion"/>
+            <h:outputLabel value="#{lbl.sugerencia}:"  />
+            <p:editor id="sugerencia" value="#{sessionRevisionActividad.revisionActividad.revision.sugerencia}" 
+                      required="true" requiredMessage="#{msg.sugerencia_obligatorio}."/>
+            <p:message id="msmSugerencia" display="icon" for="sugerencia"/>
+        </h:panelGrid>
+    </body>
+
+</html>

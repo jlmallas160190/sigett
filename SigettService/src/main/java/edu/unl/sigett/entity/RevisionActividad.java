@@ -12,6 +12,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -31,6 +32,8 @@ public class RevisionActividad implements Serializable {
     @JoinColumn(name = "actividad_id", referencedColumnName = "id")
     @ManyToOne
     private Actividad actividadId;
+    @OneToOne
+    private Revision revision;
 
     public RevisionActividad() {
     }
@@ -39,9 +42,10 @@ public class RevisionActividad implements Serializable {
         this.id = id;
     }
 
-    public RevisionActividad(Long id, Actividad actividadId) {
+    public RevisionActividad(Long id, Actividad actividadId, Revision revision) {
         this.id = id;
         this.actividadId = actividadId;
+        this.revision = revision;
     }
 
     public Long getId() {
@@ -60,4 +64,11 @@ public class RevisionActividad implements Serializable {
         this.actividadId = actividadId;
     }
 
+    public Revision getRevision() {
+        return revision;
+    }
+
+    public void setRevision(Revision revision) {
+        this.revision = revision;
+    }
 }
