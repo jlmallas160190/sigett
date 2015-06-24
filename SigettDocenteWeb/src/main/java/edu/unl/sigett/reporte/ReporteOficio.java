@@ -6,7 +6,6 @@
 package edu.unl.sigett.reporte;
 
 import java.io.Serializable;
-import javax.servlet.http.HttpServletResponse;
 import org.jlmallas.util.Oficio;
 
 /**

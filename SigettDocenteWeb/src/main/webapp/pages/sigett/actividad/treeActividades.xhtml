@@ -8,16 +8,22 @@
 
     <body>
         <f:event type="preRenderView" listener="#{actividadController.preRenderView()}"/>
-        <p:tree id="treeActividades" value="#{sessionActividad.rootActividades}" var="node" dynamic="true"  animate="true">
+        <p:tree id="treeActividades" value="#{sessionActividad.rootActividades}" var="node" dynamic="true"  animate="true" >
             <p:treeNode collapsedIcon="ui-icon-folder-collapsed" expandedIcon="ui-icon-folder-open">
-                <h:panelGrid columns="3" style="background: #fff;text-overflow: ellipsis!important" >
+                <h:panelGrid columns="3" styleClass="panelgrid">
                     <h:outputLabel styleClass="#{node.estiloEstado}"/>
-                    <p:commandLink value="#{node.nombre}"  oncomplete="PF('dlgLoading').hide(),PF('tblDocActFilter').filter()"
-                                   onstart="PF('dlgLoading').show()" update="@form"
-                                   action="#{actividadController.editar(node)}"/>
+                    <div style="  position: absolute;
+                         width: 100%;
+                         top: -50px;
+                         left: 300px;">
+                        <p:commandLink value="#{node.nombre}"  oncomplete="PF('dlgLoading').hide()"
+                                       onstart="PF('dlgLoading').show()" update="@form"
+                                       action="#{actividadController.editar(node)}"/>
+                    </div>
                     <p:commandLink id="detalleActividad" >
                         <p:graphicImage value="/resources/img/selector-search.gif"/>
                     </p:commandLink>
+
                 </h:panelGrid>
 
                 <p:overlayPanel appendToBody="true" my="left-top" showEffect="blind" for="detalleActividad" styleClass="modal-sm"  

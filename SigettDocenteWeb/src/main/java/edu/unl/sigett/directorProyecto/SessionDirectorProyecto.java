@@ -5,6 +5,7 @@
  */
 package edu.unl.sigett.directorProyecto;
 
+import edu.unl.sigett.documentoProyecto.DocumentoProyectoDTO;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
@@ -20,9 +21,13 @@ import java.util.List;
 public class SessionDirectorProyecto implements Serializable {
 
     private DirectorProyectoDTO directorProyectoDTO;
+    private DocumentoProyectoDTO certicadoDirector;
 
     private List<DirectorProyectoDTO> directoresProyectoDTO;
     private List<DirectorProyectoDTO> filterDirectoresProyectoDTO;
+
+    private Boolean renderedMediaCertificado;
+    private Boolean renderedBotonAutoriza;
 
     public SessionDirectorProyecto() {
         this.filterDirectoresProyectoDTO = new ArrayList<>();
@@ -52,6 +57,30 @@ public class SessionDirectorProyecto implements Serializable {
 
     public void setFilterDirectoresProyectoDTO(List<DirectorProyectoDTO> filterDirectoresProyectoDTO) {
         this.filterDirectoresProyectoDTO = filterDirectoresProyectoDTO;
+    }
+
+    public Boolean getRenderedMediaCertificado() {
+        return renderedMediaCertificado;
+    }
+
+    public void setRenderedMediaCertificado(Boolean renderedMediaCertificado) {
+        this.renderedMediaCertificado = renderedMediaCertificado;
+    }
+
+    public DocumentoProyectoDTO getCerticadoDirector() {
+        return certicadoDirector;
+    }
+
+    public void setCerticadoDirector(DocumentoProyectoDTO certicadoDirector) {
+        this.certicadoDirector = certicadoDirector;
+    }
+
+    public Boolean getRenderedBotonAutoriza() {
+        return renderedBotonAutoriza;
+    }
+
+    public void setRenderedBotonAutoriza(Boolean renderedBotonAutoriza) {
+        this.renderedBotonAutoriza = renderedBotonAutoriza;
     }
 
 }

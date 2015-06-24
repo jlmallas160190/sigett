@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="46cf72a6-154b-49eb-9165-52722b41a751">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="titulo" class="java.lang.String"/>
+	<parameter name="cuerpo" class="java.lang.String"/>
+	<parameter name="pie" class="java.lang.String"/>
+	<parameter name="quienCertifica" class="java.lang.String"/>
+	<parameter name="cargoQuienCertifica" class="java.lang.String"/>
+	<parameter name="lugarFecha" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="101" splitType="Stretch">
+			<textField isStretchWithOverflow="true">
+				<reportElement x="0" y="0" width="555" height="100" uuid="f6317eb2-96fd-4516-941d-870ab8b3d211"/>
+				<textElement textAlignment="Justified" markup="html"/>
+				<textFieldExpression><![CDATA[$P{titulo}+"<br/>"+$P{quienCertifica}+"<br/>"+$P{cargoQuienCertifica}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<detail>
+		<band height="159" splitType="Stretch">
+			<textField isStretchWithOverflow="true">
+				<reportElement x="0" y="0" width="555" height="159" uuid="c4a91e99-12eb-4208-b506-f747fa331dc3"/>
+				<textElement textAlignment="Justified" markup="html"/>
+				<textFieldExpression><![CDATA[$P{cuerpo}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="126" splitType="Stretch">
+			<textField isStretchWithOverflow="true">
+				<reportElement x="0" y="0" width="555" height="126" uuid="a9c74b35-885e-4aba-874b-7633bbff0f2b"/>
+				<textElement textAlignment="Justified" markup="html"/>
+				<textFieldExpression><![CDATA[$P{lugarFecha}+"<br/><br/><br/><br/><br/><br/>"+$P{quienCertifica}+"<br/>"+$P{cargoQuienCertifica}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

@@ -7,17 +7,17 @@
 
     <body>
         <h:panelGrid columns="3">
-            <p:commandButton update=":contenido:msm,:contenido:tabViewDatosDP:actividades" onstart="PF('dlgLoading').show()" 
+            <p:commandButton update=":contenido:msm" onstart="PF('dlgLoading').show()" 
                              oncomplete="PF('dlgLoading').hide()"
                              value="#{btn.grabar}" action="#{actividadController.grabar()}" icon="ui-icon-disk"/>
-            <p:commandButton update=":contenido:msm,:contenido:tabViewDatosDP:actividades" onstart="PF('dlgLoading').show()" 
+            <p:commandButton update=":contenido:msm" onstart="PF('dlgLoading').show()" 
                              oncomplete="PF('dlgLoading').hide()"
                              value="#{btn.grabar_revisar}" rendered="#{sessionActividad.actividad.padreId!=null}" action="#{actividadController.grabar()}" icon="ui-icon-disk">
                 <f:param name="tipo" value="enviar"/>
             </p:commandButton>
             <p:commandButton  value="#{btn.cancelar}" icon="ui-icon-circle-arrow-w" onstart="PF('dlgLoading').show()" 
                               oncomplete="PF('dlgLoading').hide()" 
-                              update=":contenido:dlgCrudActividad" process="@this"
+                              update=":contenido:dlgCrudActividad"
                               action="#{actividadController.cancelarEdicion()}"/>
         </h:panelGrid>  
     </body>

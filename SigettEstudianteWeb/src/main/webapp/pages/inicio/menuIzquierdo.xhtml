@@ -5,7 +5,7 @@
       xmlns:p="http://primefaces.org/ui">
 
     <body>
-        <p:fieldset legend="#{lbl.inicio}" toggleable="true">
+        <p:panel header="#{lbl.inicio}" toggleable="true">
             <h:panelGrid styleClass="panelgrid" columns="3" rowClasses="rowpanelgrid" columnClasses="col-sm-1,col-sm-10,col-sm-1">
                 <p:graphicImage width="16" height="16" value="/resources/blacks/16x16/120.png"/>
                 <p:commandLink onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" action="pretty:inicio" 
@@ -16,7 +16,7 @@
                                value="#{lbl.proyectos}"/>
                 <h:inputHidden/>
             </h:panelGrid>
-        </p:fieldset>
+        </p:panel>
     </body>
 
 </html>

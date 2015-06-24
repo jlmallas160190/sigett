@@ -11,7 +11,6 @@
             <ui:define name="title">
                 <h:outputText value="#{lbl.editar_director_proyecto}"/>
             </ui:define>
-
             <ui:define name="top">
                 <ui:include src="./../../inicio/menu.xhtml"/>
             </ui:define>
@@ -22,6 +21,25 @@
             <ui:define name="content">
                 <p:messages id="msm" showDetail="true"/>
                 <p:tabView id="tabViewDatosDP">
+                    <p:tab id="inicio" title="#{lbl.inicio}">
+                        <p:panel>
+                            <ui:include src="datosProyecto.xhtml"/>
+                            <f:facet name="footer">
+                                <h:panelGrid id="botonesDatosProyecto" styleClass="pnl-botones" columns="2">
+                                    <p:commandButton value="#{btn.autorizar_tt}" rendered="#{sessionDirectorProyecto.renderedBotonAutoriza}"
+                                                     action="#{directorProyectoController.autorizarFinalizacion()}" 
+                                                     update=":contenido:msm,:contenido:pnlCertificadoDirector,botonesDatosProyecto"
+                                                     onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide(),PF('dlgCertificadoDirector').show()"/>
+                                    <p:commandButton value="#{btn.ver_certificado}" action="#{directorProyectoController.verCertficado()}" 
+                                                     update=":contenido:msm,botonesDatosProyecto,:contenido:pnlCertificadoDirector" rendered="#{!sessionDirectorProyecto.renderedBotonAutoriza}"
+                                                     onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide(),PF('dlgCertificadoDirector').show()"/>
+                                    <p:commandButton value="#{btn.cancelar_tt}" action="#{directorProyectoController.cancelarFinalizacion()}" 
+                                                     update=":contenido:msm,botonesDatosProyecto,:contenido:pnlCertificadoDirector" rendered="#{!sessionDirectorProyecto.renderedBotonAutoriza}"
+                                                     onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()"/>
+                                </h:panelGrid>
+                            </f:facet>
+                        </p:panel>
+                    </p:tab>
                     <p:tab id="actividades" title="#{lbl.actividades}">
                         <p:panel>
                             <ui:include src="./../actividad/treeActividades.xhtml"/>
@@ -34,11 +52,13 @@
                     </p:tab>
                 </p:tabView>
                 <ui:include src="./../prorroga/dialogoCrudProrroga.xhtml"/>
-                 <ui:include src="./../revisionActividad/dialogoCrudRevisionActividad.xhtml"/>
+                <ui:include src="./../revisionActividad/dialogoCrudRevisionActividad.xhtml"/>
                 <ui:include src="./../actividad/dialogoCrudActividad.xhtml"/>
                 <ui:include src="./../documentoActividad/dialogoCrudDocumentoActividad.xhtml"/>
+                <ui:include src="dialogoCertificadoDirector.xhtml"/>
                 <f:metadata>
                     <f:event type="preRenderView" listener="#{prorrogaController.preRenderView()}"/>
+                    <f:event type="preRenderView" listener="#{directorProyectoController.actualizarDatosProyecto()}"/>
                 </f:metadata>
             </ui:define>
         </ui:composition>

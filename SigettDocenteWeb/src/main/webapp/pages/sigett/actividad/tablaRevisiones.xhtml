@@ -6,7 +6,7 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core">
     <body>
         <p:dataTable id="tblRevisionesActividad" value="#{sessionActividad.revisionesActividad}" var="item" rows="10" paginator="true"
-                     rowIndexVar="rowIx" rowKey="#{item.id}" selectionMode="single" selection="#{item}" 
+                     rowIndexVar="rowIx" rowKey="#{item.revision}" selectionMode="single" selection="#{item}" 
                      filteredValue="#{sessionActividad.filterRevisionesActividad}" widgetVar="tblRevisionesFilter"
                      rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'even-row' : 'odd-row'}" emptyMessage="#{msg.table_empty}">
             <p:column  sortBy="#{item.revision.fechaInicio}" 
@@ -15,7 +15,9 @@
                 <f:facet name="header">
                     <h:outputText value="#{lbl.fecha_inicio}"/>
                 </f:facet>
-                <h:outputText value="#{item.revision.fechaInicio}"/>
+                <h:outputText value="#{item.revision.fechaInicio}">
+                    <f:convertDateTime pattern="EEEEE dd MMMMM yyyy HH:mm:ss"/>
+                </h:outputText>
             </p:column>
 
             <p:column sortBy="#{item.revision.fechaFin}" 
@@ -24,7 +26,9 @@
                 <f:facet name="header">
                     <h:outputText value="#{lbl.fecha_fin}"/>
                 </f:facet>
-                <h:outputText value="#{item.revision.fechaFin}"/>
+                <h:outputText value="#{item.revision.fechaFin}">
+                    <f:convertDateTime pattern="EEEEE dd MMMMM yyyy HH:mm:ss"/>
+                </h:outputText>
             </p:column>
 
             <p:column sortBy="#{item.revision.observacion}" 
@@ -54,12 +58,13 @@
                                          update=":contenido:dlgCrudRevisionActividad"
                                          action="#{revisionActividadController.editar(item)}" icon="ui-icon-pencil"/>
                     </p:column>
-                    <p:commandButton onstart="PF('dlgLoading').show()" 
-                                     oncomplete="PF('dlgLoading').hide(),PF('tblRevisionesFilter').filter()" 
-                                     update=":contenido:tabViewDatosActividad:tblRevisiones"
-                                     action="#{revisionActividadController.remover(item)}" icon="ui-icon-trash"/>
-            </p:column>
-            </p:row>
+                    <p:column>
+                        <p:commandButton onstart="PF('dlgLoading').show()" 
+                                         oncomplete="PF('dlgLoading').hide(),PF('tblRevisionesFilter').filter()" 
+                                         update=":contenido:tabViewDatosActividad:tblRevisionesActividad"
+                                         action="#{revisionActividadController.remover(item)}" icon="ui-icon-trash"/>
+                    </p:column>
+                </p:row>
             </p:column>
         </p:dataTable>
     </body>

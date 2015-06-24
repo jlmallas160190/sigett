@@ -17,14 +17,12 @@
             </ui:define>
             <ui:define name="content">
                 <p:messages id="msm"/>
-                <p:fieldset id="fSproyecto" toggleable="true" legend="#{lbl.proyectos_carrera} #{sessionProyecto.carreraSeleccionada.nombre}">
-                    <p:panel>
+                <p:panel id="pnlProyectos" header="#{lbl.proyectos_carrera} #{sessionProyecto.carreraSeleccionada.nombre}" toggleable="true">
                     <ui:include src="tablaProyectos.xhtml"/>
                     <f:facet name="footer">
                         <ui:include src="botonesTablaProyectos.xhtml"/>    
                     </f:facet>
                     </p:panel>
-                </p:fieldset> 
                 <f:metadata>
                     <f:event type="preRenderView" listener="#{proyectoController.preRenderView()}"/>
                 </f:metadata>

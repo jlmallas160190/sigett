@@ -7,7 +7,7 @@
 
     <body>
         <p:dialog id="dlgCrudDocumentoProyecto" widgetVar="dlgCrudDocumentoProyecto"  header="#{msg['lbl.editar']} #{msg['lbl.documento']}" 
-                  styleClass="modal-md" modal="true" fitViewport="true" draggable="true" position="center" closable="false" >
+                  styleClass="modal-md" modal="true"  draggable="true" position="center" closable="false" >
             <p:panel id="pnlEditarDocProy" rendered="#{sessionDocumentoProyecto.renderedCrud}">
                 <ui:include src="editarDocumentoProyecto.xhtml"/>
                 <f:facet name="footer">

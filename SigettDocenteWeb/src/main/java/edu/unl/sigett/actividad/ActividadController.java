@@ -17,7 +17,6 @@ import com.jlmallas.comun.service.ItemService;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 import com.ocpsoft.pretty.faces.annotation.URLMappings;
 import edu.unl.sigett.directorProyecto.SessionDirectorProyecto;
-import edu.unl.sigett.docenteUsuario.DocenteUsuarioDM;
 import edu.unl.sigett.documentoActividad.DocumentoActividadDTO;
 import edu.unl.sigett.entity.Actividad;
 import edu.unl.sigett.entity.Cronograma;
@@ -91,10 +90,10 @@ public class ActividadController implements Serializable {
     private RevisionService revisionService;
 //</editor-fold>
     private static final Logger LOG = Logger.getLogger(ActividadController.class.getName());
-    
+
     public ActividadController() {
     }
-    
+
     public void preRenderView() {
         this.buscar();
         this.generaArbol();
@@ -108,20 +107,22 @@ public class ActividadController implements Serializable {
         sessionActividad.setTitulo(bundle.getString("objetivo"));
         if (tipo.getCodigo().equals(TipoActividadEnum.TAREA.getTipo())) {
             sessionActividad.setTitulo(bundle.getString("tarea"));
+            RequestContext.getCurrentInstance().execute("PF('tblRevisionesFilter').filter()");
+            RequestContext.getCurrentInstance().execute("PF('tblDocActFilter').filter()");
         }
         sessionActividad.setActividad(actividad);
         listadoDocumentos();
+        listadoRevisiones();
         sessionActividad.setRenderedCrud(Boolean.TRUE);
         RequestContext.getCurrentInstance().execute("PF('dlgCrudActividad').show()");
     }
-    
+
     public void cancelarEdicion() {
         sessionActividad.setActividad(new Actividad());
         sessionActividad.setRenderedCrud(Boolean.FALSE);
         RequestContext.getCurrentInstance().execute("PF('dlgCrudActividad').hide()");
-        
     }
-    
+
     private void revisar(String param) {
         Item estadoDesarrollo = itemService.buscarPorCatalogoCodigo(CatalogoEnum.ESTADOACTIVIDAD.getTipo(), EstadoActividadEnum.ENVIADO.getTipo());
         sessionActividad.getActividad().setEstadoId(estadoDesarrollo.getId());
@@ -134,7 +135,7 @@ public class ActividadController implements Serializable {
                 sessionActividad.getActividad().getPorcentajeDuracion()));
         sessionActividad.getActividad().setEstadoId(estado.getId());
     }
-    
+
     private void actualizarPorcentajes() {
         Item estado = itemService.buscarPorCatalogoCodigo(CatalogoEnum.ESTADOACTIVIDAD.getTipo(), EstadoActividadEnum.REVISADO.getTipo());
         List<Actividad> actividades = actividadService.buscar(new Actividad(null, null, null, null, null, Boolean.TRUE, null, null, null, null, null, null,
@@ -166,7 +167,7 @@ public class ActividadController implements Serializable {
             actividadService.actualizar(actividad);
         }
     }
-    
+
     private void calculosObjetivo() {
         if (sessionActividad.getActividad().getPadreId() == null) {
             return;
@@ -187,9 +188,9 @@ public class ActividadController implements Serializable {
             actividadPadre.setEstadoId(estado.getId());
         }
         actividadService.actualizar(actividadPadre);
-        
+
     }
-    
+
     private void calculosCronograma() {
         Item estado = itemService.buscarPorCatalogoCodigo(CatalogoEnum.ESTADOACTIVIDAD.getTipo(), EstadoActividadEnum.REVISADO.getTipo());
         List<Actividad> actividads = actividadService.buscar(new Actividad(null, null, null, null, null, Boolean.TRUE, null, null, null, null,
@@ -204,7 +205,7 @@ public class ActividadController implements Serializable {
                 Double.parseDouble(ValorEnum.DIVISORPORCENTAJE.getTipo()) - sum.doubleValue());
         cronogramaService.actualizar(sessionDirectorProyecto.getDirectorProyectoDTO().getDirectorProyecto().getProyectoId().getCronograma());
     }
-    
+
     public void grabar() {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
@@ -216,15 +217,16 @@ public class ActividadController implements Serializable {
             calculosObjetivo();
             calculosCronograma();
             grabarDocumentos();
+            grabarRevisiones();
             cabeceraController.getMessageView().message(FacesMessage.SEVERITY_INFO, bundle.getString("editar"), "");
             sessionActividad.setRenderedCrud(Boolean.FALSE);
             cancelarEdicion();
         } catch (Exception e) {
             LOG.warning(e.getMessage());
         }
-        
+
     }
-    
+
     private void buscar() {
         sessionActividad.getActividadesPadre().clear();
         Actividad actividadBuscar = new Actividad();
@@ -244,10 +246,11 @@ public class ActividadController implements Serializable {
             sessionActividad.getActividadesPadre().add(actividad);
         }
     }
-    
+
     private void generaArbol() {
         this.sessionActividad.setRootActividades(new DefaultTreeNode("Root", null));
         Item estado = itemService.buscarPorCatalogoCodigo(CatalogoEnum.ESTADOACTIVIDAD.getTipo(), EstadoActividadEnum.REVISADO.getTipo());
+        Item estadoDesarrollo = itemService.buscarPorCatalogoCodigo(CatalogoEnum.ESTADOACTIVIDAD.getTipo(), EstadoActividadEnum.DESARROLLO.getTipo());
         for (Actividad actividad : sessionActividad.getActividadesPadre()) {
             TreeNode node = null;
             node = new DefaultTreeNode(actividad, sessionActividad.getRootActividades());
@@ -262,6 +265,9 @@ public class ActividadController implements Serializable {
                 continue;
             }
             for (Actividad actividad : actividadesHijos) {
+                if (actividad.getEstadoId().equals(estadoDesarrollo.getId())) {
+                    continue;
+                }
                 actividad.setEstiloEstado(EstiloTreeNodeEnum.ACTIVIDADDESARROLLO.getTipo());
                 if (actividad.getEstadoId().equals(estado.getId())) {
                     actividad.setEstiloEstado(EstiloTreeNodeEnum.ACTIVIDADREVISADA.getTipo());
@@ -289,7 +295,7 @@ public class ActividadController implements Serializable {
         }
         sessionActividad.setFilterDocumentosActividadDTO(sessionActividad.getDocumentosActividadDTO());
     }
-    
+
     private void grabarDocumentos() {
         String ruta = configuracionService.buscar(new Configuracion(ConfiguracionEnum.RUTADOCUMENTOACTIVIDAD.getTipo())).get(0).getValor();
         for (DocumentoActividadDTO documentoActividadDTO : sessionActividad.getDocumentosActividadDTO()) {
@@ -312,6 +318,7 @@ public class ActividadController implements Serializable {
     }
 
     //</editor-fold>
+    //<editor-fold defaultstate="collapsed" desc="REVISIONES">
     private void listadoRevisiones() {
         sessionActividad.getRevisionesActividad().clear();
         sessionActividad.getFilterRevisionesActividad().clear();
@@ -331,6 +338,5 @@ public class ActividadController implements Serializable {
             revisionActividadService.actualizar(revisionActividad);
         }
     }
-    //<editor-fold defaultstate="collapsed" desc="REVISIONES">
     //</editor-fold>
 }

@@ -32,7 +32,8 @@ public class RevisionActividad implements Serializable {
     @JoinColumn(name = "actividad_id", referencedColumnName = "id")
     @ManyToOne
     private Actividad actividadId;
-    @OneToOne
+    @JoinColumn(name = "id", referencedColumnName = "id", insertable = false, updatable = false)
+    @OneToOne(optional = false)
     private Revision revision;
 
     public RevisionActividad() {

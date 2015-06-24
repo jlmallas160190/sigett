@@ -7,6 +7,7 @@ package edu.unl.sigett.actividad;
 
 import edu.unl.sigett.documentoActividad.DocumentoActividadDTO;
 import edu.unl.sigett.entity.Actividad;
+import edu.unl.sigett.entity.RevisionActividad;
 import edu.unl.sigett.enumeration.TipoActividadEnum;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -30,6 +31,7 @@ public class SessionActividad implements Serializable {
     private List<DocumentoActividadDTO> documentosActividadDTO;
     private List<DocumentoActividadDTO> filterDocumentosActividadDTO;
     private List<Actividad> actividadesPadre;
+    private List<RevisionActividad> revisionesActividad;
 
     private Boolean renderedCrud;
 
@@ -46,7 +48,8 @@ public class SessionActividad implements Serializable {
         this.actividadesPadre = new ArrayList<>();
         this.actividad = new Actividad();
         this.documentosActividadDTO = new ArrayList<>();
-        this.filterDocumentosActividadDTO=new ArrayList<>();
+        this.revisionesActividad = new ArrayList<>();
+        this.filterDocumentosActividadDTO = new ArrayList<>();
     }
 
     public Actividad getActividad() {
@@ -79,6 +82,14 @@ public class SessionActividad implements Serializable {
 
     public void setActividadesPadre(List<Actividad> actividadesPadre) {
         this.actividadesPadre = actividadesPadre;
+    }
+
+    public List<RevisionActividad> getRevisionesActividad() {
+        return revisionesActividad;
+    }
+
+    public void setRevisionesActividad(List<RevisionActividad> revisionesActividad) {
+        this.revisionesActividad = revisionesActividad;
     }
 
     public Boolean getRenderedCrud() {

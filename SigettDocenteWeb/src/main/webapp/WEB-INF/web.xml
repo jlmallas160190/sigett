@@ -42,7 +42,8 @@
             edu.unl.sigett.docenteUsuario,
             edu.unl.sigett.docenteProyecto,
             edu.unl.sigett.directorProyecto,
-            edu.unl.sigett.lineaInvestigacionDocente
+            edu.unl.sigett.lineaInvestigacionDocente,
+            edu.unl.sigett.actividad
         </param-value>
     </context-param>
     <context-param>

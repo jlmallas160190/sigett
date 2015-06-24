@@ -12,6 +12,7 @@ package edu.unl.sigett.enumeration;
 public enum CatalogoDocumentoProyectoEnum {
 
     ANTEPROYECTO("ANTEPROYECTO"),
+    CERTIFICACIONDIRECTOR("CERTIFICACION_DIRECTOR"),
     DOCUMENTOFINAL("DOCUMENTO_FINAL");
     String tipo;
 

@@ -67,7 +67,7 @@ public class Revision implements Serializable {
         this.id = id;
     }
 
-    public Revision(Long id, Date fechaInicio, String observacion, String sugerencia, Date fechaFin, Date horaFin, RevisionActividad revisionActividad) {
+    public Revision(Long id, Date fechaInicio, String observacion, String sugerencia, Date fechaFin, RevisionActividad revisionActividad) {
         this.id = id;
         this.fechaInicio = fechaInicio;
         this.observacion = observacion;

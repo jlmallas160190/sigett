@@ -35,7 +35,11 @@ public class EventoDaoImplement extends AbstractDao<Evento> implements EventoDao
             parametros.put("catalogoId", evento.getCatalogoId());
             existeFiltro = Boolean.TRUE;
         }
-
+        if (evento.getTablaId() != null) {
+            sql.append(" and e.tablaId=:tablaId");
+            parametros.put("tablaId", evento.getTablaId());
+            existeFiltro = Boolean.TRUE;
+        }
         if (!existeFiltro) {
             return null;
         }

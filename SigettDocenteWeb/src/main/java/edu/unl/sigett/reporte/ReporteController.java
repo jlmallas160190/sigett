@@ -14,6 +14,7 @@ import java.util.logging.Logger;
 import net.sf.jasperreports.engine.JREmptyDataSource;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperRunManager;
+import org.jlmallas.util.Certificado;
 
 /**
  *
@@ -48,6 +49,28 @@ public class ReporteController {
             p.put("referencia", reporteOficio.getReferencia());
             p.put("selloInstitucion", reporteOficio.getRutaLogoIntitucion());
             File fileReport = new File(reporteOficio.getRuta());
+            return JasperRunManager.runReportToPdf(fileReport.getPath(), p, new JREmptyDataSource());
+        } catch (JRException ex) {
+            LOG.info(ex.getMessage());
+        }
+        return bytes;
+    }
+
+    /**
+     *
+     * @param certificadoReporte
+     * @return
+     */
+    public byte[] certificado(final CertificadoReporte certificadoReporte) {
+        byte[] bytes = null;
+        try {
+            Map p = new HashMap();
+            p.put("lugarFecha", certificadoReporte.getLugar() + ", " + certificadoReporte.getFecha());
+            p.put("titulo", certificadoReporte.getTitulo());
+            p.put("quienCertifica", certificadoReporte.getDatosQuienCertifica());
+            p.put("cargoQuienCertifica", certificadoReporte.getCargoQuienCertifica());
+            p.put("cuerpo", certificadoReporte.getCuerpo());
+            File fileReport = new File(certificadoReporte.getRuta());
             return JasperRunManager.runReportToPdf(fileReport.getPath(), p, new JREmptyDataSource());
         } catch (JRException ex) {
             LOG.info(ex.getMessage());

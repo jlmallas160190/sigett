@@ -1,0 +1,21 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui">
+    <ui:composition>
+            <p:idleMonitor timeout="600000" >
+                <p:ajax event="idle" listener="#{docenteUsuarioController.logout()}"
+                    oncomplete="sessionTimeOutDialog.show();" />
+                <p:dialog  widgetVar="sessionTimeOutDialog"
+                 modal="true"  closable="false" width="400" visible="false" resizable="false">
+                     <h:panelGrid columns="1">
+                         <h:outputText value="#{msg.session_caducada}" />
+                         <input id="confirmBackToLogin" type="button" value="#{lbl.inicio}"
+                            onclick="window.location='#{facesContext.externalContext.requestContextPath}/pages/login.xhtml';" />
+                     </h:panelGrid>
+                </p:dialog>
+            </p:idleMonitor>
+    </ui:composition>
+</html>
+

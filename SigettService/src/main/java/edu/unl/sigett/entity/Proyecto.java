@@ -71,8 +71,6 @@ public class Proyecto implements Serializable {
     private List<LineaInvestigacionProyecto> lineaInvestigacionProyectoList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "proyectoId")
     private List<TemaProyecto> temaProyectoList;
-    @OneToMany(mappedBy = "proyectoId")
-    private List<InformeProyecto> informeProyectoList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "proyectoId")
     private List<ConfiguracionProyecto> configuracionProyectoList;
     @OneToMany(mappedBy = "proyectoId")
@@ -118,7 +116,6 @@ public class Proyecto implements Serializable {
         this.documentoProyectoList = new ArrayList<>();
         this.lineaInvestigacionProyectoList = new ArrayList<>();
         this.directorProyectoList = new ArrayList<>();
-        this.informeProyectoList = new ArrayList<>();
         this.proyectoCarreraOfertaList = new ArrayList<>();
         this.tribunalList = new ArrayList<>();
     }
@@ -210,15 +207,6 @@ public class Proyecto implements Serializable {
 
     public void setTemaProyectoList(List<TemaProyecto> temaProyectoList) {
         this.temaProyectoList = temaProyectoList;
-    }
-
-    @XmlTransient
-    public List<InformeProyecto> getInformeProyectoList() {
-        return informeProyectoList;
-    }
-
-    public void setInformeProyectoList(List<InformeProyecto> informeProyectoList) {
-        this.informeProyectoList = informeProyectoList;
     }
 
     @XmlTransient

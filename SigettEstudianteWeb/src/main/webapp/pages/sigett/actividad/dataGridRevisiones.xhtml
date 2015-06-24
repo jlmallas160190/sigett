@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+    <body>
+        <p:dataGrid value="#{sessionActividad.revisionesActividad}" var="item" rows="5" paginator="true" paginatorPosition="bottom" columns="1" >
+            <p:panel>
+                <h:panelGrid styleClass="panelgrid" columns="2" columnClasses="col-sm-2,col-sm-10"  rowClasses="rowpanelgrid">
+                    <h:outputText value="#{lbl.observacion}:"/>
+                    <h:outputText value="#{item.revision.observacion}"/>
+                    <h:outputText value="#{lbl.sugerencia}:"/>
+                    <h:outputText value="#{item.revision.sugerencia}"/>
+                </h:panelGrid>
+            </p:panel>  
+        </p:dataGrid>
+    </body>
+
+</html>

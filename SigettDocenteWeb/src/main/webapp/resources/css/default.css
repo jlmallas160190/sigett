@@ -2164,19 +2164,27 @@ hr {
 }
 /*TREE*/
 .ui-tree{
+    position: relative;
     width:auto !important;
-    position:relative;
-    border: transparent!important;
+    border: none;
 }
 .ui-tree .ui-tree-container{
     margin:0;
+    display: block !important;
+    -webkit-box-orient: vertical !important;
+    white-space: nowrap !important; 
     background: #f4f4f4;
     padding:4px;    
-    border: 1px solid transparent!important;
+    border: none;
+    position: relative;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important; 
 }
 .ui-tree .ui-commandlink{
     color: #666;
-    text-overflow: ellipsis;
+     display: block !important;
+    -webkit-box-orient: vertical !important;
+    text-overflow: ellipsis !important;
 }
 .ui-tree .ui-commandlink:hover{
     color: #666;
@@ -2192,7 +2200,9 @@ hr {
     background-position:0 0;
     list-style:none outside none;
     margin:0;
-    padding:1px 0 0;    
+    padding:1px 0 0;  
+    position: relative;
+    overflow: visible;
 }
 .ui-tree .ui-treenode-content{}.ui-tree .ui-tree-toggler{
     cursor:pointer;

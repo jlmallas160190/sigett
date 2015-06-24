@@ -11,7 +11,6 @@ import com.jlmallas.comun.service.ItemService;
 import edu.unl.sigett.entity.DocumentoProyecto;
 import edu.unl.sigett.proyecto.SessionProyecto;
 import edu.unl.sigett.util.CabeceraController;
-import java.io.File;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;

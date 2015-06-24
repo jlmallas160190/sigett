@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <body>
+        <p:dialog  widgetVar="dlgCertificadoDirector" header="#{lbl.certificado_director}" styleClass="modal-md" 
+                   modal="true" closable="false" position="center" draggable="false">
+            <p:panel id="pnlCertificadoDirector">
+                <f:facet name="header">
+                    <ui:include src="./../documentoProyecto/upload.xhtml"/>
+                </f:facet>
+                <p:media rendered="#{sessionDirectorProyecto.renderedMediaCertificado}" value="/AppServlet?entity=certificadoDirector" player="pdf" width="100%" height="400"/>
+                <f:facet name="footer">
+                    <h:panelGrid styleClass="pnl-botones" columns="2">
+                        <p:commandButton action="#{directorProyectoController.generarCertificado()}" update=":contenido:pnlCertificadoDirector"
+                                         onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()"
+                                         icon="ui-icon-circle-arrow-w" value="#{btn.generar_certificado}"/> 
+                        <p:commandButton action="#{directorProyectoController.cancelarImprimirCertificado()}" update=":contenido:pnlCertificadoDirector"
+                                         onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide(),PF('dlgCertificadoDirector').hide()"
+                                         icon="ui-icon-circle-arrow-w" value="#{btn.cancelar}"/> 
+                    </h:panelGrid>
+                </f:facet>
+            </p:panel>
+        </p:dialog>
+    </body>
+
+</html>

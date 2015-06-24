@@ -45,6 +45,7 @@
                 <div class="col-md-8">
                     <h:form id="contenido">
                         <ui:insert name="content">
+                             <ui:include src="../../pages/inicio/cerrarSession.xhtml" />
                         </ui:insert>
                     </h:form>
                     <p:dialog id="dlgLoading" styleClass="load"  draggable="false" closable="false" resizable="false"  showHeader="false"  widgetVar="dlgLoading" modal="true" >

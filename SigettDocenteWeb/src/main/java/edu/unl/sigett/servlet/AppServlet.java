@@ -5,6 +5,7 @@
  */
 package edu.unl.sigett.servlet;
 
+import edu.unl.sigett.directorProyecto.SessionDirectorProyecto;
 import edu.unl.sigett.documentoActividad.SessionDocumentoActividad;
 import edu.unl.sigett.documentoProyecto.DocumentoProyectoDM;
 import edu.unl.sigett.pertinencia.PertinenciaDM;
@@ -30,6 +31,8 @@ public class AppServlet extends HttpServlet {
     private DocumentoProyectoDM documentoProyectoDM;
     @Inject
     private SessionDocumentoActividad sessionDocumentoActividad;
+    @Inject
+    private SessionDirectorProyecto sessionDirectorProyecto;
     //</editor-fold>
 
     @Override
@@ -95,6 +98,26 @@ public class AppServlet extends HttpServlet {
                     response.setContentType("application/pdf");
                     response.setContentLength(sessionDocumentoActividad.getDocumentoActividadDTO().getDocumento().getContents().length);
                     response.getOutputStream().write(sessionDocumentoActividad.getDocumentoActividadDTO().getDocumento().getContents());
+                    response.getOutputStream().flush();
+                    response.getOutputStream().close();
+                    break;
+                case "certificadoDirector":
+                    if (sessionDirectorProyecto.getCerticadoDirector() == null) {
+                        response.sendError(HttpServletResponse.SC_NOT_FOUND); // 404.
+                        return;
+                    }
+                    if (sessionDirectorProyecto.getCerticadoDirector().getDocumento() == null) {
+                        response.sendError(HttpServletResponse.SC_NOT_FOUND); // 404.
+                        return;
+                    }
+                    if (sessionDirectorProyecto.getCerticadoDirector().getDocumento().getContents() == null) {
+                        response.sendError(HttpServletResponse.SC_NOT_FOUND); // 404.
+                        return;
+                    }
+                    response.setCharacterEncoding("ISO-8859-1");
+                    response.setContentType("application/pdf");
+                    response.setContentLength(sessionDirectorProyecto.getCerticadoDirector().getDocumento().getContents().length);
+                    response.getOutputStream().write(sessionDirectorProyecto.getCerticadoDirector().getDocumento().getContents());
                     response.getOutputStream().flush();
                     response.getOutputStream().close();
                     break;

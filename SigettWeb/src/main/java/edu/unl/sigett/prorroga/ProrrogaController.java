@@ -370,7 +370,7 @@ public class ProrrogaController implements Serializable {
             List<DocumentoCarrera> documentoCarreras = documentoCarreraService.buscar(new DocumentoCarrera(
                     null, documentoBuscar != null ? documentoBuscar.getId() : null, Boolean.TRUE, null, prorroga.getId()));
             if (documentoCarreras == null) {
-                generarOficioInf(prorroga);
+                generarOficioInf();
                 return;
             }
             DocumentoCarrera documentoCarrera = !documentoCarreras.isEmpty() ? documentoCarreras.get(0) : null;
@@ -382,7 +382,7 @@ public class ProrrogaController implements Serializable {
                 sessionProrroga.setRenderedMediaOficioInf(Boolean.TRUE);
                 return;
             }
-            generarOficioInf(prorroga);
+            generarOficioInf();
         } catch (Exception e) {
             LOG.info(e.getMessage());
         }
@@ -391,9 +391,8 @@ public class ProrrogaController implements Serializable {
     /**
      * GENERA OFICIO DE PROORROGA
      *
-     * @param docenteProyectoDTO
      */
-    private void generarOficioInf(final Prorroga prorroga) {
+    public void generarOficioInf() {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         HttpServletRequest request = (HttpServletRequest) facesContext.getExternalContext().getRequest();
         ReporteController reporteController = new ReporteController();
@@ -433,7 +432,7 @@ public class ProrrogaController implements Serializable {
                 CatalogoDocumentoCarreraEnum.PRORROGAAUTOR.getTipo()).getId(), Double.parseDouble(resultado.length + ""), fechaActual.getTime(), resultado, null, "pdf");
         documentoService.guardar(documento);
         documentoCarreraDM.setDocumentoCarreraDTO(new DocumentoCarreraDTO(new DocumentoCarrera(
-                numeracionNext + "", documento.getId(), Boolean.TRUE, carrera.getId(), prorroga.getId()), documento, carrera));
+                numeracionNext + "", documento.getId(), Boolean.TRUE, carrera.getId(),sessionProrroga.getProrroga().getId()), documento, carrera));
         documentoCarreraService.guardar(documentoCarreraDM.getDocumentoCarreraDTO().getDocumentoCarrera());
         sessionProrroga.setRenderedMediaOficioInf(Boolean.TRUE);
         cabeceraController.getUtilService().generaDocumento(new File(ruta), documento.getContents());

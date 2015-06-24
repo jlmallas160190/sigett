@@ -2166,12 +2166,16 @@ hr {
     width:auto !important;
     position:relative;
     border: transparent!important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important; 
 }
 .ui-tree .ui-tree-container{
     margin:0;
     background: #f4f4f4;
     padding:4px;    
     border: 1px solid transparent!important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important; 
 }
 .ui-tree .ui-commandlink{
     color: #666;

@@ -2,12 +2,13 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
 
     <body>
-     <h:panelGrid columns="2" styleClass="panelgrid" rowClasses="rowpanelgrid" columnClasses="col-sm-2,col-sm-10">
+        <h:panelGrid columns="2" styleClass="panelgrid" rowClasses="rowpanelgrid" columnClasses="col-sm-2,col-sm-10">
             <h:outputLabel value="#{lbl.nombre}:"  />
-            <h:outputLabel  value="#{sessionEventoPersona.eventoPersona.evento.nombre}"/>
+            <p:commandLink value="#{sessionEventoPersona.eventoPersona.evento.nombre}" action="#{eventoPersonaController.editar()}"/>
             <h:outputLabel  value="#{lbl.lugar}:" />
             <h:outputLabel  value="#{sessionEventoPersona.eventoPersona.evento.lugar}"/>
             <h:outputLabel value="#{lbl.fecha_inicio}"/>
@@ -18,8 +19,8 @@
             <h:outputLabel  value="#{sessionEventoPersona.eventoPersona.evento.fechaFin}">
                 <f:convertDateTime pattern="EEEEE dd MMMMM yyyy HH:mm:ss"/>
             </h:outputLabel>
-          
+            <h:outputLabel value="#{lbl.invitados}:"/>
+            <h:outputLabel  value="#{sessionEventoPersona.eventoPersona.evento.invitados}"/>
         </h:panelGrid> 
     </body>
-
 </html>

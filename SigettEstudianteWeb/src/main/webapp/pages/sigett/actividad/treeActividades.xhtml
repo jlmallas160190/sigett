@@ -10,11 +10,16 @@
         <f:event type="preRenderView" listener="#{actividadController.preRenderView()}"/>
         <p:tree id="treeActividades" value="#{sessionActividad.rootActividades}" var="node" dynamic="true"  animate="true">
             <p:treeNode collapsedIcon="ui-icon-folder-collapsed" expandedIcon="ui-icon-folder-open">
-                <h:panelGrid columns="5" style="background: #fff;text-overflow: ellipsis!important" >
+                <h:panelGrid columns="4" style="background: #fff;text-overflow: ellipsis!important" >
                     <h:outputLabel styleClass="#{node.estiloEstado}"/>
-                    <p:commandLink value="#{node.nombre}"  oncomplete="PF('dlgLoading').hide(),PF('tblDocActFilter').filter()"
+                     <div style="  position: absolute;
+                         width: 100%;
+                         top: -50px;
+                         left: 300px;">
+                    <p:commandLink value="#{node.nombre}"  oncomplete="PF('dlgLoading').hide()"
                                    onstart="PF('dlgLoading').show()" update="@form"
                                    action="#{actividadController.editar(node)}"/>
+                     </div>
                     <p:commandLink title="#{btn.agregar_tarea}" rendered="#{node.padreId==null}"  onstart="PF('dlgLoading').show()" 
                                    oncomplete="PF('dlgLoading').hide(),PF('dlgCrudActividad').show()" 
                                    update=":contenido:dlgCrudActividad,:contenido:msm" action="#{actividadController.crear()}" >

@@ -5,7 +5,7 @@
       xmlns:p="http://primefaces.org/ui">
 
     <body>
-        <p:fieldset legend="#{msg['lbl.menu']} #{msg['lbl.principal']}" toggleable="">
+        <p:panel header="#{msg['lbl.menu']} #{msg['lbl.principal']}" toggleable="">
             <h:panelGrid styleClass="panelgrid" columns="3" rowClasses="rowpanelgrid" columnClasses="col-sm-1,col-sm-10,col-sm-1">
                 <p:graphicImage width="16" height="16" value="/resources/blacks/16x16/120.png"/>
                 <p:commandLink onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" action="pretty:inicioDocente" 
@@ -28,9 +28,9 @@
                 <span class="badge"></span>-->
                 <p:graphicImage width="16" height="16" value="/resources/png/32px/Shape102.png"/>
                 <p:commandLink action="pretty:lineasInvestigacion" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()"
-                                value="#{lbl.lineas_investigacion}"/>
+                               value="#{lbl.lineas_investigacion}"/>
             </h:panelGrid>
-        </p:fieldset>
+        </p:panel>
     </body>
 
 </html>

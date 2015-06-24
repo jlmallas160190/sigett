@@ -5,14 +5,9 @@
  */
 package edu.unl.sigett.prorroga;
 
-import com.jlmallas.comun.service.ConfiguracionService;
-import com.jlmallas.comun.service.DocumentoService;
-import com.jlmallas.comun.service.ItemService;
 import edu.unl.sigett.directorProyecto.SessionDirectorProyecto;
 import edu.unl.sigett.entity.Prorroga;
-import edu.unl.sigett.service.ConfiguracionCarreraService;
 import edu.unl.sigett.service.CronogramaService;
-import edu.unl.sigett.service.DocumentoCarreraService;
 import edu.unl.sigett.service.ProrrogaService;
 import edu.unl.sigett.util.CabeceraController;
 import java.io.Serializable;
@@ -25,7 +20,6 @@ import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
-import org.jlmallas.seguridad.service.UsuarioService;
 import org.primefaces.context.RequestContext;
 
 /**
@@ -49,19 +43,6 @@ public class ProrrogaController implements Serializable {
     private ProrrogaService prorrogaService;
     @EJB
     private CronogramaService cronogramaService;
-    @EJB
-    private ConfiguracionService configuracionService;
-    @EJB
-    private UsuarioService usuarioService;
-    @EJB
-    private ItemService itemService;
-    @EJB
-    private DocumentoService documentoService;
-    @EJB
-    private DocumentoCarreraService documentoCarreraService;
-    @EJB
-    private ConfiguracionCarreraService configuracionCarreraService;
-
     //</editor-fold>
     private static final Logger LOG = Logger.getLogger(ProrrogaController.class.getName());
 

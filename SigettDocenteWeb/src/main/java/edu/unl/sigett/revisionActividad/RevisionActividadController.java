@@ -6,6 +6,7 @@
 package edu.unl.sigett.revisionActividad;
 
 import edu.unl.sigett.actividad.SessionActividad;
+import edu.unl.sigett.entity.Revision;
 import edu.unl.sigett.entity.RevisionActividad;
 import edu.unl.sigett.service.RevisionActividadService;
 import edu.unl.sigett.service.RevisionService;
@@ -13,6 +14,7 @@ import edu.unl.sigett.util.CabeceraController;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.ResourceBundle;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
@@ -48,13 +50,16 @@ public class RevisionActividadController implements Serializable {
     }
     
     public void editar(RevisionActividad revisionActividad) {
+        Calendar fechaActual = Calendar.getInstance();
+        revisionActividad.getRevision().setFechaInicio(fechaActual.getTime());
         sessionRevisionActividad.setRevisionActividad(revisionActividad);
         sessionRevisionActividad.setRenderedCrud(Boolean.TRUE);
         RequestContext.getCurrentInstance().execute("PF('dlgCrudRevisionActividad').show()");
     }
     
     public void crear() {
-        sessionRevisionActividad.setRevisionActividad(new RevisionActividad(null, sessionActividad.getActividad(), null));
+        Calendar fechaActual = Calendar.getInstance();
+        sessionRevisionActividad.setRevisionActividad(new RevisionActividad(null, sessionActividad.getActividad(), new Revision(null, fechaActual.getTime(), null, null, null, null)));
         sessionRevisionActividad.setRenderedCrud(Boolean.TRUE);
         RequestContext.getCurrentInstance().execute("PF('dlgCrudRevisionActividad').show()");
     }
@@ -77,8 +82,10 @@ public class RevisionActividadController implements Serializable {
     }
     
     public void agregar() {
+        Calendar fechaActual = Calendar.getInstance();
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
+        sessionRevisionActividad.getRevisionActividad().getRevision().setFechaFin(fechaActual.getTime());
         if (!sessionActividad.getRevisionesActividad().contains(sessionRevisionActividad.getRevisionActividad())) {
             sessionActividad.getRevisionesActividad().add(sessionRevisionActividad.getRevisionActividad());
             cabeceraController.getMessageView().message(FacesMessage.SEVERITY_INFO, bundle.getString("agregar"), "");

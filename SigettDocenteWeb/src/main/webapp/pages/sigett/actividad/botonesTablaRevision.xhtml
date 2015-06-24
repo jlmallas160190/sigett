@@ -6,8 +6,8 @@
 
     <body>
         <h:panelGrid columns="3">
-            <p:commandButton update=":contenido:dlgCrudRevision" onstart="PF('dlgLoading').show()" 
-                             oncomplete="PF('dlgLoading').hide()"
+            <p:commandButton update=":contenido:dlgCrudRevisionActividad" onstart="PF('dlgLoading').show()" 
+                             oncomplete="PF('dlgLoading').hide()" 
                              value="#{btn.crear}" action="#{revisionActividadController.crear()}" icon="ui-icon-disk"/>
         </h:panelGrid>  
     </body>

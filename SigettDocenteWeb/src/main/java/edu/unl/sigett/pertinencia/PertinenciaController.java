@@ -207,6 +207,10 @@ public class PertinenciaController implements Serializable {
         }
     }
 
+    /**
+     * 
+     * @param pertinencia 
+     */
     public void remover(Pertinencia pertinencia) {
         try {
             FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -249,7 +253,9 @@ public class PertinenciaController implements Serializable {
         }
         return Boolean.TRUE;
     }
-
+/**
+ * 
+ */
     private void buscar() {
         this.pertinenciaDM.getPertinencias().clear();
         this.pertinenciaDM.getFilterPertinencias().clear();
@@ -265,7 +271,10 @@ public class PertinenciaController implements Serializable {
             LOG.warning(e.getMessage());
         }
     }
-
+/**
+ * 
+ * @param pertinencia 
+ */
     public void imprimirInforme(Pertinencia pertinencia) {
         try {
             if (pertinencia.getId() == null) {

@@ -7,6 +7,7 @@ package com.jlmallas.comun.entity;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Cacheable;
 import javax.persistence.Column;
@@ -14,10 +15,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -58,8 +60,12 @@ public class Evento implements Serializable {
     private Date fechaFin;
     @Column(name = "catalogo_id")
     private Long catalogoId;
-    @OneToOne(mappedBy = "evento")
-    private EventoPersona eventoPersona;
+    @OneToMany(mappedBy = "evento")
+    private List<EventoPersona> eventoPersonas;
+    @Column(name = "tabla_id")
+    private Long tablaId;
+    @Transient
+    private String invitados;
 
     public Evento() {
     }
@@ -68,9 +74,10 @@ public class Evento implements Serializable {
         this.id = id;
     }
 
-    public Evento(Long id, String nombre, String lugar, Date fechaInicio, Date fechaFin, Long catalogoId) {
+    public Evento(Long id, String nombre, String lugar, Date fechaInicio, Date fechaFin, Long catalogoId,Long tablaId) {
         this.id = id;
         this.nombre = nombre;
+        this.tablaId=tablaId;
         this.lugar = lugar;
         this.fechaInicio = fechaInicio;
         this.fechaFin = fechaFin;
@@ -117,12 +124,12 @@ public class Evento implements Serializable {
         this.catalogoId = catalogoId;
     }
 
-    public EventoPersona getEventoPersona() {
-        return eventoPersona;
+    public List<EventoPersona> getEventoPersonas() {
+        return eventoPersonas;
     }
 
-    public void setEventoPersona(EventoPersona eventoPersona) {
-        this.eventoPersona = eventoPersona;
+    public void setEventoPersonas(List<EventoPersona> eventoPersonas) {
+        this.eventoPersonas = eventoPersonas;
     }
 
     public String getLugar() {
@@ -131,6 +138,22 @@ public class Evento implements Serializable {
 
     public void setLugar(String lugar) {
         this.lugar = lugar;
+    }
+
+    public String getInvitados() {
+        return invitados;
+    }
+
+    public void setInvitados(String invitados) {
+        this.invitados = invitados;
+    }
+
+    public Long getTablaId() {
+        return tablaId;
+    }
+
+    public void setTablaId(Long tablaId) {
+        this.tablaId = tablaId;
     }
 
     @Override

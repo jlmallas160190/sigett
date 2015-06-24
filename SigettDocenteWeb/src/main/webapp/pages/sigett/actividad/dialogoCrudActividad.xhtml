@@ -2,12 +2,35 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
 
     <body>
         <p:dialog id="dlgCrudActividad" header="#{sessionActividad.titulo}" styleClass="modal-md" widgetVar="dlgCrudActividad" modal="true"
                   closable="false" position="center" draggable="false">
-            <ui:include src="editarActividad.xhtml"/>
+            <p:panel rendered="#{sessionActividad.renderedCrud}">
+                <p:tabView  id="tabViewDatosActividad">
+                    <p:tab id="tabActividad" title="#{lbl.actividad}">
+                        <ui:include src="datosActividad.xhtml"/>
+                    </p:tab>
+                    <p:tab id="tabDocumentos" rendered="#{sessionActividad.actividad.padreId!=null}" title="#{lbl.documentos}">
+                        <p:panel>
+                            <ui:include src="tablaDocumentosActividad.xhtml"/> 
+                        </p:panel>
+                    </p:tab>
+                    <p:tab id="tabRevisiones" rendered="#{sessionActividad.actividad.padreId!=null}" title="#{lbl.revisiones}">
+                        <p:panel>
+                            <ui:include src="tablaRevisiones.xhtml"/> 
+                            <f:facet name="footer">
+                                <ui:include src="botonesTablaRevision.xhtml"/> 
+                            </f:facet>
+                        </p:panel>
+                    </p:tab>
+                </p:tabView>
+                <f:facet name="footer">
+                    <ui:include src="botonesCrudActividad.xhtml"/> 
+                </f:facet>
+            </p:panel>
         </p:dialog> 
     </body>
 

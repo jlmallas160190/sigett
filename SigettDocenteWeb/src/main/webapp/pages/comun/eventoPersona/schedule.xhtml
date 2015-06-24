@@ -8,7 +8,7 @@
         <f:metadata>
             <f:event type="preRenderView" listener="#{eventoPersonaController.preRenderView()}"/>
         </f:metadata>
-        <p:schedule id="schedule" widgetVar="schedule" value="#{sessionEventoPersona.schedule}" timeZone="GMT-5" view="agendaWeek">
+        <p:schedule id="schedule" widgetVar="schedule" value="#{sessionEventoPersona.schedule}" timeZone="GMT-5" >
             <p:ajax event="eventSelect" onstart="PF('dlgLoading').show()" update=":contenido:dlgEvento" oncomplete="PF('dlgLoading').hide()" 
                     listener="#{eventoPersonaController.onEventSelect}" />                                      
             <p:ajax event="eventMove" onstart="PF('dlgLoading').show()" update="schedule"  oncomplete="PF('dlgLoading').hide()"
