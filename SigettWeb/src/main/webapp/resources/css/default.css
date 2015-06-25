@@ -1165,7 +1165,7 @@ hr {
 .ui-separator{
     background: #5cb85c !important;
     border: 1px solid #5cb85c !important;
-    padding: 0!important;
+    padding: 0;
 }
 /** MegaMenu **/.ui-megamenu td{vertical-align:top;}.ui-menu.ui-megamenu .ui-menu-parent .ui-menu-child{width:auto;}
 .ui-menu.ui-megamenu .ui-menu-child > table{width:auto;}.ui-menu.ui-megamenu .ui-menu-child .ui-menu-list{width:12.5em;}

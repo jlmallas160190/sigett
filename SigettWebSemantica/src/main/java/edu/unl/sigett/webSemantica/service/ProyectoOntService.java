@@ -7,6 +7,7 @@ package edu.unl.sigett.webSemantica.service;
 
 import edu.unl.sigett.webSemantica.dto.ProyectoOntDTO;
 import edu.unl.sigett.webSemantica.util.CabeceraWebSemantica;
+import java.util.List;
 
 /**
  *
@@ -17,4 +18,6 @@ public interface ProyectoOntService {
     void read(final CabeceraWebSemantica cabecera);
 
     void write(final ProyectoOntDTO proyectoDTO);
+
+    List<ProyectoOntDTO> buscar(final ProyectoOntDTO proyectoOntDTO);
 }

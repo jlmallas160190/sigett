@@ -294,6 +294,7 @@ public class Vocabulario {
     public void crearPropiedadSigla() {
         this.sigla = model.createDatatypeProperty(getNS() + "sigla");
         this.sigla.addDomain(carreraOnt);
+        this.sigla.addDomain(areaAcademicaOnt);
         this.sigla.addRange(XSD.xstring);
         this.sigla.convertToFunctionalProperty();
     }

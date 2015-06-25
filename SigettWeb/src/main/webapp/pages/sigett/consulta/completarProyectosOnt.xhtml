@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui">
+
+    <body>
+        <p:autoComplete   effect="fade" minQueryLength="2" 
+                          scrollHeight="250" maxResults="10" 
+                          value="#{sessionPortada.proyectoOntDTOSeleccionado}"
+                          completeMethod="#{portadaController.completarProyectosOnt}"
+                          var="item" itemLabel="#{item.tema}"
+                          converter="proyectoOntDTOConverter" itemValue="#{item}" multiple="false">
+            <p:ajax event="itemSelect" update=":contenido:dsProyectos" />
+        </p:autoComplete>
+    </body>
+
+</html>

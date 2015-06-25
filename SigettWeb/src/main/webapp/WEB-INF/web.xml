@@ -46,6 +46,7 @@
             edu.unl.sigett.lineaInvestigacionCarrera,
             edu.unl.sigett.configuracionCarrera,
             edu.unl.sigett.proyecto,
+            edu.unl.sigett.portada
         </param-value>
     </context-param>
     <context-param>

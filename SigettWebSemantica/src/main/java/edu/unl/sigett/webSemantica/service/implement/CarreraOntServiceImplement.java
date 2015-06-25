@@ -39,12 +39,12 @@ public class CarreraOntServiceImplement implements CarreraOntService {
                         cabecera.getVocabulario().editarCarreraOnt()));
             }
             carreraDTO.getAreaAcademicaDTO().setIndividual(cabecera.getVocabulario().getModel().getIndividual(
-                    cabecera.getVocabulario().getNS() + "area/" + carreraDTO.getAreaAcademicaDTO().getId()));
+                    cabecera.getVocabulario().getNS() + "areaAcademica/" + carreraDTO.getAreaAcademicaDTO().getId()));
             if (carreraDTO.getAreaAcademicaDTO().getIndividual() == null) {
                 return;
             }
             carreraDTO.getNivelAcademicoDTO().setIndividual(cabecera.getVocabulario().getModel().getIndividual(
-                    cabecera.getVocabulario().getNS() + "nivel/" + carreraDTO.getNivelAcademicoDTO().getId()));
+                    cabecera.getVocabulario().getNS() + "nivelAcademico/" + carreraDTO.getNivelAcademicoDTO().getId()));
             if (carreraDTO.getAreaAcademicaDTO().getIndividual() == null) {
                 return;
             }

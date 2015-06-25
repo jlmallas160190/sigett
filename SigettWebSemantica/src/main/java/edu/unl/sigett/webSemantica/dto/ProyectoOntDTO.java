@@ -21,6 +21,11 @@ public class ProyectoOntDTO implements Serializable {
     private String estado;
     private Individual individual;
     private String uri;
+    private String autor;
+    private String docente;
+    private String lineaInvestigacion;
+    private String carrera;
+    private String nivelAcademico;
 
     public ProyectoOntDTO() {
     }
@@ -88,6 +93,46 @@ public class ProyectoOntDTO implements Serializable {
 
     public void setUri(String uri) {
         this.uri = uri;
+    }
+
+    public String getAutor() {
+        return autor;
+    }
+
+    public void setAutor(String autor) {
+        this.autor = autor;
+    }
+
+    public String getDocente() {
+        return docente;
+    }
+
+    public void setDocente(String docente) {
+        this.docente = docente;
+    }
+
+    public String getLineaInvestigacion() {
+        return lineaInvestigacion;
+    }
+
+    public void setLineaInvestigacion(String lineaInvestigacion) {
+        this.lineaInvestigacion = lineaInvestigacion;
+    }
+
+    public String getCarrera() {
+        return carrera;
+    }
+
+    public void setCarrera(String carrera) {
+        this.carrera = carrera;
+    }
+
+    public String getNivelAcademico() {
+        return nivelAcademico;
+    }
+
+    public void setNivelAcademico(String nivelAcademico) {
+        this.nivelAcademico = nivelAcademico;
     }
 
 }

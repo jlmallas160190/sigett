@@ -9,7 +9,6 @@ import com.jlmallas.comun.dao.ConfiguracionDao;
 import com.jlmallas.comun.entity.Configuracion;
 import com.jlmallas.comun.enumeration.ConfiguracionEnum;
 import com.jlmallas.comun.enumeration.ServidorCorreoEnum;
-import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
 import edu.unl.sigett.webSemantica.service.implement.AreaAcademicaOntServiceImplement;
 import edu.unl.sigett.webSemantica.service.implement.AutorOntServiceImplement;
 import edu.unl.sigett.webSemantica.service.implement.AutorProyectoOntServiceImplement;
@@ -37,7 +36,6 @@ import java.util.Properties;
 import java.util.StringTokenizer;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
-import javax.inject.Inject;
 import org.jlmallas.email.MailServiceImplement;
 import org.jlmallas.email.MailDTO;
 import org.jlmallas.email.MailService;
@@ -80,6 +78,11 @@ public class CabeceraController implements Serializable {
         this.fijarParametrosWebSemantica();
         this.fijarParametrosMail();
         this.fijarConfiguraciones();
+    }
+
+    public void preRenderViewPortada() {
+        inicarOntologias();
+        this.fijarParametrosWebSemantica();
     }
 
     /**
