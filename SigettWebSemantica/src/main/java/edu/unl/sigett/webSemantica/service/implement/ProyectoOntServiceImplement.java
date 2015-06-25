@@ -99,28 +99,28 @@ public class ProyectoOntServiceImplement implements ProyectoOntService {
                     + "?nivelAcademico dc:title ?nombreNivel.\n"
                     + "?ofertaAcademica sigett:hasPeriodoAcademico ?periodoAcademico.\n"
                     + "?periodoAcademico sigett:fechaInicio ?fechaInicioPeriodo.");
-            sparql.append("FILTER(regex(?tema,'" + "^").append(proyectoOntDTO.getTema()).append("','i')");
+            sparql.append("FILTER(regex(?tema,'" + "").append(proyectoOntDTO.getTema()).append("','i')");
 
             if (proyectoOntDTO.getAutor() != null) {
-                sparql.append("|| regex(?datosAutor,'^").append(proyectoOntDTO.getAutor()).append("','i')");
+                sparql.append("|| regex(?datosAutor,'").append(proyectoOntDTO.getAutor()).append("','i')");
             }
             if (proyectoOntDTO.getCarrera() != null) {
-                sparql.append("||regex(?nombreCarrera,'^").append(proyectoOntDTO.getCarrera()).append("','i')");
+                sparql.append("||regex(?nombreCarrera,'").append(proyectoOntDTO.getCarrera()).append("','i')");
             }
             if (proyectoOntDTO.getTipo() != null) {
-                sparql.append("|| regex(?tipo,'^").append(proyectoOntDTO.getTipo()).append("','i')");
+                sparql.append("|| regex(?tipo,'").append(proyectoOntDTO.getTipo()).append("','i')");
             }
             if (proyectoOntDTO.getEstado() != null) {
-                sparql.append("|| regex(?estadoProyecto,'^").append(proyectoOntDTO.getEstado()).append("','i')");
+                sparql.append("|| regex(?estadoProyecto,'").append(proyectoOntDTO.getEstado()).append("','i')");
             }
             if (proyectoOntDTO.getDocente() != null) {
-                sparql.append("|| regex(?datosDocente,'^").append(proyectoOntDTO.getDocente()).append("','i')");
+                sparql.append("|| regex(?datosDocente,'").append(proyectoOntDTO.getDocente()).append("','i')");
             }
             if (proyectoOntDTO.getLineaInvestigacion() != null) {
-                sparql.append("|| regex(?nombreLineaInvestigacion,'^").append(proyectoOntDTO.getLineaInvestigacion()).append("','i')");
+                sparql.append("|| regex(?nombreLineaInvestigacion,'").append(proyectoOntDTO.getLineaInvestigacion()).append("','i')");
             }
             if (proyectoOntDTO.getNivelAcademico() != null) {
-                sparql.append("|| regex(?nivelAcademico,'^").append(proyectoOntDTO.getNivelAcademico()).append("','i')");
+                sparql.append("|| regex(?nivelAcademico,'").append(proyectoOntDTO.getNivelAcademico()).append("','i')");
             }
             sparql.append(")");
             sparql.append("}");
