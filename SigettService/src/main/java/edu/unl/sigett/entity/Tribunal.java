@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package edu.unl.sigett.entity;
 
 import java.io.Serializable;
@@ -33,12 +32,8 @@ import javax.xml.bind.annotation.XmlTransient;
 @Entity
 @Table(name = "tribunal")
 @XmlRootElement
-@NamedQueries({
-    @NamedQuery(name = "Tribunal.findAll", query = "SELECT t FROM Tribunal t"),
-    @NamedQuery(name = "Tribunal.findById", query = "SELECT t FROM Tribunal t WHERE t.id = :id"),
-    @NamedQuery(name = "Tribunal.findByDescripcion", query = "SELECT t FROM Tribunal t WHERE t.descripcion = :descripcion"),
-    @NamedQuery(name = "Tribunal.findByEsActivo", query = "SELECT t FROM Tribunal t WHERE t.esActivo = :esActivo")})
 public class Tribunal implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -53,12 +48,12 @@ public class Tribunal implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "es_activo")
-    private boolean esActivo;
+    private Boolean esActivo;
     @JoinColumn(name = "proyecto_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Proyecto proyectoId;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "tribunalId")
-    private List<Miembro> miembroList;
+    private List<MiembroTribunal> miembroList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "tribunalId")
     private List<EvaluacionTribunal> evaluacionTribunalList;
 
@@ -69,7 +64,7 @@ public class Tribunal implements Serializable {
         this.id = id;
     }
 
-    public Tribunal(Long id, String descripcion, boolean esActivo) {
+    public Tribunal(Long id, String descripcion, Boolean esActivo) {
         this.id = id;
         this.descripcion = descripcion;
         this.esActivo = esActivo;
@@ -91,11 +86,11 @@ public class Tribunal implements Serializable {
         this.descripcion = descripcion;
     }
 
-    public boolean getEsActivo() {
+    public Boolean getEsActivo() {
         return esActivo;
     }
 
-    public void setEsActivo(boolean esActivo) {
+    public void setEsActivo(Boolean esActivo) {
         this.esActivo = esActivo;
     }
 
@@ -108,11 +103,11 @@ public class Tribunal implements Serializable {
     }
 
     @XmlTransient
-    public List<Miembro> getMiembroList() {
+    public List<MiembroTribunal> getMiembroList() {
         return miembroList;
     }
 
-    public void setMiembroList(List<Miembro> miembroList) {
+    public void setMiembroList(List<MiembroTribunal> miembroList) {
         this.miembroList = miembroList;
     }
 
@@ -139,15 +134,12 @@ public class Tribunal implements Serializable {
             return false;
         }
         Tribunal other = (Tribunal) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
+        return (this.id != null || other.id == null) && (this.id == null || this.id.equals(other.id));
     }
 
     @Override
     public String toString() {
         return "edu.unl.sigett.entity.Tribunal[ id=" + id + " ]";
     }
-    
+
 }

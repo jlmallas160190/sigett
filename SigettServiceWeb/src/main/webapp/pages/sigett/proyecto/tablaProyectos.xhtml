@@ -1,0 +1,78 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+        <p:dataTable id="tblProyectos" value="#{sessionProyecto.proyectos}" var="item" rows="20" paginator="true" rowExpandMode="single"
+                     filteredValue="#{sessionProyecto.filterProyectos}" widgetVar="tblProyectosFilter"
+                     draggableColumns="true" rowsPerPageTemplate="5,10,15,20,25,30,35,40,45,50" emptyMessage="#{msg['lbl.table.empty']}" 
+                     rowIndexVar="rowIx" rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'even-row' : 'odd-row'}" 
+                     rowKey="#{item}" selectionMode="single">
+            <p:column width="3%">
+                <h:outputText value="#{rowIx+1}" />
+            </p:column>
+            <p:column width="12%" sortBy="#{item.fechaCreated}">
+                <f:facet name="header">
+                    <h:outputText value="#{msg['lbl.creacion']}"/>
+                </f:facet>
+                <h:outputText value="#{item.fechaCreated}">
+                    <f:convertDateTime pattern="EEEEE dd MMMMM yyyy HH:mm:ss"/>
+                </h:outputText>
+            </p:column>
+            <p:column  width="30%" 
+                       filterBy="#{item.temaActual}"
+                       sortBy="#{item.temaActual}" filterMatchMode="contains">
+                <f:facet name="header">
+                    <h:outputText value="#{msg['lbl.tema']}"/>
+                </f:facet>
+                <p:commandLink action="#{proyectoController.editarProyecto(item)}" value="#{item.temaActual}"/>
+            </p:column>
+            <p:column width="12%" filterBy="#{item.autores}" sortBy="#{item.autores}" filterMatchMode="contains">
+                <f:facet name="header">
+                    <h:outputText value="#{msg['lbl.autores']}"/>
+                </f:facet>
+                <h:outputText value="#{item.autores}"/>
+            </p:column>
+            <p:column width="17%" filterBy="#{item.nombreOferta}"  filterMatchMode="in">
+                <f:facet name="filter">
+                    <p:selectCheckboxMenu label="#{msg['lbl.periodosAcademicos']}"  onchange="PF('tblProyectosFilter').filter()" >
+                        <f:selectItems  value="#{sessionProyecto.ofertaAcademicas}" />
+                        <p:ajax onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()"/>
+                    </p:selectCheckboxMenu>
+                </f:facet>
+                <h:outputText value="#{item.nombreOferta}"/>
+            </p:column>
+            <p:column width="12%" filterBy="#{item.tipo}" filterMatchMode="in" >
+                <f:facet name="filter" >
+                    <p:selectCheckboxMenu label="#{msg['lbl.tipo']}"  onchange="PF('tblProyectosFilter').filter()" >
+                        <f:selectItems var="tipo" itemLabel="#{tipo.nombre}" itemValue="#{tipo.nombre}" value="#{sessionProyecto.tipos}"/>
+                        <p:ajax event="change" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()"/>
+                    </p:selectCheckboxMenu>
+                </f:facet>
+                <h:outputText value="#{item.tipo}"/>
+            </p:column>
+            <p:column width="12%" filterBy="#{item.catalogo}" filterMatchMode="in">
+                <f:facet name="filter">
+                    <p:selectCheckboxMenu label="#{msg['lbl.categoria']}"  onchange="PF('tblProyectosFilter').filter()"  scrollHeight="150">
+                        <f:selectItems var="cat" itemLabel="#{cat.nombre}" itemValue="#{cat.nombre}" value="#{sessionProyecto.categorias}" />
+                        <p:ajax event="change" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()"/>
+                    </p:selectCheckboxMenu>
+                </f:facet>
+                <h:outputText value="#{item.catalogo}"/>
+            </p:column>
+            <p:column width="12%" filterBy="#{item.estado}" filterMatchMode="in">
+                <f:facet name="filter">
+                    <p:selectCheckboxMenu label="#{msg['lbl.estado']}" onchange="PF('tblProyectosFilter').filter()">
+                        <f:selectItems var="estado" itemLabel="#{estado.nombre}" itemValue="#{estado.nombre}" value="#{sessionProyecto.estados}"/>
+                        <p:ajax event="change" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()"/>
+                    </p:selectCheckboxMenu>
+                </f:facet>
+                <h:outputText value="#{item.estado}"/>
+            </p:column>
+        </p:dataTable>
+    </body>
+
+</html>

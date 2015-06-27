@@ -17,8 +17,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -31,9 +29,6 @@ import javax.xml.bind.annotation.XmlTransient;
 @Entity
 @Table(name = "parametro_catalogo_evaluacion")
 @XmlRootElement
-@NamedQueries({
-    @NamedQuery(name = "ParametroCatalogoEvaluacion.findAll", query = "SELECT p FROM ParametroCatalogoEvaluacion p"),
-    @NamedQuery(name = "ParametroCatalogoEvaluacion.findById", query = "SELECT p FROM ParametroCatalogoEvaluacion p WHERE p.id = :id")})
 public class ParametroCatalogoEvaluacion implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -46,9 +41,8 @@ public class ParametroCatalogoEvaluacion implements Serializable {
     @JoinColumn(name = "parametro_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Parametro parametroId;
-    @JoinColumn(name = "catalogo_evaluacion_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private CatalogoEvaluacion catalogoEvaluacionId;
+    @Column(name = "catalogo_evaluacion_id")
+    private Long catalogoEvaluacionId;
 
     public ParametroCatalogoEvaluacion() {
     }
@@ -82,11 +76,11 @@ public class ParametroCatalogoEvaluacion implements Serializable {
         this.parametroId = parametroId;
     }
 
-    public CatalogoEvaluacion getCatalogoEvaluacionId() {
+    public Long getCatalogoEvaluacionId() {
         return catalogoEvaluacionId;
     }
 
-    public void setCatalogoEvaluacionId(CatalogoEvaluacion catalogoEvaluacionId) {
+    public void setCatalogoEvaluacionId(Long catalogoEvaluacionId) {
         this.catalogoEvaluacionId = catalogoEvaluacionId;
     }
 
@@ -104,10 +98,7 @@ public class ParametroCatalogoEvaluacion implements Serializable {
             return false;
         }
         ParametroCatalogoEvaluacion other = (ParametroCatalogoEvaluacion) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
+        return (this.id != null || other.id == null) && (this.id == null || this.id.equals(other.id));
     }
 
     @Override

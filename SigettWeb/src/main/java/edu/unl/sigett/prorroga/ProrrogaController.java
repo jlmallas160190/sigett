@@ -258,7 +258,7 @@ public class ProrrogaController implements Serializable {
             List<DocumentoCarrera> documentoCarreras = documentoCarreraService.buscar(new DocumentoCarrera(
                     null, documentoBuscar != null ? documentoBuscar.getId() : null, Boolean.TRUE, null, prorroga.getId()));
             if (documentoCarreras == null) {
-                generarOficio(prorroga);
+                generarOficio();
                 return;
             }
             DocumentoCarrera documentoCarrera = !documentoCarreras.isEmpty() ? documentoCarreras.get(0) : null;
@@ -270,7 +270,7 @@ public class ProrrogaController implements Serializable {
                 sessionProrroga.setRenderedMediaOficio(Boolean.TRUE);
                 return;
             }
-            generarOficio(prorroga);
+            generarOficio();
         } catch (Exception e) {
             LOG.info(e.getMessage());
         }
@@ -279,9 +279,8 @@ public class ProrrogaController implements Serializable {
     /**
      * GENERA OFICIO DE PROORROGA
      *
-     * @param docenteProyectoDTO
      */
-    private void generarOficio(final Prorroga prorroga) {
+    public void generarOficio() {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         HttpServletRequest request = (HttpServletRequest) facesContext.getExternalContext().getRequest();
         ReporteController reporteController = new ReporteController();
@@ -323,7 +322,7 @@ public class ProrrogaController implements Serializable {
                 CatalogoDocumentoCarreraEnum.PRORROGA.getTipo()).getId(), Double.parseDouble(resultado.length + ""), fechaActual.getTime(), resultado, null, "pdf");
         documentoService.guardar(documento);
         documentoCarreraDM.setDocumentoCarreraDTO(new DocumentoCarreraDTO(new DocumentoCarrera(
-                numeracionNext + "", documento.getId(), Boolean.TRUE, carrera.getId(), prorroga.getId()), documento, carrera));
+                numeracionNext + "", documento.getId(), Boolean.TRUE, carrera.getId(), sessionProrroga.getProrroga().getId()), documento, carrera));
         documentoCarreraService.guardar(documentoCarreraDM.getDocumentoCarreraDTO().getDocumentoCarrera());
         sessionProrroga.setRenderedMediaOficio(Boolean.TRUE);
         cabeceraController.getUtilService().generaDocumento(new File(ruta), documento.getContents());
@@ -432,7 +431,7 @@ public class ProrrogaController implements Serializable {
                 CatalogoDocumentoCarreraEnum.PRORROGAAUTOR.getTipo()).getId(), Double.parseDouble(resultado.length + ""), fechaActual.getTime(), resultado, null, "pdf");
         documentoService.guardar(documento);
         documentoCarreraDM.setDocumentoCarreraDTO(new DocumentoCarreraDTO(new DocumentoCarrera(
-                numeracionNext + "", documento.getId(), Boolean.TRUE, carrera.getId(),sessionProrroga.getProrroga().getId()), documento, carrera));
+                numeracionNext + "", documento.getId(), Boolean.TRUE, carrera.getId(), sessionProrroga.getProrroga().getId()), documento, carrera));
         documentoCarreraService.guardar(documentoCarreraDM.getDocumentoCarreraDTO().getDocumentoCarrera());
         sessionProrroga.setRenderedMediaOficioInf(Boolean.TRUE);
         cabeceraController.getUtilService().generaDocumento(new File(ruta), documento.getContents());

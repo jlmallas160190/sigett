@@ -28,11 +28,10 @@ import java.util.List;
 @SessionScoped
 public class SessionProyecto implements Serializable {
 
-    private ProyectoOntDTO proyectoOntDTOSeleccionado;
     private Proyecto proyectoSeleccionado;
     private Carrera carreraSeleccionada;
+    private Proyecto proyectoSeleccionadoComplete;
 
-    private List<ProyectoOntDTO> proyectosOntology;
     private List<Proyecto> proyectos;
     private List<Proyecto> filterProyectos;
     private List<Carrera> filterCarreras;
@@ -66,16 +65,15 @@ public class SessionProyecto implements Serializable {
         this.filterCarreras = new ArrayList<>();
         this.proyectos = new ArrayList<>();
         this.filterProyectos = new ArrayList<>();
-        this.proyectosOntology = new ArrayList<>();
         this.ofertaAcademicas = new ArrayList<>();
     }
 
-    public ProyectoOntDTO getProyectoOntDTOSeleccionado() {
-        return proyectoOntDTOSeleccionado;
+    public Proyecto getProyectoSeleccionadoComplete() {
+        return proyectoSeleccionadoComplete;
     }
 
-    public void setProyectoOntDTOSeleccionado(ProyectoOntDTO proyectoOntDTOSeleccionado) {
-        this.proyectoOntDTOSeleccionado = proyectoOntDTOSeleccionado;
+    public void setProyectoSeleccionadoComplete(Proyecto proyectoSeleccionadoComplete) {
+        this.proyectoSeleccionadoComplete = proyectoSeleccionadoComplete;
     }
 
     public Proyecto getProyectoSeleccionado() {
@@ -84,14 +82,6 @@ public class SessionProyecto implements Serializable {
 
     public void setProyectoSeleccionado(Proyecto proyectoSeleccionado) {
         this.proyectoSeleccionado = proyectoSeleccionado;
-    }
-
-    public List<ProyectoOntDTO> getProyectosOntology() {
-        return proyectosOntology;
-    }
-
-    public void setProyectosOntology(List<ProyectoOntDTO> proyectosOntology) {
-        this.proyectosOntology = proyectosOntology;
     }
 
     public String getFiltroBuscadorSemantico() {

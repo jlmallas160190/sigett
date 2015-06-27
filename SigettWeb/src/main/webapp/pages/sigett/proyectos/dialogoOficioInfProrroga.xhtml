@@ -17,7 +17,7 @@
                     <h:panelGrid styleClass="pnl-botones" columns="2">
                         <p:commandButton action="#{prorrogaController.generarOficioInf()}" update=":contenido:pnlOficioInfProrroga"
                                          onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()"
-                                         icon="ui-icon-newwin" value="#{btn['cancelar']}"/> 
+                                         icon="ui-icon-print" value="#{btn.generar_oficio}"/> 
                         <p:commandButton action="#{prorrogaController.cancelarImprimirOficioInf()}" update=":contenido:pnlOficioInfProrroga"
                                          onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide(),PF('dlgOficioInfProrroga').hide()"
                                          icon="ui-icon-circle-arrow-w" value="#{btn['cancelar']}"/> 

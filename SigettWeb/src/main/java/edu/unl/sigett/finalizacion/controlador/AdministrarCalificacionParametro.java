@@ -7,7 +7,6 @@ package edu.unl.sigett.finalizacion.controlador;
 
 import edu.unl.sigett.entity.CalificacionMiembro;
 import edu.unl.sigett.entity.CalificacionParametro;
-import edu.unl.sigett.entity.CatalogoEvaluacion;
 import edu.unl.sigett.entity.EvaluacionTribunal;
 import edu.unl.sigett.entity.ParametroCatalogoEvaluacion;
 import edu.unl.sigett.entity.RangoEquivalencia;
@@ -59,25 +58,25 @@ public class AdministrarCalificacionParametro implements Serializable {
     public AdministrarCalificacionParametro() {
     }
 
-    public void crear(CatalogoEvaluacion catalogoEvaluacion, CalificacionMiembro calificacionMiembro) {
+    public void crear() {
         try {
-            List<ParametroCatalogoEvaluacion> parametroCatalogoEvaluacions = new ArrayList<>();
-            parametroCatalogoEvaluacions = parametroCatalogoEvaluacionFacadeLocal.buscarPorCatalogoEvaluacion(catalogoEvaluacion.getId());
-            if (parametroCatalogoEvaluacions != null) {
-                for (ParametroCatalogoEvaluacion parametroCatalogoEvaluacion : parametroCatalogoEvaluacions) {
-                    CalificacionParametro cp = new CalificacionParametro();
-                    cp = calificacionParametroFacadeLocal.buscarPorCalificacionMiembroParametro(calificacionMiembro.getId(), parametroCatalogoEvaluacion.getId());
-                    if (parametroCatalogoEvaluacion.getParametroId().getEsActivo()) {
-                        if (cp == null) {
-                            cp = new CalificacionParametro();
-                            cp.setCalificacionMiembroId(calificacionMiembro);
-                            cp.setNota(0.0);
-                            cp.setParametroCatEvId(parametroCatalogoEvaluacion);
-                            calificacionParametroFacadeLocal.create(cp);
-                        }
-                    }
-                }
-            }
+//            List<ParametroCatalogoEvaluacion> parametroCatalogoEvaluacions = new ArrayList<>();
+//            parametroCatalogoEvaluacions = parametroCatalogoEvaluacionFacadeLocal.buscarPorCatalogoEvaluacion(catalogoEvaluacion.getId());
+//            if (parametroCatalogoEvaluacions != null) {
+//                for (ParametroCatalogoEvaluacion parametroCatalogoEvaluacion : parametroCatalogoEvaluacions) {
+//                    CalificacionParametro cp = new CalificacionParametro();
+//                    cp = calificacionParametroFacadeLocal.buscarPorCalificacionMiembroParametro(calificacionMiembro.getId(), parametroCatalogoEvaluacion.getId());
+//                    if (parametroCatalogoEvaluacion.getParametroId().getEsActivo()) {
+//                        if (cp == null) {
+//                            cp = new CalificacionParametro();
+//                            cp.setCalificacionMiembroId(calificacionMiembro);
+////                            cp.setNota(0.0);
+//                            cp.setParametroCatEvId(parametroCatalogoEvaluacion);
+//                            calificacionParametroFacadeLocal.create(cp);
+//                        }
+//                    }
+//                }
+//            }
         } catch (Exception e) {
         }
     }

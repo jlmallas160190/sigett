@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+    <body>
+        <p:dataGrid  value="#{sessionProyecto.autoresProyectoDTO}" var="item" rows="20" paginator="true" paginatorPosition="bottom"
+                    emptyMessage="#{msg['lbl.table.empty']}">
+            <p:panel>
+                <h:panelGrid styleClass="panelgrid" rowClasses="rowpanelgrid" columnClasses="col-sm-2,col-sm-10" columns="2" >
+                    <h:outputLabel value="#{msg['lbl.nombres']}:"/>
+                    <h:outputLabel value="#{item.persona.nombres}"/>
+                    <h:outputLabel value="#{msg['lbl.apellidos']}:"/>
+                    <h:outputLabel value="#{item.persona.apellidos}"/>
+                    <h:outputLabel value="#{msg['lbl.email']}:"/>
+                    <h:outputLabel value="#{item.persona.email}"/>
+                    <h:outputLabel value="#{msg['lbl.estado']}:"/>
+                    <h:outputLabel value="#{item.estudianteCarrera.estado}"/>
+                </h:panelGrid>
+            </p:panel>
+        </p:dataGrid>
+    </body>
+
+</html>

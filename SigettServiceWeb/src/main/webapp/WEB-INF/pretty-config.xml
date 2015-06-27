@@ -5,6 +5,6 @@
 
     <url-mapping id="portada">
         <pattern value="/portada" />
-        <view-id value="faces/portada.xhtml" />
+        <view-id value="faces/pages/portada.xhtml" />
     </url-mapping>  
 </pretty-config>

@@ -9,10 +9,15 @@
         <p:dialog id="dlgOficioProrroga" widgetVar="dlgOficioProrroga" header="#{msg['lbl.oficio']}" styleClass="modal-md"  modal="true" 
                   closable="false" >
             <p:panel  id="pnlOficioProrroga">
+                <f:facet name="header">
+                    <ui:include src="./../documentoCarrera/upload.xhtml"/>  
+                </f:facet>
                 <p:media rendered="#{sessionProrroga.renderedMediaOficio}" value="/AppServlet?entity=documentoCarrera" player="pdf" width="100%" height="400"/>
                 <f:facet name="footer">
                     <h:panelGrid styleClass="pnl-botones" columns="5">
-                        <ui:include src="./../documentoCarrera/upload.xhtml"/>
+                        <p:commandButton action="#{prorrogaController.generarOficio()}" update=":contenido:pnlOficioProrroga"
+                                         onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()"
+                                         icon="ui-icon-print" value="#{btn.generar_oficio}"/> 
                         <p:commandButton action="#{prorrogaController.cancelarImprimirOficio()}" update=":contenido:pnlOficioProrroga"
                                          onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide(),PF('dlgOficioProrroga').hide()"
                                          icon="ui-icon-circle-arrow-w" value="#{btn['cancelar']}"/> 

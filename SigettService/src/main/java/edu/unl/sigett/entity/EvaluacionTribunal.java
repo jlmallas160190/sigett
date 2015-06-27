@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package edu.unl.sigett.entity;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
@@ -18,8 +18,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -36,18 +34,8 @@ import javax.xml.bind.annotation.XmlTransient;
 @Entity
 @Table(name = "evaluacion_tribunal")
 @XmlRootElement
-@NamedQueries({
-    @NamedQuery(name = "EvaluacionTribunal.findAll", query = "SELECT e FROM EvaluacionTribunal e"),
-    @NamedQuery(name = "EvaluacionTribunal.findById", query = "SELECT e FROM EvaluacionTribunal e WHERE e.id = :id"),
-    @NamedQuery(name = "EvaluacionTribunal.findByNota", query = "SELECT e FROM EvaluacionTribunal e WHERE e.nota = :nota"),
-    @NamedQuery(name = "EvaluacionTribunal.findByObservacion", query = "SELECT e FROM EvaluacionTribunal e WHERE e.observacion = :observacion"),
-    @NamedQuery(name = "EvaluacionTribunal.findBySugerencia", query = "SELECT e FROM EvaluacionTribunal e WHERE e.sugerencia = :sugerencia"),
-    @NamedQuery(name = "EvaluacionTribunal.findByLugar", query = "SELECT e FROM EvaluacionTribunal e WHERE e.lugar = :lugar"),
-    @NamedQuery(name = "EvaluacionTribunal.findByFechaInicio", query = "SELECT e FROM EvaluacionTribunal e WHERE e.fechaInicio = :fechaInicio"),
-    @NamedQuery(name = "EvaluacionTribunal.findByFechaFin", query = "SELECT e FROM EvaluacionTribunal e WHERE e.fechaFin = :fechaFin"),
-    @NamedQuery(name = "EvaluacionTribunal.findByEsAptoCalificar", query = "SELECT e FROM EvaluacionTribunal e WHERE e.esAptoCalificar = :esAptoCalificar"),
-    @NamedQuery(name = "EvaluacionTribunal.findByFechaPlazo", query = "SELECT e FROM EvaluacionTribunal e WHERE e.fechaPlazo = :fechaPlazo")})
 public class EvaluacionTribunal implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -57,7 +45,7 @@ public class EvaluacionTribunal implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "nota")
-    private double nota;
+    private BigDecimal nota;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 1000)
@@ -86,7 +74,7 @@ public class EvaluacionTribunal implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "es_apto_calificar")
-    private boolean esAptoCalificar;
+    private Boolean esAptoCalificar;
     @Basic(optional = false)
     @NotNull
     @Column(name = "fecha_plazo")
@@ -105,9 +93,8 @@ public class EvaluacionTribunal implements Serializable {
     @JoinColumn(name = "rango_equivalencia_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private RangoEquivalencia rangoEquivalenciaId;
-    @JoinColumn(name = "catalogo_evaluacion_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private CatalogoEvaluacion catalogoEvaluacionId;
+    @Column(name = "catalogo_evaluacion_id")
+    private Long catalogoEvaluacionId;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "evaluacionTribunalId")
     private List<Acta> actaList;
 
@@ -118,7 +105,8 @@ public class EvaluacionTribunal implements Serializable {
         this.id = id;
     }
 
-    public EvaluacionTribunal(Long id, double nota, String observacion, String sugerencia, String lugar, Date fechaInicio, Date fechaFin, boolean esAptoCalificar, Date fechaPlazo) {
+    public EvaluacionTribunal(Long id, BigDecimal nota, String observacion, String sugerencia, String lugar, Date fechaInicio, Date fechaFin,
+            Boolean esAptoCalificar, Date fechaPlazo, Tribunal tribunalId, RangoNota rangoNotaId, Long catalogoEvaluacionId) {
         this.id = id;
         this.nota = nota;
         this.observacion = observacion;
@@ -128,6 +116,9 @@ public class EvaluacionTribunal implements Serializable {
         this.fechaFin = fechaFin;
         this.esAptoCalificar = esAptoCalificar;
         this.fechaPlazo = fechaPlazo;
+        this.tribunalId = tribunalId;
+        this.rangoNotaId = rangoNotaId;
+        this.catalogoEvaluacionId = catalogoEvaluacionId;
     }
 
     public Long getId() {
@@ -138,11 +129,11 @@ public class EvaluacionTribunal implements Serializable {
         this.id = id;
     }
 
-    public double getNota() {
+    public BigDecimal getNota() {
         return nota;
     }
 
-    public void setNota(double nota) {
+    public void setNota(BigDecimal nota) {
         this.nota = nota;
     }
 
@@ -186,11 +177,11 @@ public class EvaluacionTribunal implements Serializable {
         this.fechaFin = fechaFin;
     }
 
-    public boolean getEsAptoCalificar() {
+    public Boolean getEsAptoCalificar() {
         return esAptoCalificar;
     }
 
-    public void setEsAptoCalificar(boolean esAptoCalificar) {
+    public void setEsAptoCalificar(Boolean esAptoCalificar) {
         this.esAptoCalificar = esAptoCalificar;
     }
 
@@ -244,11 +235,11 @@ public class EvaluacionTribunal implements Serializable {
         this.rangoEquivalenciaId = rangoEquivalenciaId;
     }
 
-    public CatalogoEvaluacion getCatalogoEvaluacionId() {
+    public Long getCatalogoEvaluacionId() {
         return catalogoEvaluacionId;
     }
 
-    public void setCatalogoEvaluacionId(CatalogoEvaluacion catalogoEvaluacionId) {
+    public void setCatalogoEvaluacionId(Long catalogoEvaluacionId) {
         this.catalogoEvaluacionId = catalogoEvaluacionId;
     }
 
@@ -275,15 +266,12 @@ public class EvaluacionTribunal implements Serializable {
             return false;
         }
         EvaluacionTribunal other = (EvaluacionTribunal) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
+        return (this.id != null || other.id == null) && (this.id == null || this.id.equals(other.id));
     }
 
     @Override
     public String toString() {
         return "edu.unl.sigett.entity.EvaluacionTribunal[ id=" + id + " ]";
     }
-    
+
 }

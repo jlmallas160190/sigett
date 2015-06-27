@@ -18,7 +18,6 @@
         <module>SigettDocenteWeb</module>
         <module>SigettSeguridadWeb</module>
         <module>SigettEstudianteWeb</module>
-    <module>SigettServiceWeb</module>
         <module>SigettServiceWeb</module>
     </modules>
 </project>

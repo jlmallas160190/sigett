@@ -3,8 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:p="http://primefaces.org/ui"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      xmlns:p="http://primefaces.org/ui">
 
     <body>
         <ui:composition template="./../../../template.xhtml">
@@ -13,22 +12,21 @@
             </ui:define>
 
             <ui:define name="top">
-                <ui:include src="./../../inicio/menu.xhtml"/>
+                <ui:include src="./../../portada/menu.xhtml"/>
             </ui:define>
 
-            <ui:define name="left">
-                <ui:include src="./../../inicio/menuIzquierdo.xhtml"/>
-            </ui:define>
             <ui:define name="content">
                 <p:messages id="msm" showDetail="true"/>
                 <p:tabView id="tabViewDatosDP">
-                    <p:tab id="pertinencias" title="#{msg['lbl.pertinencias']}">
-                        <p:panel>
-                            <ui:include src="tablaPertinencias.xhtml"/>
-                            <f:facet name="footer">
-                                <ui:include src="botonesTablaPertinencia.xhtml"/>
-                            </f:facet>
-                        </p:panel>
+                    <p:tab id="tabDatosInicio" title="#{msg['lbl.informacion']} #{msg['lbl.inicio']}" >
+                        <p:fieldset legend="#{msg['lbl.informacion']}" toggleable="true">
+                            <ui:include src="datosProyecto.xhtml"/>
+                        </p:fieldset>
+                        <br/>
+                        <br/>
+                        <p:fieldset legend="#{msg['lbl.lineasInvestigacion']}" toggleable="true">
+                            <ui:include src="dataGridLineasInvestigacion.xhtml"/>
+                        </p:fieldset>
                     </p:tab>
                     <p:tab title="#{msg['lbl.documentos']}">
                         <p:panel>
@@ -37,18 +35,16 @@
                     </p:tab>
                     <p:tab title="#{msg['lbl.autores']}">
                         <p:panel>
-                            <ui:include src="./../autorProyecto/tablaAutores.xhtml"/>
+                            <ui:include src="dataGridAutores.xhtml"/>
+                        </p:panel>
+                    </p:tab>
+                    <p:tab title="#{msg['lbl.directores']}">
+                        <p:panel>
+                            <ui:include src="dataGridDirectores.xhtml"/>
                         </p:panel>
                     </p:tab>
                 </p:tabView>
-                <ui:include src="./../pertinencias/dialogoEditarPertinencia.xhtml"/>
-                <ui:include src="dialogoInformePertinencia.xhtml"/>
-                <ui:include src="dialogoSubirInformePertinencia.xhtml"/>
                 <ui:include src="dialogoVerDocumentoProyecto.xhtml"/>
-                <f:metadata>
-                    <f:event type="preRenderView" listener="#{docenteProyectoController.preRenderViewEditar()}"/>
-                    <f:event type="preRenderView" listener="#{pertinenciaController.preRenderView()}"/>
-                </f:metadata>
             </ui:define>
         </ui:composition>
     </body>

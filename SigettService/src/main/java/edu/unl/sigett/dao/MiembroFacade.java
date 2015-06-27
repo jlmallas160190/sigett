@@ -5,7 +5,7 @@
  */
 package edu.unl.sigett.dao;
 
-import edu.unl.sigett.entity.Miembro;
+import edu.unl.sigett.entity.MiembroTribunal;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.Query;
@@ -15,14 +15,14 @@ import javax.persistence.Query;
  * @author JorgeLuis
  */
 @Stateless
-public class MiembroFacade extends AbstractDao<Miembro> implements MiembroFacadeLocal {
+public class MiembroFacade extends AbstractDao<MiembroTribunal> implements MiembroFacadeLocal {
 
     public MiembroFacade() {
-        super(Miembro.class);
+        super(MiembroTribunal.class);
     }
 
     @Override
-    public List<Miembro> buscarPorTribunal(Long tribunalId) {
+    public List<MiembroTribunal> buscarPorTribunal(Long tribunalId) {
         try {
             Query query = em.createQuery("SELECT m FROM Miembro m WHERE" + " (m.tribunalId.id=:id and m.esActivo=TRUE)");
             query.setParameter("id", tribunalId);
@@ -34,7 +34,7 @@ public class MiembroFacade extends AbstractDao<Miembro> implements MiembroFacade
     }
 
     @Override
-    public List<Miembro> buscarPorDocente(Long docenteId) {
+    public List<MiembroTribunal> buscarPorDocente(Long docenteId) {
         try {
             Query query = em.createQuery("SELECT m FROM Miembro m WHERE" + " (m.docenteId.id=:id and m.esActivo=TRUE) order by m.id DESC");
             query.setParameter("id", docenteId);

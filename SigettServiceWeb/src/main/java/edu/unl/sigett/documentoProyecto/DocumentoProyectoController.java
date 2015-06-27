@@ -46,10 +46,8 @@ public class DocumentoProyectoController implements Serializable {
     //<editor-fold defaultstate="collapsed" desc="CRUD">
     public void editar(DocumentoProyectoDTO documentoProyectoDTO) {
         try {
-            sessionDocumentoProyecto.setTamanioArchivo(cabeceraController.getConfiguracionGeneralUtil().getTamanioArchivo());
             sessionDocumentoProyecto.setDocumentoProyectoDTOSeleccionado(documentoProyectoDTO);
             sessionDocumentoProyecto.setRenderedCrud(Boolean.TRUE);
-            RequestContext.getCurrentInstance().execute("PF('dlgCrudDocumentoProyecto').show()");
         } catch (Exception e) {
             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_FATAL, e.getMessage(), "");
             FacesContext.getCurrentInstance().addMessage(null, message);
@@ -59,7 +57,6 @@ public class DocumentoProyectoController implements Serializable {
     public void cancelarEdicion() {
         sessionDocumentoProyecto.setRenderedCrud(Boolean.FALSE);
         sessionDocumentoProyecto.setDocumentoProyectoDTOSeleccionado(new DocumentoProyectoDTO());
-        RequestContext.getCurrentInstance().execute("PF('dlgCrudDocumentoProyecto').hide()");
     }
     //</editor-fold>
 }

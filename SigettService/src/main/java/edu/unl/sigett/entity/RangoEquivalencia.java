@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package edu.unl.sigett.entity;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -17,8 +17,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -32,12 +30,8 @@ import javax.xml.bind.annotation.XmlTransient;
 @Entity
 @Table(name = "rango_equivalencia")
 @XmlRootElement
-@NamedQueries({
-    @NamedQuery(name = "RangoEquivalencia.findAll", query = "SELECT r FROM RangoEquivalencia r"),
-    @NamedQuery(name = "RangoEquivalencia.findById", query = "SELECT r FROM RangoEquivalencia r WHERE r.id = :id"),
-    @NamedQuery(name = "RangoEquivalencia.findByNotaInicio", query = "SELECT r FROM RangoEquivalencia r WHERE r.notaInicio = :notaInicio"),
-    @NamedQuery(name = "RangoEquivalencia.findByNotaFin", query = "SELECT r FROM RangoEquivalencia r WHERE r.notaFin = :notaFin")})
 public class RangoEquivalencia implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,17 +41,16 @@ public class RangoEquivalencia implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "nota_inicio")
-    private double notaInicio;
+    private BigDecimal notaInicio;
     @Basic(optional = false)
     @NotNull
     @Column(name = "nota_fin")
-    private double notaFin;
+    private BigDecimal notaFin;
     @JoinColumn(name = "rango_nota_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private RangoNota rangoNotaId;
-    @JoinColumn(name = "equivalencia_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private Equivalencia equivalenciaId;
+    @Column(name = "equivalencia_id")
+    private Long equivalenciaId;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "rangoEquivalenciaId")
     private List<EvaluacionTribunal> evaluacionTribunalList;
 
@@ -68,10 +61,13 @@ public class RangoEquivalencia implements Serializable {
         this.id = id;
     }
 
-    public RangoEquivalencia(Long id, double notaInicio, double notaFin) {
+    public RangoEquivalencia(Long id, BigDecimal notaInicio, BigDecimal notaFin, RangoNota rangoNotaId, Long equivalenciaId, List<EvaluacionTribunal> evaluacionTribunalList) {
         this.id = id;
         this.notaInicio = notaInicio;
         this.notaFin = notaFin;
+        this.rangoNotaId = rangoNotaId;
+        this.equivalenciaId = equivalenciaId;
+        this.evaluacionTribunalList = evaluacionTribunalList;
     }
 
     public Long getId() {
@@ -82,19 +78,19 @@ public class RangoEquivalencia implements Serializable {
         this.id = id;
     }
 
-    public double getNotaInicio() {
+    public BigDecimal getNotaInicio() {
         return notaInicio;
     }
 
-    public void setNotaInicio(double notaInicio) {
+    public void setNotaInicio(BigDecimal notaInicio) {
         this.notaInicio = notaInicio;
     }
 
-    public double getNotaFin() {
+    public BigDecimal getNotaFin() {
         return notaFin;
     }
 
-    public void setNotaFin(double notaFin) {
+    public void setNotaFin(BigDecimal notaFin) {
         this.notaFin = notaFin;
     }
 
@@ -106,11 +102,11 @@ public class RangoEquivalencia implements Serializable {
         this.rangoNotaId = rangoNotaId;
     }
 
-    public Equivalencia getEquivalenciaId() {
+    public Long getEquivalenciaId() {
         return equivalenciaId;
     }
 
-    public void setEquivalenciaId(Equivalencia equivalenciaId) {
+    public void setEquivalenciaId(Long equivalenciaId) {
         this.equivalenciaId = equivalenciaId;
     }
 
@@ -137,15 +133,12 @@ public class RangoEquivalencia implements Serializable {
             return false;
         }
         RangoEquivalencia other = (RangoEquivalencia) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
+        return (this.id != null || other.id == null) && (this.id == null || this.id.equals(other.id));
     }
 
     @Override
     public String toString() {
         return "edu.unl.sigett.entity.RangoEquivalencia[ id=" + id + " ]";
     }
-    
+
 }

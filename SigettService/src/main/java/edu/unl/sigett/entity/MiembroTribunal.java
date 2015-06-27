@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package edu.unl.sigett.entity;
 
 import java.io.Serializable;
@@ -15,8 +14,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -26,14 +23,10 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author jorge-luis
  */
 @Entity
-@Table(name = "miembro")
+@Table(name = "miembro_tribunal")
 @XmlRootElement
-@NamedQueries({
-    @NamedQuery(name = "Miembro.findAll", query = "SELECT m FROM Miembro m"),
-    @NamedQuery(name = "Miembro.findById", query = "SELECT m FROM Miembro m WHERE m.id = :id"),
-    @NamedQuery(name = "Miembro.findByDocenteId", query = "SELECT m FROM Miembro m WHERE m.docenteId = :docenteId"),
-    @NamedQuery(name = "Miembro.findByEsActivo", query = "SELECT m FROM Miembro m WHERE m.esActivo = :esActivo")})
-public class Miembro implements Serializable {
+public class MiembroTribunal implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,25 +40,26 @@ public class Miembro implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "es_activo")
-    private boolean esActivo;
+    private Boolean esActivo;
     @JoinColumn(name = "tribunal_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Tribunal tribunalId;
-    @JoinColumn(name = "cargo_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private CargoMiembro cargoId;
+    @Column(name = "cargo_id")
+    private Long cargoId;
 
-    public Miembro() {
+    public MiembroTribunal() {
     }
 
-    public Miembro(Long id) {
+    public MiembroTribunal(Long id) {
         this.id = id;
     }
 
-    public Miembro(Long id, long docenteId, boolean esActivo) {
+    public MiembroTribunal(Long id, Long docenteId, Boolean esActivo, Tribunal tribunalId, Long cargoId) {
         this.id = id;
         this.docenteId = docenteId;
         this.esActivo = esActivo;
+        this.tribunalId = tribunalId;
+        this.cargoId = cargoId;
     }
 
     public Long getId() {
@@ -84,11 +78,11 @@ public class Miembro implements Serializable {
         this.docenteId = docenteId;
     }
 
-    public boolean getEsActivo() {
+    public Boolean getEsActivo() {
         return esActivo;
     }
 
-    public void setEsActivo(boolean esActivo) {
+    public void setEsActivo(Boolean esActivo) {
         this.esActivo = esActivo;
     }
 
@@ -100,11 +94,11 @@ public class Miembro implements Serializable {
         this.tribunalId = tribunalId;
     }
 
-    public CargoMiembro getCargoId() {
+    public Long getCargoId() {
         return cargoId;
     }
 
-    public void setCargoId(CargoMiembro cargoId) {
+    public void setCargoId(Long cargoId) {
         this.cargoId = cargoId;
     }
 
@@ -118,19 +112,16 @@ public class Miembro implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Miembro)) {
+        if (!(object instanceof MiembroTribunal)) {
             return false;
         }
-        Miembro other = (Miembro) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
+        MiembroTribunal other = (MiembroTribunal) object;
+        return (this.id != null || other.id == null) && (this.id == null || this.id.equals(other.id));
     }
 
     @Override
     public String toString() {
         return "edu.unl.sigett.entity.Miembro[ id=" + id + " ]";
     }
-    
+
 }

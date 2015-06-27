@@ -204,12 +204,12 @@
     <sigett:hasAutor rdf:resource="http://www.owl-ontologies.com/sigett/autor/207"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://www.owl-ontologies.com/sigett/proyecto/1">
-    <dc:type rdf:datatype="http://www.w3.org/2001/XMLSchema#string">TRABAJO DE TITULACION</dc:type>
-    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">INICIO</dc:description>
-    <dc:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">SISTEMA DE INFORMACIÓN INTEGRADO Y PUBLICACIÓN DE CONTENIDOS EDUCATOVOS PARA LA GESTIÓN Y DIFUSIÓN DE TRABAJOS DE TITULACIÓN</dc:title>
-    <sigett:id rdf:datatype="http://www.w3.org/2001/XMLSchema#long">1</sigett:id>
-    <rdf:type rdf:resource="http://www.owl-ontologies.com/sigett/proyecto"/>
     <dc:date rdf:datatype="http://www.w3.org/2001/XMLSchema#string">2015-06-24</dc:date>
+    <sigett:id rdf:datatype="http://www.w3.org/2001/XMLSchema#long">1</sigett:id>
+    <dc:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">SISTEMA DE INFORMACIÓN INTEGRADO Y PUBLICACIÓN DE CONTENIDOS EDUCATOVOS PARA LA GESTIÓN Y DIFUSIÓN DE TRABAJOS DE TITULACIÓN</dc:title>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">INICIO</dc:description>
+    <rdf:type rdf:resource="http://www.owl-ontologies.com/sigett/proyecto"/>
+    <dc:type rdf:datatype="http://www.w3.org/2001/XMLSchema#string">TRABAJO DE TITULACION</dc:type>
   </rdf:Description>
   <rdf:Description rdf:about="http://www.owl-ontologies.com/sigett/hasLineaInvestigacion">
     <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>

@@ -105,7 +105,7 @@ public class DocenteProyectoController implements Serializable {
             List<DocumentoCarrera> documentoCarreras = documentoCarreraService.buscar(new DocumentoCarrera(
                     null, documentoBuscar != null ? documentoBuscar.getId() : null, Boolean.TRUE, null, docenteProyectoDTO.getDocenteProyecto().getId()));
             if (documentoCarreras == null) {
-                generarOficioPertinencia(docenteProyectoDTO);
+                generarOficioPertinencia();
                 return;
             }
             DocumentoCarrera documentoCarrera = !documentoCarreras.isEmpty() ? documentoCarreras.get(0) : null;
@@ -117,7 +117,7 @@ public class DocenteProyectoController implements Serializable {
                 sessionDocenteProyecto.setRenderedMediaOficio(Boolean.TRUE);
                 return;
             }
-            generarOficioPertinencia(docenteProyectoDTO);
+            generarOficioPertinencia();
         } catch (Exception e) {
             LOG.info(e.getMessage());
         }
@@ -126,9 +126,8 @@ public class DocenteProyectoController implements Serializable {
     /**
      * GENERA OFICIO DE PERTINENCIA
      *
-     * @param docenteProyectoDTO
      */
-    private void generarOficioPertinencia(final DocenteProyectoDTO docenteProyectoDTO) {
+    public void generarOficioPertinencia() {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         HttpServletRequest request = (HttpServletRequest) facesContext.getExternalContext().getRequest();
         ReporteController reporteController = new ReporteController();
@@ -148,12 +147,12 @@ public class DocenteProyectoController implements Serializable {
                         PropertiesFileEnum.CONTENIDOREPORTE, "oficio") + " " + carrera.getSigla() + "-" + cabeceraController.getValueFromProperties(
                         PropertiesFileEnum.CONTENIDOREPORTE, "sigla_institucion"), carrera.getLugar(), cabeceraController.getUtilService().formatoFecha(
                         fechaActual.getTime(), "EEEEE dd MMMMM yyyy"), numeracion, cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "docente_carrera") + " "
-                + carrera.getNombre(), docenteProyectoDTO.getDocenteCarrera().getDocenteId().getTituloDocenteId().getTituloId().getAbreviacion()
-                + "<br/>" + docenteProyectoDTO.getPersona().getNombres() + " " + docenteProyectoDTO.getPersona().getApellidos(),
+                + carrera.getNombre(), sessionDocenteProyecto.getDocenteProyectoDTO().getDocenteCarrera().getDocenteId().getTituloDocenteId().getTituloId().getAbreviacion()
+                + "<br/>" + sessionDocenteProyecto.getDocenteProyectoDTO().getPersona().getNombres() + " " + sessionDocenteProyecto.getDocenteProyectoDTO().getPersona().getApellidos(),
                 cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "coordinador_carrera") + " " + carrera.getNombre(),
                 sessionProyecto.getCoordinadorPeriodoDTOCarreraSeleccionada().getDocente().getTituloDocenteId().getTituloId().getAbreviacion() + "<br/>"
                 + sessionProyecto.getCoordinadorPeriodoDTOCarreraSeleccionada().getPersona().getNombres() + " " + sessionProyecto.
-                getCoordinadorPeriodoDTOCarreraSeleccionada().getPersona().getApellidos(), generarCuerpoOficioPertinencia(docenteProyectoDTO,
+                getCoordinadorPeriodoDTOCarreraSeleccionada().getPersona().getApellidos(), generarCuerpoOficioPertinencia(sessionDocenteProyecto.getDocenteProyectoDTO(),
                         carrera), "", "", cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "despedida_pertinencia"), cabeceraController.getValueFromProperties(
                         PropertiesFileEnum.CONTENIDOREPORTE, "saludo"), "", sessionUsuario.getUsuario().getNombres().toUpperCase() + " "
                 + sessionUsuario.getUsuario().getApellidos().toUpperCase(), rutaReporte));
@@ -166,7 +165,7 @@ public class DocenteProyectoController implements Serializable {
                 CatalogoDocumentoCarreraEnum.PERTINENCIA.getTipo()).getId(), Double.parseDouble(resultado.length + ""), fechaActual.getTime(), resultado, null, "pdf");
         documentoService.guardar(documento);
         documentoCarreraDM.setDocumentoCarreraDTO(new DocumentoCarreraDTO(new DocumentoCarrera(
-                numeracionNext + "", documento.getId(), Boolean.TRUE, carrera.getId(), docenteProyectoDTO.getDocenteProyecto().getId()), documento, carrera));
+                numeracionNext + "", documento.getId(), Boolean.TRUE, carrera.getId(), sessionDocenteProyecto.getDocenteProyectoDTO().getDocenteProyecto().getId()), documento, carrera));
         documentoCarreraService.guardar(documentoCarreraDM.getDocumentoCarreraDTO().getDocumentoCarrera());
         sessionDocenteProyecto.setRenderedMediaOficio(Boolean.TRUE);
         cabeceraController.getUtilService().generaDocumento(new File(ruta), documento.getContents());
@@ -203,7 +202,7 @@ public class DocenteProyectoController implements Serializable {
             List<DocumentoCarrera> documentoCarreras = documentoCarreraService.buscar(new DocumentoCarrera(
                     null, documentoBuscar != null ? documentoBuscar.getId() : null, Boolean.TRUE, null, docenteProyectoDTO.getDocenteProyecto().getId()));
             if (documentoCarreras == null) {
-                generarFePertinencia(docenteProyectoDTO);
+                generarFePertinencia();
                 return;
             }
             DocumentoCarrera documentoCarrera = !documentoCarreras.isEmpty() ? documentoCarreras.get(0) : null;
@@ -215,17 +214,17 @@ public class DocenteProyectoController implements Serializable {
                 sessionDocenteProyecto.setRenderedMediaFePresentacion(Boolean.TRUE);
                 return;
             }
-            generarFePertinencia(docenteProyectoDTO);
+            generarFePertinencia();
         } catch (Exception e) {
             LOG.info(e.getMessage());
         }
     }
 
     /**
-     *
-     * @param docenteProyectoDTO
+     * Generar oficio de pertienencia de asigancion de director de tarbajo de
+     * titulacion.
      */
-    private void generarFePertinencia(final DocenteProyectoDTO docenteProyectoDTO) {
+    public void generarFePertinencia() {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         HttpServletRequest request = (HttpServletRequest) facesContext.getExternalContext().getRequest();
         ReporteController reporteController = new ReporteController();
@@ -234,20 +233,20 @@ public class DocenteProyectoController implements Serializable {
         String rutaReporte = request.getRealPath("/") + configuracionService.buscar(new Configuracion(ConfiguracionEnum.RUTAREPORTEFEPRESENTACION.getTipo())).get(0).getValor();
 
         byte[] resultado = reporteController.fePresentacion(new ReporteFePresentacion(generaReferenciaFePresentacion(fechaActual, carrera),
-                generaCuerpoFePresentacion(docenteProyectoDTO, fechaActual, carrera),
-                generaFirmasInvolucrados(docenteProyectoDTO, carrera), generaFinalFePresentacion(docenteProyectoDTO, fechaActual, carrera),
+                generaCuerpoFePresentacion(sessionDocenteProyecto.getDocenteProyectoDTO(), fechaActual, carrera),
+                generaFirmasInvolucrados(sessionDocenteProyecto.getDocenteProyectoDTO(), carrera), generaFinalFePresentacion(sessionDocenteProyecto.getDocenteProyectoDTO(), fechaActual, carrera),
                 sessionUsuario.getUsuario().getNombres().toUpperCase() + " " + sessionUsuario.getUsuario().getApellidos(), rutaReporte));
         if (resultado == null) {
             return;
         }
         String ruta = configuracionService.buscar(new Configuracion(ConfiguracionEnum.RUTAFEPRESENTACION.getTipo())).get(0).getValor() + "/fePertinencia"
-                + docenteProyectoDTO.getDocenteProyecto().getId() + ".pdf";
+                + sessionDocenteProyecto.getDocenteProyectoDTO().getDocenteProyecto().getId() + ".pdf";
         Documento documento = new Documento(null, ruta, itemService.buscarPorCatalogoCodigo(CatalogoEnum.FEPRESENTACION.getTipo(),
                 CatalogoDocumentoCarreraEnum.PERTINENCIA.getTipo()).getId(), Double.parseDouble(resultado.length + ""), fechaActual.getTime(),
                 resultado, null, "pdf");
         documentoService.guardar(documento);
         documentoCarreraDM.setDocumentoCarreraDTO(new DocumentoCarreraDTO(new DocumentoCarrera("", documento.getId(), Boolean.TRUE,
-                carrera.getId(), docenteProyectoDTO.getDocenteProyecto().getId()), documento, carrera));
+                carrera.getId(), sessionDocenteProyecto.getDocenteProyectoDTO().getDocenteProyecto().getId()), documento, carrera));
         documentoCarreraDM.getDocumentoCarreraDTO().getDocumentoCarrera().setNumeracion("");
         documentoCarreraService.guardar(documentoCarreraDM.getDocumentoCarreraDTO().getDocumentoCarrera());
         sessionDocenteProyecto.setRenderedMediaFePresentacion(Boolean.TRUE);
@@ -345,6 +344,7 @@ public class DocenteProyectoController implements Serializable {
         this.directorDM.getDirectoresDTO().clear();
         this.directorDM.getFilterDirectoresDTO().clear();
         sessionDocenteProyecto.setRenderedPnlDocentesDisponibles(Boolean.FALSE);
+        RequestContext.getCurrentInstance().execute("PF('dlgDocentesDisponibles').hide()");
     }
 
     /**
@@ -419,6 +419,7 @@ public class DocenteProyectoController implements Serializable {
             RequestContext.getCurrentInstance().execute("PF('dlgBuscarDocentesDisponibles').hide()");
             cabeceraController.getMessageView().message(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.docente") + " "
                     + bundle.getString("lbl.msm_agregar"), "");
+            cancelarDocentesDisponibles();
         } catch (Exception e) {
             LOG.info(e.getMessage());
         }

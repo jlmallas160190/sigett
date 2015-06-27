@@ -9,10 +9,15 @@
         <p:dialog id="dlgFePertinencia" widgetVar="dlgFePertinencia" header="#{lbl['fe_presentacion']}" styleClass="modal-md"  modal="true" 
                   closable="false" position="center" draggable="false" fitViewport="true">
             <p:panel id="pnlFePertinencia">
+                <f:facet name="header">
+                    <ui:include src="./../documentoCarrera/upload.xhtml"/> 
+                </f:facet>
                 <p:media rendered="#{sessionDocenteProyecto.renderedMediaFePresentacion}" value="/AppServlet?entity=documentoCarrera" player="pdf" width="100%" height="400"/>
                 <f:facet name="footer">
                     <h:panelGrid styleClass="pnl-botones" columns="2">
-                       <ui:include src="./../documentoCarrera/upload.xhtml"/>
+                        <p:commandButton action="#{docenteProyectoController.generarFePertinencia()}" update=":contenido:pnlFePertinencia"
+                                         onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()"
+                                         icon="ui-icon-print" value="#{btn.generar_fe_presentacion}"/>
                         <p:commandButton action="#{docenteProyectoController.cancelarImprimirFe()}" update=":contenido:pnlFePertinencia"
                                          onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide(),PF('dlgFePertinencia').hide()"
                                          icon="ui-icon-circle-arrow-w" value="#{btn['cancelar']}"/> 

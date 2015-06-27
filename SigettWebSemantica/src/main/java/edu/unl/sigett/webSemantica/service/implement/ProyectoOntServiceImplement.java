@@ -27,16 +27,16 @@ import java.util.logging.Logger;
  * @author jorge-luis
  */
 public class ProyectoOntServiceImplement implements ProyectoOntService {
-
+    
     private static final Logger LOG = Logger.getLogger(ProyectoOntServiceImplement.class.getName());
-
+    
     private CabeceraWebSemantica cabecera;
-
+    
     @Override
     public void read(CabeceraWebSemantica cabecera) {
         this.cabecera = cabecera;
     }
-
+    
     @Override
     public void write(ProyectoOntDTO proyectoDTO) {
         try {
@@ -53,7 +53,7 @@ public class ProyectoOntServiceImplement implements ProyectoOntService {
             proyectoDTO.getIndividual().setPropertyValue(DC.description, cabecera.getVocabulario().getModel().createTypedLiteral(proyectoDTO.getEstado()));
             proyectoDTO.getIndividual().setPropertyValue(DC.type, cabecera.getVocabulario().getModel().createTypedLiteral(proyectoDTO.getTipo()));
             proyectoDTO.getIndividual().setPropertyValue(DC.date, cabecera.getVocabulario().getModel().createTypedLiteral(proyectoDTO.getFechaCreacion()));
-
+            
             File file = new File(cabecera.getRuta());
             if (!file.exists()) {
                 file.createNewFile();
@@ -65,7 +65,7 @@ public class ProyectoOntServiceImplement implements ProyectoOntService {
             LOG.info(e.getMessage());
         }
     }
-
+    
     @Override
     public List<ProyectoOntDTO> buscar(final ProyectoOntDTO proyectoOntDTO) {
         List<ProyectoOntDTO> proyectos = new ArrayList<>();
@@ -74,7 +74,7 @@ public class ProyectoOntServiceImplement implements ProyectoOntService {
             sparql.append("PREFIX sigett:<http://www.owl-ontologies.com/sigett/>\n"
                     + "PREFIX foaf:<http://xmlns.com/foaf/0.1/>\n"
                     + "PREFIX dc:<http://purl.org/dc/elements/1.1/>\n"
-                    + "select ?id ?tema ?nombreCarrera ?estadoProyecto ?tipo \n"
+                    + "select ?id ?tema ?nombreCarrera ?estadoProyecto ?tipo ?carreraId ?ofertaAcademicaId \n"
                     + "where{\n");
             sparql.append("?proyecto sigett:id ?id.\n"
                     + "?proyecto dc:title ?tema.\n"
@@ -92,7 +92,9 @@ public class ProyectoOntServiceImplement implements ProyectoOntService {
                     + "?proyectoCarreraOferta sigett:hasProyecto ?proyecto.\n"
                     + "?proyectoCarreraOferta sigett:hasCarrera ?carrera.\n"
                     + "?proyectoCarreraOferta sigett:hasOfertaAcademica ?ofertaAcademica.\n"
+                    + "?ofertaAcademica sigett:id ?ofertaAcademicaId.\n"
                     + "?carrera dc:title ?nombreCarrera.\n"
+                    + "?carrera sigett:id ?carreraId.\n"
                     + "?carrrera sigett:esParteDeArea ?area.\n"
                     + "?area sigett:sigla ?siglaArea.\n"
                     + "?carrrera sigett:esParteDeNivelAcademico ?nivelAcademico.\n"
@@ -100,7 +102,7 @@ public class ProyectoOntServiceImplement implements ProyectoOntService {
                     + "?ofertaAcademica sigett:hasPeriodoAcademico ?periodoAcademico.\n"
                     + "?periodoAcademico sigett:fechaInicio ?fechaInicioPeriodo.");
             sparql.append("FILTER(regex(?tema,'" + "").append(proyectoOntDTO.getTema()).append("','i')");
-
+            
             if (proyectoOntDTO.getAutor() != null) {
                 sparql.append("|| regex(?datosAutor,'").append(proyectoOntDTO.getAutor()).append("','i')");
             }
@@ -134,11 +136,15 @@ public class ProyectoOntServiceImplement implements ProyectoOntService {
                 String nombreCarrera = soln.getLiteral("nombreCarrera").getString();
                 String estado = soln.getLiteral("estadoProyecto").getString();
                 String tema = soln.getLiteral("tema").getString();
+                String carreraId = soln.getLiteral("carreraId").getString();
+                String ofertaId = soln.getLiteral("ofertaAcademicaId").getString();
                 ProyectoOntDTO proyecto = new ProyectoOntDTO();
                 proyecto.setId(Long.parseLong(id));
                 proyecto.setCarrera(nombreCarrera);
                 proyecto.setEstado(estado);
                 proyecto.setTipo(tipo);
+                proyecto.setOfertaAcademicaId(Long.parseLong(ofertaId));
+                proyecto.setCarreraId(Integer.parseInt(carreraId));
                 proyecto.setTema(tema);
                 proyectos.add(proyecto);
             }
@@ -147,5 +153,5 @@ public class ProyectoOntServiceImplement implements ProyectoOntService {
         }
         return proyectos;
     }
-
+    
 }

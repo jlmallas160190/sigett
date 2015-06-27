@@ -75,7 +75,7 @@
         </session-timeout>
     </session-config>
     <welcome-file-list>
-        <welcome-file>faces/portada.xhtml</welcome-file>
+        <welcome-file>faces/pages/portada/index.xhtml</welcome-file>
     </welcome-file-list>
     <security-constraint>
         <display-name>PostulacionConstraint</display-name>

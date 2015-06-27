@@ -5,7 +5,7 @@
  */
 package edu.unl.sigett.dao;
 
-import edu.unl.sigett.entity.Miembro;
+import edu.unl.sigett.entity.MiembroTribunal;
 import java.util.List;
 import javax.ejb.Local;
 
@@ -16,21 +16,21 @@ import javax.ejb.Local;
 @Local
 public interface MiembroFacadeLocal {
 
-    void create(Miembro miembro);
+    void create(MiembroTribunal miembro);
 
-    void edit(Miembro miembro);
+    void edit(MiembroTribunal miembro);
 
-    void remove(Miembro miembro);
+    void remove(MiembroTribunal miembro);
 
-    Miembro find(Object id);
+    MiembroTribunal find(Object id);
 
-    List<Miembro> findAll();
+    List<MiembroTribunal> findAll();
 
-    List<Miembro> findRange(int[] range);
+    List<MiembroTribunal> findRange(int[] range);
 
-    List<Miembro> buscarPorTribunal(Long tribunalId);
+    List<MiembroTribunal> buscarPorTribunal(Long tribunalId);
 
-    List<Miembro> buscarPorDocente(Long docenteId);
+    List<MiembroTribunal> buscarPorDocente(Long docenteId);
 
     int count();
 

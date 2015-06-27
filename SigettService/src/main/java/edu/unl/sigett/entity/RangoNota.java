@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package edu.unl.sigett.entity;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -15,8 +15,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -31,13 +29,8 @@ import javax.xml.bind.annotation.XmlTransient;
 @Entity
 @Table(name = "rango_nota")
 @XmlRootElement
-@NamedQueries({
-    @NamedQuery(name = "RangoNota.findAll", query = "SELECT r FROM RangoNota r"),
-    @NamedQuery(name = "RangoNota.findById", query = "SELECT r FROM RangoNota r WHERE r.id = :id"),
-    @NamedQuery(name = "RangoNota.findByNombre", query = "SELECT r FROM RangoNota r WHERE r.nombre = :nombre"),
-    @NamedQuery(name = "RangoNota.findByValorInicio", query = "SELECT r FROM RangoNota r WHERE r.valorInicio = :valorInicio"),
-    @NamedQuery(name = "RangoNota.findByValorFin", query = "SELECT r FROM RangoNota r WHERE r.valorFin = :valorFin")})
 public class RangoNota implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -52,11 +45,11 @@ public class RangoNota implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "valor_inicio")
-    private double valorInicio;
+    private BigDecimal valorInicio;
     @Basic(optional = false)
     @NotNull
     @Column(name = "valor_fin")
-    private double valorFin;
+    private BigDecimal valorFin;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "rangoNotaId")
     private List<RangoEquivalencia> rangoEquivalenciaList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "rangoNotaId")
@@ -69,7 +62,7 @@ public class RangoNota implements Serializable {
         this.id = id;
     }
 
-    public RangoNota(Integer id, String nombre, double valorInicio, double valorFin) {
+    public RangoNota(Integer id, String nombre, BigDecimal valorInicio, BigDecimal valorFin) {
         this.id = id;
         this.nombre = nombre;
         this.valorInicio = valorInicio;
@@ -92,19 +85,19 @@ public class RangoNota implements Serializable {
         this.nombre = nombre;
     }
 
-    public double getValorInicio() {
+    public BigDecimal getValorInicio() {
         return valorInicio;
     }
 
-    public void setValorInicio(double valorInicio) {
+    public void setValorInicio(BigDecimal valorInicio) {
         this.valorInicio = valorInicio;
     }
 
-    public double getValorFin() {
+    public BigDecimal getValorFin() {
         return valorFin;
     }
 
-    public void setValorFin(double valorFin) {
+    public void setValorFin(BigDecimal valorFin) {
         this.valorFin = valorFin;
     }
 

@@ -3,29 +3,9 @@
                xsi:schemaLocation="http://ocpsoft.org/schema/rewrite-config-prettyfaces
                       http://ocpsoft.org/xml/ns/prettyfaces/rewrite-config-prettyfaces.xsd">
 
-    <url-mapping id="portada">
-        <pattern value="/portada" />
-        <view-id value="faces/portada.xhtml" />
-    </url-mapping>  
-    <url-mapping id="loginAdmin">
-        <pattern value="/loginAdmin" />
-        <view-id value="faces/pages/admin/login.xhtml"/>       
-    </url-mapping>
     <url-mapping id="login">
         <pattern value="/login" />
         <view-id value="faces/pages/inicio/login.xhtml"/>       
-    </url-mapping>
-    <url-mapping id="loginEstudiante">
-        <pattern value="/loginEstudiante" />
-        <view-id value="faces/loginEstudiante.xhtml"/>       
-    </url-mapping>
-    <url-mapping id="principalAdmin">
-        <pattern value="/admin" />
-        <view-id value="faces/pages/admin/principal.xhtml"/>       
-    </url-mapping>
-    <url-mapping id="principalEstudiante">
-        <pattern value="/principalEstudiante" />
-        <view-id value="faces/principalEstudiante.xhtml"/>       
     </url-mapping>
     <url-mapping id="principal">
         <pattern value="/principal"/>

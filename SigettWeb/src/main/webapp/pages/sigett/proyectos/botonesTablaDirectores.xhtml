@@ -9,7 +9,7 @@
         <h:panelGrid id="opcionesDirector"  columns="1">
             <p:commandButton  icon="ui-icon-search" rendered="#{directorProyectoDM.renderedBuscarDirectorDisponible}" 
                               value="#{msg['lbl.buscar']} #{msg['lbl.directores']}" onstart="PF('dlgLoading').show()" 
-                              oncomplete="PF('dlgLoading').hide(),PF('dlgDirectoresDisponibles').show(),PF('tblDirectoresFilter').filter()"  
+                              oncomplete="PF('dlgLoading').hide(),PF('tblDirectoresFilter').filter()"  
                               update=":contenido:dlgDirectoresDisponibles"
                               action="#{directorController.listadoDirectoresDiponibles()}">
                 <f:param name="tipo" value="director"/>

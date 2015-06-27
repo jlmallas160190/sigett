@@ -10,15 +10,10 @@ import com.jlmallas.comun.dao.PersonaDao;
 import edu.unl.sigett.finalizacion.managed.session.SessionMiembro;
 import edu.unl.sigett.proyecto.SessionProyecto;
 import edu.unl.sigett.entity.AutorProyecto;
-import edu.unl.sigett.entity.CargoMiembro;
 import edu.jlmallas.academico.entity.Carrera;
-import edu.unl.sigett.entity.ConfiguracionCarrera;
-import edu.jlmallas.academico.entity.CoordinadorPeriodo;
 import edu.jlmallas.academico.entity.Docente;
-import edu.jlmallas.academico.entity.DocenteCarrera;
 import edu.unl.sigett.entity.EvaluacionTribunal;
-import edu.unl.sigett.entity.Miembro;
-import edu.unl.sigett.entity.DocumentoCarrera;
+import edu.unl.sigett.entity.MiembroTribunal;
 import edu.unl.sigett.entity.Proyecto;
 import edu.unl.sigett.entity.ProyectoCarreraOferta;
 import edu.unl.sigett.entity.Tribunal;
@@ -38,7 +33,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.primefaces.context.RequestContext;
 import edu.unl.sigett.dao.AutorProyectoDao;
-import edu.unl.sigett.dao.CargoMiembroFacadeLocal;
 import edu.jlmallas.academico.service.CarreraService;
 import edu.unl.sigett.dao.ConfiguracionCarreraDao;
 import edu.unl.sigett.dao.ConfiguracionGeneralDao;
@@ -50,11 +44,7 @@ import edu.unl.sigett.dao.DocumentoCarreraDao;
 import edu.unl.sigett.dao.ProyectoOfertaCarreraDao;
 import edu.unl.sigett.dao.ProyectoDao;
 import org.jlmallas.seguridad.dao.UsuarioDao;
-import edu.jlmallas.academico.entity.EstudianteCarrera;
 import edu.jlmallas.academico.dao.EstudianteCarreraDao;
-import edu.unl.sigett.enumeration.CatalogoDocumentoCarreraEnum;
-import edu.unl.sigett.enumeration.EstadoAutorEnum;
-import edu.unl.sigett.enumeration.EstadoProyectoEnum;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -81,8 +71,6 @@ public class AdministrarMiembrosTribunal implements Serializable {
     private DocenteCarreraDao docenteCarreraFacadeLocal;
     @EJB
     private ProyectoOfertaCarreraDao proyectoCarreraOfertaFacadeLocal;
-    @EJB
-    private CargoMiembroFacadeLocal cargoMiembroFacadeLocal;
     @EJB
     private DocenteDao docenteFacadeLocal;
     @EJB
@@ -115,9 +103,9 @@ public class AdministrarMiembrosTribunal implements Serializable {
     private boolean renderedImprimirOficioSustentacionPublica;
     private boolean renderedDlgOficio;
 
-    private List<Miembro> miembros;
+    private List<MiembroTribunal> miembros;
     private List<Docente> docentes;
-    private List<Miembro> consultaMiembros;
+    private List<MiembroTribunal> consultaMiembros;
 
     private String cargo;
     private String criterioDocente;
@@ -129,7 +117,7 @@ public class AdministrarMiembrosTribunal implements Serializable {
     }
 
     //<editor-fold defaultstate="collapsed" desc="MÉTODOS CRUD">
-    public void imprimirOficioMiembroTribunal(Miembro miembro, Tribunal tribunal, Proyecto proyecto, Usuario usuario) {
+    public void imprimirOficioMiembroTribunal(MiembroTribunal miembro, Tribunal tribunal, Proyecto proyecto, Usuario usuario) {
         try {
 //            FacesContext facesContext = FacesContext.getCurrentInstance();
 //            ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
@@ -174,74 +162,74 @@ public class AdministrarMiembrosTribunal implements Serializable {
 
     public void descargarOficioMiembroTribunalPublica(Usuario user) {
         try {
-            Map datosReporte = new HashMap();
-//            AdministrarReportes reportes = new AdministrarReportes();
-            FacesContext facesContext = FacesContext.getCurrentInstance();
-            ResourceBundle resourceBundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            HttpServletRequest request = (HttpServletRequest) facesContext.getExternalContext().getRequest();
-            String path = request.getRealPath("/");
-            String pathSetting = request.getRealPath("/settings.txt");
-            Carrera carrera = carreraFacadeLocal.find(carreraId);
-            String secretario = "";
-            int contador = 0;
-            Miembro miembro = miembroFacadeLocal.find(miembroId);
-            String presidente = "";
-            String miembros = "";
-//            ConfiguracionCarrera configuracionCarrera = configuracionCarreraFacadeLocal.buscarPorCarreraId(carreraId, "NO");
-//            int nOficio = Integer.parseInt(configuracionCarrera.getValor());
-            Docente docenteMiembroPublica = docenteFacadeLocal.find(miembro.getDocenteId());
-            Persona datosMiembroPublica = personaFacadeLocal.find(docenteMiembroPublica.getId());
-
-            for (Miembro m : miembroFacadeLocal.buscarPorTribunal(miembro.getTribunalId().getId())) {
-                Docente docente = docenteFacadeLocal.find(m.getDocenteId());
-                Persona personaDocente = personaFacadeLocal.find(docente.getId());
-                if (m.getCargoId().getId() == 1) {
-                    presidente += docente.getTituloDocenteId().getTituloId().getAbreviacion() + " " + personaDocente.getNombres() + " "
-                            + personaDocente.getApellidos() + " ";
-                } else {
-                    if (contador == 0) {
-                        miembros += "" + docente.getTituloDocenteId().getTituloId().getAbreviacion() + " "
-                                + personaDocente.getNombres() + " " + personaDocente.getApellidos() + " ";
-                        contador++;
-                    } else {
-                        miembros += ", " + docente.getTituloDocenteId().getTituloId().getAbreviacion() + " " + personaDocente.getNombres() + " "
-                                + personaDocente.getApellidos();;
-                        contador++;
-                    }
-                }
-            }
-            String lugarSustentacion = "";
-            String fechaSustentacion = "";
-            for (EvaluacionTribunal evaluacionTribunal : miembro.getTribunalId().getEvaluacionTribunalList()) {
-                if (evaluacionTribunal.getCatalogoEvaluacionId().getId() == 2) {
-                    lugarSustentacion = evaluacionTribunal.getLugar();
-                    int tiempo = evaluacionTribunal.getFechaFin().getHours() - evaluacionTribunal.getFechaInicio().getHours();
-                    fechaSustentacion = configuracionGeneralFacadeLocal.dateFormat(evaluacionTribunal.getFechaInicio()) + " a partir de " + configuracionGeneralFacadeLocal.timeFormat(evaluacionTribunal.getFechaInicio()) + ""
-                            + " a efecto para que se cumpla por un espacio  máximo de " + tiempo + " hora(s) con la sustentación pública.";
-                }
-            }
-//            CoordinadorPeriodo coordinadorPeriodo = coordinadorPeriodoFacadeLocal.buscarVigente(carrera.getId());
-//            Persona datosCoordinador = personaFacadeLocal.find(coordinadorPeriodo.getCoordinadorId().getId());
-//            Docente docenteCoordinador = docenteFacadeLocal.find(datosCoordinador.getId());
-            secretario = user.getNombres().toUpperCase() + " " + user.getApellidos().toUpperCase();
-//            DocumentoCarrera oficioCarrera = oficioCarreraFacadeLocal.buscarPorTablaId(miembroId, CatalogoDocumentoCarreraEnum.MIEMBROTRIBUNALPUBLICA.getTipo());
-            HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
-            Calendar fechaActual = Calendar.getInstance();
-            String fechaFormateada = configuracionGeneralFacadeLocal.dateFormat(fechaActual.getTime());
-
-            datosReporte.put("miembro", datosMiembroPublica.getNombres().toUpperCase() + " " + datosMiembroPublica.getApellidos().toUpperCase());
-//            datosReporte.put("coordinador", datosCoordinador.getNombres().toUpperCase() + " " + datosCoordinador.getApellidos().toUpperCase());
-            datosReporte.put("temaProyecto", miembro.getTribunalId().getProyectoId().getTemaActual());
-            datosReporte.put("cargoMiembro", miembro.getCargoId().getNombre().toUpperCase());
-            datosReporte.put("tituloMiembro", docenteMiembroPublica.getTituloDocenteId().getTituloId().getAbreviacion().toUpperCase());
-//            datosReporte.put("tituloCoordinador", docenteCoordinador.getTituloDocenteId().getTituloId().getAbreviacion());
-//            datosReporte.put("autores", getAutores(autorProyectoFacadeLocal.buscarPorProyecto(miembro.getTribunalId().getProyectoId().getId())));
-            datosReporte.put("abreviacion_oficio", resourceBundle.getString("lbl.abreviacion_oficio"));
-            datosReporte.put("articulos_sustentacion_publica", resourceBundle.getString("lbl.articulos_sustentacion_publica"));
-
-//            reportes.oficioMiembroTribunalSpublica("pdf", fechaFormateada, fechaSustentacion, lugarSustentacion, response, datosReporte,
-//                    configuracionCarreraFacadeLocal, configuracionCarrera, oficioCarrera, presidente, miembros, miembroId, oficioCarreraFacadeLocal, catalogoOficioFacadeLocal, carrera,
-//                    nOficio, secretario, path, pathSetting);
+//            Map datosReporte = new HashMap();
+////            AdministrarReportes reportes = new AdministrarReportes();
+//            FacesContext facesContext = FacesContext.getCurrentInstance();
+//            ResourceBundle resourceBundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
+//            HttpServletRequest request = (HttpServletRequest) facesContext.getExternalContext().getRequest();
+//            String path = request.getRealPath("/");
+//            String pathSetting = request.getRealPath("/settings.txt");
+//            Carrera carrera = carreraFacadeLocal.find(carreraId);
+//            String secretario = "";
+//            int contador = 0;
+//            MiembroTribunal miembro = miembroFacadeLocal.find(miembroId);
+//            String presidente = "";
+//            String miembros = "";
+////            ConfiguracionCarrera configuracionCarrera = configuracionCarreraFacadeLocal.buscarPorCarreraId(carreraId, "NO");
+////            int nOficio = Integer.parseInt(configuracionCarrera.getValor());
+//            Docente docenteMiembroPublica = docenteFacadeLocal.find(miembro.getDocenteId());
+//            Persona datosMiembroPublica = personaFacadeLocal.find(docenteMiembroPublica.getId());
+//
+//            for (MiembroTribunal m : miembroFacadeLocal.buscarPorTribunal(miembro.getTribunalId().getId())) {
+//                Docente docente = docenteFacadeLocal.find(m.getDocenteId());
+//                Persona personaDocente = personaFacadeLocal.find(docente.getId());
+//                if (m.getCargoId().getId() == 1) {
+//                    presidente += docente.getTituloDocenteId().getTituloId().getAbreviacion() + " " + personaDocente.getNombres() + " "
+//                            + personaDocente.getApellidos() + " ";
+//                } else {
+//                    if (contador == 0) {
+//                        miembros += "" + docente.getTituloDocenteId().getTituloId().getAbreviacion() + " "
+//                                + personaDocente.getNombres() + " " + personaDocente.getApellidos() + " ";
+//                        contador++;
+//                    } else {
+//                        miembros += ", " + docente.getTituloDocenteId().getTituloId().getAbreviacion() + " " + personaDocente.getNombres() + " "
+//                                + personaDocente.getApellidos();;
+//                        contador++;
+//                    }
+//                }
+//            }
+//            String lugarSustentacion = "";
+//            String fechaSustentacion = "";
+//            for (EvaluacionTribunal evaluacionTribunal : miembro.getTribunalId().getEvaluacionTribunalList()) {
+//                if (evaluacionTribunal.getCatalogoEvaluacionId().getId() == 2) {
+//                    lugarSustentacion = evaluacionTribunal.getLugar();
+//                    int tiempo = evaluacionTribunal.getFechaFin().getHours() - evaluacionTribunal.getFechaInicio().getHours();
+//                    fechaSustentacion = configuracionGeneralFacadeLocal.dateFormat(evaluacionTribunal.getFechaInicio()) + " a partir de " + configuracionGeneralFacadeLocal.timeFormat(evaluacionTribunal.getFechaInicio()) + ""
+//                            + " a efecto para que se cumpla por un espacio  máximo de " + tiempo + " hora(s) con la sustentación pública.";
+//                }
+//            }
+////            CoordinadorPeriodo coordinadorPeriodo = coordinadorPeriodoFacadeLocal.buscarVigente(carrera.getId());
+////            Persona datosCoordinador = personaFacadeLocal.find(coordinadorPeriodo.getCoordinadorId().getId());
+////            Docente docenteCoordinador = docenteFacadeLocal.find(datosCoordinador.getId());
+//            secretario = user.getNombres().toUpperCase() + " " + user.getApellidos().toUpperCase();
+////            DocumentoCarrera oficioCarrera = oficioCarreraFacadeLocal.buscarPorTablaId(miembroId, CatalogoDocumentoCarreraEnum.MIEMBROTRIBUNALPUBLICA.getTipo());
+//            HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
+//            Calendar fechaActual = Calendar.getInstance();
+//            String fechaFormateada = configuracionGeneralFacadeLocal.dateFormat(fechaActual.getTime());
+//
+//            datosReporte.put("miembro", datosMiembroPublica.getNombres().toUpperCase() + " " + datosMiembroPublica.getApellidos().toUpperCase());
+////            datosReporte.put("coordinador", datosCoordinador.getNombres().toUpperCase() + " " + datosCoordinador.getApellidos().toUpperCase());
+//            datosReporte.put("temaProyecto", miembro.getTribunalId().getProyectoId().getTemaActual());
+//            datosReporte.put("cargoMiembro", miembro.getCargoId().getNombre().toUpperCase());
+//            datosReporte.put("tituloMiembro", docenteMiembroPublica.getTituloDocenteId().getTituloId().getAbreviacion().toUpperCase());
+////            datosReporte.put("tituloCoordinador", docenteCoordinador.getTituloDocenteId().getTituloId().getAbreviacion());
+////            datosReporte.put("autores", getAutores(autorProyectoFacadeLocal.buscarPorProyecto(miembro.getTribunalId().getProyectoId().getId())));
+//            datosReporte.put("abreviacion_oficio", resourceBundle.getString("lbl.abreviacion_oficio"));
+//            datosReporte.put("articulos_sustentacion_publica", resourceBundle.getString("lbl.articulos_sustentacion_publica"));
+//
+////            reportes.oficioMiembroTribunalSpublica("pdf", fechaFormateada, fechaSustentacion, lugarSustentacion, response, datosReporte,
+////                    configuracionCarreraFacadeLocal, configuracionCarrera, oficioCarrera, presidente, miembros, miembroId, oficioCarreraFacadeLocal, catalogoOficioFacadeLocal, carrera,
+////                    nOficio, secretario, path, pathSetting);
         } catch (Exception e) {
         }
     }
@@ -272,65 +260,65 @@ public class AdministrarMiembrosTribunal implements Serializable {
 
     public void descargarOficioMiembroTribunalPrivada(Usuario user) {
         try {
-            FacesContext facesContext = FacesContext.getCurrentInstance();
-            ResourceBundle resourceBundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            Map datosReporte = new HashMap();
-//            AdministrarReportes reportes = new AdministrarReportes();
-            HttpServletRequest request = (HttpServletRequest) facesContext.getExternalContext().getRequest();
-            String path = request.getRealPath("/");
-            String pathSetting = request.getRealPath("/settings.txt");
-            Carrera carrera = carreraFacadeLocal.find(carreraId);
-            String secretario = "";
-            int contador = 0;
-            Miembro miembro = miembroFacadeLocal.find(miembroId);
-            String presidente = "";
-            String miembros = "";
-            secretario = "";
-//            ConfiguracionCarrera configuracionCarrera = configuracionCarreraFacadeLocal.buscarPorCarreraId(carreraId, "NO");
-//            int nOficio = Integer.parseInt(configuracionCarrera.getValor());
-            Docente docenteMiembro = docenteFacadeLocal.find(miembro.getDocenteId());
-            Persona datosMiembro = personaFacadeLocal.find(docenteMiembro.getId());
-            for (Miembro m : miembroFacadeLocal.buscarPorTribunal(miembro.getTribunalId().getId())) {
-                Docente docente = docenteFacadeLocal.find(m.getDocenteId());
-                Persona personaDocente = personaFacadeLocal.find(docente.getId());
-                if (m.getCargoId().getId() == 1) {
-                    presidente += docente.getTituloDocenteId().getTituloId().getAbreviacion() + " " + personaDocente.getNombres() + " "
-                            + personaDocente.getApellidos() + " ";
-                } else {
-                    if (contador == 0) {
-                        miembros += "" + docente.getTituloDocenteId().getTituloId().getAbreviacion() + " "
-                                + personaDocente.getNombres() + " " + personaDocente.getApellidos() + " ";
-                        contador++;
-                    } else {
-                        miembros += ", " + docente.getTituloDocenteId().getTituloId().getAbreviacion() + " " + personaDocente.getNombres() + " "
-                                + personaDocente.getApellidos();;
-                        contador++;
-                    }
-                }
-            }
-//            CoordinadorPeriodo coordinadorPeriodo = coordinadorPeriodoFacadeLocal.buscarVigente(carrera.getId());
-//            Persona datosCoordinador = personaFacadeLocal.find(coordinadorPeriodo.getCoordinadorId().getId());
-//            Docente docenteCoordinador = docenteFacadeLocal.find(datosCoordinador.getId());
-            secretario = user.getNombres().toUpperCase() + " " + user.getApellidos().toUpperCase();
-//            DocumentoCarrera oficioCarrera = oficioCarreraFacadeLocal.buscarPorTablaId(miembroId, CatalogoDocumentoCarreraEnum.MIEMBROTRIBUNALPRIVADA.getTipo());
-            HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
-            Calendar fechaActual = Calendar.getInstance();
-            String fechaFormateada = configuracionGeneralFacadeLocal.dateFormat(fechaActual.getTime());
-            datosReporte.put("miembro", datosMiembro.getNombres().toUpperCase() + " " + datosMiembro.getApellidos().toUpperCase());
-//            datosReporte.put("coordinador", datosCoordinador.getNombres().toUpperCase() + " " + datosCoordinador.getApellidos().toUpperCase());
-            datosReporte.put("temaProyecto", miembro.getTribunalId().getProyectoId().getTemaActual());
-            datosReporte.put("tituloMiembro", docenteMiembro.getTituloDocenteId().getTituloId().getAbreviacion().toUpperCase());
-            datosReporte.put("cargoMiembro", miembro.getCargoId().getNombre().toUpperCase());
-//            datosReporte.put("tituloCoordinador", docenteCoordinador.getTituloDocenteId().getTituloId().getAbreviacion());
-//            datosReporte.put("autores", getAutores(autorProyectoFacadeLocal.buscarPorProyecto(miembro.getTribunalId().getProyectoId().getId())));
-            datosReporte.put("abreviacion_oficio", resourceBundle.getString("lbl.abreviacion_oficio"));
-            datosReporte.put("articulos_designar_miembro_tribunal", resourceBundle.getString("lbl.articulos_designar_miembro_tribunal"));
-            datosReporte.put("asunto_designar_miembro_tribunal", resourceBundle.getString("lbl.asunto_designar_miembro_tribunal"));
-            datosReporte.put("nota_designar_miembro_tribunal", resourceBundle.getString("lbl.designar_miembro_tribunal"));
-
-//            reportes.oficioMiembroTribunalSprivada("docx", fechaFormateada, response, datosReporte, configuracionCarreraFacadeLocal, configuracionCarrera,
-//                    oficioCarrera, presidente, miembros, miembroId, oficioCarreraFacadeLocal, catalogoOficioFacadeLocal, carrera, nOficio, secretario,
-//                    path, pathSetting);
+//            FacesContext facesContext = FacesContext.getCurrentInstance();
+//            ResourceBundle resourceBundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
+//            Map datosReporte = new HashMap();
+////            AdministrarReportes reportes = new AdministrarReportes();
+//            HttpServletRequest request = (HttpServletRequest) facesContext.getExternalContext().getRequest();
+//            String path = request.getRealPath("/");
+//            String pathSetting = request.getRealPath("/settings.txt");
+//            Carrera carrera = carreraFacadeLocal.find(carreraId);
+//            String secretario = "";
+//            int contador = 0;
+//            MiembroTribunal miembro = miembroFacadeLocal.find(miembroId);
+//            String presidente = "";
+//            String miembros = "";
+//            secretario = "";
+////            ConfiguracionCarrera configuracionCarrera = configuracionCarreraFacadeLocal.buscarPorCarreraId(carreraId, "NO");
+////            int nOficio = Integer.parseInt(configuracionCarrera.getValor());
+//            Docente docenteMiembro = docenteFacadeLocal.find(miembro.getDocenteId());
+//            Persona datosMiembro = personaFacadeLocal.find(docenteMiembro.getId());
+//            for (MiembroTribunal m : miembroFacadeLocal.buscarPorTribunal(miembro.getTribunalId().getId())) {
+//                Docente docente = docenteFacadeLocal.find(m.getDocenteId());
+//                Persona personaDocente = personaFacadeLocal.find(docente.getId());
+//                if (m.getCargoId().getId() == 1) {
+//                    presidente += docente.getTituloDocenteId().getTituloId().getAbreviacion() + " " + personaDocente.getNombres() + " "
+//                            + personaDocente.getApellidos() + " ";
+//                } else {
+//                    if (contador == 0) {
+//                        miembros += "" + docente.getTituloDocenteId().getTituloId().getAbreviacion() + " "
+//                                + personaDocente.getNombres() + " " + personaDocente.getApellidos() + " ";
+//                        contador++;
+//                    } else {
+//                        miembros += ", " + docente.getTituloDocenteId().getTituloId().getAbreviacion() + " " + personaDocente.getNombres() + " "
+//                                + personaDocente.getApellidos();;
+//                        contador++;
+//                    }
+//                }
+//            }
+////            CoordinadorPeriodo coordinadorPeriodo = coordinadorPeriodoFacadeLocal.buscarVigente(carrera.getId());
+////            Persona datosCoordinador = personaFacadeLocal.find(coordinadorPeriodo.getCoordinadorId().getId());
+////            Docente docenteCoordinador = docenteFacadeLocal.find(datosCoordinador.getId());
+//            secretario = user.getNombres().toUpperCase() + " " + user.getApellidos().toUpperCase();
+////            DocumentoCarrera oficioCarrera = oficioCarreraFacadeLocal.buscarPorTablaId(miembroId, CatalogoDocumentoCarreraEnum.MIEMBROTRIBUNALPRIVADA.getTipo());
+//            HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
+//            Calendar fechaActual = Calendar.getInstance();
+//            String fechaFormateada = configuracionGeneralFacadeLocal.dateFormat(fechaActual.getTime());
+//            datosReporte.put("miembro", datosMiembro.getNombres().toUpperCase() + " " + datosMiembro.getApellidos().toUpperCase());
+////            datosReporte.put("coordinador", datosCoordinador.getNombres().toUpperCase() + " " + datosCoordinador.getApellidos().toUpperCase());
+//            datosReporte.put("temaProyecto", miembro.getTribunalId().getProyectoId().getTemaActual());
+//            datosReporte.put("tituloMiembro", docenteMiembro.getTituloDocenteId().getTituloId().getAbreviacion().toUpperCase());
+//            datosReporte.put("cargoMiembro", miembro.getCargoId().getNombre().toUpperCase());
+////            datosReporte.put("tituloCoordinador", docenteCoordinador.getTituloDocenteId().getTituloId().getAbreviacion());
+////            datosReporte.put("autores", getAutores(autorProyectoFacadeLocal.buscarPorProyecto(miembro.getTribunalId().getProyectoId().getId())));
+//            datosReporte.put("abreviacion_oficio", resourceBundle.getString("lbl.abreviacion_oficio"));
+//            datosReporte.put("articulos_designar_miembro_tribunal", resourceBundle.getString("lbl.articulos_designar_miembro_tribunal"));
+//            datosReporte.put("asunto_designar_miembro_tribunal", resourceBundle.getString("lbl.asunto_designar_miembro_tribunal"));
+//            datosReporte.put("nota_designar_miembro_tribunal", resourceBundle.getString("lbl.designar_miembro_tribunal"));
+//
+////            reportes.oficioMiembroTribunalSprivada("docx", fechaFormateada, response, datosReporte, configuracionCarreraFacadeLocal, configuracionCarrera,
+////                    oficioCarrera, presidente, miembros, miembroId, oficioCarreraFacadeLocal, catalogoOficioFacadeLocal, carrera, nOficio, secretario,
+////                    path, pathSetting);
         } catch (Exception e) {
         }
     }
@@ -351,7 +339,7 @@ public class AdministrarMiembrosTribunal implements Serializable {
 //                    || proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.RECUPERACIONPUBLICA.getTipo())) {
 //                int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "crear_miembro_tribunal");
 //                if (tienePermiso == 1) {
-//                    sessionMiembro.setMiembro(new Miembro());
+//                    sessionMiembro.setMiembro(new MiembroTribunal());
 //                    sessionMiembro.setPersona(new Persona());
 //                    sessionMiembro.getMiembro().setTribunalId(tribunal);
 //                    sessionMiembro.getMiembro().setEsActivo(true);
@@ -385,7 +373,7 @@ public class AdministrarMiembrosTribunal implements Serializable {
         }
     }
 
-    public String editar(Usuario usuario, Miembro miembro, Proyecto proyecto) {
+    public String editar(Usuario usuario, MiembroTribunal miembro, Proyecto proyecto) {
         String navegacion = "";
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
@@ -425,7 +413,7 @@ public class AdministrarMiembrosTribunal implements Serializable {
         return navegacion;
     }
 
-    public String seleccionarDocente(Miembro miembro, Docente docente) {
+    public String seleccionarDocente(MiembroTribunal miembro, Docente docente) {
         String navegacion = "";
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
@@ -454,7 +442,7 @@ public class AdministrarMiembrosTribunal implements Serializable {
         return var;
     }
 
-    public String grabar(Miembro miembro, Tribunal tribunal, Proyecto proyecto, Usuario usuario) {
+    public String grabar(MiembroTribunal miembro, Tribunal tribunal, Proyecto proyecto, Usuario usuario) {
         String navegacion = "";
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
@@ -487,7 +475,7 @@ public class AdministrarMiembrosTribunal implements Serializable {
 //                                        RequestContext.getCurrentInstance().execute("PF('dlgEditarMiembro').hide()");
 //                                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_grabar"), "");
 //                                        FacesContext.getCurrentInstance().addMessage(null, message);
-//                                        sessionMiembro.setMiembro(new Miembro());
+//                                        sessionMiembro.setMiembro(new MiembroTribunal());
 //                                        sessionMiembro.setPersona(new Persona());
 //                                    }
 //                                } else {
@@ -516,7 +504,7 @@ public class AdministrarMiembrosTribunal implements Serializable {
 //                                        RequestContext.getCurrentInstance().execute("PF('dlgEditarMiembro').hide()");
 //                                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_editar"), "");
 //                                        FacesContext.getCurrentInstance().addMessage(null, message);
-//                                        sessionMiembro.setMiembro(new Miembro());
+//                                        sessionMiembro.setMiembro(new MiembroTribunal());
 //                                    }
 //                                } else {
 //                                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_editar") + ". " + bundle.getString("lbl.msm_consulte"), "");
@@ -546,7 +534,7 @@ public class AdministrarMiembrosTribunal implements Serializable {
 
     public void buscarDocentesDisponibles(String criterio, Proyecto proyecto, Tribunal tribunal) {
         this.docentes = new ArrayList<>();
-        List<Miembro> miembros1 = new ArrayList<>();
+        List<MiembroTribunal> miembros1 = new ArrayList<>();
         try {
             miembros1 = miembroFacadeLocal.buscarPorTribunal(tribunal.getId());
             if (permiteAgregarDirectorTribunal()) {
@@ -558,7 +546,7 @@ public class AdministrarMiembrosTribunal implements Serializable {
 //                                || personaDocente.getNombres().toLowerCase().contains(criterio.toLowerCase())
 //                                || personaDocente.getNumeroIdentificacion().toLowerCase().contains(criterio.toLowerCase())) {
 //                            if (!miembros1.isEmpty()) {
-//                                for (Miembro miembro : miembros1) {
+//                                for (MiembroTribunal miembro : miembros1) {
 //                                    if (miembro.getDocenteId() != docenteCarrera.getDocenteId().getId()) {
 //                                        if (!docentes.contains(docenteCarrera.getDocenteId())) {
 //                                            docentes.add(docenteCarrera.getDocenteId());
@@ -598,7 +586,7 @@ public class AdministrarMiembrosTribunal implements Serializable {
     public boolean docenteSeleccionado(Docente docente, Tribunal tribunal) {
         boolean var = false;
         try {
-            for (Miembro miembro : miembroFacadeLocal.buscarPorTribunal(tribunal.getId())) {
+            for (MiembroTribunal miembro : miembroFacadeLocal.buscarPorTribunal(tribunal.getId())) {
                 if (miembro.getDocenteId().equals(docente)) {
                     var = true;
                     break;
@@ -625,7 +613,7 @@ public class AdministrarMiembrosTribunal implements Serializable {
     public void consultar(Tribunal tribunal, String criterio) {
         try {
             this.consultaMiembros = new ArrayList<>();
-            for (Miembro miembro : miembroFacadeLocal.buscarPorTribunal(tribunal.getId())) {
+            for (MiembroTribunal miembro : miembroFacadeLocal.buscarPorTribunal(tribunal.getId())) {
                 Persona personaDocente = personaFacadeLocal.find(miembro.getDocenteId());
                 if (personaDocente.getApellidos().toLowerCase().contains(criterio.toLowerCase())
                         || personaDocente.getNombres().toLowerCase().contains(criterio.toLowerCase())
@@ -645,7 +633,7 @@ public class AdministrarMiembrosTribunal implements Serializable {
             this.miembros = new ArrayList<>();
             int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "buscar_miembro_tribunal");
             if (tienePermiso == 1) {
-                for (Miembro miembro : miembroFacadeLocal.buscarPorTribunal(tribunal.getId())) {
+                for (MiembroTribunal miembro : miembroFacadeLocal.buscarPorTribunal(tribunal.getId())) {
                     Persona personaDocente = personaFacadeLocal.find(miembro.getDocenteId());
                     if (personaDocente.getApellidos().toLowerCase().contains(criterio.toLowerCase())
                             || personaDocente.getNombres().toLowerCase().contains(criterio.toLowerCase())
@@ -661,27 +649,27 @@ public class AdministrarMiembrosTribunal implements Serializable {
         }
     }
 
-    public List<CargoMiembro> buscarCargos() {
-        try {
-            return cargoMiembroFacadeLocal.findAll();
-        } catch (Exception e) {
-        }
-        return null;
-    }
+//    public List<CargoMiembro> buscarCargos() {
+//        try {
+//            return cargoMiembroFacadeLocal.findAll();
+//        } catch (Exception e) {
+//        }
+//        return null;
+//    }
 
-    public boolean existePresidente(Miembro m, Tribunal tribunal) {
+    public boolean existePresidente(MiembroTribunal m, Tribunal tribunal) {
         boolean var = false;
         try {
-            if (m.getCargoId().getId() == 1) {
-                for (Miembro miembro : miembroFacadeLocal.buscarPorTribunal(tribunal.getId())) {
-                    if (miembro.getCargoId().getId() == 1 && m.getCargoId().equals(miembro.getCargoId())) {
-                        if (miembro.getId() != m.getId()) {
-                            var = true;
-                            break;
-                        }
-                    }
-                }
-            }
+//            if (m.getCargoId().getId() == 1) {
+//                for (MiembroTribunal miembro : miembroFacadeLocal.buscarPorTribunal(tribunal.getId())) {
+//                    if (miembro.getCargoId().getId() == 1 && m.getCargoId().equals(miembro.getCargoId())) {
+//                        if (miembro.getId() != m.getId()) {
+//                            var = true;
+//                            break;
+//                        }
+//                    }
+//                }
+//            }
         } catch (Exception e) {
         }
         return var;
@@ -690,18 +678,18 @@ public class AdministrarMiembrosTribunal implements Serializable {
     public boolean existeUnPresidente(Tribunal tribunal) {
         boolean var = false;
         try {
-            for (Miembro miembro : miembroFacadeLocal.buscarPorTribunal(tribunal.getId())) {
-                if (miembro.getCargoId().getId() == 1) {
-                    var = true;
-                    break;
-                }
-            }
+//            for (MiembroTribunal miembro : miembroFacadeLocal.buscarPorTribunal(tribunal.getId())) {
+//                if (miembro.getCargoId().getId() == 1) {
+//                    var = true;
+//                    break;
+//                }
+//            }
         } catch (Exception e) {
         }
         return var;
     }
 
-    public void remover(Miembro miembro, Tribunal tribunal, Proyecto proyecto, Usuario usuario) {
+    public void remover(MiembroTribunal miembro, Tribunal tribunal, Proyecto proyecto, Usuario usuario) {
         try {
 //            FacesContext facesContext = FacesContext.getCurrentInstance();
 //            ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
@@ -908,11 +896,11 @@ public class AdministrarMiembrosTribunal implements Serializable {
         this.renderedDlgEditar = renderedDlgEditar;
     }
 
-    public List<Miembro> getMiembros() {
+    public List<MiembroTribunal> getMiembros() {
         return miembros;
     }
 
-    public void setMiembros(List<Miembro> miembros) {
+    public void setMiembros(List<MiembroTribunal> miembros) {
         this.miembros = miembros;
     }
 
@@ -988,11 +976,11 @@ public class AdministrarMiembrosTribunal implements Serializable {
         this.miembroId = miembroId;
     }
 
-    public List<Miembro> getConsultaMiembros() {
+    public List<MiembroTribunal> getConsultaMiembros() {
         return consultaMiembros;
     }
 
-    public void setConsultaMiembros(List<Miembro> consultaMiembros) {
+    public void setConsultaMiembros(List<MiembroTribunal> consultaMiembros) {
         this.consultaMiembros = consultaMiembros;
     }
     //</editor-fold>

@@ -9,10 +9,16 @@
         <p:dialog id="dlgOficioPertinencia" widgetVar="dlgOficioPertinencia" header="#{msg['lbl.oficio']}" styleClass="modal-md"  modal="true" 
                   closable="false" position="center" draggable="false" fitViewport="true">
             <p:panel  id="pnlOficioPertinencia">
+                <f:facet name="header">
+                    <ui:include src="./../documentoCarrera/upload.xhtml"/>
+                </f:facet>
                 <p:media rendered="#{sessionDocenteProyecto.renderedMediaOficio}" value="/AppServlet?entity=documentoCarrera" player="pdf" width="100%" height="400"/>
                 <f:facet name="footer">
                     <h:panelGrid styleClass="pnl-botones" columns="2">
-                        <ui:include src="./../documentoCarrera/upload.xhtml"/>
+
+                        <p:commandButton action="#{docenteProyectoController.generarOficioPertinencia()}" update=":contenido:pnlOficioPertinencia"
+                                         onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()"
+                                         icon="ui-icon-print" value="#{btn.generar_oficio}"/> 
                         <p:commandButton action="#{docenteProyectoController.cancelarImprimirOficio()}" update=":contenido:pnlOficioPertinencia"
                                          onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide(),PF('dlgOficioPertinencia').hide()"
                                          icon="ui-icon-circle-arrow-w" value="#{btn['cancelar']}"/> 

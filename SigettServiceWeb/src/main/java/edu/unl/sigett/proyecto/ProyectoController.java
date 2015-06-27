@@ -16,6 +16,8 @@ import com.ocpsoft.pretty.faces.annotation.URLMapping;
 import com.ocpsoft.pretty.faces.annotation.URLMappings;
 import edu.jlmallas.academico.entity.Area;
 import edu.jlmallas.academico.entity.Carrera;
+import edu.jlmallas.academico.entity.CoordinadorPeriodo;
+import edu.jlmallas.academico.entity.Docente;
 import edu.jlmallas.academico.entity.DocenteCarrera;
 import edu.jlmallas.academico.entity.EstudianteCarrera;
 import edu.jlmallas.academico.entity.OfertaAcademica;
@@ -42,6 +44,7 @@ import edu.unl.sigett.service.ProyectoCarreraOfertaService;
 import edu.unl.sigett.service.ProyectoService;
 import edu.unl.sigett.util.CabeceraController;
 import edu.unl.sigett.webSemantica.dto.ProyectoOntDTO;
+import java.io.File;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
@@ -50,6 +53,7 @@ import java.util.List;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.inject.Inject;
+import org.primefaces.event.SelectEvent;
 
 /**
  *
@@ -229,6 +233,12 @@ public class ProyectoController implements Serializable {
         List<ProyectoOntDTO> proyectoOntDTOs = cabeceraController.getOntologyService().getProyectoOntService().buscar(proyectoOntDTOBuscar);
         for (ProyectoOntDTO proyectoOntDTO : proyectoOntDTOs) {
             Proyecto proyecto = proyectoService.buscarPorId(new Proyecto(proyectoOntDTO.getId()));
+            proyecto.setAutores(autores(proyecto));
+            proyecto.setDirectores(directores(proyecto));
+            proyecto.setEstado(itemService.buscarPorId(proyecto.getEstadoProyectoId()).getNombre());
+            proyecto.setCatalogo(itemService.buscarPorId(proyecto.getCatalogoProyectoId()).getNombre());
+            proyecto.setTipo(itemService.buscarPorId(proyecto.getTipoProyectoId()).getNombre());
+            proyecto.setNombreOferta(ofertaAcademicaService.find(proyectoOntDTO.getOfertaAcademicaId()).getNombre());
             if (!sessionProyecto.getProyectos().contains(proyecto)) {
                 sessionProyecto.getProyectos().add(proyecto);
             }
@@ -253,13 +263,12 @@ public class ProyectoController implements Serializable {
         }
     }
 
-    /**
-     * PERIMITE AGREGAR UN PROYECTO DESDE EL BUSCADOR SEMÁNTICO
-     */
-    public void agregar() {
-        Proyecto proyecto = proyectoService.buscarPorId(new Proyecto(sessionProyecto.getProyectoOntDTOSeleccionado().getId()));
-        if (!sessionProyecto.getProyectos().contains(proyecto)) {
-            sessionProyecto.getProyectos().add(proyecto);
+    public void seleccionarCarrera(SelectEvent event) {
+        try {
+            sessionProyecto.setCarreraSeleccionada((Carrera) event.getObject());
+            buscar();
+        } catch (Exception e) {
+            System.out.println(e);
         }
     }
 
@@ -282,6 +291,7 @@ public class ProyectoController implements Serializable {
     }
 
     public String editarProyecto(Proyecto proyecto) {
+        iniciar();
         sessionProyecto.setProyectoSeleccionado(proyecto);
         listadoDocumentos();
         buscarAutores();
@@ -290,8 +300,6 @@ public class ProyectoController implements Serializable {
     }
 
     private void listadoDocumentos() {
-        sessionProyecto.getDocumentosProyectoDTO().clear();
-        sessionProyecto.getFilterDocumentosProyectoDTO().clear();
         try {
             List<DocumentoProyecto> documentoProyectos = this.documentoProyectoService.buscar(
                     new DocumentoProyecto(Boolean.TRUE, null, sessionProyecto.getProyectoSeleccionado()));
@@ -300,6 +308,7 @@ public class ProyectoController implements Serializable {
                         documentoProyecto, documentoService.buscarPorId(new Documento(
                                         documentoProyecto.getDocumentoId(), null, null, null, null, null, null, null)));
                 documentoProyectoDTO.getDocumento().setCatalogo(itemService.buscarPorId(documentoProyectoDTO.getDocumento().getCatalogoId()).getNombre());
+                documentoProyectoDTO.getDocumento().setContents(cabeceraController.getUtilService().obtenerBytes(new File(documentoProyectoDTO.getDocumento().getRuta())));
                 sessionProyecto.getDocumentosProyectoDTO().add(documentoProyectoDTO);
             }
             sessionProyecto.setFilterDocumentosProyectoDTO(sessionProyecto.getDocumentosProyectoDTO());
@@ -308,7 +317,17 @@ public class ProyectoController implements Serializable {
         }
     }
 
+    private void iniciar() {
+        sessionProyecto.getDocumentosProyectoDTO().clear();
+        sessionProyecto.getFilterDocumentosProyectoDTO().clear();
+        sessionProyecto.getAutoresProyectoDTO().clear();
+        sessionProyecto.getFilterAutoresProyectoDTO().clear();
+        sessionProyecto.getDirectoresProyectoDTO().clear();
+        sessionProyecto.getFilterAutoresProyectoDTO().clear();
+    }
+
     private void buscarAutores() {
+
         Item estadoRenunciado = itemService.buscarPorCatalogoCodigo(CatalogoEnum.ESTADOAUTOR.getTipo(), EstadoAutorEnum.RENUNCIADO.getTipo());
         List<AutorProyecto> autorProyectos = autorProyectoService.buscar(new AutorProyecto(sessionProyecto.getProyectoSeleccionado(), null, null, null, null));
         if (autorProyectos == null) {
@@ -319,6 +338,7 @@ public class ProyectoController implements Serializable {
                 continue;
             }
             EstudianteCarrera estudianteCarrera = estudianteCarreraService.buscarPorId(new EstudianteCarrera(autorProyecto.getAspiranteId().getId()));
+            estudianteCarrera.setEstado(itemService.buscarPorId(estudianteCarrera.getEstadoId()).getNombre());
             Persona persona = personaService.buscarPorId(new Persona(estudianteCarrera.getEstudianteId().getId()));
             AutorProyectoDTO autorProyectoDTO = new AutorProyectoDTO(autorProyecto, autorProyecto.getAspiranteId(), estudianteCarrera, persona);
             if (!sessionProyecto.getAutoresProyectoDTO().contains(autorProyectoDTO)) {
@@ -329,6 +349,7 @@ public class ProyectoController implements Serializable {
     }
 
     private void buscarDirectores() {
+
         Item estadoRenunciado = itemService.buscarPorCatalogoCodigo(CatalogoEnum.ESTADODIRECTOR.getTipo(), EstadoDirectorEnum.RENUNCIADO.getTipo());
         List<DirectorProyecto> directorProyectos = directorProyectoService.buscar(new DirectorProyecto(null, null, null, sessionProyecto.getProyectoSeleccionado(), null, null));
         if (directorProyectos == null) {

@@ -26,6 +26,8 @@ public class ProyectoOntDTO implements Serializable {
     private String lineaInvestigacion;
     private String carrera;
     private String nivelAcademico;
+    private Integer carreraId;
+    private Long ofertaAcademicaId;
 
     public ProyectoOntDTO() {
     }
@@ -133,6 +135,22 @@ public class ProyectoOntDTO implements Serializable {
 
     public void setNivelAcademico(String nivelAcademico) {
         this.nivelAcademico = nivelAcademico;
+    }
+
+    public Integer getCarreraId() {
+        return carreraId;
+    }
+
+    public void setCarreraId(Integer carreraId) {
+        this.carreraId = carreraId;
+    }
+
+    public Long getOfertaAcademicaId() {
+        return ofertaAcademicaId;
+    }
+
+    public void setOfertaAcademicaId(Long ofertaAcademicaId) {
+        this.ofertaAcademicaId = ofertaAcademicaId;
     }
 
 }

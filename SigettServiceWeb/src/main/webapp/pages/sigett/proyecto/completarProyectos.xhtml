@@ -5,12 +5,13 @@
 
     <body>
         <p:autoComplete   effect="fade" minQueryLength="4"  placeholder="#{msg['lbl.buscar']}" 
-                          maxResults="20" style="width: 100%!important"
-                          value="#{sessionProyecto.proyectoOntDTOSeleccionado}"
+                          maxResults="10" style="width: 100%!important"
+                          value="#{sessionProyecto.proyectoSeleccionadoComplete}"
                           completeMethod="#{proyectoController.completarProyectos}"
-                          var="item" itemLabel="#{item.tema}"
-                          converter="proyectoOntDTOConverter" itemValue="#{item}" multiple="false">
-            <p:ajax event="itemSelect" update=":contenido:dgProyectos" />
+                          var="item" itemLabel="#{item.temaActual}"
+                          converter="proyectoDTOConverter" itemValue="#{item}" multiple="false">
+            <p:ajax event="itemSelect" onstart="PF('dlgLoading').show()" 
+                    oncomplete="PF('dlgLoading').hide(),PF('tblProyectosFilter').filter()" update=":contenido:tblProyectos"  />
         </p:autoComplete>
     </body>
 

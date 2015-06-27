@@ -18,7 +18,7 @@ import edu.jlmallas.academico.entity.Docente;
 import edu.jlmallas.academico.entity.EstudianteCarrera;
 import edu.unl.sigett.entity.ConfiguracionCarrera;
 import edu.unl.sigett.entity.EvaluacionTribunal;
-import edu.unl.sigett.entity.Miembro;
+import edu.unl.sigett.entity.MiembroTribunal;
 import edu.unl.sigett.entity.Parametro;
 import edu.unl.sigett.entity.Proyecto;
 import edu.unl.sigett.entity.ProyectoCarreraOferta;
@@ -308,7 +308,7 @@ public class AdministrarActas implements Serializable {
 //                    miembrosCabeceraTabla.add("");
 //                }
 //                if (tribunal.getMiembroList() != null) {
-//                    for (Miembro miembro : tribunal.getMiembroList()) {
+//                    for (MiembroTribunal miembro : tribunal.getMiembroList()) {
 //                        if (miembro.getEsActivo()) {
 //                            Docente docenteMiembro = docenteFacadeLocal.find(miembro.getDocenteId());
 //                            Persona datosMiembro = personaFacadeLocal.find(docenteMiembro.getId());

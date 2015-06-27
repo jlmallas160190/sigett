@@ -3,12 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package edu.unl.sigett.entity;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.Cacheable;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,8 +18,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -33,14 +32,9 @@ import javax.xml.bind.annotation.XmlTransient;
 @Entity
 @Table(name = "calificacion_miembro")
 @XmlRootElement
-@NamedQueries({
-    @NamedQuery(name = "CalificacionMiembro.findAll", query = "SELECT c FROM CalificacionMiembro c"),
-    @NamedQuery(name = "CalificacionMiembro.findById", query = "SELECT c FROM CalificacionMiembro c WHERE c.id = :id"),
-    @NamedQuery(name = "CalificacionMiembro.findByNota", query = "SELECT c FROM CalificacionMiembro c WHERE c.nota = :nota"),
-    @NamedQuery(name = "CalificacionMiembro.findByObservacion", query = "SELECT c FROM CalificacionMiembro c WHERE c.observacion = :observacion"),
-    @NamedQuery(name = "CalificacionMiembro.findByMiembroId", query = "SELECT c FROM CalificacionMiembro c WHERE c.miembroId = :miembroId"),
-    @NamedQuery(name = "CalificacionMiembro.findByEsActivo", query = "SELECT c FROM CalificacionMiembro c WHERE c.esActivo = :esActivo")})
+@Cacheable(value = false)
 public class CalificacionMiembro implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -50,7 +44,7 @@ public class CalificacionMiembro implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "nota")
-    private double nota;
+    private BigDecimal nota;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 500)
@@ -64,7 +58,7 @@ public class CalificacionMiembro implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "es_activo")
-    private boolean esActivo;
+    private Boolean esActivo;
     @JoinColumn(name = "evaluacion_tribunal_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private EvaluacionTribunal evaluacionTribunalId;
@@ -80,12 +74,13 @@ public class CalificacionMiembro implements Serializable {
         this.id = id;
     }
 
-    public CalificacionMiembro(Long id, double nota, String observacion, String miembroId, boolean esActivo) {
+    public CalificacionMiembro(Long id, BigDecimal nota, String observacion, String miembroId, Boolean esActivo, EvaluacionTribunal evaluacionTribunalId) {
         this.id = id;
         this.nota = nota;
         this.observacion = observacion;
         this.miembroId = miembroId;
         this.esActivo = esActivo;
+        this.evaluacionTribunalId = evaluacionTribunalId;
     }
 
     public Long getId() {
@@ -96,12 +91,20 @@ public class CalificacionMiembro implements Serializable {
         this.id = id;
     }
 
-    public double getNota() {
+    public BigDecimal getNota() {
         return nota;
     }
 
-    public void setNota(double nota) {
+    public void setNota(BigDecimal nota) {
         this.nota = nota;
+    }
+
+    public Boolean getEsActivo() {
+        return esActivo;
+    }
+
+    public void setEsActivo(Boolean esActivo) {
+        this.esActivo = esActivo;
     }
 
     public String getObservacion() {
@@ -118,14 +121,6 @@ public class CalificacionMiembro implements Serializable {
 
     public void setMiembroId(String miembroId) {
         this.miembroId = miembroId;
-    }
-
-    public boolean getEsActivo() {
-        return esActivo;
-    }
-
-    public void setEsActivo(boolean esActivo) {
-        this.esActivo = esActivo;
     }
 
     public EvaluacionTribunal getEvaluacionTribunalId() {
@@ -168,15 +163,12 @@ public class CalificacionMiembro implements Serializable {
             return false;
         }
         CalificacionMiembro other = (CalificacionMiembro) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
+        return (this.id != null || other.id == null) && (this.id == null || this.id.equals(other.id));
     }
 
     @Override
     public String toString() {
         return "edu.unl.sigett.entity.CalificacionMiembro[ id=" + id + " ]";
     }
-    
+
 }

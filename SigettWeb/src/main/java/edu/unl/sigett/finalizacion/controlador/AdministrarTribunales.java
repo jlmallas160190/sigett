@@ -12,7 +12,7 @@ import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
 import edu.unl.sigett.entity.AutorProyecto;
 import edu.jlmallas.academico.entity.Docente;
 import edu.unl.sigett.entity.EvaluacionTribunal;
-import edu.unl.sigett.entity.Miembro;
+import edu.unl.sigett.entity.MiembroTribunal;
 import edu.unl.sigett.entity.Proyecto;
 import edu.unl.sigett.entity.Tribunal;
 import org.jlmallas.seguridad.entity.Usuario;
@@ -371,7 +371,7 @@ public class AdministrarTribunales implements Serializable {
     public void buscarPorDocente(Long docenteId, String criterio) {
         try {
             tribunalesPorDocente = new ArrayList<>();
-            for (Miembro miembro : miembroFacadeLocal.buscarPorDocente(docenteId)) {
+            for (MiembroTribunal miembro : miembroFacadeLocal.buscarPorDocente(docenteId)) {
                 if (miembro.getTribunalId().getProyectoId().getTemaActual().toLowerCase().contains(criterio.toLowerCase())) {
                     tribunalesPorDocente.add(miembro.getTribunalId());
                 }

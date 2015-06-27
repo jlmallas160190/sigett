@@ -74,8 +74,10 @@ public class DirectorController implements Serializable {
             sessionDocenteProyecto.setRenderedPnlDocentesDisponibles(Boolean.FALSE);
             if (param.equals("director")) {
                 directorProyectoDM.setRenderedPnlDirectoresDisponibles(Boolean.TRUE);
+                RequestContext.getCurrentInstance().execute("PF('dlgDirectoresDisponibles').show()");
             } else {
                 sessionDocenteProyecto.setRenderedPnlDocentesDisponibles(Boolean.TRUE);
+                RequestContext.getCurrentInstance().execute("PF('dlgDocentesDisponibles').show()");
             }
             this.directorDM.getDirectoresDTO().clear();
             this.directorDM.getFilterDirectoresDTO().clear();
@@ -99,7 +101,7 @@ public class DirectorController implements Serializable {
                     }
                 }
             }
-            RequestContext.getCurrentInstance().execute("PF('dlgBuscarDocentesDisponibles').show()");
+
             directorDM.setFilterDirectoresDTO(directorDM.getDirectoresDTO());
         } catch (Exception e) {
             LOG.info(e.getMessage());

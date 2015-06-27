@@ -13,7 +13,7 @@ import edu.unl.sigett.entity.CalificacionMiembro;
 import edu.unl.sigett.entity.CalificacionParametro;
 import edu.jlmallas.academico.entity.Docente;
 import edu.unl.sigett.entity.EvaluacionTribunal;
-import edu.unl.sigett.entity.Miembro;
+import edu.unl.sigett.entity.MiembroTribunal;
 import edu.unl.sigett.entity.RangoEquivalencia;
 import edu.unl.sigett.entity.RangoNota;
 import edu.unl.sigett.entity.Tribunal;
@@ -93,7 +93,7 @@ public class AdministrarCalificacionMiembro implements Serializable {
 //            List<Miembro> miembros = new ArrayList<>();
 //            miembros = miembroFacadeLocal.buscarPorDocente(docente.getId());
 //            if (miembros != null && evaluacionTribunal != null) {
-//                for (Miembro miembro : miembros) {
+//                for (MiembroTribunal miembro : miembros) {
 //                    if (encontrado == false) {
 //                        for (CalificacionMiembro cm : calificacionMiembroFacadeLocal.buscarPorMiembro(configuracionFacadeLocal.encriptaClave(miembro.getId() + ""))) {
 //                            if (cm.getMiembroId().equals(calificacionMiembro.getMiembroId())) {
@@ -195,7 +195,7 @@ public class AdministrarCalificacionMiembro implements Serializable {
 
     public void grabarCalificacionesMiembro(Tribunal tribunal, EvaluacionTribunal evaluacionTribunal) {
         try {
-////            for (Miembro miembro : miembroFacadeLocal.buscarPorTribunal(tribunal.getId())) {
+////            for (MiembroTribunal miembro : miembroFacadeLocal.buscarPorTribunal(tribunal.getId())) {
 ////                List<CalificacionMiembro> calificacionMiembros = calificacionMiembroFacadeLocal.buscarPorMiembroEvaluacionTribunal(configuracionFacadeLocal.encriptaClave(miembro.getId() + ""), evaluacionTribunal.getId());
 ////                CalificacionMiembro calificacionMiembro = null;
 ////                if (calificacionMiembros != null) {
@@ -215,39 +215,39 @@ public class AdministrarCalificacionMiembro implements Serializable {
         }
     }
 
-    public void calculaNota(CalificacionMiembro calificacionMiembro) {
-        try {
-            double nota = 0.0;
-            int numeroParametros = 0;
-            for (CalificacionParametro cp : calificacionParametroFacadeLocal.buscarPorCalificacionMiembro(calificacionMiembro.getId())) {
-                numeroParametros++;
-                nota += cp.getNota();
-            }
-            nota = nota / numeroParametros;
-            nota = Math.round(nota * 100);
-            nota = nota / 100;
-            calificacionMiembro.setNota(nota);
-            sessionCalificacionMiembro.setCalificacionMiembro(calificacionMiembro);
-        } catch (Exception e) {
-        }
-    }
-
-    public void calculaNotaView(CalificacionMiembro calificacionMiembro) {
-        try {
-            double nota = 0.0;
-            int numeroParametros = 0;
-            for (CalificacionParametro cp : administrarCalificacionParametro.getCalificacionParametros()) {
-                numeroParametros++;
-                nota += cp.getNota();
-            }
-            nota = nota / numeroParametros;
-            nota = Math.round(nota * 100);
-            nota = nota / 100;
-            calificacionMiembro.setNota(nota);
-            sessionCalificacionMiembro.setCalificacionMiembro(calificacionMiembro);
-        } catch (Exception e) {
-        }
-    }
+//    public void calculaNota(CalificacionMiembro calificacionMiembro) {
+//        try {
+//            double nota = 0.0;
+//            int numeroParametros = 0;
+//            for (CalificacionParametro cp : calificacionParametroFacadeLocal.buscarPorCalificacionMiembro(calificacionMiembro.getId())) {
+//                numeroParametros++;
+//                nota += cp.getNota();
+//            }
+//            nota = nota / numeroParametros;
+//            nota = Math.round(nota * 100);
+//            nota = nota / 100;
+//            calificacionMiembro.setNota(nota);
+//            sessionCalificacionMiembro.setCalificacionMiembro(calificacionMiembro);
+//        } catch (Exception e) {
+//        }
+//    }
+//
+//    public void calculaNotaView(CalificacionMiembro calificacionMiembro) {
+//        try {
+//            double nota = 0.0;
+//            int numeroParametros = 0;
+//            for (CalificacionParametro cp : administrarCalificacionParametro.getCalificacionParametros()) {
+//                numeroParametros++;
+//                nota += cp.getNota();
+//            }
+//            nota = nota / numeroParametros;
+//            nota = Math.round(nota * 100);
+//            nota = nota / 100;
+//            calificacionMiembro.setNota(nota);
+//            sessionCalificacionMiembro.setCalificacionMiembro(calificacionMiembro);
+//        } catch (Exception e) {
+//        }
+//    }
 
     public void buscarConsulta(EvaluacionTribunal evaluacionTribunal) {
         this.calificacionMiembrosConsulta = new ArrayList<>();
@@ -272,7 +272,7 @@ public class AdministrarCalificacionMiembro implements Serializable {
 //            miembros = miembroFacadeLocal.buscarPorDocente(docente.getId());
 //
 //            if (miembros != null && evaluacionTribunal != null) {
-//                for (Miembro miembro : miembros) {
+//                for (MiembroTribunal miembro : miembros) {
 //                    if (encontrado == false) {
 //                        for (CalificacionMiembro cm : calificacionMiembroFacadeLocal.buscarPorMiembro(configuracionFacadeLocal.encriptaClave(miembro.getId() + ""))) {
 //                            if (cm.getMiembroId().equals(calificacionMiembro.getMiembroId()) && evaluacionTribunal.getFechaInicio().before(fechaActual.getTime()) && evaluacionTribunal.getFechaPlazo().after(fechaActual.getTime())) {

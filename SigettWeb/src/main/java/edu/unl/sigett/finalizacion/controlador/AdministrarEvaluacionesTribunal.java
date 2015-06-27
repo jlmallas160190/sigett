@@ -5,19 +5,15 @@
  */
 package edu.unl.sigett.finalizacion.controlador;
 
-import com.jlmallas.comun.entity.Persona;
 import com.jlmallas.comun.dao.PersonaDao;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 import com.ocpsoft.pretty.faces.annotation.URLMappings;
 import edu.unl.sigett.finalizacion.managed.session.SessionEvaluacionTribunal;
 import edu.unl.sigett.proyecto.SessionProyecto;
 import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
-import edu.unl.sigett.entity.AutorProyecto;
-import edu.unl.sigett.entity.CalificacionMiembro;
-import edu.unl.sigett.entity.CatalogoEvaluacion;
 import edu.jlmallas.academico.entity.Docente;
 import edu.unl.sigett.entity.EvaluacionTribunal;
-import edu.unl.sigett.entity.Miembro;
+import edu.unl.sigett.entity.MiembroTribunal;
 import edu.unl.sigett.entity.Proyecto;
 import edu.unl.sigett.entity.RangoEquivalencia;
 import edu.unl.sigett.entity.RangoNota;
@@ -26,7 +22,6 @@ import org.jlmallas.seguridad.entity.Usuario;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -45,7 +40,6 @@ import org.primefaces.model.DefaultScheduleModel;
 import org.primefaces.model.ScheduleEvent;
 import org.primefaces.model.ScheduleModel;
 import edu.unl.sigett.dao.AutorProyectoDao;
-import edu.unl.sigett.dao.CatalogoEvaluacionFacadeLocal;
 import edu.unl.sigett.dao.ConfiguracionGeneralDao;
 import edu.jlmallas.academico.dao.EstudianteCarreraDao;
 import edu.unl.sigett.dao.EvaluacionTribunalFacadeLocal;
@@ -54,13 +48,8 @@ import edu.unl.sigett.dao.ProyectoDao;
 import edu.unl.sigett.dao.RangoEquivalenciaFacadeLocal;
 import edu.unl.sigett.dao.RangoNotaFacadeLocal;
 import org.jlmallas.seguridad.dao.UsuarioDao;
-import edu.jlmallas.academico.entity.EstudianteCarrera;
-import edu.jlmallas.academico.enumeration.EstadoEstudianteCarreraEnum;
 import edu.jlmallas.academico.dao.DocenteDao;
 import edu.unl.sigett.enumeration.CatalogoEvaluacionEnum;
-import edu.unl.sigett.enumeration.CatalogoEventoEnum;
-import edu.unl.sigett.enumeration.EstadoAutorEnum;
-import edu.unl.sigett.enumeration.EstadoProyectoEnum;
 
 /**
  *
@@ -90,8 +79,7 @@ public class AdministrarEvaluacionesTribunal implements Serializable {
 
     @EJB
     private UsuarioDao usuarioFacadeLocal;
-    @EJB
-    private CatalogoEvaluacionFacadeLocal catalogoEvaluacionFacadeLocal;
+
     @EJB
     private RangoEquivalenciaFacadeLocal rangoEquivalenciaFacadeLocal;
     @EJB
@@ -229,15 +217,15 @@ public class AdministrarEvaluacionesTribunal implements Serializable {
 
     public boolean existeSustentacionPublica(Tribunal tribunal) {
         boolean var = false;
-        try {
-            for (EvaluacionTribunal evaluacionTribunal : evaluacionTribunalFacadeLocal.buscarPorTribunal(tribunal.getId())) {
-                if (evaluacionTribunal.getCatalogoEvaluacionId().getCodigo().equalsIgnoreCase(CatalogoEvaluacionEnum.SUSTENTACIONPUBLICA.getTipo())) {
-                    var = true;
-                    break;
-                }
-            }
-        } catch (Exception e) {
-        }
+//        try {
+//            for (EvaluacionTribunal evaluacionTribunal : evaluacionTribunalFacadeLocal.buscarPorTribunal(tribunal.getId())) {
+//                if (evaluacionTribunal.getCatalogoEvaluacionId().getCodigo().equalsIgnoreCase(CatalogoEvaluacionEnum.SUSTENTACIONPUBLICA.getTipo())) {
+//                    var = true;
+//                    break;
+//                }
+//            }
+//        } catch (Exception e) {
+//        }
         return var;
     }
 
@@ -466,26 +454,26 @@ public class AdministrarEvaluacionesTribunal implements Serializable {
 
     public void aceptarAcentarNota(EvaluacionTribunal evaluacionTribunal) {
         try {
-            FacesContext facesContext = FacesContext.getCurrentInstance();
-            ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            if (evaluacionTribunal.getId() != null) {
-                RangoNota rn = null;
-                if (evaluacionTribunal.getRangoNotaId() != null) {
-                    rn = evaluacionTribunal.getRangoNotaId();
-                }
-                if (rn != null) {
-                    evaluacionTribunal.setRangoNotaId(rn);
-                    for (RangoEquivalencia rangoEquivalencia : rangoEquivalenciaFacadeLocal.buscarPorRangoNota(rn.getId())) {
-                        if (evaluacionTribunal.getNota() >= rangoEquivalencia.getNotaInicio() && evaluacionTribunal.getNota() <= rangoEquivalencia.getNotaFin()) {
-                            evaluacionTribunal.setRangoEquivalenciaId(rangoEquivalencia);
-                            break;
-                        }
-                    }
-                }
-                evaluacionTribunalFacadeLocal.edit(evaluacionTribunal);
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_editar"), "");
-                FacesContext.getCurrentInstance().addMessage(null, message);
-            }
+//            FacesContext facesContext = FacesContext.getCurrentInstance();
+//            ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
+//            if (evaluacionTribunal.getId() != null) {
+//                RangoNota rn = null;
+//                if (evaluacionTribunal.getRangoNotaId() != null) {
+//                    rn = evaluacionTribunal.getRangoNotaId();
+//                }
+//                if (rn != null) {
+//                    evaluacionTribunal.setRangoNotaId(rn);
+//                    for (RangoEquivalencia rangoEquivalencia : rangoEquivalenciaFacadeLocal.buscarPorRangoNota(rn.getId())) {
+//                        if (evaluacionTribunal.getNota() >= rangoEquivalencia.getNotaInicio() && evaluacionTribunal.getNota() <= rangoEquivalencia.getNotaFin()) {
+//                            evaluacionTribunal.setRangoEquivalenciaId(rangoEquivalencia);
+//                            break;
+//                        }
+//                    }
+//                }
+//                evaluacionTribunalFacadeLocal.edit(evaluacionTribunal);
+//                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_editar"), "");
+//                FacesContext.getCurrentInstance().addMessage(null, message);
+//            }
         } catch (Exception e) {
         }
     }
@@ -587,9 +575,9 @@ public class AdministrarEvaluacionesTribunal implements Serializable {
                                     || (horaInicioEvaluacion.after(horaInicioOtraEvaluacion) && horaInicioEvaluacion.before(horaFinOtraEvaluacion)))
                                     || (horaFinEvaluacion.equals(horaInicioOtraEvaluacion) || horaFinEvaluacion.equals(horaFinOtraEvaluacion)
                                     || (horaFinEvaluacion.after(horaInicioOtraEvaluacion) && horaFinEvaluacion.before(horaFinOtraEvaluacion)))) {
-                                for (Miembro m : miembroFacadeLocal.buscarPorTribunal(ev.getTribunalId().getId())) {
+                                for (MiembroTribunal m : miembroFacadeLocal.buscarPorTribunal(ev.getTribunalId().getId())) {
                                     if (encontrado == false) {
-                                        for (Miembro mi : miembroFacadeLocal.buscarPorTribunal(evaluacionTribunal.getTribunalId().getId())) {
+                                        for (MiembroTribunal mi : miembroFacadeLocal.buscarPorTribunal(evaluacionTribunal.getTribunalId().getId())) {
                                             if (m.getDocenteId().equals(mi.getDocenteId())) {
                                                 Docente docente = docenteFacadeLocal.find(m.getDocenteId());
                                                 docenteEncontrado = docente;
@@ -625,27 +613,27 @@ public class AdministrarEvaluacionesTribunal implements Serializable {
 
     public void listadoSustentacionesPorUsuarioCarrera(Usuario usuario, Proyecto proyecto) {
         try {
-            FacesContext facesContext = FacesContext.getCurrentInstance();
-            ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            this.evaluacionTribunalesByCarrera = new ArrayList<>();
-            eventModel = new DefaultScheduleModel();
-            for (EvaluacionTribunal ev : evaluacionTribunalFacadeLocal.buscarPorUsuarioCarrera(usuario.getId())) {
-                if (!evaluacionTribunalesByCarrera.contains(ev)) {
-                    DefaultScheduleEvent evento = new DefaultScheduleEvent();
-                    evento.setData(ev);
-                    evento.setStartDate(ev.getFechaInicio());
-                    evento.setEndDate(ev.getFechaFin());
-                    if (ev.getTribunalId().getProyectoId().getId() == proyecto.getId()) {
-                        evento.setTitle(ev.getCatalogoEvaluacionId().getNombre());
-                        evento.setStyleClass("propio");
-                    } else {
-                        evento.setTitle(ev.getCatalogoEvaluacionId().getNombre() + " " + bundle.getString("lbl.de") + " " + bundle.getString("lbl.proyecto") + " " + bundle.getString("lbl.tema_proyecto") + ": " + proyecto.getTemaActual());
-                        evento.setStyleClass("otro");
-                    }
-                    eventModel.addEvent(evento);
-                    evaluacionTribunalesByCarrera.add(ev);
-                }
-            }
+//            FacesContext facesContext = FacesContext.getCurrentInstance();
+//            ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
+//            this.evaluacionTribunalesByCarrera = new ArrayList<>();
+//            eventModel = new DefaultScheduleModel();
+//            for (EvaluacionTribunal ev : evaluacionTribunalFacadeLocal.buscarPorUsuarioCarrera(usuario.getId())) {
+//                if (!evaluacionTribunalesByCarrera.contains(ev)) {
+//                    DefaultScheduleEvent evento = new DefaultScheduleEvent();
+//                    evento.setData(ev);
+//                    evento.setStartDate(ev.getFechaInicio());
+//                    evento.setEndDate(ev.getFechaFin());
+//                    if (ev.getTribunalId().getProyectoId().getId() == proyecto.getId()) {
+//                        evento.setTitle(ev.getCatalogoEvaluacionId().getNombre());
+//                        evento.setStyleClass("propio");
+//                    } else {
+//                        evento.setTitle(ev.getCatalogoEvaluacionId().getNombre() + " " + bundle.getString("lbl.de") + " " + bundle.getString("lbl.proyecto") + " " + bundle.getString("lbl.tema_proyecto") + ": " + proyecto.getTemaActual());
+//                        evento.setStyleClass("otro");
+//                    }
+//                    eventModel.addEvent(evento);
+//                    evaluacionTribunalesByCarrera.add(ev);
+//                }
+//            }
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -653,26 +641,26 @@ public class AdministrarEvaluacionesTribunal implements Serializable {
 
     public void consultaSustentaciones(Usuario usuario) {
         try {
-            FacesContext facesContext = FacesContext.getCurrentInstance();
-            ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            List<EvaluacionTribunal> ets = new ArrayList<>();
-            eventModelConsulta = new DefaultScheduleModel();
-            for (EvaluacionTribunal ev : evaluacionTribunalFacadeLocal.buscarPorUsuarioCarrera(usuario.getId())) {
-                if (!ets.contains(ev)) {
-                    DefaultScheduleEvent evento = new DefaultScheduleEvent();
-                    evento.setData(ev);
-                    evento.setStartDate(ev.getFechaInicio());
-                    evento.setEndDate(ev.getFechaFin());
-                    evento.setTitle(ev.getCatalogoEvaluacionId().getNombre() + " " + bundle.getString("lbl.de") + " " + bundle.getString("lbl.proyecto") + ": " + ev.getTribunalId().getProyectoId().getTemaActual());
-                    if (ev.getCatalogoEvaluacionId().getId() == 1) {
-                        evento.setStyleClass("privada");
-                    } else {
-                        evento.setStyleClass("publica");
-                    }
-                    eventModelConsulta.addEvent(evento);
-                    ets.add(ev);
-                }
-            }
+//            FacesContext facesContext = FacesContext.getCurrentInstance();
+//            ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
+//            List<EvaluacionTribunal> ets = new ArrayList<>();
+//            eventModelConsulta = new DefaultScheduleModel();
+//            for (EvaluacionTribunal ev : evaluacionTribunalFacadeLocal.buscarPorUsuarioCarrera(usuario.getId())) {
+//                if (!ets.contains(ev)) {
+//                    DefaultScheduleEvent evento = new DefaultScheduleEvent();
+//                    evento.setData(ev);
+//                    evento.setStartDate(ev.getFechaInicio());
+//                    evento.setEndDate(ev.getFechaFin());
+//                    evento.setTitle(ev.getCatalogoEvaluacionId().getNombre() + " " + bundle.getString("lbl.de") + " " + bundle.getString("lbl.proyecto") + ": " + ev.getTribunalId().getProyectoId().getTemaActual());
+//                    if (ev.getCatalogoEvaluacionId().getId() == 1) {
+//                        evento.setStyleClass("privada");
+//                    } else {
+//                        evento.setStyleClass("publica");
+//                    }
+//                    eventModelConsulta.addEvent(evento);
+//                    ets.add(ev);
+//                }
+//            }
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -768,19 +756,19 @@ public class AdministrarEvaluacionesTribunal implements Serializable {
 
     public boolean permitirCrearOtraSustentacion(EvaluacionTribunal evaluacionTribunal) {
         boolean var = false;
-        int numero = Integer.parseInt(configuracionGeneralFacadeLocal.find(45).getValor());
-        int contador = 0;
+//        int numero = Integer.parseInt(configuracionGeneralFacadeLocal.find(45).getValor());
+//        int contador = 0;
         try {
-            for (EvaluacionTribunal eva : evaluacionTribunalFacadeLocal.buscarPorTribunal(evaluacionTribunal.getTribunalId().getId())) {
-                if (eva.getCatalogoEvaluacionId().getId() == evaluacionTribunal.getCatalogoEvaluacionId().getId()) {
-                    contador++;
-                }
-            }
-            if (contador < numero) {
-                var = true;
-            } else {
-                var = false;
-            }
+//            for (EvaluacionTribunal eva : evaluacionTribunalFacadeLocal.buscarPorTribunal(evaluacionTribunal.getTribunalId().getId())) {
+//                if (eva.getCatalogoEvaluacionId().getId() == evaluacionTribunal.getCatalogoEvaluacionId().getId()) {
+//                    contador++;
+//                }
+//            }
+//            if (contador < numero) {
+//                var = true;
+//            } else {
+//                var = false;
+//            }
         } catch (Exception e) {
         }
         return var;
@@ -790,27 +778,27 @@ public class AdministrarEvaluacionesTribunal implements Serializable {
 
     public boolean renderedImprimirActa(EvaluacionTribunal evaluacionTribunal, Usuario usuario) {
         boolean var = false;
-        int tienePermiso = 0;
-        try {
-            if (evaluacionTribunal.getCatalogoEvaluacionId().getCodigo().equalsIgnoreCase(CatalogoEvaluacionEnum.SUSTENTACIONPRIVADA.getTipo())) {
-                tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "calificar_evaluacion_tribunal_privada");
-                if (tienePermiso == 1) {
-                    var = true;
-                } else {
-                    var = false;
-                }
-            } else {
-                if (evaluacionTribunal.getCatalogoEvaluacionId().getCodigo().equalsIgnoreCase(CatalogoEvaluacionEnum.SUSTENTACIONPUBLICA.getTipo())) {
-                    tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "calificar_evaluacion_tribunal_publica");
-                    if (tienePermiso == 1) {
-                        var = true;
-                    } else {
-                        var = false;
-                    }
-                }
-            }
-        } catch (Exception e) {
-        }
+//        int tienePermiso = 0;
+//        try {
+//            if (evaluacionTribunal.getCatalogoEvaluacionId().getCodigo().equalsIgnoreCase(CatalogoEvaluacionEnum.SUSTENTACIONPRIVADA.getTipo())) {
+//                tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "calificar_evaluacion_tribunal_privada");
+//                if (tienePermiso == 1) {
+//                    var = true;
+//                } else {
+//                    var = false;
+//                }
+//            } else {
+//                if (evaluacionTribunal.getCatalogoEvaluacionId().getCodigo().equalsIgnoreCase(CatalogoEvaluacionEnum.SUSTENTACIONPUBLICA.getTipo())) {
+//                    tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "calificar_evaluacion_tribunal_publica");
+//                    if (tienePermiso == 1) {
+//                        var = true;
+//                    } else {
+//                        var = false;
+//                    }
+//                }
+//            }
+//        } catch (Exception e) {
+//        }
         return var;
     }
 
@@ -890,23 +878,23 @@ public class AdministrarEvaluacionesTribunal implements Serializable {
 
     public void renderedAceptarNota(Docente docente) {
         try {
-            Miembro miembro = null;
-            List<Miembro> miembros = new ArrayList<>();
-            miembros = miembroFacadeLocal.buscarPorDocente(docente.getId());
-            if (miembros != null) {
-                miembro = !miembros.isEmpty() ? miembros.get(0) : null;
-                if (miembro != null) {
-                    if (miembro.getCargoId().getId() == 1) {
-                        renderedAceptarNota = true;
-                    } else {
-                        renderedAceptarNota = false;
-                    }
-                } else {
-                    renderedAceptarNota = false;
-                }
-            } else {
-                renderedAceptarNota = false;
-            }
+//            MiembroTribunal miembro = null;
+//            List<MiembroTribunal> miembros = new ArrayList<>();
+//            miembros = miembroFacadeLocal.buscarPorDocente(docente.getId());
+//            if (miembros != null) {
+//                miembro = !miembros.isEmpty() ? miembros.get(0) : null;
+//                if (miembro != null) {
+//                    if (miembro.getCargoId().getId() == 1) {
+//                        renderedAceptarNota = true;
+//                    } else {
+//                        renderedAceptarNota = false;
+//                    }
+//                } else {
+//                    renderedAceptarNota = false;
+//                }
+//            } else {
+//                renderedAceptarNota = false;
+//            }
         } catch (Exception e) {
         }
     }
