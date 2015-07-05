@@ -416,7 +416,6 @@ public class DocenteProyectoController implements Serializable {
             DocenteProyectoDTO docenteProyectoDTO = new DocenteProyectoDTO(docenteProyecto, directorDTO.getPersona(),
                     directorDTO.getDocenteCarrera());
             sessionProyecto.getDocentesProyectoDTO().add(docenteProyectoDTO);
-            RequestContext.getCurrentInstance().execute("PF('dlgBuscarDocentesDisponibles').hide()");
             cabeceraController.getMessageView().message(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.docente") + " "
                     + bundle.getString("lbl.msm_agregar"), "");
             cancelarDocentesDisponibles();

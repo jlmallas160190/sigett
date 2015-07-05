@@ -109,15 +109,7 @@ public class EstudianteUsuarioController implements Serializable {
                 if (usuarios == null) {
                     return "";
                 }
-                EstudianteUsuario estudianteUsuario = estudianteUsuarioService.buscarPorId(!usuarios.isEmpty() ? usuarios.get(0).getId() : null);
-                if (estudianteUsuario == null) {
-                    this.cabeceraController.getMessageView().message(FacesMessage.SEVERITY_ERROR, bundle.getString("datos_usuario_incorrectos"), "");
-                    return "";
-                }
-                sessionEstudianteUsuario.setEstudianteUsuarioDTO(new EstudianteUsuarioDTO(!usuarios.isEmpty() ? usuarios.get(0) : null,
-                        estudianteService.buscarPorId(new Estudiante(estudianteUsuario.getEstudianteId())),
-                        personaService.buscarPorId(new Persona(estudianteUsuario.getEstudianteId())), new Rol(null,
-                                cabeceraController.getValueFromProperties(PropertiesFileEnum.ETIQUETASES, "estudiante"))));
+                iniciarUsuario();
                 return "pretty:inicio";
             }
             if (var == 2) {
@@ -136,7 +128,24 @@ public class EstudianteUsuarioController implements Serializable {
             this.cabeceraController.getMessageView().message(FacesMessage.SEVERITY_ERROR, bundle.getString("username_incorrecto"), "");
             return "";
         }
+        iniciarUsuario();
         return "pretty:inicio";
+    }
+
+    private void iniciarUsuario() {
+        List<Usuario> usuarios = usuarioService.buscar(new Usuario(null, null, sessionEstudianteUsuario.getEstudianteUsuarioDTO().getUsuario().
+                getUsername(), null, null, null, Boolean.TRUE, Boolean.FALSE));
+        if (usuarios == null) {
+            return;
+        }
+        EstudianteUsuario estudianteUsuario = estudianteUsuarioService.buscarPorId(!usuarios.isEmpty() ? usuarios.get(0).getId() : null);
+        if (estudianteUsuario == null) {
+            return;
+        }
+        sessionEstudianteUsuario.setEstudianteUsuarioDTO(new EstudianteUsuarioDTO(!usuarios.isEmpty() ? usuarios.get(0) : null,
+                estudianteService.buscarPorId(new Estudiante(estudianteUsuario.getEstudianteId())),
+                personaService.buscarPorId(new Persona(estudianteUsuario.getEstudianteId())), new Rol(null,
+                        cabeceraController.getValueFromProperties(PropertiesFileEnum.ETIQUETASES, "estudiante"))));
     }
     //<editor-fold defaultstate="collapsed" desc="SERVICIOS WEB">
 
@@ -149,7 +158,7 @@ public class EstudianteUsuarioController implements Serializable {
                     configuracionService.buscar(new Configuracion(ConfiguracionEnum.CLAVEWS.getTipo())).get(0).getValor()));
             String userService = configuracionService.buscar(new Configuracion(ConfiguracionEnum.USUARIOWS.getTipo())).get(0).getValor();
             String serviceUrl = configuracionService.buscar(new Configuracion(URLWSEnum.VALIDARESTUDIANTE.getTipo())).get(0).getValor();
-            String s = serviceUrl + "?cedula=" + cedula + ";clave=" + passwordService;
+            String s = serviceUrl + "?cedula=" + cedula + ";clave=" + clave;
             ConexionDTO seguridad = new ConexionDTO(passwordService, s, userService);
             NetClientService conexion = new NetClientServiceImplement();
             String datosJson = conexion.response(seguridad);

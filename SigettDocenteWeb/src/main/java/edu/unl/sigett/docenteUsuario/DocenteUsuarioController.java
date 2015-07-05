@@ -102,18 +102,7 @@ public class DocenteUsuarioController implements Serializable {
                 this.cabeceraController.getMessageView().message(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.clave_incorrecta") + "", "");
             }
             if (var == 1) {
-                List<Usuario> usuarios = usuarioService.buscar(new Usuario(null, null, docenteUsuarioDM.getDocenteUsuarioDTO().getUsuario().
-                        getUsername(), null, null, null, Boolean.TRUE, Boolean.FALSE));
-                if (usuarios == null) {
-                    return "";
-                }
-                DocenteUsuario docenteUsuario = docenteUsuarioDao.buscarPorId(!usuarios.isEmpty() ? usuarios.get(0).getId() : null);
-                if (docenteUsuario == null) {
-                    this.cabeceraController.getMessageView().message(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.datos_incorrectos"), "");
-                    return "";
-                }
-                docenteUsuarioDM.setDocenteUsuarioDTO(new DocenteUsuarioDTO(docenteService.buscarPorId(new Docente(docenteUsuario.getDocenteId())),
-                        !usuarios.isEmpty() ? usuarios.get(0) : null, personaDao.find(docenteUsuario.getDocenteId())));
+                iniciarUsuario();
                 return "pretty:inicioDocente";
             }
             if (var == 2) {
@@ -132,7 +121,22 @@ public class DocenteUsuarioController implements Serializable {
             this.cabeceraController.getMessageView().message(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.usuario_incorrecto"), "");
             return "";
         }
+        iniciarUsuario();
         return "pretty:inicioDocente";
+    }
+
+    private void iniciarUsuario() {
+        List<Usuario> usuarios = usuarioService.buscar(new Usuario(null, null, docenteUsuarioDM.getDocenteUsuarioDTO().getUsuario().
+                getUsername(), null, null, null, Boolean.TRUE, Boolean.FALSE));
+        if (usuarios == null) {
+            return;
+        }
+        DocenteUsuario docenteUsuario = docenteUsuarioDao.buscarPorId(!usuarios.isEmpty() ? usuarios.get(0).getId() : null);
+        if (docenteUsuario == null) {
+            return;
+        }
+        docenteUsuarioDM.setDocenteUsuarioDTO(new DocenteUsuarioDTO(docenteService.buscarPorId(new Docente(docenteUsuario.getDocenteId())),
+                !usuarios.isEmpty() ? usuarios.get(0) : null, personaDao.find(docenteUsuario.getDocenteId())));
     }
 
     public String logout() {
@@ -152,7 +156,7 @@ public class DocenteUsuarioController implements Serializable {
                     configuracionService.buscar(new Configuracion(ConfiguracionEnum.CLAVEWS.getTipo())).get(0).getValor()));
             String userService = configuracionService.buscar(new Configuracion(ConfiguracionEnum.USUARIOWS.getTipo())).get(0).getValor();
             String serviceUrl = configuracionService.buscar(new Configuracion(URLWSEnum.VALIDARDOCENTE.getTipo())).get(0).getValor();
-            String s = serviceUrl + "?cedula=" + cedula + ";clave=" + passwordService;
+            String s = serviceUrl + "?cedula=" + cedula + ";clave=" + clave;
             ConexionDTO seguridad = new ConexionDTO(passwordService, s, userService);
             NetClientService conexion = new NetClientServiceImplement();
             String datosJson = conexion.response(seguridad);

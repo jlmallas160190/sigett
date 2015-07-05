@@ -116,7 +116,7 @@ import org.primefaces.model.DualListModel;
 @URLMappings(mappings = {
     @URLMapping(
             id = "editarProyecto",
-            pattern = "/editarProyecto/#{sessionProyecto.proyectoSeleccionado.id}",
+            pattern = "/editarProyecto/",
             viewId = "/faces/pages/sigett/proyectos/editarProyecto.xhtml"
     ),
     @URLMapping(
