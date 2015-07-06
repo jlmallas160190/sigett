@@ -45,13 +45,13 @@ public class DocumentoProyectoController implements Serializable {
     @Inject
     private CabeceraController cabeceraController;
     private static final Logger LOG = Logger.getLogger(DocumentoProyectoController.class.getName());
-    @EJB
+    @EJB(lookup = "java:global/ComunService/ConfiguracionServiceImplement!com.jlmallas.comun.service.ConfiguracionService")
     private ConfiguracionService configuracionService;
-    @EJB
+    @EJB(lookup = "java:global/ComunService/DocumentoServiceImplement!com.jlmallas.comun.service.DocumentoService")
     private DocumentoService documentoService;
-    @EJB
+    @EJB(lookup = "java:global/SigettService/DocumentoProyectoServiceImplement!edu.unl.sigett.service.DocumentoProyectoService")
     private DocumentoProyectoService documentoProyectoService;
-    @EJB
+    @EJB(lookup = "java:global/ComunService/ItemServiceImplement!com.jlmallas.comun.service.ItemService")
     private ItemService itemService;
 
     public DocumentoProyectoController() {

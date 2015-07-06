@@ -13,7 +13,7 @@
 
             <ui:define name="content">
                 <f:metadata>
-                    <f:event type="preRenderView" listener="#{cabeceraController.preRenderView()}"/>
+                    <f:event type="preRenderView" listener="#{cabeceraController.preRenderView}"/>
                 </f:metadata>
                 <p:panel id="header" header="#{msg['lbl.ingresar']}">
                     <p:messages id="msm" showDetail="true"/>
@@ -27,12 +27,13 @@
                         </p:password>
                         <p:message id="msmClave" for="clave"/>
                     </h:panelGrid>
-                    <br/>
-                    <h:panelGrid columns="1" styleClass="pnl-botones">
-                        <p:commandButton id="btn" value="#{msg['lbl.ingresar']}" 
-                                         icon="ui-icon-locked" 
-                                         action="#{loginController.logear(usuarioDM.usuario.username,usuarioDM.usuario.password)}"/>
-                    </h:panelGrid>
+                    <f:facet name="footer">
+                        <h:panelGrid columns="1" styleClass="pnl-botones">
+                            <p:commandButton id="btn" value="#{msg['lbl.ingresar']}" 
+                                             icon="ui-icon-locked"  update="msm"
+                                             action="#{loginController.logear(usuarioDM.usuario.username,usuarioDM.usuario.password)}"/>
+                        </h:panelGrid>
+                    </f:facet>
                 </p:panel>
             </ui:define>
         </ui:composition>

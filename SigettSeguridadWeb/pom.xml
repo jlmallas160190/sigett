@@ -23,7 +23,7 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>AcademicoService</artifactId>
             <version>1.0</version>
-            <type>ejb</type>
+            <scope>provided</scope>
         </dependency>
          
         <dependency>
@@ -71,13 +71,13 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>ComunService</artifactId>
             <version>${project.version}</version>
-            
-            <type>ejb</type>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>SeguridadService</artifactId>
             <version>${project.version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>net.java.dev.rome</groupId>
@@ -89,12 +89,12 @@
             <artifactId>apiJlmallas</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>
-            <type>jar</type>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>SigettService</artifactId>
             <version>${project.version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>javax</groupId>

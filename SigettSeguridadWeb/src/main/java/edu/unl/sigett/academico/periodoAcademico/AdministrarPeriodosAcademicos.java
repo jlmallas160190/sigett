@@ -10,10 +10,10 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
-import com.jlmallas.comun.dao.ConfiguracionDao;
 import com.jlmallas.comun.entity.Configuracion;
 import com.jlmallas.comun.enumeration.ConfiguracionEnum;
 import com.jlmallas.comun.enumeration.URLWSEnum;
+import com.jlmallas.comun.service.ConfiguracionService;
 import org.jlmallas.httpClient.NetClientServiceImplement;
 import org.jlmallas.httpClient.ConexionDTO;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
@@ -36,11 +36,11 @@ import edu.jlmallas.academico.service.OfertaAcademicaService;
 import edu.jlmallas.academico.service.PeriodoAcademicoService;
 import edu.unl.sigett.academico.ofertaAcademica.SessionOfertaAcademica;
 import edu.unl.sigett.seguridad.usuario.UsuarioDM;
-import org.jlmallas.seguridad.dao.UsuarioDao;
 import edu.unl.sigett.util.CabeceraController;
 import javax.annotation.PostConstruct;
 import org.jlmallas.httpClient.NetClientService;
 import org.jlmallas.secure.Secure;
+import org.jlmallas.seguridad.service.UsuarioService;
 
 /**
  *
@@ -75,16 +75,16 @@ public class AdministrarPeriodosAcademicos implements Serializable {
     @Inject
     private CabeceraController cabeceraController;
 
-    @EJB
+    @EJB(lookup = "java:global/AcademicoService/PeriodoAcademicoServiceImplement!edu.jlmallas.academico.service.PeriodoAcademicoService")
     private PeriodoAcademicoService periodoAcademicoFacadeLocal;
-    @EJB
+    @EJB(lookup = "java:global/SeguridadService/LogDaoImplement!org.jlmallas.seguridad.dao.LogDao")
     private LogDao logFacadeLocal;
-    @EJB
+    @EJB(lookup = "java:global/AcademicoService/OfertaAcademicaServiceImplement!edu.jlmallas.academico.service.OfertaAcademicaService")
     private OfertaAcademicaService ofertaAcademicaService;
-    @EJB
-    private ConfiguracionDao configuracionDao;
-    @EJB
-    private UsuarioDao usuarioFacadeLocal;
+    @EJB(lookup = "java:global/ComunService/ConfiguracionServiceImplement!com.jlmallas.comun.service.ConfiguracionService")
+    private ConfiguracionService configuracionService;
+    @EJB(lookup = "java:global/SeguridadService/UsuarioServiceImplement!org.jlmallas.seguridad.service.UsuarioService")
+    private UsuarioService usuarioService;
 
     //<editor-fold defaultstate="collapsed" desc="MÉTODOS CRUD">
     @PostConstruct
@@ -111,7 +111,7 @@ public class AdministrarPeriodosAcademicos implements Serializable {
         try {
             FacesContext facesContext = FacesContext.getCurrentInstance();
             ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "crear_periodo_academico");
+            int tienePermiso = usuarioService.tienePermiso(usuario, "crear_periodo_academico");
             if (tienePermiso == 1) {
                 sessionPeriodoAcademico.setPeriodoAcademico(new PeriodoAcademico());
                 sessionPeriodoAcademico.getPeriodoAcademico().setIdSga("0");
@@ -140,7 +140,7 @@ public class AdministrarPeriodosAcademicos implements Serializable {
             FacesContext facesContext = FacesContext.getCurrentInstance();
             ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
             String param = (String) facesContext.getExternalContext().getRequestParameterMap().get("1");
-            int tienePermiso = usuarioFacadeLocal.tienePermiso(usuarioDM.getUsuario(), "editar_periodo_academico");
+            int tienePermiso = usuarioService.tienePermiso(usuarioDM.getUsuario(), "editar_periodo_academico");
             if (tienePermiso == 1) {
                 sessionOfertaAcademica.getOfertaAcademicas().clear();
                 sessionOfertaAcademica.getOfertaAcademicasFilter().clear();
@@ -174,7 +174,7 @@ public class AdministrarPeriodosAcademicos implements Serializable {
             ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
             String param = (String) facesContext.getExternalContext().getRequestParameterMap().get("1");
             if (periodoAcademico.getId() == null) {
-                int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "crear_periodo_academico");
+                int tienePermiso = usuarioService.tienePermiso(usuario, "crear_periodo_academico");
                 if (tienePermiso == 1) {
                     periodoAcademicoFacadeLocal.guardar(periodoAcademico);
                     logFacadeLocal.create(logFacadeLocal.crearLog("PeriodoAcademico", periodoAcademico.getId() + "", "CREAR", "|Fecha Inicio" + periodoAcademico.getFechaInicio() + "|Fecha Fin= " + periodoAcademico.getFechaFin(), usuarioDM.getUsuario()));
@@ -201,7 +201,7 @@ public class AdministrarPeriodosAcademicos implements Serializable {
                     }
                 }
             } else {
-                int tienePermiso = usuarioFacadeLocal.tienePermiso(usuarioDM.getUsuario(), "editar_periodo_academico");
+                int tienePermiso = usuarioService.tienePermiso(usuarioDM.getUsuario(), "editar_periodo_academico");
                 if (tienePermiso == 1) {
                     grabarOfertas(sessionOfertaAcademica.getOfertaAcademicas());
                     OfertaAcademica primerOferta = ofertaAcademicaService.primerOfertaPorFechaYPeriodoLectivo(periodoAcademico.getId());
@@ -278,7 +278,7 @@ public class AdministrarPeriodosAcademicos implements Serializable {
             sessionPeriodoAcademico.setPeriodoAcademicosFilter(new ArrayList<PeriodoAcademico>());
             FacesContext facesContext = FacesContext.getCurrentInstance();
             ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "buscar_periodo_academico");
+            int tienePermiso = usuarioService.tienePermiso(usuario, "buscar_periodo_academico");
             if (tienePermiso == 1) {
                 PeriodoAcademico periodoAcademicoBuscar = new PeriodoAcademico();
                 sessionPeriodoAcademico.setPeriodoAcademicos(periodoAcademicoFacadeLocal.buscarPorCriterio(periodoAcademicoBuscar));
@@ -322,11 +322,11 @@ public class AdministrarPeriodosAcademicos implements Serializable {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
         try {
-            if (usuarioFacadeLocal.tienePermiso(usuario, "sga_ws_periodo_academico") == 1) {
+            if (usuarioService.tienePermiso(usuario, "sga_ws_periodo_academico") == 1) {
                 String claveWS = this.cabeceraController.getSecureService().decrypt(new Secure(cabeceraController.getConfiguracionGeneralDTO().getSecureKey(),
-                        configuracionDao.buscar(new Configuracion(ConfiguracionEnum.CLAVEWS.getTipo())).get(0).getValor()));
-                String usuarioWs = configuracionDao.buscar(new Configuracion(ConfiguracionEnum.USUARIOWS.getTipo())).get(0).getValor();
-                String url = configuracionDao.buscar(new Configuracion(URLWSEnum.URLPERIODOLECTIVOWS.getTipo())).get(0).getValor();
+                        configuracionService.buscar(new Configuracion(ConfiguracionEnum.CLAVEWS.getTipo())).get(0).getValor()));
+                String usuarioWs = configuracionService.buscar(new Configuracion(ConfiguracionEnum.USUARIOWS.getTipo())).get(0).getValor();
+                String url = configuracionService.buscar(new Configuracion(URLWSEnum.URLPERIODOLECTIVOWS.getTipo())).get(0).getValor();
                 ConexionDTO seguridad = new ConexionDTO(claveWS, url, usuarioWs);
                 NetClientService conexion = new NetClientServiceImplement();
                 String datosJson = conexion.response(seguridad);
@@ -415,7 +415,7 @@ public class AdministrarPeriodosAcademicos implements Serializable {
 //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="MÉTODOS RENDERED">
     public void renderedCrearOferta(Usuario usuario) {
-        int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "crear_oferta_academica");
+        int tienePermiso = usuarioService.tienePermiso(usuario, "crear_oferta_academica");
         if (tienePermiso == 1) {
             sessionOfertaAcademica.setRenderedCrear(true);
         } else {
@@ -424,7 +424,7 @@ public class AdministrarPeriodosAcademicos implements Serializable {
     }
 
     public void renderedEditarOferta(Usuario usuario) {
-        int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "editar_oferta_academica");
+        int tienePermiso = usuarioService.tienePermiso(usuario, "editar_oferta_academica");
         if (tienePermiso == 1) {
             sessionOfertaAcademica.setRenderedEditar(true);
             sessionOfertaAcademica.setRenderedNoEditar(false);
@@ -435,7 +435,7 @@ public class AdministrarPeriodosAcademicos implements Serializable {
     }
 
     public void renderedSincronizarOferta(Usuario usuario) {
-        int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "sga_ws_oferta_academica");
+        int tienePermiso = usuarioService.tienePermiso(usuario, "sga_ws_oferta_academica");
         if (tienePermiso == 1) {
             sessionOfertaAcademica.setRenderedSincronizar(true);
         } else {
@@ -444,7 +444,7 @@ public class AdministrarPeriodosAcademicos implements Serializable {
     }
 
     public void renderedCrear(Usuario usuario) {
-        int tienePermiso = usuarioFacadeLocal.tienePermiso(usuarioDM.getUsuario(), "crear_periodo_academico");
+        int tienePermiso = usuarioService.tienePermiso(usuarioDM.getUsuario(), "crear_periodo_academico");
         if (tienePermiso == 1) {
             sessionPeriodoAcademico.setRenderedCrear(true);
         } else {
@@ -453,7 +453,7 @@ public class AdministrarPeriodosAcademicos implements Serializable {
     }
 
     public void renderedSgaWs(Usuario usuario) {
-        int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "sga_ws_periodo_academico");
+        int tienePermiso = usuarioService.tienePermiso(usuario, "sga_ws_periodo_academico");
         if (tienePermiso == 1) {
             sessionPeriodoAcademico.setRenderedSincronizar(true);
         } else {
@@ -470,7 +470,7 @@ public class AdministrarPeriodosAcademicos implements Serializable {
     }
 
     public void renderedEditar(Usuario usuario) {
-        int tienePermiso = usuarioFacadeLocal.tienePermiso(usuarioDM.getUsuario(), "editar_periodo_academico");
+        int tienePermiso = usuarioService.tienePermiso(usuarioDM.getUsuario(), "editar_periodo_academico");
         if (tienePermiso == 1) {
             sessionPeriodoAcademico.setRenderedEditar(true);
             sessionPeriodoAcademico.setRenderedNoEditar(false);

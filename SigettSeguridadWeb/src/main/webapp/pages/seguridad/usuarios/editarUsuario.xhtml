@@ -17,13 +17,7 @@
             <ui:define name="title">#{msg['lbl.usuario']}</ui:define>
             <ui:define name="content">
                 <p:growl id="msm"/>
-                <p:panel toggleable="true">
-                    <!--<f:facet name="header">
-                        <h:panelGrid>
-                            <p:commandButton value="#{msg['lbl.historial']}" icon="ui-icon-document-w"
-                                             action="#{administrarLogs.historico('Usuario',usuarioCRUDDM.usuario.id)}"/>
-                        </h:panelGrid>
-                    </f:facet>-->
+                <p:panel style="background: #f8f8f8  !important;" toggleable="true">
                     <p:panel header="#{msg['lbl.editar']} #{msg['lbl.usuario']}" toggleable="true">
                         <h:panelGrid styleClass="panelgrid" rowClasses="rowpanelgrid"
                                      columnClasses="col-sm-3,col-sm-8,col-sm-1" columns="3">

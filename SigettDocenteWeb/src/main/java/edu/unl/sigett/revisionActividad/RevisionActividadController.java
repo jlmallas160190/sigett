@@ -40,15 +40,15 @@ public class RevisionActividadController implements Serializable {
 
     //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="SERVICIOS">
-    @EJB
+    @EJB(lookup = "java:global/SigettService/RevisionActividadServiceImplement!edu.unl.sigett.service.RevisionActividadService")
     private RevisionActividadService revisionActividadService;
-    @EJB
+    @EJB(lookup = "java:global/SigettService/RevisionServiceImplement!edu.unl.sigett.service.RevisionService")
     private RevisionService revisionService;
 
     //</editor-fold>
     public RevisionActividadController() {
     }
-    
+
     public void editar(RevisionActividad revisionActividad) {
         Calendar fechaActual = Calendar.getInstance();
         revisionActividad.getRevision().setFechaInicio(fechaActual.getTime());
@@ -56,20 +56,20 @@ public class RevisionActividadController implements Serializable {
         sessionRevisionActividad.setRenderedCrud(Boolean.TRUE);
         RequestContext.getCurrentInstance().execute("PF('dlgCrudRevisionActividad').show()");
     }
-    
+
     public void crear() {
         Calendar fechaActual = Calendar.getInstance();
         sessionRevisionActividad.setRevisionActividad(new RevisionActividad(null, sessionActividad.getActividad(), new Revision(null, fechaActual.getTime(), null, null, null, null)));
         sessionRevisionActividad.setRenderedCrud(Boolean.TRUE);
         RequestContext.getCurrentInstance().execute("PF('dlgCrudRevisionActividad').show()");
     }
-    
+
     public void cancelarEdicion() {
         sessionRevisionActividad.setRenderedCrud(Boolean.FALSE);
         sessionRevisionActividad.setRevisionActividad(new RevisionActividad());
         RequestContext.getCurrentInstance().execute("PF('dlgCrudRevisionActividad').hide()");
     }
-    
+
     public void remover(RevisionActividad revisionActividad) {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
@@ -80,7 +80,7 @@ public class RevisionActividadController implements Serializable {
             revisionService.eliminar(revisionActividad.getRevision());
         }
     }
-    
+
     public void agregar() {
         Calendar fechaActual = Calendar.getInstance();
         FacesContext facesContext = FacesContext.getCurrentInstance();

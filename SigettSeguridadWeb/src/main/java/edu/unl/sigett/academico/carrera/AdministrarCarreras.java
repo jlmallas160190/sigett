@@ -10,11 +10,11 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
-import com.jlmallas.comun.dao.ConfiguracionDao;
 import com.jlmallas.comun.entity.Configuracion;
 import com.jlmallas.comun.enumeration.ConfiguracionEnum;
 import com.jlmallas.comun.enumeration.TipoConfiguracionEnum;
 import com.jlmallas.comun.enumeration.URLWSEnum;
+import com.jlmallas.comun.service.ConfiguracionService;
 import org.jlmallas.httpClient.NetClientServiceImplement;
 import org.jlmallas.httpClient.ConexionDTO;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
@@ -42,9 +42,9 @@ import edu.unl.sigett.entity.ConfiguracionCarrera;
 import edu.unl.sigett.service.ConfiguracionCarreraService;
 import edu.unl.sigett.seguridad.usuario.UsuarioDM;
 import edu.unl.sigett.util.CabeceraController;
-import org.jlmallas.seguridad.dao.UsuarioDao;
 import org.jlmallas.httpClient.NetClientService;
 import org.jlmallas.secure.Secure;
+import org.jlmallas.seguridad.service.UsuarioService;
 
 /**
  *
@@ -74,18 +74,18 @@ public class AdministrarCarreras implements Serializable {
     UsuarioDM usuarioDM;
     @Inject
     private CabeceraController cabeceraController;
-    @EJB
-    private NivelService nivelFacadeLocal;
-    @EJB
-    private CarreraService carreraFacadeLocal;
-    @EJB
+    @EJB(lookup = "java:global/AcademicoService/NivelServiceImplement!edu.jlmallas.academico.service.NivelService")
+    private NivelService nivelService;
+    @EJB(lookup = "java:global/AcademicoService/CarreraServiceImplement!edu.jlmallas.academico.service.CarreraService")
+    private CarreraService carreraService;
+    @EJB(lookup = "java:global/SeguridadService/LogDaoImplement!org.jlmallas.seguridad.dao.LogDao")
     private LogDao logFacadeLocal;
-    @EJB
-    private UsuarioDao usuarioFacadeLocal;
-    @EJB
+    @EJB(lookup = "java:global/SeguridadService/UsuarioServiceImplement!org.jlmallas.seguridad.service.UsuarioService")
+    private UsuarioService usuarioService;
+    @EJB(lookup = "java:global/SigettService/ConfiguracionCarreraServiceImplement!edu.unl.sigett.service.ConfiguracionCarreraService")
     private ConfiguracionCarreraService configuracionCarreraService;
-    @EJB
-    private ConfiguracionDao configuracionDao;
+    @EJB(lookup = "java:global/ComunService/ConfiguracionServiceImplement!com.jlmallas.comun.service.ConfiguracionService")
+    private ConfiguracionService configuracionService;
 
     public void init() {
         buscar(usuarioDM.getUsuario(), sessionArea.getArea());
@@ -98,7 +98,7 @@ public class AdministrarCarreras implements Serializable {
         try {
             FacesContext facesContext = FacesContext.getCurrentInstance();
             ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "crear_carrera");
+            int tienePermiso = usuarioService.tienePermiso(usuario, "crear_carrera");
             if (tienePermiso == 1) {
                 sessionCarrera.setCarrera(new Carrera());
                 sessionCarrera.setEsEditado(false);
@@ -117,7 +117,7 @@ public class AdministrarCarreras implements Serializable {
 
     public List<Nivel> listadoNiveles() {
         try {
-            return nivelFacadeLocal.findAll();
+            return nivelService.findAll();
         } catch (Exception e) {
             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_FATAL, e.getMessage(), "");
             FacesContext.getCurrentInstance().addMessage(null, message);
@@ -136,7 +136,7 @@ public class AdministrarCarreras implements Serializable {
                 carrera.setIdSga("");
             }
             int posNivel = nivel.indexOf(":");
-            Nivel nivelObj = nivelFacadeLocal.find(Integer.parseInt(nivel.substring(0, posNivel)));
+            Nivel nivelObj = nivelService.find(Integer.parseInt(nivel.substring(0, posNivel)));
             if (nivelObj != null) {
                 carrera.setNivelId(nivelObj);
             }
@@ -146,9 +146,9 @@ public class AdministrarCarreras implements Serializable {
                 carrera.setLogo(sessionCarrera.getContents());
             }
             if (carrera.getId() == null) {
-                int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "crear_carrera");
+                int tienePermiso = usuarioService.tienePermiso(usuario, "crear_carrera");
                 if (tienePermiso == 1) {
-                    carreraFacadeLocal.create(carrera);
+                    carreraService.create(carrera);
                     logFacadeLocal.create(logFacadeLocal.crearLog("Carrera", carrera.getId() + "", "CREAR", "|Nombre=" + carrera.getNombre() + "|IdSga="
                             + carrera.getIdSga() + "|Área=" + carrera.getAreaId().getId(), usuario));
                     ConfiguracionCarrera configuracionCarrera1 = new ConfiguracionCarrera(null,
@@ -188,9 +188,9 @@ public class AdministrarCarreras implements Serializable {
                     FacesContext.getCurrentInstance().addMessage(null, message);
                 }
             } else {
-                int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "editar_carrera");
+                int tienePermiso = usuarioService.tienePermiso(usuario, "editar_carrera");
                 if (tienePermiso == 1) {
-                    carreraFacadeLocal.edit(carrera);
+                    carreraService.edit(carrera);
                     logFacadeLocal.create(logFacadeLocal.crearLog("Carrera", carrera.getId() + "", "EDITAR", "|Nombre=" + carrera.getNombre() + "|IdSga=" + carrera.getIdSga() + "|Área=" + carrera.getAreaId().getId(), usuario));
                     if (configuracionCarreraService.buscarPrimero(new ConfiguracionCarrera(carrera.getId(), "MA")) == null) {
                         ConfiguracionCarrera configuracionCarrera1 = new ConfiguracionCarrera(null,
@@ -247,7 +247,7 @@ public class AdministrarCarreras implements Serializable {
         try {
             FacesContext facesContext = FacesContext.getCurrentInstance();
             ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "editar_carrera");
+            int tienePermiso = usuarioService.tienePermiso(usuario, "editar_carrera");
             if (tienePermiso == 1) {
                 sessionCarrera.setCarrera(carrera);
                 sessionCarrera.setEsEditado(true);
@@ -276,7 +276,7 @@ public class AdministrarCarreras implements Serializable {
         try {
             Carrera carreraBuscar = new Carrera();
             carreraBuscar.setAreaId(area);
-            return carreraFacadeLocal.buscarPorCriterio(carreraBuscar);
+            return carreraService.buscarPorCriterio(carreraBuscar);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -288,7 +288,7 @@ public class AdministrarCarreras implements Serializable {
         try {
             Carrera carreraBuscar = new Carrera();
             carreraBuscar.setAreaId(area);
-            sessionCarrera.setCarreras(carreraFacadeLocal.buscarPorCriterio(carreraBuscar));
+            sessionCarrera.setCarreras(carreraService.buscarPorCriterio(carreraBuscar));
         } catch (Exception e) {
         }
     }
@@ -301,17 +301,17 @@ public class AdministrarCarreras implements Serializable {
             Carrera c = null;
             carrera.setAreaId(sessionArea.getArea());
             if (!carrera.getIdSga().equalsIgnoreCase("")) {
-                c = carreraFacadeLocal.buscarIdSga(carrera.getIdSga());
+                c = carreraService.buscarIdSga(carrera.getIdSga());
             } else {
                 if (carrera.getId() != null) {
-                    c = carreraFacadeLocal.find(carrera.getIdSga());
+                    c = carreraService.find(carrera.getIdSga());
                 }
             }
             if (c == null) {
                 if (carrera.getNombreTitulo() != null) {
                     carrera.setNombreTitulo("S/N");
                 }
-                carreraFacadeLocal.create(carrera);
+                carreraService.create(carrera);
                 ConfiguracionCarrera configuracionCarrera1 = new ConfiguracionCarrera(null,
                         "Número de Módulo Aprobado por el estudiante para ser Apto a realizar un trabajo de titulación", "MA", carrera.getId(), "S/N",
                         TipoConfiguracionEnum.NUMERICO.getTipo());
@@ -340,7 +340,7 @@ public class AdministrarCarreras implements Serializable {
                     if (carrera.getNombreTitulo() != null) {
                         carrera.setNombreTitulo("S/N");
                     }
-                    carreraFacadeLocal.edit(carrera);
+                    carreraService.edit(carrera);
                     carrera.setEsEditado(false);
                     if (configuracionCarreraService.buscarPrimero(new ConfiguracionCarrera(carrera.getId(), "MA")) == null) {
                         ConfiguracionCarrera configuracionCarrera1 = new ConfiguracionCarrera(null,
@@ -379,7 +379,7 @@ public class AdministrarCarreras implements Serializable {
     //<editor-fold defaultstate="collapsed" desc="MÉTODOS RENDERED">
 
     public void renderedSgaWs(Usuario usuario) {
-        int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "sga_ws_carrera");
+        int tienePermiso = usuarioService.tienePermiso(usuario, "sga_ws_carrera");
         if (tienePermiso == 1) {
             sessionCarrera.setRenderedSincronizar(true);
         } else {
@@ -388,7 +388,7 @@ public class AdministrarCarreras implements Serializable {
     }
 
     public void renderedCrear(Usuario usuario) {
-        int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "crear_carrera");
+        int tienePermiso = usuarioService.tienePermiso(usuario, "crear_carrera");
         if (tienePermiso == 1) {
             sessionCarrera.setRenderedCrear(true);
         } else {
@@ -397,7 +397,7 @@ public class AdministrarCarreras implements Serializable {
     }
 
     public void renderedEditar(Usuario usuario) {
-        int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "editar_carrera");
+        int tienePermiso = usuarioService.tienePermiso(usuario, "editar_carrera");
         if (tienePermiso == 1) {
             sessionCarrera.setRenderedEditar(true);
             sessionCarrera.setRenderedNoEditar(false);
@@ -412,12 +412,12 @@ public class AdministrarCarreras implements Serializable {
     public void sgawsListaCarreras(Usuario usuario, Area area) {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-        if (usuarioFacadeLocal.tienePermiso(usuario, "sga_ws_carrera") == 1) {
+        if (usuarioService.tienePermiso(usuario, "sga_ws_carrera") == 1) {
             try {
                 String claveWS = this.cabeceraController.getSecureService().decrypt(new Secure(cabeceraController.getConfiguracionGeneralDTO().getSecureKey(),
-                        configuracionDao.buscar(new Configuracion(ConfiguracionEnum.CLAVEWS.getTipo())).get(0).getValor()));
-                String usuarioWs = configuracionDao.buscar(new Configuracion(ConfiguracionEnum.USUARIOWS.getTipo())).get(0).getValor();
-                String url = configuracionDao.buscar(new Configuracion(URLWSEnum.URLCARRERAWS.getTipo())).get(0).getValor() + "?siglas=" + area.getSigla();
+                        configuracionService.buscar(new Configuracion(ConfiguracionEnum.CLAVEWS.getTipo())).get(0).getValor()));
+                String usuarioWs = configuracionService.buscar(new Configuracion(ConfiguracionEnum.USUARIOWS.getTipo())).get(0).getValor();
+                String url = configuracionService.buscar(new Configuracion(URLWSEnum.URLCARRERAWS.getTipo())).get(0).getValor() + "?siglas=" + area.getSigla();
                 ConexionDTO seguridad = new ConexionDTO(claveWS, url, usuarioWs);
                 NetClientService conexion = new NetClientServiceImplement();
                 String datosJson = conexion.response(seguridad);
@@ -494,13 +494,13 @@ public class AdministrarCarreras implements Serializable {
             if (sessionCarrera.getKeyEntero() == 4) {
                 Nivel nivelBuscar = new Nivel();
                 nivelBuscar.setNombre(valor.getAsString());
-                Nivel n = nivelFacadeLocal.buscarPorNombre(nivelBuscar);
+                Nivel n = nivelService.buscarPorNombre(nivelBuscar);
                 if (n != null) {
                     sessionCarrera.getCarreraWs().setNivelId(n);
                 } else {
                     n = new Nivel();
                     n.setNombre(valor.getAsString());
-                    nivelFacadeLocal.create(n);
+                    nivelService.create(n);
                     sessionCarrera.getCarreraWs().setNivelId(n);
                 }
                 sessionCarrera.setKeyEntero(sessionCarrera.getKeyEntero() + 1);

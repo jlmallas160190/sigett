@@ -72,21 +72,21 @@ public class ActividadController implements Serializable {
     private SessionDirectorProyecto sessionDirectorProyecto;
 //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="SERVICIOS">
-    @EJB
+    @EJB(lookup = "java:global/SigettService/ActividadServiceImplement!edu.unl.sigett.service.ActividadService")
     private ActividadService actividadService;
-    @EJB
+    @EJB(lookup = "java:global/ComunService/ItemServiceImplement!com.jlmallas.comun.service.ItemService")
     private ItemService itemService;
-    @EJB
+    @EJB(lookup = "java:global/SigettService/CronogramaServiceImplement!edu.unl.sigett.service.CronogramaService")
     private CronogramaService cronogramaService;
-    @EJB
+    @EJB(lookup = "java:global/ComunService/DocumentoServiceImplement!com.jlmallas.comun.service.DocumentoService")
     private DocumentoService documentoService;
-    @EJB
+    @EJB(lookup = "java:global/ComunService/ConfiguracionServiceImplement!com.jlmallas.comun.service.ConfiguracionService")
     private ConfiguracionService configuracionService;
-    @EJB
+    @EJB(lookup = "java:global/SigettService/DocumentoActividadServiceImplement!edu.unl.sigett.service.DocumentoActividadService")
     private DocumentoActividadService documentoActividadService;
-    @EJB
+    @EJB(lookup = "java:global/SigettService/RevisionActividadServiceImplement!edu.unl.sigett.service.RevisionActividadService")
     private RevisionActividadService revisionActividadService;
-    @EJB
+    @EJB(lookup = "java:global/SigettService/RevisionServiceImplement!edu.unl.sigett.service.RevisionService")
     private RevisionService revisionService;
 //</editor-fold>
     private static final Logger LOG = Logger.getLogger(ActividadController.class.getName());

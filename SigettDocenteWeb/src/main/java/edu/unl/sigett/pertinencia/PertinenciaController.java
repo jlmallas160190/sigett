@@ -5,12 +5,12 @@
  */
 package edu.unl.sigett.pertinencia;
 
-import com.jlmallas.comun.dao.ConfiguracionDao;
 import com.jlmallas.comun.entity.Configuracion;
 import com.jlmallas.comun.entity.Documento;
 import com.jlmallas.comun.entity.Item;
 import com.jlmallas.comun.enumeration.CatalogoEnum;
 import com.jlmallas.comun.enumeration.ConfiguracionEnum;
+import com.jlmallas.comun.service.ConfiguracionService;
 import com.jlmallas.comun.service.DocumentoService;
 import com.jlmallas.comun.service.ItemService;
 import edu.jlmallas.academico.entity.Carrera;
@@ -65,23 +65,23 @@ public class PertinenciaController implements Serializable {
     private DocenteUsuarioDM docenteUsuarioDM;
     //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="SERVICIOS">
-    @EJB
+    @EJB(lookup = "java:global/SigettService/PertinenciaServiceImplement!edu.unl.sigett.service.PertinenciaService")
     private PertinenciaService pertinenciaService;
-    @EJB
+    @EJB(lookup = "java:global/SeguridadService/LogDaoImplement!org.jlmallas.seguridad.dao.LogDao")
     private LogDao logDao;
-    @EJB
+    @EJB(lookup = "java:global/ComunService/ItemServiceImplement!com.jlmallas.comun.service.ItemService")
     private ItemService itemService;
-    @EJB
+    @EJB(lookup = "java:global/SigettService/ProyectoServiceImplement!edu.unl.sigett.service.ProyectoService")
     private ProyectoService proyectoService;
-    @EJB
+    @EJB(lookup = "java:global/ComunService/DocumentoServiceImplement!com.jlmallas.comun.service.DocumentoService")
     private DocumentoService documentoService;
-    @EJB
+    @EJB(lookup = "java:global/SigettService/DocumentoCarreraServiceImplement!edu.unl.sigett.service.DocumentoCarreraService")
     private DocumentoCarreraService documentoCarreraService;
-    @EJB
+    @EJB(lookup = "java:global/AcademicoService/CarreraServiceImplement!edu.jlmallas.academico.service.CarreraService")
     private CarreraService carreraService;
-    @EJB
-    private ConfiguracionDao configuracionDao;
-    @EJB
+    @EJB(lookup = "java:global/ComunService/ConfiguracionServiceImplement!com.jlmallas.comun.service.ConfiguracionService")
+    private ConfiguracionService configuracionService;
+    @EJB(lookup = "java:global/SigettService/CronogramaServiceImplement!edu.unl.sigett.service.CronogramaService")
     private CronogramaService cronogramaService;
     //</editor-fold>
     private static final Logger LOG = Logger.getLogger(PertinenciaController.class.getName());
@@ -208,8 +208,8 @@ public class PertinenciaController implements Serializable {
     }
 
     /**
-     * 
-     * @param pertinencia 
+     *
+     * @param pertinencia
      */
     public void remover(Pertinencia pertinencia) {
         try {
@@ -253,9 +253,10 @@ public class PertinenciaController implements Serializable {
         }
         return Boolean.TRUE;
     }
-/**
- * 
- */
+
+    /**
+     *
+     */
     private void buscar() {
         this.pertinenciaDM.getPertinencias().clear();
         this.pertinenciaDM.getFilterPertinencias().clear();
@@ -271,10 +272,11 @@ public class PertinenciaController implements Serializable {
             LOG.warning(e.getMessage());
         }
     }
-/**
- * 
- * @param pertinencia 
- */
+
+    /**
+     *
+     * @param pertinencia
+     */
     public void imprimirInforme(Pertinencia pertinencia) {
         try {
             if (pertinencia.getId() == null) {
@@ -320,11 +322,11 @@ public class PertinenciaController implements Serializable {
         Carrera carrera = carreraService.find(docenteProyectoDM.getDocenteProyectoDTOSeleccionado().getDocenteCarrera().getCarreraId().getId());
         Calendar fechaActual = Calendar.getInstance();
 
-        String rutaReporte = request.getRealPath("/") + configuracionDao.buscar(new Configuracion(
+        String rutaReporte = request.getRealPath("/") + configuracionService.buscar(new Configuracion(
                 ConfiguracionEnum.RUTAINFORMEPERTINENCIA.getTipo())).get(0).getValor();
 
         byte[] resultado = reporteController.informePertinencia(new ReporteOficio(carrera.getLogo() != null ? carrera.getLogo() : null,
-                request.getRealPath("/") + "" + configuracionDao.buscar(new Configuracion(ConfiguracionEnum.RUTALOGOINSTITUCION.getTipo())).get(0).getValor(),
+                request.getRealPath("/") + "" + configuracionService.buscar(new Configuracion(ConfiguracionEnum.RUTALOGOINSTITUCION.getTipo())).get(0).getValor(),
                 carrera.getNombre(), carrera.getAreaId().getNombre(), carrera.getSigla(), null, cabeceraController.getValueFromProperties(
                         PropertiesFileEnum.CONTENIDOREPORTE, "nombre_institucion"), cabeceraController.getValueFromProperties(
                         PropertiesFileEnum.CONTENIDOREPORTE, "oficio") + " " + carrera.getSigla() + "-" + cabeceraController.getValueFromProperties(
@@ -343,7 +345,7 @@ public class PertinenciaController implements Serializable {
         if (resultado == null) {
             return;
         }
-        String ruta = configuracionDao.buscar(new Configuracion(ConfiguracionEnum.RUTAINFORME.getTipo())).get(0).getValor()
+        String ruta = configuracionService.buscar(new Configuracion(ConfiguracionEnum.RUTAINFORME.getTipo())).get(0).getValor()
                 + "/informe_" + pertinencia.getId() + ".pdf";
         Documento documento = new Documento(null, ruta, itemService.buscarPorCatalogoCodigo(CatalogoEnum.CATALOGOINFORME.getTipo(),
                 CatalogoDocumentoCarreraEnum.PERTINENCIA.getTipo()).getId(), Double.parseDouble(resultado.length + ""), fechaActual.getTime(), resultado, null, "pdf");
@@ -399,7 +401,7 @@ public class PertinenciaController implements Serializable {
                 getDocenteProyecto().getProyectoId().getTemaActual() + "<b/>, " + cabeceraController.getValueFromProperties(
                         PropertiesFileEnum.CONTENIDOREPORTE, "infPer_ref_d") + " " + docenteProyectoDM.getDocenteProyectoDTOSeleccionado().
                 getDocenteProyecto().getProyectoId().getAutores().toUpperCase() + " " + cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE,
-                        "infPer_ref_e")+" <br/>"+pertinenciaDM.getPertinencia().getObservacion());
+                        "infPer_ref_e") + " <br/>" + pertinenciaDM.getPertinencia().getObservacion());
     }
 
     /**

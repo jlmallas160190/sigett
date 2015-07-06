@@ -39,9 +39,9 @@ public class ProrrogaController implements Serializable {
     private SessionDirectorProyecto sessionDirectorProyecto;
     //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="SERVICIOS">
-    @EJB
+    @EJB(lookup = "java:global/SigettService/ProrrogaServiceImplement!edu.unl.sigett.service.ProrrogaService")
     private ProrrogaService prorrogaService;
-    @EJB
+    @EJB(lookup = "java:global/SigettService/CronogramaServiceImplement!edu.unl.sigett.service.CronogramaService")
     private CronogramaService cronogramaService;
     //</editor-fold>
     private static final Logger LOG = Logger.getLogger(ProrrogaController.class.getName());

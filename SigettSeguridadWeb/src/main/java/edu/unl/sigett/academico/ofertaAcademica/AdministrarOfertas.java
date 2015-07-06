@@ -14,6 +14,7 @@ import com.jlmallas.comun.dao.ConfiguracionDao;
 import com.jlmallas.comun.entity.Configuracion;
 import com.jlmallas.comun.enumeration.ConfiguracionEnum;
 import com.jlmallas.comun.enumeration.URLWSEnum;
+import com.jlmallas.comun.service.ConfiguracionService;
 import org.jlmallas.httpClient.NetClientServiceImplement;
 import org.jlmallas.httpClient.ConexionDTO;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
@@ -35,6 +36,7 @@ import edu.unl.sigett.util.CabeceraController;
 import org.jlmallas.httpClient.NetClientService;
 import org.jlmallas.secure.Secure;
 import org.jlmallas.seguridad.dao.UsuarioDao;
+import org.jlmallas.seguridad.service.UsuarioService;
 
 /**
  *
@@ -61,10 +63,10 @@ public class AdministrarOfertas implements Serializable {
     private SessionOfertaAcademica sessionOfertaAcademica;
     @Inject
     private CabeceraController cabeceraController;
-    @EJB
-    private ConfiguracionDao configuracionDao;
-    @EJB
-    private UsuarioDao usuarioFacadeLocal;
+    @EJB(lookup = "java:global/ComunService/ConfiguracionServiceImplement!com.jlmallas.comun.service.ConfiguracionService")
+    private ConfiguracionService configuracionService;
+    @EJB(lookup = "java:global/SeguridadService/UsuarioServiceImplement!org.jlmallas.seguridad.service.UsuarioService")
+    private UsuarioService usuarioService;
 
     public AdministrarOfertas() {
     }
@@ -75,7 +77,7 @@ public class AdministrarOfertas implements Serializable {
         try {
             FacesContext facesContext = FacesContext.getCurrentInstance();
             ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "crear_oferta_academica");
+            int tienePermiso = usuarioService.tienePermiso(usuario, "crear_oferta_academica");
             if (tienePermiso == 1) {
                 sessionOfertaAcademica.setOfertaAcademica(new OfertaAcademica());
                 sessionOfertaAcademica.getOfertaAcademica().setIdSga("0");
@@ -98,7 +100,7 @@ public class AdministrarOfertas implements Serializable {
         try {
             FacesContext facesContext = FacesContext.getCurrentInstance();
             ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            int tienePermiso = usuarioFacadeLocal.tienePermiso(usuarioDM.getUsuario(), "editar_oferta_academica");
+            int tienePermiso = usuarioService.tienePermiso(usuarioDM.getUsuario(), "editar_oferta_academica");
             if (tienePermiso == 1) {
                 sessionOfertaAcademica.setOfertaAcademica(ofertaAcademica);
                 sessionOfertaAcademica.setEsEditado(true);
@@ -158,7 +160,7 @@ public class AdministrarOfertas implements Serializable {
     //<editor-fold defaultstate="collapsed" desc="MÉTODOS RENDERED">
 
     public void renderedCrear(Usuario usuario) {
-        int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "crear_oferta_academica");
+        int tienePermiso = usuarioService.tienePermiso(usuario, "crear_oferta_academica");
         if (tienePermiso == 1) {
             sessionOfertaAcademica.setRenderedCrear(true);
         } else {
@@ -167,7 +169,7 @@ public class AdministrarOfertas implements Serializable {
     }
 
     public void renderedEditar(Usuario usuario) {
-        int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "editar_oferta_academica");
+        int tienePermiso = usuarioService.tienePermiso(usuario, "editar_oferta_academica");
         if (tienePermiso == 1) {
             sessionOfertaAcademica.setRenderedEditar(true);
             sessionOfertaAcademica.setRenderedNoEditar(false);
@@ -178,7 +180,7 @@ public class AdministrarOfertas implements Serializable {
     }
 
     public void renderedSincronizar(Usuario usuario) {
-        int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "sga_ws_oferta_academica");
+        int tienePermiso = usuarioService.tienePermiso(usuario, "sga_ws_oferta_academica");
         if (tienePermiso == 1) {
             sessionOfertaAcademica.setRenderedSincronizar(true);
         } else {
@@ -192,11 +194,11 @@ public class AdministrarOfertas implements Serializable {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
         try {
-            if (usuarioFacadeLocal.tienePermiso(usuarioDM.getUsuario(), "sga_ws_oferta_academica") == 1) {
+            if (usuarioService.tienePermiso(usuarioDM.getUsuario(), "sga_ws_oferta_academica") == 1) {
                 String claveWS = this.cabeceraController.getSecureService().decrypt(new Secure(cabeceraController.getConfiguracionGeneralDTO().getSecureKey(),
-                        configuracionDao.buscar(new Configuracion(ConfiguracionEnum.CLAVEWS.getTipo())).get(0).getValor()));
-                String usuarioWs = configuracionDao.buscar(new Configuracion(ConfiguracionEnum.USUARIOWS.getTipo())).get(0).getValor();
-                String url = configuracionDao.buscar(new Configuracion(URLWSEnum.URLOFERTAACADEMICAWS.getTipo())).get(0).getValor() + "?id_periodo=" + periodoId;
+                        configuracionService.buscar(new Configuracion(ConfiguracionEnum.CLAVEWS.getTipo())).get(0).getValor()));
+                String usuarioWs = configuracionService.buscar(new Configuracion(ConfiguracionEnum.USUARIOWS.getTipo())).get(0).getValor();
+                String url = configuracionService.buscar(new Configuracion(URLWSEnum.URLOFERTAACADEMICAWS.getTipo())).get(0).getValor() + "?id_periodo=" + periodoId;
                 ConexionDTO seguridad = new ConexionDTO(claveWS, url, usuarioWs);
                 NetClientService conexion = new NetClientServiceImplement();
                 String datosJson = conexion.response(seguridad);

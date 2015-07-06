@@ -37,7 +37,6 @@ import edu.unl.sigett.enumeration.EstadoProyectoEnum;
 import edu.unl.sigett.service.AutorProyectoService;
 import edu.unl.sigett.service.DocenteProyectoService;
 import edu.unl.sigett.service.DocumentoProyectoService;
-import edu.unl.sigett.util.SelectItemsController;
 import edu.unl.sigett.util.SessionSelectItems;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
@@ -87,25 +86,25 @@ public class DocenteProyectoController implements Serializable {
     private SessionAutorProyecto sessionAutorProyecto;
 //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="SERVICIOS">
-    @EJB
+    @EJB(lookup = "java:global/SigettService/DocenteProyectoServiceImplement!edu.unl.sigett.service.DocenteProyectoService")
     private DocenteProyectoService docenteProyectoService;
-    @EJB
+    @EJB(lookup = "java:global/ComunService/PersonaServiceImplement!com.jlmallas.comun.service.PersonaService")
     private PersonaService personaService;
-    @EJB
+    @EJB(lookup = "java:global/ComunService/ItemServiceImplement!com.jlmallas.comun.service.ItemService")
     private ItemService itemService;
-    @EJB
+    @EJB(lookup = "java:global/SigettService/AutorProyectoServiceImplement!edu.unl.sigett.service.AutorProyectoService")
     private AutorProyectoService autorProyectoService;
-    @EJB
+    @EJB(lookup = "java:global/AcademicoService/EstudianteCarreraServiceImplement!edu.jlmallas.academico.service.EstudianteCarreraService")
     private EstudianteCarreraService estudianteCarreraService;
-    @EJB
+    @EJB(lookup = "java:global/AcademicoService/DocenteCarreraServiceImplement!edu.jlmallas.academico.service.DocenteCarreraService")
     private DocenteCarreraService docenteCarreraService;
-    @EJB
+    @EJB(lookup = "java:global/AcademicoService/CoordinadorPeriodoServiceImplement!edu.jlmallas.academico.service.CoordinadorPeriodoService")
     private CoordinadorPeriodoService coordinadorPeriodoService;
-    @EJB
+    @EJB(lookup = "java:global/AcademicoService/DocenteServiceImplement!edu.jlmallas.academico.service.DocenteService")
     private DocenteService docenteService;
-    @EJB
+    @EJB(lookup = "java:global/SigettService/DocumentoProyectoServiceImplement!edu.unl.sigett.service.DocumentoProyectoService")
     private DocumentoProyectoService documentoProyectoService;
-    @EJB
+    @EJB(lookup = "java:global/ComunService/DocumentoServiceImplement!com.jlmallas.comun.service.DocumentoService")
     private DocumentoService documentoService;
 //</editor-fold>
     private static final Logger LOG = Logger.getLogger(DocenteProyectoController.class.getName());
@@ -247,7 +246,7 @@ public class DocenteProyectoController implements Serializable {
             DocenteProyectoDTO docenteProyectoDTO = new DocenteProyectoDTO(docenteProyecto,
                     personaService.buscarPorId(new Persona(docenteProyecto.getDocenteCarreraId())),
                     docenteCarreraService.buscarPorId(new DocenteCarrera(docenteProyecto.getDocenteCarreraId(), null, null, null)));
-            
+
             docenteProyectoDM.getDocentesProyectoDTO().add(docenteProyectoDTO);
         }
         docenteProyectoDM.setFilterDocentesProyectoDTO(docenteProyectoDM.getDocentesProyectoDTO());

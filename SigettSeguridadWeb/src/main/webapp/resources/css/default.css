@@ -385,7 +385,7 @@ input[disabled="disabled"], select[disabled="disabled"], textarea[disabled="disa
     padding: 2px 2px 2px 2px;
     text-decoration: none;
     text-transform: uppercase;
-   background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #7892c2), color-stop(1, #476e9e))!important;
+    background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #7892c2), color-stop(1, #476e9e))!important;
     background:-moz-linear-gradient(top, #7892c2 5%, #476e9e 100%)!important;
     background:-webkit-linear-gradient(top, #7892c2 5%, #476e9e 100%)!important;
     background:-o-linear-gradient(top, #7892c2 5%, #476e9e 100%)!important;
@@ -1272,7 +1272,7 @@ hr {
     text-align: center;
     padding:4px 10px 4px 10px;
     color: #ffffff !important;
-       background: #578a5a;
+    background: #578a5a;
     background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05,#4d9948), color-stop(1,#578a5a))!important;
     background:-moz-linear-gradient(top,#4d9948 10%,#578a5a 100%)!important;
     background:-webkit-linear-gradient(top,#4d9948 10%,#578a5a 100%)!important;
@@ -1339,7 +1339,7 @@ hr {
 .ui-dialog .ui-dialog-titlebar { 
     padding: 15px;
     position: relative; 
-        background: #578a5a;
+    background: #578a5a;
     background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05,#4d9948), color-stop(1,#578a5a))!important;
     background:-moz-linear-gradient(top,#4d9948 10%,#578a5a 100%)!important;
     background:-webkit-linear-gradient(top,#4d9948 10%,#578a5a 100%)!important;
@@ -1485,7 +1485,7 @@ hr {
     border-top-right-radius: 3px;
     border-top-left-radius: 3px;
     color:#ffffff !important;
-   background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #7892c2), color-stop(1, #476e9e))!important;
+    background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #7892c2), color-stop(1, #476e9e))!important;
     background:-moz-linear-gradient(top, #7892c2 5%, #476e9e 100%)!important;
     background:-webkit-linear-gradient(top, #7892c2 5%, #476e9e 100%)!important;
     background:-o-linear-gradient(top, #7892c2 5%, #476e9e 100%)!important;
@@ -1749,7 +1749,7 @@ hr {
 .ui-datagrid .ui-paginator-bottom{
     border-top:0px none;
     color: #666 !important;
-        background: #578a5a;
+    background: #578a5a;
     background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05,#4d9948), color-stop(1,#578a5a))!important;
     background:-moz-linear-gradient(top,#4d9948 10%,#578a5a 100%)!important;
     background:-webkit-linear-gradient(top,#4d9948 10%,#578a5a 100%)!important;
@@ -1782,7 +1782,7 @@ hr {
 .ui-datagrid .ui-paginator-top{
     border-bottom:0px none;
     color: #666;
-       background: #578a5a;
+    background: #578a5a;
     background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05,#4d9948), color-stop(1,#578a5a))!important;
     background:-moz-linear-gradient(top,#4d9948 10%,#578a5a 100%)!important;
     background:-webkit-linear-gradient(top,#4d9948 10%,#578a5a 100%)!important;

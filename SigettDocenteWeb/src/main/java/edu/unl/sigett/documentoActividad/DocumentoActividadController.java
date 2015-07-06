@@ -42,15 +42,17 @@ public class DocumentoActividadController implements Serializable {
     private CabeceraController cabeceraController;
     //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="SERVICIOS">
-    @EJB
+    @EJB(lookup = "java:global/SigettService/DocumentoActividadServiceImplement!edu.unl.sigett.service.DocumentoActividadService")
     private DocumentoActividadService documentoActividadService;
-    @EJB
+    @EJB(lookup = "java:global/ComunService/DocumentoServiceImplement!com.jlmallas.comun.service.DocumentoService")
     private DocumentoService documentoService;
-    @EJB
+    @EJB(lookup = "java:global/ComunService/ItemServiceImplement!com.jlmallas.comun.service.ItemService")
     private ItemService itemService;
 //</editor-fold>
+
     public DocumentoActividadController() {
     }
+
     public void editar(DocumentoActividadDTO documentoActividadDTO) {
         sessionDocumentoActividad.setDocumentoActividadDTO(documentoActividadDTO);
         sessionDocumentoActividad.setRenderedCrud(Boolean.TRUE);

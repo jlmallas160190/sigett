@@ -14,7 +14,7 @@ import javax.inject.Named;
  *
  * @author JorgeLuis
  */
-@Named
+@Named("usuarioDM")
 @SessionScoped
 public class UsuarioDM implements Serializable {
 

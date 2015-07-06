@@ -5,10 +5,9 @@
  */
 package edu.unl.sigett.util;
 
-import com.jlmallas.comun.dao.ConfiguracionDao;
 import com.jlmallas.comun.entity.Configuracion;
 import com.jlmallas.comun.enumeration.ConfiguracionEnum;
-import edu.unl.sigett.seguridad.usuario.UsuarioDM;
+import com.jlmallas.comun.service.ConfiguracionService;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -20,7 +19,6 @@ import java.util.Properties;
 import java.util.StringTokenizer;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
-import javax.inject.Inject;
 import org.jlmallas.email.MailServiceImplement;
 import org.jlmallas.email.MailDTO;
 import org.jlmallas.email.MailService;
@@ -28,7 +26,6 @@ import org.jlmallas.secure.SecureService;
 import org.jlmallas.secure.SecureServiceImplement;
 import org.jlmallas.util.service.UtilService;
 import org.jlmallas.util.service.UtilServiceImplement;
-
 
 /**
  *
@@ -38,14 +35,9 @@ import org.jlmallas.util.service.UtilServiceImplement;
 @SessionScoped
 public class CabeceraController implements Serializable {
 
-    //<editor-fold defaultstate="collapsed" desc="MANAGED BEANS">
-    @Inject
-    private UsuarioDM sessionUsuario;
-    //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="SERVICIOS">
-
-    @EJB
-    private ConfiguracionDao configuracionDao;
+    @EJB(lookup = "java:global/ComunService/ConfiguracionServiceImplement!com.jlmallas.comun.service.ConfiguracionService")
+    private ConfiguracionService configuracionService;
 //</editor-fold>
     private MessageView messageView;
     private MailService mailService;
@@ -71,7 +63,7 @@ public class CabeceraController implements Serializable {
         BufferedReader br = null;
         String secretKey = "";
         try {
-            String pathSecretKey = configuracionDao.buscar(new Configuracion(ConfiguracionEnum.SECRETKEY.getTipo())).get(0).getValor();
+            String pathSecretKey = configuracionService.buscar(new Configuracion(ConfiguracionEnum.SECRETKEY.getTipo())).get(0).getValor();
             String sCurrentLine;
             br = new BufferedReader(new FileReader(pathSecretKey));
             int count = 0;

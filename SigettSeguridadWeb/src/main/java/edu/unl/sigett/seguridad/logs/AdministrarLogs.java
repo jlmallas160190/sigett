@@ -5,7 +5,6 @@
  */
 package edu.unl.sigett.seguridad.logs;
 
-
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 import com.ocpsoft.pretty.faces.annotation.URLMappings;
 import edu.unl.sigett.seguridad.usuario.UsuarioDM;
@@ -24,6 +23,7 @@ import javax.inject.Named;
 import javax.servlet.http.HttpServletResponse;
 import org.jlmallas.seguridad.dao.LogDao;
 import org.jlmallas.seguridad.dao.UsuarioDao;
+import org.jlmallas.seguridad.service.UsuarioService;
 
 /**
  *
@@ -41,9 +41,9 @@ public class AdministrarLogs implements Serializable {
 
     @Inject
     private UsuarioDM sessionUsuario;
-    @EJB
-    private UsuarioDao usuarioFacadeLocal;
-    @EJB
+    @EJB(lookup = "java:global/SeguridadService/UsuarioServiceImplement!org.jlmallas.seguridad.service.UsuarioService")
+    private UsuarioService usuarioService;
+    @EJB(lookup = "java:global/SeguridadService/LogDaoImplement!org.jlmallas.seguridad.dao.LogDao")
     private LogDao logFacadeLocal;
 
     private Date fecha;
@@ -76,7 +76,7 @@ public class AdministrarLogs implements Serializable {
             String fechaFinFormat = formatoFecha.format(fechaFin);
             fechaInicio = formatoFecha.parse(fechaFormat);
             fechaFin = formatoFecha.parse(fechaFinFormat);
-            int tienePermiso = usuarioFacadeLocal.tienePermiso(sessionUsuario.getUsuario(), "buscar_log");
+            int tienePermiso = usuarioService.tienePermiso(sessionUsuario.getUsuario(), "buscar_log");
             if (tienePermiso == 1) {
                 return logFacadeLocal.buscarPorTablaFecha(tabla, fechaInicio, fechaFin);
             } else {
@@ -106,7 +106,6 @@ public class AdministrarLogs implements Serializable {
         }
     }
 
-   
     public String getTabla() {
         return tabla;
     }

@@ -13,7 +13,6 @@ import com.jlmallas.comun.service.EventoService;
 import com.jlmallas.comun.service.ItemService;
 import edu.jlmallas.academico.entity.DocenteCarrera;
 import edu.jlmallas.academico.service.DocenteCarreraService;
-import edu.unl.sigett.actividad.SessionActividad;
 import edu.unl.sigett.director.DirectorDTO;
 import edu.unl.sigett.directorProyecto.DirectorProyectoDTO;
 import edu.unl.sigett.directorProyecto.SessionDirectorProyecto;
@@ -57,19 +56,19 @@ public class EventoPersonaController implements Serializable {
     private SessionDirectorProyecto sessionDirectorProyecto;
     //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="SERVICIOS">
-    @EJB
+    @EJB(lookup = "java:global/ComunService/EventoPersonaServiceImplement!com.jlmallas.comun.service.EventoPersonaService")
     private EventoPersonaService eventoPersonaService;
-    @EJB
+    @EJB(lookup = "java:global/ComunService/ItemServiceImplement!com.jlmallas.comun.service.ItemService")
     private ItemService itemService;
-    @EJB
+    @EJB(lookup = "java:global/SigettService/ActividadServiceImplement!edu.unl.sigett.service.ActividadService")
     private ActividadService actividadService;
-    @EJB
+    @EJB(lookup = "java:global/ComunService/EventoServiceImplement!com.jlmallas.comun.service.EventoService")
     private EventoService eventoService;
-    @EJB
+    @EJB(lookup = "java:global/SigettService/DirectorProyectoServiceImplement!edu.unl.sigett.service.DirectorProyectoService")
     private DirectorProyectoService directorProyectoService;
-    @EJB
+    @EJB(lookup = "java:global/SigettService/ProyectoServiceImplement!edu.unl.sigett.service.ProyectoService")
     private ProyectoService proyectoService;
-    @EJB
+    @EJB(lookup = "java:global/AcademicoService/DocenteCarreraServiceImplement!edu.jlmallas.academico.service.DocenteCarreraService")
     private DocenteCarreraService docenteCarreraService;
 
     //</editor-fold>

@@ -70,7 +70,7 @@
   <rdf:Description rdf:about="http://www.owl-ontologies.com/sigett/nivelAcademico/1">
     <sigett:id rdf:datatype="http://www.w3.org/2001/XMLSchema#int">1</sigett:id>
     <rdf:type rdf:resource="http://www.owl-ontologies.com/sigett/nivelAcademico"/>
-    <dc:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">presencial</dc:title>
+    <dc:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">PREGRADO</dc:title>
   </rdf:Description>
   <rdf:Description rdf:about="http://www.owl-ontologies.com/sigett/fechaFin">
     <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>

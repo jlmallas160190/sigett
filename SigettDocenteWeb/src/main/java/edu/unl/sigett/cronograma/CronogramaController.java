@@ -5,10 +5,10 @@
  */
 package edu.unl.sigett.cronograma;
 
-import com.jlmallas.comun.dao.ConfiguracionDao;
 import com.jlmallas.comun.entity.Configuracion;
 import com.jlmallas.comun.enumeration.ConfiguracionEnum;
 import com.jlmallas.comun.enumeration.ValorEnum;
+import com.jlmallas.comun.service.ConfiguracionService;
 import edu.unl.sigett.docenteProyecto.DocenteProyectoDM;
 import edu.unl.sigett.entity.ConfiguracionProyecto;
 import edu.unl.sigett.enumeration.ConfiguracionProyectoEnum;
@@ -43,9 +43,9 @@ public class CronogramaController implements Serializable {
 
     //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="SERVICIOS">
-    @EJB
-    private ConfiguracionDao configuracionDao;
-    @EJB
+    @EJB(lookup = "java:global/ComunService/ConfiguracionServiceImplement!com.jlmallas.comun.service.ConfiguracionService")
+    private ConfiguracionService configuracionService;
+    @EJB(lookup = "java:global/SigettService/ConfiguracionProyectoServiceImplement!edu.unl.sigett.service.ConfiguracionProyectoService")
     private ConfiguracionProyectoService configuracionProyectoService;
 
     //</editor-fold>
@@ -80,7 +80,7 @@ public class CronogramaController implements Serializable {
     public void calcularDuracion() {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-        Double tiempoMax = Double.parseDouble(configuracionDao.buscar(new Configuracion(ConfiguracionEnum.TIEMPODESARROLLOTT.getTipo())).get(0).getValor());
+        Double tiempoMax = Double.parseDouble(configuracionService.buscar(new Configuracion(ConfiguracionEnum.TIEMPODESARROLLOTT.getTipo())).get(0).getValor());
         @SuppressWarnings("UnusedAssignment")
         Double duracionDias = 0.0;
         if (!validarFechas()) {

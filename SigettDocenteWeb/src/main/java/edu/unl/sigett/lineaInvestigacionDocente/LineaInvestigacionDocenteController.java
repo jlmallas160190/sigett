@@ -56,9 +56,9 @@ public class LineaInvestigacionDocenteController implements Serializable {
     private CabeceraController cabeceraController;
     //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="SERVICIOS">
-    @EJB
+    @EJB(lookup = "java:global/SigettService/LineaInvestigacionDocenteServiceImplement!edu.unl.sigett.service.LineaInvestigacionDocenteService")
     private LineaInvestigacionDocenteService lineaInvestigacionDocenteService;
-    @EJB
+    @EJB(lookup = "java:global/SigettService/LineaInvestigacionServiceImplement!edu.unl.sigett.service.LineaInvestigacionService")
     private LineaInvestigacionService lineaInvestigacionService;
     //</editor-fold>
     private static final Logger LOG = Logger.getLogger(LineaInvestigacionDocenteController.class.getName());

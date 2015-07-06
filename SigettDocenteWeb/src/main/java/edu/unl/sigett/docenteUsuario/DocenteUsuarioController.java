@@ -10,8 +10,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
-import com.jlmallas.comun.dao.PersonaDao;
 import com.jlmallas.comun.entity.Configuracion;
+import com.jlmallas.comun.entity.Persona;
 import com.jlmallas.comun.enumeration.ConfiguracionEnum;
 import com.jlmallas.comun.enumeration.ValorEnum;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
@@ -19,6 +19,7 @@ import com.ocpsoft.pretty.faces.annotation.URLMappings;
 import edu.unl.sigett.entity.DocenteUsuario;
 import com.jlmallas.comun.enumeration.URLWSEnum;
 import com.jlmallas.comun.service.ConfiguracionService;
+import com.jlmallas.comun.service.PersonaService;
 import edu.jlmallas.academico.entity.Docente;
 import edu.jlmallas.academico.service.DocenteService;
 import edu.unl.sigett.service.DocenteUsuarioService;
@@ -68,16 +69,16 @@ public class DocenteUsuarioController implements Serializable {
     private CabeceraController cabeceraController;
     //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="SERVICIOS">
-    @EJB
+    @EJB(lookup = "java:global/ComunService/ConfiguracionServiceImplement!com.jlmallas.comun.service.ConfiguracionService")
     private ConfiguracionService configuracionService;
-    @EJB
+    @EJB(lookup = "java:global/SeguridadService/UsuarioServiceImplement!org.jlmallas.seguridad.service.UsuarioService")
     private UsuarioService usuarioService;
-    @EJB
+    @EJB(lookup = "java:global/SigettService/DocenteUsuarioServiceImplement!edu.unl.sigett.service.DocenteUsuarioService")
     private DocenteUsuarioService docenteUsuarioDao;
-    @EJB
+    @EJB(lookup = "java:global/AcademicoService/DocenteServiceImplement!edu.jlmallas.academico.service.DocenteService")
     private DocenteService docenteService;
-    @EJB
-    private PersonaDao personaDao;
+    @EJB(lookup = "java:global/ComunService/PersonaServiceImplement!com.jlmallas.comun.service.PersonaService")
+    private PersonaService personaService;
     //</editor-fold>
     private static final Logger LOG = Logger.getLogger(DocenteUsuarioController.class.getName());
 
@@ -136,7 +137,7 @@ public class DocenteUsuarioController implements Serializable {
             return;
         }
         docenteUsuarioDM.setDocenteUsuarioDTO(new DocenteUsuarioDTO(docenteService.buscarPorId(new Docente(docenteUsuario.getDocenteId())),
-                !usuarios.isEmpty() ? usuarios.get(0) : null, personaDao.find(docenteUsuario.getDocenteId())));
+                !usuarios.isEmpty() ? usuarios.get(0) : null, personaService.buscarPorId(new Persona(docenteUsuario.getDocenteId()))));
     }
 
     public String logout() {

@@ -28,9 +28,9 @@ public class SelectItemsController implements Serializable {
     private DocenteUsuarioDM docenteUsuarioDM;
     @Inject
     private SessionSelectItems sessionSelectItems;
-    @EJB
+    @EJB(lookup = "java:global/ComunService/ItemServiceImplement!com.jlmallas.comun.service.ItemService")
     private ItemService itemService;
-    @EJB
+    @EJB(lookup = "java:global/AcademicoService/DocenteCarreraServiceImplement!edu.jlmallas.academico.service.DocenteCarreraService")
     private DocenteCarreraService docenteCarreraService;
 
     public SelectItemsController() {

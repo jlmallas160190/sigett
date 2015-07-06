@@ -11,6 +11,7 @@ import edu.unl.sigett.util.CabeceraController;
 
 import org.jlmallas.seguridad.entity.Usuario;
 import java.io.Serializable;
+import java.util.List;
 import java.util.ResourceBundle;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
@@ -19,14 +20,13 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import org.jlmallas.secure.Secure;
-import org.jlmallas.seguridad.dao.UsuarioDao;
 import org.jlmallas.seguridad.service.UsuarioService;
 
 /**
  *
  * @author JorgeLuis
  */
-@Named
+@Named("loginController")
 @SessionScoped
 @URLMappings(mappings = {
     @URLMapping(
@@ -42,9 +42,7 @@ import org.jlmallas.seguridad.service.UsuarioService;
 })
 public class LoginController implements Serializable {
 
-    @EJB
-    private UsuarioDao usuarioFacadeLocal;
-    @EJB
+    @EJB(lookup = "java:global/SeguridadService/UsuarioServiceImplement!org.jlmallas.seguridad.service.UsuarioService")
     private UsuarioService usuarioService;
     @Inject
     private UsuarioDM sessionUsuario;
@@ -66,7 +64,10 @@ public class LoginController implements Serializable {
         int var = usuarioService.logear(username, cabeceraController.getSecureService().encrypt(
                 new Secure(cabeceraController.getConfiguracionGeneralDTO().getSecureKey(), password)));
         if (var == 1) {
-            sessionUsuario.setUsuario(usuarioFacadeLocal.buscarPorUsuario(username));
+            Usuario usuarioBuscar = new Usuario();
+            usuarioBuscar.setUsername(username);
+            List<Usuario> usuarios = usuarioService.buscar(usuarioBuscar);
+            sessionUsuario.setUsuario(!usuarios.isEmpty() ? usuarios.get(0) : null);
             if (sessionUsuario.getUsuario().getEsActivo()) {
                 return "pretty:inicio";
             } else {

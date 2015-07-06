@@ -10,10 +10,10 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
-import com.jlmallas.comun.dao.ConfiguracionDao;
 import com.jlmallas.comun.entity.Configuracion;
 import com.jlmallas.comun.enumeration.ConfiguracionEnum;
 import com.jlmallas.comun.enumeration.URLWSEnum;
+import com.jlmallas.comun.service.ConfiguracionService;
 import org.jlmallas.httpClient.NetClientServiceImplement;
 import org.jlmallas.httpClient.ConexionDTO;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
@@ -36,10 +36,10 @@ import edu.unl.sigett.academico.carrera.SessionCarrera;
 import edu.unl.sigett.seguridad.usuario.UsuarioDM;
 import edu.unl.sigett.util.CabeceraController;
 import org.jlmallas.seguridad.dao.LogDao;
-import org.jlmallas.seguridad.dao.UsuarioDao;
 import javax.servlet.http.HttpServletRequest;
 import org.jlmallas.httpClient.NetClientService;
 import org.jlmallas.secure.Secure;
+import org.jlmallas.seguridad.service.UsuarioService;
 
 /**
  *
@@ -76,14 +76,14 @@ public class AdministrarAreas implements Serializable {
     private CabeceraController cabeceraController;
     //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="INYECCIÓN DE SERVICIOS">
-    @EJB
-    private AreaService areaFacadeLocal;
-    @EJB
+    @EJB(lookup = "java:global/AcademicoService/AreaServiceImplement!edu.jlmallas.academico.service.AreaService")
+    private AreaService areaService;
+    @EJB(lookup = "java:global/SeguridadService/LogDaoImplement!org.jlmallas.seguridad.dao.LogDao")
     private LogDao logFacadeLocal;
-    @EJB
-    private UsuarioDao usuarioDao;
-    @EJB
-    private ConfiguracionDao configuracionDao;
+    @EJB(lookup = "java:global/SeguridadService/UsuarioServiceImplement!org.jlmallas.seguridad.service.UsuarioService")
+    private UsuarioService usuarioService;
+    @EJB(lookup = "java:global/ComunService/ConfiguracionServiceImplement!com.jlmallas.comun.service.ConfiguracionService")
+    private ConfiguracionService configuracionService;
 //</editor-fold>
     private List<Area> directorioAreas;
 
@@ -104,7 +104,7 @@ public class AdministrarAreas implements Serializable {
     //<editor-fold defaultstate="collapsed" desc="MÉTODOS CRUD">
     public List<Area> listarTodo() {
         try {
-            return areaFacadeLocal.findAll();
+            return areaService.findAll();
         } catch (Exception e) {
         }
         return null;
@@ -115,7 +115,7 @@ public class AdministrarAreas implements Serializable {
         try {
             FacesContext facesContext = FacesContext.getCurrentInstance();
             ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            int tienePermiso = usuarioDao.tienePermiso(usuario, "crear_area");
+            int tienePermiso = usuarioService.tienePermiso(usuario, "crear_area");
             if (tienePermiso == 1) {
                 sessionArea.setArea(new Area());
                 sessionCarrera.getCarreras().clear();
@@ -140,10 +140,10 @@ public class AdministrarAreas implements Serializable {
         try {
             FacesContext facesContext = FacesContext.getCurrentInstance();
             ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            int tienePermiso = usuarioDao.tienePermiso(usuario, "editar_area");
+            int tienePermiso = usuarioService.tienePermiso(usuario, "editar_area");
             if (tienePermiso == 1) {
                 sessionCarrera.getCarreras().clear();
-                area = areaFacadeLocal.buscarPorId(area.getId());
+                area = areaService.buscarPorId(area.getId());
                 sessionArea.setArea(area);
                 sessionCarrera.getCarreras().addAll(sessionArea.getArea().getCarreraList());
                 this.renderedCrearCarrera(usuario);
@@ -169,9 +169,9 @@ public class AdministrarAreas implements Serializable {
             ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
             String param = (String) facesContext.getExternalContext().getRequestParameterMap().get("1");
             if (area.getId() == null) {
-                int tienePermiso = usuarioDao.tienePermiso(usuario, "crear_area");
+                int tienePermiso = usuarioService.tienePermiso(usuario, "crear_area");
                 if (tienePermiso == 1) {
-                    areaFacadeLocal.guardar(area);
+                    areaService.guardar(area);
                     logFacadeLocal.create(logFacadeLocal.crearLog("Area", area.getId() + "", "CREAR", "|Nombre= " + area.getNombre() + "|Sigla= "
                             + area.getSigla(), usuario));
                     buscar();
@@ -199,10 +199,10 @@ public class AdministrarAreas implements Serializable {
                 return "";
             }
             if (area.getId() != null) {
-                int tienePermiso = usuarioDao.tienePermiso(usuario, "editar_area");
+                int tienePermiso = usuarioService.tienePermiso(usuario, "editar_area");
                 if (tienePermiso == 1) {
                     sessionArea.getArea().setCarreraList(new ArrayList<Carrera>());
-                    areaFacadeLocal.actualizar(area);
+                    areaService.actualizar(area);
                     logFacadeLocal.create(logFacadeLocal.crearLog("Area", area.getId() + "", "EDITAR", "|Nombre= " + area.getNombre() + "|Sigla= "
                             + area.getSigla(), usuario));
                     buscar();
@@ -241,7 +241,7 @@ public class AdministrarAreas implements Serializable {
 //            areaBuscar.setNombre(criterio);
 //            areaBuscar.setSigla(criterio);
 //            areaBuscar.setSecretario(criterio);
-//            for (Area a : areaFacadeLocal.buscarPorCriterio(areaBuscar)) {
+//            for (Area a : areaService.buscarPorCriterio(areaBuscar)) {
 //                for (Carrera c : a.getCarreraList()) {
 //                    if (directorioAreas.contains(a)) {
 //                        for (ProyectoCarreraOferta p : proyectoCarreraOfertaFacadeLocal.buscarPorCarrera(c.getId())) {
@@ -298,7 +298,7 @@ public class AdministrarAreas implements Serializable {
     public void buscar() {
         sessionArea.setAreas(new ArrayList<Area>());
         try {
-            sessionArea.setAreas(areaFacadeLocal.buscarPorCriterio(new Area()));
+            sessionArea.setAreas(areaService.buscarPorCriterio(new Area()));
         } catch (Exception e) {
 
         }
@@ -314,10 +314,10 @@ public class AdministrarAreas implements Serializable {
         for (Area a : sessionArea.getAreasWS()) {
             Area areaBuscar = new Area();
             areaBuscar.setSigla(a.getSigla());
-            List<Area> areas = areaFacadeLocal.buscarPorCriterio(areaBuscar);
+            List<Area> areas = areaService.buscarPorCriterio(areaBuscar);
             Area a1 = !areas.isEmpty() ? areas.get(0) : null;
             if (a1 == null) {
-                areaFacadeLocal.guardar(a);
+                areaService.guardar(a);
                 logFacadeLocal.create(logFacadeLocal.crearLog("Area", a.getId() + "", "CREAR", "|Nombre= " + a.getNombre() + "|Sigla= "
                         + a.getSigla() + "|" + ipAddress, usuarioDM.getUsuario()));
             } else {
@@ -325,7 +325,7 @@ public class AdministrarAreas implements Serializable {
                 a1.setSigla(a.getSigla());
                 a1.setSecretario(a.getSecretario());
                 a = a1;
-                areaFacadeLocal.actualizar(a);
+                areaService.actualizar(a);
                 logFacadeLocal.create(logFacadeLocal.crearLog("Area", a.getId() + "", "EDITAR", "|Nombre= " + a.getNombre() + "|Sigla= "
                         + a.getSigla() + "|" + ipAddress, usuarioDM.getUsuario()));
             }
@@ -341,9 +341,9 @@ public class AdministrarAreas implements Serializable {
         try {
 
             String claveWS = this.cabeceraController.getSecureService().decrypt(new Secure(cabeceraController.getConfiguracionGeneralDTO().getSecureKey(),
-                    configuracionDao.buscar(new Configuracion(ConfiguracionEnum.CLAVEWS.getTipo())).get(0).getValor()));
-            String usuarioWs = configuracionDao.buscar(new Configuracion(ConfiguracionEnum.USUARIOWS.getTipo())).get(0).getValor();
-            String url = configuracionDao.buscar(new Configuracion(URLWSEnum.URLAREAWS.getTipo())).get(0).getValor();
+                    configuracionService.buscar(new Configuracion(ConfiguracionEnum.CLAVEWS.getTipo())).get(0).getValor()));
+            String usuarioWs = configuracionService.buscar(new Configuracion(ConfiguracionEnum.USUARIOWS.getTipo())).get(0).getValor();
+            String url = configuracionService.buscar(new Configuracion(URLWSEnum.URLAREAWS.getTipo())).get(0).getValor();
             ConexionDTO seguridad = new ConexionDTO(claveWS, url, usuarioWs);
             NetClientService conexion = new NetClientServiceImplement();
             String datosJson = conexion.response(seguridad);
@@ -429,7 +429,7 @@ public class AdministrarAreas implements Serializable {
     //<editor-fold defaultstate="collapsed" desc="MÉTODOS RENDERED">
 
     public void renderedSgaWsCarrera(Usuario usuario) {
-        int tienePermiso = usuarioDao.tienePermiso(usuario, "sga_ws_carrera");
+        int tienePermiso = usuarioService.tienePermiso(usuario, "sga_ws_carrera");
         if (tienePermiso == 1) {
             sessionCarrera.setRenderedSincronizar(true);
         } else {
@@ -438,7 +438,7 @@ public class AdministrarAreas implements Serializable {
     }
 
     public void renderedCrearCarrera(Usuario usuario) {
-        int tienePermiso = usuarioDao.tienePermiso(usuario, "crear_carrera");
+        int tienePermiso = usuarioService.tienePermiso(usuario, "crear_carrera");
         if (tienePermiso == 1) {
             sessionCarrera.setRenderedCrear(true);
         } else {
@@ -447,7 +447,7 @@ public class AdministrarAreas implements Serializable {
     }
 
     public void renderedEditarCarrera(Usuario usuario) {
-        int tienePermiso = usuarioDao.tienePermiso(usuario, "editar_carrera");
+        int tienePermiso = usuarioService.tienePermiso(usuario, "editar_carrera");
         if (tienePermiso == 1) {
             sessionCarrera.setRenderedEditar(true);
             sessionCarrera.setRenderedNoEditar(false);
@@ -458,7 +458,7 @@ public class AdministrarAreas implements Serializable {
     }
 
     public void renderedSgaWs(Usuario usuario) {
-        int tienePermiso = usuarioDao.tienePermiso(usuario, "sga_ws_area");
+        int tienePermiso = usuarioService.tienePermiso(usuario, "sga_ws_area");
         if (tienePermiso == 1) {
             sessionArea.setRenderedSincronizar(true);
         } else {
@@ -475,7 +475,7 @@ public class AdministrarAreas implements Serializable {
     }
 
     public void renderedCrear(Usuario usuario) {
-        int tienePermiso = usuarioDao.tienePermiso(usuario, "crear_area");
+        int tienePermiso = usuarioService.tienePermiso(usuario, "crear_area");
         if (tienePermiso == 1) {
             sessionArea.setRenderedCrear(true);
         } else {
@@ -484,7 +484,7 @@ public class AdministrarAreas implements Serializable {
     }
 
     public void renderedEditar(Usuario usuario) {
-        int tienePermiso = usuarioDao.tienePermiso(usuario, "editar_area");
+        int tienePermiso = usuarioService.tienePermiso(usuario, "editar_area");
         if (tienePermiso == 1) {
             sessionArea.setRenderedEditar(true);
             sessionArea.setRenderedNoEditar(false);

@@ -31,8 +31,6 @@ import org.jlmallas.seguridad.entity.Permiso;
 public class UsuarioDaoImplement extends AbstractDao<Usuario> implements UsuarioDao {
 
     @EJB
-    private UsuarioPermisoDao usuarioPermisoFacadeLocal;
-    @EJB
     private RolPermisoDao rolPermisoDao;
     @EJB
     private RolUsuarioDao rolUsuarioDao;

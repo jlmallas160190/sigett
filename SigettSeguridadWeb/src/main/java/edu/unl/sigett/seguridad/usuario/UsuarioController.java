@@ -35,7 +35,6 @@ import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
 import org.jlmallas.secure.Secure;
-import org.jlmallas.seguridad.dao.UsuarioDao;
 import org.jlmallas.seguridad.dao.UsuarioPermisoDao;
 import org.jlmallas.seguridad.dao.LogDao;
 import org.jlmallas.seguridad.service.UsuarioService;
@@ -78,23 +77,21 @@ public class UsuarioController implements Serializable {
     private CabeceraController cabeceraController;
     //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="SERVICIOS">
-    @EJB
-    private CarreraService carreraFacadeLocal;
-    @EJB
+    @EJB(lookup = "java:global/AcademicoService/CarreraServiceImplement!edu.jlmallas.academico.service.CarreraService")
+    private CarreraService carreraService;
+    @EJB(lookup = "java:global/SigettService/UsuarioCarreraDaoImplement!edu.unl.sigett.dao.UsuarioCarreraDao")
     private UsuarioCarreraDao usuarioCarreraDao;
-    @EJB
+    @EJB(lookup = "java:global/SeguridadService/RolDaoImplement!org.jlmallas.seguridad.dao.RolDao")
     private RolDao rolDao;
-    @EJB
-    private RolUsuarioDao rolUsuarioFacadeLocal;
-    @EJB
+    @EJB(lookup = "java:global/SeguridadService/RolUsuarioDaoImplement!org.jlmallas.seguridad.dao.RolUsuarioDao")
+    private RolUsuarioDao rolUsuarioDao;
+    @EJB(lookup = "java:global/SeguridadService/LogDaoImplement!org.jlmallas.seguridad.dao.LogDao")
     private LogDao logDao;
-    @EJB
-    private PermisoDao permisoFacadeLocal;
-    @EJB
-    private UsuarioPermisoDao usuarioPermisoFacadeLocal;
-    @EJB
-    private UsuarioDao usuarioDao;
-    @EJB
+    @EJB(lookup = "java:global/SeguridadService/PermisoDaoImplement!org.jlmallas.seguridad.dao.PermisoDao")
+    private PermisoDao permisoDao;
+    @EJB(lookup = "java:global/SeguridadService/UsuarioPermisoDaoImplement!org.jlmallas.seguridad.dao.UsuarioPermisoDao")
+    private UsuarioPermisoDao usuarioPermisoDao;
+    @EJB(lookup = "java:global/SeguridadService/UsuarioServiceImplement!org.jlmallas.seguridad.service.UsuarioService")
     private UsuarioService usuarioService;
 //</editor-fold>
     private static final Logger LOG = Logger.getLogger(UsuarioController.class.getName());
@@ -111,9 +108,9 @@ public class UsuarioController implements Serializable {
         try {
             FacesContext facesContext = FacesContext.getCurrentInstance();
             ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            int tienePermiso = usuarioDao.tienePermiso(session, "editar_usuario");
+            int tienePermiso = usuarioService.tienePermiso(session, "editar_usuario");
             if (tienePermiso == 1) {
-                usuario = usuarioDao.find(usuario.getId());
+                usuario = usuarioService.buscarPorId(new Usuario(usuario.getId()));
                 usuarioCRUDDM.setUsuario(usuario);
                 usuarioCRUDDM.setRolesUsuariosRemovidos(new ArrayList<RolUsuario>());
                 usuarioCRUDDM.setUsuariosPermisoRemovidos(new ArrayList<UsuarioPermiso>());
@@ -150,7 +147,7 @@ public class UsuarioController implements Serializable {
         try {
             FacesContext facesContext = FacesContext.getCurrentInstance();
             ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            int tienePermiso = usuarioDao.tienePermiso(usuario, "crear_usuario");
+            int tienePermiso = usuarioService.tienePermiso(usuario, "crear_usuario");
             if (tienePermiso == 1) {
                 usuarioCRUDDM.setUsuario(new Usuario());
                 listarRoles(usuarioCRUDDM.getUsuario());
@@ -178,7 +175,7 @@ public class UsuarioController implements Serializable {
             usuarioCRUDDM.getFilterUsuarios().clear();
             Usuario usuarioBuscar = new Usuario();
             usuarioBuscar.setApellidos("");
-            usuarioCRUDDM.setUsuarios(usuarioDao.buscarPorCriterio(usuarioBuscar));
+            usuarioCRUDDM.setUsuarios(usuarioService.buscar(usuarioBuscar));
             usuarioCRUDDM.setFilterUsuarios(usuarioCRUDDM.getUsuarios());
 
         } catch (Exception e) {
@@ -191,7 +188,7 @@ public class UsuarioController implements Serializable {
         for (Object o : usuarioCRUDDM.getCarrerasDualList().getTarget()) {
             int pos = o.toString().indexOf(":");
             Integer id = Integer.parseInt(o.toString().substring(0, pos));
-            Carrera c = carreraFacadeLocal.find(id);
+            Carrera c = carreraService.find(id);
             UsuarioCarrera usuarioCarrera = new UsuarioCarrera();
             usuarioCarrera.setCarreraId(c.getId());
             usuarioCarrera.setUsuarioId(usuarioCRUDDM.getUsuario().getId());
@@ -209,15 +206,15 @@ public class UsuarioController implements Serializable {
         for (Object permiso : usuarioCRUDDM.getPermisosDualList().getTarget()) {
             int pos = permiso.toString().indexOf(":");
             Long id = Long.parseLong(permiso.toString().substring(0, pos));
-            Permiso p = permisoFacadeLocal.find(id);
+            Permiso p = permisoDao.find(id);
             UsuarioPermiso usuarioPermiso = new UsuarioPermiso();
             usuarioPermiso.setPermisoId(p);
             usuarioPermiso.setUsuarioId(usuarioCRUDDM.getUsuario());
             usuarioPermisos.add(usuarioPermiso);
         }
         for (UsuarioPermiso usuarioPermiso : usuarioPermisos) {
-            if (contienePermiso(usuarioPermisoFacadeLocal.buscarPorUsuario(usuarioCRUDDM.getUsuario().getId()), usuarioPermiso) == false) {
-                usuarioPermisoFacadeLocal.create(usuarioPermiso);
+            if (contienePermiso(usuarioPermisoDao.buscarPorUsuario(usuarioCRUDDM.getUsuario().getId()), usuarioPermiso) == false) {
+                usuarioPermisoDao.create(usuarioPermiso);
             }
         }
     }
@@ -234,8 +231,8 @@ public class UsuarioController implements Serializable {
             rolUsuarios.add(rolUsuario);
         }
         for (RolUsuario rolUsuario : rolUsuarios) {
-            if (contieneRol(rolUsuarioFacadeLocal.buscarPorUsuario(usuarioCRUDDM.getUsuario().getId()), rolUsuario) == false) {
-                rolUsuarioFacadeLocal.create(rolUsuario);
+            if (contieneRol(rolUsuarioDao.buscarPorUsuario(usuarioCRUDDM.getUsuario().getId()), rolUsuario) == false) {
+                rolUsuarioDao.create(rolUsuario);
                 logDao.create(logDao.crearLog("RolUsuario", rolUsuario.getId() + "", "CREAR", "|Rol=" + rolUsuario.getRolId()
                         + "|Usuario=" + rolUsuario.getUsuarioId(), usuarioCRUDDM.getUsuario()));
             }
@@ -249,13 +246,16 @@ public class UsuarioController implements Serializable {
      */
     public String guardar() {
         try {
+            Usuario usuarioBuscar = new Usuario();
+            usuarioBuscar.setUsername(usuarioCRUDDM.getUsuario().getUsername());
+            List<Usuario> usuarios = usuarioService.buscar(usuarioBuscar);
             FacesContext facesContext = FacesContext.getCurrentInstance();
             ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
             String param = (String) facesContext.getExternalContext().getRequestParameterMap().get("1");
-            if (usuarioService.unicoUsername(usuarioCRUDDM.getUsuario().getUsername()) == false || usuarioDao.find(usuarioCRUDDM.getUsuario().getId()).
-                    equals(usuarioDao.buscarPorUsuario(usuarioCRUDDM.getUsuario().getUsername()))) {
+            if (usuarioService.unicoUsername(usuarioCRUDDM.getUsuario().getUsername()) == false || usuarioService.buscarPorId(new Usuario(usuarioCRUDDM.getUsuario().getId())).
+                    equals(!usuarios.isEmpty() ? usuarios.get(0) : null)) {
                 usuarioCRUDDM.getUsuario().setUsuarioPermisoList(new ArrayList<UsuarioPermiso>());
-                usuarioDao.edit(usuarioCRUDDM.getUsuario());
+                usuarioService.actualizar(usuarioCRUDDM.getUsuario());
                 logDao.create(logDao.crearLog("Usuario", usuarioCRUDDM.getUsuario().getId() + "", "EDITAR", "|Username= "
                         + usuarioCRUDDM.getUsuario().getUsername() + "|EsActivo=" + usuarioCRUDDM.getUsuario().getEsActivo() + "|EsSuperuser= "
                         + usuarioCRUDDM.getUsuario().getEsSuperuser()
@@ -311,7 +311,7 @@ public class UsuarioController implements Serializable {
                     usuarioCRUDDM.getUsuario().setPassword(cabeceraController.getSecureService().encrypt(
                             new Secure(cabeceraController.getConfiguracionGeneralDTO().getSecureKey(), usuario.getPassword())));
                     usuarioCRUDDM.getUsuario().setUsuarioPermisoList(new ArrayList<UsuarioPermiso>());
-                    usuarioDao.create(usuarioCRUDDM.getUsuario());
+                    usuarioService.guardar(usuarioCRUDDM.getUsuario());
                     logDao.create(logDao.crearLog("Usuario", usuarioCRUDDM.getUsuario().getId() + "", "CREAR", "|Username= "
                             + usuarioCRUDDM.getUsuario().getUsername() + "|EsActivo=" + usuarioCRUDDM.getUsuario().getEsActivo()
                             + "|EsSuperuser= " + usuarioCRUDDM.getUsuario().getEsSuperuser() + "|Nombres= " + usuarioCRUDDM.getUsuario().getNombres()
@@ -340,14 +340,16 @@ public class UsuarioController implements Serializable {
                 }
                 return "";
             }
-
+            Usuario usuarioBuscar = new Usuario();
+            usuarioBuscar.setUsername(usuarioCRUDDM.getUsuario().getUsername());
+            List<Usuario> usuarios = usuarioService.buscar(usuarioBuscar);
             if (usuarioService.unicoUsername(usuarioCRUDDM.getUsuario().getUsername()) == false
-                    || usuarioDao.find(usuarioCRUDDM.getUsuario().getId())
-                    .equals(usuarioDao.buscarPorUsuario(usuarioCRUDDM.getUsuario().getUsername()))) {
+                    || usuarioService.buscarPorId(new Usuario(usuarioCRUDDM.getUsuario().getId()))
+                    .equals(!usuarios.isEmpty() ? usuarios.get(0) : null)) {
                 usuarioCRUDDM.getUsuario().setPassword(cabeceraController.getSecureService().encrypt(
                         new Secure(cabeceraController.getConfiguracionGeneralDTO().getSecureKey(), usuarioCRUDDM.getUsuario().getPassword())));
                 usuarioCRUDDM.getUsuario().setUsuarioPermisoList(new ArrayList<UsuarioPermiso>());
-                usuarioDao.edit(usuarioCRUDDM.getUsuario());
+                usuarioService.actualizar(usuarioCRUDDM.getUsuario());
                 logDao.create(logDao.crearLog("Usuario", usuarioCRUDDM.getUsuario().getId() + "", "EDITAR", "|Username= "
                         + usuarioCRUDDM.getUsuario().getUsername() + "|EsActivo=" + usuarioCRUDDM.getUsuario().getEsActivo() + "|EsSuperuser= "
                         + usuarioCRUDDM.getUsuario().getEsSuperuser() + "|Nombres= " + usuarioCRUDDM.getUsuario().getNombres() + "|Apellidos= "
@@ -379,8 +381,8 @@ public class UsuarioController implements Serializable {
         boolean var = false;
         if (usuarioCarreras != null) {
             for (UsuarioCarrera uc : usuarioCarreras) {
-                Carrera carrera = carreraFacadeLocal.find(uc.getCarreraId());
-                Carrera carreraBuscar = carreraFacadeLocal.find(usuarioCarrera.getCarreraId());
+                Carrera carrera = carreraService.find(uc.getCarreraId());
+                Carrera carreraBuscar = carreraService.find(usuarioCarrera.getCarreraId());
                 if (carrera.equals(carreraBuscar)) {
                     var = true;
                     break;
@@ -415,8 +417,8 @@ public class UsuarioController implements Serializable {
     public Long devuelveCarreraEliminar(List<UsuarioCarrera> usuarioCarreras, UsuarioCarrera usuarioCarrera) {
         Long var = (long) 0;
         for (UsuarioCarrera uc : usuarioCarreras) {
-            Carrera carrera = carreraFacadeLocal.find(uc.getCarreraId());
-            Carrera carreraBuscar = carreraFacadeLocal.find(usuarioCarrera.getCarreraId());
+            Carrera carrera = carreraService.find(uc.getCarreraId());
+            Carrera carreraBuscar = carreraService.find(usuarioCarrera.getCarreraId());
             if (carrera.equals(carreraBuscar)) {
                 var = uc.getId();
                 break;
@@ -454,12 +456,12 @@ public class UsuarioController implements Serializable {
             if (usuarioCRUDDM.getUsuario() != null) {
                 if (usuarioCRUDDM.getUsuario().getId() != null) {
                     for (UsuarioCarrera uc : usuarioCarreraDao.buscarPorUsuario(usuarioCRUDDM.getUsuario().getId())) {
-                        Carrera carrera = carreraFacadeLocal.find(uc.getCarreraId());
+                        Carrera carrera = carreraService.find(uc.getCarreraId());
                         usuarioCarreras.add(carrera);
                     }
                 }
             }
-            for (Carrera c : carreraFacadeLocal.findAll()) {
+            for (Carrera c : carreraService.findAll()) {
                 if (!usuarioCarreras.contains(c)) {
                     carreras.add(c);
                 }
@@ -483,7 +485,7 @@ public class UsuarioController implements Serializable {
                     }
                 }
             }
-            for (Permiso permiso : permisoFacadeLocal.findAll()) {
+            for (Permiso permiso : permisoDao.findAll()) {
                 if (!usuariosPermisos.contains(permiso)) {
                     permisos.add(permiso);
                 }
@@ -518,11 +520,11 @@ public class UsuarioController implements Serializable {
         }
         if (usuarioCRUDDM.getUsuario().getId() != null) {
             for (UsuarioPermiso usuarioPermiso : usuarioCRUDDM.getUsuariosPermisoRemovidos()) {
-                Long id = devuelvePermisoEliminar(usuarioPermisoFacadeLocal.buscarPorUsuario(usuarioCRUDDM.getUsuario().getId()), usuarioPermiso);
+                Long id = devuelvePermisoEliminar(usuarioPermisoDao.buscarPorUsuario(usuarioCRUDDM.getUsuario().getId()), usuarioPermiso);
                 UsuarioPermiso up = new UsuarioPermiso();
-                up = usuarioPermisoFacadeLocal.find(id);
+                up = usuarioPermisoDao.find(id);
                 if (up != null) {
-                    usuarioPermisoFacadeLocal.remove(up);
+                    usuarioPermisoDao.remove(up);
                 }
             }
         }
@@ -531,11 +533,11 @@ public class UsuarioController implements Serializable {
     public void removerRolUsuarios() {
         if (usuarioCRUDDM.getUsuario().getId() != null) {
             for (RolUsuario rolUsuario : usuarioCRUDDM.getRolesUsuariosRemovidos()) {
-                Long id = devuelveRolEliminar(rolUsuarioFacadeLocal.buscarPorUsuario(usuarioCRUDDM.getUsuario().getId()), rolUsuario);
+                Long id = devuelveRolEliminar(rolUsuarioDao.buscarPorUsuario(usuarioCRUDDM.getUsuario().getId()), rolUsuario);
                 RolUsuario r = new RolUsuario();
-                r = rolUsuarioFacadeLocal.find(id);
+                r = rolUsuarioDao.find(id);
                 if (r != null) {
-                    rolUsuarioFacadeLocal.remove(r);
+                    rolUsuarioDao.remove(r);
                 }
             }
         }
@@ -546,7 +548,7 @@ public class UsuarioController implements Serializable {
             for (Object item : event.getItems()) {
                 int v = item.toString().indexOf(":");
                 Long id = Long.parseLong(item.toString().substring(0, v));
-                Permiso p = permisoFacadeLocal.find(id);
+                Permiso p = permisoDao.find(id);
                 UsuarioPermiso up = new UsuarioPermiso();
                 up.setPermisoId(p);
                 if (event.isRemove()) {
@@ -571,7 +573,7 @@ public class UsuarioController implements Serializable {
             for (Object item : event.getItems()) {
                 int v = item.toString().indexOf(":");
                 Integer id = Integer.parseInt(item.toString().substring(0, v));
-                Carrera c = carreraFacadeLocal.find(id);
+                Carrera c = carreraService.find(id);
                 UsuarioCarrera uc = new UsuarioCarrera();
                 uc.setCarreraId(c.getId());
                 if (event.isRemove()) {
@@ -585,7 +587,7 @@ public class UsuarioController implements Serializable {
                 usuarioCRUDDM.setNumeroCarrerasSeleccionadas(usuarioCRUDDM.getCarrerasDualList().getTarget().size());
             }
 
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
             LOG.info(e.getMessage());
         }
 
@@ -640,7 +642,7 @@ public class UsuarioController implements Serializable {
     //<editor-fold defaultstate="collapsed" desc="RENDERED">
 
     public void renderedCrear(Usuario usuario) {
-        int tienePermiso = usuarioDao.tienePermiso(usuario, "crear_usuario");
+        int tienePermiso = usuarioService.tienePermiso(usuario, "crear_usuario");
         if (tienePermiso == 1) {
             usuarioCRUDDM.setRenderedCrear(true);
         } else {
@@ -649,7 +651,7 @@ public class UsuarioController implements Serializable {
     }
 
     public void renderedEditar(Usuario usuario) {
-        int tienePermiso = usuarioDao.tienePermiso(usuario, "editar_usuario");
+        int tienePermiso = usuarioService.tienePermiso(usuario, "editar_usuario");
         if (tienePermiso == 1) {
             usuarioCRUDDM.setRenderedEditar(true);
             usuarioCRUDDM.setRenderedNoEditar(false);
