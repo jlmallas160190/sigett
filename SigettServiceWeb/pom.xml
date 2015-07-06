@@ -110,7 +110,7 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>SigettWebSemantica</artifactId>
+            <artifactId>SigettLUD</artifactId>
             <version>1.0</version>
             <scope>provided</scope>
             <type>jar</type>

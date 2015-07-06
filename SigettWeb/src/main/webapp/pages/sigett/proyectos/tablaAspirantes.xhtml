@@ -27,7 +27,9 @@
                 </f:facet>
                 <h:outputText value="#{aspirante.persona.apellidos} #{aspirante.persona.nombres}"/>
             </p:column>
-            <p:column sortBy="#{aspirante.persona.numeroIdentificacion}">
+            <p:column sortBy="#{aspirante.persona.numeroIdentificacion}"
+                      filterBy="#{aspirante.persona.numeroIdentificacion}"
+                      filterMatchMode="contains">
                 <f:facet name="header">
                     <h:outputText value="#{msg['lbl.ci']}"/>
                 </f:facet>

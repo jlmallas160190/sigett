@@ -5,20 +5,8 @@
  */
 package edu.unl.sigett.util;
 
-import edu.unl.sigett.webSemantica.dto.ProyectoCarreraOfertaOntDTO;
-import edu.unl.sigett.webSemantica.service.AreaAcademicaOntService;
-import edu.unl.sigett.webSemantica.service.AutorOntService;
-import edu.unl.sigett.webSemantica.service.AutorProyectoOntService;
-import edu.unl.sigett.webSemantica.service.CarreraOntService;
-import edu.unl.sigett.webSemantica.service.DirectorProyectoOntService;
-import edu.unl.sigett.webSemantica.service.DocenteOntService;
-import edu.unl.sigett.webSemantica.service.LineaInvestigacionOntService;
-import edu.unl.sigett.webSemantica.service.LineaInvestigacionProyectoOntService;
-import edu.unl.sigett.webSemantica.service.NivelAcademicoOntService;
-import edu.unl.sigett.webSemantica.service.OfertaAcademicoOntService;
-import edu.unl.sigett.webSemantica.service.PeriodoAcademicoOntService;
-import edu.unl.sigett.webSemantica.service.ProyectoCarreraOfertaOntService;
-import edu.unl.sigett.webSemantica.service.ProyectoOntService;
+
+import edu.unl.sigett.lud.service.*;
 import java.io.Serializable;
 
 /**

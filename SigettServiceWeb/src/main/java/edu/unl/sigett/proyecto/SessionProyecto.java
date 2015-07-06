@@ -13,7 +13,6 @@ import edu.unl.sigett.autorProyecto.AutorProyectoDTO;
 import edu.unl.sigett.directorProyecto.DirectorProyectoDTO;
 import edu.unl.sigett.documentoProyecto.DocumentoProyectoDTO;
 import edu.unl.sigett.entity.Proyecto;
-import edu.unl.sigett.webSemantica.dto.ProyectoOntDTO;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;

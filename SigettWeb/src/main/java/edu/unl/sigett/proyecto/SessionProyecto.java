@@ -20,7 +20,7 @@ import edu.unl.sigett.entity.LineaInvestigacionProyecto;
 import edu.unl.sigett.entity.Proyecto;
 import edu.unl.sigett.entity.ProyectoCarreraOferta;
 import edu.unl.sigett.entity.TemaProyecto;
-import edu.unl.sigett.webSemantica.dto.ProyectoOntDTO;
+import edu.unl.sigett.lud.dto.ProyectoOntDTO;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;

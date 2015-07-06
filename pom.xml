@@ -14,7 +14,7 @@
         <module>SigettService</module>
         <module>ComunService</module>
         <module>AcademicoService</module>
-        <module>SigettWebSemantica</module>
+        <module>SigettLUD</module>
         <module>SigettDocenteWeb</module>
         <module>SigettSeguridadWeb</module>
         <module>SigettEstudianteWeb</module>

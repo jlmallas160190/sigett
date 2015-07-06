@@ -26,46 +26,42 @@ import java.util.logging.Logger;
  *
  * @author jorge-luis
  */
-public class ProyectoOntServiceImplement implements ProyectoOntService {
-    
-    private static final Logger LOG = Logger.getLogger(ProyectoOntServiceImplement.class.getName());
-    
-    private CabeceraWebSemantica cabecera;
-    
+public class ProyectoOntServiceImplement extends AbstractSigettLUD implements ProyectoOntService {
+
     @Override
-    public void read(CabeceraWebSemantica cabecera) {
-        this.cabecera = cabecera;
+    public void read(CabeceraWebSemantica cabeceraWebSemantica) {
+        this.setCabecera(cabeceraWebSemantica);
     }
-    
+
     @Override
     public void write(ProyectoOntDTO proyectoDTO) {
         try {
-            proyectoDTO.setIndividual(cabecera.getVocabulario().getModel().getIndividual(
-                    cabecera.getVocabulario().getNS() + "proyecto/" + proyectoDTO.getId()));
+            proyectoDTO.setIndividual(this.getCabecera().getVocabulario().getModel().getIndividual(
+                    this.getCabecera().getVocabulario().getNS() + "proyecto/" + proyectoDTO.getId()));
             if (proyectoDTO.getIndividual() == null) {
-                proyectoDTO.setIndividual(cabecera.getVocabulario().getModel().createIndividual(
-                        cabecera.getVocabulario().getNS() + "proyecto/" + proyectoDTO.getId(),
-                        cabecera.getVocabulario().editarProyectoOnt()));
+                proyectoDTO.setIndividual(this.getCabecera().getVocabulario().getModel().createIndividual(
+                        this.getCabecera().getVocabulario().getNS() + "proyecto/" + proyectoDTO.getId(),
+                        this.getCabecera().getVocabulario().editarProyectoOnt()));
             }
-            proyectoDTO.getIndividual().setPropertyValue(cabecera.getVocabulario().editarPropiedadId(),
-                    cabecera.getVocabulario().getModel().createTypedLiteral(proyectoDTO.getId()));
-            proyectoDTO.getIndividual().setPropertyValue(DC.title, cabecera.getVocabulario().getModel().createTypedLiteral(proyectoDTO.getTema()));
-            proyectoDTO.getIndividual().setPropertyValue(DC.description, cabecera.getVocabulario().getModel().createTypedLiteral(proyectoDTO.getEstado()));
-            proyectoDTO.getIndividual().setPropertyValue(DC.type, cabecera.getVocabulario().getModel().createTypedLiteral(proyectoDTO.getTipo()));
-            proyectoDTO.getIndividual().setPropertyValue(DC.date, cabecera.getVocabulario().getModel().createTypedLiteral(proyectoDTO.getFechaCreacion()));
-            
-            File file = new File(cabecera.getRuta());
+            proyectoDTO.getIndividual().setPropertyValue(this.getCabecera().getVocabulario().editarPropiedadId(),
+                    this.getCabecera().getVocabulario().getModel().createTypedLiteral(proyectoDTO.getId()));
+            proyectoDTO.getIndividual().setPropertyValue(DC.title, this.getCabecera().getVocabulario().getModel().createTypedLiteral(proyectoDTO.getTema()));
+            proyectoDTO.getIndividual().setPropertyValue(DC.description, this.getCabecera().getVocabulario().getModel().createTypedLiteral(proyectoDTO.getEstado()));
+            proyectoDTO.getIndividual().setPropertyValue(DC.type, this.getCabecera().getVocabulario().getModel().createTypedLiteral(proyectoDTO.getTipo()));
+            proyectoDTO.getIndividual().setPropertyValue(DC.date, this.getCabecera().getVocabulario().getModel().createTypedLiteral(proyectoDTO.getFechaCreacion()));
+
+            File file = new File(this.getCabecera().getRuta());
             if (!file.exists()) {
                 file.createNewFile();
             }
             PrintWriter out = new PrintWriter(file);
             out.println("<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>");
-            cabecera.getVocabulario().getModel().write(out, "RDF/XML");
+            this.getCabecera().getVocabulario().getModel().write(out, "RDF/XML");
         } catch (IOException e) {
-            LOG.info(e.getMessage());
+            Logger.getLogger(ProyectoOntServiceImplement.class.getName()).warning(e.getMessage());
         }
     }
-    
+
     @Override
     public List<ProyectoOntDTO> buscar(final ProyectoOntDTO proyectoOntDTO) {
         List<ProyectoOntDTO> proyectos = new ArrayList<>();
@@ -102,7 +98,7 @@ public class ProyectoOntServiceImplement implements ProyectoOntService {
                     + "?ofertaAcademica sigett:hasPeriodoAcademico ?periodoAcademico.\n"
                     + "?periodoAcademico sigett:fechaInicio ?fechaInicioPeriodo.");
             sparql.append("FILTER(regex(?tema,'" + "").append(proyectoOntDTO.getTema()).append("','i')");
-            
+
             if (proyectoOntDTO.getAutor() != null) {
                 sparql.append("|| regex(?datosAutor,'").append(proyectoOntDTO.getAutor()).append("','i')");
             }
@@ -127,7 +123,7 @@ public class ProyectoOntServiceImplement implements ProyectoOntService {
             sparql.append(")");
             sparql.append("}");
             Query query = QueryFactory.create(sparql.toString());
-            QueryExecution qe = QueryExecutionFactory.create(query, cabecera.getVocabulario().getModel());
+            QueryExecution qe = QueryExecutionFactory.create(query, this.getCabecera().getVocabulario().getModel());
             ResultSet results = qe.execSelect();
             while (results.hasNext()) {
                 QuerySolution soln = results.nextSolution();
@@ -149,9 +145,9 @@ public class ProyectoOntServiceImplement implements ProyectoOntService {
                 proyectos.add(proyecto);
             }
         } catch (NumberFormatException e) {
-            LOG.warning(e.getMessage());
+            Logger.getLogger(ProyectoOntServiceImplement.class.getName()).warning(e.getMessage());
         }
         return proyectos;
     }
-    
+
 }
