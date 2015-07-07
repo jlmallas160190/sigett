@@ -5,7 +5,6 @@ package edu.unl.sigett.proyecto;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-import com.jlmallas.comun.dao.PersonaDao;
 import com.jlmallas.comun.entity.Configuracion;
 import com.jlmallas.comun.entity.Documento;
 import com.jlmallas.comun.entity.Item;
@@ -16,9 +15,9 @@ import com.jlmallas.comun.enumeration.TipoConfiguracionEnum;
 import com.jlmallas.comun.service.ConfiguracionService;
 import com.jlmallas.comun.service.DocumentoService;
 import com.jlmallas.comun.service.ItemService;
+import com.jlmallas.comun.service.PersonaService;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 import com.ocpsoft.pretty.faces.annotation.URLMappings;
-import edu.jlmallas.academico.dao.EstudianteCarreraDao;
 import edu.jlmallas.academico.entity.Carrera;
 import edu.jlmallas.academico.entity.CoordinadorPeriodo;
 import edu.jlmallas.academico.entity.Docente;
@@ -31,6 +30,7 @@ import edu.jlmallas.academico.service.CarreraService;
 import edu.jlmallas.academico.service.CoordinadorPeriodoService;
 import edu.jlmallas.academico.service.DocenteCarreraService;
 import edu.jlmallas.academico.service.DocenteService;
+import edu.jlmallas.academico.service.EstudianteCarreraService;
 import edu.jlmallas.academico.service.OfertaAcademicaService;
 import edu.unl.sigett.academico.dto.CoordinadorPeriodoDTO;
 import edu.unl.sigett.autorProyecto.AutorProyectoDTO;
@@ -132,55 +132,55 @@ public class ProyectoController implements Serializable {
 
     //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="SERVICIOS">
-    @EJB
+    @EJB(lookup = "java:global/SigettService/ProyectoServiceImplement!edu.unl.sigett.service.ProyectoService")
     private ProyectoService proyectoService;
-    @EJB
+ @EJB(lookup = "java:global/SigettService/ProyectoCarreraOfertaServiceImplement!edu.unl.sigett.service.ProyectoCarreraOfertaService")
     private ProyectoCarreraOfertaService proyectoCarreraOfertaService;
-    @EJB
+    @EJB(lookup = "java:global/AcademicoService/OfertaAcademicaServiceImplement!edu.jlmallas.academico.service.OfertaAcademicaService")
     private OfertaAcademicaService ofertaAcademicaService;
-    @EJB
+    @EJB(lookup = "java:global/SeguridadService/LogDaoImplement!org.jlmallas.seguridad.dao.LogDao")
     private LogDao logDao;
-    @EJB
+  @EJB(lookup = "java:global/SigettService/LineaInvestigacionProyectoServiceImplement!edu.unl.sigett.service.LineaInvestigacionProyectoService")
     private LineaInvestigacionProyectoService lineaInvestigacionProyectoService;
-    @EJB
+     @EJB(lookup = "java:global/SigettService/ConfiguracionProyectoServiceImplement!edu.unl.sigett.service.ConfiguracionProyectoService")
     private ConfiguracionProyectoService configuracionProyectoService;
-    @EJB
+    @EJB(lookup = "java:global/AcademicoService/CarreraServiceImplement!edu.jlmallas.academico.service.CarreraService")
     private CarreraService carreraService;
-    @EJB
-    private PersonaDao personaDao;
-    @EJB
+    @EJB(lookup = "java:global/ComunService/PersonaServiceImplement!com.jlmallas.comun.service.PersonaService")
+    private PersonaService personaService;
+    @EJB(lookup = "java:global/SigettService/AutorProyectoServiceImplement!edu.unl.sigett.service.AutorProyectoService")
     private AutorProyectoService autorProyectoService;
-    @EJB
+    @EJB(lookup = "java:global/ComunService/ItemServiceImplement!com.jlmallas.comun.service.ItemService")
     private ItemService itemService;
-    @EJB
+     @EJB(lookup = "java:global/SigettService/LineaInvestigacionServiceImplement!edu.unl.sigett.service.LineaInvestigacionService")
     private LineaInvestigacionService lineaInvestigacionService;
-    @EJB
-    private EstudianteCarreraDao estudianteCarreraDao;
-    @EJB
+    @EJB(lookup = "java:global/SigettService/EstudianteCarreraServiceImplement!edu.unl.sigett.service.EstudianteCarreraService")
+    private EstudianteCarreraService estudianteCarreraService;
+    @EJB(lookup = "java:global/SeguridadService/UsuarioServiceImplement!org.jlmallas.seguridad.service.UsuarioService")
     private UsuarioService usuarioService;
-    @EJB
+     @EJB(lookup = "java:global/SigettService/ConfiguracionCarreraServiceImplement!edu.unl.sigett.service.ConfiguracionCarreraService")
     private ConfiguracionCarreraService configuracionCarreraService;
-    @EJB
+     @EJB(lookup = "java:global/SigettService/DocenteProyectoServiceImplement!edu.unl.sigett.service.DocenteProyectoService")
     private DocenteProyectoService docenteProyectoService;
-    @EJB
+  @EJB(lookup = "java:global/SigettService/DirectorProyectoServiceImplement!edu.unl.sigett.service.DirectorProyectoService")
     private DirectorProyectoService directorProyectoService;
-    @EJB
+   @EJB(lookup = "java:global/AcademicoService/DocenteCarreraServiceImplement!edu.jlmallas.academico.service.DocenteCarreraService")
     private DocenteCarreraService docenteCarreraService;
-    @EJB
+   @EJB(lookup = "java:global/SigettService/TemaProyectoServiceImplement!edu.unl.sigett.service.TemaProyectoService")
     private TemaProyectoService temaProyectoService;
-    @EJB
+   @EJB(lookup = "java:global/SigettService/DocumentoProyectoServiceImplement!edu.unl.sigett.service.DocumentoProyectoService")
     private DocumentoProyectoService documentoProyectoService;
-    @EJB
+   @EJB(lookup = "java:global/SigettService/CronogramaServiceImplement!edu.unl.sigett.service.CronogramaService")
     private CronogramaService cronogramaService;
-    @EJB
+  @EJB(lookup = "java:global/SigettService/TemaServiceImplement!edu.unl.sigett.service.TemaService")
     private TemaService temaService;
-    @EJB
+  @EJB(lookup = "java:global/ComunService/DocumentoServiceImplement!com.jlmallas.comun.service.DocumentoService")
     private DocumentoService documentoService;
-    @EJB
+   @EJB(lookup = "java:global/ComunService/ConfiguracionServiceImplement!com.jlmallas.comun.service.ConfiguracionService")
     private ConfiguracionService configuracionService;
-    @EJB
+    @EJB(lookup = "java:global/AcademicoService/CoordinadorPeriodoServiceImplement!edu.jlmallas.academico.service.CoordinadorPeriodoService")
     private CoordinadorPeriodoService coordinadorPeriodoService;
-    @EJB
+    @EJB(lookup = "java:global/AcademicoService/DocenteServiceImplement!edu.jlmallas.academico.service.DocenteService")
     private DocenteService docenteService;
     //</editor-fold>
     private static final Logger LOG = Logger.getLogger(ProyectoController.class.getName());
@@ -505,8 +505,8 @@ public class ProyectoController implements Serializable {
             if (coordinadorPeriodo == null) {
                 return;
             }
-            CoordinadorPeriodoDTO coordinadorPeriodoDTO = new CoordinadorPeriodoDTO(coordinadorPeriodo, personaDao.find(
-                    coordinadorPeriodo.getCoordinadorId().getId()), null);
+            CoordinadorPeriodoDTO coordinadorPeriodoDTO = new CoordinadorPeriodoDTO(coordinadorPeriodo, personaService.buscarPorId(
+                    new Persona(coordinadorPeriodo.getCoordinadorId().getId())), null);
             coordinadorPeriodoDTO.setDocente(docenteService.buscarPorId(new Docente(coordinadorPeriodoDTO.getPersona().getId())));
             sessionProyecto.setCoordinadorPeriodoDTOCarreraSeleccionada(coordinadorPeriodoDTO);
             buscar();
@@ -988,8 +988,8 @@ public class ProyectoController implements Serializable {
             if (estadoRenunciado.getId().equals(autorProyecto.getEstadoAutorId())) {
                 continue;
             }
-            EstudianteCarrera estudianteCarrera = estudianteCarreraDao.find(autorProyecto.getAspiranteId().getId());
-            Persona persona = personaDao.find(estudianteCarrera.getEstudianteId().getId());
+            EstudianteCarrera estudianteCarrera = estudianteCarreraService.buscarPorId(new EstudianteCarrera(autorProyecto.getAspiranteId().getId()));
+            Persona persona = personaService.buscarPorId(new Persona(estudianteCarrera.getEstudianteId().getId()));
             if (contador == 0) {
                 if (persona == null) {
                     continue;
@@ -1016,8 +1016,8 @@ public class ProyectoController implements Serializable {
             if (estadoRenunciado.getId().equals(autorProyecto.getEstadoAutorId())) {
                 continue;
             }
-            EstudianteCarrera estudianteCarrera = estudianteCarreraDao.find(autorProyecto.getAspiranteId().getId());
-            Persona persona = personaDao.find(estudianteCarrera.getEstudianteId().getId());
+            EstudianteCarrera estudianteCarrera = estudianteCarreraService.buscarPorId(new EstudianteCarrera(autorProyecto.getAspiranteId().getId()));
+            Persona persona = personaService.buscarPorId(new Persona(estudianteCarrera.getEstudianteId().getId()));
             AutorProyectoDTO autorProyectoDTO = new AutorProyectoDTO(autorProyecto, autorProyecto.getAspiranteId(), estudianteCarrera, persona);
             if (!sessionProyecto.getAutoresProyectoDTO().contains(autorProyectoDTO)) {
                 sessionProyecto.getAutoresProyectoDTO().add(autorProyectoDTO);
@@ -1104,7 +1104,7 @@ public class ProyectoController implements Serializable {
                 if (docenteCarreras.isEmpty()) {
                     continue;
                 }
-                DocenteProyectoDTO docenteProyectoDTO = new DocenteProyectoDTO(docenteProyecto, personaDao.find(docenteProyecto.getDocenteCarreraId()),
+                DocenteProyectoDTO docenteProyectoDTO = new DocenteProyectoDTO(docenteProyecto, personaService.buscarPorId(new Persona(docenteProyecto.getDocenteCarreraId())),
                         docenteCarreras.get(0));
                 sessionProyecto.getDocentesProyectoDTO().add(docenteProyectoDTO);
             }
@@ -1303,7 +1303,7 @@ public class ProyectoController implements Serializable {
                 continue;
             }
             DocenteCarrera docenteCarrera = docenteCarreraService.buscarPorId(new DocenteCarrera(directorProyecto.getDirectorId().getId()));
-            Persona persona = personaDao.find(docenteCarrera.getDocenteId().getId());
+            Persona persona = personaService.buscarPorId(new Persona(docenteCarrera.getDocenteId().getId()));
             if (contador == 0) {
                 resultado = (persona.getApellidos() + " " + persona.getNombres());
             } else {
@@ -1328,7 +1328,7 @@ public class ProyectoController implements Serializable {
                 continue;
             }
             DocenteCarrera docenteCarrera = docenteCarreraService.buscarPorId(new DocenteCarrera(directorProyecto.getDirectorId().getId()));
-            Persona persona = personaDao.find(docenteCarrera.getDocenteId().getId());
+            Persona persona = personaService.buscarPorId(new Persona(docenteCarrera.getDocenteId().getId()));
             DirectorProyectoDTO directorProyectoDTO = new DirectorProyectoDTO(directorProyecto,
                     new DirectorDTO(directorProyecto.getDirectorId(), docenteCarrera, persona));
             if (!sessionProyecto.getDirectoresProyectoDTO().contains(directorProyectoDTO)) {

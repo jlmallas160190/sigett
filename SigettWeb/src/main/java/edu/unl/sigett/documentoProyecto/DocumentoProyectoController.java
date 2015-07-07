@@ -41,7 +41,7 @@ public class DocumentoProyectoController implements Serializable {
     private CabeceraController cabeceraController;
     //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="SERVICIOS">
-    @EJB
+    @EJB(lookup = "java:global/ComunService/ItemServiceImplement!com.jlmallas.comun.service.ItemService")
     private ItemService itemService;
     //</editor-fold>
     private static final Logger LOG = Logger.getLogger(DocumentoProyectoController.class.getName());

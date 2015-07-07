@@ -16,6 +16,10 @@ import javax.ejb.Local;
 @Local
 public interface ItemService {
 
+    void guardar(final Item item);
+
+    void actualizar(final Item item);
+
     List<Item> buscarPorCatalogo(String codigoCalogo);
 
     Item buscarPorCatalogoCodigo(String codigoCatalogo, String codigo);

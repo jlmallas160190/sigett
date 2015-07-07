@@ -5,11 +5,13 @@
  */
 package edu.unl.sigett.autorProyecto;
 
-import com.jlmallas.comun.dao.PersonaDao;
 import com.jlmallas.comun.entity.Item;
+import com.jlmallas.comun.entity.Persona;
 import com.jlmallas.comun.enumeration.CatalogoEnum;
 import com.jlmallas.comun.service.ItemService;
-import edu.jlmallas.academico.dao.EstudianteCarreraDao;
+import com.jlmallas.comun.service.PersonaService;
+import edu.jlmallas.academico.entity.EstudianteCarrera;
+import edu.jlmallas.academico.service.EstudianteCarreraService;
 import edu.unl.sigett.academico.dto.EstudianteCarreraDTO;
 import edu.unl.sigett.entity.Aspirante;
 import edu.unl.sigett.entity.AutorProyecto;
@@ -19,7 +21,6 @@ import edu.unl.sigett.enumeration.TipoProyectoEnum;
 import edu.unl.sigett.proyecto.SessionProyecto;
 import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
 import edu.unl.sigett.service.AspiranteService;
-import edu.unl.sigett.service.AutorProyectoService;
 import edu.unl.sigett.usuarioCarrera.SessionUsuarioCarrera;
 import edu.unl.sigett.util.CabeceraController;
 import javax.inject.Named;
@@ -33,7 +34,7 @@ import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
-import org.jlmallas.seguridad.dao.UsuarioDao;
+import org.jlmallas.seguridad.service.UsuarioService;
 import org.primefaces.context.RequestContext;
 
 /**
@@ -57,17 +58,15 @@ public class AutorProyectoController implements Serializable {
     private CabeceraController cabeceraController;
 //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="SERVICIOS">
-    @EJB
-    private AutorProyectoService autorProyectoService;
-    @EJB
-    private EstudianteCarreraDao estudianteCarreraDao;
-    @EJB
-    private PersonaDao personaDao;
-    @EJB
-    private UsuarioDao usuarioDao;
-    @EJB
+    @EJB(lookup = "java:global/SigettService/EstudianteCarreraServiceImplement!edu.unl.sigett.service.EstudianteCarreraService")
+    private EstudianteCarreraService estudianteCarreraService;
+    @EJB(lookup = "java:global/ComunService/PersonaServiceImplement!com.jlmallas.comun.service.PersonaService")
+    private PersonaService personaService;
+    @EJB(lookup = "java:global/SeguridadService/UsuarioServiceImplement!org.jlmallas.seguridad.service.UsuarioService")
+    private UsuarioService usuarioService;
+    @EJB(lookup = "java:global/ComunService/ItemServiceImplement!com.jlmallas.comun.service.ItemService")
     private ItemService itemService;
-    @EJB
+    @EJB(lookup = "java:global/SigettService/AspiranteServiceImplement!edu.unl.sigett.service.AspiranteService")
     private AspiranteService aspiranteService;
     //</editor-fold>
 
@@ -133,8 +132,8 @@ public class AutorProyectoController implements Serializable {
                     continue;
                 }
                 AspiranteDTO aspiranteDTO = new AspiranteDTO(aspirantes.get(0),
-                        estudianteCarreraDTO.getEstudianteCarrera(), personaDao.find(
-                                estudianteCarreraDTO.getEstudianteCarrera().getEstudianteId().getId()));
+                        estudianteCarreraDTO.getEstudianteCarrera(), personaService.buscarPorId(
+                                new Persona(estudianteCarreraDTO.getEstudianteCarrera().getEstudianteId().getId())));
                 sessionAutorProyecto.getAspirantesDTO().add(aspiranteDTO);
             }
             sessionAutorProyecto.setFilterAspirantesDTO(sessionAutorProyecto.getAspirantesDTO());
@@ -180,7 +179,7 @@ public class AutorProyectoController implements Serializable {
             if (!sessionProyecto.getEstadoActual().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.INICIO.getTipo())) {
                 return;
             }
-            int tienePermiso = usuarioDao.tienePermiso(sessionUsuario.getUsuario(), "select_autor_proyecto");
+            int tienePermiso = usuarioService.tienePermiso(sessionUsuario.getUsuario(), "select_autor_proyecto");
             if (tienePermiso != 1) {
                 cabeceraController.getMessageView().message(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_crear") + ". "
                         + bundle.getString("lbl.msm_consulte"), "");
@@ -214,9 +213,9 @@ public class AutorProyectoController implements Serializable {
                 autorProyecto.setFechaCulminacion(sessionProyecto.getCronograma().getFechaProrroga());
             }
             AutorProyectoDTO autorProyectoDTO = new AutorProyectoDTO(
-                    autorProyecto, aspiranteDTO.getAspirante(), estudianteCarreraDao.find(
-                            aspiranteDTO.getAspirante().getId()), null);
-            autorProyectoDTO.setPersona(personaDao.find(autorProyectoDTO.getEstudianteCarrera().getEstudianteId().getId()));
+                    autorProyecto, aspiranteDTO.getAspirante(), estudianteCarreraService.buscarPorId(
+                            new EstudianteCarrera(aspiranteDTO.getAspirante().getId())), null);
+            autorProyectoDTO.setPersona(personaService.buscarPorId(new Persona(autorProyectoDTO.getEstudianteCarrera().getEstudianteId().getId())));
             AutorProyectoDTO ap = contieneAutorProyecto(autorProyectoDTO);
             if (ap == null) {
                 sessionProyecto.getAutoresProyectoDTO().add(autorProyectoDTO);
@@ -280,7 +279,7 @@ public class AutorProyectoController implements Serializable {
             sessionAutorProyecto.setRenderedBuscarAspirantes(Boolean.FALSE);
             Item item = itemService.buscarPorId(sessionProyecto.getProyectoSeleccionado().getEstadoProyectoId());
             if (item.getCodigo().equalsIgnoreCase(EstadoProyectoEnum.INICIO.getTipo())) {
-                int tienePermiso = usuarioDao.tienePermiso(sessionUsuario.getUsuario(), "buscar_aspirante");
+                int tienePermiso = usuarioService.tienePermiso(sessionUsuario.getUsuario(), "buscar_aspirante");
                 if (tienePermiso == 1) {
                     sessionAutorProyecto.setRenderedBuscarAspirantes(Boolean.TRUE);
                 }
@@ -293,7 +292,7 @@ public class AutorProyectoController implements Serializable {
         sessionAutorProyecto.setRenderedSeleccionar(Boolean.FALSE);
         Item item = itemService.buscarPorId(sessionProyecto.getProyectoSeleccionado().getEstadoProyectoId());
         if (item.getCodigo().equalsIgnoreCase(EstadoProyectoEnum.INICIO.getTipo())) {
-            int tienePermiso = usuarioDao.tienePermiso(sessionUsuario.getUsuario(), "select_autor_proyecto");
+            int tienePermiso = usuarioService.tienePermiso(sessionUsuario.getUsuario(), "select_autor_proyecto");
             if (tienePermiso == 1) {
                 sessionAutorProyecto.setRenderedSeleccionar(Boolean.TRUE);
             }

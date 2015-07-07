@@ -29,7 +29,7 @@ import org.jlmallas.seguridad.service.UsuarioService;
 public class Login implements Serializable {
 
     //<editor-fold defaultstate="collapsed" desc="SERVICIOS">
-    @EJB
+    @EJB(lookup = "java:global/SeguridadService/UsuarioServiceImplement!org.jlmallas.seguridad.service.UsuarioService")
     private UsuarioService usuarioService;
 //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="MANAGED BEANS">

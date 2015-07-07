@@ -72,25 +72,25 @@ public class ActividadController implements Serializable {
     private SessionAutorProyecto sessionAutorProyecto;
     //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="SERVICIOS">
-    @EJB
+    @EJB(lookup = "java:global/ComunService/ItemServiceImplement!com.jlmallas.comun.service.ItemService")
     private ItemService itemService;
-    @EJB
+    @EJB(lookup = "java:global/SigettService/ConfiguracionProyectoServiceImplement!edu.unl.sigett.service.ConfiguracionProyectoService")
     private ConfiguracionProyectoService configuracionProyectoService;
-    @EJB
+    @EJB(lookup = "java:global/SigettService/ActividadServiceImplement!edu.unl.sigett.service.ActividadService")
     private ActividadService actividadService;
-    @EJB
+    @EJB(lookup = "java:global/SigettService/DocumentoActividadServiceImplement!edu.unl.sigett.service.DocumentoActividadService")
     private DocumentoActividadService documentoActividadService;
-    @EJB
+    @EJB(lookup = "java:global/ComunService/DocumentoServiceImplement!com.jlmallas.comun.service.DocumentoService")
     private DocumentoService documentoService;
-    @EJB
+    @EJB(lookup = "java:global/ComunService/ConfiguracionServiceImplement!com.jlmallas.comun.service.ConfiguracionService")
     private ConfiguracionService configuracionService;
-    @EJB
+    @EJB(lookup = "java:global/ComunService/EventoServiceImplement!com.jlmallas.comun.service.EventoService")
     private EventoService eventoService;
-    @EJB
+    @EJB(lookup = "java:global/ComunService/EventoPersonaServiceImplement!com.jlmallas.comun.service.EventoPersonaService")
     private EventoPersonaService eventoPersonaService;
-    @EJB
+    @EJB(lookup = "java:global/SigettService/CronogramaServiceImplement!edu.unl.sigett.service.CronogramaService")
     private CronogramaService cronogramaService;
-    @EJB
+    @EJB(lookup = "java:global/SigettService/RevisionActividadServiceImplement!edu.unl.sigett.service.RevisionActividadService")
     private RevisionActividadService revisionActividadService;
     //</editor-fold>
     private static final Logger LOG = Logger.getLogger(ActividadController.class.getName());

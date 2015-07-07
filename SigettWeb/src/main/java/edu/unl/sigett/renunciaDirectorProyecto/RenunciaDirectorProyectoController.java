@@ -50,20 +50,20 @@ public class RenunciaDirectorProyectoController implements Serializable {
     private CabeceraController cabeceraController;
     //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="SERVICIOS">
-    @EJB
+    @EJB(lookup = "java:global/SigettService/RenunciaDirectorServiceImplement!edu.unl.sigett.service.RenunciaDirectorService")
     private RenunciaDirectorService renunciaDirectorService;
-    @EJB
+    @EJB(lookup = "java:global/SigettService/RenunciaServiceImplement!edu.unl.sigett.service.RenunciaService")
     private RenunciaService renunciaService;
-    @EJB
+    @EJB(lookup = "java:global/SigettService/DirectorProyectoServiceImplement!edu.unl.sigett.service.DirectorProyectoService")
     private DirectorProyectoService directorProyectoService;
-    @EJB
+    @EJB(lookup = "java:global/ComunService/ItemServiceImplement!com.jlmallas.comun.service.ItemService")
     private ItemService itemService;
     //</editor-fold>
     private static final Logger LOG = Logger.getLogger(RenunciaDirectorProyectoController.class.getName());
-    
+
     public RenunciaDirectorProyectoController() {
     }
-    
+
     public void guardar() {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
@@ -84,7 +84,7 @@ public class RenunciaDirectorProyectoController implements Serializable {
             LOG.warning(e.getMessage());
         }
     }
-    
+
     public void cancelarEdicion() {
         this.sessionRenuncia.setRenuncia(new Renuncia());
         this.sessionRenunciaDirectorProyecto.setRenunciaDirector(new RenunciaDirector());

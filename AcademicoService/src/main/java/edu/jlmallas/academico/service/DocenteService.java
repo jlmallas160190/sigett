@@ -14,5 +14,12 @@ import javax.ejb.Local;
  */
 @Local
 public interface DocenteService {
+
+    void guardar(final Docente docente);
+
+    void actualizar(final Docente docente);
+
+    void eliminar(final Docente docente);
+
     Docente buscarPorId(final Docente docente);
 }

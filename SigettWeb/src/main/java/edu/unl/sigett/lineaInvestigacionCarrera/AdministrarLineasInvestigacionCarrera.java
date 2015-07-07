@@ -25,8 +25,10 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import edu.unl.sigett.dao.LineaInvestigacionCarreraDao;
 import edu.unl.sigett.dao.LineaInvestigacionDao;
+import edu.unl.sigett.service.LineaInvestigacionService;
 import org.jlmallas.seguridad.dao.LogDao;
 import org.jlmallas.seguridad.dao.UsuarioDao;
+import org.jlmallas.seguridad.service.UsuarioService;
 
 /**
  *
@@ -57,18 +59,18 @@ public class AdministrarLineasInvestigacionCarrera implements Serializable {
     private SessionLineaInvestigacionCarrera sessionLineaInvestigacionCarrera;
     @Inject
     private SessionUsuario sessionUsuario;
-    //</editor-fold>
-    //<editor-fold defaultstate="collapsed" desc="INYECCIÓN DE SERVICIOS">
     @Inject
     private SessionUsuarioCarrera sessionUsuarioCarrera;
-    @EJB
+    //</editor-fold>
+    //<editor-fold defaultstate="collapsed" desc="INYECCIÓN DE SERVICIOS">
+    @EJB(lookup = "java:global/SeguridadService/LogDaoImplement!org.jlmallas.seguridad.dao.LogDao")
     private LogDao logFacadeLocal;
-    @EJB
+    @EJB(lookup = "java:global/SigettService/LineaInvestigacionCarreraDaoImplement!edu.unl.sigett.dao.LineaInvestigacionCarreraDao")
     private LineaInvestigacionCarreraDao lineaInvestigacionCarreraDao;
-    @EJB
-    private UsuarioDao usuarioFacadeLocal;
-    @EJB
-    private LineaInvestigacionDao lineaInvestigacionDao;
+    @EJB(lookup = "java:global/SeguridadService/UsuarioServiceImplement!org.jlmallas.seguridad.service.UsuarioService")
+    private UsuarioService usuarioService;
+    @EJB(lookup = "java:global/SigettService/LineaInvestigacionServiceImplement!edu.unl.sigett.service.LineaInvestigacionService")
+    private LineaInvestigacionService lineaInvestigacionService;
 //</editor-fold>
 
     public AdministrarLineasInvestigacionCarrera() {
@@ -91,7 +93,7 @@ public class AdministrarLineasInvestigacionCarrera implements Serializable {
         try {
             FacesContext facesContext = FacesContext.getCurrentInstance();
             ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            int tienePermiso = usuarioFacadeLocal.tienePermiso(sessionUsuario.getUsuario(), "crear_linea_investigacion_carrera");
+            int tienePermiso = usuarioService.tienePermiso(sessionUsuario.getUsuario(), "crear_linea_investigacion_carrera");
             if (tienePermiso == 1) {
                 sessionLineaInvestigacionCarrera.setLineaInvestigacionCarrera(new LineaInvestigacionCarrera(new LineaInvestigacion(),
                         sessionUsuarioCarrera.getUsuarioCarreraDTO().getCarrera().getId()));
@@ -115,7 +117,7 @@ public class AdministrarLineasInvestigacionCarrera implements Serializable {
         try {
             FacesContext facesContext = FacesContext.getCurrentInstance();
             ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            int tienePermiso = usuarioFacadeLocal.tienePermiso(sessionUsuario.getUsuario(), "editar_linea_investigacion_carrera");
+            int tienePermiso = usuarioService.tienePermiso(sessionUsuario.getUsuario(), "editar_linea_investigacion_carrera");
             if (tienePermiso == 1) {
                 sessionLineaInvestigacionCarrera.setLineaInvestigacionCarrera(lineaInvestigacionCarrera);
                 navegacion = "pretty:editarLineaInvestigacionCarrera";
@@ -136,7 +138,7 @@ public class AdministrarLineasInvestigacionCarrera implements Serializable {
         try {
             FacesContext facesContext = FacesContext.getCurrentInstance();
             ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            int tienePermiso = usuarioFacadeLocal.tienePermiso(sessionUsuario.getUsuario(), "eliminar_linea_investigacion_carrera");
+            int tienePermiso = usuarioService.tienePermiso(sessionUsuario.getUsuario(), "eliminar_linea_investigacion_carrera");
             if (tienePermiso == 1) {
                 if (lineaInvestigacion.getEsActivo()) {
                     lineaInvestigacion.setEsActivo(false);
@@ -147,7 +149,7 @@ public class AdministrarLineasInvestigacionCarrera implements Serializable {
                     logFacadeLocal.create(logFacadeLocal.crearLog("LineaInvestigacion", lineaInvestigacion.getId() + "", "ACTIVAR", "|Nombre= "
                             + lineaInvestigacion.getNombre() + "|Descripción= " + lineaInvestigacion.getDescripcion(), sessionUsuario.getUsuario()));
                 }
-                lineaInvestigacionDao.edit(lineaInvestigacion);
+                lineaInvestigacionService.actualizar(lineaInvestigacion);
                 return;
             }
             if (tienePermiso == 2) {
@@ -167,7 +169,7 @@ public class AdministrarLineasInvestigacionCarrera implements Serializable {
             FacesContext facesContext = FacesContext.getCurrentInstance();
             ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
 
-            int tienePermiso = usuarioFacadeLocal.tienePermiso(sessionUsuario.getUsuario(), "buscar_linea_investigacion_carrera");
+            int tienePermiso = usuarioService.tienePermiso(sessionUsuario.getUsuario(), "buscar_linea_investigacion_carrera");
             if (tienePermiso == 1) {
                 this.sessionLineaInvestigacionCarrera.setLineaInvestigacionCarreras(lineaInvestigacionCarreraDao.buscar(
                         new LineaInvestigacionCarrera(null, sessionUsuarioCarrera.getUsuarioCarreraDTO().getCarrera().getId())));
@@ -198,9 +200,9 @@ public class AdministrarLineasInvestigacionCarrera implements Serializable {
             ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
             String param = (String) facesContext.getExternalContext().getRequestParameterMap().get("1");
             if (lineaInvestigacionCarrera.getId() == null) {
-                int tienePermiso = usuarioFacadeLocal.tienePermiso(sessionUsuario.getUsuario(), "crear_linea_investigacion_carrera");
+                int tienePermiso = usuarioService.tienePermiso(sessionUsuario.getUsuario(), "crear_linea_investigacion_carrera");
                 if (tienePermiso == 1) {
-                    lineaInvestigacionDao.create(lineaInvestigacionCarrera.getLineaInvestigacionId());
+                    lineaInvestigacionService.guardar(lineaInvestigacionCarrera.getLineaInvestigacionId());
                     logFacadeLocal.create(logFacadeLocal.crearLog("LineaInvestigacion", lineaInvestigacionCarrera.getLineaInvestigacionId().getId()
                             + "", "CREAR", "|Nombre= " + lineaInvestigacionCarrera.getLineaInvestigacionId().getDescripcion(),
                             sessionUsuario.getUsuario()));
@@ -225,9 +227,9 @@ public class AdministrarLineasInvestigacionCarrera implements Serializable {
                 buscar();
                 return "";
             }
-            int tienePermiso = usuarioFacadeLocal.tienePermiso(sessionUsuario.getUsuario(), "editar_linea_investigacion_carrera");
+            int tienePermiso = usuarioService.tienePermiso(sessionUsuario.getUsuario(), "editar_linea_investigacion_carrera");
             if (tienePermiso == 1) {
-                lineaInvestigacionDao.edit(lineaInvestigacionCarrera.getLineaInvestigacionId());
+                lineaInvestigacionService.actualizar(lineaInvestigacionCarrera.getLineaInvestigacionId());
                 logFacadeLocal.create(logFacadeLocal.crearLog("LineaInvestigacion", lineaInvestigacionCarrera.getLineaInvestigacionId().getId()
                         + "", "EDITAR", "|Nombre= " + lineaInvestigacionCarrera.getLineaInvestigacionId().getDescripcion(),
                         sessionUsuario.getUsuario()));
@@ -259,7 +261,7 @@ public class AdministrarLineasInvestigacionCarrera implements Serializable {
     //<editor-fold defaultstate="collapsed" desc="MÉTODOS RENDERED">
 
     public void renderedBuscar(Usuario usuario) {
-        int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "buscar_docente");
+        int tienePermiso = usuarioService.tienePermiso(usuario, "buscar_docente");
         if (tienePermiso == 1) {
             sessionLineaInvestigacionCarrera.setRenderedBuscar(true);
         } else {
@@ -268,7 +270,7 @@ public class AdministrarLineasInvestigacionCarrera implements Serializable {
     }
 
     public void renderedEditar() {
-        int tienePermiso = usuarioFacadeLocal.tienePermiso(sessionUsuario.getUsuario(), "editar_linea_investigacion_carrera");
+        int tienePermiso = usuarioService.tienePermiso(sessionUsuario.getUsuario(), "editar_linea_investigacion_carrera");
         if (tienePermiso == 1) {
             sessionLineaInvestigacionCarrera.setRenderedEditar(true);
         } else {
@@ -277,7 +279,7 @@ public class AdministrarLineasInvestigacionCarrera implements Serializable {
     }
 
     public void renderedEliminar() {
-        int tienePermiso = usuarioFacadeLocal.tienePermiso(sessionUsuario.getUsuario(), "eliminar_linea_investigacion_carrera");
+        int tienePermiso = usuarioService.tienePermiso(sessionUsuario.getUsuario(), "eliminar_linea_investigacion_carrera");
         if (tienePermiso == 1) {
             sessionLineaInvestigacionCarrera.setRenderedEliminar(true);
         } else {
@@ -286,7 +288,7 @@ public class AdministrarLineasInvestigacionCarrera implements Serializable {
     }
 
     public void renderedCrear() {
-        int tienePermiso = usuarioFacadeLocal.tienePermiso(sessionUsuario.getUsuario(), "crear_linea_investigacion_carrera");
+        int tienePermiso = usuarioService.tienePermiso(sessionUsuario.getUsuario(), "crear_linea_investigacion_carrera");
         if (tienePermiso == 1) {
             sessionLineaInvestigacionCarrera.setRenderedCrear(true);
         } else {

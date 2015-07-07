@@ -60,19 +60,19 @@ public class AutorProyectoController implements Serializable {
     private SessionEstudianteUsuario sessionEstudianteUsuario;
     //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="SERVICIOS">
-    @EJB
+    @EJB(lookup = "java:global/SigettService/AutorProyectoServiceImplement!edu.unl.sigett.service.AutorProyectoService")
     private AutorProyectoService autorProyectoService;
-    @EJB
+    @EJB(lookup = "java:global/ComunService/PersonaServiceImplement!com.jlmallas.comun.service.PersonaService")
     private PersonaService personaService;
-    @EJB
+    @EJB(lookup = "java:global/AcademicoService/EstudianteCarreraServiceImplement!edu.jlmallas.academico.service.EstudianteCarreraService")
     private EstudianteCarreraService estudianteCarreraService;
-    @EJB
+    @EJB(lookup = "java:global/SigettService/AspiranteServiceImplement!edu.unl.sigett.service.AspiranteService")
     private AspiranteService aspiranteService;
-    @EJB
+    @EJB(lookup = "java:global/ComunService/ItemServiceImplement!com.jlmallas.comun.service.ItemService")
     private ItemService itemService;
-    @EJB
+    @EJB(lookup = "java:global/SigettService/DirectorProyectoServiceImplement!edu.unl.sigett.service.DirectorProyectoService")
     private DirectorProyectoService directorProyectoService;
-    @EJB
+    @EJB(lookup = "java:global/AcademicoService/DocenteCarreraServiceImplement!edu.jlmallas.academico.service.DocenteCarreraService")
     private DocenteCarreraService docenteCarreraService;
 
     //</editor-fold>

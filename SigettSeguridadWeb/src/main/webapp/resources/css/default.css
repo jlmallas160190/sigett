@@ -5,7 +5,7 @@
 }
 
 body {
-    background:#f3f3f3 !important;
+    background:#f8f8f8 !important;
     font-family: Verdana, "Verdana CE",  Arial, "Arial CE", "Lucida Grande CE", lucida, "Helvetica CE", sans-serif;
     color: #000000;  
     margin: 10px;
@@ -14,6 +14,7 @@ body.pnl_login{
     background: #eee !important;
 }
 .panelgrid{
+    background: #f8f8f8; 
     width: 100% !important;
     overflow: auto!important;
     font-family:  Arial, "Arial CE"!important;
@@ -33,7 +34,7 @@ label:first-letter{
 .rowpanelgrid1 {
     overflow: hidden!important;
     padding: 2px 2px !important;
-    border-bottom: 1px solid #eee!important ;
+    border-bottom: 1px solid #ddd!important ;
 }
 .rowpanelgrid {
     overflow: hidden!important;
@@ -220,6 +221,7 @@ input[disabled="disabled"], select[disabled="disabled"], textarea[disabled="disa
 .ui-panelgrid{
     border-collapse:collapse;
     border: none !important;
+    background: #f1f2f2 !important; 
 }
 .ui-panelgrid .ui-panelgrid-header{
     text-align:center;
@@ -1213,7 +1215,7 @@ hr {
 .ui-tabmenu .ui-tabmenu-nav{
     margin:0;
     padding:.2em .2em 0;
-    background: #f8f8f8  !important;
+    background: none;
 }
 .ui-tabmenu .ui-tabmenu-nav .ui-tabmenuitem{
     list-style:none;
@@ -1264,8 +1266,7 @@ hr {
 
 }
 .ui-picklist .ui-picklist-item:hover{
-    background: #eee !important;
-    color:#045491 !important;; 
+    background: #f8f8f8; 
 }
 
 .ui-picklist .ui-picklist-caption {
@@ -1500,7 +1501,6 @@ hr {
 .ui-tabs .ui-tabs-panel{
     border-width: 0;
     padding: 0;   
-    background: #f1f2f2 !important; 
 }
 .ui-tabs .ui-tabs-nav li{
     display:block;

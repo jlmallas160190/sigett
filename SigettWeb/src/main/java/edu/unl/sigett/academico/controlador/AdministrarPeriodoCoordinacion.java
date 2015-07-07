@@ -20,10 +20,10 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import org.primefaces.context.RequestContext;
-import edu.jlmallas.academico.dao.PeriodoCoordinacionDao;
+import edu.jlmallas.academico.service.PeriodoCoordinacionService;
 import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
 import edu.unl.sigett.usuarioCarrera.SessionUsuarioCarrera;
-import org.jlmallas.seguridad.dao.UsuarioDao;
+import org.jlmallas.seguridad.service.UsuarioService;
 
 /**
  *
@@ -58,10 +58,10 @@ public class AdministrarPeriodoCoordinacion implements Serializable {
     private SessionUsuario sessionUsuario;
     //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="SERVICIOS"> 
-    @EJB
-    private UsuarioDao usuarioFacadeLocal;
-    @EJB
-    private PeriodoCoordinacionDao periodoCoordinacionDao;
+    @EJB(lookup = "java:global/SeguridadService/UsuarioServiceImplement!org.jlmallas.seguridad.service.UsuarioService")
+    private UsuarioService usuarioService;
+    @EJB(lookup = "java:global/SigettService/PeriodoCoordinacionServiceImplement!edu.unl.sigett.service.PeriodoCoordinacionService")
+    private PeriodoCoordinacionService periodoCoordinacionService;
     //</editor-fold>
 
     public AdministrarPeriodoCoordinacion() {
@@ -81,7 +81,7 @@ public class AdministrarPeriodoCoordinacion implements Serializable {
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
         String param = (String) facesContext.getExternalContext().getRequestParameterMap().get("1");
         try {
-            int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "crear_periodo_coordinacion");
+            int tienePermiso = usuarioService.tienePermiso(usuario, "crear_periodo_coordinacion");
             if (tienePermiso == 1) {
                 sessionPeriodoCoordinacion.setPeriodoCoordinacion(new PeriodoCoordinacion(carrera, Boolean.TRUE));
                 sessionPeriodoCoordinacion.getPeriodoCoordinacion().setCarreraId(carrera);
@@ -107,7 +107,7 @@ public class AdministrarPeriodoCoordinacion implements Serializable {
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
         String param = (String) facesContext.getExternalContext().getRequestParameterMap().get("1");
         try {
-            int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "editar_periodo_coordinacion");
+            int tienePermiso = usuarioService.tienePermiso(usuario, "editar_periodo_coordinacion");
             if (tienePermiso == 1) {
                 sessionPeriodoCoordinacion.setPeriodoCoordinacion(periodoCoordinacion);
                 if (param.equalsIgnoreCase("editar")) {
@@ -132,9 +132,9 @@ public class AdministrarPeriodoCoordinacion implements Serializable {
         try {
             FacesContext facesContext = FacesContext.getCurrentInstance();
             ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            int tienePermiso = usuarioFacadeLocal.tienePermiso(sessionUsuario.getUsuario(), "buscar_periodo_coordinacion");
+            int tienePermiso = usuarioService.tienePermiso(sessionUsuario.getUsuario(), "buscar_periodo_coordinacion");
             if (tienePermiso == 1) {
-                sessionPeriodoCoordinacion.setPeriodosCoordinacion(periodoCoordinacionDao.buscar(new PeriodoCoordinacion(
+                sessionPeriodoCoordinacion.setPeriodosCoordinacion(periodoCoordinacionService.buscar(new PeriodoCoordinacion(
                         sessionUsuarioCarrera.getUsuarioCarreraDTO().getCarrera(), Boolean.TRUE)));
                 sessionPeriodoCoordinacion.setFilterPeriodosCoordinacion(sessionPeriodoCoordinacion.getPeriodosCoordinacion());
             } else {
@@ -159,9 +159,9 @@ public class AdministrarPeriodoCoordinacion implements Serializable {
         String param = (String) facesContext.getExternalContext().getRequestParameterMap().get("1");
         try {
             if (periodoCoordinacion.getId() == null) {
-                int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "crear_periodo_coordinacion");
+                int tienePermiso = usuarioService.tienePermiso(usuario, "crear_periodo_coordinacion");
                 if (tienePermiso == 1) {
-                    periodoCoordinacionDao.create(periodoCoordinacion);
+                    periodoCoordinacionService.guardar(periodoCoordinacion);
                     if (param.equalsIgnoreCase("grabar")) {
                         sessionPeriodoCoordinacion.setPeriodoCoordinacion(new PeriodoCoordinacion());
                         navegacion = "pretty:periodosCoordinacion";
@@ -176,9 +176,9 @@ public class AdministrarPeriodoCoordinacion implements Serializable {
                     FacesContext.getCurrentInstance().addMessage(null, message);
                 }
             } else {
-                int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "editar_periodo_coordinacion");
+                int tienePermiso = usuarioService.tienePermiso(usuario, "editar_periodo_coordinacion");
                 if (tienePermiso == 1) {
-                    periodoCoordinacionDao.edit(periodoCoordinacion);
+                    periodoCoordinacionService.actualizar(periodoCoordinacion);
                     if (param.equalsIgnoreCase("grabar")) {
                         sessionPeriodoCoordinacion.setPeriodoCoordinacion(new PeriodoCoordinacion());
                         navegacion = "buscarPeriodosCoordinacion";
@@ -202,7 +202,7 @@ public class AdministrarPeriodoCoordinacion implements Serializable {
 
     public void renderedCrear(Usuario usuario) {
         try {
-            int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "crear_periodo_coordinacion");
+            int tienePermiso = usuarioService.tienePermiso(usuario, "crear_periodo_coordinacion");
             if (tienePermiso == 1) {
                 sessionPeriodoCoordinacion.setRenderedCrear(Boolean.TRUE);
             } else {
@@ -214,7 +214,7 @@ public class AdministrarPeriodoCoordinacion implements Serializable {
 
     public void renderedEditar(Usuario usuario) {
         try {
-            int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "editar_periodo_coordinacion");
+            int tienePermiso = usuarioService.tienePermiso(usuario, "editar_periodo_coordinacion");
             if (tienePermiso == 1) {
                 sessionPeriodoCoordinacion.setRenderedEditar(Boolean.TRUE);
             } else {
@@ -226,7 +226,7 @@ public class AdministrarPeriodoCoordinacion implements Serializable {
 
     public void renderedEliminar(Usuario usuario) {
         try {
-            int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "eliminar_periodo_coordinacion");
+            int tienePermiso = usuarioService.tienePermiso(usuario, "eliminar_periodo_coordinacion");
             sessionPeriodoCoordinacion.setRenderedEliminar(Boolean.FALSE);
             if (tienePermiso == 1) {
                 sessionPeriodoCoordinacion.setRenderedEliminar(Boolean.TRUE);

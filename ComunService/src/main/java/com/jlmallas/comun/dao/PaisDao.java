@@ -5,7 +5,7 @@
  */
 package com.jlmallas.comun.dao;
 
-import com.jlmallas.comun.entity.Nacionalidad;
+import com.jlmallas.comun.entity.Pais;
 import java.util.List;
 import javax.ejb.Local;
 
@@ -14,19 +14,21 @@ import javax.ejb.Local;
  * @author jorge-luis
  */
 @Local
-public interface NacionalidadFacadeLocal {
+public interface PaisDao {
 
-    void create(Nacionalidad nacionalidad);
+    void create(Pais pais);
 
-    void edit(Nacionalidad nacionalidad);
+    void edit(Pais pais);
 
-    void remove(Nacionalidad nacionalidad);
+    void remove(Pais pais);
 
-    Nacionalidad find(Object id);
+    Pais find(Object id);
 
-    List<Nacionalidad> findAll();
+    List<Pais> findAll();
 
-    List<Nacionalidad> findRange(int[] range);
+    List<Pais> findRange(int[] range);
+
+    List<Pais> buscar(final Pais pais);
 
     int count();
 

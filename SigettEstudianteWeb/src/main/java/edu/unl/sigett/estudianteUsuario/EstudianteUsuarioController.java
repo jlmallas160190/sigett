@@ -64,15 +64,15 @@ import org.jlmallas.seguridad.service.UsuarioService;
 public class EstudianteUsuarioController implements Serializable {
 
     //<editor-fold defaultstate="collapsed" desc="SERVICIOS">
-    @EJB
+    @EJB(lookup = "java:global/SeguridadService/UsuarioServiceImplement!org.jlmallas.seguridad.service.UsuarioService")
     private UsuarioService usuarioService;
-    @EJB
+    @EJB(lookup = "java:global/ComunService/ConfiguracionServiceImplement!com.jlmallas.comun.service.ConfiguracionService")
     private ConfiguracionService configuracionService;
-    @EJB
+    @EJB(lookup = "java:global/SigettService/EstudianteUsuarioServiceImplement!edu.unl.sigett.service.EstudianteUsuarioService")
     private EstudianteUsuarioService estudianteUsuarioService;
-    @EJB
+    @EJB(lookup = "java:global/AcademicoService/EstudianteServiceImplement!edu.jlmallas.academico.service.EstudianteService")
     private EstudianteService estudianteService;
-    @EJB
+    @EJB(lookup = "java:global/ComunService/PersonaServiceImplement!com.jlmallas.comun.service.PersonaService")
     private PersonaService personaService;
 //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="MANAGED BEANS">

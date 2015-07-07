@@ -5,12 +5,10 @@
  */
 package edu.unl.sigett.temaProyecto;
 
-import edu.unl.sigett.dao.TemaProyectoDao;
 import edu.unl.sigett.proyecto.SessionProyecto;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
-import javax.ejb.EJB;
 import javax.inject.Inject;
 
 /**
@@ -25,10 +23,6 @@ public class TemaProyectoController implements Serializable {
     @Inject
     private SessionProyecto sessionProyecto;
     //</editor-fold>
-    //<editor-fold defaultstate="collapsed" desc="SERVICIOS">
-    @EJB
-    private TemaProyectoDao temaProyectoDao;
-//</editor-fold>
 
     public TemaProyectoController() {
     }

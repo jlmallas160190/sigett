@@ -30,7 +30,7 @@ public interface PersonaDao {
 
     Persona buscarPorNumeroIdentificacion(String numeroIdentificacion);
 
-    boolean esUnico(String numeroIdentificacion, Long id);
+    Boolean esUnico(String numeroIdentificacion, Long id);
 
     List<Persona> buscar(Persona persona);
 

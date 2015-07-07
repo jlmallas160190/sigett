@@ -9,6 +9,10 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.jlmallas.comun.entity.Configuracion;
+import com.jlmallas.comun.enumeration.ConfiguracionEnum;
+import com.jlmallas.comun.enumeration.URLWSEnum;
+import com.jlmallas.comun.service.ConfiguracionService;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 import com.ocpsoft.pretty.faces.annotation.URLMappings;
 import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
@@ -24,15 +28,15 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
-import edu.unl.sigett.dao.ConfiguracionCarreraDao;
-import edu.unl.sigett.dao.ConfiguracionGeneralDao;
 import org.jlmallas.seguridad.dao.LogDao;
 import edu.jlmallas.academico.service.OfertaAcademicaService;
 import edu.unl.sigett.service.ConfiguracionCarreraService;
+import edu.unl.sigett.util.CabeceraController;
 import java.util.List;
 import org.jlmallas.httpClient.NetClientServiceImplement;
 import org.jlmallas.httpClient.ConexionDTO;
-import org.jlmallas.seguridad.dao.UsuarioDao;
+import org.jlmallas.secure.Secure;
+import org.jlmallas.seguridad.service.UsuarioService;
 
 /**
  *
@@ -60,18 +64,20 @@ public class AdministrarConfiguracionCarrera implements Serializable {
     private SessionConfiguracionCarrera sessionConfiguracionCarrera;
     @Inject
     private SessionUsuarioCarrera sessionUsuarioCarrera;
+    @Inject
+    private CabeceraController cabeceraController;
     //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="INYECCIÓN DE SERVICIOS">
-    @EJB
+    @EJB(lookup = "java:global/SigettService/ConfiguracionCarreraServiceImplement!edu.unl.sigett.service.ConfiguracionCarreraService")
     private ConfiguracionCarreraService configuracionCarreraService;
-    @EJB
+    @EJB(lookup = "java:global/SeguridadService/LogDaoImplement!org.jlmallas.seguridad.dao.LogDao")
     private LogDao logFacadeLocal;
-    @EJB
+    @EJB(lookup = "java:global/AcademicoService/OfertaAcademicaServiceImplement!edu.jlmallas.academico.service.OfertaAcademicaService")
     private OfertaAcademicaService ofertaAcademicaFacadeLocal;
-    @EJB
-    private UsuarioDao usuarioFacadeLocal;
-    @EJB
-    private ConfiguracionGeneralDao configuracionGeneralFacadeLocal;
+    @EJB(lookup = "java:global/SeguridadService/UsuarioServiceImplement!org.jlmallas.seguridad.service.UsuarioService")
+    private UsuarioService usuarioService;
+    @EJB(lookup = "java:global/ComunService/ConfiguracionServiceImplement!com.jlmallas.comun.service.ConfiguracionService")
+    private ConfiguracionService configuracionService;
     //</editor-fold>
 
     public AdministrarConfiguracionCarrera() {
@@ -88,7 +94,7 @@ public class AdministrarConfiguracionCarrera implements Serializable {
         try {
             FacesContext facesContext = FacesContext.getCurrentInstance();
             ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            int tienePermiso = usuarioFacadeLocal.tienePermiso(sessionUsuario.getUsuario(), "crear_configuracion_carrera");
+            int tienePermiso = usuarioService.tienePermiso(sessionUsuario.getUsuario(), "crear_configuracion_carrera");
             if (tienePermiso == 1) {
                 sessionConfiguracionCarrera.setConfiguracionCarrera(new ConfiguracionCarrera());
                 navegacion = "pretty:crearConfiguracionCarrera";
@@ -121,7 +127,7 @@ public class AdministrarConfiguracionCarrera implements Serializable {
         try {
             FacesContext facesContext = FacesContext.getCurrentInstance();
             ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            int tienePermiso = usuarioFacadeLocal.tienePermiso(sessionUsuario.getUsuario(), "editar_configuracion_carrera");
+            int tienePermiso = usuarioService.tienePermiso(sessionUsuario.getUsuario(), "editar_configuracion_carrera");
             if (tienePermiso == 1) {
                 sessionConfiguracionCarrera.setConfiguracionCarrera(configuracionCarrera);
                 navegacion = "pretty:editarConfiguracionCarrera";
@@ -146,7 +152,7 @@ public class AdministrarConfiguracionCarrera implements Serializable {
             String param = (String) facesContext.getExternalContext().getRequestParameterMap().get("1");
 //            configuracionCarrera.setCarreraId(sessionUsuarioCarrera.getUsuarioCarrera().getCarreraId());
             if (configuracionCarrera.getId() == null) {
-                int tienePermiso = usuarioFacadeLocal.tienePermiso(sessionUsuario.getUsuario(), "crear_configuracion_carrera");
+                int tienePermiso = usuarioService.tienePermiso(sessionUsuario.getUsuario(), "crear_configuracion_carrera");
                 if (tienePermiso == 1) {
                     if (param.equalsIgnoreCase("grabar")) {
                         configuracionCarreraService.guardar(configuracionCarrera);
@@ -176,7 +182,7 @@ public class AdministrarConfiguracionCarrera implements Serializable {
                     }
                 }
             } else {
-                int tienePermiso = usuarioFacadeLocal.tienePermiso(sessionUsuario.getUsuario(), "editar_configuracion_carrera");
+                int tienePermiso = usuarioService.tienePermiso(sessionUsuario.getUsuario(), "editar_configuracion_carrera");
                 if (tienePermiso == 1) {
                     if (param.equalsIgnoreCase("grabar")) {
                         configuracionCarreraService.actualizar(configuracionCarrera);
@@ -239,7 +245,7 @@ public class AdministrarConfiguracionCarrera implements Serializable {
     //<editor-fold defaultstate="collapsed" desc="MÉTODOS RENDERED">
 
     public void renderedEditar() {
-        int tienePermiso = usuarioFacadeLocal.tienePermiso(sessionUsuario.getUsuario(), "editar_configuracion_carrera");
+        int tienePermiso = usuarioService.tienePermiso(sessionUsuario.getUsuario(), "editar_configuracion_carrera");
         if (tienePermiso == 1) {
             sessionConfiguracionCarrera.setRenderedEditar(true);
         } else {
@@ -252,12 +258,14 @@ public class AdministrarConfiguracionCarrera implements Serializable {
     public void sgaWebServicesModulosCarrera(Carrera carrera, OfertaAcademica ofertaAcademica) {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-        if (usuarioFacadeLocal.tienePermiso(sessionUsuario.getUsuario(), "sga_ws_modulos_carrera") == 1) {
+        if (usuarioService.tienePermiso(sessionUsuario.getUsuario(), "sga_ws_modulos_carrera") == 1) {
             try {
-                String serviceUrl = configuracionGeneralFacadeLocal.find((int) 27).getValor();
+                String passwordService = this.cabeceraController.getSecureService().decrypt(new Secure(cabeceraController.getConfiguracionGeneralUtil().getSecureKey(),
+                        configuracionService.buscar(new Configuracion(ConfiguracionEnum.CLAVEWS.getTipo())).get(0).getValor()));
+                String userService = configuracionService.buscar(new Configuracion(ConfiguracionEnum.USUARIOWS.getTipo())).get(0).getValor();
+                String serviceUrl = configuracionService.buscar(new Configuracion(URLWSEnum.URLMODULOSCARRERAWS.getTipo())).get(0).getValor();
                 String s = serviceUrl + "?id_oferta=" + ofertaAcademica.getIdSga() + ";id_carrera=" + carrera.getIdSga();
-                ConexionDTO seguridad = new ConexionDTO(configuracionGeneralFacadeLocal.find((int) 5).getValor(),
-                        s, configuracionGeneralFacadeLocal.find((int) 6).getValor());
+                ConexionDTO seguridad = new ConexionDTO(passwordService, s, userService);
                 NetClientServiceImplement conexion = new NetClientServiceImplement();
                 String datosJson = conexion.response(seguridad);
                 if (!datosJson.equalsIgnoreCase("")) {

@@ -26,4 +26,19 @@ public class DocenteServiceImplement implements DocenteService {
         return docenteDao.find(docente.getId());
     }
 
+    @Override
+    public void guardar(final Docente docente) {
+        this.docenteDao.create(docente);
+    }
+
+    @Override
+    public void actualizar(final Docente docente) {
+        this.docenteDao.edit(docente);
+    }
+
+    @Override
+    public void eliminar(final Docente docente) {
+        this.docenteDao.remove(docente);
+    }
+
 }

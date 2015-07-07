@@ -5,7 +5,8 @@
  */
 package edu.unl.sigett.director;
 
-import com.jlmallas.comun.dao.PersonaDao;
+import com.jlmallas.comun.entity.Persona;
+import com.jlmallas.comun.service.PersonaService;
 import edu.unl.sigett.academico.dto.DocenteCarreraDTO;
 import edu.unl.sigett.directorProyecto.DirectorProyectoDM;
 import edu.unl.sigett.docenteProyecto.SessionDocenteProyecto;
@@ -47,12 +48,12 @@ public class DirectorController implements Serializable {
     private DirectorProyectoDM directorProyectoDM;
     //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="SERVICIOS">
-    @EJB
+    @EJB(lookup = "java:global/SigettService/LineaInvestigacionDocenteServiceImplement!edu.unl.sigett.service.LineaInvestigacionDocenteService")
     private LineaInvestigacionDocenteService lineaInvestigacionDocenteService;
-    @EJB
+    @EJB(lookup = "java:global/SigettService/DirectorServiceImplement!edu.unl.sigett.service.DirectorService")
     private DirectorService directorService;
-    @EJB
-    private PersonaDao personaDao;
+    @EJB(lookup = "java:global/ComunService/PersonaServiceImplement!com.jlmallas.comun.service.PersonaService")
+    private PersonaService personaService;
 
     //</editor-fold>
     private static final Logger LOG = Logger.getLogger(DirectorController.class.getName());
@@ -93,8 +94,8 @@ public class DirectorController implements Serializable {
                             continue;
                         }
                         DirectorDTO directorDTO = new DirectorDTO(directorService.buscarPorId(new Director(
-                                docenteCarreraDTO.getDocenteCarrera().getId())), docenteCarreraDTO.getDocenteCarrera(), personaDao.find(
-                                        docenteCarreraDTO.getDocenteCarrera().getDocenteId().getId()));
+                                docenteCarreraDTO.getDocenteCarrera().getId())), docenteCarreraDTO.getDocenteCarrera(), personaService.buscarPorId(
+                                       new Persona(docenteCarreraDTO.getDocenteCarrera().getDocenteId().getId())));
                         if (!directorDM.getDirectoresDTO().contains(directorDTO)) {
                             directorDM.getDirectoresDTO().add(directorDTO);
                         }

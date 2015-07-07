@@ -47,4 +47,14 @@ public class PersonaServiceImplement implements PersonaService {
         return this.personaDao.buscar(persona);
     }
 
+    @Override
+    public Boolean esUnico(final String numeroIdentificacion, Long id) {
+       return this.personaDao.esUnico(numeroIdentificacion, id);
+    }
+
+    @Override
+    public Persona buscarPorNumeroIdentificacion(final String numeroIdentificacion) {
+      return this.personaDao.buscarPorNumeroIdentificacion(numeroIdentificacion);
+    }
+
 }

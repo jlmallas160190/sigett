@@ -69,4 +69,14 @@ public class ItemServiceImplement implements ItemService {
         return itemDao.find(itemId);
     }
     
+    @Override
+    public void guardar(final Item item) {
+        this.itemDao.create(item);
+    }
+    
+    @Override
+    public void actualizar(final Item item) {
+        this.itemDao.edit(item);
+    }
+    
 }

@@ -10,7 +10,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
-import com.jlmallas.comun.dao.ConfiguracionDao;
 import com.jlmallas.comun.entity.Item;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 import com.ocpsoft.pretty.faces.annotation.URLMappings;
@@ -26,7 +25,6 @@ import edu.unl.sigett.entity.LineaInvestigacion;
 import edu.unl.sigett.entity.LineaInvestigacionDocente;
 import com.jlmallas.comun.entity.Persona;
 import com.jlmallas.comun.enumeration.CatalogoEnum;
-import com.jlmallas.comun.dao.ItemDao;
 import edu.jlmallas.academico.entity.TituloDocente;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -40,14 +38,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import org.primefaces.event.TransferEvent;
 import org.primefaces.model.DualListModel;
-import com.jlmallas.comun.dao.NacionalidadFacadeLocal;
-import edu.unl.sigett.dao.DirectorDao;
-import edu.jlmallas.academico.dao.DocenteCarreraDao;
-import edu.jlmallas.academico.dao.DocenteDao;
-import edu.unl.sigett.dao.LineaInvestigacionDocenteDao;
-import edu.unl.sigett.dao.LineaInvestigacionDao;
 import org.jlmallas.seguridad.dao.LogDao;
-import com.jlmallas.comun.dao.PersonaDao;
 import com.jlmallas.comun.entity.Configuracion;
 import com.jlmallas.comun.entity.Nacionalidad;
 import com.jlmallas.comun.enumeration.ConfiguracionEnum;
@@ -55,17 +46,24 @@ import com.jlmallas.comun.enumeration.GeneroEnum;
 import com.jlmallas.comun.enumeration.TipoDocIdentEnum;
 import com.jlmallas.comun.enumeration.URLWSEnum;
 import com.jlmallas.comun.service.CatalogoService;
+import com.jlmallas.comun.service.ConfiguracionService;
 import com.jlmallas.comun.service.ItemService;
+import com.jlmallas.comun.service.NacionalidadService;
+import com.jlmallas.comun.service.PersonaService;
 import edu.jlmallas.academico.entity.Titulo;
 import edu.jlmallas.academico.dao.TituloDocenteDao;
 import edu.jlmallas.academico.dao.TituloDao;
+import edu.jlmallas.academico.service.DocenteCarreraService;
+import edu.jlmallas.academico.service.DocenteService;
 import edu.jlmallas.academico.service.EstadoLaboralService;
 import edu.unl.sigett.academico.dto.DocenteCarreraDTO;
 import edu.unl.sigett.entity.ConfiguracionCarrera;
 import edu.unl.sigett.entity.DocenteUsuario;
 import edu.unl.sigett.entity.LineaInvestigacionCarrera;
 import edu.unl.sigett.service.ConfiguracionCarreraService;
+import edu.unl.sigett.service.DirectorService;
 import edu.unl.sigett.service.DocenteUsuarioService;
+import edu.unl.sigett.service.LineaInvestigacionDocenteService;
 import edu.unl.sigett.service.LineaInvestigacionService;
 import edu.unl.sigett.util.CabeceraController;
 import edu.unl.sigett.util.MessageView;
@@ -74,7 +72,6 @@ import org.jlmallas.httpClient.NetClientServiceImplement;
 import org.jlmallas.httpClient.ConexionDTO;
 import org.jlmallas.httpClient.NetClientService;
 import org.jlmallas.secure.Secure;
-import org.jlmallas.seguridad.dao.UsuarioDao;
 import org.jlmallas.seguridad.dao.RolDao;
 import org.jlmallas.seguridad.dao.RolUsuarioDao;
 import org.jlmallas.seguridad.entity.Rol;
@@ -119,50 +116,44 @@ public class AdministrarDocentesCarrera implements Serializable {
     private CabeceraController cabeceraController;
 //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="INYECCIÓN DE SERVICIOS">
-    @EJB
+    @EJB(lookup = "java:global/SeguridadService/LogDaoImplement!org.jlmallas.seguridad.dao.LogDao")
     private LogDao logFacadeLocal;
-    @EJB
+    @EJB(lookup = "java:global/AcademicoService/TituloDaoImplement!edu.jlmallas.academico.dao.TituloDao")
     private TituloDao tituloDao;
-    @EJB
-    private NacionalidadFacadeLocal nacionalidadFacadeLocal;
-    @EJB
+    @EJB(lookup = "java:global/ComunService/NacionalidadServiceImplement!com.jlmallas.comun.service.NacionalidadService")
+    private NacionalidadService nacionalidadService;
+    @EJB(lookup = "java:global/SeguridadService/RolDaoImplement!org.jlmallas.seguridad.dao.RolDao")
     private RolDao rolDao;
-    @EJB
+    @EJB(lookup = "java:global/SeguridadService/RolUsuarioDaoImplement!org.jlmallas.seguridad.dao.RolUsuarioDao")
     private RolUsuarioDao rolUsuarioDao;
-    @EJB
-    private DocenteCarreraDao docenteCarreraDao;
-    @EJB
-    private DocenteDao docenteDao;
-    @EJB
-    private PersonaDao personaDao;
-    @EJB
-    private ItemDao itemDao;
-    @EJB
+    @EJB(lookup = "java:global/AcademicoService/DocenteCarreraServiceImplement!edu.jlmallas.academico.dao.DocenteCarreraService")
+    private DocenteCarreraService docenteCarreraService;
+    @EJB(lookup = "java:global/AcademicoService/DocenteServiceImplement!edu.jlmallas.academico.service.DocenteService")
+    private DocenteService docenteService;
+    @EJB(lookup = "java:global/ComunService/PersonaServiceImplement!com.jlmallas.comun.service.PersonaService")
+    private PersonaService personaService;
+    @EJB(lookup = "java:global/AcademicoService/EstadoLaboralServiceImplement!edu.jlmallas.academico.service.EstadoLaboralService")
     private EstadoLaboralService estadoLaboralService;
-    @EJB
-    private UsuarioDao usuarioDao;
-    @EJB
+    @EJB(lookup = "java:global/SeguridadService/UsuarioServiceImplement!org.jlmallas.seguridad.service.UsuarioService")
     private UsuarioService usuarioService;
-    @EJB
+    @EJB(lookup = "java:global/SigettService/DocenteUsuarioServiceImplement!edu.unl.sigett.service.DocenteUsuarioService")
     private DocenteUsuarioService docenteUsuarioService;
-    @EJB
-    private LineaInvestigacionDocenteDao lineaInvestigacionDocenteFacadeLocal;
-    @EJB
-    private LineaInvestigacionDao lineaInvestigacionFacadeLocal;
-    @EJB
+    @EJB(lookup = "java:global/SigettService/LineaInvestigacionDocenteServiceImplement!edu.unl.sigett.service.LineaInvestigacionDocenteService")
+    private LineaInvestigacionDocenteService lineaInvestigacionDocenteService;
+    @EJB(lookup = "java:global/AcademicoService/TituloDocenteDaoImplement!edu.jlmallas.academico.dao.TituloDocenteDao")
     private TituloDocenteDao tituloDocenteFacadeLocal;
-    @EJB
-    private DirectorDao directorFacadeLocal;
-    @EJB
+    @EJB(lookup = "java:global/SigettService/DirectorServiceImplement!edu.unl.sigett.service.DirectorService")
+    private DirectorService directorService;
+    @EJB(lookup = "java:global/SigettService/ConfiguracionCarreraServiceImplement!edu.unl.sigett.service.ConfiguracionCarreraService")
     private ConfiguracionCarreraService configuracionCarreraService;
-    @EJB
+    @EJB(lookup = "java:global/ComunService/ItemServiceImplement!com.jlmallas.comun.service.ItemService")
     private ItemService itemService;
-    @EJB
+    @EJB(lookup = "java:global/ComunService/CatalogoServiceImplement!com.jlmallas.comun.service.CatalogoService")
     private CatalogoService catalogoService;
-    @EJB
+    @EJB(lookup = "java:global/SigettService/LineaInvestigacionServiceImplement!edu.unl.sigett.service.LineaInvestigacionServic")
     private LineaInvestigacionService lineaInvestigacionService;
-    @EJB
-    private ConfiguracionDao configuracionDao;
+    @EJB(lookup = "java:global/ComunService/ConfiguracionServiceImplement!com.jlmallas.comun.service.ConfiguracionService")
+    private ConfiguracionService configuracionService;
 //</editor-fold>
 
     public void init() {
@@ -256,10 +247,10 @@ public class AdministrarDocentesCarrera implements Serializable {
         String navegacion = "";
         try {
             sessionDocenteCarrera.setLineaInvestigacionDocentesRemovidos(new ArrayList<LineaInvestigacionDocente>());
-            sessionDocenteCarrera.setDocenteCarreraDTO(new DocenteCarreraDTO(docenteCarreraDao.find(
-                    docenteCarreraAux.getDocenteCarrera().getId()), personaDao.find(docenteCarreraAux.
-                            getDocenteCarrera().getDocenteId().getId()),
-                    directorFacadeLocal.find(docenteCarreraAux.getDocenteCarrera().getId())));
+            sessionDocenteCarrera.setDocenteCarreraDTO(new DocenteCarreraDTO(docenteCarreraService.buscarPorId(
+                    new DocenteCarrera(docenteCarreraAux.getDocenteCarrera().getId())), personaService.buscarPorId(new Persona(docenteCarreraAux.
+                                    getDocenteCarrera().getDocenteId().getId())),
+                    directorService.buscarPorId(new Director(docenteCarreraAux.getDocenteCarrera().getId()))));
             listadoLineasInvestigacion(docenteCarreraAux.getDocenteCarrera().getDocenteId());
             docenteCarreraAux.getDocenteCarrera().getDocenteId().getEstadoLaboralId().setTipoContrato(
                     itemService.buscarPorId(docenteCarreraAux.getDocenteCarrera().getDocenteId().
@@ -268,9 +259,9 @@ public class AdministrarDocentesCarrera implements Serializable {
                     getDocenteCarrera().getDocenteId().getEstadoLaboralId().toString());
             sessionDocenteCarrera.setTitulo(docenteCarreraAux.
                     getDocenteCarrera().getDocenteId().getTituloDocenteId().toString());
-            sessionDocenteCarrera.setTipoDocumento(itemDao.find(docenteCarreraAux.getPersona().getTipoDocumentoIdentificacionId()).
+            sessionDocenteCarrera.setTipoDocumento(itemService.buscarPorId(docenteCarreraAux.getPersona().getTipoDocumentoIdentificacionId()).
                     toString());
-            sessionDocenteCarrera.setGenero(itemDao.find(docenteCarreraAux.getPersona().
+            sessionDocenteCarrera.setGenero(itemService.buscarPorId(docenteCarreraAux.getPersona().
                     getGeneroId()).
                     toString());
             navegacion = "pretty:editarDocenteCarrera";
@@ -284,14 +275,14 @@ public class AdministrarDocentesCarrera implements Serializable {
         this.sessionDocenteCarrera.getDocenteCarreraDTOs().clear();
         this.sessionDocenteCarrera.getFilterDocenteCarrerasDTO().clear();
         try {
-            List<DocenteCarrera> docenteCarreras = docenteCarreraDao.buscar(new DocenteCarrera(null, null, sessionUsuarioCarrera.getUsuarioCarreraDTO().getCarrera(),
+            List<DocenteCarrera> docenteCarreras = docenteCarreraService.buscar(new DocenteCarrera(null, null, sessionUsuarioCarrera.getUsuarioCarreraDTO().getCarrera(),
                     Boolean.FALSE));
             if (docenteCarreras == null) {
                 return;
             }
             for (DocenteCarrera docenteCarrera : docenteCarreras) {
-                DocenteCarreraDTO dca = new DocenteCarreraDTO(docenteCarrera, personaDao.find(docenteCarrera.getDocenteId().getId()),
-                        directorFacadeLocal.find(docenteCarrera.getId()));
+                DocenteCarreraDTO dca = new DocenteCarreraDTO(docenteCarrera, personaService.buscarPorId(new Persona(docenteCarrera.getDocenteId().getId())),
+                        directorService.buscarPorId(new Director(docenteCarrera.getId())));
                 this.sessionDocenteCarrera.getDocenteCarreraDTOs().add(dca);
             }
             sessionDocenteCarrera.getFilterDocenteCarrerasDTO().addAll(sessionDocenteCarrera.getDocenteCarreraDTOs());
@@ -306,12 +297,12 @@ public class AdministrarDocentesCarrera implements Serializable {
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
         String param = (String) facesContext.getExternalContext().getRequestParameterMap().get("1");
         try {
-            Item g = itemDao.buscarPorCodigo(CatalogoEnum.GENERO.getTipo(), sessionDocenteCarrera.getGenero());
+            Item g = itemService.buscarPorCatalogoCodigo(CatalogoEnum.GENERO.getTipo(), sessionDocenteCarrera.getGenero());
             if (g != null) {
                 sessionDocenteCarrera.getDocenteCarreraDTO().getPersona().
                         setGeneroId(g.getId());
             }
-            Item tdi = itemDao.buscarPorCodigo(CatalogoEnum.TIPODOCUMENTOIDENTIFICACION.getTipo(), sessionDocenteCarrera.getTipoDocumento());
+            Item tdi = itemService.buscarPorCatalogoCodigo(CatalogoEnum.TIPODOCUMENTOIDENTIFICACION.getTipo(), sessionDocenteCarrera.getTipoDocumento());
             if (tdi != null) {
                 sessionDocenteCarrera.getDocenteCarreraDTO().getPersona().
                         setTipoDocumentoIdentificacionId(tdi.getId());
@@ -330,12 +321,12 @@ public class AdministrarDocentesCarrera implements Serializable {
 
             if (sessionDocenteCarrera.getDocenteCarreraDTO().
                     getDocenteCarrera().getId() == null) {
-                if (personaDao.esUnico(sessionDocenteCarrera.getDocenteCarreraDTO().getPersona().getNumeroIdentificacion(),
+                if (personaService.esUnico(sessionDocenteCarrera.getDocenteCarreraDTO().getPersona().getNumeroIdentificacion(),
                         sessionDocenteCarrera.getDocenteCarreraDTO().getPersona().getId())) {
-                    personaDao.create(sessionDocenteCarrera.getDocenteCarreraDTO().getPersona());
+                    personaService.guardar(sessionDocenteCarrera.getDocenteCarreraDTO().getPersona());
                     sessionDocenteCarrera.getDocenteCarreraDTO().getDocenteCarrera().getDocenteId().
                             setId(sessionDocenteCarrera.getDocenteCarreraDTO().getPersona().getId());
-                    docenteDao.create(sessionDocenteCarrera.getDocenteCarreraDTO().getDocenteCarrera().getDocenteId());
+                    docenteService.guardar(sessionDocenteCarrera.getDocenteCarreraDTO().getDocenteCarrera().getDocenteId());
                     logFacadeLocal.create(logFacadeLocal.crearLog("Docente", sessionDocenteCarrera.getDocenteCarreraDTO().getDocenteCarrera().getDocenteId().getId() + "",
                             "CREAR", "|Nombres= " + sessionDocenteCarrera.getDocenteCarreraDTO().getPersona().getNombres() + "|Apellidos= "
                             + sessionDocenteCarrera.getDocenteCarreraDTO().getPersona().getApellidos()
@@ -343,10 +334,10 @@ public class AdministrarDocentesCarrera implements Serializable {
                             + sessionDocenteCarrera.getDocenteCarreraDTO().getPersona().getEmail(), sessionUsuario.getUsuario()));
 
                     sessionDocenteCarrera.getDocenteCarreraDTO().getDocenteCarrera().setCarreraId(sessionUsuarioCarrera.getUsuarioCarreraDTO().getCarrera());
-                    docenteCarreraDao.create(sessionDocenteCarrera.getDocenteCarreraDTO().getDocenteCarrera());
+                    docenteCarreraService.guardar(sessionDocenteCarrera.getDocenteCarreraDTO().getDocenteCarrera());
                     sessionDocenteCarrera.getDocenteCarreraDTO().getDirector().setId(sessionDocenteCarrera.getDocenteCarreraDTO()
                             .getDocenteCarrera().getId());
-                    directorFacadeLocal.create(sessionDocenteCarrera.getDocenteCarreraDTO().getDirector());
+                    directorService.guardar(sessionDocenteCarrera.getDocenteCarreraDTO().getDirector());
                     this.grabarUsuarioDocente(sessionDocenteCarrera.getDocenteCarreraDTO().getDocenteCarrera().getDocenteId());
                     grabarLineasInvestigacionDocentes(sessionDocenteCarrera.getDocenteCarreraDTO().getDocenteCarrera().getDocenteId());
                     if (param.equalsIgnoreCase("grabar")) {
@@ -364,11 +355,11 @@ public class AdministrarDocentesCarrera implements Serializable {
                 }
                 this.buscar();
             } else {
-                if (personaDao.esUnico(sessionDocenteCarrera.getDocenteCarreraDTO().getPersona().getNumeroIdentificacion(),
+                if (personaService.esUnico(sessionDocenteCarrera.getDocenteCarreraDTO().getPersona().getNumeroIdentificacion(),
                         sessionDocenteCarrera.getDocenteCarreraDTO().getPersona().getId())) {
-                    personaDao.edit(sessionDocenteCarrera.getDocenteCarreraDTO().getPersona());
+                    personaService.actualizar(sessionDocenteCarrera.getDocenteCarreraDTO().getPersona());
                     sessionDocenteCarrera.getDocenteCarreraDTO().getDocenteCarrera().getDocenteId().setId(sessionDocenteCarrera.getDocenteCarreraDTO().getPersona().getId());
-                    docenteDao.edit(sessionDocenteCarrera.getDocenteCarreraDTO().getDocenteCarrera().getDocenteId());
+                    docenteService.actualizar(sessionDocenteCarrera.getDocenteCarreraDTO().getDocenteCarrera().getDocenteId());
                     logFacadeLocal.create(logFacadeLocal.crearLog("Docente", sessionDocenteCarrera.getDocenteCarreraDTO().getDocenteCarrera().getDocenteId().getId() + "",
                             "CREAR", "|Nombres= " + sessionDocenteCarrera.getDocenteCarreraDTO().getPersona().getNombres() + "|Apellidos= "
                             + sessionDocenteCarrera.getDocenteCarreraDTO().getPersona().getApellidos()
@@ -376,7 +367,7 @@ public class AdministrarDocentesCarrera implements Serializable {
                             + sessionDocenteCarrera.getDocenteCarreraDTO().getPersona().getEmail(), sessionUsuario.getUsuario()));
 
                     sessionDocenteCarrera.getDocenteCarreraDTO().getDirector().setEsActivo(true);
-                    docenteCarreraDao.edit(sessionDocenteCarrera.getDocenteCarreraDTO().getDocenteCarrera());
+                    docenteCarreraService.actualizar(sessionDocenteCarrera.getDocenteCarreraDTO().getDocenteCarrera());
                     grabarLineasInvestigacionDocentes(sessionDocenteCarrera.getDocenteCarreraDTO().getDocenteCarrera().getDocenteId());
                     removerDocenteLineasInvestigacion(sessionDocenteCarrera.getDocenteCarreraDTO().getDocenteCarrera().getDocenteId());
                     if (param.equalsIgnoreCase("grabar")) {
@@ -438,7 +429,7 @@ public class AdministrarDocentesCarrera implements Serializable {
             for (Object item : event.getItems()) {
                 int v = item.toString().indexOf(":");
                 Long id = Long.parseLong(item.toString().substring(0, v));
-                LineaInvestigacion li = lineaInvestigacionFacadeLocal.find(id);
+                LineaInvestigacion li = lineaInvestigacionService.buscarPorId(new LineaInvestigacion(id));
                 LineaInvestigacionDocente lid = new LineaInvestigacionDocente();
                 lid.setLineaInvestigacionId(li);
                 if (event.isRemove()) {
@@ -457,14 +448,14 @@ public class AdministrarDocentesCarrera implements Serializable {
                 LineaInvestigacionDocente lineaInvestigacionDocenteBuscar = new LineaInvestigacionDocente();
                 lineaInvestigacionDocenteBuscar.setDocenteId(docente.getId());
                 for (LineaInvestigacionDocente ld : sessionDocenteCarrera.getLineaInvestigacionDocentesRemovidos()) {
-                    Long id = devuelveLineaInvestigacionEliminar(lineaInvestigacionDocenteFacadeLocal.buscar(lineaInvestigacionDocenteBuscar), ld);
+                    Long id = devuelveLineaInvestigacionEliminar(lineaInvestigacionDocenteService.buscar(lineaInvestigacionDocenteBuscar), ld);
                     LineaInvestigacionDocente lid = null;
-                    lid = lineaInvestigacionDocenteFacadeLocal.find(id);
+                    lid = lineaInvestigacionDocenteService.buscarPorId(new LineaInvestigacionDocente(id));
                     if (lid != null) {
                         logFacadeLocal.create(logFacadeLocal.crearLog("LineaInvestigacionDocente", ld.getId() + "",
                                 "DELETE", "LineaInvestigacion=" + ld.getLineaInvestigacionId() + "|Docente=" + ld.getDocenteId(),
                                 sessionUsuario.getUsuario()));
-                        lineaInvestigacionDocenteFacadeLocal.remove(lid);
+                        lineaInvestigacionDocenteService.eliminar(lid);
                     }
                 }
             }
@@ -484,7 +475,7 @@ public class AdministrarDocentesCarrera implements Serializable {
         for (Object o : sessionDocenteCarrera.getLineasInvestigacionDualList().getTarget()) {
             int v = o.toString().indexOf(":");
             Long id = Long.parseLong(o.toString().substring(0, v));
-            LineaInvestigacion li = lineaInvestigacionFacadeLocal.find(id);
+            LineaInvestigacion li = lineaInvestigacionService.buscarPorId(new LineaInvestigacion(id));
             LineaInvestigacionDocente ld = new LineaInvestigacionDocente();
             ld.setDocenteId(docente.getId());
             ld.setLineaInvestigacionId(li);
@@ -493,8 +484,8 @@ public class AdministrarDocentesCarrera implements Serializable {
         for (LineaInvestigacionDocente lineaInvestigacionDocente : lids) {
             LineaInvestigacionDocente lineaInvestigacionDocenteBuscar = new LineaInvestigacionDocente();
             lineaInvestigacionDocenteBuscar.setDocenteId(docente.getId());
-            if (contieneLineaInvestigacion(lineaInvestigacionDocenteFacadeLocal.buscar(lineaInvestigacionDocente), lineaInvestigacionDocente) == false) {
-                lineaInvestigacionDocenteFacadeLocal.create(lineaInvestigacionDocente);
+            if (contieneLineaInvestigacion(lineaInvestigacionDocenteService.buscar(lineaInvestigacionDocente), lineaInvestigacionDocente) == false) {
+                lineaInvestigacionDocenteService.guardar(lineaInvestigacionDocente);
                 logFacadeLocal.create(logFacadeLocal.crearLog("LineaInvestigacionDocente", lineaInvestigacionDocente.getId() + "",
                         "CREAR", "|LineaInvestigacion= " + lineaInvestigacionDocente.getLineaInvestigacionId() + "|Docente="
                         + lineaInvestigacionDocente.getDocenteId(), sessionUsuario.getUsuario()));
@@ -529,9 +520,9 @@ public class AdministrarDocentesCarrera implements Serializable {
         try {
             Usuario usuario = null;
             DocenteUsuario du = docenteUsuarioService.buscarPorDocente(new DocenteUsuario(null, docente.getId()));
-            Persona personaDocente = personaDao.find(docente.getId());
+            Persona personaDocente = personaService.buscarPorId(new Persona(docente.getId()));
             if (du != null) {
-                usuario = usuarioDao.find(du.getId());
+                usuario = usuarioService.buscarPorId(new Usuario(du.getId()));
             }
             if (usuario == null) {
                 usuario = new Usuario();
@@ -544,7 +535,7 @@ public class AdministrarDocentesCarrera implements Serializable {
                         new Secure(cabeceraController.getConfiguracionGeneralUtil().getSecureKey(), personaDocente.getNumeroIdentificacion())));
                 usuario.setUsername(personaDocente.getNumeroIdentificacion());
                 if (usuarioService.unicoUsername(usuario.getUsername()) == false) {
-                    usuarioDao.create(usuario);
+                    usuarioService.guardar(usuario);
                     DocenteUsuario docenteUsuario = new DocenteUsuario();
                     docenteUsuario.setDocenteId(docente.getId());
                     docenteUsuario.setId(usuario.getId());
@@ -561,7 +552,7 @@ public class AdministrarDocentesCarrera implements Serializable {
             } else {
                 usuario.setPassword(cabeceraController.getSecureService().encrypt(
                         new Secure(cabeceraController.getConfiguracionGeneralUtil().getSecureKey(), personaDocente.getNumeroIdentificacion())));
-                usuarioDao.edit(usuario);
+                usuarioService.actualizar(usuario);
             }
         } catch (Exception e) {
             e.initCause(e);
@@ -569,8 +560,9 @@ public class AdministrarDocentesCarrera implements Serializable {
     }
 //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="MÉTODOS RENDERED">
+
     private void renderedEditar() {
-        int tienePermiso = usuarioDao.tienePermiso(sessionUsuario.getUsuario(), "editar_docente_carrera");
+        int tienePermiso = usuarioService.tienePermiso(sessionUsuario.getUsuario(), "editar_docente_carrera");
         if (tienePermiso == 1) {
             sessionDocenteCarrera.setRenderedEditar(true);
             sessionDocenteCarrera.setRenderedNoEditar(false);
@@ -591,7 +583,7 @@ public class AdministrarDocentesCarrera implements Serializable {
 
     private void renderedCrear() {
 
-        int tienePermiso = usuarioDao.tienePermiso(sessionUsuario.getUsuario(), "crear_docente_carrera");
+        int tienePermiso = usuarioService.tienePermiso(sessionUsuario.getUsuario(), "crear_docente_carrera");
         if (tienePermiso == 1) {
             sessionDocenteCarrera.setRenderedCrear(true);
             return;
@@ -611,12 +603,12 @@ public class AdministrarDocentesCarrera implements Serializable {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
         MessageView messageView = new MessageView();
-        if (usuarioDao.tienePermiso(sessionUsuario.getUsuario(), "sga_ws_datos_docente") == 1) {
+        if (usuarioService.tienePermiso(sessionUsuario.getUsuario(), "sga_ws_datos_docente") == 1) {
             try {
                 String passwordService = this.cabeceraController.getSecureService().decrypt(new Secure(cabeceraController.getConfiguracionGeneralUtil().getSecureKey(),
-                        configuracionDao.buscar(new Configuracion(ConfiguracionEnum.CLAVEWS.getTipo())).get(0).getValor()));
-                String userService = configuracionDao.buscar(new Configuracion(ConfiguracionEnum.USUARIOWS.getTipo())).get(0).getValor();
-                String serviceUrl = configuracionDao.buscar(new Configuracion(URLWSEnum.UNIDADDOCENTEPARALELO.getTipo())).get(0).getValor();
+                        configuracionService.buscar(new Configuracion(ConfiguracionEnum.CLAVEWS.getTipo())).get(0).getValor()));
+                String userService = configuracionService.buscar(new Configuracion(ConfiguracionEnum.USUARIOWS.getTipo())).get(0).getValor();
+                String serviceUrl = configuracionService.buscar(new Configuracion(URLWSEnum.UNIDADDOCENTEPARALELO.getTipo())).get(0).getValor();
                 String s = serviceUrl + "?id_paralelo=" + paraleloId;
                 ConexionDTO seguridad = new ConexionDTO(passwordService, s, userService);
                 NetClientService conexion = new NetClientServiceImplement();
@@ -676,11 +668,11 @@ public class AdministrarDocentesCarrera implements Serializable {
                 JsonPrimitive valor = elemento.getAsJsonPrimitive();
                 if (sessionDocenteCarrera.getI() > 5) {
                     if (sessionDocenteCarrera.getKeyEnteroWSUnidadesDocenteParalelo() == 7) {
-                        Persona persona = personaDao.buscarPorNumeroIdentificacion(valor.getAsString());
+                        Persona persona = personaService.buscarPorNumeroIdentificacion(valor.getAsString());
                         DocenteCarreraDTO docenteCarreraAux = null;
                         Docente docente = null;
                         if (persona != null) {
-                            docente = docenteDao.find(persona.getId());
+                            docente = docenteService.buscarPorId(new Docente(persona.getId()));
                         } else {
                             persona = new Persona();
                             persona.setNumeroIdentificacion(valor.getAsString());
@@ -714,13 +706,13 @@ public class AdministrarDocentesCarrera implements Serializable {
     private void grabarDesdeWebServices() {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-        if (usuarioDao.tienePermiso(sessionUsuario.getUsuario(), "sga_ws_datos_docente") == 1) {
+        if (usuarioService.tienePermiso(sessionUsuario.getUsuario(), "sga_ws_datos_docente") == 1) {
             try {
                 sessionDocenteCarrera.getDocenteCarrerDTOWS().getPersona().setEmail("S/N");
                 String passwordService = this.cabeceraController.getSecureService().decrypt(new Secure(cabeceraController.getConfiguracionGeneralUtil().getSecureKey(),
-                        configuracionDao.buscar(new Configuracion(ConfiguracionEnum.CLAVEWS.getTipo())).get(0).getValor()));
-                String userService = configuracionDao.buscar(new Configuracion(ConfiguracionEnum.USUARIOWS.getTipo())).get(0).getValor();
-                String serviceUrl = configuracionDao.buscar(new Configuracion(URLWSEnum.DATOSDOCENTE.getTipo())).get(0).getValor();
+                        configuracionService.buscar(new Configuracion(ConfiguracionEnum.CLAVEWS.getTipo())).get(0).getValor()));
+                String userService = configuracionService.buscar(new Configuracion(ConfiguracionEnum.USUARIOWS.getTipo())).get(0).getValor();
+                String serviceUrl = configuracionService.buscar(new Configuracion(URLWSEnum.DATOSDOCENTE.getTipo())).get(0).getValor();
                 String s = serviceUrl + "?cedula=" + sessionDocenteCarrera.getDocenteCarrerDTOWS().getPersona().getNumeroIdentificacion();
                 ConexionDTO seguridad = new ConexionDTO(passwordService, s, userService);
                 NetClientService conexion = new NetClientServiceImplement();
@@ -737,30 +729,30 @@ public class AdministrarDocentesCarrera implements Serializable {
                         Item itemT = itemService.buscarPorCatalogoCodigo(CatalogoEnum.TIPODOCUMENTOIDENTIFICACION.getTipo(),
                                 TipoDocIdentEnum.CEDULA.getTipo());
                         Item itemG = itemService.buscarPorCatalogoCodigo(CatalogoEnum.GENERO.getTipo(), GeneroEnum.MASCULINO.getTipo());
-                        Nacionalidad nacionalidad = nacionalidadFacadeLocal.find(1);
+                        Nacionalidad nacionalidad = nacionalidadService.buscarPorId(new Nacionalidad(1));
                         sessionDocenteCarrera.getDocenteCarrerDTOWS().getPersona().setTipoDocumentoIdentificacionId(itemT.getId());
                         sessionDocenteCarrera.getDocenteCarrerDTOWS().getPersona().setGeneroId(itemG.getId());
                         sessionDocenteCarrera.getDocenteCarrerDTOWS().getPersona()
                                 .setFechaNacimiento(fechaActual.getTime());
                         sessionDocenteCarrera.getDocenteCarrerDTOWS().getPersona().setNacionalidadId(nacionalidad);
                         if (sessionDocenteCarrera.getDocenteCarrerDTOWS().getPersona().getId() == null) {
-                            personaDao.create(sessionDocenteCarrera.getDocenteCarrerDTOWS().getPersona());
+                            personaService.guardar(sessionDocenteCarrera.getDocenteCarrerDTOWS().getPersona());
                         } else {
-                            personaDao.edit(sessionDocenteCarrera.getDocenteCarrerDTOWS().getPersona());
+                            personaService.actualizar(sessionDocenteCarrera.getDocenteCarrerDTOWS().getPersona());
                         }
                         sessionDocenteCarrera.getDocenteCarrerDTOWS().getDocenteCarrera().getDocenteId()
                                 .setId(sessionDocenteCarrera.getDocenteCarrerDTOWS().getPersona().getId());
-                        docenteDao.create(sessionDocenteCarrera.getDocenteCarrerDTOWS().getDocenteCarrera().getDocenteId());
+                        docenteService.guardar(sessionDocenteCarrera.getDocenteCarrerDTOWS().getDocenteCarrera().getDocenteId());
                         this.grabarUsuarioDocente(sessionDocenteCarrera.getDocenteCarrerDTOWS().getDocenteCarrera().getDocenteId());
-                        docenteCarreraDao.create(sessionDocenteCarrera.getDocenteCarrerDTOWS().getDocenteCarrera());
+                        docenteCarreraService.guardar(sessionDocenteCarrera.getDocenteCarrerDTOWS().getDocenteCarrera());
                         sessionDocenteCarrera.getDocenteCarrerDTOWS().getDirector().
                                 setId(sessionDocenteCarrera.getDocenteCarrerDTOWS().getDocenteCarrera().getId());
-                        directorFacadeLocal.create(sessionDocenteCarrera.getDocenteCarrerDTOWS().getDirector());
+                        directorService.guardar(sessionDocenteCarrera.getDocenteCarrerDTOWS().getDirector());
                     } else {
-                        Persona datosDocente = personaDao.find(
-                                sessionDocenteCarrera.getDocenteCarrerDTOWS().getDocenteCarrera().getDocenteId().getId());
-                        personaDao.edit(datosDocente);
-                        docenteDao.edit(sessionDocenteCarrera.getDocenteCarrerDTOWS().getDocenteCarrera().getDocenteId());
+                        Persona datosDocente = personaService.buscarPorId(
+                                new Persona(sessionDocenteCarrera.getDocenteCarrerDTOWS().getDocenteCarrera().getDocenteId().getId()));
+                        personaService.actualizar(datosDocente);
+                        docenteService.actualizar(sessionDocenteCarrera.getDocenteCarrerDTOWS().getDocenteCarrera().getDocenteId());
                     }
                 }
             } catch (Exception e) {
@@ -783,7 +775,7 @@ public class AdministrarDocentesCarrera implements Serializable {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
         MessageView messageView = new MessageView();
-        if (usuarioDao.tienePermiso(sessionUsuario.getUsuario(), "sga_ws_datos_docente") == 1) {
+        if (usuarioService.tienePermiso(sessionUsuario.getUsuario(), "sga_ws_datos_docente") == 1) {
             try {
                 /**
                  * Buscar Oferta académica actual de la carrera
@@ -793,9 +785,9 @@ public class AdministrarDocentesCarrera implements Serializable {
                     return;
                 }
                 String passwordService = this.cabeceraController.getSecureService().decrypt(new Secure(cabeceraController.getConfiguracionGeneralUtil().getSecureKey(),
-                        configuracionDao.buscar(new Configuracion(ConfiguracionEnum.CLAVEWS.getTipo())).get(0).getValor()));
-                String userService = configuracionDao.buscar(new Configuracion(ConfiguracionEnum.USUARIOWS.getTipo())).get(0).getValor();
-                String serviceUrl = configuracionDao.buscar(new Configuracion(URLWSEnum.PARALELOCARRERA.getTipo())).get(0).getValor();
+                        configuracionService.buscar(new Configuracion(ConfiguracionEnum.CLAVEWS.getTipo())).get(0).getValor()));
+                String userService = configuracionService.buscar(new Configuracion(ConfiguracionEnum.USUARIOWS.getTipo())).get(0).getValor();
+                String serviceUrl = configuracionService.buscar(new Configuracion(URLWSEnum.PARALELOCARRERA.getTipo())).get(0).getValor();
                 String ofertaIdActual = configuracionCarrera.getValor();
                 String s = serviceUrl + "?id_oferta=" + ofertaIdActual + ";id_carrera=" + c.getIdSga();
                 ConexionDTO seguridad = new ConexionDTO(passwordService, s, userService);
@@ -869,12 +861,12 @@ public class AdministrarDocentesCarrera implements Serializable {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
         MessageView messageView = new MessageView();
-        if (usuarioDao.tienePermiso(sessionUsuario.getUsuario(), "sga_ws_datos_docente") == 1) {
+        if (usuarioService.tienePermiso(sessionUsuario.getUsuario(), "sga_ws_datos_docente") == 1) {
             try {
                 String passwordService = this.cabeceraController.getSecureService().decrypt(new Secure(cabeceraController.getConfiguracionGeneralUtil().getSecureKey(),
-                        configuracionDao.buscar(new Configuracion(ConfiguracionEnum.CLAVEWS.getTipo())).get(0).getValor()));
-                String userService = configuracionDao.buscar(new Configuracion(ConfiguracionEnum.USUARIOWS.getTipo())).get(0).getValor();
-                String serviceUrl = configuracionDao.buscar(new Configuracion(URLWSEnum.DATOSDOCENTE.getTipo())).get(0).getValor();
+                        configuracionService.buscar(new Configuracion(ConfiguracionEnum.CLAVEWS.getTipo())).get(0).getValor()));
+                String userService = configuracionService.buscar(new Configuracion(ConfiguracionEnum.USUARIOWS.getTipo())).get(0).getValor();
+                String serviceUrl = configuracionService.buscar(new Configuracion(URLWSEnum.DATOSDOCENTE.getTipo())).get(0).getValor();
                 String s = serviceUrl + "?cedula=" + sessionDocenteCarrera.getDocenteCarreraDTO().
                         getPersona().getNumeroIdentificacion();
                 ConexionDTO seguridad = new ConexionDTO(passwordService, s, userService);
@@ -994,9 +986,9 @@ public class AdministrarDocentesCarrera implements Serializable {
                     }
                     item = new Item(null, valor.getAsString().toUpperCase(), valor.getAsString().toUpperCase(), true, null,
                             catalogoService.buscarPorCodigo(CatalogoEnum.TIPOCONTRATO.getTipo()));
-                    itemDao.create(item);
+                    itemService.guardar(item);
                     item.setIdPadre(item.getId());
-                    itemDao.edit(item);
+                    itemService.actualizar(item);
                     estadoLaboralEncontrado = new EstadoLaboral();
                     estadoLaboralEncontrado.setTipoContratoId(item.getId());
                     estadoLaboralService.guardar(estadoLaboralEncontrado);

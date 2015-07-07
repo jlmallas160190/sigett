@@ -5,24 +5,22 @@
  */
 package edu.unl.sigett.usuarioCarrera;
 
-import com.jlmallas.comun.dao.PersonaDao;
+import com.jlmallas.comun.entity.Persona;
+import com.jlmallas.comun.service.PersonaService;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 import com.ocpsoft.pretty.faces.annotation.URLMappings;
-import edu.jlmallas.academico.dao.CarreraDao;
-import edu.jlmallas.academico.dao.DocenteCarreraDao;
-import edu.jlmallas.academico.dao.EstudianteCarreraDao;
 import edu.jlmallas.academico.entity.Carrera;
 import edu.jlmallas.academico.entity.DocenteCarrera;
 import edu.jlmallas.academico.entity.EstudianteCarrera;
+import edu.jlmallas.academico.service.CarreraService;
+import edu.jlmallas.academico.service.DocenteCarreraService;
+import edu.jlmallas.academico.service.EstudianteCarreraService;
 import edu.unl.sigett.academico.dto.DocenteCarreraDTO;
 import edu.unl.sigett.academico.dto.EstudianteCarreraDTO;
-import edu.unl.sigett.dao.ConfiguracionCarreraDao;
-import edu.unl.sigett.dao.DirectorDao;
 import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
 import org.jlmallas.seguridad.entity.Usuario;
 import edu.unl.sigett.entity.UsuarioCarrera;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import javax.ejb.EJB;
@@ -32,11 +30,12 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import edu.unl.sigett.dao.UsuarioCarreraDao;
-import org.jlmallas.seguridad.dao.UsuarioDao;
-import edu.unl.sigett.entity.Aspirante;
 import edu.unl.sigett.entity.ConfiguracionCarrera;
+import edu.unl.sigett.entity.Director;
 import edu.unl.sigett.service.AspiranteService;
 import edu.unl.sigett.service.ConfiguracionCarreraService;
+import edu.unl.sigett.service.DirectorService;
+import org.jlmallas.seguridad.service.UsuarioService;
 import org.primefaces.event.FileUploadEvent;
 
 /**
@@ -65,24 +64,24 @@ public class AdministrarUsuarioCarrera implements Serializable {
     private SessionUsuario sessionUsuario;
     //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="INYECCIÓN DE SERVICIOS">
-    @EJB
-    private UsuarioDao usuarioDao;
-    @EJB
+    @EJB(lookup = "java:global/SeguridadService/UsuarioServiceImplement!org.jlmallas.seguridad.service.UsuarioService")
+    private UsuarioService usuarioService;
+    @EJB(lookup = "java:global/SigettService/UsuarioCarreraDaoImplement!edu.unl.sigett.dao.UsuarioCarreraDao")
     private UsuarioCarreraDao usuarioCarreraDao;
-    @EJB
-    private CarreraDao carreraDao;
-    @EJB
+    @EJB(lookup = "java:global/ComunService/CarreraService Implement!com.jlmallas.comun.service.CarreraService ")
+    private CarreraService carreraService;
+     @EJB(lookup = "java:global/SigettService/ConfiguracionCarreraServiceImplement!edu.unl.sigett.service.ConfiguracionCarreraService")
     private ConfiguracionCarreraService configuracionCarreraService;
-    @EJB
-    private EstudianteCarreraDao estudianteCarreraDao;
-    @EJB
-    private PersonaDao personaDao;
-    @EJB
+   @EJB(lookup = "java:global/SigettService/EstudianteCarreraServiceImplement!edu.unl.sigett.service.EstudianteCarreraService")
+    private EstudianteCarreraService estudianteCarreraService;
+    @EJB(lookup = "java:global/ComunService/PersonaServiceImplement!com.jlmallas.comun.service.PersonaService")
+    private PersonaService personaService;
+  @EJB(lookup = "java:global/SigettService/AspiranteServiceImplement!edu.unl.sigett.service.AspiranteService")
     private AspiranteService aspiranteService;
-    @EJB
-    private DocenteCarreraDao docenteCarreraDao;
-    @EJB
-    private DirectorDao directorDao;
+    @EJB(lookup = "java:global/AcademicoService/DocenteCarreraServiceImplement!edu.jlmallas.academico.service.DocenteCarreraService")
+    private DocenteCarreraService docenteCarreraService;
+   @EJB(lookup = "java:global/SigettService/DirectorServiceImplement!edu.unl.sigett.service.DirectorService")
+    private DirectorService directorService;
     //</editor-fold>
 
     public AdministrarUsuarioCarrera() {
@@ -97,7 +96,7 @@ public class AdministrarUsuarioCarrera implements Serializable {
 
     //<editor-fold defaultstate="collapsed" desc="MÉTODOS RENDERED">
     public void renderedEditar() {
-        int tienePermiso = usuarioDao.tienePermiso(sessionUsuario.getUsuario(), "editar_usuario_carrera");
+        int tienePermiso = usuarioService.tienePermiso(sessionUsuario.getUsuario(), "editar_usuario_carrera");
         if (tienePermiso == 1) {
             sessionUsuarioCarrera.setRenderedEditar(true);
             sessionUsuarioCarrera.setRenderedEditar(false);
@@ -108,7 +107,7 @@ public class AdministrarUsuarioCarrera implements Serializable {
     }
 
     public void renderedBuscar(Usuario usuario) {
-        int tienePermiso = usuarioDao.tienePermiso(usuario, "buscar_docente");
+        int tienePermiso = usuarioService.tienePermiso(usuario, "buscar_docente");
         if (tienePermiso == 1) {
             sessionUsuarioCarrera.setRenderedBuscar(true);
             return;
@@ -123,9 +122,9 @@ public class AdministrarUsuarioCarrera implements Serializable {
         try {
             FacesContext facesContext = FacesContext.getCurrentInstance();
             ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            int tienePermiso = usuarioDao.tienePermiso(sessionUsuario.getUsuario(), "editar_usuario_carrera");
+            int tienePermiso = usuarioService.tienePermiso(sessionUsuario.getUsuario(), "editar_usuario_carrera");
             if (tienePermiso == 1) {
-                usuarioCarreraAux.setCarrera(carreraDao.find(usuarioCarreraAux.getCarrera().getId()));
+                usuarioCarreraAux.setCarrera(carreraService.find(usuarioCarreraAux.getCarrera().getId()));
                 sessionUsuarioCarrera.setUsuarioCarreraDTO(usuarioCarreraAux);
                 navegacion = "pretty:editarUsuarioCarrera";
             } else {
@@ -148,7 +147,7 @@ public class AdministrarUsuarioCarrera implements Serializable {
             sessionUsuarioCarrera.getFilterUsuarioCarrerasDTO().clear();
             FacesContext facesContext = FacesContext.getCurrentInstance();
             ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-            int tienePermiso = usuarioDao.tienePermiso(sessionUsuario.getUsuario(), "buscar_usuario_carrera");
+            int tienePermiso = usuarioService.tienePermiso(sessionUsuario.getUsuario(), "buscar_usuario_carrera");
             if (tienePermiso == 1) {
                 UsuarioCarrera usuarioCarrera = new UsuarioCarrera();
                 usuarioCarrera.setUsuarioId(sessionUsuario.getUsuario().getId());
@@ -157,8 +156,8 @@ public class AdministrarUsuarioCarrera implements Serializable {
                     return;
                 }
                 for (UsuarioCarrera uc : usuarioCarreras) {
-                    UsuarioCarreraDTO usuarioCarreraAux = new UsuarioCarreraDTO(uc, usuarioDao.find(uc.getUsuarioId()),
-                            carreraDao.find(uc.getCarreraId()));
+                    UsuarioCarreraDTO usuarioCarreraAux = new UsuarioCarreraDTO(uc, usuarioService.buscarPorId(new Usuario(uc.getUsuarioId())),
+                            carreraService.find(uc.getCarreraId()));
                     sessionUsuarioCarrera.getUsuarioCarrerasDTOS().add(usuarioCarreraAux);
                 }
                 sessionUsuarioCarrera.setFilterUsuarioCarrerasDTO(sessionUsuarioCarrera.getUsuarioCarrerasDTOS());
@@ -241,7 +240,7 @@ public class AdministrarUsuarioCarrera implements Serializable {
                 configuracionCarrera4.setTipo("numerico");
                 configuracionCarreraService.guardar(configuracionCarrera4);
             }
-            carreraDao.edit(sessionUsuarioCarrera.getUsuarioCarreraDTO().getCarrera());
+            carreraService.edit(sessionUsuarioCarrera.getUsuarioCarreraDTO().getCarrera());
             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.carrera") + " "
                     + bundle.getString("lbl.msm_editar"), "");
             FacesContext.getCurrentInstance().addMessage(null, message);
@@ -271,13 +270,13 @@ public class AdministrarUsuarioCarrera implements Serializable {
     private void listasEstudiantes() {
         this.sessionUsuarioCarrera.getEstudiantesCarreraDTO().clear();
         for (Carrera carrera : sessionUsuarioCarrera.getCarreras()) {
-            List<EstudianteCarrera> estudiantesCarreras = estudianteCarreraDao.buscar(new EstudianteCarrera(carrera, null, null, null));
+            List<EstudianteCarrera> estudiantesCarreras = estudianteCarreraService.buscar(new EstudianteCarrera(carrera, null, null, null));
             if (estudiantesCarreras.isEmpty()) {
                 continue;
             }
             for (EstudianteCarrera estudianteCarrera : estudiantesCarreras) {
                 EstudianteCarreraDTO estudianteCarreraDTO = new EstudianteCarreraDTO(estudianteCarrera,
-                        personaDao.find(estudianteCarrera.getEstudianteId().getId()), aspiranteService.buscarPorId(estudianteCarrera.getId()));
+                        personaService.buscarPorId(new Persona(estudianteCarrera.getEstudianteId().getId())), aspiranteService.buscarPorId(estudianteCarrera.getId()));
                 sessionUsuarioCarrera.getEstudiantesCarreraDTO().add(estudianteCarreraDTO);
             }
         }
@@ -289,13 +288,13 @@ public class AdministrarUsuarioCarrera implements Serializable {
     private void listasDocentes() {
         this.sessionUsuarioCarrera.getDocentesCarreraDTO().clear();
         for (Carrera carrera : sessionUsuarioCarrera.getCarreras()) {
-            List<DocenteCarrera> docenteCarreras = docenteCarreraDao.buscar(new DocenteCarrera(null, null, carrera, null));
+            List<DocenteCarrera> docenteCarreras = docenteCarreraService.buscar(new DocenteCarrera(null, null, carrera, null));
             if (docenteCarreras.isEmpty()) {
                 continue;
             }
             for (DocenteCarrera docenteCarrera : docenteCarreras) {
                 DocenteCarreraDTO docenteCarreraDTO = new DocenteCarreraDTO(docenteCarrera,
-                        personaDao.find(docenteCarrera.getDocenteId().getId()), directorDao.find(docenteCarrera.getId()));
+                        personaService.buscarPorId(new Persona(docenteCarrera.getDocenteId().getId())), directorService.buscarPorId(new Director(docenteCarrera.getId())));
                 sessionUsuarioCarrera.getDocentesCarreraDTO().add(docenteCarreraDTO);
             }
         }
@@ -311,7 +310,7 @@ public class AdministrarUsuarioCarrera implements Serializable {
             return;
         }
         for (UsuarioCarrera usuarioCarrera : usuarioCarreras) {
-            sessionUsuarioCarrera.getCarreras().add(carreraDao.find(usuarioCarrera.getCarreraId()));
+            sessionUsuarioCarrera.getCarreras().add(carreraService.find(usuarioCarrera.getCarreraId()));
         }
     }
 }

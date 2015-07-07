@@ -25,4 +25,8 @@ public interface PersonaService {
     Persona buscarPorId(final Persona persona);
 
     List<Persona> buscar(final Persona persona);
+
+    Boolean esUnico(String numeroIdentificacion, Long id);
+
+    Persona buscarPorNumeroIdentificacion(String numeroIdentificacion);
 }

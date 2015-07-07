@@ -109,4 +109,9 @@ public class LineaInvestigacionServiceImplement implements LineaInvestigacionSer
         return this.lineaInvestigacionDao.find(lineaInvestigacion.getId());
     }
 
+    @Override
+    public void actualizar(final LineaInvestigacion lineaInvestigacion) {
+        this.lineaInvestigacionDao.edit(lineaInvestigacion);
+    }
+
 }

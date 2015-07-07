@@ -82,17 +82,17 @@ public class DirectorProyectoController implements Serializable {
     private SessionRenuncia sessionRenuncia;
     //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="SERVICIOS">
-    @EJB
+    @EJB(lookup = "java:global/SeguridadService/UsuarioServiceImplement!org.jlmallas.seguridad.service.UsuarioService")
     private UsuarioService usuarioService;
-    @EJB
+    @EJB(lookup = "java:global/ComunService/ConfiguracionServiceImplement!com.jlmallas.comun.service.ConfiguracionService")
     private ConfiguracionService configuracionService;
-    @EJB
+    @EJB(lookup = "java:global/ComunService/ItemServiceImplement!com.jlmallas.comun.service.ItemService")
     private ItemService itemService;
-    @EJB
+    @EJB(lookup = "java:global/ComunService/DocumentoServiceImplement!com.jlmallas.comun.service.DocumentoService")
     private DocumentoService documentoService;
-    @EJB
+    @EJB(lookup = "java:global/SigettService/DocumentoCarreraServiceImplement!edu.unl.sigett.service.DocumentoCarreraService")
     private DocumentoCarreraService documentoCarreraService;
-    @EJB
+    @EJB(lookup = "java:global/SigettService/ConfiguracionCarreraServiceImplement!edu.unl.sigett.service.ConfiguracionCarreraService")
     private ConfiguracionCarreraService configuracionCarreraService;
     //</editor-fold>
     private static final Logger LOG = Logger.getLogger(DirectorProyectoController.class.getName());
@@ -297,8 +297,8 @@ public class DirectorProyectoController implements Serializable {
                         PropertiesFileEnum.CONTENIDOREPORTE, "oficio") + " " + carrera.getSigla() + "-" + cabeceraController.getValueFromProperties(
                         PropertiesFileEnum.CONTENIDOREPORTE, "sigla_institucion"), carrera.getLugar(), cabeceraController.getUtilService().formatoFecha(
                         fechaActual.getTime(), "EEEEE dd MMMMM yyyy"), numeracion, cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "docente_carrera") + " "
-                + carrera.getNombre(),directorProyectoDM.getDirectorProyectoDTO().getDirectorDTO().getDocenteCarrera().getDocenteId().getTituloDocenteId().getTituloId().getAbreviacion() + "<br/>"
-                + directorProyectoDM.getDirectorProyectoDTO().getDirectorDTO().getPersona().getNombres() + " " +directorProyectoDM.getDirectorProyectoDTO().getDirectorDTO().getPersona().getApellidos(), cabeceraController.getValueFromProperties(
+                + carrera.getNombre(), directorProyectoDM.getDirectorProyectoDTO().getDirectorDTO().getDocenteCarrera().getDocenteId().getTituloDocenteId().getTituloId().getAbreviacion() + "<br/>"
+                + directorProyectoDM.getDirectorProyectoDTO().getDirectorDTO().getPersona().getNombres() + " " + directorProyectoDM.getDirectorProyectoDTO().getDirectorDTO().getPersona().getApellidos(), cabeceraController.getValueFromProperties(
                         PropertiesFileEnum.CONTENIDOREPORTE, "coordinador_carrera") + " " + carrera.getNombre(), sessionProyecto.getCoordinadorPeriodoDTOCarreraSeleccionada().getDocente().getTituloDocenteId().
                 getTituloId().getAbreviacion() + "<br/>" + sessionProyecto.getCoordinadorPeriodoDTOCarreraSeleccionada().getPersona().getNombres() + " " + sessionProyecto.getCoordinadorPeriodoDTOCarreraSeleccionada().getPersona().getApellidos(),
                 generarCuerpoOficio(directorProyectoDM.getDirectorProyectoDTO()), "", "", cabeceraController.getValueFromProperties(
@@ -387,13 +387,13 @@ public class DirectorProyectoController implements Serializable {
             return;
         }
         String ruta = configuracionService.buscar(new Configuracion(ConfiguracionEnum.RUTAFEPRESENTACION.getTipo())).get(0).getValor() + "/fePertinencia"
-                +directorProyectoDM.getDirectorProyectoDTO().getDirectorProyecto().getId() + ".pdf";
+                + directorProyectoDM.getDirectorProyectoDTO().getDirectorProyecto().getId() + ".pdf";
         Documento documento = new Documento(null, ruta, itemService.buscarPorCatalogoCodigo(CatalogoEnum.FEPRESENTACION.getTipo(),
                 CatalogoDocumentoCarreraEnum.DIRECTORPROYECTO.getTipo()).getId(), Double.parseDouble(resultado.length + ""), fechaActual.getTime(),
                 resultado, null, "pdf");
         documentoService.guardar(documento);
         documentoCarreraDM.setDocumentoCarreraDTO(new DocumentoCarreraDTO(new DocumentoCarrera("", documento.getId(), Boolean.TRUE,
-                carrera.getId(),directorProyectoDM.getDirectorProyectoDTO().getDirectorProyecto().getId()), documento, carrera));
+                carrera.getId(), directorProyectoDM.getDirectorProyectoDTO().getDirectorProyecto().getId()), documento, carrera));
         documentoCarreraDM.getDocumentoCarreraDTO().getDocumentoCarrera().setNumeracion("");
         documentoCarreraService.guardar(documentoCarreraDM.getDocumentoCarreraDTO().getDocumentoCarrera());
         directorProyectoDM.setRenderedMediaFePresentacion(Boolean.TRUE);

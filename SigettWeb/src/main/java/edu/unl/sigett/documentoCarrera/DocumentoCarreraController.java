@@ -35,11 +35,7 @@ public class DocumentoCarreraController implements Serializable {
     private CabeceraController cabeceraController;
     //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="SERVICIOS">
-    @EJB
-    private DocumentoCarreraService documentoCarreraService;
-    @EJB
-    private ItemService itemService;
-    @EJB
+    @EJB(lookup = "java:global/ComunService/DocumentoServiceImplement!com.jlmallas.comun.service.DocumentoService")
     private DocumentoService documentoService;
 
     //</editor-fold>

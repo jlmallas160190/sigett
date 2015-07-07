@@ -15,7 +15,6 @@ import edu.unl.sigett.entity.DocumentoActividad;
 import edu.unl.sigett.enumeration.CatalogoDocumentoActividad;
 import edu.unl.sigett.service.DocumentoActividadService;
 import edu.unl.sigett.util.CabeceraController;
-import java.io.File;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
@@ -44,11 +43,11 @@ public class DocumentoActividadController implements Serializable {
     private CabeceraController cabeceraController;
     //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="SERVICIOS">
-    @EJB
+    @EJB(lookup = "java:global/SigettService/DocumentoActividadServiceImplement!edu.unl.sigett.service.DocumentoActividadService")
     private DocumentoActividadService documentoActividadService;
-    @EJB
+    @EJB(lookup = "java:global/ComunService/DocumentoServiceImplement!com.jlmallas.comun.service.DocumentoService")
     private DocumentoService documentoService;
-    @EJB
+    @EJB(lookup = "java:global/ComunService/ItemServiceImplement!com.jlmallas.comun.service.ItemService")
     private ItemService itemService;
 
     public DocumentoActividadController() {

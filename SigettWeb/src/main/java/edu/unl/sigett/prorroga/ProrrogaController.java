@@ -73,21 +73,21 @@ public class ProrrogaController implements Serializable {
     private DocumentoCarreraDM documentoCarreraDM;
     //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="SERVICIOS">
-    @EJB
+    @EJB(lookup = "java:global/SigettService/ProrrogaServiceImplement!edu.unl.sigett.service.ProrrogaService")
     private ProrrogaService prorrogaService;
-    @EJB
+    @EJB(lookup = "java:global/SigettService/CronogramaServiceImplement!edu.unl.sigett.service.CronogramaService")
     private CronogramaService cronogramaService;
-    @EJB
+    @EJB(lookup = "java:global/ComunService/ConfiguracionServiceImplement!com.jlmallas.comun.service.ConfiguracionService")
     private ConfiguracionService configuracionService;
-    @EJB
+    @EJB(lookup = "java:global/SeguridadService/UsuarioServiceImplement!org.jlmallas.seguridad.service.UsuarioService")
     private UsuarioService usuarioService;
-    @EJB
+    @EJB(lookup = "java:global/ComunService/ItemServiceImplement!com.jlmallas.comun.service.ItemService")
     private ItemService itemService;
-    @EJB
+    @EJB(lookup = "java:global/ComunService/DocumentoServiceImplement!com.jlmallas.comun.service.DocumentoService")
     private DocumentoService documentoService;
-    @EJB
+    @EJB(lookup = "java:global/SigettService/DocumentoCarreraServiceImplement!edu.unl.sigett.service.DocumentoCarreraService")
     private DocumentoCarreraService documentoCarreraService;
-    @EJB
+    @EJB(lookup = "java:global/SigettService/ConfiguracionCarreraServiceImplement!edu.unl.sigett.service.ConfiguracionCarreraService")
     private ConfiguracionCarreraService configuracionCarreraService;
 
     //</editor-fold>

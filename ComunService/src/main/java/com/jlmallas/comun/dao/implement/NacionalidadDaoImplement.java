@@ -7,7 +7,7 @@ package com.jlmallas.comun.dao.implement;
 
 import com.jlmallas.comun.entity.Nacionalidad;
 import com.jlmallas.comun.dao.AbstractDao;
-import com.jlmallas.comun.dao.NacionalidadFacadeLocal;
+import com.jlmallas.comun.dao.NacionalidadDao;
 import javax.ejb.Stateless;
 
 /**
@@ -15,9 +15,9 @@ import javax.ejb.Stateless;
  * @author jorge-luis
  */
 @Stateless
-public class NacionalidadFacade extends AbstractDao<Nacionalidad> implements NacionalidadFacadeLocal {
+public class NacionalidadDaoImplement extends AbstractDao<Nacionalidad> implements NacionalidadDao {
 
-    public NacionalidadFacade() {
+    public NacionalidadDaoImplement() {
         super(Nacionalidad.class);
     }
 
