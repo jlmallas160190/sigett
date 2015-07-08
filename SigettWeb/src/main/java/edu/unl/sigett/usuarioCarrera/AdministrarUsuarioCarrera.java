@@ -47,7 +47,7 @@ import org.primefaces.event.FileUploadEvent;
 @URLMappings(mappings = {
     @URLMapping(
             id = "editarUsuarioCarrera",
-            pattern = "/editarUsuarioCarrera/#{sessionUsuarioCarrera.usuarioCarreraDTO.carrera.id}",
+            pattern = "/editarUsuarioCarrera/",
             viewId = "/faces/pages/sigett/usuarioCarrera/editarUsuarioCarrera.xhtml"
     ),
     @URLMapping(
@@ -68,19 +68,19 @@ public class AdministrarUsuarioCarrera implements Serializable {
     private UsuarioService usuarioService;
     @EJB(lookup = "java:global/SigettService/UsuarioCarreraDaoImplement!edu.unl.sigett.dao.UsuarioCarreraDao")
     private UsuarioCarreraDao usuarioCarreraDao;
-    @EJB(lookup = "java:global/ComunService/CarreraService Implement!com.jlmallas.comun.service.CarreraService ")
+    @EJB(lookup = "java:global/AcademicoService/CarreraServiceImplement!edu.jlmallas.academico.service.CarreraService")
     private CarreraService carreraService;
-     @EJB(lookup = "java:global/SigettService/ConfiguracionCarreraServiceImplement!edu.unl.sigett.service.ConfiguracionCarreraService")
+    @EJB(lookup = "java:global/SigettService/ConfiguracionCarreraServiceImplement!edu.unl.sigett.service.ConfiguracionCarreraService")
     private ConfiguracionCarreraService configuracionCarreraService;
-   @EJB(lookup = "java:global/SigettService/EstudianteCarreraServiceImplement!edu.unl.sigett.service.EstudianteCarreraService")
+    @EJB(lookup = "java:global/AcademicoService/EstudianteCarreraServiceImplement!edu.jlmallas.academico.service.EstudianteCarreraService")
     private EstudianteCarreraService estudianteCarreraService;
     @EJB(lookup = "java:global/ComunService/PersonaServiceImplement!com.jlmallas.comun.service.PersonaService")
     private PersonaService personaService;
-  @EJB(lookup = "java:global/SigettService/AspiranteServiceImplement!edu.unl.sigett.service.AspiranteService")
+    @EJB(lookup = "java:global/SigettService/AspiranteServiceImplement!edu.unl.sigett.service.AspiranteService")
     private AspiranteService aspiranteService;
     @EJB(lookup = "java:global/AcademicoService/DocenteCarreraServiceImplement!edu.jlmallas.academico.service.DocenteCarreraService")
     private DocenteCarreraService docenteCarreraService;
-   @EJB(lookup = "java:global/SigettService/DirectorServiceImplement!edu.unl.sigett.service.DirectorService")
+    @EJB(lookup = "java:global/SigettService/DirectorServiceImplement!edu.unl.sigett.service.DirectorService")
     private DirectorService directorService;
     //</editor-fold>
 

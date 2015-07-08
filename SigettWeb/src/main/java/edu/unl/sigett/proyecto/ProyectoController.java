@@ -134,15 +134,15 @@ public class ProyectoController implements Serializable {
     //<editor-fold defaultstate="collapsed" desc="SERVICIOS">
     @EJB(lookup = "java:global/SigettService/ProyectoServiceImplement!edu.unl.sigett.service.ProyectoService")
     private ProyectoService proyectoService;
- @EJB(lookup = "java:global/SigettService/ProyectoCarreraOfertaServiceImplement!edu.unl.sigett.service.ProyectoCarreraOfertaService")
+    @EJB(lookup = "java:global/SigettService/ProyectoCarreraOfertaServiceImplement!edu.unl.sigett.service.ProyectoCarreraOfertaService")
     private ProyectoCarreraOfertaService proyectoCarreraOfertaService;
     @EJB(lookup = "java:global/AcademicoService/OfertaAcademicaServiceImplement!edu.jlmallas.academico.service.OfertaAcademicaService")
     private OfertaAcademicaService ofertaAcademicaService;
     @EJB(lookup = "java:global/SeguridadService/LogDaoImplement!org.jlmallas.seguridad.dao.LogDao")
     private LogDao logDao;
-  @EJB(lookup = "java:global/SigettService/LineaInvestigacionProyectoServiceImplement!edu.unl.sigett.service.LineaInvestigacionProyectoService")
+    @EJB(lookup = "java:global/SigettService/LineaInvestigacionProyectoServiceImplement!edu.unl.sigett.service.LineaInvestigacionProyectoService")
     private LineaInvestigacionProyectoService lineaInvestigacionProyectoService;
-     @EJB(lookup = "java:global/SigettService/ConfiguracionProyectoServiceImplement!edu.unl.sigett.service.ConfiguracionProyectoService")
+    @EJB(lookup = "java:global/SigettService/ConfiguracionProyectoServiceImplement!edu.unl.sigett.service.ConfiguracionProyectoService")
     private ConfiguracionProyectoService configuracionProyectoService;
     @EJB(lookup = "java:global/AcademicoService/CarreraServiceImplement!edu.jlmallas.academico.service.CarreraService")
     private CarreraService carreraService;
@@ -152,31 +152,31 @@ public class ProyectoController implements Serializable {
     private AutorProyectoService autorProyectoService;
     @EJB(lookup = "java:global/ComunService/ItemServiceImplement!com.jlmallas.comun.service.ItemService")
     private ItemService itemService;
-     @EJB(lookup = "java:global/SigettService/LineaInvestigacionServiceImplement!edu.unl.sigett.service.LineaInvestigacionService")
+    @EJB(lookup = "java:global/SigettService/LineaInvestigacionServiceImplement!edu.unl.sigett.service.LineaInvestigacionService")
     private LineaInvestigacionService lineaInvestigacionService;
-    @EJB(lookup = "java:global/SigettService/EstudianteCarreraServiceImplement!edu.unl.sigett.service.EstudianteCarreraService")
+    @EJB(lookup = "java:global/AcademicoService/EstudianteCarreraServiceImplement!edu.jlmallas.academico.service.EstudianteCarreraService")
     private EstudianteCarreraService estudianteCarreraService;
     @EJB(lookup = "java:global/SeguridadService/UsuarioServiceImplement!org.jlmallas.seguridad.service.UsuarioService")
     private UsuarioService usuarioService;
-     @EJB(lookup = "java:global/SigettService/ConfiguracionCarreraServiceImplement!edu.unl.sigett.service.ConfiguracionCarreraService")
+    @EJB(lookup = "java:global/SigettService/ConfiguracionCarreraServiceImplement!edu.unl.sigett.service.ConfiguracionCarreraService")
     private ConfiguracionCarreraService configuracionCarreraService;
-     @EJB(lookup = "java:global/SigettService/DocenteProyectoServiceImplement!edu.unl.sigett.service.DocenteProyectoService")
+    @EJB(lookup = "java:global/SigettService/DocenteProyectoServiceImplement!edu.unl.sigett.service.DocenteProyectoService")
     private DocenteProyectoService docenteProyectoService;
-  @EJB(lookup = "java:global/SigettService/DirectorProyectoServiceImplement!edu.unl.sigett.service.DirectorProyectoService")
+    @EJB(lookup = "java:global/SigettService/DirectorProyectoServiceImplement!edu.unl.sigett.service.DirectorProyectoService")
     private DirectorProyectoService directorProyectoService;
-   @EJB(lookup = "java:global/AcademicoService/DocenteCarreraServiceImplement!edu.jlmallas.academico.service.DocenteCarreraService")
+    @EJB(lookup = "java:global/AcademicoService/DocenteCarreraServiceImplement!edu.jlmallas.academico.service.DocenteCarreraService")
     private DocenteCarreraService docenteCarreraService;
-   @EJB(lookup = "java:global/SigettService/TemaProyectoServiceImplement!edu.unl.sigett.service.TemaProyectoService")
+    @EJB(lookup = "java:global/SigettService/TemaProyectoServiceImplement!edu.unl.sigett.service.TemaProyectoService")
     private TemaProyectoService temaProyectoService;
-   @EJB(lookup = "java:global/SigettService/DocumentoProyectoServiceImplement!edu.unl.sigett.service.DocumentoProyectoService")
+    @EJB(lookup = "java:global/SigettService/DocumentoProyectoServiceImplement!edu.unl.sigett.service.DocumentoProyectoService")
     private DocumentoProyectoService documentoProyectoService;
-   @EJB(lookup = "java:global/SigettService/CronogramaServiceImplement!edu.unl.sigett.service.CronogramaService")
+    @EJB(lookup = "java:global/SigettService/CronogramaServiceImplement!edu.unl.sigett.service.CronogramaService")
     private CronogramaService cronogramaService;
-  @EJB(lookup = "java:global/SigettService/TemaServiceImplement!edu.unl.sigett.service.TemaService")
+    @EJB(lookup = "java:global/SigettService/TemaServiceImplement!edu.unl.sigett.service.TemaService")
     private TemaService temaService;
-  @EJB(lookup = "java:global/ComunService/DocumentoServiceImplement!com.jlmallas.comun.service.DocumentoService")
+    @EJB(lookup = "java:global/ComunService/DocumentoServiceImplement!com.jlmallas.comun.service.DocumentoService")
     private DocumentoService documentoService;
-   @EJB(lookup = "java:global/ComunService/ConfiguracionServiceImplement!com.jlmallas.comun.service.ConfiguracionService")
+    @EJB(lookup = "java:global/ComunService/ConfiguracionServiceImplement!com.jlmallas.comun.service.ConfiguracionService")
     private ConfiguracionService configuracionService;
     @EJB(lookup = "java:global/AcademicoService/CoordinadorPeriodoServiceImplement!edu.jlmallas.academico.service.CoordinadorPeriodoService")
     private CoordinadorPeriodoService coordinadorPeriodoService;

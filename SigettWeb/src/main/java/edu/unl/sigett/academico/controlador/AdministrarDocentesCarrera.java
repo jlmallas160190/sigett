@@ -126,7 +126,7 @@ public class AdministrarDocentesCarrera implements Serializable {
     private RolDao rolDao;
     @EJB(lookup = "java:global/SeguridadService/RolUsuarioDaoImplement!org.jlmallas.seguridad.dao.RolUsuarioDao")
     private RolUsuarioDao rolUsuarioDao;
-    @EJB(lookup = "java:global/AcademicoService/DocenteCarreraServiceImplement!edu.jlmallas.academico.dao.DocenteCarreraService")
+    @EJB(lookup = "java:global/AcademicoService/DocenteCarreraServiceImplement!edu.jlmallas.academico.service.DocenteCarreraService")
     private DocenteCarreraService docenteCarreraService;
     @EJB(lookup = "java:global/AcademicoService/DocenteServiceImplement!edu.jlmallas.academico.service.DocenteService")
     private DocenteService docenteService;
@@ -150,7 +150,7 @@ public class AdministrarDocentesCarrera implements Serializable {
     private ItemService itemService;
     @EJB(lookup = "java:global/ComunService/CatalogoServiceImplement!com.jlmallas.comun.service.CatalogoService")
     private CatalogoService catalogoService;
-    @EJB(lookup = "java:global/SigettService/LineaInvestigacionServiceImplement!edu.unl.sigett.service.LineaInvestigacionServic")
+    @EJB(lookup = "java:global/SigettService/LineaInvestigacionServiceImplement!edu.unl.sigett.service.LineaInvestigacionService")
     private LineaInvestigacionService lineaInvestigacionService;
     @EJB(lookup = "java:global/ComunService/ConfiguracionServiceImplement!com.jlmallas.comun.service.ConfiguracionService")
     private ConfiguracionService configuracionService;

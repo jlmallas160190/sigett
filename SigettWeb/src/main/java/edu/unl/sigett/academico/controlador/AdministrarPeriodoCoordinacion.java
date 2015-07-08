@@ -34,7 +34,7 @@ import org.jlmallas.seguridad.service.UsuarioService;
 @URLMappings(mappings = {
     @URLMapping(
             id = "editarPeriodoCoordinacion",
-            pattern = "/editarPeriodoCoordinacion/#{sessionPeriodoCoordinacion.periodoCoordinacion.id}",
+            pattern = "/editarPeriodoCoordinacion/",
             viewId = "/faces/pages/academico/periodosCoordinacion/editarPeriodoCoordinacion.xhtml"
     ),
     @URLMapping(
@@ -60,7 +60,7 @@ public class AdministrarPeriodoCoordinacion implements Serializable {
     //<editor-fold defaultstate="collapsed" desc="SERVICIOS"> 
     @EJB(lookup = "java:global/SeguridadService/UsuarioServiceImplement!org.jlmallas.seguridad.service.UsuarioService")
     private UsuarioService usuarioService;
-    @EJB(lookup = "java:global/SigettService/PeriodoCoordinacionServiceImplement!edu.unl.sigett.service.PeriodoCoordinacionService")
+    @EJB(lookup = "java:global/AcademicoService/PeriodoCoordinacionServiceImplement!edu.jlmallas.academico.service.PeriodoCoordinacionService")
     private PeriodoCoordinacionService periodoCoordinacionService;
     //</editor-fold>
 
@@ -167,7 +167,7 @@ public class AdministrarPeriodoCoordinacion implements Serializable {
                         navegacion = "pretty:periodosCoordinacion";
                     } else {
                         if (param.equalsIgnoreCase("grabar-editar")) {
-                            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.periodo") + " " + bundle.getString("lbl.msm_grabar"), "");
+                            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.periodoAcademico") + " " + bundle.getString("lbl.msm_grabar"), "");
                             FacesContext.getCurrentInstance().addMessage(null, message);
                         }
                     }
@@ -181,10 +181,10 @@ public class AdministrarPeriodoCoordinacion implements Serializable {
                     periodoCoordinacionService.actualizar(periodoCoordinacion);
                     if (param.equalsIgnoreCase("grabar")) {
                         sessionPeriodoCoordinacion.setPeriodoCoordinacion(new PeriodoCoordinacion());
-                        navegacion = "buscarPeriodosCoordinacion";
+                        navegacion = "pretty:periodosCoordinacion";
                     } else {
                         if (param.equalsIgnoreCase("grabar-editar")) {
-                            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.periodo") + " " + bundle.getString("lbl.msm_editar"), "");
+                            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.periodoAcademico") + " " + bundle.getString("lbl.msm_editar"), "");
                             FacesContext.getCurrentInstance().addMessage(null, message);
                         }
                     }

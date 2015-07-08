@@ -34,12 +34,6 @@ public class DocumentoProyectoController implements Serializable {
     @Inject
     private CabeceraController cabeceraController;
     //</editor-fold>
-    //<editor-fold defaultstate="collapsed" desc="SERVICIOS">
-    @EJB
-    private ItemService itemService;
-    //</editor-fold>
-    private static final Logger LOG = Logger.getLogger(DocumentoProyectoController.class.getName());
-
     public DocumentoProyectoController() {
     }
 

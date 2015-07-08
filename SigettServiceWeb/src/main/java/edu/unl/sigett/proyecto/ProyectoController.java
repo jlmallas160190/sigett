@@ -16,8 +16,6 @@ import com.ocpsoft.pretty.faces.annotation.URLMapping;
 import com.ocpsoft.pretty.faces.annotation.URLMappings;
 import edu.jlmallas.academico.entity.Area;
 import edu.jlmallas.academico.entity.Carrera;
-import edu.jlmallas.academico.entity.CoordinadorPeriodo;
-import edu.jlmallas.academico.entity.Docente;
 import edu.jlmallas.academico.entity.DocenteCarrera;
 import edu.jlmallas.academico.entity.EstudianteCarrera;
 import edu.jlmallas.academico.entity.OfertaAcademica;
@@ -74,31 +72,31 @@ public class ProyectoController implements Serializable {
     private SessionProyecto sessionProyecto;
     @Inject
     private CabeceraController cabeceraController;
-    @EJB
+    @EJB(lookup = "java:global/SigettService/ProyectoServiceImplement!edu.unl.sigett.service.ProyectoService")
     private ProyectoService proyectoService;
-    @EJB
+    @EJB(lookup = "java:global/ComunService/ItemServiceImplement!com.jlmallas.comun.service.ItemService")
     private ItemService itemService;
-    @EJB
+    @EJB(lookup = "java:global/SigettService/ProyectoCarreraOfertaServiceImplement!edu.unl.sigett.service.ProyectoCarreraOfertaService")
     private ProyectoCarreraOfertaService proyectoCarreraOfertaService;
-    @EJB
+    @EJB(lookup = "java:global/ComunService/DocumentoServiceImplement!com.jlmallas.comun.service.DocumentoService")
     private DocumentoService documentoService;
-    @EJB
+    @EJB(lookup = "java:global/SigettService/DocumentoProyectoServiceImplement!edu.unl.sigett.service.DocumentoProyectoService")
     private DocumentoProyectoService documentoProyectoService;
-    @EJB
+    @EJB(lookup = "java:global/AcademicoService/OfertaAcademicaServiceImplement!edu.jlmallas.academico.service.OfertaAcademicaService")
     private OfertaAcademicaService ofertaAcademicaService;
-    @EJB
+    @EJB(lookup = "java:global/AcademicoService/EstudianteCarreraServiceImplement!edu.jlmallas.academico.service.EstudianteCarreraService")
     private EstudianteCarreraService estudianteCarreraService;
-    @EJB
+    @EJB(lookup = "java:global/ComunService/PersonaServiceImplement!com.jlmallas.comun.service.PersonaService")
     private PersonaService personaService;
-    @EJB
+    @EJB(lookup = "java:global/AcademicoService/DocenteCarreraServiceImplement!edu.jlmallas.academico.service.DocenteCarreraService")
     private DocenteCarreraService docenteCarreraService;
-    @EJB
+    @EJB(lookup = "java:global/AcademicoService/CarreraServiceImplement!edu.jlmallas.academico.service.CarreraService")
     private CarreraService carreraService;
-    @EJB
+    @EJB(lookup = "java:global/AcademicoService/AreaServiceImplement!edu.jlmallas.academico.service.AreaService")
     private AreaService areaService;
-    @EJB
+    @EJB(lookup = "java:global/SigettService/AutorProyectoServiceImplement!edu.unl.sigett.service.AutorProyectoService")
     private AutorProyectoService autorProyectoService;
-    @EJB
+    @EJB(lookup = "java:global/SigettService/DirectorProyectoServiceImplement!edu.unl.sigett.service.DirectorProyectoService")
     private DirectorProyectoService directorProyectoService;
 
     private static final Logger LOG = Logger.getLogger(ProyectoController.class.getName());

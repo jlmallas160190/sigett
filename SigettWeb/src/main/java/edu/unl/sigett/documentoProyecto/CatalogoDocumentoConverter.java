@@ -21,18 +21,18 @@ import javax.faces.convert.FacesConverter;
 @FacesConverter("catalogoDocumentoConverter")
 public class CatalogoDocumentoConverter implements Converter {
 
-    @EJB
+    @EJB(lookup = "java:global/ComunService/ItemServiceImplement!com.jlmallas.comun.service.ItemService")
     ItemService itemService;
 
     @Override
     public Object getAsObject(FacesContext context, UIComponent component, String value) {
-        return itemService.buscarPorCatalogoCodigo(CatalogoEnum.CATALOGODOCUMENTOPROYECTO.getTipo(),value);
+        return itemService.buscarPorCatalogoCodigo(CatalogoEnum.CATALOGODOCUMENTOPROYECTO.getTipo(), value);
     }
 
     @Override
     public String getAsString(FacesContext context, UIComponent component, Object value) {
-        Item item=((Item) value);
-        if(item==null){
+        Item item = ((Item) value);
+        if (item == null) {
             return "";
         }
         return item.getCodigo();

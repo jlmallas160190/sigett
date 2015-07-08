@@ -5,16 +5,16 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
     <body>
-        <p:dataScroller value="#{sessionConfiguracionCarrera.configuracionCarreras}"
-                        id="dgConfiguraciones" var="configuracion"  buffer="10" mode="document"  chunkSize="2">
-            <p:fieldset toggleable="true" style="height:100%" legend="#{configuracion.nombre} (#{configuracion.codigo})">
+        <p:dataGrid value="#{sessionConfiguracionCarrera.configuracionCarreras}"
+                    id="dgConfiguraciones" var="configuracion" rows="6" columns="1" >
+            <p:panel toggleable="true" header="#{configuracion.nombre} (#{configuracion.codigo})">
                 <h:panelGrid rendered="#{sessionConfiguracionCarrera.renderedEditar}" styleClass="panelgrid" rowClasses="rowpanelgrid"
-                             columnClasses="col-sm-1,col-sm-9,col-sm-1-col-sm-1" columns="4">
+                             columnClasses="col-sm-1,col-sm-9,col-sm-1-col-sm-1"  columns="4">
                     <h:outputLabel value="#{msg['lbl.valor']}:"/>
-                    <p:commandButton rendered="#{configuracion.tipo=='boton'}" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" 
-                                     icon="ui-icon-refresh" update="@form" process="@this" value="#{configuracion.observacion}" 
+                    <p:commandButton rendered="#{configuracion.tipo=='BOTON'}" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" 
+                                     icon="ui-icon-refresh" update="@form"  value="#{configuracion.observacion}" 
                                      action="#{administrarConfiguracionCarrera.seleccionaOfertaAcademicaActual(configuracion)}" />
-                    <p:inputText id="valor" rendered="#{configuracion.tipo=='numerico'}" value="#{configuracion.valor}">
+                    <p:inputText id="valor" rendered="#{configuracion.tipo=='NUMERICO'}" value="#{configuracion.valor}">
                         <f:validateRegex pattern="^[0-9]{1,11}$" />
                     </p:inputText>
                     <p:commandButton icon="ui-icon-disk" update="dgConfiguraciones,:contenido:msm" onstart="PF('dlgLoading').show()" 
@@ -32,8 +32,8 @@
                     <h:outputLabel value="#{msg['lbl.valor']}:"/>
                     <h:outputText value="#{configuracion.valor}"/>
                 </h:panelGrid>
-            </p:fieldset>
-        </p:dataScroller>
+            </p:panel>
+        </p:dataGrid>
     </body>
 
 </html>

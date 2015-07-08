@@ -152,23 +152,23 @@ public class AdministrarCarreras implements Serializable {
                     logFacadeLocal.create(logFacadeLocal.crearLog("Carrera", carrera.getId() + "", "CREAR", "|Nombre=" + carrera.getNombre() + "|IdSga="
                             + carrera.getIdSga() + "|Área=" + carrera.getAreaId().getId(), usuario));
                     ConfiguracionCarrera configuracionCarrera1 = new ConfiguracionCarrera(null,
-                            "Número de Módulo Aprobado por el estudiante para ser Apto a realizar un trabajo de titulación", "MA", carrera.getId(), "S/N",
+                            "Número de Módulo Aprobado por el estudiante para ser Apto a realizar un trabajo de titulación", "S/N", carrera.getId(), "MA",
                             TipoConfiguracionEnum.NUMERICO.getTipo());
                     configuracionCarreraService.guardar(configuracionCarrera1);
 
                     ConfiguracionCarrera configuracionCarrera3 = new ConfiguracionCarrera(null,
-                            "Número de Oficio", "NO", carrera.getId(), "S/N", TipoConfiguracionEnum.NUMERICO.getTipo());
+                            "Número de Oficio", "S/N", carrera.getId(), "NO", TipoConfiguracionEnum.NUMERICO.getTipo());
                     configuracionCarreraService.guardar(configuracionCarrera3);
 
                     ConfiguracionCarrera configuracionCarrera2 = new ConfiguracionCarrera(null,
-                            "Número de Módulo para ser egresado", "ME", carrera.getId(), "S/N", TipoConfiguracionEnum.NUMERICO.getTipo());
+                            "Número de Módulo para ser egresado", "S/N", carrera.getId(), "ME", TipoConfiguracionEnum.NUMERICO.getTipo());
                     configuracionCarreraService.guardar(configuracionCarrera2);
                     ConfiguracionCarrera configuracionCarrera = new ConfiguracionCarrera(null,
-                            "Id de oferta académica", "OA", carrera.getId(), "S/N", TipoConfiguracionEnum.BOTON.getTipo());
+                            "Id de oferta académica", "S/N", carrera.getId(), "OA", TipoConfiguracionEnum.BOTON.getTipo());
                     configuracionCarreraService.guardar(configuracionCarrera);
 
                     ConfiguracionCarrera configuracionCarrera4 = new ConfiguracionCarrera(null,
-                            "Número de acta", "NA", carrera.getId(), "S/N", TipoConfiguracionEnum.NUMERICO.getTipo());
+                            "Número de acta", "S/N", carrera.getId(), "NA", TipoConfiguracionEnum.NUMERICO.getTipo());
                     configuracionCarreraService.guardar(configuracionCarrera4);
                     if (param.equalsIgnoreCase("grabar")) {
                         carrera = new Carrera();
@@ -194,29 +194,29 @@ public class AdministrarCarreras implements Serializable {
                     logFacadeLocal.create(logFacadeLocal.crearLog("Carrera", carrera.getId() + "", "EDITAR", "|Nombre=" + carrera.getNombre() + "|IdSga=" + carrera.getIdSga() + "|Área=" + carrera.getAreaId().getId(), usuario));
                     if (configuracionCarreraService.buscarPrimero(new ConfiguracionCarrera(carrera.getId(), "MA")) == null) {
                         ConfiguracionCarrera configuracionCarrera1 = new ConfiguracionCarrera(null,
-                                "Número de Módulo Aprobado por el estudiante para ser Apto a realizar un trabajo de titulación", "MA", carrera.getId(), "S/N",
+                                "Número de Módulo Aprobado por el estudiante para ser Apto a realizar un trabajo de titulación", "S/N", carrera.getId(), "MA",
                                 TipoConfiguracionEnum.NUMERICO.getTipo());
                         configuracionCarreraService.guardar(configuracionCarrera1);
                     }
                     if (configuracionCarreraService.buscarPrimero(new ConfiguracionCarrera(carrera.getId(), "ME")) == null) {
                         ConfiguracionCarrera configuracionCarrera2 = new ConfiguracionCarrera(null,
-                                "Número de Módulo para ser egresado", "ME", carrera.getId(), "S/N", TipoConfiguracionEnum.NUMERICO.getTipo());
+                                "Número de Módulo para ser egresado", "S/N", carrera.getId(), "ME", TipoConfiguracionEnum.NUMERICO.getTipo());
                         configuracionCarreraService.guardar(configuracionCarrera2);
                     }
                     if (configuracionCarreraService.buscarPrimero(new ConfiguracionCarrera(carrera.getId(), "OA")) == null) {
                         ConfiguracionCarrera configuracionCarrera = new ConfiguracionCarrera(null,
-                                "Id de oferta académica", "OA", carrera.getId(), "S/N", TipoConfiguracionEnum.BOTON.getTipo());
+                                "Id de oferta académica", "S/N", carrera.getId(), "OA", TipoConfiguracionEnum.BOTON.getTipo());
                         configuracionCarreraService.guardar(configuracionCarrera);
                     }
                     if (configuracionCarreraService.buscarPrimero(new ConfiguracionCarrera(carrera.getId(), "NO")) == null) {
                         ConfiguracionCarrera configuracionCarrera3 = new ConfiguracionCarrera(null,
-                                "Número de Oficio", "NO", carrera.getId(), "S/N", TipoConfiguracionEnum.NUMERICO.getTipo());
+                                "Número de Oficio", "S/N", carrera.getId(), "NO", TipoConfiguracionEnum.NUMERICO.getTipo());
                         configuracionCarreraService.guardar(configuracionCarrera3);
                     }
 
                     if (configuracionCarreraService.buscarPrimero(new ConfiguracionCarrera(carrera.getId(), "NA")) == null) {
                         ConfiguracionCarrera configuracionCarrera4 = new ConfiguracionCarrera(null,
-                                "Número de acta", "NA", carrera.getId(), "S/N", TipoConfiguracionEnum.NUMERICO.getTipo());
+                                "Número de acta", "S/N", carrera.getId(), "NA", TipoConfiguracionEnum.NUMERICO.getTipo());
                         configuracionCarreraService.guardar(configuracionCarrera4);
                     }
 
@@ -313,23 +313,23 @@ public class AdministrarCarreras implements Serializable {
                 }
                 carreraService.create(carrera);
                 ConfiguracionCarrera configuracionCarrera1 = new ConfiguracionCarrera(null,
-                        "Número de Módulo Aprobado por el estudiante para ser Apto a realizar un trabajo de titulación", "MA", carrera.getId(), "S/N",
+                        "Número de Módulo Aprobado por el estudiante para ser Apto a realizar un trabajo de titulación", "S/N", carrera.getId(), "MA",
                         TipoConfiguracionEnum.NUMERICO.getTipo());
                 configuracionCarreraService.guardar(configuracionCarrera1);
 
                 ConfiguracionCarrera configuracionCarrera3 = new ConfiguracionCarrera(null,
-                        "Número de Oficio", "NO", carrera.getId(), "S/N", TipoConfiguracionEnum.NUMERICO.getTipo());
+                        "Número de Oficio", "S/N", carrera.getId(), "NO", TipoConfiguracionEnum.NUMERICO.getTipo());
                 configuracionCarreraService.guardar(configuracionCarrera3);
 
                 ConfiguracionCarrera configuracionCarrera2 = new ConfiguracionCarrera(null,
-                        "Número de Módulo para ser egresado", "ME", carrera.getId(), "S/N", TipoConfiguracionEnum.NUMERICO.getTipo());
+                        "Número de Módulo para ser egresado", "S/N", carrera.getId(), "ME", TipoConfiguracionEnum.NUMERICO.getTipo());
                 configuracionCarreraService.guardar(configuracionCarrera2);
                 ConfiguracionCarrera configuracionCarrera = new ConfiguracionCarrera(null,
-                        "Id de oferta académica", "OA", carrera.getId(), "S/N", TipoConfiguracionEnum.BOTON.getTipo());
+                        "Id de oferta académica", "S/N", carrera.getId(), "OA", TipoConfiguracionEnum.BOTON.getTipo());
                 configuracionCarreraService.guardar(configuracionCarrera);
 
                 ConfiguracionCarrera configuracionCarrera4 = new ConfiguracionCarrera(null,
-                        "Número de acta", "NA", carrera.getId(), "S/N", TipoConfiguracionEnum.NUMERICO.getTipo());
+                        "Número de acta", "S/N", carrera.getId(), "NA", TipoConfiguracionEnum.NUMERICO.getTipo());
                 configuracionCarreraService.guardar(configuracionCarrera4);
             } else {
                 if (carrera.isEsEditado()) {
@@ -344,29 +344,29 @@ public class AdministrarCarreras implements Serializable {
                     carrera.setEsEditado(false);
                     if (configuracionCarreraService.buscarPrimero(new ConfiguracionCarrera(carrera.getId(), "MA")) == null) {
                         ConfiguracionCarrera configuracionCarrera1 = new ConfiguracionCarrera(null,
-                                "Número de Módulo Aprobado por el estudiante para ser Apto a realizar un trabajo de titulación", "MA", carrera.getId(), "S/N",
+                                "Número de Módulo Aprobado por el estudiante para ser Apto a realizar un trabajo de titulación", "S/N", carrera.getId(), "MA",
                                 TipoConfiguracionEnum.NUMERICO.getTipo());
                         configuracionCarreraService.guardar(configuracionCarrera1);
                     }
                     if (configuracionCarreraService.buscarPrimero(new ConfiguracionCarrera(carrera.getId(), "ME")) == null) {
                         ConfiguracionCarrera configuracionCarrera2 = new ConfiguracionCarrera(null,
-                                "Número de Módulo para ser egresado", "ME", carrera.getId(), "S/N", TipoConfiguracionEnum.NUMERICO.getTipo());
+                                "Número de Módulo para ser egresado", "S/N", carrera.getId(), "ME", TipoConfiguracionEnum.NUMERICO.getTipo());
                         configuracionCarreraService.guardar(configuracionCarrera2);
                     }
                     if (configuracionCarreraService.buscarPrimero(new ConfiguracionCarrera(carrera.getId(), "OA")) == null) {
                         ConfiguracionCarrera configuracionCarrera = new ConfiguracionCarrera(null,
-                                "Id de oferta académica", "OA", carrera.getId(), "S/N", TipoConfiguracionEnum.BOTON.getTipo());
+                                "Id de oferta académica", "S/N", carrera.getId(), "OA", TipoConfiguracionEnum.BOTON.getTipo());
                         configuracionCarreraService.guardar(configuracionCarrera);
                     }
                     if (configuracionCarreraService.buscarPrimero(new ConfiguracionCarrera(carrera.getId(), "NO")) == null) {
                         ConfiguracionCarrera configuracionCarrera3 = new ConfiguracionCarrera(null,
-                                "Número de Oficio", "NO", carrera.getId(), "S/N", TipoConfiguracionEnum.NUMERICO.getTipo());
+                                "Número de Oficio", "S/N", carrera.getId(), "NO", TipoConfiguracionEnum.NUMERICO.getTipo());
                         configuracionCarreraService.guardar(configuracionCarrera3);
                     }
 
                     if (configuracionCarreraService.buscarPrimero(new ConfiguracionCarrera(carrera.getId(), "NA")) == null) {
                         ConfiguracionCarrera configuracionCarrera4 = new ConfiguracionCarrera(null,
-                                "Número de acta", "NA", carrera.getId(), "S/N", TipoConfiguracionEnum.NUMERICO.getTipo());
+                                "Número de acta", "S/N", carrera.getId(), "NA", TipoConfiguracionEnum.NUMERICO.getTipo());
                         configuracionCarreraService.guardar(configuracionCarrera4);
                     }
                 }

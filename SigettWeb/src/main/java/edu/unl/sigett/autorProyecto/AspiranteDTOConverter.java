@@ -7,9 +7,6 @@ package edu.unl.sigett.autorProyecto;
  */
 
 
-import edu.unl.sigett.academico.converter.DocenteCarreraDTOConverter;
-import edu.unl.sigett.academico.dto.DocenteCarreraDTO;
-import edu.unl.sigett.autorProyecto.AspiranteDTO;
 import java.util.List;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;

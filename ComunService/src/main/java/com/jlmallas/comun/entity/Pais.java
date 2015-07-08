@@ -15,8 +15,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -31,11 +29,6 @@ import javax.xml.bind.annotation.XmlTransient;
 @Entity
 @Table(name = "pais",schema = "comun")
 @XmlRootElement
-@NamedQueries({
-    @NamedQuery(name = "Pais.findAll", query = "SELECT p FROM Pais p"),
-    @NamedQuery(name = "Pais.findById", query = "SELECT p FROM Pais p WHERE p.id = :id"),
-    @NamedQuery(name = "Pais.findByNombre", query = "SELECT p FROM Pais p WHERE p.nombre = :nombre"),
-    @NamedQuery(name = "Pais.findBySigla", query = "SELECT p FROM Pais p WHERE p.sigla = :sigla")})
 public class Pais implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id

@@ -21,7 +21,7 @@ import javax.faces.convert.FacesConverter;
 @FacesConverter("categoriaProyectoConverter")
 public class CategoriaProyectoConverter implements Converter {
 
-    @EJB
+    @EJB(lookup = "java:global/ComunService/ItemServiceImplement!com.jlmallas.comun.service.ItemService")
     ItemService itemService;
 
     @Override

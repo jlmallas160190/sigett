@@ -27,7 +27,7 @@ public class PersonaDaoImplement extends AbstractDao<Persona> implements Persona
 
     @Override
     public Boolean esUnico(String numeroIdentificacion, Long id) {
-        boolean var = false;
+        Boolean var = false;
         Persona per = null;
         if (id != null) {
             per = find(id);
@@ -38,11 +38,11 @@ public class PersonaDaoImplement extends AbstractDao<Persona> implements Persona
                 if (per.getId() != null) {
                     var = p == per;
                 } else {
-                    var = false;
+                    var = Boolean.FALSE;
                 }
             }
         } else {
-            var = true;
+            var =Boolean.TRUE;
         }
         return var;
     }

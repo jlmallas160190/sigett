@@ -117,7 +117,7 @@ public class AdministrarEstudiantesCarrera implements Serializable {
     private EstudianteService estudianteService;
     @EJB(lookup = "java:global/SeguridadService/LogDaoImplement!org.jlmallas.seguridad.dao.LogDao")
     private LogDao logFacadeLocal;
-    @EJB(lookup = "java:global/SigettService/EstudianteCarreraServiceImplement!edu.unl.sigett.service.EstudianteCarreraService")
+    @EJB(lookup = "java:global/AcademicoService/EstudianteCarreraServiceImplement!edu.jlmallas.academico.service.EstudianteCarreraService")
     private EstudianteCarreraService estudianteCarreraService;
     @EJB(lookup = "java:global/SeguridadService/RolDaoImplement!org.jlmallas.seguridad.dao.RolDao")
     private RolDao rolDao;
@@ -129,7 +129,7 @@ public class AdministrarEstudiantesCarrera implements Serializable {
     private AspiranteService aspiranteService;
     @EJB(lookup = "java:global/ComunService/ConfiguracionServiceImplement!com.jlmallas.comun.service.ConfiguracionService")
     private ConfiguracionService configuracionService;
-    @EJB(lookup = "java:global/SigettService/ReporteMatriculaDaoImplement!edu.unl.sigett.dao.ReporteMatriculaDao")
+    @EJB(lookup = "java:global/AcademicoService/ReporteMatriculaDaoImplement!edu.jlmallas.academico.dao.ReporteMatriculaDao")
     private ReporteMatriculaDao reporteMatriculaDao;
     @EJB(lookup = "java:global/AcademicoService/OfertaAcademicaServiceImplement!edu.jlmallas.academico.service.OfertaAcademicaService")
     private OfertaAcademicaService ofertaAcademicaService;
@@ -507,7 +507,8 @@ public class AdministrarEstudiantesCarrera implements Serializable {
                     .getEstudianteCarrera().getCarreraId().getId(), "MA")).get(0).getValor();
             String moduloEgresado = configuracionCarreraService.buscar(new ConfiguracionCarrera(sessionEstudianteCarrera.getEstudianteCarreraDTO()
                     .getEstudianteCarrera().getCarreraId().getId(), "ME")).get(0).getValor();
-            int tiempoGracia = Integer.parseInt(configuracionCarreraService.buscarPorId(new ConfiguracionCarrera((int) 21)).getValor());
+            Configuracion configuracion= configuracionService.buscarPorId(new Configuracion(ConfiguracionEnum.TIEMPOGRACIA.getTipo()));
+            int tiempoGracia = Integer.parseInt(configuracion.getValor());
             ReporteMatricula reporte = sessionEstudianteCarrera.getReporteMatriculaUltimo();
             if (reporte.getNumeroModuloMatriculado() != null) {
                 if (Integer.parseInt(reporte.getNumeroModuloMatriculado()) > Integer.parseInt(moduloMaxAprobado)) {
@@ -885,7 +886,6 @@ public class AdministrarEstudiantesCarrera implements Serializable {
                     sessionEstudianteCarrera.getReporteMatriculasWS().clear();
                     parserMatriculasJson(datos);
                     grabarReporteMatriculas();
-                    messageView.message(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.sincronizado"), "");
                 }
             } catch (Exception e) {
                 messageView.message(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.no_sincronizar_web_services"), "");

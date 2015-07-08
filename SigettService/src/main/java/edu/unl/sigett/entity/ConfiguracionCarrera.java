@@ -7,13 +7,12 @@ package edu.unl.sigett.entity;
 
 import java.io.Serializable;
 import javax.persistence.Basic;
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -26,15 +25,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Entity
 @Table(name = "configuracion_carrera")
 @XmlRootElement
-@NamedQueries({
-    @NamedQuery(name = "ConfiguracionCarrera.findAll", query = "SELECT c FROM ConfiguracionCarrera c"),
-    @NamedQuery(name = "ConfiguracionCarrera.findById", query = "SELECT c FROM ConfiguracionCarrera c WHERE c.id = :id"),
-    @NamedQuery(name = "ConfiguracionCarrera.findByNombre", query = "SELECT c FROM ConfiguracionCarrera c WHERE c.nombre = :nombre"),
-    @NamedQuery(name = "ConfiguracionCarrera.findByValor", query = "SELECT c FROM ConfiguracionCarrera c WHERE c.valor = :valor"),
-    @NamedQuery(name = "ConfiguracionCarrera.findByCarreraId", query = "SELECT c FROM ConfiguracionCarrera c WHERE c.carreraId = :carreraId"),
-    @NamedQuery(name = "ConfiguracionCarrera.findByCodigo", query = "SELECT c FROM ConfiguracionCarrera c WHERE c.codigo = :codigo"),
-    @NamedQuery(name = "ConfiguracionCarrera.findByObservacion", query = "SELECT c FROM ConfiguracionCarrera c WHERE c.observacion = :observacion"),
-    @NamedQuery(name = "ConfiguracionCarrera.findByTipo", query = "SELECT c FROM ConfiguracionCarrera c WHERE c.tipo = :tipo")})
+@Cacheable(value = false)
 public class ConfiguracionCarrera implements Serializable {
 
     private static final long serialVersionUID = 1L;

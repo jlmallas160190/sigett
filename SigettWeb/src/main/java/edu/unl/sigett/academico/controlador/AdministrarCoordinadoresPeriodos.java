@@ -80,7 +80,7 @@ public class AdministrarCoordinadoresPeriodos implements Serializable {
     private DocenteCarreraService docenteCarreraService;
     @EJB(lookup = "java:global/SeguridadService/UsuarioServiceImplement!org.jlmallas.seguridad.service.UsuarioService")
     private UsuarioService usuarioService;
-    @EJB(lookup = "java:global/AcademicoService/CoordinadorServiceImplement!edu.jlmallas.academico.service.CoordinadorService")
+    @EJB(lookup = "java:global/AcademicoService/PeriodoCoordinacionServiceImplement!edu.jlmallas.academico.service.PeriodoCoordinacionService")
     private PeriodoCoordinacionService periodoCoordinacionService;
     @EJB(lookup = "java:global/ComunService/PersonaServiceImplement!com.jlmallas.comun.service.PersonaService")
     private PersonaService personaService;

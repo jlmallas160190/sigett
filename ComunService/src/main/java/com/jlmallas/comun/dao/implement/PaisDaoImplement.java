@@ -32,7 +32,7 @@ public class PaisDaoImplement extends AbstractDao<Pais> implements PaisDao {
         sql.append("SELECT p FROM Pais p WHERE 1=1 ");
         if (pais.getNombre() != null) {
             sql.append(" and p.nombre=:nombre ");
-            parametros.put("catalogo", pais.getNombre());
+            parametros.put("nombre", pais.getNombre());
         }
         final Query q = em.createQuery(sql.toString());
         for (String key : parametros.keySet()) {

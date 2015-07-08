@@ -34,12 +34,6 @@ import javax.xml.bind.annotation.XmlTransient;
 @Entity
 @Table(name = "periodo_coordinacion", schema = "academico")
 @XmlRootElement
-@NamedQueries({
-    @NamedQuery(name = "PeriodoCoordinacion.findAll", query = "SELECT p FROM PeriodoCoordinacion p"),
-    @NamedQuery(name = "PeriodoCoordinacion.findById", query = "SELECT p FROM PeriodoCoordinacion p WHERE p.id = :id"),
-    @NamedQuery(name = "PeriodoCoordinacion.findByFechaInicio", query = "SELECT p FROM PeriodoCoordinacion p WHERE p.fechaInicio = :fechaInicio"),
-    @NamedQuery(name = "PeriodoCoordinacion.findByFechaFin", query = "SELECT p FROM PeriodoCoordinacion p WHERE p.fechaFin = :fechaFin"),
-    @NamedQuery(name = "PeriodoCoordinacion.findByEsActivo", query = "SELECT p FROM PeriodoCoordinacion p WHERE p.esActivo = :esActivo")})
 public class PeriodoCoordinacion implements Serializable {
 
     private static final long serialVersionUID = 1L;

@@ -9,6 +9,7 @@ import com.jlmallas.comun.dao.ConfiguracionDao;
 import com.jlmallas.comun.entity.Configuracion;
 import com.jlmallas.comun.enumeration.ConfiguracionEnum;
 import com.jlmallas.comun.enumeration.ServidorCorreoEnum;
+import com.jlmallas.comun.service.ConfiguracionService;
 import edu.unl.sigett.lud.service.implement.*;
 import edu.unl.sigett.lud.util.CabeceraWebSemantica;
 import edu.unl.sigett.lud.vocabulay.Vocabulario;
@@ -42,8 +43,8 @@ import org.jlmallas.util.service.UtilServiceImplement;
 public class CabeceraController implements Serializable {
 
     //<editor-fold defaultstate="collapsed" desc="SERVICIOS">
-    @EJB
-    private ConfiguracionDao configuracionDao;
+    @EJB(lookup = "java:global/ComunService/ConfiguracionServiceImplement!com.jlmallas.comun.service.ConfiguracionService")
+    private ConfiguracionService configuracionService;
 //</editor-fold>
     private MessageView messageView;
     private MailService mailService;
@@ -86,18 +87,18 @@ public class CabeceraController implements Serializable {
     }
 
     private void fijarParametrosMail() {
-        String puerto = configuracionDao.buscar(new Configuracion(ServidorCorreoEnum.PUERTO.getTipo())).get(0).getValor();
-        String smtp = configuracionDao.buscar(new Configuracion(ServidorCorreoEnum.SMTP.getTipo())).get(0).getValor();
-        String usuario = configuracionDao.buscar(new Configuracion(ServidorCorreoEnum.USUARIO.getTipo())).get(0).getValor();
+        String puerto = configuracionService.buscar(new Configuracion(ServidorCorreoEnum.PUERTO.getTipo())).get(0).getValor();
+        String smtp = configuracionService.buscar(new Configuracion(ServidorCorreoEnum.SMTP.getTipo())).get(0).getValor();
+        String usuario = configuracionService.buscar(new Configuracion(ServidorCorreoEnum.USUARIO.getTipo())).get(0).getValor();
         String clave = this.secureService.decrypt(new Secure(this.getConfiguracionGeneralUtil().getSecureKey(),
-                configuracionDao.buscar(new Configuracion(ServidorCorreoEnum.CLAVE.getTipo())).get(0).getValor()));
+                configuracionService.buscar(new Configuracion(ServidorCorreoEnum.CLAVE.getTipo())).get(0).getValor()));
         mailDTO = new MailDTO(smtp, puerto, usuario, clave, null, null, null, null);
     }
 
     private void fijarConfiguraciones() {
-        configuracionGeneralUtil.setTiempoMaximoPertinencia(configuracionDao.buscar(
+        configuracionGeneralUtil.setTiempoMaximoPertinencia(configuracionService.buscar(
                 new Configuracion(ConfiguracionEnum.TIEMPOPERTINENCIA.getTipo())).get(0).getValor());
-        configuracionGeneralUtil.setTamanioArchivo(Double.parseDouble(configuracionDao.buscar(
+        configuracionGeneralUtil.setTamanioArchivo(Double.parseDouble(configuracionService.buscar(
                 new Configuracion(ConfiguracionEnum.TAMANIOARCHIVO.getTipo())).get(0).getValor()));
     }
 
@@ -106,7 +107,7 @@ public class CabeceraController implements Serializable {
         BufferedReader br = null;
         String secretKey = "";
         try {
-            String pathSecretKey = configuracionDao.buscar(new Configuracion(ConfiguracionEnum.SECRETKEY.getTipo())).get(0).getValor();
+            String pathSecretKey = configuracionService.buscar(new Configuracion(ConfiguracionEnum.SECRETKEY.getTipo())).get(0).getValor();
             String sCurrentLine;
             br = new BufferedReader(new FileReader(pathSecretKey));
             int count = 0;
@@ -131,7 +132,7 @@ public class CabeceraController implements Serializable {
 
     private void fijarParametrosWebSemantica() {
         try {
-            String ruta = configuracionDao.buscar(new Configuracion(ConfiguracionEnum.RUTARDF.getTipo())).get(0).getValor();
+            String ruta = configuracionService.buscar(new Configuracion(ConfiguracionEnum.RUTARDF.getTipo())).get(0).getValor();
             if (ruta == null) {
                 return;
             }

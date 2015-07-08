@@ -36,10 +36,6 @@ import javax.xml.bind.annotation.XmlTransient;
 @Table(name = "carrera", schema = "academico")
 @Cacheable(value = false)
 @XmlRootElement
-@NamedQueries({
-    @NamedQuery(name = "Carrera.findAll", query = "SELECT c FROM Carrera c"),
-    @NamedQuery(name = "Carrera.findById", query = "SELECT c FROM Carrera c WHERE c.id = :id"),
-    @NamedQuery(name = "Carrera.findByNombre", query = "SELECT c FROM Carrera c WHERE c.nombre = :nombre")})
 public class Carrera implements Serializable {
 
     @Lob

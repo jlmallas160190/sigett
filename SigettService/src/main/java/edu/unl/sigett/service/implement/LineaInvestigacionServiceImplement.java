@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.unl.sigett.service;
+package edu.unl.sigett.service.implement;
 
 import edu.unl.sigett.dao.LineaInvestigacionCarreraDao;
 import edu.unl.sigett.dao.LineaInvestigacionDao;
@@ -11,6 +11,7 @@ import edu.unl.sigett.dao.LineaInvestigacionDocenteDao;
 import edu.unl.sigett.entity.LineaInvestigacion;
 import edu.unl.sigett.entity.LineaInvestigacionCarrera;
 import edu.unl.sigett.entity.LineaInvestigacionDocente;
+import edu.unl.sigett.service.LineaInvestigacionService;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
