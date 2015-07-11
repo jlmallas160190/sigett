@@ -11,9 +11,9 @@
                              value="#{msg['lbl.sincronizar']} SGA" 
                              action="#{administrarEstudiantesCarrera.sgaWebServicesEstudianteMatriculas()}"
                              icon="ui-icon-refresh"/>
-            <p:commandButton icon="ui-icon-comprobar" value="#{msg['lbl.comprobar']}" process="@this" 
+            <p:commandButton icon="ui-icon-comprobar" value="#{msg['lbl.comprobar']}" 
                              onstart="PF('dlgLoading').show();" 
-                             oncomplete="PF('dlgLoading').hide()" update="datosEstudianteCarrera,esApto,:contenido:msm" 
+                             oncomplete="PF('dlgLoading').hide()" update="pnlInformacionEstudio,:contenido:msm" 
                              action="#{administrarEstudiantesCarrera.compruebaEsAspiranteApto()}"/>
         </h:panelGrid>
     </body>

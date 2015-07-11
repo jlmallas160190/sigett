@@ -24,7 +24,7 @@
                             <ui:include src="datosPersonales.xhtml"/> 
                         </p:tab>
                         <p:tab  title="#{msg['lbl.informacion']} #{msg['lbl.estudio']}" rendered="#{sessionEstudianteCarrera.renderedInformacionEstudio}">
-                            <p:panel style="border: transparent">
+                            <p:panel id="pnlInformacionEstudio">
                                 <ui:include src="datosCarrera.xhtml"/>
                                 <p:overlayPanel appendToBody="true" my="left-top" showEffect="blind" for="detalleMatriculas" styleClass="modal-md"  
                                                 hideEffect="fade">

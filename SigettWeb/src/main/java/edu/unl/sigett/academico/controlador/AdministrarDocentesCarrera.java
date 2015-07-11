@@ -88,7 +88,7 @@ import org.jlmallas.seguridad.service.UsuarioService;
 @URLMappings(mappings = {
     @URLMapping(
             id = "editarDocenteCarrera",
-            pattern = "/editarDocenteCarrera/#{sessionDocenteCarrera.docenteCarreraDTO.docenteCarrera.id}",
+            pattern = "/editarDocenteCarrera/",
             viewId = "/faces/pages/academico/docentesCarrera/editarDocenteCarrera.xhtml"
     ),
     @URLMapping(
@@ -683,7 +683,7 @@ public class AdministrarDocentesCarrera implements Serializable {
                         DocenteCarrera dc = new DocenteCarrera(null, docente, carrera, Boolean.TRUE);
                         docenteCarreraAux = new DocenteCarreraDTO(dc,
                                 persona, new Director(null, Boolean.TRUE));
-                        sessionDocenteCarrera.setDocenteCarrerDTOWS(docenteCarreraAux);
+                        sessionDocenteCarrera.setDocenteCarreraDTOWS(docenteCarreraAux);
                         sessionDocenteCarrera.setKeyEnteroWSUnidadesDocenteParalelo(sessionDocenteCarrera.getKeyEnteroWSUnidadesDocenteParalelo() + 1);
                         grabarDesdeWebServices();
                         return;
@@ -708,51 +708,56 @@ public class AdministrarDocentesCarrera implements Serializable {
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
         if (usuarioService.tienePermiso(sessionUsuario.getUsuario(), "sga_ws_datos_docente") == 1) {
             try {
-                sessionDocenteCarrera.getDocenteCarrerDTOWS().getPersona().setEmail("S/N");
+                sessionDocenteCarrera.getDocenteCarreraDTOWS().getPersona().setEmail("S/N");
                 String passwordService = this.cabeceraController.getSecureService().decrypt(new Secure(cabeceraController.getConfiguracionGeneralUtil().getSecureKey(),
                         configuracionService.buscar(new Configuracion(ConfiguracionEnum.CLAVEWS.getTipo())).get(0).getValor()));
                 String userService = configuracionService.buscar(new Configuracion(ConfiguracionEnum.USUARIOWS.getTipo())).get(0).getValor();
                 String serviceUrl = configuracionService.buscar(new Configuracion(URLWSEnum.DATOSDOCENTE.getTipo())).get(0).getValor();
-                String s = serviceUrl + "?cedula=" + sessionDocenteCarrera.getDocenteCarrerDTOWS().getPersona().getNumeroIdentificacion();
+                String s = serviceUrl + "?cedula=" + sessionDocenteCarrera.getDocenteCarreraDTOWS().getPersona().getNumeroIdentificacion();
                 ConexionDTO seguridad = new ConexionDTO(passwordService, s, userService);
                 NetClientService conexion = new NetClientServiceImplement();
                 String datosJson = conexion.response(seguridad);
                 if (!datosJson.equalsIgnoreCase("")) {
                     JsonParser parser = new JsonParser();
                     JsonElement datos = parser.parse(datosJson);
-                    parserDocenteJson(datos, sessionDocenteCarrera.getDocenteCarrerDTOWS());
+                    parserDocenteJson(datos, sessionDocenteCarrera.getDocenteCarreraDTOWS());
                     /**
                      * GRABAR DOCENTE, DOCENTE CARRERA, PERSONA, DIRECTOR
                      */
-                    if (sessionDocenteCarrera.getDocenteCarrerDTOWS().getDocenteCarrera().getDocenteId().getId() == null) {
+
+                    if (sessionDocenteCarrera.getDocenteCarreraDTOWS().getDocenteCarrera().getDocenteId().getId() == null) {
+                        if (!personaService.esUnico(sessionDocenteCarrera.getDocenteCarreraDTOWS().getPersona().getNumeroIdentificacion(),
+                                sessionDocenteCarrera.getDocenteCarreraDTOWS().getPersona().getId())) {
+                            return;
+                        }
                         Calendar fechaActual = Calendar.getInstance();
                         Item itemT = itemService.buscarPorCatalogoCodigo(CatalogoEnum.TIPODOCUMENTOIDENTIFICACION.getTipo(),
                                 TipoDocIdentEnum.CEDULA.getTipo());
                         Item itemG = itemService.buscarPorCatalogoCodigo(CatalogoEnum.GENERO.getTipo(), GeneroEnum.MASCULINO.getTipo());
                         Nacionalidad nacionalidad = nacionalidadService.buscarPorId(new Nacionalidad(1));
-                        sessionDocenteCarrera.getDocenteCarrerDTOWS().getPersona().setTipoDocumentoIdentificacionId(itemT.getId());
-                        sessionDocenteCarrera.getDocenteCarrerDTOWS().getPersona().setGeneroId(itemG.getId());
-                        sessionDocenteCarrera.getDocenteCarrerDTOWS().getPersona()
+                        sessionDocenteCarrera.getDocenteCarreraDTOWS().getPersona().setTipoDocumentoIdentificacionId(itemT.getId());
+                        sessionDocenteCarrera.getDocenteCarreraDTOWS().getPersona().setGeneroId(itemG.getId());
+                        sessionDocenteCarrera.getDocenteCarreraDTOWS().getPersona()
                                 .setFechaNacimiento(fechaActual.getTime());
-                        sessionDocenteCarrera.getDocenteCarrerDTOWS().getPersona().setNacionalidadId(nacionalidad);
-                        if (sessionDocenteCarrera.getDocenteCarrerDTOWS().getPersona().getId() == null) {
-                            personaService.guardar(sessionDocenteCarrera.getDocenteCarrerDTOWS().getPersona());
+                        sessionDocenteCarrera.getDocenteCarreraDTOWS().getPersona().setNacionalidadId(nacionalidad);
+                        if (sessionDocenteCarrera.getDocenteCarreraDTOWS().getPersona().getId() == null) {
+                            personaService.guardar(sessionDocenteCarrera.getDocenteCarreraDTOWS().getPersona());
                         } else {
-                            personaService.actualizar(sessionDocenteCarrera.getDocenteCarrerDTOWS().getPersona());
+                            personaService.actualizar(sessionDocenteCarrera.getDocenteCarreraDTOWS().getPersona());
                         }
-                        sessionDocenteCarrera.getDocenteCarrerDTOWS().getDocenteCarrera().getDocenteId()
-                                .setId(sessionDocenteCarrera.getDocenteCarrerDTOWS().getPersona().getId());
-                        docenteService.guardar(sessionDocenteCarrera.getDocenteCarrerDTOWS().getDocenteCarrera().getDocenteId());
-                        this.grabarUsuarioDocente(sessionDocenteCarrera.getDocenteCarrerDTOWS().getDocenteCarrera().getDocenteId());
-                        docenteCarreraService.guardar(sessionDocenteCarrera.getDocenteCarrerDTOWS().getDocenteCarrera());
-                        sessionDocenteCarrera.getDocenteCarrerDTOWS().getDirector().
-                                setId(sessionDocenteCarrera.getDocenteCarrerDTOWS().getDocenteCarrera().getId());
-                        directorService.guardar(sessionDocenteCarrera.getDocenteCarrerDTOWS().getDirector());
+                        sessionDocenteCarrera.getDocenteCarreraDTOWS().getDocenteCarrera().getDocenteId()
+                                .setId(sessionDocenteCarrera.getDocenteCarreraDTOWS().getPersona().getId());
+                        docenteService.guardar(sessionDocenteCarrera.getDocenteCarreraDTOWS().getDocenteCarrera().getDocenteId());
+                        this.grabarUsuarioDocente(sessionDocenteCarrera.getDocenteCarreraDTOWS().getDocenteCarrera().getDocenteId());
+                        docenteCarreraService.guardar(sessionDocenteCarrera.getDocenteCarreraDTOWS().getDocenteCarrera());
+                        sessionDocenteCarrera.getDocenteCarreraDTOWS().getDirector().
+                                setId(sessionDocenteCarrera.getDocenteCarreraDTOWS().getDocenteCarrera().getId());
+                        directorService.guardar(sessionDocenteCarrera.getDocenteCarreraDTOWS().getDirector());
                     } else {
                         Persona datosDocente = personaService.buscarPorId(
-                                new Persona(sessionDocenteCarrera.getDocenteCarrerDTOWS().getDocenteCarrera().getDocenteId().getId()));
+                                new Persona(sessionDocenteCarrera.getDocenteCarreraDTOWS().getDocenteCarrera().getDocenteId().getId()));
                         personaService.actualizar(datosDocente);
-                        docenteService.actualizar(sessionDocenteCarrera.getDocenteCarrerDTOWS().getDocenteCarrera().getDocenteId());
+                        docenteService.actualizar(sessionDocenteCarrera.getDocenteCarreraDTOWS().getDocenteCarrera().getDocenteId());
                     }
                 }
             } catch (Exception e) {
@@ -934,6 +939,14 @@ public class AdministrarDocentesCarrera implements Serializable {
                     return;
                 }
                 if (sessionDocenteCarrera.getKeyEntero() == 3) {
+                    if (valor == null) {
+                        sessionDocenteCarrera.setKeyEntero(sessionDocenteCarrera.getKeyEntero() + 1);
+                        return;
+                    }
+                    if (valor.getAsString() == null) {
+                        sessionDocenteCarrera.setKeyEntero(sessionDocenteCarrera.getKeyEntero() + 1);
+                        return;
+                    }
                     TituloDocente tituloDocenteBuscar = new TituloDocente(new Titulo());
                     tituloDocenteBuscar.getTituloId().setNombre(valor.getAsString());
                     List<TituloDocente> tituloDocentes = tituloDocenteFacadeLocal.buscar(tituloDocenteBuscar);
@@ -952,7 +965,11 @@ public class AdministrarDocentesCarrera implements Serializable {
                     titulo.setEsActivo(true);
                     titulo.setNombre(valor.getAsString());
                     int espacio = titulo.getNombre().indexOf(" ");
-                    titulo.setAbreviacion(titulo.getNombre().substring(0, espacio));
+                    if (espacio > 0) {
+                        titulo.setAbreviacion(titulo.getNombre().substring(0, espacio));
+                    } else {
+                        titulo.setAbreviacion(titulo.getNombre());
+                    }
                     tituloDao.create(titulo);
                     td.setTituloId(titulo);
                     docenteCarreraAux.getDocenteCarrera().getDocenteId().setTituloDocenteId(td);

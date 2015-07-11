@@ -74,13 +74,14 @@ public class ConfiguracionCarrera implements Serializable {
         this.codigo = codigo;
     }
 
-    public ConfiguracionCarrera(Integer id, String nombre, String valor, int carreraId, String observacion, String tipo) {
+    public ConfiguracionCarrera(Integer id, String nombre, String valor, String codigo, int carreraId, String observacion, String tipo) {
         this.id = id;
         this.nombre = nombre;
         this.valor = valor;
         this.carreraId = carreraId;
         this.observacion = observacion;
         this.tipo = tipo;
+        this.codigo = codigo;
     }
 
     public Integer getId() {

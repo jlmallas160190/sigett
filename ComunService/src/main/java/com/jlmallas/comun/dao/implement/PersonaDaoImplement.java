@@ -42,18 +42,28 @@ public class PersonaDaoImplement extends AbstractDao<Persona> implements Persona
                 }
             }
         } else {
-            var =Boolean.TRUE;
+            var = Boolean.TRUE;
         }
         return var;
     }
 
     @Override
     public Persona buscarPorNumeroIdentificacion(String numeroIdentificacion) {
+        @SuppressWarnings("UnusedAssignment")
         List<Persona> personas = new ArrayList<>();
         try {
-            Query query = em.createNamedQuery("Persona.findByNumeroIdentificacion");
-            query.setParameter("numeroIdentificacion", numeroIdentificacion);
-            personas = query.getResultList();
+            StringBuilder sql = new StringBuilder();
+            HashMap<String, Object> parametros = new HashMap<>();
+            sql.append("SELECT p FROM Persona p WHERE 1=1 ");
+            if (numeroIdentificacion != null) {
+                sql.append(" and p.numeroIdentificacion=:numeroIdentificacion");
+                parametros.put("numeroIdentificacion", numeroIdentificacion);
+            }
+            final Query q = em.createQuery(sql.toString());
+            for (String key : parametros.keySet()) {
+                q.setParameter(key, parametros.get(key));
+            }
+            personas = q.getResultList();
             return !personas.isEmpty() ? personas.get(0) : null;
         } catch (Exception e) {
         }

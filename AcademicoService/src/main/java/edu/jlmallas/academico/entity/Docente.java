@@ -43,10 +43,10 @@ public class Docente implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "docenteId")
     private List<DocenteCarrera> docenteCarreraList;
     @JoinColumn(name = "titulo_docente_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
+    @ManyToOne
     private TituloDocente tituloDocenteId;
     @JoinColumn(name = "estado_laboral_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
+    @ManyToOne
     private EstadoLaboral estadoLaboralId;
 
     public Docente() {

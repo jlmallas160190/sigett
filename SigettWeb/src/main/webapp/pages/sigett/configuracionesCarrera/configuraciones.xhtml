@@ -5,7 +5,7 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
     <body>
-        <p:dataGrid value="#{sessionConfiguracionCarrera.configuracionCarreras}"
+        <p:dataGrid value="#{sessionConfiguracionCarrera.configuracionCarreras}" paginator="true" paginatorPosition="bottom"
                     id="dgConfiguraciones" var="configuracion" rows="6" columns="1" >
             <p:panel toggleable="true" header="#{configuracion.nombre} (#{configuracion.codigo})">
                 <h:panelGrid rendered="#{sessionConfiguracionCarrera.renderedEditar}" styleClass="panelgrid" rowClasses="rowpanelgrid"
@@ -18,7 +18,7 @@
                         <f:validateRegex pattern="^[0-9]{1,11}$" />
                     </p:inputText>
                     <p:commandButton icon="ui-icon-disk" update="dgConfiguraciones,:contenido:msm" onstart="PF('dlgLoading').show()" 
-                                     oncomplete="PF('dlgLoading').hide()" process="@this" action="#{administrarConfiguracionCarrera.grabar(configuracion)}">
+                                     oncomplete="PF('dlgLoading').hide()" action="#{administrarConfiguracionCarrera.grabar(configuracion)}">
                         <f:param name="1" value="grabar-editar"/>
                     </p:commandButton>
                     <p:commandButton rendered="#{sessionUsuario.usuario.esSuperuser}" icon="ui-icon-pencil" update="dgConfiguraciones,:contenido:msm" 

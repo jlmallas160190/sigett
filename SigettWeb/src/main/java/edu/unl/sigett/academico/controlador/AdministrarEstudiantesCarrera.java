@@ -81,7 +81,7 @@ import org.jlmallas.seguridad.service.UsuarioService;
 @URLMappings(mappings = {
     @URLMapping(
             id = "editarEstudianteCarrera",
-            pattern = "/editarEstudianteCarrera/estudiantesCarrera/#{sessionEstudianteCarrera.estudianteCarreraDTO.estudianteCarrera.id}",
+            pattern = "/editarEstudianteCarrera/estudiantesCarrera/",
             viewId = "/faces/pages/academico/estudiantesCarrera/editarEstudianteCarrera.xhtml"
     ),
     @URLMapping(
@@ -507,7 +507,7 @@ public class AdministrarEstudiantesCarrera implements Serializable {
                     .getEstudianteCarrera().getCarreraId().getId(), "MA")).get(0).getValor();
             String moduloEgresado = configuracionCarreraService.buscar(new ConfiguracionCarrera(sessionEstudianteCarrera.getEstudianteCarreraDTO()
                     .getEstudianteCarrera().getCarreraId().getId(), "ME")).get(0).getValor();
-            Configuracion configuracion= configuracionService.buscarPorId(new Configuracion(ConfiguracionEnum.TIEMPOGRACIA.getTipo()));
+            Configuracion configuracion = configuracionService.buscar(new Configuracion(ConfiguracionEnum.TIEMPOGRACIA.getTipo())).get(0);
             int tiempoGracia = Integer.parseInt(configuracion.getValor());
             ReporteMatricula reporte = sessionEstudianteCarrera.getReporteMatriculaUltimo();
             if (reporte.getNumeroModuloMatriculado() != null) {
@@ -518,11 +518,11 @@ public class AdministrarEstudiantesCarrera implements Serializable {
                         if (tiempo <= tiempoGracia) {
                             esApto = true;
                         } else {
-                            mensaje = bundle.getString("lbl.msm_tiempo_apto_aspirante");
+                            mensaje = bundle.getString("aspirante_apto_tiempo");
                         }
                     }
                 } else {
-                    mensaje = bundle.getString("lbl.msm_modulo_apto_aspirante");
+                    mensaje = bundle.getString("aspirante_no_apto_plan_estudio");
                 }
 
                 if (Integer.parseInt(reporte.getNumeroModuloMatriculado()) >= Integer.parseInt(moduloEgresado)) {
@@ -534,14 +534,14 @@ public class AdministrarEstudiantesCarrera implements Serializable {
                             CatalogoEnum.ESTADOESTUDIANTECARRERA.getTipo(), EstadoEstudianteCarreraEnum.EGRESADO.getTipo()).getId());
                     aspiranteService.actualizar(sessionEstudianteCarrera.getEstudianteCarreraDTO().getAspirante());
                     estudianteCarreraService.actualizar(sessionEstudianteCarrera.getEstudianteCarreraDTO().getEstudianteCarrera());
-                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_es_apto_aspirante"), "");
+                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("aspirante_apto"), "");
                     FacesContext.getCurrentInstance().addMessage(null, message);
                     logFacadeLocal.create(logFacadeLocal.crearLog("Aspirante", sessionEstudianteCarrera.getEstudianteCarreraDTO().getAspirante()
                             .getId() + "", "EDITAR", "NUEVO: |EsApto=" + sessionEstudianteCarrera.getEstudianteCarreraDTO().getAspirante().
                             getEsApto(), sessionUsuario.getUsuario()));
                 }
             } else {
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.estudiante") + " " + bundle.getString("lbl.reporte_matriculas"), "");
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("reporte_maticulas_empty"), "");
                 FacesContext.getCurrentInstance().addMessage(null, message);
             }
         } else {
@@ -549,7 +549,6 @@ public class AdministrarEstudiantesCarrera implements Serializable {
             FacesContext.getCurrentInstance().addMessage(null, message);
         }
     }
-
     //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="MÉTODOS RENDERED">
     public void renderedInformacionEstudio(Estudiante estudiante) {

@@ -27,7 +27,7 @@ import org.primefaces.model.DualListModel;
 public class SessionDocenteCarrera implements Serializable {
 
     private DocenteCarreraDTO docenteCarreraDTO;
-    private DocenteCarreraDTO docenteCarrerDTOWS;
+    private DocenteCarreraDTO docenteCarreraDTOWS;
     private List<DocenteCarreraDTO> docenteCarreraDTOs;
     private List<DocenteCarreraDTO> filterDocenteCarrerasDTO;
     private String estadoLaboral;
@@ -51,7 +51,7 @@ public class SessionDocenteCarrera implements Serializable {
 
     public SessionDocenteCarrera() {
         this.filterDocenteCarrerasDTO = new ArrayList<>();
-        this.docenteCarrerDTOWS = new DocenteCarreraDTO();
+        this.docenteCarreraDTOWS = new DocenteCarreraDTO();
         this.titulos = new ArrayList<>();
         this.estadoLaborales = new ArrayList<>();
         this.tiposDocumento = new ArrayList<>();
@@ -204,12 +204,12 @@ public class SessionDocenteCarrera implements Serializable {
         this.titulos = titulos;
     }
 
-    public DocenteCarreraDTO getDocenteCarrerDTOWS() {
-        return docenteCarrerDTOWS;
+    public DocenteCarreraDTO getDocenteCarreraDTOWS() {
+        return docenteCarreraDTOWS;
     }
 
-    public void setDocenteCarrerDTOWS(DocenteCarreraDTO docenteCarrerDTOWS) {
-        this.docenteCarrerDTOWS = docenteCarrerDTOWS;
+    public void setDocenteCarreraDTOWS(DocenteCarreraDTO docenteCarreraDTOWS) {
+        this.docenteCarreraDTOWS = docenteCarreraDTOWS;
     }
 
     public int getKeyEnteroWSUnidadesDocenteParalelo() {

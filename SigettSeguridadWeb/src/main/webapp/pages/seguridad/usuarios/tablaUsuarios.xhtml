@@ -21,13 +21,6 @@
             <p:commandLink value="#{item.username}" 
                            action="#{usuarioController.editar(item,usuarioDM.usuario)}"/>
         </p:column>
-        <p:column sortBy="#{item.username}"
-                  filterBy="#{item.username}"  filterMatchMode="contains">
-            <f:facet name="header">
-                <h:outputText value="#{msg['lbl.usuario']}"/>
-            </f:facet>
-            <h:outputText value="#{item.username}"/>
-        </p:column>
         <p:column sortBy="#{item.nombres}"
                   filterBy="#{item.nombres}"  filterMatchMode="contains">
             <f:facet name="header">
