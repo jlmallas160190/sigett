@@ -81,7 +81,7 @@ import org.jlmallas.seguridad.service.UsuarioService;
 @URLMappings(mappings = {
     @URLMapping(
             id = "editarEstudianteCarrera",
-            pattern = "/editarEstudianteCarrera/estudiantesCarrera/",
+            pattern = "/editarEstudianteCarrera/",
             viewId = "/faces/pages/academico/estudiantesCarrera/editarEstudianteCarrera.xhtml"
     ),
     @URLMapping(

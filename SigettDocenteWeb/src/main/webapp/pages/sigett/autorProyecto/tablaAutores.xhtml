@@ -5,12 +5,13 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
     <body>
-        <p:dataScroller value="#{sessionAutorProyecto.autorProyectos}" var="item" chunkSize="5">
+        <p:dataGrid value="#{sessionAutorProyecto.autorProyectos}" var="item"  columns="1" rows="1" paginator="true"
+                    paginatorPosition="bottom">
             <p:column filterBy="#{item.persona.apellidos} #{item.persona.nombres}" sortBy="#{item.persona.apellidos}">
                 <f:facet name="header">
                     <h:outputText value="#{msg['lbl.autor']}"/>
                 </f:facet>
-                <p:fieldset legend="#{item.persona.nombres.toUpperCase()} #{item.persona.apellidos.toUpperCase()}" toggleable="true" toggleSpeed="500">
+                <p:panel header="#{item.persona.nombres.toUpperCase()} #{item.persona.apellidos.toUpperCase()}" toggleable="true" toggleSpeed="500">
                     <h:panelGrid columns="2" styleClass="panelgrid" rowClasses="rowpanelgrid" columnClasses="col-sm-2,col-sm-10">
                         <p:outputLabel value="#{msg['lbl.nombres']}:"/>
                         <p:outputLabel value="#{item.persona.nombres}"/>
@@ -19,9 +20,9 @@
                         <p:outputLabel value="#{msg['lbl.email']}:"/>
                         <p:outputLabel value="#{item.persona.email}"/>
                     </h:panelGrid>
-                </p:fieldset>
+                </p:panel>
             </p:column>
-        </p:dataScroller>
+        </p:dataGrid>
     </body>
 
 </html>

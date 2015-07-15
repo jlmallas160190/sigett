@@ -141,13 +141,12 @@ public class LineaInvestigacionDocenteController implements Serializable {
         }
     }
 
-    public String grabar() {
+    public void grabar() {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
         grabarLineasInvestigacion();
         removerLineasInvestigacion();
-        this.cabeceraController.getMessageView().message(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_grabar") + "", "");
-        return "pretty:inicioDocente";
+        this.cabeceraController.getMessageView().message(FacesMessage.SEVERITY_INFO, bundle.getString("grabar") + "", "");
     }
 
     private void grabarLineasInvestigacion() {

@@ -5,7 +5,7 @@
       xmlns:p="http://primefaces.org/ui">
     <ui:composition>
         <p:idleMonitor timeout="600000" >
-            <p:ajax event="idle" listener="#{docenteUsuarioController.logout()}"
+            <p:ajax event="idle" listener="#{estudianteUsuarioController.logout()}"
                     oncomplete="PF('sessionTimeOutDialog').show();" />
             <p:dialog  widgetVar="sessionTimeOutDialog"
                        modal="true"  closable="false" width="400" visible="false" resizable="false">

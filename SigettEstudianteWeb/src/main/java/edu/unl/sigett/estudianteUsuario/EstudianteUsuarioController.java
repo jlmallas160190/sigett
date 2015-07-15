@@ -53,7 +53,7 @@ import org.jlmallas.seguridad.service.UsuarioService;
     @URLMapping(
             id = "loginEstudiante",
             pattern = "/login",
-            viewId = "/faces/login.xhtml"
+            viewId = "/faces/pages/login.xhtml"
     ),
     @URLMapping(
             id = "inicio",

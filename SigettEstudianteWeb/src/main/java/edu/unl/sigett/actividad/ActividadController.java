@@ -267,6 +267,8 @@ public class ActividadController implements Serializable {
             actividad.setCronogramaId(cronogramaTemp);
             actividad.setEstadoId(estadoId);
             actividad.setTipoId(tipoId);
+            actividad.setPorcentajeAvance(new BigDecimal(0.0));
+            actividad.setPorcentajeFaltante(new BigDecimal(ValorEnum.DIVISORPORCENTAJE.getTipo()));
             if (actividad.getEstadoId().equals(estado.getId())) {
                 actividad.setPorcentajeAvance(new BigDecimal(ValorEnum.DIVISORPORCENTAJE.getTipo()));
                 actividad.setPorcentajeFaltante(new BigDecimal(ValorEnum.DIVISORPORCENTAJE.getTipo()).subtract(actividad.getPorcentajeAvance()));
@@ -364,7 +366,6 @@ public class ActividadController implements Serializable {
         } catch (Exception e) {
             LOG.warning(e.getMessage());
         }
-
     }
 
     public void remover(Actividad actividad) {

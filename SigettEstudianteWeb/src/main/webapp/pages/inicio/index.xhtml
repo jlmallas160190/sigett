@@ -6,12 +6,15 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core">
 
     <body>
-        <ui:composition template="./../../template.xhtml">
+        <ui:composition template="./../template.xhtml">
             <ui:define name="title">
                 <h:outputText value="#{lbl.inicio}"/>
             </ui:define>
             <ui:define name="top">
                 <ui:include src="menu.xhtml"/>
+            </ui:define>
+            <ui:define name="content">
+                <ui:include src="cerrarSession.xhtml"/>
             </ui:define>
             <ui:define name="left">
                 <ui:include  src="menuIzquierdo.xhtml"/>

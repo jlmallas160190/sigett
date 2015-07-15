@@ -48,10 +48,13 @@
                     </h:form>
                     <p:dialog id="dlgLoading" styleClass="load"  draggable="false" closable="false" resizable="false"  showHeader="false"  widgetVar="dlgLoading" modal="true" >
                         <h:panelGrid columns="2" >
-                            <h:outputLabel value="#{msg['lbl.cargando']}"/>
+                            <h:outputLabel value="#{lbl.cargando}"/>
                             <h:graphicImage   height="50" width="50" value="/resources/img/ajax-loader-green.gif" />
                         </h:panelGrid>
                     </p:dialog>
+                     <ui:insert name="cierreSession">
+                        <ui:include src="../pages/inicio/cerrarSession.xhtml" />
+                    </ui:insert>
                 </div>
                 <div class="col-md-2">
                     <f:view >
@@ -71,7 +74,7 @@
                             </div>
                             <div class="col-md-4">
                                 <br/>
-                                <p:panel header="#{msg['lbl.informacion']}">
+                                <p:panel header="#{lbl.informacion}">
                                     <center>
                                         <span ><b> Universidad Nacional de Loja </b></span><br/>
                                         <span>Carrera de Ingenieria en Sistemas</span> <br/>
@@ -81,7 +84,7 @@
                             </div>
                             <div class="col-md-4">
                                 <br/>
-                                <p:panel header="#{msg['lbl.lenguajes']}">
+                                <p:panel header="#{lbl.lenguajes}">
                                     <h:panelGrid styleClass="panelGroup" rowClasses="rowpanelgrid" columns="2">
                                         <p:commandLink update=":tittle,:contenido,:superior,:derecha,:inferior,:izquierda,:dlgLoading"  title="Spanish"  action="#{localizacion.localeChanged()}">
                                             <f:param value="es" name="locale"/>

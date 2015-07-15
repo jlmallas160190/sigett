@@ -6,7 +6,8 @@
     <body>
         <h:panelGrid  styleClass="pnl-botones" columns="1">
             <p:commandButton id="guardar" value="#{btn.grabar}"  onstart="PF('dlgLoading').show()"
-                             oncomplete="PF('dlgLoading').hide()" icon="ui-icon-disk" action="#{lineaInvestigacionDocenteController.grabar()}"/>
+                             oncomplete="PF('dlgLoading').hide()" icon="ui-icon-disk" update=":contenido:msm" 
+                             action="#{lineaInvestigacionDocenteController.grabar()}"/>
         </h:panelGrid>
     </body>
 

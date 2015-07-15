@@ -7,7 +7,7 @@
       xml:lang="es" lang="es">
 
     <body>
-        <ui:composition template="./../../../template.xhtml">
+        <ui:composition template="./../../template.xhtml">
             <ui:define name="title">#{lbl.lineas_investigacion}</ui:define>
             <ui:define name="top">
                 <ui:include src="./../../inicio/menu.xhtml"/>
@@ -16,7 +16,7 @@
                 <ui:include src="./../../inicio/menuIzquierdo.xhtml"/>
             </ui:define>
             <ui:define name="content">
-                <p:messages id="msgs" showDetail="true"/>
+                <p:growl id="msm" showDetail="true"/>
                 <p:panel>
                     <ui:include src="pickListLineasInvestigacion.xhtml" /> 
                     <f:facet name="footer">

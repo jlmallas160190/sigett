@@ -6,7 +6,7 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
 
-    <ui:composition template="./../../../template.xhtml">
+    <ui:composition template="./../../template.xhtml">
         <ui:define name="title"><h:outputText value="#{msg['lbl.editar']} #{msg['lbl.proyecto']}"/></ui:define>
         <ui:define name="top">
             <ui:include src="./../../inicio/menu.xhtml"/>
@@ -20,19 +20,19 @@
             <p:panel>
                 <p:tabView  id="tabViewDatosProyecto" >
                     <p:tab id="tabDatosInicio" title="#{msg['lbl.informacion']} #{msg['lbl.inicio']}" >
-                        <p:fieldset legend="#{msg['lbl.informacion']}" toggleable="true">
+                        <p:panel header="#{msg['lbl.informacion']}" toggleable="true">
                             <ui:include src="datosProyecto.xhtml"/>
-                        </p:fieldset>
+                        </p:panel>
                          <br/>
-                        <p:fieldset legend="#{msg['lbl.lineasInvestigacion']}" toggleable="true">
+                        <p:panel header="#{msg['lbl.lineasInvestigacion']}" toggleable="true">
                             <ui:include src="dataGridLineasInvestigacion.xhtml"/>
                             <ui:include src="pickListLineasInvestigacion.xhtml"/>
-                        </p:fieldset>
+                        </p:panel>
                         <br/>
-                        <p:fieldset legend="#{msg['lbl.carreras']}" toggleable="true">
+                        <p:panel header="#{msg['lbl.carreras']}" toggleable="true">
                             <ui:include src="dataGridCarreras.xhtml"/>
                             <ui:include src="pickListCarreras.xhtml"/>
-                        </p:fieldset>
+                        </p:panel>
                     </p:tab>
                     <p:tab id="tabAutores" title="#{msg['lbl.autores']}">
                         <p:panel>

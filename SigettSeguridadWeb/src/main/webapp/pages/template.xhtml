@@ -27,7 +27,6 @@
 
     <h:body>
         <div id="top">
-           
             <h:form id="superior">
                 <ui:insert name="top">
                 </ui:insert>
@@ -45,7 +44,6 @@
                 <div class="col-md-8">
                     <h:form id="contenido">
                         <ui:insert name="content">
-                             <ui:include src="../../pages/inicio/cerrarSession.xhtml" />
                         </ui:insert>
                     </h:form>
                     <p:dialog id="dlgLoading" styleClass="load"  draggable="false" closable="false" resizable="false"  showHeader="false"  widgetVar="dlgLoading" modal="true" >
@@ -54,6 +52,9 @@
                             <h:graphicImage   height="50" width="50" value="/resources/img/ajax-loader-green.gif" />
                         </h:panelGrid>
                     </p:dialog>
+                     <ui:insert name="cierreSession">
+                        <ui:include src="../pages/inicio/cerrarSession.xhtml" />
+                    </ui:insert>
                 </div>
                 <div class="col-md-2">
                     <f:view >
@@ -70,7 +71,6 @@
                     <div class="container">
                         <div class="row">
                             <div class="col-md-4">
-                                
                             </div>
                             <div class="col-md-4">
                                 <br/>

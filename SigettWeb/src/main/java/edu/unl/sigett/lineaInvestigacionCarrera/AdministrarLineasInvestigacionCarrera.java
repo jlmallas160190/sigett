@@ -39,7 +39,7 @@ import org.jlmallas.seguridad.service.UsuarioService;
 @URLMappings(mappings = {
     @URLMapping(
             id = "editarLineaInvestigacionCarrera",
-            pattern = "/editarLineaInvestigacionCarrera/#{sessionLineaInvestigacionCarrera.lineaInvestigacionCarrera.id}",
+            pattern = "/editarLineaInvestigacionCarrera/",
             viewId = "/faces/pages/sigett/lineasInvestigacionCarrera/editarLineaInvestigacionCarrera.xhtml"
     ),
     @URLMapping(
