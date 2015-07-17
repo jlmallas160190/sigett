@@ -28,8 +28,6 @@ public interface ConfiguracionCarreraDao {
 
     List<ConfiguracionCarrera> findRange(int[] range);
 
-//    ConfiguracionCarrera buscarPorCarreraId(Integer carreraId, String codigo);
-
     List<ConfiguracionCarrera> buscar(ConfiguracionCarrera configuracionCarrera);
 
     int count();

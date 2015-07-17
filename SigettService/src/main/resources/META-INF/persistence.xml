@@ -1,10 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
-    <persistence-unit name="sigettPU" transaction-type="JTA">
-        <jta-data-source>jdbc/sigett</jta-data-source>
-        <exclude-unlisted-classes>false</exclude-unlisted-classes>
-        <properties>
-            <property name="hibernate.hbm2ddl.auto" value="update"/>
-        </properties>
-    </persistence-unit>
+  <persistence-unit name="sigettPU" transaction-type="JTA">
+    <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+    <jta-data-source>jdbc/sigett</jta-data-source>
+    <class>edu.unl.sigett.entity.Acta</class>
+    <class>edu.unl.sigett.entity.Actividad</class>
+    <class>edu.unl.sigett.entity.Aspirante</class>
+    <class>edu.unl.sigett.entity.AutorProyecto</class>
+    <class>edu.unl.sigett.entity.CalificacionMiembro</class>
+    <class>edu.unl.sigett.entity.CalificacionParametro</class>
+    <class>edu.unl.sigett.entity.ConfiguracionCarrera</class>
+    <class>edu.unl.sigett.entity.ConfiguracionProyecto</class>
+    <class>edu.unl.sigett.entity.Cronograma</class>
+    <class>edu.unl.sigett.entity.Director</class>
+    <class>edu.unl.sigett.entity.DirectorProyecto</class>
+    <class>edu.unl.sigett.entity.DocenteProyecto</class>
+    <class>edu.unl.sigett.entity.DocenteUsuario</class>
+    <class>edu.unl.sigett.entity.DocumentoActividad</class>
+    <class>edu.unl.sigett.entity.DocumentoCarrera</class>
+    <class>edu.unl.sigett.entity.DocumentoExpediente</class>
+    <class>edu.unl.sigett.entity.DocumentoProyecto</class>
+    <class>edu.unl.sigett.entity.DuracionActividad</class>
+    <class>edu.unl.sigett.entity.DuracionCronograma</class>
+    <class>edu.unl.sigett.entity.EstudianteUsuario</class>
+    <class>edu.unl.sigett.entity.EvaluacionTribunal</class>
+    <class>edu.unl.sigett.entity.Expediente</class>
+    <class>edu.unl.sigett.entity.LineaInvestigacion</class>
+    <class>edu.unl.sigett.entity.LineaInvestigacionCarrera</class>
+    <class>edu.unl.sigett.entity.LineaInvestigacionDocente</class>
+    <class>edu.unl.sigett.entity.LineaInvestigacionProyecto</class>
+    <class>edu.unl.sigett.entity.MiembroTribunal</class>
+    <class>edu.unl.sigett.entity.Parametro</class>
+    <class>edu.unl.sigett.entity.ParametroCatalogoEvaluacion</class>
+    <class>edu.unl.sigett.entity.Pertinencia</class>
+    <class>edu.unl.sigett.entity.PlazoEvaluacionTribunal</class>
+    <class>edu.unl.sigett.entity.Prorroga</class>
+    <class>edu.unl.sigett.entity.Proyecto</class>
+    <class>edu.unl.sigett.entity.ProyectoCarreraOferta</class>
+    <class>edu.unl.sigett.entity.RangoEquivalencia</class>
+    <class>edu.unl.sigett.entity.RangoNota</class>
+    <class>edu.unl.sigett.entity.Renuncia</class>
+    <class>edu.unl.sigett.entity.RenunciaDirector</class>
+    <class>edu.unl.sigett.entity.Revision</class>
+    <class>edu.unl.sigett.entity.RevisionActividad</class>
+    <class>edu.unl.sigett.entity.SugerenciaCalificacionMiembro</class>
+    <class>edu.unl.sigett.entity.Tema</class>
+    <class>edu.unl.sigett.entity.TemaProyecto</class>
+    <class>edu.unl.sigett.entity.Tribunal</class>
+    <class>edu.unl.sigett.entity.UsuarioCarrera</class>
+    <exclude-unlisted-classes>true</exclude-unlisted-classes>
+    <properties>
+      <property name="eclipselink.ddl-generation" value="create-or-extend-tables"/>
+    </properties>
+  </persistence-unit>
 </persistence>

@@ -28,9 +28,7 @@ public interface ReporteMatriculaDao {
 
     List<ReporteMatricula> findRange(int[] range);
 
-    ReporteMatricula buscarPorMatriculaId(Long matriculaId);
-
-    List<ReporteMatricula> buscarPorEstudianteCarrera(Long estudianteCarreraId);
+    List<ReporteMatricula> buscar(final ReporteMatricula reporteMatricula);
 
     ReporteMatricula buscarUltimaMatriculaEstudiante(Long estudianteId);
 

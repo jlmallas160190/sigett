@@ -11,7 +11,11 @@ package edu.unl.sigett.enumeration;
  */
 public enum ConfiguracionCarreraEnum {
 
-    OFERTAACADEMICA("OA");
+    OFERTAACADEMICA("OA"),
+    MODULOAPROBADO("MA"),
+    NUMEROACTA("NA"),
+    NUMEROOFICIO("NO"),
+    MODULOEGRESADO("ME");
     String tipo;
 
     private ConfiguracionCarreraEnum(String tipo) {

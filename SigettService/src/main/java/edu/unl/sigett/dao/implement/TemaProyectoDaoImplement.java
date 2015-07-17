@@ -25,17 +25,7 @@ public class TemaProyectoDaoImplement extends AbstractDao<TemaProyecto> implemen
         super(TemaProyecto.class);
     }
 
-    @Override
-    public List<TemaProyecto> buscarPorProyecto(Long proyectoId) {
-        try {
-            Query query = em.createQuery("SELECT t FROM TemaProyecto t WHERE " + "(t.proyectoId.id=:id)");
-            query.setParameter("id", proyectoId);
-            return query.getResultList();
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-        return null;
-    }
+
 
     @Override
     public List<TemaProyecto> buscar(TemaProyecto temaProyecto) {

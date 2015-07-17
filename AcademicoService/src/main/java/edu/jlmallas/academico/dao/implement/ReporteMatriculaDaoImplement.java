@@ -9,6 +9,7 @@ import edu.jlmallas.academico.dao.AbstractDao;
 import edu.jlmallas.academico.dao.ReporteMatriculaDao;
 import edu.jlmallas.academico.entity.ReporteMatricula;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.Query;
@@ -20,39 +21,13 @@ import javax.persistence.Query;
 @Stateless
 public class ReporteMatriculaDaoImplement extends AbstractDao<ReporteMatricula> implements ReporteMatriculaDao {
 
-
     public ReporteMatriculaDaoImplement() {
         super(ReporteMatricula.class);
     }
 
     @Override
-    public ReporteMatricula buscarPorMatriculaId(Long matriculaId) {
-        List<ReporteMatricula> reporteMatriculas = new ArrayList<>();
-        try {
-            Query query = em.createNamedQuery("ReporteMatricula.findByMatriculaId");
-            query.setParameter("matriculaId", matriculaId);
-            reporteMatriculas = query.getResultList();
-            return !reporteMatriculas.isEmpty() ? reporteMatriculas.get(0) : null;
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-        return null;
-    }
-
-    @Override
-    public List<ReporteMatricula> buscarPorEstudianteCarrera(Long estudianteCarreraId) {
-        try {
-            Query query = em.createQuery("SELECT rm  from ReporteMatricula rm WHERE " + "(rm.estudianteCarreraId.id=:id)");
-            query.setParameter("id", estudianteCarreraId);
-            return query.getResultList();
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-        return null;
-    }
-
-    @Override
     public ReporteMatricula buscarUltimaMatriculaEstudiante(Long estudianteCarreraId) {
+        @SuppressWarnings("UnusedAssignment")
         List<ReporteMatricula> reporteMatriculas = new ArrayList<>();
         try {
             Query query = em.createQuery("SELECT rm  from ReporteMatricula rm WHERE " + " rm.matriculaId= (SELECT MAX(rm1.matriculaId) "
@@ -79,5 +54,31 @@ public class ReporteMatriculaDaoImplement extends AbstractDao<ReporteMatricula> 
             System.out.println(e);
         }
         return null;
+    }
+
+    @Override
+    public List<ReporteMatricula> buscar(final ReporteMatricula reporteMatricula) {
+        StringBuilder sql = new StringBuilder();
+        HashMap<String, Object> parametros = new HashMap<>();
+        Boolean existeFiltro = Boolean.FALSE;
+        sql.append("SELECT rm  from ReporteMatricula rm WHERE 1=1 ");
+        if (reporteMatricula.getMatriculaId() != null) {
+            sql.append(" and rm.matriculaId=:matriculaId");
+            parametros.put("matriculaId", reporteMatricula.getMatriculaId());
+            existeFiltro = Boolean.TRUE;
+        }
+        if (reporteMatricula.getEstudianteCarreraId() != null) {
+            sql.append(" and rm.estudianteCarreraId=:estudianteCarreraId");
+            parametros.put("estudianteCarreraId", reporteMatricula.getEstudianteCarreraId());
+            existeFiltro = Boolean.TRUE;
+        }
+        if (!existeFiltro) {
+            return new ArrayList<>();
+        }
+        final Query q = em.createQuery(sql.toString());
+        for (String key : parametros.keySet()) {
+            q.setParameter(key, parametros.get(key));
+        }
+        return q.getResultList();
     }
 }

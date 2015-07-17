@@ -10,13 +10,13 @@
 
     <body>
 
-        <ui:composition template="./../../../template.xhtml">
+        <ui:composition template="./../../template.xhtml">
             <ui:define name="title">#{msg['lbl.area']}</ui:define>
             <ui:define name="top">
                 <ui:include src="./../../inicio/menu.xhtml"/>
             </ui:define>
             <ui:define name="content">
-                <p:messages id="msm"/>
+                <p:growl id="msm"/>
                 <p:panel>
                     <f:facet name="header">
                         <h:panelGrid>

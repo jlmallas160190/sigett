@@ -28,12 +28,6 @@ public interface ProyectoOfertaCarreraDao {
 
     List<ProyectoCarreraOferta> findRange(int[] range);
 
-    List<ProyectoCarreraOferta> buscarPorCarreraOferta(Integer carreraId, Integer periodoId);
-
-    List<ProyectoCarreraOferta> buscarPorCarrera(Integer carreraId);
-
-    List<ProyectoCarreraOferta> buscarPorProyecto(Long proyectoId);
-
     List<ProyectoCarreraOferta> buscar(ProyectoCarreraOferta proyectoCarreraOferta);
 
     int count();

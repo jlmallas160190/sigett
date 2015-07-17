@@ -1,0 +1,63 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <body>
+        <p:dataTable id="tblMiembros"  value="#{sessionMiembroTribunal.miembrosTribunalDTO}" var="item" rows="20" paginator="true"
+                     rowIndexVar="rowIx" editable="true" rowKey="#{item.docente}" selectionMode="single" selection="#{item}" editMode="cell"
+                     filteredValue="#{sessionMiembroTribunal.filterMiembrosTribunalDTO}" widgetVar="tblMTFilter"
+                     rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'even-row' : 'odd-row'}" emptyMessage="#{msg['lbl.table.empty']}">
+            <p:column sortBy="#{item.persona.apellidos}" filterBy="#{item.persona.nombres} #{item.persona.apellidos}"
+                      rendered="#{sessionMiembroTribunal.renderedEditar}">
+                <f:facet name="header">
+                    <h:outputText value="#{lbl.miembro}"/>
+                </f:facet>
+                <p:commandLink value="#{item.persona.nombres} #{item.persona.apellidos}"
+                               onstart="PF('dlgLoading').show();" oncomplete="PF('dlgLoading').hide()"
+                               action="#{miembroTribunalController.editar(item)}"/>
+            </p:column>
+           <p:column sortBy="#{item.persona.apellidos}" filterBy="#{item.persona.nombres} #{item.persona.apellidos}"
+                      rendered="#{!sessionMiembroTribunal.renderedEditar}">
+                <f:facet name="header">
+                    <h:outputText value="#{lbl.miembro}"/>
+                </f:facet>
+               <p:outputLabel value="#{item.persona.nombres} #{item.persona.apellidos}"/>
+            </p:column>
+            <p:column sortBy="#{item.persona.numeroIdentificacion}" filterBy="#{item.persona.numeroIdentificacion}" >
+                <f:facet name="header">
+                    <h:outputText value="#{msg['lbl.ci']} "/>
+                </f:facet>
+                <h:outputText value="#{item.persona.numeroIdentificacion}"/>
+            </p:column>
+            <p:column sortBy="#{item.miembroTribunal.cargo}" filterBy="#{item.miembroTribunal.cargo}" >
+                <f:facet name="header">
+                    <h:outputText value="#{msg['lbl.cargo']}"/>
+                </f:facet>
+                <h:outputText value="#{item.miembroTribunal.cargo}"/>
+            </p:column>
+            <!--<p:column rendered="#{administrarMiembrosTribunal.renderedImprimirOficioSustentacionPrivada}">
+                <f:facet name="header">
+                    <h:outputText value="#{msg['lbl.imprimir']} #{msg['lbl.oficio']}"/>
+                </f:facet> 
+                <p:commandButton onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" icon="ui-icon-print" update=":editarTribunal:msm,:oficioMiembroTribunalSprivada" action="#{administrarMiembrosTribunal.imprimirOficioMiembroTribunal(miembro,tribunal,sessionProyecto.proyecto,sessionUsuario.usuario)}"/>
+            </p:column>
+            <p:column rendered="#{administrarMiembrosTribunal.renderedImprimirOficioSustentacionPublica}">
+                <f:facet name="header">
+                    <h:outputText value="#{msg['lbl.imprimir']} #{msg['lbl.oficio']}"/>
+                </f:facet> 
+                <p:commandButton onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" icon="ui-icon-print" update=":editarTribunal:msm,:oficioMiembroTribunalSpublica,:dlgOficioMiembroTribunalSpublica,:dlgOficioMiembroTribunalSprivada" action="#{administrarMiembrosTribunal.imprimirOficioMiembroTribunal(miembro,tribunal,sessionProyecto.proyecto,sessionUsuario.usuario)}"/>
+            </p:column>-->
+            <p:column rendered="#{sessionMiembroTribunal.renderedEliminar}">
+                <f:facet name="header">
+                    <h:outputText value="#{msg['lbl.eliminar']}"/>
+                </f:facet>
+                <p:commandButton icon="ui-icon-trash"  onclick="if (!confirm('#{msg['lbl.confirmarEliminar']}'))
+                            return false;" update="tblMiembros" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" 
+                            action="#{miembroTribunalController.remover(item)}">
+                </p:commandButton>
+            </p:column>
+        </p:dataTable>
+    </body>
+</html>

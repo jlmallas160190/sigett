@@ -77,6 +77,10 @@ public class EvaluacionTribunal implements Serializable {
     private Boolean esAptoCalificar;
     @Basic(optional = false)
     @NotNull
+    @Column(name = "es_activo")
+    private Boolean esActivo;
+    @Basic(optional = false)
+    @NotNull
     @Column(name = "fecha_plazo")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaPlazo;
@@ -106,7 +110,7 @@ public class EvaluacionTribunal implements Serializable {
     }
 
     public EvaluacionTribunal(Long id, BigDecimal nota, String observacion, String sugerencia, String lugar, Date fechaInicio, Date fechaFin,
-            Boolean esAptoCalificar, Date fechaPlazo, Tribunal tribunalId, RangoNota rangoNotaId, Long catalogoEvaluacionId) {
+            Boolean esAptoCalificar, Date fechaPlazo, Tribunal tribunalId, RangoNota rangoNotaId, Long catalogoEvaluacionId, Boolean esActivo) {
         this.id = id;
         this.nota = nota;
         this.observacion = observacion;
@@ -119,6 +123,7 @@ public class EvaluacionTribunal implements Serializable {
         this.tribunalId = tribunalId;
         this.rangoNotaId = rangoNotaId;
         this.catalogoEvaluacionId = catalogoEvaluacionId;
+        this.esActivo = esActivo;
     }
 
     public Long getId() {
@@ -191,6 +196,14 @@ public class EvaluacionTribunal implements Serializable {
 
     public void setFechaPlazo(Date fechaPlazo) {
         this.fechaPlazo = fechaPlazo;
+    }
+
+    public Boolean getEsActivo() {
+        return esActivo;
+    }
+
+    public void setEsActivo(Boolean esActivo) {
+        this.esActivo = esActivo;
     }
 
     @XmlTransient

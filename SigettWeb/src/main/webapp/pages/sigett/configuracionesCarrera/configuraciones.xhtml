@@ -17,7 +17,7 @@
                     <p:inputText id="valor" rendered="#{configuracion.tipo=='NUMERICO'}" value="#{configuracion.valor}">
                         <f:validateRegex pattern="^[0-9]{1,11}$" />
                     </p:inputText>
-                    <p:commandButton icon="ui-icon-disk" update="dgConfiguraciones,:contenido:msm" onstart="PF('dlgLoading').show()" 
+                    <p:commandButton icon="ui-icon-disk"  update="dgConfiguraciones,:contenido:msm" onstart="PF('dlgLoading').show()" 
                                      oncomplete="PF('dlgLoading').hide()" action="#{administrarConfiguracionCarrera.grabar(configuracion)}">
                         <f:param name="1" value="grabar-editar"/>
                     </p:commandButton>

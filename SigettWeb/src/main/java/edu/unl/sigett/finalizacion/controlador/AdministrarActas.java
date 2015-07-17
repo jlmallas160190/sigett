@@ -48,8 +48,8 @@ import edu.jlmallas.academico.dao.DocenteDao;
 import edu.jlmallas.academico.dao.EstudianteCarreraDao;
 import edu.unl.sigett.enumeration.EstadoAutorEnum;
 import edu.unl.sigett.dao.ConfiguracionCarreraDao;
-import edu.unl.sigett.dao.EvaluacionTribunalFacadeLocal;
-import edu.unl.sigett.dao.MiembroFacadeLocal;
+import edu.unl.sigett.dao.EvaluacionTribunalDao;
+import edu.unl.sigett.dao.MiembroTribunalDao;
 
 /**
  *
@@ -62,9 +62,9 @@ public class AdministrarActas implements Serializable {
 //    @EJB
 //    private AutorProyectoDao autorProyectoFacadeLocal;
 //    @EJB
-//    private MiembroFacadeLocal miembroFacadeLocal;
+//    private MiembroTribunalDao miembroFacadeLocal;
 //    @EJB
-//    private EvaluacionTribunalFacadeLocal evaluacionTribunalFacadeLocal;
+//    private EvaluacionTribunalDao evaluacionTribunalFacadeLocal;
 //    @EJB
 //    private ActaFacadeLocal actaFacadeLocal;
 //    @EJB

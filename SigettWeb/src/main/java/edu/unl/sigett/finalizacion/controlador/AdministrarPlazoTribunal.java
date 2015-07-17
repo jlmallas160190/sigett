@@ -17,8 +17,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import org.primefaces.context.RequestContext;
-import edu.unl.sigett.dao.ConfiguracionGeneralDao;
-import edu.unl.sigett.dao.EvaluacionTribunalFacadeLocal;
+import edu.unl.sigett.dao.EvaluacionTribunalDao;
 import edu.unl.sigett.dao.PlazoEvaluacionTribunalFacadeLocal;
 
 /**
@@ -37,7 +36,7 @@ public class AdministrarPlazoTribunal implements Serializable {
 //    @EJB
 //    private PlazoEvaluacionTribunalFacadeLocal plazoEvaluacionTribunalFacadeLocal;
 //    @EJB
-//    private EvaluacionTribunalFacadeLocal evaluacionTribunalFacadeLocal;
+//    private EvaluacionTribunalDao evaluacionTribunalFacadeLocal;
 //    @EJB
 //    private ConfiguracionGeneralDao configuracionGeneralFacadeLocal;
 //

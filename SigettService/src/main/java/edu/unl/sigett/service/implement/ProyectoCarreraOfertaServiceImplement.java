@@ -8,6 +8,7 @@ package edu.unl.sigett.service.implement;
 import edu.unl.sigett.dao.ProyectoOfertaCarreraDao;
 import edu.unl.sigett.entity.ProyectoCarreraOferta;
 import edu.unl.sigett.service.ProyectoCarreraOfertaService;
+import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -44,7 +45,11 @@ public class ProyectoCarreraOfertaServiceImplement implements ProyectoCarreraOfe
 
     @Override
     public List<ProyectoCarreraOferta> buscar(final ProyectoCarreraOferta proyectoCarreraOferta) {
-        return this.proyectoCarreraDao.buscar(proyectoCarreraOferta);
+        List<ProyectoCarreraOferta> proyectoCarreraOfertas = this.proyectoCarreraDao.buscar(proyectoCarreraOferta);
+        if (proyectoCarreraOferta == null) {
+            return new ArrayList<>();
+        }
+        return proyectoCarreraOfertas;
     }
 
 }

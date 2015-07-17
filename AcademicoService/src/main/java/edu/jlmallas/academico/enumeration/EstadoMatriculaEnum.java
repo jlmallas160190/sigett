@@ -11,8 +11,9 @@ package edu.jlmallas.academico.enumeration;
  */
 public enum EstadoMatriculaEnum {
 
-    APROBADA("APROBADA"),
-    REPROBADA("REPROBADA");
+    APROBADA("EstadoMatriculaAprobada"),
+    MATRICULADO("EstadoMatriculaMatriculada"),
+    REPROBADA("EstadoMatriculaReprobada");
     String tipo;
 
     private EstadoMatriculaEnum(String tipo) {

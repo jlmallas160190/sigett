@@ -15,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -46,6 +47,8 @@ public class MiembroTribunal implements Serializable {
     private Tribunal tribunalId;
     @Column(name = "cargo_id")
     private Long cargoId;
+    @Transient
+    private String cargo;
 
     public MiembroTribunal() {
     }
@@ -54,12 +57,13 @@ public class MiembroTribunal implements Serializable {
         this.id = id;
     }
 
-    public MiembroTribunal(Long id, Long docenteId, Boolean esActivo, Tribunal tribunalId, Long cargoId) {
+    public MiembroTribunal(Long id, Long docenteId, Boolean esActivo, Tribunal tribunalId, Long cargoId,String cargo) {
         this.id = id;
         this.docenteId = docenteId;
         this.esActivo = esActivo;
         this.tribunalId = tribunalId;
         this.cargoId = cargoId;
+        this.cargo=cargo;
     }
 
     public Long getId() {
@@ -100,6 +104,14 @@ public class MiembroTribunal implements Serializable {
 
     public void setCargoId(Long cargoId) {
         this.cargoId = cargoId;
+    }
+
+    public String getCargo() {
+        return cargo;
+    }
+
+    public void setCargo(String cargo) {
+        this.cargo = cargo;
     }
 
     @Override

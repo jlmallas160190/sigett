@@ -105,17 +105,17 @@ import org.primefaces.model.DualListModel;
     @URLMapping(
             id = "editarProyecto",
             pattern = "/editarProyecto/",
-            viewId = "/faces/pages/sigett/proyectos/editarProyecto.xhtml"
+            viewId = "/faces/pages/sigett/proyecto/editarProyecto.xhtml"
     ),
     @URLMapping(
             id = "crearProyecto",
             pattern = "/crearProyecto/",
-            viewId = "/faces/pages/sigett/proyectos/editarProyecto.xhtml"
+            viewId = "/faces/pages/sigett/proyecto/editarProyecto.xhtml"
     ),
     @URLMapping(
             id = "proyectos",
             pattern = "/proyectos/",
-            viewId = "/faces/pages/sigett/proyectos/index.xhtml"
+            viewId = "/faces/pages/sigett/proyecto/index.xhtml"
     )
 })
 public class ProyectoController implements Serializable {

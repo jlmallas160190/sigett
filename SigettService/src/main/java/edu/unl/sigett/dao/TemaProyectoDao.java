@@ -28,8 +28,6 @@ public interface TemaProyectoDao {
 
     List<TemaProyecto> findRange(int[] range);
 
-    List<TemaProyecto> buscarPorProyecto(Long proyectoId);
-
     List<TemaProyecto> buscar(final TemaProyecto temaProyecto);
 
     int count();

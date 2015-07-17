@@ -6,7 +6,7 @@
 package edu.jlmallas.academico.entity;
 
 import java.io.Serializable;
-import java.math.BigInteger;
+import java.math.BigDecimal;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,8 +15,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
@@ -30,15 +28,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Entity
 @Table(name = "reporte_matricula", schema = "academico")
 @XmlRootElement
-@NamedQueries({
-    @NamedQuery(name = "ReporteMatricula.findAll", query = "SELECT r FROM ReporteMatricula r"),
-    @NamedQuery(name = "ReporteMatricula.findById", query = "SELECT r FROM ReporteMatricula r WHERE r.id = :id"),
-    @NamedQuery(name = "ReporteMatricula.findByMatriculaId", query = "SELECT r FROM ReporteMatricula r WHERE r.matriculaId = :matriculaId"),
-    @NamedQuery(name = "ReporteMatricula.findByModuloMatriculado", query = "SELECT r FROM ReporteMatricula r WHERE r.moduloMatriculado = :moduloMatriculado"),
-    @NamedQuery(name = "ReporteMatricula.findByNumeroModuloMatriculado", query = "SELECT r FROM ReporteMatricula r WHERE r.numeroModuloMatriculado = :numeroModuloMatriculado"),
-    @NamedQuery(name = "ReporteMatricula.findByParalelo", query = "SELECT r FROM ReporteMatricula r WHERE r.paralelo = :paralelo"),
-    @NamedQuery(name = "ReporteMatricula.findByEsAprobado", query = "SELECT r FROM ReporteMatricula r WHERE r.esAprobado = :esAprobado"),
-    @NamedQuery(name = "ReporteMatricula.findByNota", query = "SELECT r FROM ReporteMatricula r WHERE r.nota = :nota")})
 public class ReporteMatricula implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -71,7 +60,7 @@ public class ReporteMatricula implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "nota")
-    private Double nota;
+    private BigDecimal nota;
     @JoinColumn(name = "oferta_academica_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private OfertaAcademica ofertaAcademicaId;
@@ -144,11 +133,11 @@ public class ReporteMatricula implements Serializable {
         this.esAprobado = esAprobado;
     }
 
-    public Double getNota() {
+    public BigDecimal getNota() {
         return nota;
     }
 
-    public void setNota(Double nota) {
+    public void setNota(BigDecimal nota) {
         this.nota = nota;
     }
 
@@ -198,10 +187,7 @@ public class ReporteMatricula implements Serializable {
             return false;
         }
         ReporteMatricula other = (ReporteMatricula) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
+        return (this.id != null || other.id == null) && (this.id == null || this.id.equals(other.id));
     }
 
     @Override
