@@ -5,16 +5,21 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
     <body>
-        <h:panelGrid id="datos" rowClasses="rowpanelgrid" columns="2">
+        <h:panelGrid id="datos" rowClasses="rowpanelgrid" styleClass="panelgrid" columnClasses="col-sm-2,col-sm-10" columns="2">
+            <p:commandButton value="#{lbl.buscar_docentes}" 
+                             onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide(),PF('tblMDFilter').filter()"
+                             action="#{miembroTribunalController.buscarMiembrosDisponibles()}" process="@this"
+                             update=":contenido:dlgMiembrosDisponibles"/>
+            <h:inputHidden/>
             <h:outputLabel value="#{lbl.nombres}"/>
             <h:outputText value="#{sessionMiembroTribunal.miembroTribunalDTOSeleccionado.persona.nombres}"/>
             <h:outputLabel value="#{lbl.apellidos}"/>
             <h:outputText value="#{sessionMiembroTribunal.miembroTribunalDTOSeleccionado.persona.apellidos}"/>
             <h:outputLabel value="#{lbl.ci}"/>
-            <h:outputText value="#{sessionMiembroTribunal.miembroTribunalDTOSeleccionado.persona.ci}"/>
+            <h:outputText value="#{sessionMiembroTribunal.miembroTribunalDTOSeleccionado.persona.numeroIdentificacion}"/>
             <h:outputLabel value="#{lbl.cargo}*" />
             <p:selectOneMenu id="cargo"  converter="cargoMiembroTribunalConverter" required="true"
-                             value="#{sessionMiembroTribunal.miembroTribunalDTOSeleccionado.miembroTribunal.cargo}" >
+                             value="#{sessionMiembroTribunal.cargoSeleccionado}" >
                 <f:selectItem noSelectionOption="true" itemLabel="#{msg['lbl.seleccionar']}"/>
                 <f:selectItems itemLabel="#{cargo.nombre}"   var="tipo" value="#{sessionMiembroTribunal.cargos}"/>
             </p:selectOneMenu>

@@ -6,7 +6,6 @@
 package edu.unl.sigett.miembroTribunal;
 
 import com.jlmallas.comun.entity.Item;
-import edu.jlmallas.academico.entity.DocenteCarrera;
 import edu.unl.sigett.director.DirectorDTO;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -29,6 +28,7 @@ public class SessionMiembroTribunal implements Serializable {
     private List<MiembroTribunalDTO> miembrosTribunalDTO;
     private List<MiembroTribunalDTO> filterMiembrosTribunalDTO;
     private List<DirectorDTO> directoresDTO;
+    private List<DirectorDTO> directoresDTOAux;
     private List<DirectorDTO> filterDirectoresDTO;
     private List<Item> cargos;
 
@@ -39,13 +39,14 @@ public class SessionMiembroTribunal implements Serializable {
     private Boolean renderedDlgDocentesDisponibles;
 
     public SessionMiembroTribunal() {
-        this.cargoSeleccionado=new Item();
-        this.cargos=new ArrayList<>();
+        this.filterDirectoresDTO = new ArrayList<>();
+        this.cargoSeleccionado = new Item();
+        this.cargos = new ArrayList<>();
         this.miembrosTribunalDTO = new ArrayList<>();
         this.filterMiembrosTribunalDTO = new ArrayList<>();
         this.miembroTribunalDTOSeleccionado = new MiembroTribunalDTO();
         this.directoresDTO = new ArrayList<>();
-        this.filterDirectoresDTO = new ArrayList<>();
+        this.directoresDTOAux = new ArrayList<>();
     }
 
     public MiembroTribunalDTO getMiembroTribunalDTOSeleccionado() {
@@ -64,12 +65,12 @@ public class SessionMiembroTribunal implements Serializable {
         this.directoresDTO = directoresDTO;
     }
 
-    public List<DirectorDTO> getFilterDirectoresDTO() {
-        return filterDirectoresDTO;
+    public List<DirectorDTO> getDirectoresDTOAux() {
+        return directoresDTOAux;
     }
 
-    public void setFilterDirectoresDTO(List<DirectorDTO> filterDirectoresDTO) {
-        this.filterDirectoresDTO = filterDirectoresDTO;
+    public void setDirectoresDTOAux(List<DirectorDTO> directoresDTOAux) {
+        this.directoresDTOAux = directoresDTOAux;
     }
 
     public Boolean getRenderedCrear() {
@@ -150,6 +151,14 @@ public class SessionMiembroTribunal implements Serializable {
 
     public void setCargoSeleccionado(Item cargoSeleccionado) {
         this.cargoSeleccionado = cargoSeleccionado;
+    }
+
+    public List<DirectorDTO> getFilterDirectoresDTO() {
+        return filterDirectoresDTO;
+    }
+
+    public void setFilterDirectoresDTO(List<DirectorDTO> filterDirectoresDTO) {
+        this.filterDirectoresDTO = filterDirectoresDTO;
     }
 
 }

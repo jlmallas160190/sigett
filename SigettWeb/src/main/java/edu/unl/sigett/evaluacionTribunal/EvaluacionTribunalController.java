@@ -5,30 +5,42 @@
  */
 package edu.unl.sigett.evaluacionTribunal;
 
+import com.jlmallas.comun.entity.Evento;
 import com.jlmallas.comun.entity.EventoPersona;
 import com.jlmallas.comun.entity.Item;
 import com.jlmallas.comun.entity.Persona;
 import com.jlmallas.comun.enumeration.CatalogoEnum;
+import com.jlmallas.comun.enumeration.EquivalenciaEnum;
+import com.jlmallas.comun.enumeration.EventoEnum;
 import com.jlmallas.comun.service.EventoPersonaService;
+import com.jlmallas.comun.service.EventoService;
 import com.jlmallas.comun.service.ItemService;
 import com.jlmallas.comun.service.PersonaService;
 import edu.jlmallas.academico.entity.Carrera;
+import edu.jlmallas.academico.entity.EstudianteCarrera;
+import edu.jlmallas.academico.enumeration.EstadoEstudianteCarreraEnum;
+import edu.jlmallas.academico.service.EstudianteCarreraService;
+import edu.unl.sigett.directorProyecto.DirectorProyectoDTO;
+import edu.unl.sigett.entity.AutorProyecto;
 import edu.unl.sigett.entity.CalificacionMiembro;
 import edu.unl.sigett.entity.EvaluacionTribunal;
 import edu.unl.sigett.entity.MiembroTribunal;
-import edu.unl.sigett.entity.ProyectoCarreraOferta;
 import edu.unl.sigett.entity.RangoEquivalencia;
 import edu.unl.sigett.entity.RangoNota;
-import edu.unl.sigett.entity.Tribunal;
+import edu.unl.sigett.enumeration.CargoMiembroEnum;
 import edu.unl.sigett.enumeration.CatalogoEvaluacionEnum;
+import edu.unl.sigett.enumeration.EstadoActividadEnum;
+import edu.unl.sigett.enumeration.EstadoAutorEnum;
 import edu.unl.sigett.enumeration.EstadoProyectoEnum;
 import edu.unl.sigett.miembroTribunal.MiembroTribunalDTO;
+import edu.unl.sigett.miembroTribunal.SessionMiembroTribunal;
 import edu.unl.sigett.proyecto.SessionProyecto;
 import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
+import edu.unl.sigett.service.AutorProyectoService;
 import edu.unl.sigett.service.CalificacionMiembroTribunalService;
 import edu.unl.sigett.service.EvaluacionTribunalService;
 import edu.unl.sigett.service.MiembroTribunalService;
-import edu.unl.sigett.service.ProyectoCarreraOfertaService;
+import edu.unl.sigett.service.ProyectoService;
 import edu.unl.sigett.service.RangoEquivalenciaService;
 import edu.unl.sigett.service.RangoNotaService;
 import edu.unl.sigett.tribunal.SessionTribunal;
@@ -38,7 +50,6 @@ import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -76,6 +87,8 @@ public class EvaluacionTribunalController implements Serializable {
     private CabeceraController cabeceraController;
     @Inject
     private SessionTribunal sessionTribunal;
+    @Inject
+    private SessionMiembroTribunal sessionMiembroTribunal;
     //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="SERVICIOS">
     @EJB(lookup = "java:global/SeguridadService/UsuarioServiceImplement!org.jlmallas.seguridad.service.UsuarioService")
@@ -86,6 +99,8 @@ public class EvaluacionTribunalController implements Serializable {
     private EvaluacionTribunalService evaluacionTribunalService;
     @EJB(lookup = "java:global/ComunService/EventoPersonaServiceImplement!com.jlmallas.comun.service.EventoPersonaService")
     private EventoPersonaService eventoPersonaService;
+    @EJB(lookup = "java:global/ComunService/EventoServiceImplement!com.jlmallas.comun.service.EventoService")
+    private EventoService eventoService;
     @EJB(lookup = "java:global/ComunService/PersonaServiceImplement!com.jlmallas.comun.service.PersonaService")
     private PersonaService personaService;
     @EJB(lookup = "java:global/SigettService/RangoNotaServiceImplement!edu.unl.sigett.service.RangoNotaService")
@@ -96,6 +111,12 @@ public class EvaluacionTribunalController implements Serializable {
     private MiembroTribunalService miembroTribunalService;
     @EJB(lookup = "java:global/SigettService/CalificacionMiembroTribunalServiceImplement!edu.unl.sigett.service.CalificacionMiembroTribunalService")
     private CalificacionMiembroTribunalService calificacionMiembroTribunalService;
+    @EJB(lookup = "java:global/SigettService/ProyectoServiceImplement!edu.unl.sigett.service.ProyectoService")
+    private ProyectoService proyectoService;
+    @EJB(lookup = "java:global/AcademicoService/EstudianteCarreraServiceImplement!edu.jlmallas.academico.service.EstudianteCarreraService")
+    private EstudianteCarreraService estudianteCarreraService;
+    @EJB(lookup = "java:global/SigettService/AutorProyectoServiceImplement!edu.unl.sigett.service.AutorProyectoService")
+    private AutorProyectoService autorProyectoService;
     //</editor-fold>
     private static final Logger LOG = Logger.getLogger(EvaluacionTribunalController.class.getName());
 
@@ -108,7 +129,8 @@ public class EvaluacionTribunalController implements Serializable {
         renderedEditar();
         renderedEliminar();
         buscar();
-        
+        schudele();
+
     }
 
     //<editor-fold defaultstate="collapsed" desc="MÉTODOS CRUD">
@@ -123,15 +145,20 @@ public class EvaluacionTribunalController implements Serializable {
                 return;
             }
             Integer tienePermiso = usuarioService.tienePermiso(sessionUsuario.getUsuario(), cabeceraController.getValueFromProperties(
-                    PropertiesFileEnum.PERMISOS, "crear_evalulacion_tribunal").trim());
+                    PropertiesFileEnum.PERMISOS, "crear_evaluacion_tribunal").trim());
             if (tienePermiso == 1) {
                 sessionEvaluacionTribunal.setEvaluacionTribunal(new EvaluacionTribunal());
                 sessionEvaluacionTribunal.getEvaluacionTribunal().setLugar("ninguno");
+                sessionEvaluacionTribunal.getEvaluacionTribunal().setNota(BigDecimal.ZERO);
+                sessionEvaluacionTribunal.getEvaluacionTribunal().setEsAptoCalificar(Boolean.FALSE);
+                sessionEvaluacionTribunal.getEvaluacionTribunal().setEsActivo(Boolean.FALSE);
                 sessionEvaluacionTribunal.getEvaluacionTribunal().setObservacion("ninguno");
                 sessionEvaluacionTribunal.getEvaluacionTribunal().setSugerencia("ninguno");
                 sessionEvaluacionTribunal.getEvaluacionTribunal().setFechaInicio(sessionEvaluacionTribunal.getFechaInicioSeleccionada());
                 sessionEvaluacionTribunal.getEvaluacionTribunal().setFechaFin(sessionEvaluacionTribunal.getFechaFinSeleccionada());
+                sessionEvaluacionTribunal.getEvaluacionTribunal().setFechaPlazo(sessionEvaluacionTribunal.getFechaFinSeleccionada());
                 fijarCatalogoEvaluacion(sessionEvaluacionTribunal.getEvaluacionTribunal());
+                sessionEvaluacionTribunal.getEvaluacionTribunal().setTribunalId(sessionTribunal.getTribunal());
                 listadoRangos();
                 sessionEvaluacionTribunal.setRenderedDlgCrud(Boolean.TRUE);
                 RequestContext.getCurrentInstance().execute("PF('dlgEditarEvaluacionTribunal').show()");
@@ -195,244 +222,151 @@ public class EvaluacionTribunalController implements Serializable {
         } catch (Exception e) {
         }
     }
-//
-//    public boolean existeSustentacionPublica(Tribunal tribunal) {
-//        boolean var = false;
-////        try {
-////            for (EvaluacionTribunal evaluacionTribunal : evaluacionTribunalFacadeLocal.buscarPorTribunal(tribunal.getId())) {
-////                if (evaluacionTribunal.getCatalogoEvaluacionId().getCodigo().equalsIgnoreCase(CatalogoEvaluacionEnum.SUSTENTACIONPUBLICA.getTipo())) {
-////                    var = true;
-////                    break;
-////                }
-////            }
-////        } catch (Exception e) {
-////        }
-//        return var;
-//    }
-//
-////    public void actualizaEstadoAutores(EvaluacionTribunal evaluacionTribunal, EstadoAutor estadoAutor, EstadoEstudianteCarrera estadoEstudianteCarrera) {
-////        try {
-////            for (AutorProyecto autorProyecto : autorProyectoFacadeLocal.buscarPorProyecto(evaluacionTribunal.getTribunalId().getProyectoId().getId())) {
-////                EstudianteCarrera estudianteCarrera = estudianteCarreraFacadeLocal.find(autorProyecto.getAspiranteId().getId());
-////                if (!autorProyecto.getEstadoAutorId().getCodigo().equalsIgnoreCase(EstadoAutorEnum.ABANDONADO.getTipo())) {
-////                    autorProyecto.setEstadoAutorId(estadoAutor);
-////                    autorProyectoFacadeLocal.edit(autorProyecto);
-////                    estudianteCarrera.setEstadoId(estadoEstudianteCarrera);
-////                    estudianteCarreraFacadeLocal.edit(estudianteCarrera);
-////                }
-////            }
-////        } catch (Exception e) {
-////        }
-////    }
-//
-//    public void grabar(EvaluacionTribunal evaluacionTribunal, Tribunal tribunal, Proyecto proyecto, Usuario usuario) {
-//        try {
-////            CatalogoEvento catalogoEvento = catalogoEventoFacadeLocal.buscarPorCodigo(CatalogoEventoEnum.SUSTENTACION.getTipo());
-////            Evento evento = null;
-////            EstadoProyecto estadoProyecto = null;
-//////            EstadoEstudianteCarrera estadoEstudianteCarrera = null;
-////            FacesContext facesContext = FacesContext.getCurrentInstance();
-////            String param = (String) facesContext.getExternalContext().getRequestParameterMap().get("1");
-////            ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-////            int posRangoNota = 0;
-////            RangoNota rn = null;
-////            if (rangoNota != null) {
-////                posRangoNota = rangoNota.indexOf(":");
-////                rn = rangoNotaFacadeLocal.find(Integer.parseInt(rangoNota.substring(0, posRangoNota)));
-////            } else {
-////                if (evaluacionTribunal.getRangoNotaId() != null) {
-////                    rn = evaluacionTribunal.getRangoNotaId();
-////                }
-////            }
-////            if (rn != null) {
-////                evaluacionTribunal.setRangoNotaId(rn);
-////                for (RangoEquivalencia rangoEquivalencia : rangoEquivalenciaFacadeLocal.buscarPorRangoNota(rn.getId())) {
-////                    if (evaluacionTribunal.getNota() >= rangoEquivalencia.getNotaInicio() && evaluacionTribunal.getNota() <= rangoEquivalencia.getNotaFin()) {
-////                        evaluacionTribunal.setRangoEquivalenciaId(rangoEquivalencia);
-////                        break;
-////                    }
-////                }
-////            }
-////            if (administrarMiembrosTribunal.existeUnPresidente(tribunal)) {
-////                if (existeMiembroOtraSustentacion(evaluacionTribunal, usuario, proyecto) == false) {
-////                    if (tribunal.getProyectoId().getId() != null) {
-////                        proyecto = proyectoFacadeLocal.find(tribunal.getProyectoId().getId());
-////                    }
-////                    if (evaluacionTribunal.getId() == null) {
-////                        if (permitirCrearOtraSustentacion(evaluacionTribunal)) {
-////                            int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "crear_evaluacion_tribunal");
-////                            if (tienePermiso == 1) {
-////                                evaluacionTribunal.setTribunalId(tribunal);
-////                                calculaNota(tribunal, evaluacionTribunal);
-////                                evaluacionTribunal.setFechaPlazo(evaluacionTribunal.getFechaFin());
-////                                evaluacionTribunalFacadeLocal.create(evaluacionTribunal);
-////                                evento = new Evento(null, evaluacionTribunal.getCatalogoEvaluacionId().getNombre(), evaluacionTribunal.getFechaInicio(), evaluacionTribunal.getFechaFin(), evaluacionTribunal.getId() + "");
-////                                eventoFacadeLocal.edit(evento);
-////                                administrarCalificacionMiembro.grabarCalificacionesMiembro(tribunal, evaluacionTribunal);
-////                                listadoSustentacionesPorUsuarioCarrera(usuario, tribunal.getProyectoId());
-////                                if (param.equalsIgnoreCase("grabar-dlg")) {
-////                                    RequestContext.getCurrentInstance().execute("PF('dlgEditarEvaluacionTribunal').hide()");
-////                                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_grabar"), "");
-////                                    FacesContext.getCurrentInstance().addMessage(null, message);
-////                                    sessionEvaluacionTribunal.setEvaluacionTribunal(new EvaluacionTribunal());
-////                                } else {
-////                                    if (param.equalsIgnoreCase("grabar-editar-dlg")) {
-////                                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_grabar"), "");
-////                                        FacesContext.getCurrentInstance().addMessage(null, message);
-////                                    }
-////                                }
-////                            } else {
-////                                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_crear") + ". " + bundle.getString("lbl.msm_consulte"), "");
-////                                FacesContext.getCurrentInstance().addMessage(null, message);
-////                            }
-////                        } else {
-////                            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_crear") + ". " + bundle.getString("lbl.msm_consulte"), "");
-////                            FacesContext.getCurrentInstance().addMessage(null, message);
-////                        }
-////                    } else {
-////                        int tienePermiso = usuarioFacadeLocal.tienePermiso(usuario, "editar_evaluacion_tribunal");
-////                        int tienePermiso1 = usuarioFacadeLocal.tienePermiso(usuario, "calificar_evaluacion_tribunal_privada");
-////                        int tienePermiso2 = usuarioFacadeLocal.tienePermiso(usuario, "calificar_evaluacion_tribunal_publica");
-////                        EstadoAutor estadoAutor = null;
-////                        if (tienePermiso == 1 || tienePermiso1 == 1 || tienePermiso2 == 1) {
-////                            evaluacionTribunal.setTribunalId(tribunal);
-////                            calculaNota(tribunal, evaluacionTribunal);
-////                            evaluacionTribunalFacadeLocal.edit(evaluacionTribunal);
-////                            evento = eventoFacadeLocal.buscarPorCategoriaEvento(catalogoEvento.getId(), evaluacionTribunal.getId() + "");
-////                            if (evento == null) {
-////                                evento = new Evento(null, evaluacionTribunal.getCatalogoEvaluacionId().getNombre(), evaluacionTribunal.getFechaInicio(), evaluacionTribunal.getFechaFin(), evaluacionTribunal.getId() + "");
-////                                eventoFacadeLocal.edit(evento);
-////                            } else {
-////                                evento.setTitulo(evaluacionTribunal.getCatalogoEvaluacionId().getNombre());
-////                                evento.setFechaInicio(evaluacionTribunal.getFechaInicio());
-////                                evento.setFechaFin(evaluacionTribunal.getFechaFin());
-////                                eventoFacadeLocal.edit(evento);
-////                            }
-////                            administrarCalificacionMiembro.grabarCalificacionesMiembro(tribunal, evaluacionTribunal);
-////                            if (evaluacionTribunal.getEsAptoCalificar()) {
-////                                /*Privada*/
-////                                if (evaluacionTribunal.getCatalogoEvaluacionId().getCodigo().equalsIgnoreCase(CatalogoEvaluacionEnum.SUSTENTACIONPUBLICA.getTipo())) {
-////                                    if (proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.SUSTENTACIONPRIVADA.getTipo())) {
-////                                        if (evaluacionTribunal.getRangoEquivalenciaId().getId() != 4) {
-////                                            /*APROBADA*/
-////                                            estadoProyecto = estadoProyectoFacadeLocal.buscarPorCodigo(EstadoProyectoEnum.SUSTENTACIONPUBLICA.getTipo());
-////                                            estadoAutor = estadoAutorFacadeLocal.buscarPorCodigo(EstadoAutorEnum.SUSTENTACIONPUBLICA.getTipo());
-//////                                            estadoEstudianteCarrera = estadoEstudianteCarreraFacadeLocal.buscarPorCodigo(EstadoEstudianteCarreraEnum.EGRESADO.getTipo());
-////                                        } else {
-////                                            if (permitirCrearOtraSustentacion(evaluacionTribunal)) {
-////                                                /*RECUPERACIÓN*/
-////                                                estadoProyecto = estadoProyectoFacadeLocal.buscarPorCodigo(EstadoProyectoEnum.RECUPERACIONPUBLICA.getTipo());
-////                                                estadoAutor = estadoAutorFacadeLocal.buscarPorCodigo(EstadoAutorEnum.RECUPERACIONPUBLICA.getTipo());
-//////                                                estadoEstudianteCarrera = estadoEstudianteCarreraFacadeLocal.buscarPorCodigo(EstadoEstudianteCarreraEnum.EGRESADO.getTipo());
-////                                            } else {
-////                                                /*REPROBADO*/
-////                                                estadoProyecto = estadoProyectoFacadeLocal.buscarPorCodigo(EstadoProyectoEnum.REPROBADO.getTipo());
-////                                                estadoAutor = estadoAutorFacadeLocal.buscarPorCodigo(EstadoAutorEnum.REPROBADO.getTipo());
-//////                                                estadoEstudianteCarrera = estadoEstudianteCarreraFacadeLocal.find(EstadoEstudianteCarreraEnum.EGRESADO.getTipo());
-////                                            }
-////                                        }
-////                                    } else {
-////                                        /*RECUPERACIÓN PRIVADA*/
-////                                        if (proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.RECUPERACIONPRIVADA.getTipo())) {
-////                                            if (evaluacionTribunal.getRangoEquivalenciaId().getId() != 4) {
-////                                                /*APROBADA*/
-////                                                estadoProyecto = estadoProyectoFacadeLocal.buscarPorCodigo(EstadoProyectoEnum.APROBADO.getTipo());
-////                                                estadoAutor = estadoAutorFacadeLocal.buscarPorCodigo(EstadoAutorEnum.APROBADO.getTipo());
-//////                                                estadoEstudianteCarrera = estadoEstudianteCarreraFacadeLocal.find(3);
-////                                            } else {
-////                                                if (permitirCrearOtraSustentacion(evaluacionTribunal)) {
-////                                                    /*RECUPERACIÓN PRIVADA*/
-////                                                    estadoProyecto = estadoProyectoFacadeLocal.buscarPorCodigo(EstadoProyectoEnum.RECUPERACIONPRIVADA.getTipo());
-////                                                    estadoAutor = estadoAutorFacadeLocal.buscarPorCodigo(EstadoAutorEnum.RECUPERACIONPRIVADA.getTipo());
-//////                                                    estadoEstudianteCarrera = estadoEstudianteCarreraFacadeLocal.find(2);
-////                                                } else {
-////                                                    /*REPROBADO*/
-////                                                    estadoProyecto = estadoProyectoFacadeLocal.buscarPorCodigo(EstadoProyectoEnum.REPROBADO.getTipo());
-////                                                    estadoAutor = estadoAutorFacadeLocal.buscarPorCodigo(EstadoProyectoEnum.REPROBADO.getTipo());
-//////                                                    estadoEstudianteCarrera = estadoEstudianteCarreraFacadeLocal.find(2);
-////                                                }
-////                                            }
-////                                        }
-////                                    }
-////                                } else {
-////                                    /*PÚBLICA*/
-////                                    if (evaluacionTribunal.getCatalogoEvaluacionId().getCodigo().equalsIgnoreCase(CatalogoEvaluacionEnum.SUSTENTACIONPUBLICA.getTipo())) {
-////                                        if (proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.SUSTENTACIONPUBLICA.getTipo())) {
-////                                            if (evaluacionTribunal.getRangoEquivalenciaId().getId() != 4) {
-////                                                estadoProyecto = estadoProyectoFacadeLocal.buscarPorCodigo(EstadoProyectoEnum.APROBADO.getTipo());
-////                                                estadoAutor = estadoAutorFacadeLocal.buscarPorCodigo(EstadoProyectoEnum.APROBADO.getTipo());
-//////                                                estadoEstudianteCarrera = estadoEstudianteCarreraFacadeLocal.find(3);
-////                                            } else {
-////                                                if (permitirCrearOtraSustentacion(evaluacionTribunal)) {
-////                                                    estadoProyecto = estadoProyectoFacadeLocal.buscarPorCodigo(EstadoProyectoEnum.RECUPERACIONPUBLICA.getTipo());
-////                                                    estadoAutor = estadoAutorFacadeLocal.buscarPorCodigo(EstadoAutorEnum.RECUPERACIONPUBLICA.getTipo());
-//////                                                    estadoEstudianteCarrera = estadoEstudianteCarreraFacadeLocal.find(2);
-////                                                } else {
-////                                                    estadoProyecto = estadoProyectoFacadeLocal.buscarPorCodigo(EstadoProyectoEnum.REPROBADO.getTipo());
-////                                                    estadoAutor = estadoAutorFacadeLocal.buscarPorCodigo(EstadoAutorEnum.REPROBADO.getTipo());
-//////                                                    estadoEstudianteCarrera = estadoEstudianteCarreraFacadeLocal.buscarPorCodigo(EstadoEstudianteCarreraEnum.EGRESADO.getTipo());
-////                                                }
-////                                            }
-////                                        } else {
-////                                            if (proyecto.getEstadoProyectoId().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.RECUPERACIONPUBLICA.getTipo())) {
-////                                                if (evaluacionTribunal.getRangoEquivalenciaId().getId() != 4) {
-////                                                    estadoProyecto = estadoProyectoFacadeLocal.buscarPorCodigo(EstadoProyectoEnum.APROBADO.getTipo());
-////                                                    estadoAutor = estadoAutorFacadeLocal.buscarPorCodigo(EstadoAutorEnum.APROBADO.getTipo());
-//////                                                    estadoEstudianteCarrera = estadoEstudianteCarreraFacadeLocal.find(EstadoEstudianteCarreraEnum.TITULADO.getTipo());
-////                                                } else {
-////                                                    if (permitirCrearOtraSustentacion(evaluacionTribunal)) {
-////                                                        estadoProyecto = estadoProyectoFacadeLocal.buscarPorCodigo(EstadoProyectoEnum.RECUPERACIONPUBLICA.getTipo());
-////                                                        estadoAutor = estadoAutorFacadeLocal.buscarPorCodigo(EstadoAutorEnum.RECUPERACIONPUBLICA.getTipo());
-//////                                                        estadoEstudianteCarrera = estadoEstudianteCarreraFacadeLocal.find(EstadoEstudianteCarreraEnum.EGRESADO.getTipo());
-////                                                    } else {
-////                                                        estadoProyecto = estadoProyectoFacadeLocal.buscarPorCodigo(EstadoProyectoEnum.REPROBADO.getTipo());
-////                                                        estadoAutor = estadoAutorFacadeLocal.buscarPorCodigo(EstadoProyectoEnum.REPROBADO.getTipo());
-//////                                                        estadoEstudianteCarrera = estadoEstudianteCarreraFacadeLocal.find(EstadoEstudianteCarreraEnum.EGRESADO.getTipo());
-////                                                    }
-////                                                }
-////                                            }
-////                                        }
-////                                    }
-////                                }
-////                                tribunal.getProyectoId().setEstadoProyectoId(estadoProyecto);
-////                                proyectoFacadeLocal.edit(tribunal.getProyectoId());
-//////                                actualizaEstadoAutores(evaluacionTribunal, estadoAutor, estadoEstudianteCarrera);
-////                            }
-////                            listadoSustentacionesPorUsuarioCarrera(usuario, tribunal.getProyectoId());
-////                            if (param != null) {
-////                                if (param.equalsIgnoreCase("grabar-dlg")) {
-////                                    RequestContext.getCurrentInstance().execute("PF('dlgEditarEvaluacionTribunal').hide()");
-////                                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_editar"), "");
-////                                    FacesContext.getCurrentInstance().addMessage(null, message);
-////                                    sessionEvaluacionTribunal.setEvaluacionTribunal(new EvaluacionTribunal());
-////                                } else {
-////                                    if (param.equalsIgnoreCase("grabar-editar-dlg")) {
-////                                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_editar"), "");
-////                                        FacesContext.getCurrentInstance().addMessage(null, message);
-////                                    }
-////                                }
-////                            } else {
-////                                sessionEvaluacionTribunal.setEvaluacionTribunal(new EvaluacionTribunal());
-////                            }
-////                        } else {
-////                            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_editar") + ". " + bundle.getString("lbl.msm_consulte"), "");
-////                            FacesContext.getCurrentInstance().addMessage(null, message);
-////                        }
-////                    }
-////
-////                } else {
-////                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.miembro") + " " + bundle.getString("lbl.miembro_encontrado"), "");
-////                    FacesContext.getCurrentInstance().addMessage(null, message);
-////                }
-////            } else {
-////                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.no_select") + "" + bundle.getString("lbl.presidente") + ". " + bundle.getString("lbl.msm_consulte"), "");
-////                FacesContext.getCurrentInstance().addMessage(null, message);
-////            }
-//        } catch (Exception e) {
-//            System.out.println(e);
-//        }
-//    }
-//
+
+    /**
+     * CREAR EVENTO PARA LOS MIEMBROS DE TRIBUANAL
+     */
+    private void grabarEventosDirector() {
+        Item tipoEvento = itemService.buscarPorCatalogoCodigo(CatalogoEnum.CATALOGOEVENTO.getTipo(), EventoEnum.EVALUACIONTRIBUNAL.getTipo());
+        for (MiembroTribunalDTO miembroTribunalDTO : sessionMiembroTribunal.getMiembrosTribunalDTO()) {
+            if (!miembroTribunalDTO.getMiembroTribunal().getEsActivo()) {
+                continue;
+            }
+            Evento eventoBuscar = new Evento();
+            eventoBuscar.setTablaId(sessionEvaluacionTribunal.getEvaluacionTribunal().getId());
+            Calendar fechaCulminacion = Calendar.getInstance();
+            fechaCulminacion.setTime(sessionEvaluacionTribunal.getEvaluacionTribunal().getFechaPlazo());
+            fechaCulminacion.add(Calendar.HOUR_OF_DAY, 1);
+            List<Evento> eventos = eventoService.buscar(eventoBuscar);
+            Evento evento = !eventos.isEmpty() ? eventos.get(0) : null;
+            if (evento == null) {
+                evento = new Evento(null, sessionEvaluacionTribunal.getEvaluacionTribunal().getCatalogoEvaluacion() + ": "
+                        + sessionProyecto.getProyectoSeleccionado().getTemaActual(), "", sessionEvaluacionTribunal.getEvaluacionTribunal().getFechaInicio(),
+                        fechaCulminacion.getTime(), tipoEvento.getId(), sessionEvaluacionTribunal.getEvaluacionTribunal().getId());
+                eventoService.guardar(evento);
+                EventoPersona eventoMiembro = new EventoPersona(null, miembroTribunalDTO.getPersona(), evento);
+                eventoPersonaService.guardar(eventoMiembro);
+                continue;
+            }
+            evento.setNombre(sessionEvaluacionTribunal.getEvaluacionTribunal().getCatalogoEvaluacion() + ": "
+                    + sessionProyecto.getProyectoSeleccionado().getTemaActual());
+            eventoService.actualizar(evento);
+            EventoPersona eventoPersonaBuscar = new EventoPersona();
+            eventoPersonaBuscar.setEvento(evento);
+            eventoPersonaBuscar.setPersonaId(miembroTribunalDTO.getPersona());
+            List<EventoPersona> eventoPersonas = eventoPersonaService.buscar(eventoPersonaBuscar);
+            EventoPersona eventoPersona = !eventoPersonas.isEmpty() ? eventoPersonas.get(0) : null;
+            if (eventoPersona == null) {
+                eventoPersona = new EventoPersona(null, miembroTribunalDTO.getPersona(), evento);
+                eventoPersonaService.guardar(eventoPersona);
+            }
+        }
+    }
+
+    private void actualizarEstadoProyecto() {
+        if (sessionProyecto.getEstadoActual().getCodigo().equals(EstadoProyectoEnum.SUSTENTACIONPRIVADA.getTipo())) {
+            Item sustententacionPublica = itemService.buscarPorCatalogoCodigo(CatalogoEnum.ESTADOPROYECTO.getTipo(), EstadoProyectoEnum.SUSTENTACIONPUBLICA.getTipo());
+            sessionProyecto.getProyectoSeleccionado().setEstadoProyectoId(sustententacionPublica.getId());
+            sessionProyecto.setEstadoActual(sustententacionPublica);
+            if (sessionEvaluacionTribunal.getEquivalencia().getCodigo().equals(EquivalenciaEnum.REPROBADO.getTipo())) {
+                Item recuperacion = itemService.buscarPorCatalogoCodigo(CatalogoEnum.ESTADOPROYECTO.getTipo(), EstadoProyectoEnum.RECUPERACIONPRIVADA.getTipo());
+                sessionProyecto.getProyectoSeleccionado().setEstadoProyectoId(recuperacion.getId());
+                sessionProyecto.setEstadoActual(recuperacion);
+            }
+            return;
+        }
+        if (sessionProyecto.getEstadoActual().getCodigo().equals(EstadoProyectoEnum.RECUPERACIONPRIVADA.getTipo())) {
+            Item sustententacionPublica = itemService.buscarPorCatalogoCodigo(CatalogoEnum.ESTADOPROYECTO.getTipo(), EstadoProyectoEnum.SUSTENTACIONPUBLICA.getTipo());
+            sessionProyecto.getProyectoSeleccionado().setEstadoProyectoId(sustententacionPublica.getId());
+            sessionProyecto.setEstadoActual(sustententacionPublica);
+            if (sessionEvaluacionTribunal.getEquivalencia().getCodigo().equals(EquivalenciaEnum.REPROBADO.getTipo())) {
+                Item reprobado = itemService.buscarPorCatalogoCodigo(CatalogoEnum.ESTADOPROYECTO.getTipo(), EstadoProyectoEnum.REPROBADO.getTipo());
+                sessionProyecto.getProyectoSeleccionado().setEstadoProyectoId(reprobado.getId());
+                sessionProyecto.setEstadoActual(reprobado);
+            }
+            return;
+        }
+        if (sessionProyecto.getEstadoActual().getCodigo().equals(EstadoProyectoEnum.SUSTENTACIONPUBLICA.getTipo())) {
+            Item aprobado = itemService.buscarPorCatalogoCodigo(CatalogoEnum.ESTADOPROYECTO.getTipo(), EstadoProyectoEnum.APROBADO.getTipo());
+            sessionProyecto.getProyectoSeleccionado().setEstadoProyectoId(aprobado.getId());
+            sessionProyecto.setEstadoActual(aprobado);
+            if (sessionEvaluacionTribunal.getEquivalencia().getCodigo().equals(EquivalenciaEnum.REPROBADO.getTipo())) {
+                Item recuperacion = itemService.buscarPorCatalogoCodigo(CatalogoEnum.ESTADOPROYECTO.getTipo(), EstadoProyectoEnum.RECUPERACIONPUBLICA.getTipo());
+                sessionProyecto.getProyectoSeleccionado().setEstadoProyectoId(recuperacion.getId());
+                sessionProyecto.setEstadoActual(recuperacion);
+            }
+            return;
+        }
+        if (sessionProyecto.getEstadoActual().getCodigo().equals(EstadoProyectoEnum.RECUPERACIONPUBLICA.getTipo())) {
+            Item aprobado = itemService.buscarPorCatalogoCodigo(CatalogoEnum.ESTADOPROYECTO.getTipo(), EstadoProyectoEnum.APROBADO.getTipo());
+            sessionProyecto.getProyectoSeleccionado().setEstadoProyectoId(aprobado.getId());
+            sessionProyecto.setEstadoActual(aprobado);
+            if (sessionEvaluacionTribunal.getEquivalencia().getCodigo().equals(EquivalenciaEnum.REPROBADO.getTipo())) {
+                Item reprobado = itemService.buscarPorCatalogoCodigo(CatalogoEnum.ESTADOPROYECTO.getTipo(), EstadoProyectoEnum.REPROBADO.getTipo());
+                sessionProyecto.getProyectoSeleccionado().setEstadoProyectoId(reprobado.getId());
+                sessionProyecto.setEstadoActual(reprobado);
+            }
+        }
+    }
+
+    private void actualizarEstadoAutores() {
+        if (!sessionProyecto.getEstadoActual().getCodigo().equals(EstadoProyectoEnum.APROBADO.getTipo())) {
+            return;
+        }
+        Item estadoRenunciado = itemService.buscarPorCatalogoCodigo(CatalogoEnum.ESTADOAUTOR.getTipo(), EstadoAutorEnum.RENUNCIADO.getTipo());
+        Item estadoFinalizado = itemService.buscarPorCatalogoCodigo(CatalogoEnum.ESTADOAUTOR.getTipo(), EstadoAutorEnum.FINALIZADO.getTipo());
+        Item titulado = itemService.buscarPorCatalogoCodigo(CatalogoEnum.ESTADOESTUDIANTECARRERA.getTipo(), EstadoEstudianteCarreraEnum.TITULADO.getTipo());
+        for (AutorProyecto autorProyecto : sessionProyecto.getProyectoSeleccionado().getAutorProyectoList()) {
+            if (autorProyecto.getEstadoAutorId().equals(estadoRenunciado.getId())) {
+                continue;
+            }
+            EstudianteCarrera estudianteCarreraBuscar = new EstudianteCarrera();
+            estudianteCarreraBuscar.setId(autorProyecto.getAspiranteId().getId());
+            EstudianteCarrera estudianteCarrera = estudianteCarreraService.buscarPorId(estudianteCarreraBuscar);
+            estudianteCarrera.setEstadoId(titulado.getId());
+            autorProyecto.setEstadoAutorId(estadoFinalizado.getId());
+            estudianteCarreraService.actualizar(estudianteCarrera);
+            autorProyectoService.editar(autorProyecto);
+        }
+    }
+
+    public void grabar(EvaluacionTribunal evaluacionTribunal) {
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
+        try {
+            RangoEquivalencia rangoEquivalenciaBuscar = new RangoEquivalencia();
+            rangoEquivalenciaBuscar.setRangoNotaId(evaluacionTribunal.getRangoNotaId());
+            List<RangoEquivalencia> rangoEquivalencias = rangoEquivalenciaService.buscar(rangoEquivalenciaBuscar);
+            RangoEquivalencia rangoEquivalencia = !rangoEquivalencias.isEmpty() ? rangoEquivalencias.get(0) : null;
+            if (rangoEquivalencia == null) {
+                return;
+            }
+            Item equivalencia = itemService.buscarPorId(rangoEquivalencia.getId());
+            sessionEvaluacionTribunal.setEquivalencia(equivalencia);
+            evaluacionTribunal.setRangoEquivalenciaId(rangoEquivalencia);
+            if (!existeUnPresidente()) {
+                return;
+            }
+            calculaNota(evaluacionTribunal);
+            if (evaluacionTribunal.getId() == null) {
+                evaluacionTribunalService.guardar(evaluacionTribunal);
+                grabarEventosDirector();
+                actualizarEstadoProyecto();
+                actualizarEstadoAutores();
+                proyectoService.actualizar(sessionProyecto.getProyectoSeleccionado());
+                cabeceraController.getMessageView().message(FacesMessage.SEVERITY_INFO, bundle.getString("grabar"), "");
+                return;
+            }
+            evaluacionTribunalService.actualizar(evaluacionTribunal);
+            grabarEventosDirector();
+            actualizarEstadoProyecto();
+            actualizarEstadoAutores();
+            proyectoService.actualizar(sessionProyecto.getProyectoSeleccionado());
+            cabeceraController.getMessageView().message(FacesMessage.SEVERITY_INFO, bundle.getString("editar"), "");
+        } catch (Exception e) {
+            LOG.warning(e.getMessage());
+        }
+    }
 
     /**
      * VAIDAR NOTA DE EVALUACION
@@ -470,7 +404,7 @@ public class EvaluacionTribunalController implements Serializable {
         }
     }
 
-    public void buscar() {
+    private void buscar() {
         try {
             this.sessionEvaluacionTribunal.getEvaluacionesTribunal().clear();
             EvaluacionTribunal evaluacionTribunalBuscar = new EvaluacionTribunal();
@@ -586,7 +520,7 @@ public class EvaluacionTribunalController implements Serializable {
      * GENERAR CRONOGRAMA CON TODAS LA EVALUACIONES DE TRIBUNALES DE PROYECTOS
      * DE LA CARRERA ADMINISTRADA POR EL USUARIO
      */
-    public void schudele() {
+    private void schudele() {
         try {
             this.sessionEvaluacionTribunal.setEventModel(new DefaultScheduleModel());
             for (Carrera carrera : sessionProyecto.getCarreras()) {
@@ -678,6 +612,21 @@ public class EvaluacionTribunalController implements Serializable {
         cabeceraController.getMessageView().message(FacesMessage.SEVERITY_ERROR, bundle.getString("miembro_ocupado"), "");
     }
 
+    public Boolean existeUnPresidente() {
+        try {
+            Item presidente = itemService.buscarPorCatalogoCodigo(CatalogoEnum.CARGOMIEMBROTRIBUNAL.getTipo(), CargoMiembroEnum.PRESIDENTE.getTipo());
+            MiembroTribunal miembroTribunalBuscar = new MiembroTribunal();
+            miembroTribunalBuscar.setTribunalId(sessionTribunal.getTribunal());
+            List<MiembroTribunal> miembroTribunales = miembroTribunalService.buscar(miembroTribunalBuscar);
+            for (MiembroTribunal miembro : miembroTribunales) {
+                if (miembro.getCargoId().equals(presidente.getId())) {
+                    return Boolean.TRUE;
+                }
+            }
+        } catch (Exception e) {
+        }
+        return Boolean.FALSE;
+    }
 //
 //    public boolean permitirCrearOtraSustentacion(EvaluacionTribunal evaluacionTribunal) {
 //        boolean var = false;
@@ -727,6 +676,7 @@ public class EvaluacionTribunalController implements Serializable {
 //        return var;
 //    }
 //
+
     public void renderedCalificar() {
         try {
             sessionEvaluacionTribunal.setRenderedCalificarPrivada(Boolean.FALSE);
@@ -751,7 +701,6 @@ public class EvaluacionTribunalController implements Serializable {
         } catch (Exception e) {
         }
     }
-//
 
     public void renderedCrear() {
         try {
@@ -763,7 +712,7 @@ public class EvaluacionTribunalController implements Serializable {
                 return;
             }
             Integer tienePermiso = usuarioService.tienePermiso(sessionUsuario.getUsuario(), cabeceraController.getValueFromProperties(
-                    PropertiesFileEnum.PERMISOS, "crear_evalulacion_tribunal").trim());
+                    PropertiesFileEnum.PERMISOS, "crear_evaluacion_tribunal").trim());
             if (tienePermiso == 1) {
                 sessionEvaluacionTribunal.setRenderedCrear(Boolean.TRUE);
             }
@@ -782,7 +731,7 @@ public class EvaluacionTribunalController implements Serializable {
                 return;
             }
             Integer tienePermiso = usuarioService.tienePermiso(sessionUsuario.getUsuario(), cabeceraController.getValueFromProperties(
-                    PropertiesFileEnum.PERMISOS, "editar_evalulacion_tribunal").trim());
+                    PropertiesFileEnum.PERMISOS, "editar_evaluacion_tribunal").trim());
             if (tienePermiso == 1) {
                 sessionEvaluacionTribunal.setRenderedEditar(Boolean.TRUE);
             }
@@ -801,7 +750,7 @@ public class EvaluacionTribunalController implements Serializable {
                 return;
             }
             Integer tienePermiso = usuarioService.tienePermiso(sessionUsuario.getUsuario(), cabeceraController.getValueFromProperties(
-                    PropertiesFileEnum.PERMISOS, "eliminar_evalulacion_tribunal").trim());
+                    PropertiesFileEnum.PERMISOS, "eliminar_evaluacion_tribunal").trim());
             if (tienePermiso == 1) {
                 sessionEvaluacionTribunal.setRenderedEliminar(Boolean.TRUE);
             }

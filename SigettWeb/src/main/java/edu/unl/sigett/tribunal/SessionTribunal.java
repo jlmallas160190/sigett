@@ -31,6 +31,7 @@ public class SessionTribunal implements Serializable {
     private Boolean renderedCrud;
 
     public SessionTribunal() {
+        renderedCrud=Boolean.FALSE;
         this.filterTribunales = new ArrayList<>();
         this.tribunales = new ArrayList<>();
         this.tribunal = new Tribunal();

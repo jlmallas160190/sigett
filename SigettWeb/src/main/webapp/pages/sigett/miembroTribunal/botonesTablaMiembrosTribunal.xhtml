@@ -5,7 +5,11 @@
       xmlns:p="http://primefaces.org/ui">
     <body>
         <h:panelGrid styleClass="pnl-botones">
-            <p:commandButton value="#{lbl.crear}" rendered="#{sessionMiembroTribunal.renderedCrear}" action="#{miembroTribunalController.crear()}"/>
+            <p:commandButton value="#{lbl.crear}" icon="ui-icon-newwin" rendered="#{sessionMiembroTribunal.renderedCrear}" 
+                             onstart="PF('dlgLoading').show()"
+                             update=":contenido:msm,:contenido:dlgCrudMiembroTribunal"
+                             oncomplete="PF('dlgLoading').hide()" process="@this" actionListener="#{directorController.listadoDirectoresDiponibles()}"
+                             action="#{miembroTribunalController.crear()}"/>
         </h:panelGrid>
     </body>
 </html>

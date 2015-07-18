@@ -22,6 +22,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -101,6 +102,10 @@ public class EvaluacionTribunal implements Serializable {
     private Long catalogoEvaluacionId;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "evaluacionTribunalId")
     private List<Acta> actaList;
+    @Transient
+    private String equivalencia;
+    @Transient
+    private String catalogoEvaluacion;
 
     public EvaluacionTribunal() {
     }
@@ -256,6 +261,14 @@ public class EvaluacionTribunal implements Serializable {
         this.catalogoEvaluacionId = catalogoEvaluacionId;
     }
 
+    public String getEquivalencia() {
+        return equivalencia;
+    }
+
+    public void setEquivalencia(String equivalencia) {
+        this.equivalencia = equivalencia;
+    }
+
     @XmlTransient
     public List<Acta> getActaList() {
         return actaList;
@@ -263,6 +276,14 @@ public class EvaluacionTribunal implements Serializable {
 
     public void setActaList(List<Acta> actaList) {
         this.actaList = actaList;
+    }
+
+    public String getCatalogoEvaluacion() {
+        return catalogoEvaluacion;
+    }
+
+    public void setCatalogoEvaluacion(String catalogoEvaluacion) {
+        this.catalogoEvaluacion = catalogoEvaluacion;
     }
 
     @Override

@@ -145,13 +145,13 @@ public class AdministrarEstudiantesCarrera implements Serializable {
 
     public AdministrarEstudiantesCarrera() {
     }
-    
+
     public void init() {
         this.buscar();
         this.renderedCrear();
         this.renderedEditar();
     }
-    
+
     public void initEditar() {
         this.listadoGeneros();
         this.listadoTiposDocumentos();
@@ -167,9 +167,9 @@ public class AdministrarEstudiantesCarrera implements Serializable {
         sessionEstudianteCarrera.setRenderedInformacionEstudio(false);
         habilitaCampoEsAptoAspirante(sessionUsuario.getUsuario());
         return "pretty:crearEstudianteCarrera";
-        
+
     }
-    
+
     public String editar(EstudianteCarreraDTO estudianteCarreraDTO) {
         sessionEstudianteCarrera.setEstudianteCarreraDTO(estudianteCarreraDTO);
         habilitaCampoEsAptoAspirante(sessionUsuario.getUsuario());
@@ -180,7 +180,7 @@ public class AdministrarEstudiantesCarrera implements Serializable {
                 getGeneroId()).toString());
         return "pretty:editarEstudianteCarrera";
     }
-    
+
     public void listadoGeneros() {
         try {
             sessionEstudianteCarrera.setGeneros(itemService.buscarPorCatalogo(CatalogoEnum.GENERO.getTipo()));
@@ -188,7 +188,7 @@ public class AdministrarEstudiantesCarrera implements Serializable {
             System.out.println(e);
         }
     }
-    
+
     public void listadoTiposDocumentos() {
         try {
             sessionEstudianteCarrera.setTiposDocumento(itemService.buscarPorCatalogo(CatalogoEnum.TIPODOCUMENTOIDENTIFICACION.getTipo()));
@@ -196,7 +196,7 @@ public class AdministrarEstudiantesCarrera implements Serializable {
             System.out.println(e);
         }
     }
-    
+
     public void buscar() {
         this.sessionEstudianteCarrera.getEstudiantesCarreraDTO().clear();
         this.sessionEstudianteCarrera.getFilterEstudiantesCarreraDTO().clear();
@@ -228,7 +228,7 @@ public class AdministrarEstudiantesCarrera implements Serializable {
                     CatalogoEnum.ESTADOESTUDIANTECARRERA.getTipo(), EstadoEstudianteCarreraEnum.ESTUDIANTE.getTipo()).getId());
         }
     }
-    
+
     public String grabar() {
         try {
             FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -248,18 +248,18 @@ public class AdministrarEstudiantesCarrera implements Serializable {
             if (sessionEstudianteCarrera.getEstudianteCarreraDTO().getEstudianteCarrera().getId() == null) {
                 if (personaService.esUnico(sessionEstudianteCarrera.getEstudianteCarreraDTO().getPersona().getNumeroIdentificacion(),
                         sessionEstudianteCarrera.getEstudianteCarreraDTO().getPersona().getId())) {
-                    
+
                     personaService.guardar(sessionEstudianteCarrera.getEstudianteCarreraDTO().getPersona());
                     sessionEstudianteCarrera.getEstudianteCarreraDTO().
                             getEstudianteCarrera().getEstudianteId().setId(sessionEstudianteCarrera.getEstudianteCarreraDTO().getPersona().getId());
                     estudianteService.guardar(sessionEstudianteCarrera.getEstudianteCarreraDTO().getEstudianteCarrera().getEstudianteId());
-                    
+
                     logFacadeLocal.create(logFacadeLocal.crearLog("Estudiante", sessionEstudianteCarrera.getEstudianteCarreraDTO().getEstudianteCarrera().getEstudianteId().getId()
                             + "", "CREAR", "|Nombres= " + sessionEstudianteCarrera.getEstudianteCarreraDTO().getPersona().getNombres()
                             + "|Apellidos= " + sessionEstudianteCarrera.getEstudianteCarreraDTO().getPersona().getApellidos()
                             + "|Cédula= " + sessionEstudianteCarrera.getEstudianteCarreraDTO().getPersona().getNumeroIdentificacion() + "|Email= "
                             + sessionEstudianteCarrera.getEstudianteCarreraDTO().getPersona().getEmail(), sessionUsuario.getUsuario()));
-                    
+
                     fijarEstadoEstudianteCarrera();
                     estudianteCarreraService.guardar(sessionEstudianteCarrera.getEstudianteCarreraDTO().getEstudianteCarrera());
                     sessionEstudianteCarrera.getEstudianteCarreraDTO().getAspirante().setId(
@@ -319,7 +319,7 @@ public class AdministrarEstudiantesCarrera implements Serializable {
                     "lbl.msm_existe"), "");
             FacesContext.getCurrentInstance().addMessage(null, message);
             return "";
-            
+
         } catch (Exception e) {
             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), "");
             FacesContext.getCurrentInstance().addMessage(null, message);
@@ -401,7 +401,7 @@ public class AdministrarEstudiantesCarrera implements Serializable {
             e.printStackTrace();
         }
     }
-    
+
     public void obtenerMatriculaUltima() {
         @SuppressWarnings("UnusedAssignment")
         ReporteMatricula rm = new ReporteMatricula();
@@ -417,7 +417,7 @@ public class AdministrarEstudiantesCarrera implements Serializable {
         } catch (Exception e) {
         }
     }
-    
+
     public void obtenerPrimerMatricula() {
         @SuppressWarnings("UnusedAssignment")
         ReporteMatricula rm = new ReporteMatricula();
@@ -449,7 +449,7 @@ public class AdministrarEstudiantesCarrera implements Serializable {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
+
     }
 
     /**
@@ -481,7 +481,7 @@ public class AdministrarEstudiantesCarrera implements Serializable {
                     logFacadeLocal.create(logFacadeLocal.crearLog("ReporteMatricula", reporte.getId() + "", "CREAR", "NUEVO: |MatriculaId"
                             + reporte.getMatriculaId() + "|NombreModulo= " + reporte.getModuloMatriculado() + "|Oferta= "
                             + reporte.getOfertaAcademicaId().getId() + "|Estado= " + reporte.getEstadoMatriculaId(), sessionUsuario.getUsuario()));
-                    
+
                 }
             }
         } catch (Exception e) {
@@ -505,7 +505,7 @@ public class AdministrarEstudiantesCarrera implements Serializable {
             sessionEstudianteCarrera.getReporteMatriculas().add(reporteMatricula);
         }
     }
-    
+
     @SuppressWarnings("UnusedAssignment")
     public void compruebaEsAspiranteApto() {
         FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -539,17 +539,21 @@ public class AdministrarEstudiantesCarrera implements Serializable {
             cabeceraController.getMessageView().message(FacesMessage.SEVERITY_ERROR, bundle.getString("aspirante_no_apto_tiempo"), "");
             return;
         }
-        if (Integer.parseInt(reporte.getNumeroModuloMatriculado()) >= Integer.parseInt(moduloEgresado)) {
-            sessionEstudianteCarrera.getEstudianteCarreraDTO().getEstudianteCarrera().setEstadoId(
-                    itemService.buscarPorCatalogoCodigo(CatalogoEnum.ESTADOESTUDIANTECARRERA.getTipo(),
-                            EstadoEstudianteCarreraEnum.ESTUDIANTE.getTipo()).getId());
-        }
+        Item itemEstudiante = itemService.buscarPorCatalogoCodigo(CatalogoEnum.ESTADOESTUDIANTECARRERA.getTipo(),
+                EstadoEstudianteCarreraEnum.ESTUDIANTE.getTipo());
         sessionEstudianteCarrera.getEstudianteCarreraDTO().getAspirante().setEsApto(Boolean.TRUE);
-        sessionEstudianteCarrera.getEstudianteCarreraDTO().getEstudianteCarrera().setEstadoId(itemService.buscarPorCatalogoCodigo(
-                CatalogoEnum.ESTADOESTUDIANTECARRERA.getTipo(), EstadoEstudianteCarreraEnum.EGRESADO.getTipo()).getId());
+        sessionEstudianteCarrera.getEstudianteCarreraDTO().getEstudianteCarrera().setEstadoId(itemEstudiante.getId());
+        sessionEstudianteCarrera.getEstudianteCarreraDTO().getEstudianteCarrera().setEstado(itemEstudiante.getNombre());
+        if (Integer.parseInt(reporte.getNumeroModuloMatriculado()) >= Integer.parseInt(moduloEgresado)) {
+            Item itemEgresado = itemService.buscarPorCatalogoCodigo(CatalogoEnum.ESTADOESTUDIANTECARRERA.getTipo(),
+                    EstadoEstudianteCarreraEnum.EGRESADO.getTipo());
+            sessionEstudianteCarrera.getEstudianteCarreraDTO().getEstudianteCarrera().setEstadoId(itemEgresado.getId());
+            sessionEstudianteCarrera.getEstudianteCarreraDTO().getEstudianteCarrera().setEstado(itemEgresado.getNombre());
+        }
+        cabeceraController.getMessageView().message(FacesMessage.SEVERITY_INFO, bundle.getString("aspirante_apto"), "");
         aspiranteService.actualizar(sessionEstudianteCarrera.getEstudianteCarreraDTO().getAspirante());
         estudianteCarreraService.actualizar(sessionEstudianteCarrera.getEstudianteCarreraDTO().getEstudianteCarrera());
-        cabeceraController.getMessageView().message(FacesMessage.SEVERITY_INFO, bundle.getString("aspirante_apto"), "");
+
         logFacadeLocal.create(logFacadeLocal.crearLog("Aspirante", sessionEstudianteCarrera.getEstudianteCarreraDTO().getAspirante()
                 .getId() + "", "EDITAR", "NUEVO: |EsApto=" + sessionEstudianteCarrera.getEstudianteCarreraDTO().getAspirante().
                 getEsApto(), sessionUsuario.getUsuario()));
@@ -569,7 +573,7 @@ public class AdministrarEstudiantesCarrera implements Serializable {
         } catch (Exception e) {
         }
     }
-    
+
     public void renderedEditar() {
         int tienePermiso = usuarioService.tienePermiso(sessionUsuario.getUsuario(), "editar_estudiante_carrera");
         if (tienePermiso == 1) {
@@ -578,7 +582,7 @@ public class AdministrarEstudiantesCarrera implements Serializable {
             sessionEstudianteCarrera.setRenderedEditar(false);
         }
     }
-    
+
     public void renderedCrear() {
         int tienePermiso = usuarioService.tienePermiso(sessionUsuario.getUsuario(), "crear_estudiante_carrera");
         sessionEstudianteCarrera.setRenderedEditar(false);
@@ -643,13 +647,13 @@ public class AdministrarEstudiantesCarrera implements Serializable {
                         JsonParser jp = new JsonParser();
                         JsonElement jsonElement = jp.parse(e);
                         parserParalelosCarrera(jsonElement, c);
-                        
+
                     } catch (Exception e) {
                         parserParalelosCarrera(entrada.getValue(), c);
                     }
-                    
+
                 }
-                
+
             } else if (elemento.isJsonArray()) {
                 JsonArray array = elemento.getAsJsonArray();
                 sessionEstudianteCarrera.setKeyWsParalelosCarreraEntero(0);
@@ -669,7 +673,7 @@ public class AdministrarEstudiantesCarrera implements Serializable {
                 }
             }
         } catch (Exception e) {
-            
+
         }
     }
 
@@ -742,7 +746,7 @@ public class AdministrarEstudiantesCarrera implements Serializable {
             messageView.message(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.permiso_denegado_sincronizar") + ". " + bundle.getString("lbl.msm_consulte"), "");
         }
     }
-    
+
     public void sgaWebServicesDatosEstudiante() {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
@@ -793,7 +797,7 @@ public class AdministrarEstudiantesCarrera implements Serializable {
                         JsonParser jp = new JsonParser();
                         JsonElement jsonElement = jp.parse(e);
                         parserEstudianteJson(jsonElement, estudianteCarreraDTO);
-                        
+
                     } catch (Exception e) {
                         parserEstudianteJson(entrada.getValue(), estudianteCarreraDTO);
                     }
@@ -864,12 +868,12 @@ public class AdministrarEstudiantesCarrera implements Serializable {
                 }
                 sessionEstudianteCarrera.setKeyEntero(sessionEstudianteCarrera.getKeyEntero() + 1);
             }
-            
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    
+
     public void sgaWebServicesEstudianteMatriculas() {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
@@ -900,7 +904,7 @@ public class AdministrarEstudiantesCarrera implements Serializable {
             messageView.message(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.permiso_denegado_sincronizar") + ". " + bundle.getString("lbl.msm_consulte"), "");
         }
     }
-    
+
     public void sgaWebServicesReporteMatricula(ReporteMatricula rm) {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
@@ -914,7 +918,7 @@ public class AdministrarEstudiantesCarrera implements Serializable {
                 String serviceUrl = configuracionService.buscar(new Configuracion(URLWSEnum.REPORTEMATRICULAESTUDIANTE.getTipo())).get(0).getValor();
                 String s = serviceUrl + "?cedula=" + p.getNumeroIdentificacion() + ";id_carrera="
                         + rm.getEstudianteCarreraId().getCarreraId().getIdSga() + ";id_oferta=" + rm.getOfertaAcademicaId().getIdSga();
-                
+
                 ConexionDTO seguridad = new ConexionDTO(passwordService, s, userService);
                 NetClientService conexion = new NetClientServiceImplement();
                 String datosJson = conexion.response(seguridad);
@@ -930,7 +934,7 @@ public class AdministrarEstudiantesCarrera implements Serializable {
         } else {
             messageView.message(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.permiso_denegado_sincronizar") + ". " + bundle.getString("lbl.msm_consulte"), "");
         }
-        
+
     }
 
     /**
@@ -954,7 +958,7 @@ public class AdministrarEstudiantesCarrera implements Serializable {
                         JsonParser jp = new JsonParser();
                         JsonElement jsonElement = jp.parse(e);
                         parserReporteMatricula(jsonElement, rm);
-                        
+
                     } catch (Exception e) {
                         parserReporteMatricula(entrada.getValue(), rm);
                     }
@@ -962,7 +966,7 @@ public class AdministrarEstudiantesCarrera implements Serializable {
             } else if (elemento.isJsonArray()) {
                 JsonArray array = elemento.getAsJsonArray();
                 sessionEstudianteCarrera.setKeyEnteroRm(0);
-                
+
                 java.util.Iterator<JsonElement> iter = array.iterator();
                 while (iter.hasNext()) {
                     JsonElement entrada = iter.next();
@@ -984,7 +988,7 @@ public class AdministrarEstudiantesCarrera implements Serializable {
         } catch (Exception e) {
         }
     }
-    
+
     @SuppressWarnings("CallToThreadDumpStack")
     private void parserMatriculasJson(JsonElement elemento) throws Exception {
         try {
@@ -1000,7 +1004,7 @@ public class AdministrarEstudiantesCarrera implements Serializable {
                         JsonParser jp = new JsonParser();
                         JsonElement jsonElement = jp.parse(e);
                         parserMatriculasJson(jsonElement);
-                        
+
                     } catch (Exception e) {
                         parserMatriculasJson(entrada.getValue());
                     }
@@ -1011,7 +1015,7 @@ public class AdministrarEstudiantesCarrera implements Serializable {
                 JsonArray array = elemento.getAsJsonArray();
                 sessionEstudianteCarrera.setKeyEnteroMatricula(0);
                 sessionEstudianteCarrera.setReporteMatricula(new ReporteMatricula(Boolean.FALSE));
-                
+
                 java.util.Iterator<JsonElement> iter = array.iterator();
                 while (iter.hasNext()) {
                     JsonElement entrada = iter.next();
@@ -1034,7 +1038,7 @@ public class AdministrarEstudiantesCarrera implements Serializable {
                     sessionEstudianteCarrera.setKeyEnteroMatricula(sessionEstudianteCarrera.getKeyEnteroMatricula() + 1);
                     return;
                 }
-                
+
                 if (sessionEstudianteCarrera.getKeyEnteroMatricula() == 2) {
                     sessionEstudianteCarrera.getReporteMatricula().setParalelo(valor.getAsString());
                     sessionEstudianteCarrera.setKeyEnteroMatricula(sessionEstudianteCarrera.getKeyEnteroMatricula() + 1);
@@ -1045,7 +1049,7 @@ public class AdministrarEstudiantesCarrera implements Serializable {
                     sessionEstudianteCarrera.setKeyEnteroMatricula(sessionEstudianteCarrera.getKeyEnteroMatricula() + 1);
                     return;
                 }
-                
+
                 if (sessionEstudianteCarrera.getKeyEnteroMatricula() == 4) {
                     sessionEstudianteCarrera.getReporteMatricula().setModuloMatriculado(valor.getAsString());
                     sessionEstudianteCarrera.setKeyEnteroMatricula(sessionEstudianteCarrera.getKeyEnteroMatricula() + 1);
@@ -1061,7 +1065,7 @@ public class AdministrarEstudiantesCarrera implements Serializable {
                 }
                 sessionEstudianteCarrera.setKeyEnteroMatricula(sessionEstudianteCarrera.getKeyEnteroMatricula() + 1);
             }
-            
+
             sessionEstudianteCarrera.getReporteMatriculasWS().add(sessionEstudianteCarrera.getReporteMatricula());
         } catch (Exception e) {
             e.printStackTrace();
@@ -1085,7 +1089,7 @@ public class AdministrarEstudiantesCarrera implements Serializable {
             String userService = configuracionService.buscar(new Configuracion(ConfiguracionEnum.USUARIOWS.getTipo())).get(0).getValor();
             String serviceUrl = configuracionService.buscar(new Configuracion(URLWSEnum.ESTADOESTUDIANTEPARALELO.getTipo())).get(0).getValor();
             String s = serviceUrl + "?id_paralelo=" + paraleloId;
-            
+
             ConexionDTO seguridad = new ConexionDTO(passwordService, s, userService);
             NetClientService conexion = new NetClientServiceImplement();
             String datosJson = conexion.response(seguridad);
@@ -1161,7 +1165,7 @@ public class AdministrarEstudiantesCarrera implements Serializable {
                 }
                 sessionEstudianteCarrera.setContadorEstadoEP(sessionEstudianteCarrera.getContadorEstadoEP() + 1);
             }
-            
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1172,23 +1176,23 @@ public class AdministrarEstudiantesCarrera implements Serializable {
     public SessionUsuario getSessionUsuario() {
         return sessionUsuario;
     }
-    
+
     public void setSessionUsuario(SessionUsuario sessionUsuario) {
         this.sessionUsuario = sessionUsuario;
     }
-    
+
     public SessionEstudianteCarrera getSessionEstudianteCarrera() {
         return sessionEstudianteCarrera;
     }
-    
+
     public void setSessionEstudianteCarrera(SessionEstudianteCarrera sessionEstudianteCarrera) {
         this.sessionEstudianteCarrera = sessionEstudianteCarrera;
     }
-    
+
     public SessionUsuarioCarrera getSessionUsuarioCarrera() {
         return sessionUsuarioCarrera;
     }
-    
+
     public void setSessionUsuarioCarrera(SessionUsuarioCarrera sessionUsuarioCarrera) {
         this.sessionUsuarioCarrera = sessionUsuarioCarrera;
     }

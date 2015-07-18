@@ -5,7 +5,10 @@
       xmlns:p="http://primefaces.org/ui">
     <body>
         <h:panelGrid styleClass="pnl-botones">
-            <p:commandButton value="#{lbl.crear}" rendered="#{sessionTribunal.renderedCrear}" action="#{tribunalController.crear()}"/>
+            <p:commandButton value="#{lbl.crear}" icon="ui-icon-newwin" rendered="#{sessionTribunal.renderedCrear}" 
+                             process="@this"
+                             onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide(),PF('tblMTFilter').filter()" update=":contenido:msm,:contenido:dlgEditarTribunal"
+                             action="#{tribunalController.crear()}"/>
         </h:panelGrid>
     </body>
 </html>

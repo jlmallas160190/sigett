@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui">
+    <body>
+        <p:schedule id="schedule" value="#{sessionEvaluacionTribunal.eventModel}" widgetVar="schedule" timeZone="GMT-5" view="agendaWeek">
+            <p:ajax event="dateSelect" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" 
+                    listener="#{evaluacionTribunalController.onEventCrear}" update=":contenido:dlgEditarEvaluacionTribunal"/>
+            <p:ajax event="eventSelect" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" 
+                    listener="#{evaluacionTribunalController.onEventSelect}" />                                      
+            <p:ajax event="eventMove" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" 
+                    listener="#{evaluacionTribunalController.onEventMove}" update=":contenido:msm,schedule"/>                                                                                  
+            <p:ajax event="eventResize" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" 
+                    listener="#{evaluacionTribunalController.onEventResize}" update="schedule,:contenido:msm"/>
+        </p:schedule>
+    </body>
+
+</html>

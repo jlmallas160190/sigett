@@ -6,8 +6,6 @@
 
 package edu.unl.sigett.director;
 
-import edu.unl.sigett.academico.converter.DocenteCarreraDTOConverter;
-import edu.unl.sigett.academico.dto.DocenteCarreraDTO;
 import java.util.List;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -18,7 +16,7 @@ import javax.faces.convert.FacesConverter;
  *
  * @author jorge-luis
  */
-@FacesConverter("DirectorDTOConverter")
+@FacesConverter("directorDTOConverter")
 public class DirectorDTOConverter implements Converter{
 private static List<DirectorDTO> directoresDTO;
     @Override

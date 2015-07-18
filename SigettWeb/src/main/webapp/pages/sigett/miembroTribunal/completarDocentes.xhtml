@@ -5,13 +5,13 @@
 
     <body>
         <p:autoComplete   effect="fade" minQueryLength="2" placeholder="#{msg['lbl.buscar']}"
-                          scrollHeight="250" maxResults="10" 
+                          scrollHeight="250" maxResults="10"
                           value="#{sessionMiembroTribunal.directorDTOSeleccionado}"
                           completeMethod="#{miembroTribunalController.completarDocentes}"
-                          var="d" itemLabel="#{d.persona.apellidos} #{d.persona.nombres}"
-                          converter="directorDTOConverter" itemValue="#{d}" multiple="false">
+                          var="director" itemLabel="#{director.persona.apellidos} #{director.persona.nombres}"
+                          converter="directorDTOConverter" itemValue="#{director}" multiple="false">
             <p:ajax event="itemSelect" update="datos,msm"
-                    listener="#{miembroTribunalController.seleccionarDocente(d)}" />
+                   />
         </p:autoComplete>
     </body>
 

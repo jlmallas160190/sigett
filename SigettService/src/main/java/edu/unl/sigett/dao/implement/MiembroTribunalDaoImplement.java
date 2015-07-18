@@ -37,8 +37,13 @@ public class MiembroTribunalDaoImplement extends AbstractDao<MiembroTribunal> im
             existeFiltro = Boolean.TRUE;
         }
         if (miembroTribunal.getTribunalId() != null) {
-            sql.append(" and m.tribuanlId=:tribunalId ");
+            sql.append(" and m.tribunalId=:tribunalId ");
             parametros.put("tribunalId", miembroTribunal.getTribunalId());
+            existeFiltro = Boolean.TRUE;
+        }
+        if (miembroTribunal.getEsActivo() != null) {
+            sql.append(" and m.esActivo=:activo ");
+            parametros.put("activo", miembroTribunal.getEsActivo());
             existeFiltro = Boolean.TRUE;
         }
         if (!existeFiltro) {

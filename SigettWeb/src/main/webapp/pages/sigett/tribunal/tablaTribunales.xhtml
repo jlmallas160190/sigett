@@ -5,9 +5,10 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
     <body>
-        <p:dataTable id="dgTribunales" paginatorPosition="bottom" value="#{sessionTribunal.tribunales}" var="item"
+        <p:dataTable id="tblTribunales" paginatorPosition="bottom" value="#{sessionTribunal.tribunales}" var="item"
                      filteredValue="#{sessionTribunal.filterTribunales}" widgetVar="tblTribunalesFilter"
-                    paginator="true" rowIndexVar="rowIx" emptyMessage="#{msg['lbl.table.empty']}">
+                     rowIndexVar="rowIx" rowKey="#{item}" selectionMode="single" selection="#{item}"
+                     paginator="true" rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'even-row' : 'odd-row'}"  emptyMessage="#{msg['lbl.table.empty']}">
             <p:column sortBy="#{item.descripcion}" filterBy="#{item.descripcion}"
                       rendered="#{sessionTribunal.renderedEditar}">
                 <f:facet name="header">
@@ -19,7 +20,10 @@
                 <f:facet name="header">
                     <h:outputLabel value="#{lbl.accion}"/>  
                 </f:facet>
-                <p:commandButton icon="ui-icon-pencil" action="#{tribunalController.editar(item)}" rendered="#{sessionTribunal.renderedEditar}"/>
+                <p:commandButton icon="ui-icon-pencil" action="#{tribunalController.editar(item)}" 
+                                 onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide(),PF('schedule').update(),PF('tblMTFilter').filter()" 
+                                 update=":contenido:dlgEditarTribunal,:contenido:tabViewDatosTribunal:schedule"
+                                 rendered="#{sessionTribunal.renderedEditar}"/>
             </p:column>
         </p:dataTable>
     </body>

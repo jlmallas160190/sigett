@@ -9,13 +9,16 @@ package com.jlmallas.comun.enumeration;
  *
  * @author jorge-luis
  */
-public enum EventoEnum {
+public enum EquivalenciaEnum {
 
-    ACTIVIDAD("ACTIVIDAD"),
-    EVALUACIONTRIBUNAL("EVALUACION_TRIBUNAL");
+    REPROBADO("REPROBADO"),
+    REGULAR("REGULAR"),
+    MUYBUENO("MUYBUENO"),
+    BUENO("BUENO"),
+    SOBRESALIENTE("SOBRESALIENTE");
     String tipo;
 
-    private EventoEnum(String tipo) {
+    private EquivalenciaEnum(String tipo) {
         this.tipo = tipo;
     }
 

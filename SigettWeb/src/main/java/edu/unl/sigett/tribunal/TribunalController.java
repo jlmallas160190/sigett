@@ -8,24 +8,16 @@ package edu.unl.sigett.tribunal;
 import com.jlmallas.comun.entity.Item;
 import com.jlmallas.comun.enumeration.CatalogoEnum;
 import com.jlmallas.comun.service.ItemService;
-import edu.jlmallas.academico.dao.ReporteMatriculaDao;
 import edu.jlmallas.academico.entity.EstudianteCarrera;
-import edu.jlmallas.academico.entity.OfertaAcademica;
-import edu.jlmallas.academico.entity.ReporteMatricula;
 import edu.jlmallas.academico.enumeration.EstadoEstudianteCarreraEnum;
 import edu.jlmallas.academico.service.EstudianteCarreraService;
-import edu.jlmallas.academico.service.OfertaAcademicaService;
 import edu.unl.sigett.entity.AutorProyecto;
-import edu.unl.sigett.entity.ConfiguracionCarrera;
-import edu.unl.sigett.entity.Proyecto;
 import edu.unl.sigett.entity.Tribunal;
-import edu.unl.sigett.enumeration.ConfiguracionCarreraEnum;
 import edu.unl.sigett.enumeration.EstadoAutorEnum;
 import edu.unl.sigett.enumeration.EstadoProyectoEnum;
 import edu.unl.sigett.proyecto.SessionProyecto;
 import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
 import edu.unl.sigett.service.AutorProyectoService;
-import edu.unl.sigett.service.ConfiguracionCarreraService;
 import edu.unl.sigett.service.TribunalService;
 import edu.unl.sigett.util.CabeceraController;
 import edu.unl.sigett.util.PropertiesFileEnum;
@@ -64,8 +56,6 @@ public class TribunalController implements Serializable {
     //<editor-fold defaultstate="collapsed" desc="SERVICIOS">
     @EJB(lookup = "java:global/SigettService/AutorProyectoServiceImplement!edu.unl.sigett.service.AutorProyectoService")
     private AutorProyectoService autorProyectoService;
-    @EJB(lookup = "java:global/AcademicoService/ReporteMatriculaDaoImplement!edu.jlmallas.academico.dao.ReporteMatriculaDao")
-    private ReporteMatriculaDao reporteMatriculaDao;
     @EJB(lookup = "java:global/SigettService/TribunalServiceImplement!edu.unl.sigett.service.TribunalService")
     private TribunalService tribunalService;
     @EJB(lookup = "java:global/ComunService/ItemServiceImplement!com.jlmallas.comun.service.ItemService")
@@ -76,10 +66,6 @@ public class TribunalController implements Serializable {
     private UsuarioService usuarioService;
     @EJB(lookup = "java:global/SeguridadService/LogDaoImplement!org.jlmallas.seguridad.dao.LogDao")
     private LogDao logDao;
-    @EJB(lookup = "java:global/SigettService/ConfiguracionCarreraServiceImplement!edu.unl.sigett.service.ConfiguracionCarreraService")
-    private ConfiguracionCarreraService configuracionCarreraService;
-    @EJB(lookup = "java:global/AcademicoService/OfertaAcademicaServiceImplement!edu.jlmallas.academico.service.OfertaAcademicaService")
-    private OfertaAcademicaService ofertaAcademicaService;
     //</editor-fold>
     private static final Logger LOG = Logger.getLogger(TribunalController.class.getName());
 
@@ -103,25 +89,18 @@ public class TribunalController implements Serializable {
      */
     public Boolean comprobarAutoresAptosSustentacion() {
         try {
-            String moduloEgresado = configuracionCarreraService.buscar(new ConfiguracionCarrera(sessionProyecto.getCarreraSeleccionada().getId(), "ME")).get(0).getValor();
             Item estadoAutorRenunciado = itemService.buscarPorCatalogoCodigo(CatalogoEnum.ESTADOAUTOR.getTipo(), EstadoAutorEnum.RENUNCIADO.getTipo());
             Item estadoEstudianteEgresado = itemService.buscarPorCatalogoCodigo(CatalogoEnum.ESTADOESTUDIANTECARRERA.getTipo(),
                     EstadoEstudianteCarreraEnum.EGRESADO.getTipo());
             AutorProyecto autorProyectoBuscar = new AutorProyecto();
             autorProyectoBuscar.setProyectoId(sessionProyecto.getProyectoSeleccionado());
             List<AutorProyecto> autorProyectos = autorProyectoService.buscar(autorProyectoBuscar);
-            ConfiguracionCarrera configuracionCarrera = configuracionCarreraService.buscarPrimero(
-                    new ConfiguracionCarrera(sessionProyecto.getCarreraSeleccionada().getId(), ConfiguracionCarreraEnum.OFERTAACADEMICA.getTipo()));
-            OfertaAcademica ofertaAcademicaActual = ofertaAcademicaService.find(Long.parseLong(configuracionCarrera.getValor()));
             for (AutorProyecto autorProyecto : autorProyectos) {
                 EstudianteCarrera estudianteCarrera = estudianteCarreraService.buscarPorId(new EstudianteCarrera(autorProyecto.getAspiranteId().getId()));
-                if (!autorProyecto.getEstadoAutorId().equals(estadoAutorRenunciado.getId())) {
-                    return Boolean.TRUE;
+                if (autorProyecto.getEstadoAutorId().equals(estadoAutorRenunciado.getId())) {
+                    return Boolean.FALSE;
                 }
-                ReporteMatricula rm = reporteMatriculaDao.buscarUltimaMatriculaEstudiante(estudianteCarrera.getId());
-                if (estudianteCarrera.getEstadoId().equals(estadoEstudianteEgresado.getId())
-                        || (Integer.parseInt(rm.getNumeroModuloMatriculado()) >= Integer.parseInt(moduloEgresado)
-                        && rm.getOfertaAcademicaId().equals(ofertaAcademicaActual))) {
+                if (estudianteCarrera.getEstadoId().equals(estadoEstudianteEgresado.getId())) {
                     return Boolean.TRUE;
                 }
             }
@@ -141,7 +120,7 @@ public class TribunalController implements Serializable {
         tribunalBuscar.setProyectoId(sessionProyecto.getProyectoSeleccionado());
         tribunalBuscar.setEsActivo(Boolean.TRUE);
         List<Tribunal> tribunals = tribunalService.buscar(tribunalBuscar);
-        if (!tribunals.isEmpty()) {
+        if (tribunals.isEmpty()) {
             return Boolean.TRUE;
         }
         return Boolean.FALSE;
@@ -156,7 +135,7 @@ public class TribunalController implements Serializable {
                 return;
             }
             if (!comprobarTribunalesActivos()) {
-                cabeceraController.getMessageView().message(FacesMessage.SEVERITY_ERROR, bundle.getString("denegado_crear") + ". " + bundle.getString("lbl.msm_consulte"), "");
+                cabeceraController.getMessageView().message(FacesMessage.SEVERITY_ERROR, bundle.getString("denegar_crear"), "");
                 return;
             }
             if (!(sessionProyecto.getEstadoActual().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.SUSTENTACIONPRIVADA.getTipo())
@@ -170,6 +149,7 @@ public class TribunalController implements Serializable {
             if (tienePermiso == 1) {
                 sessionTribunal.setTribunal(new Tribunal());
                 sessionTribunal.getTribunal().setProyectoId(sessionProyecto.getProyectoSeleccionado());
+                sessionTribunal.getTribunal().setEsActivo(Boolean.TRUE);
                 sessionTribunal.setRenderedCrud(Boolean.TRUE);
                 RequestContext.getCurrentInstance().execute("PF('dlgEditarTribunal').show()");
             }
@@ -179,17 +159,7 @@ public class TribunalController implements Serializable {
     }
 
     public void editar(Tribunal tribunal) {
-        FacesContext facesContext = FacesContext.getCurrentInstance();
-        ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
         try {
-            if (!comprobarAutoresAptosSustentacion()) {
-                cabeceraController.getMessageView().message(FacesMessage.SEVERITY_ERROR, bundle.getString("autor_no_apto"), "");
-                return;
-            }
-            if (!comprobarTribunalesActivos()) {
-                cabeceraController.getMessageView().message(FacesMessage.SEVERITY_ERROR, bundle.getString("denegado_editar"), "");
-                return;
-            }
             if (!(sessionProyecto.getEstadoActual().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.SUSTENTACIONPRIVADA.getTipo())
                     || sessionProyecto.getEstadoActual().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.SUSTENTACIONPUBLICA.getTipo()))
                     || sessionProyecto.getEstadoActual().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.RECUPERACIONPRIVADA.getTipo())
@@ -246,7 +216,6 @@ public class TribunalController implements Serializable {
             Integer tienePermiso = usuarioService.tienePermiso(sessionUsuario.getUsuario(), cabeceraController.getValueFromProperties(
                     PropertiesFileEnum.PERMISOS, "crear_tribunal").trim());
             if (tienePermiso == 1) {
-                tribunalService.guardar(tribunal);
                 tribunalService.actualizar(tribunal);
                 logDao.create(logDao.crearLog("Tribunal", tribunal.getId() + "", "EDITAR", "|Descripcion " + tribunal.getDescripcion() + "|Es Activo= " + tribunal.getEsActivo() + "|Proyecto= " + tribunal.getProyectoId().getId(), sessionUsuario.getUsuario()));
                 if (param.equalsIgnoreCase("grabar")) {
@@ -259,7 +228,7 @@ public class TribunalController implements Serializable {
                 }
                 return;
             }
-            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_crear") + ". " + bundle.getString("lbl.msm_consulte"), "");
+            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("denegar_crear") + ". " + bundle.getString("lbl.msm_consulte"), "");
             FacesContext.getCurrentInstance().addMessage(null, message);
 
         } catch (Exception e) {
@@ -285,7 +254,7 @@ public class TribunalController implements Serializable {
                 cabeceraController.getMessageView().message(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_eliminar"), "");
                 return;
             }
-            cabeceraController.getMessageView().message(FacesMessage.SEVERITY_ERROR, bundle.getString("denegado_eliminar"), "");
+            cabeceraController.getMessageView().message(FacesMessage.SEVERITY_ERROR, bundle.getString("denegar_eliminar"), "");
         } catch (Exception e) {
             LOG.warning(e.getMessage());
         }
@@ -311,7 +280,7 @@ public class TribunalController implements Serializable {
             Tribunal tribunalBuscar = new Tribunal();
             tribunalBuscar.setProyectoId(sessionProyecto.getProyectoSeleccionado());
             tribunalBuscar.setEsActivo(Boolean.TRUE);
-            sessionTribunal.setTribunales(tribunalService.buscar(tribunalBuscar));
+            sessionTribunal.getTribunales().addAll(tribunalService.buscar(tribunalBuscar));
             sessionTribunal.setFilterTribunales(sessionTribunal.getTribunales());
         } catch (Exception e) {
         }

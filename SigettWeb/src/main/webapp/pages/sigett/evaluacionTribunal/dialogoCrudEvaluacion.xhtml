@@ -5,17 +5,14 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
     <body>
-        <p:dialog id="dlgEditarTribunal" header="#{lbl.editar_tribunal}" styleClass="modal-md" widgetVar="dlgEditarTribunal" 
+        <p:dialog id="dlgEditarEvaluacionTribunal" header="#{lbl.editar_evaluacion_tribunal}"  styleClass="modal-md" widgetVar="dlgEditarEvaluacionTribunal" 
                   modal="true" closable="false" position="center" draggable="false">
-            <p:panel rendered="#{sessionTribunal.renderedCrud}">
-                <f:event type="preRenderView" listener="#{miembroTribunalController.preRenderView()}"/>
-                <f:event type="preRenderView" listener="#{evaluacionTribunalController.preRenderView()}"/>
-                <ui:include src="editarTribunal.xhtml"/>
+            <p:panel rendered="#{sessionEvaluacionTribunal.renderedDlgCrud}">
+                <ui:include src="editarEvaluacionTribunal.xhtml"/>
                 <f:facet name="footer">
-                    <ui:include src="botonesEditarTribunal.xhtml"/>
+                    <ui:include src="botonesCrudEvaluacion.xhtml"/>
                 </f:facet>
             </p:panel>
         </p:dialog>
     </body>
-
 </html>

@@ -24,7 +24,7 @@
                         <p:panel header="#{msg['lbl.informacion']}" toggleable="true">
                             <ui:include src="datosProyecto.xhtml"/>
                         </p:panel>
-                         <br/>
+                        <br/>
                         <p:panel header="#{msg['lbl.lineasInvestigacion']}" toggleable="true">
                             <ui:include src="dataGridLineasInvestigacion.xhtml"/>
                             <ui:include src="pickListLineasInvestigacion.xhtml"/>
@@ -77,11 +77,11 @@
                             </f:facet>    
                         </p:panel>
                     </p:tab>
-                    <p:tab  id="tabTribunales" rendered="#{tribunalController.renderedCrear()}" title="#{lbl.tribunales}" >
+                    <p:tab  id="tabTribunales" rendered="#{sessionTribunal.renderedBuscar}" title="#{lbl.tribunales}" >
                         <p:panel>
                             <ui:include src="./../tribunal/tablaTribunales.xhtml"/>
                             <f:facet name="footer">
-                                 <ui:include src="./../tribunal/botonestablaTribunales.xhtml"/>
+                                <ui:include src="./../tribunal/botonesTablaTribunales.xhtml"/>
                             </f:facet>
                         </p:panel>
                     </p:tab>
@@ -90,7 +90,10 @@
                     <ui:include src="botonesEditarProyecto.xhtml"/>
                 </f:facet>
             </p:panel>
-              <ui:include src="./../tribunal/dialogoTribunal.xhtml"/>
+            <ui:include src="./../tribunal/dialogoTribunal.xhtml"/>
+            <ui:include src="./../evaluacionTribunal/dialogoCrudEvaluacion.xhtml"/>
+            <ui:include src="./../miembroTribunal/dialogoCrudMiembroTribunal.xhtml"/>
+            <ui:include src="./../miembroTribunal/dialogoMiembrosDisponibles.xhtml"/>
             <ui:include src="./../prorroga/dialogoEditarProrroga.xhtml"/>
             <ui:include src="dialogoDirectoresDisponibles.xhtml"/>
             <ui:include src="dialogoDocentesDisponibles.xhtml"/>

@@ -5,24 +5,35 @@
  */
 package edu.unl.sigett.miembroTribunal;
 
+import com.jlmallas.comun.entity.Configuracion;
 import com.jlmallas.comun.entity.EventoPersona;
 import com.jlmallas.comun.entity.Item;
 import com.jlmallas.comun.entity.Persona;
 import com.jlmallas.comun.enumeration.CatalogoEnum;
+import com.jlmallas.comun.enumeration.ConfiguracionEnum;
+import com.jlmallas.comun.enumeration.ValorEnum;
+import com.jlmallas.comun.service.ConfiguracionService;
 import com.jlmallas.comun.service.EventoPersonaService;
 import com.jlmallas.comun.service.ItemService;
 import com.jlmallas.comun.service.PersonaService;
+import edu.jlmallas.academico.entity.Carrera;
 import edu.jlmallas.academico.entity.Docente;
+import edu.jlmallas.academico.entity.DocenteCarrera;
+import edu.jlmallas.academico.service.DocenteCarreraService;
 import edu.jlmallas.academico.service.DocenteService;
 import edu.unl.sigett.director.DirectorDM;
 import edu.unl.sigett.director.DirectorDTO;
 import edu.unl.sigett.director.DirectorDTOConverter;
+import edu.unl.sigett.directorProyecto.DirectorProyectoDTO;
+import edu.unl.sigett.entity.Director;
+import edu.unl.sigett.entity.DirectorProyecto;
 import edu.unl.sigett.entity.EvaluacionTribunal;
 import edu.unl.sigett.entity.MiembroTribunal;
 import edu.unl.sigett.enumeration.CargoMiembroEnum;
 import edu.unl.sigett.enumeration.EstadoProyectoEnum;
 import edu.unl.sigett.proyecto.SessionProyecto;
 import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
+import edu.unl.sigett.service.DirectorService;
 import edu.unl.sigett.service.MiembroTribunalService;
 import edu.unl.sigett.tribunal.SessionTribunal;
 import edu.unl.sigett.util.CabeceraController;
@@ -61,8 +72,6 @@ public class MiembroTribunalController implements Serializable {
     private SessionTribunal sessionTribunal;
     @Inject
     private CabeceraController cabeceraController;
-    @Inject
-    private DirectorDM directorDM;
     //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="SERVICIOS">
     @EJB(lookup = "java:global/SeguridadService/UsuarioServiceImplement!org.jlmallas.seguridad.service.UsuarioService")
@@ -77,6 +86,12 @@ public class MiembroTribunalController implements Serializable {
     private PersonaService personaService;
     @EJB(lookup = "java:global/ComunService/EventoPersonaServiceImplement!com.jlmallas.comun.service.EventoPersonaService")
     private EventoPersonaService eventoPersonaService;
+    @EJB(lookup = "java:global/AcademicoService/DocenteCarreraServiceImplement!edu.jlmallas.academico.service.DocenteCarreraService")
+    private DocenteCarreraService docenteCarreraService;
+    @EJB(lookup = "java:global/SigettService/DirectorServiceImplement!edu.unl.sigett.service.DirectorService")
+    private DirectorService directorService;
+    @EJB(lookup = "java:global/ComunService/ConfiguracionServiceImplement!com.jlmallas.comun.service.ConfiguracionService")
+    private ConfiguracionService configuracionService;
     //</editor-fold>
     private static final Logger LOG = Logger.getLogger(MiembroTribunalController.class.getName());
 
@@ -138,6 +153,7 @@ public class MiembroTribunalController implements Serializable {
                     PropertiesFileEnum.PERMISOS, "editar_miembro_tribunal").trim());
             if (tienePermiso == 1) {
                 buscarCargos();
+                sessionMiembroTribunal.setCargoSeleccionado(itemService.buscarPorId(miembroTribunal.getMiembroTribunal().getCargoId()));
                 sessionMiembroTribunal.setMiembroTribunalDTOSeleccionado(miembroTribunal);
                 sessionMiembroTribunal.setRenderedDlgCrud(Boolean.TRUE);
                 RequestContext.getCurrentInstance().execute("PF('dlgCrudMiembroTribunal').show()");
@@ -152,17 +168,57 @@ public class MiembroTribunalController implements Serializable {
     public void seleccionarDocente(DirectorDTO directorDTO) {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
+        Boolean directorEncontrado = Boolean.FALSE;
+        Configuracion configuracionBuscar = new Configuracion(ConfiguracionEnum.AGREGARMIEMBRODIRECTOR.getTipo());
+        List<Configuracion> configuraciones = configuracionService.buscar(configuracionBuscar);
+        Configuracion configuracion = !configuraciones.isEmpty() ? configuraciones.get(0) : null;
         try {
             if (!validaDocenteDisponible(directorDTO.getPersona())) {
                 cabeceraController.getMessageView().message(FacesMessage.SEVERITY_ERROR, bundle.getString("miembro_ocupado"), "");
                 return;
             }
+            if (!sessionProyecto.getDirectoresProyectoDTO().isEmpty() && configuracion != null) {
+                if (configuracion.getValor().equals(ValorEnum.NO.getTipo())) {
+                    for (DirectorProyectoDTO directorProyectoDTO : sessionProyecto.getDirectoresProyectoDTO()) {
+                        if (directorProyectoDTO.getDirectorDTO().getDirector().equals(directorDTO.getDirector())) {
+                            directorEncontrado = Boolean.TRUE;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (directorEncontrado) {
+                cabeceraController.getMessageView().message(FacesMessage.SEVERITY_ERROR, bundle.getString("miembro_es_director"), "");
+                return;
+            }
             sessionMiembroTribunal.getMiembroTribunalDTOSeleccionado().setDocente(directorDTO.getDocenteCarrera().getDocenteId());
             sessionMiembroTribunal.getMiembroTribunalDTOSeleccionado().setPersona(directorDTO.getPersona());
-            cabeceraController.getMessageView().message(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_seleccionar"), "");
+            sessionMiembroTribunal.getMiembroTribunalDTOSeleccionado().getMiembroTribunal().setDocenteId(sessionMiembroTribunal.getMiembroTribunalDTOSeleccionado().getDocente().getId());
+            MiembroTribunal miembroTribunalBuscar = new MiembroTribunal();
+            miembroTribunalBuscar.setDocenteId(sessionMiembroTribunal.getMiembroTribunalDTOSeleccionado().getDocente().getId());
+            miembroTribunalBuscar.setTribunalId(sessionTribunal.getTribunal());
+            List<MiembroTribunal> miembroTribunals = miembroTribunalService.buscar(miembroTribunalBuscar);
+            MiembroTribunal miembroTribunalEditado = !miembroTribunals.isEmpty() ? miembroTribunals.get(0) : null;
+            if (miembroTribunalEditado != null) {
+                miembroTribunalEditado.setEsActivo(Boolean.TRUE);
+                sessionMiembroTribunal.getMiembroTribunalDTOSeleccionado().setMiembroTribunal(miembroTribunalEditado);
+            }
         } catch (Exception e) {
             LOG.warning(e.getMessage());
         }
+    }
+
+    public void buscarMiembrosDisponibles() {
+        listarDirectoresCarrera();
+        listadoMiembrosDisponibles();
+        sessionMiembroTribunal.setRenderedDlgDocentesDisponibles(Boolean.TRUE);
+        RequestContext.getCurrentInstance().execute("PF('dlgMiembrosDisponibles').show()");
+    }
+
+    public void cancelarMiembrosDisponibles() {
+        sessionMiembroTribunal.setRenderedDlgDocentesDisponibles(Boolean.FALSE);
+        RequestContext.getCurrentInstance().execute("PF('dlgMiembrosDisponibles').hide()");
     }
 
     @SuppressWarnings("UnusedAssignment")
@@ -222,14 +278,20 @@ public class MiembroTribunalController implements Serializable {
     public void grabar(MiembroTribunalDTO miembroTribunalDTO) {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
-        String param = (String) facesContext.getExternalContext().getRequestParameterMap().get("1");
+        String param = (String) facesContext.getExternalContext().getRequestParameterMap().get("tipo-grabado");
         try {
+            miembroTribunalDTO.getMiembroTribunal().setCargoId(sessionMiembroTribunal.getCargoSeleccionado().getId());
+            miembroTribunalDTO.getMiembroTribunal().setTribunalId(sessionTribunal.getTribunal());
             if (miembroTribunalDTO.getMiembroTribunal().getDocenteId() == null) {
                 cabeceraController.getMessageView().message(FacesMessage.SEVERITY_ERROR, bundle.getString("docente_no_seleccionado"), "");
                 return;
             }
             if (!validaMiembrosTribunal()) {
                 cabeceraController.getMessageView().message(FacesMessage.SEVERITY_ERROR, bundle.getString("miembro_ocupado"), "");
+                return;
+            }
+            if (existePresidente(miembroTribunalDTO.getMiembroTribunal())) {
+                cabeceraController.getMessageView().message(FacesMessage.SEVERITY_ERROR, bundle.getString("tribunal_existe_presidente"), "");
                 return;
             }
             if (!(sessionProyecto.getEstadoActual().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.SUSTENTACIONPRIVADA.getTipo())
@@ -244,7 +306,6 @@ public class MiembroTribunalController implements Serializable {
                 if (tienePermiso == 1) {
                     miembroTribunalService.guardar(miembroTribunalDTO.getMiembroTribunal());
                     if (param.equalsIgnoreCase("grabar")) {
-                        RequestContext.getCurrentInstance().execute("PF('dlgEditarMiembroTribunal').hide()");
                         cancelarEdicion();
                         return;
                     }
@@ -256,13 +317,12 @@ public class MiembroTribunalController implements Serializable {
             Integer tienePermiso = usuarioService.tienePermiso(sessionUsuario.getUsuario(), cabeceraController.getValueFromProperties(
                     PropertiesFileEnum.PERMISOS, "editar_miembro_tribunal").trim());
             if (tienePermiso == 1) {
-                miembroTribunalService.guardar(miembroTribunalDTO.getMiembroTribunal());
+                miembroTribunalService.actualizar(miembroTribunalDTO.getMiembroTribunal());
+                cabeceraController.getMessageView().message(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_editar"), "");
                 if (param.equalsIgnoreCase("grabar")) {
-                    RequestContext.getCurrentInstance().execute("PF('dlgEditarMiembroTribunal').hide()");
                     cancelarEdicion();
                     return;
                 }
-                cabeceraController.getMessageView().message(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_editar"), "");
             }
             cabeceraController.getMessageView().message(FacesMessage.SEVERITY_ERROR, bundle.getString("denegado_editar"), "");
         } catch (NumberFormatException e) {
@@ -279,6 +339,7 @@ public class MiembroTribunalController implements Serializable {
      */
     public List<DirectorDTO> completarDocentes(final String query) {
         sessionMiembroTribunal.getDirectoresDTO().clear();
+        Boolean miembrosEmpty = Boolean.FALSE;
         List<DirectorDTO> results = new ArrayList<>();
         try {
             if ("".equals(query.trim())) {
@@ -288,20 +349,23 @@ public class MiembroTribunalController implements Serializable {
             miembroTribunalBuscar.setTribunalId(sessionTribunal.getTribunal());
             List<MiembroTribunal> miembrosTribunal = miembroTribunalService.buscar(miembroTribunalBuscar);
             if (miembrosTribunal.isEmpty()) {
-                sessionMiembroTribunal.setDirectoresDTO(directorDM.getDirectoresDTO());
+                sessionMiembroTribunal.getDirectoresDTO().addAll(sessionMiembroTribunal.getDirectoresDTOAux());
+                miembrosEmpty = Boolean.TRUE;
             }
-            for (DirectorDTO directorDTO : directorDM.getDirectoresDTO()) {
-                for (MiembroTribunal miembroTribunal : miembrosTribunal) {
-                    if (!miembroTribunal.getDocenteId().equals(directorDTO.getDocenteCarrera().getDocenteId().getId())) {
-                        sessionMiembroTribunal.getDirectoresDTO().add(directorDTO);
+            if (!miembrosEmpty) {
+                for (DirectorDTO directorDTO : sessionMiembroTribunal.getDirectoresDTOAux()) {
+                    for (MiembroTribunal miembroTribunal : miembrosTribunal) {
+                        if (!miembroTribunal.getDocenteId().equals(directorDTO.getDocenteCarrera().getDocenteId().getId())) {
+                            sessionMiembroTribunal.getDirectoresDTO().add(directorDTO);
+                        }
                     }
                 }
             }
             for (DirectorDTO directorDTO : sessionMiembroTribunal.getDirectoresDTO()) {
-                if (directorDTO.getPersona().getApellidos().toLowerCase().contains(query.toLowerCase())
-                        || directorDTO.getPersona().getNombres().toLowerCase().contains(query.toLowerCase())
-                        || directorDTO.getPersona().getNumeroIdentificacion().toLowerCase().contains(query.toLowerCase())) {
-                   results.add(directorDTO);
+                if (directorDTO.getPersona().getApellidos().toLowerCase().startsWith(query.toLowerCase())
+                        || directorDTO.getPersona().getNombres().toLowerCase().startsWith(query.toLowerCase())
+                        || directorDTO.getPersona().getNumeroIdentificacion().toLowerCase().startsWith(query.toLowerCase())) {
+                    results.add(directorDTO);
                 }
             }
         } catch (Exception e) {
@@ -311,13 +375,64 @@ public class MiembroTribunalController implements Serializable {
         return results;
     }
 
+    /**
+     * LISTAR LOS DIRECTORES DE PROYECTOS DE LAS CARRERAS ADMINISTRADAS POR EL
+     * USUARIO DEL SISTEMA
+     */
+    private void listarDirectoresCarrera() {
+        sessionMiembroTribunal.getDirectoresDTOAux().clear();
+        for (Carrera carrera : sessionProyecto.getCarreras()) {
+            DocenteCarrera docenteCarreraBuscar = new DocenteCarrera();
+            docenteCarreraBuscar.setCarreraId(carrera);
+            List<DocenteCarrera> docenteCarreras = docenteCarreraService.buscar(docenteCarreraBuscar);
+            for (DocenteCarrera dc : docenteCarreras) {
+                Director directorBuscar = new Director();
+                directorBuscar.setId(dc.getId());
+                DirectorDTO directorDTO = new DirectorDTO(directorService.buscarPorId(directorBuscar), dc,
+                        personaService.buscarPorId(new Persona(dc.getDocenteId().getId())));
+                sessionMiembroTribunal.getDirectoresDTOAux().add(directorDTO);
+            }
+        }
+    }
+
+    private void listadoMiembrosDisponibles() {
+        sessionMiembroTribunal.getDirectoresDTO().clear();
+        Boolean miembrosEmpty = Boolean.FALSE;
+        MiembroTribunal miembroTribunalBuscar = new MiembroTribunal();
+        miembroTribunalBuscar.setTribunalId(sessionTribunal.getTribunal());
+        List<MiembroTribunal> miembrosTribunal = miembroTribunalService.buscar(miembroTribunalBuscar);
+        if (miembrosTribunal.isEmpty()) {
+            sessionMiembroTribunal.getDirectoresDTO().addAll(sessionMiembroTribunal.getDirectoresDTOAux());
+            miembrosEmpty = Boolean.TRUE;
+        }
+        if (!miembrosEmpty) {
+            for (DirectorDTO directorDTO : sessionMiembroTribunal.getDirectoresDTOAux()) {
+                for (MiembroTribunal miembroTribunal : miembrosTribunal) {
+                    if (!miembroTribunal.getDocenteId().equals(directorDTO.getDocenteCarrera().getDocenteId().getId())) {
+                        if (!sessionMiembroTribunal.getDirectoresDTO().contains(directorDTO)) {
+                            sessionMiembroTribunal.getDirectoresDTO().add(directorDTO);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     public void buscar() {
         this.sessionMiembroTribunal.getMiembrosTribunalDTO().clear();
         this.sessionMiembroTribunal.getFilterMiembrosTribunalDTO().clear();
-        for (MiembroTribunal miembroTribunal : sessionTribunal.getTribunal().getMiembroList()) {
+        MiembroTribunal miembroTribunalBuscar = new MiembroTribunal();
+        if (sessionTribunal.getTribunal().getId() == null) {
+            return;
+        }
+        miembroTribunalBuscar.setTribunalId(sessionTribunal.getTribunal());
+        miembroTribunalBuscar.setEsActivo(Boolean.TRUE);
+        List<MiembroTribunal> miembrosTribunal = miembroTribunalService.buscar(miembroTribunalBuscar);
+        for (MiembroTribunal miembroTribunal : miembrosTribunal) {
             MiembroTribunalDTO miembroTribunalDTO = new MiembroTribunalDTO(miembroTribunal,
                     docenteService.buscarPorId(new Docente(miembroTribunal.getDocenteId())), null);
             miembroTribunalDTO.setPersona(personaService.buscarPorId(new Persona(miembroTribunalDTO.getDocente().getId())));
+            miembroTribunal.setCargo(itemService.buscarPorId(miembroTribunal.getCargoId()).getNombre());
             sessionMiembroTribunal.getMiembrosTribunalDTO().add(miembroTribunalDTO);
         }
         this.sessionMiembroTribunal.setFilterMiembrosTribunalDTO(sessionMiembroTribunal.getMiembrosTribunalDTO());
@@ -333,11 +448,14 @@ public class MiembroTribunalController implements Serializable {
      * @param miembroTribunal
      * @return
      */
-    public Boolean existePresidente(MiembroTribunal miembroTribunal) {
+    private Boolean existePresidente(MiembroTribunal miembroTribunal) {
         try {
             Item presidente = itemService.buscarPorCatalogoCodigo(CatalogoEnum.CARGOMIEMBROTRIBUNAL.getTipo(), CargoMiembroEnum.PRESIDENTE.getTipo());
             if (miembroTribunal.getCargoId().equals(presidente.getId())) {
                 for (MiembroTribunalDTO miembroTribunalDTO : sessionMiembroTribunal.getMiembrosTribunalDTO()) {
+                    if (miembroTribunalDTO.getDocente().getId().equals(miembroTribunal.getDocenteId())) {
+                        continue;
+                    }
                     if (miembroTribunalDTO.getMiembroTribunal().getCargoId().equals(presidente.getId())
                             && miembroTribunal.getCargoId().equals(miembroTribunalDTO.getMiembroTribunal().getCargoId())) {
                         return Boolean.TRUE;
