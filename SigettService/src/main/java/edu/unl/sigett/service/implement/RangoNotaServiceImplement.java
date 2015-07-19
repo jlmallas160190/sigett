@@ -32,4 +32,13 @@ public class RangoNotaServiceImplement implements RangoNotaService {
         return this.rangoNotaDao.buscar(rangoNota);
     }
 
+    @Override
+    public RangoNota buscarPorCodigo(final RangoNota rangoNota) {
+        List<RangoNota> rangoNotas = rangoNotaDao.buscar(rangoNota);
+        if (rangoNotas == null) {
+            return null;
+        }
+        return !rangoNotas.isEmpty() ? rangoNotas.get(0) : null;
+    }
+
 }

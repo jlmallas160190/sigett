@@ -5,8 +5,6 @@ package edu.unl.sigett.service;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
-
 import edu.unl.sigett.entity.CalificacionMiembro;
 import java.util.List;
 import javax.ejb.Local;
@@ -16,7 +14,7 @@ import javax.ejb.Local;
  * @author jorge-luis
  */
 @Local
-public interface CalificacionMiembroTribunalService {
+public interface CalificacionMiembroService {
 
     void guardar(final CalificacionMiembro calificacionMiembro);
 
@@ -27,4 +25,6 @@ public interface CalificacionMiembroTribunalService {
     CalificacionMiembro buscarPorId(final CalificacionMiembro calificacionMiembro);
 
     List<CalificacionMiembro> buscar(final CalificacionMiembro calificacionMiembro);
+
+    CalificacionMiembro buscarPorMiembro(final CalificacionMiembro calificacionMiembro);
 }

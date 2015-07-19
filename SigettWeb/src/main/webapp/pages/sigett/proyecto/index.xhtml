@@ -5,15 +5,13 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
     <body>
-        <ui:composition template="./../../template.xhtml">
+        <ui:composition template="./../../template2.xhtml">
             <ui:define name="title">#{msg['lbl.proyectos']}</ui:define>
             <ui:define name="top">
                 <ui:include src="./../../inicio/menu.xhtml"/>
             </ui:define>
-            <ui:define name="right">
-                <p:panel>
-                    <ui:include src="tablaCarrerasFilter.xhtml"/>
-                </p:panel>
+            <ui:define name="left">
+                  <ui:include src="tablaCarrerasFilter.xhtml"/>
             </ui:define>
             <ui:define name="content">
                 <p:messages id="msm"/>

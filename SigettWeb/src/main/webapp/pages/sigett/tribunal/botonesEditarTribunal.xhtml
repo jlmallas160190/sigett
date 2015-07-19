@@ -17,7 +17,7 @@
                 <f:param name="tipo-grabado" value="grabar-editar"/>
             </p:commandButton>
             <p:commandButton value="#{lbl.cancelar}" update="msm" icon="ui-icon-circle-arrow-w" onstart="PF('dlgLoading').show()"
-                             oncomplete="PF('dlgLoading').hide()" process="@this" action="#{tribunalController.cancelarEdicion()}"/>
+                             oncomplete="PF('dlgLoading').hide()" process="@this"  action="#{tribunalController.cancelarEdicion()}"/>
         </h:panelGrid>
     </body>
 </html>

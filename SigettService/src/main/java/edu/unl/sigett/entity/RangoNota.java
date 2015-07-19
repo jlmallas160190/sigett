@@ -40,8 +40,8 @@ public class RangoNota implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 250)
-    @Column(name = "nombre")
-    private String nombre;
+    @Column(name = "codigo")
+    private String codigo;
     @Basic(optional = false)
     @NotNull
     @Column(name = "valor_inicio")
@@ -62,9 +62,9 @@ public class RangoNota implements Serializable {
         this.id = id;
     }
 
-    public RangoNota(Integer id, String nombre, BigDecimal valorInicio, BigDecimal valorFin) {
+    public RangoNota(Integer id, String codigo, BigDecimal valorInicio, BigDecimal valorFin) {
         this.id = id;
-        this.nombre = nombre;
+        this.codigo = codigo;
         this.valorInicio = valorInicio;
         this.valorFin = valorFin;
     }
@@ -77,12 +77,12 @@ public class RangoNota implements Serializable {
         this.id = id;
     }
 
-    public String getNombre() {
-        return nombre;
+    public String getCodigo() {
+        return codigo;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
     }
 
     public BigDecimal getValorInicio() {
@@ -141,7 +141,7 @@ public class RangoNota implements Serializable {
 
     @Override
     public String toString() {
-        return "edu.unl.sigett.entity.RangoNota[ id=" + id + " ]";
+        return codigo;
     }
 
 }

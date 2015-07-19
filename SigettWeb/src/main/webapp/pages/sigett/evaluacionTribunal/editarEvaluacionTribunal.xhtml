@@ -2,14 +2,30 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
     <body>
-        <p:panel rendered="#{!sessionEvaluacionTribunal.evaluacionTribunal.esAptoCalificar}">
-            <ui:include src="datosEvaluacionTribunal.xhtml"/>  
+        <p:panel >
+            <div class="row-fluid">
+                <div class="col-sm-8">
+                    <ui:include src="datosEvaluacionTribunal.xhtml"/>  
+                </div>
+                <div class="col-sm-4">
+                    <p:panel header="#{msg['lbl.calificaciones']}" style="background: #333">
+                        <ui:include src="calificaciones.xhtml"/>  
+                        <f:facet name="footer">
+                            <p:outputLabel style="text-align:right!important;width: 100%" value="#{sessionEvaluacionTribunal.evaluacionTribunal.nota}"/>
+                        </f:facet>
+                    </p:panel>
+                    <br/>
+                    <p:panel rendered="#{sessionEvaluacionTribunal.evaluacionTribunal.tribunalId.id != sessionTribunal.tribunal.id}"
+                             header="#{lbl.miembros}">
+                        <ui:include src="dataGridMiembros.xhtml"/>  
+                    </p:panel>
+                </div>
+            </div>
         </p:panel>
-        <p:panel rendered="#{sessionEvaluacionTribunal.evaluacionTribunal.esAptoCalificar}">
-            <ui:include src="validarEvaluacion.xhtml"/>
-        </p:panel>
+
     </body>
 </html>
 

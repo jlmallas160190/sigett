@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+        <p:dataTable id="tblEvaluaciones" value="#{sessionEvaluacionTribunal.evaluacionesTribunal}" var="item" rows="5" paginator="true"
+                     rowIndexVar="rowIx" rowKey="#{item}" selectionMode="single" selection="#{item}" editable="true"
+                     filteredValue="#{sessionEvaluacionTribunal.filterTribunal}" widgetVar="tblEvaluacionesFilter"
+                     rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'even-row' : 'odd-row'}" emptyMessage="#{msg['lbl.table.empty']}">
+            <p:column sortBy="#{item.tribunalId.proyectoId.temaActual}">
+                <f:facet name="header">
+                    <h:outputText value="#{lbl.proyecto}"/>
+                </f:facet>
+                <h:outputText value="#{item.tribunalId.proyectoId.temaActual}"/>
+            </p:column>
+              <p:column >
+                <f:facet name="header">
+                    <h:outputText value="#{lbl.accion}"/>
+                </f:facet>
+                <p:commandButton icon="ui-icon-pencil"  onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" 
+                                 action="#{evaluacionTribunalController.editar(item)}">
+                </p:commandButton>
+            </p:column>
+        </p:dataTable>
+    </body>
+
+</html>

@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <body>
+        <p:dataTable id="tblMiembros"  value="#{sessionMiembroTribunal.miembrosTribunalDTO}" var="item" rows="20" paginator="true"
+                     rowIndexVar="rowIx" editable="true" rowKey="#{item.docente}" selectionMode="single" selection="#{item}" editMode="cell"
+                     filteredValue="#{sessionMiembroTribunal.filterMiembrosTribunalDTO}" widgetVar="tblMTFilter"
+                     rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'even-row' : 'odd-row'}" emptyMessage="#{msg['lbl.table.empty']}">
+           <p:column sortBy="#{item.persona.apellidos}" filterBy="#{item.persona.nombres} #{item.persona.apellidos}">
+                <f:facet name="header">
+                    <h:outputText value="#{lbl.proyecto}"/>
+                </f:facet>
+               <p:outputLabel value="#{item.miembroTribunal.tribunalId.proyectoId.temaActual}"/>
+            </p:column>
+            <p:column >
+                <f:facet name="header">
+                    <h:outputText value="#{lbl.accion}"/>
+                </f:facet>
+                <p:commandButton icon="ui-icon-pencil"  onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" 
+                                 action="#{miembroTribunalController.editar(item)}">
+                </p:commandButton>
+            </p:column>
+        </p:dataTable>
+    </body>
+</html>

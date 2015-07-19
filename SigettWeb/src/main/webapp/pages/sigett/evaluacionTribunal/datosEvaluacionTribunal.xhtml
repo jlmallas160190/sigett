@@ -6,20 +6,23 @@
       xmlns:p="http://primefaces.org/ui">
     <body>
         <h:panelGrid  styleClass="panelgrid"  columns="3" rowClasses="rowpanelgrid"  columnClasses="col-sm-2,col-sm-9,col-sm-1">
-            <h:outputLabel  value="#{msg['lbl.lugar']}*"/>
-            <p:inputTextarea placeholder="#{msg['lbl.lugar']}" style="text-transform: none"  id="lugar" value="#{sessionEvaluacionTribunal.evaluacionTribunal.lugar}" title="#{msg['lbl.lugar']}"
+            <h:outputLabel  value="#{msg['lbl.lugar']}: *"/>
+            <p:inputTextarea placeholder="#{msg['lbl.lugar']}" style="text-transform: none"  id="lugar" onkeyup="this.value=this.value.toUpperCase()"
+                             value="#{sessionEvaluacionTribunal.evaluacionTribunal.lugar}" title="#{msg['lbl.lugar']}"
                              required="true" requiredMessage="#{msg['lbl.lugar']} #{msg['lbl.obligatorio']}.">
                 <p:ajax event="keyup" update="msmLugar"/>
-                <p:ajax event="change" update="@this"/>
             </p:inputTextarea>
             <p:message id="msmLugar" display="icon" for="lugar"/>
-            <h:outputLabel  value="#{lbl.rango_calificacion}*"/>
+            <h:outputLabel  value="#{lbl.rango_calificacion}: *"/>
             <p:selectOneMenu id="categoriaEv" value="#{sessionEvaluacionTribunal.evaluacionTribunal.rangoNotaId}" required="true"
                              converter="rangoNotaConverter"
                              requiredMessage="#{lbl.rango_calificacion} #{msg['lbl.obligatorio']}.">
-                <f:selectItem noSelectionOption="true" itemLabel="#{msg['lbl.seleccionar']}"/>
                 <f:selectItems value="#{sessionEvaluacionTribunal.rangoNotas}"/>
             </p:selectOneMenu>
+            <h:inputHidden/>
+            <h:outputLabel rendered="#{sessionEvaluacionTribunal.renderedCalificarPrivada || sessionEvaluacionTribunal.renderedCalificarPublica}" 
+                           value="#{lbl.calificar}: *"/>
+            <p:selectBooleanCheckbox rendered="#{sessionEvaluacionTribunal.renderedCalificarPrivada || sessionEvaluacionTribunal.renderedCalificarPublica}" value="#{sessionEvaluacionTribunal.evaluacionTribunal.esAptoCalificar}"/>
         </h:panelGrid> 
     </body>
 </html>

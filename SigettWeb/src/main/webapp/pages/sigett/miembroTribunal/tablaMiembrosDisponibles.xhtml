@@ -9,12 +9,12 @@
                      rowIndexVar="rowIx" editable="true" rowKey="#{item.director}" selectionMode="single" selection="#{item}" editMode="cell"
                      filteredValue="#{sessionMiembroTribunal.filterDirectoresDTO}" widgetVar="tblMDFilter"
                      rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'even-row' : 'odd-row'}" emptyMessage="#{msg['lbl.table.empty']}">
-        
-           <p:column sortBy="#{item.persona.apellidos}" filterBy="#{item.persona.nombres} #{item.persona.apellidos}">
+
+            <p:column sortBy="#{item.persona.apellidos}" filterBy="#{item.persona.apellidos} #{item.persona.nombres}">
                 <f:facet name="header">
                     <h:outputText value="#{lbl.miembro}"/>
                 </f:facet>
-               <p:outputLabel value="#{item.persona.nombres} #{item.persona.apellidos}"/>
+                <p:outputLabel value="#{item.persona.nombres} #{item.persona.apellidos}"/>
             </p:column>
             <p:column sortBy="#{item.persona.numeroIdentificacion}" filterBy="#{item.persona.numeroIdentificacion}" >
                 <f:facet name="header">

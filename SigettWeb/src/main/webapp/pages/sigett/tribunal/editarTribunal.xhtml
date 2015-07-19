@@ -6,6 +6,7 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
     <body>
         <p:tabView  id="tabViewDatosTribunal" >
+            <p:ajax rendered="#{sessionTribunal.tribunal.id!=null}" event="tabChange" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" update="schedule" />
             <p:tab  title="#{lbl.inicio}" >
                 <ui:include src="datosTribunal.xhtml"/>
             </p:tab>

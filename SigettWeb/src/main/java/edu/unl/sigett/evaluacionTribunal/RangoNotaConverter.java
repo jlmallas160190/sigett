@@ -25,7 +25,9 @@ public class RangoNotaConverter implements Converter {
 
     @Override
     public Object getAsObject(FacesContext context, UIComponent component, String value) {
-        return this.rangoNotaService.buscarPorId(new RangoNota(Integer.parseInt(value)));
+        RangoNota rangoNotaBuscar = new RangoNota();
+        rangoNotaBuscar.setCodigo(value);
+        return this.rangoNotaService.buscarPorCodigo(rangoNotaBuscar);
     }
 
     @Override
@@ -34,7 +36,7 @@ public class RangoNotaConverter implements Converter {
         if (rangoNota == null) {
             return null;
         }
-        return rangoNota.getNombre();
+        return rangoNota.getCodigo();
     }
 
 }

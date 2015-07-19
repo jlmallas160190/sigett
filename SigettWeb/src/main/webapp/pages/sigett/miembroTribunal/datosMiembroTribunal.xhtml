@@ -6,7 +6,7 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core">
     <body>
         <h:panelGrid id="datos" rowClasses="rowpanelgrid" styleClass="panelgrid" columnClasses="col-sm-2,col-sm-10" columns="2">
-            <p:commandButton value="#{lbl.buscar_docentes}" 
+            <p:commandButton value="#{lbl.buscar_docentes}" icon="ui-icon-search"
                              onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide(),PF('tblMDFilter').filter()"
                              action="#{miembroTribunalController.buscarMiembrosDisponibles()}" process="@this"
                              update=":contenido:dlgMiembrosDisponibles"/>

@@ -6,14 +6,17 @@
 package edu.unl.sigett.miembroTribunal;
 
 import com.jlmallas.comun.entity.Configuracion;
+import com.jlmallas.comun.entity.Evento;
 import com.jlmallas.comun.entity.EventoPersona;
 import com.jlmallas.comun.entity.Item;
 import com.jlmallas.comun.entity.Persona;
 import com.jlmallas.comun.enumeration.CatalogoEnum;
 import com.jlmallas.comun.enumeration.ConfiguracionEnum;
+import com.jlmallas.comun.enumeration.EventoEnum;
 import com.jlmallas.comun.enumeration.ValorEnum;
 import com.jlmallas.comun.service.ConfiguracionService;
 import com.jlmallas.comun.service.EventoPersonaService;
+import com.jlmallas.comun.service.EventoService;
 import com.jlmallas.comun.service.ItemService;
 import com.jlmallas.comun.service.PersonaService;
 import edu.jlmallas.academico.entity.Carrera;
@@ -21,18 +24,19 @@ import edu.jlmallas.academico.entity.Docente;
 import edu.jlmallas.academico.entity.DocenteCarrera;
 import edu.jlmallas.academico.service.DocenteCarreraService;
 import edu.jlmallas.academico.service.DocenteService;
-import edu.unl.sigett.director.DirectorDM;
 import edu.unl.sigett.director.DirectorDTO;
 import edu.unl.sigett.director.DirectorDTOConverter;
 import edu.unl.sigett.directorProyecto.DirectorProyectoDTO;
+import edu.unl.sigett.entity.CalificacionMiembro;
 import edu.unl.sigett.entity.Director;
-import edu.unl.sigett.entity.DirectorProyecto;
 import edu.unl.sigett.entity.EvaluacionTribunal;
 import edu.unl.sigett.entity.MiembroTribunal;
 import edu.unl.sigett.enumeration.CargoMiembroEnum;
 import edu.unl.sigett.enumeration.EstadoProyectoEnum;
+import edu.unl.sigett.evaluacionTribunal.SessionEvaluacionTribunal;
 import edu.unl.sigett.proyecto.SessionProyecto;
 import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
+import edu.unl.sigett.service.CalificacionMiembroService;
 import edu.unl.sigett.service.DirectorService;
 import edu.unl.sigett.service.MiembroTribunalService;
 import edu.unl.sigett.tribunal.SessionTribunal;
@@ -41,7 +45,9 @@ import edu.unl.sigett.util.PropertiesFileEnum;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -50,6 +56,7 @@ import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
+import org.jlmallas.secure.Secure;
 import org.jlmallas.seguridad.service.UsuarioService;
 import org.primefaces.context.RequestContext;
 
@@ -72,6 +79,8 @@ public class MiembroTribunalController implements Serializable {
     private SessionTribunal sessionTribunal;
     @Inject
     private CabeceraController cabeceraController;
+    @Inject
+    private SessionEvaluacionTribunal sessionEvaluacionTribunal;
     //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="SERVICIOS">
     @EJB(lookup = "java:global/SeguridadService/UsuarioServiceImplement!org.jlmallas.seguridad.service.UsuarioService")
@@ -92,6 +101,10 @@ public class MiembroTribunalController implements Serializable {
     private DirectorService directorService;
     @EJB(lookup = "java:global/ComunService/ConfiguracionServiceImplement!com.jlmallas.comun.service.ConfiguracionService")
     private ConfiguracionService configuracionService;
+    @EJB(lookup = "java:global/ComunService/EventoServiceImplement!com.jlmallas.comun.service.EventoService")
+    private EventoService eventoService;
+    @EJB(lookup = "java:global/SigettService/CalificacionMiembroServiceImplement!edu.unl.sigett.service.CalificacionMiembroService")
+    private CalificacionMiembroService calificacionMiembroService;
     //</editor-fold>
     private static final Logger LOG = Logger.getLogger(MiembroTribunalController.class.getName());
 
@@ -266,15 +279,6 @@ public class MiembroTribunalController implements Serializable {
         return Boolean.TRUE;
     }
 
-    public Boolean validaMiembrosTribunal() {
-        for (MiembroTribunalDTO miembroTribunalDTO : sessionMiembroTribunal.getMiembrosTribunalDTO()) {
-            if (!validaDocenteDisponible(miembroTribunalDTO.getPersona())) {
-                return Boolean.FALSE;
-            }
-        }
-        return Boolean.TRUE;
-    }
-
     public void grabar(MiembroTribunalDTO miembroTribunalDTO) {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
@@ -286,7 +290,7 @@ public class MiembroTribunalController implements Serializable {
                 cabeceraController.getMessageView().message(FacesMessage.SEVERITY_ERROR, bundle.getString("docente_no_seleccionado"), "");
                 return;
             }
-            if (!validaMiembrosTribunal()) {
+            if (!validaDocenteDisponible(miembroTribunalDTO.getPersona())) {
                 cabeceraController.getMessageView().message(FacesMessage.SEVERITY_ERROR, bundle.getString("miembro_ocupado"), "");
                 return;
             }
@@ -305,6 +309,8 @@ public class MiembroTribunalController implements Serializable {
                         PropertiesFileEnum.PERMISOS, "crear_miembro_tribunal").trim());
                 if (tienePermiso == 1) {
                     miembroTribunalService.guardar(miembroTribunalDTO.getMiembroTribunal());
+                    grabarEventosDirector();
+                    grabarCalificacionesMiembrosTribunal();
                     if (param.equalsIgnoreCase("grabar")) {
                         cancelarEdicion();
                         return;
@@ -318,6 +324,8 @@ public class MiembroTribunalController implements Serializable {
                     PropertiesFileEnum.PERMISOS, "editar_miembro_tribunal").trim());
             if (tienePermiso == 1) {
                 miembroTribunalService.actualizar(miembroTribunalDTO.getMiembroTribunal());
+                grabarEventosDirector();
+                grabarCalificacionesMiembrosTribunal();
                 cabeceraController.getMessageView().message(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_editar"), "");
                 if (param.equalsIgnoreCase("grabar")) {
                     cancelarEdicion();
@@ -376,6 +384,23 @@ public class MiembroTribunalController implements Serializable {
     }
 
     /**
+     * GRABAR CALIFICACIONES DE TRIBUNAL POR CADA EVALUACIÓN
+     */
+    private void grabarCalificacionesMiembrosTribunal() {
+        for (EvaluacionTribunal evaluacionTribunal : sessionEvaluacionTribunal.getEvaluacionesTribunal()) {
+            CalificacionMiembro calificacionMiembroBuscar = new CalificacionMiembro();
+            calificacionMiembroBuscar.setMiembroId(cabeceraController.getSecureService().encrypt(
+                    new Secure(cabeceraController.getConfiguracionGeneralUtil().getSecureKey(), sessionMiembroTribunal.getMiembroTribunalDTOSeleccionado().getMiembroTribunal().getId() + "")));
+            CalificacionMiembro calificacionMiembro = calificacionMiembroService.buscarPorMiembro(calificacionMiembroBuscar);
+            if (calificacionMiembro == null) {
+                calificacionMiembro = new CalificacionMiembro(null, BigDecimal.ZERO, "Ninguno", cabeceraController.getSecureService().encrypt(
+                        new Secure(cabeceraController.getConfiguracionGeneralUtil().getSecureKey(), sessionMiembroTribunal.getMiembroTribunalDTOSeleccionado().getMiembroTribunal().getId() + "")), Boolean.TRUE, evaluacionTribunal);
+                calificacionMiembroService.guardar(calificacionMiembro);
+            }
+        }
+    }
+
+    /**
      * LISTAR LOS DIRECTORES DE PROYECTOS DE LAS CARRERAS ADMINISTRADAS POR EL
      * USUARIO DEL SISTEMA
      */
@@ -391,6 +416,50 @@ public class MiembroTribunalController implements Serializable {
                 DirectorDTO directorDTO = new DirectorDTO(directorService.buscarPorId(directorBuscar), dc,
                         personaService.buscarPorId(new Persona(dc.getDocenteId().getId())));
                 sessionMiembroTribunal.getDirectoresDTOAux().add(directorDTO);
+            }
+        }
+    }
+
+    /**
+     * CREAR EVENTO PARA LOS MIEMBROS DE TRIBUANAL
+     */
+    private void grabarEventosDirector() {
+        Item tipoEvento = itemService.buscarPorCatalogoCodigo(CatalogoEnum.CATALOGOEVENTO.getTipo(), EventoEnum.MIEMBROTRIBUNAL.getTipo());
+        for (EvaluacionTribunal evaluacionTribunal : sessionEvaluacionTribunal.getEvaluacionesTribunal()) {
+            if (!evaluacionTribunal.getEsActivo()) {
+                continue;
+            }
+            evaluacionTribunal.setCatalogoEvaluacion(itemService.buscarPorId(evaluacionTribunal.getCatalogoEvaluacionId()).getNombre());
+            Evento eventoBuscar = new Evento();
+            eventoBuscar.setTablaId(evaluacionTribunal.getId());
+            Calendar fechaCulminacion = Calendar.getInstance();
+            fechaCulminacion.setTime(evaluacionTribunal.getFechaPlazo());
+            fechaCulminacion.add(Calendar.HOUR_OF_DAY, 1);
+            List<Evento> eventos = eventoService.buscar(eventoBuscar);
+            Evento evento = !eventos.isEmpty() ? eventos.get(0) : null;
+            if (evento == null) {
+                evento = new Evento(null, evaluacionTribunal.getCatalogoEvaluacion() + ": "
+                        + sessionProyecto.getProyectoSeleccionado().getTemaActual(), evaluacionTribunal.getLugar(), evaluacionTribunal.getFechaInicio(),
+                        fechaCulminacion.getTime(), tipoEvento.getId(), evaluacionTribunal.getId());
+                eventoService.guardar(evento);
+                EventoPersona eventoMiembro = new EventoPersona(null, sessionMiembroTribunal.getMiembroTribunalDTOSeleccionado().getPersona(), evento);
+                eventoPersonaService.guardar(eventoMiembro);
+                continue;
+            }
+            evento.setLugar(evaluacionTribunal.getLugar());
+            evento.setFechaInicio(evaluacionTribunal.getFechaInicio());
+            evento.setFechaFin(evaluacionTribunal.getFechaPlazo());
+            evento.setNombre(evaluacionTribunal.getCatalogoEvaluacion() + ": "
+                    + evaluacionTribunal.getTribunalId().getProyectoId().getTemaActual());
+            eventoService.actualizar(evento);
+            EventoPersona eventoPersonaBuscar = new EventoPersona();
+            eventoPersonaBuscar.setEvento(evento);
+            eventoPersonaBuscar.setPersonaId(sessionMiembroTribunal.getMiembroTribunalDTOSeleccionado().getPersona());
+            List<EventoPersona> eventoPersonas = eventoPersonaService.buscar(eventoPersonaBuscar);
+            EventoPersona eventoPersona = !eventoPersonas.isEmpty() ? eventoPersonas.get(0) : null;
+            if (eventoPersona == null) {
+                eventoPersona = new EventoPersona(null, sessionMiembroTribunal.getMiembroTribunalDTOSeleccionado().getPersona(), evento);
+                eventoPersonaService.guardar(eventoPersona);
             }
         }
     }

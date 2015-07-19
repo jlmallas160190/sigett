@@ -3,11 +3,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:p="http://primefaces.org/ui">
     <body>
-        <p:schedule id="schedule" value="#{sessionEvaluacionTribunal.eventModel}" widgetVar="schedule" timeZone="GMT-5" view="agendaWeek">
+        <p:schedule id="schedule" value="#{sessionEvaluacionTribunal.eventModel}" widgetVar="schedule" timeZone="GMT-5" >
             <p:ajax event="dateSelect" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" 
                     listener="#{evaluacionTribunalController.onEventCrear}" update=":contenido:dlgEditarEvaluacionTribunal"/>
             <p:ajax event="eventSelect" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" 
-                    listener="#{evaluacionTribunalController.onEventSelect}" />                                      
+                    listener="#{evaluacionTribunalController.onEventSelect}"  update=":contenido:dlgEditarEvaluacionTribunal" />                                      
             <p:ajax event="eventMove" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" 
                     listener="#{evaluacionTribunalController.onEventMove}" update=":contenido:msm,schedule"/>                                                                                  
             <p:ajax event="eventResize" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" 

@@ -8,9 +8,11 @@ package edu.unl.sigett.comun.eventoPersona;
 import com.jlmallas.comun.entity.EventoPersona;
 import com.jlmallas.comun.entity.Item;
 import com.jlmallas.comun.enumeration.CatalogoEnum;
+import com.jlmallas.comun.enumeration.EventoEnum;
 import com.jlmallas.comun.service.EventoPersonaService;
 import com.jlmallas.comun.service.EventoService;
 import com.jlmallas.comun.service.ItemService;
+import com.jlmallas.comun.service.PersonaService;
 import edu.jlmallas.academico.entity.DocenteCarrera;
 import edu.jlmallas.academico.service.DocenteCarreraService;
 import edu.unl.sigett.director.DirectorDTO;
@@ -19,11 +21,13 @@ import edu.unl.sigett.directorProyecto.SessionDirectorProyecto;
 import edu.unl.sigett.docenteUsuario.DocenteUsuarioDM;
 import edu.unl.sigett.entity.Actividad;
 import edu.unl.sigett.entity.DirectorProyecto;
+import edu.unl.sigett.entity.EvaluacionTribunal;
 import edu.unl.sigett.entity.Proyecto;
-import edu.unl.sigett.enumeration.CatalogoEventoEnum;
 import edu.unl.sigett.enumeration.EstiloScheduleEnum;
+import edu.unl.sigett.evaluacionTribunal.SessionEvaluacionTribunal;
 import edu.unl.sigett.service.ActividadService;
 import edu.unl.sigett.service.DirectorProyectoService;
+import edu.unl.sigett.service.MiembroTribunalService;
 import edu.unl.sigett.service.ProyectoService;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
@@ -54,6 +58,8 @@ public class EventoPersonaController implements Serializable {
     private DocenteUsuarioDM docenteUsuarioDM;
     @Inject
     private SessionDirectorProyecto sessionDirectorProyecto;
+    @Inject
+    SessionEvaluacionTribunal sessionEvaluacionTribunal;
     //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="SERVICIOS">
     @EJB(lookup = "java:global/ComunService/EventoPersonaServiceImplement!com.jlmallas.comun.service.EventoPersonaService")
@@ -70,6 +76,10 @@ public class EventoPersonaController implements Serializable {
     private ProyectoService proyectoService;
     @EJB(lookup = "java:global/AcademicoService/DocenteCarreraServiceImplement!edu.jlmallas.academico.service.DocenteCarreraService")
     private DocenteCarreraService docenteCarreraService;
+    @EJB(lookup = "java:global/SigettService/MiembroTribunalServiceImplement!edu.unl.sigett.service.MiembroTribunalService")
+    private MiembroTribunalService miembroTribunalService;
+    @EJB(lookup = "java:global/ComunService/PersonaServiceImplement!com.jlmallas.comun.service.PersonaService")
+    private PersonaService personaService;
 
     //</editor-fold>
     public EventoPersonaController() {
@@ -108,7 +118,7 @@ public class EventoPersonaController implements Serializable {
      */
     private void generaSchedule() {
         sessionEventoPersona.setSchedule(new DefaultScheduleModel());
-        Item actividad = itemService.buscarPorCatalogoCodigo(CatalogoEnum.CATALOGOEVENTO.getTipo(), CatalogoEventoEnum.ACTIVIDAD.getTipo());
+        Item actividad = itemService.buscarPorCatalogoCodigo(CatalogoEnum.CATALOGOEVENTO.getTipo(), EventoEnum.ACTIVIDAD.getTipo());
         for (EventoPersona eventoPersona : sessionEventoPersona.getEventoPersonas()) {
             DefaultScheduleEvent evento = new DefaultScheduleEvent();
             evento.setTitle(eventoPersona.getEvento().getNombre());
@@ -145,7 +155,7 @@ public class EventoPersonaController implements Serializable {
 
     public String editar() {
         Item catalogo = itemService.buscarPorId(sessionEventoPersona.getEventoPersona().getEvento().getCatalogoId());
-        if (catalogo.getCodigo().equals(CatalogoEventoEnum.ACTIVIDAD.getTipo())) {
+        if (catalogo.getCodigo().equals(EventoEnum.ACTIVIDAD.getTipo())) {
             Actividad actividad = actividadService.buscarPorId(new Actividad(sessionEventoPersona.getEventoPersona().getEvento().getTablaId()));
             DirectorProyecto directorProyectoBuscar = new DirectorProyecto();
             Proyecto proyecto = proyectoService.buscarPorId(new Proyecto(actividad.getCronogramaId().getId()));
@@ -162,6 +172,14 @@ public class EventoPersonaController implements Serializable {
                     docenteCarreraService.buscarPorId(new DocenteCarrera(directorProyecto.getDirectorId().getId())), null));
             sessionDirectorProyecto.setDirectorProyectoDTO(directorProyectoDTO);
             return "pretty:editarDirectorProyecto";
+        }
+        if (catalogo.getCodigo().equals(EventoEnum.MIEMBROTRIBUNAL.getTipo())) {
+            EvaluacionTribunal evaluacionTribunal = new EvaluacionTribunal();
+            evaluacionTribunal.setId(sessionEventoPersona.getEventoPersona().getEvento().getTablaId());
+            if (evaluacionTribunal != null) {
+                sessionEvaluacionTribunal.setEvaluacionTribunal(evaluacionTribunal);
+            }
+            return "pretty:editarEvaluacionTribunal";
         }
         return "";
     }

@@ -8,6 +8,7 @@ package edu.unl.sigett.evaluacionTribunal;
 import com.jlmallas.comun.entity.Item;
 import edu.unl.sigett.entity.EvaluacionTribunal;
 import edu.unl.sigett.entity.RangoNota;
+import edu.unl.sigett.miembroTribunal.MiembroTribunalDTO;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -26,9 +27,9 @@ import org.primefaces.model.ScheduleModel;
 public class SessionEvaluacionTribunal implements Serializable {
 
     private EvaluacionTribunal evaluacionTribunal;
-    private Item catalogoEvaluacion;
     private Item equivalencia;
     private List<EvaluacionTribunal> evaluacionesTribunal;
+    private List<MiembroTribunalDTO> miembrosTribunalDTO;
     private List<RangoNota> rangoNotas;
 
     private ScheduleModel eventModel;
@@ -45,6 +46,7 @@ public class SessionEvaluacionTribunal implements Serializable {
 
     public SessionEvaluacionTribunal() {
         eventModel = new DefaultScheduleModel();
+        this.miembrosTribunalDTO = new ArrayList<>();
         this.evaluacionesTribunal = new ArrayList<>();
         this.rangoNotas = new ArrayList<>();
         this.evaluacionTribunal = new EvaluacionTribunal();
@@ -146,20 +148,20 @@ public class SessionEvaluacionTribunal implements Serializable {
         this.rangoNotas = rangoNotas;
     }
 
-    public Item getCatalogoEvaluacion() {
-        return catalogoEvaluacion;
-    }
-
-    public void setCatalogoEvaluacion(Item catalogoEvaluacion) {
-        this.catalogoEvaluacion = catalogoEvaluacion;
-    }
-
     public Item getEquivalencia() {
         return equivalencia;
     }
 
     public void setEquivalencia(Item equivalencia) {
         this.equivalencia = equivalencia;
+    }
+
+    public List<MiembroTribunalDTO> getMiembrosTribunalDTO() {
+        return miembrosTribunalDTO;
+    }
+
+    public void setMiembrosTribunalDTO(List<MiembroTribunalDTO> miembrosTribunalDTO) {
+        this.miembrosTribunalDTO = miembrosTribunalDTO;
     }
 
 }

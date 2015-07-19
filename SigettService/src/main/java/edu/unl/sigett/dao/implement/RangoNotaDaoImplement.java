@@ -31,8 +31,12 @@ public class RangoNotaDaoImplement extends AbstractDao<RangoNota> implements Ran
         HashMap<String, Object> parametros = new HashMap<>();
         sql.append("SELECT r from RangoNota r WHERE 1=1");
         if (rangoNota.getId() != null) {
-            sql.append(" and r.id=:id ");
+            sql.append(" and r.id=:id");
             parametros.put("id", rangoNota.getId());
+        }
+        if (rangoNota.getCodigo() != null) {
+            sql.append(" and r.codigo=:codigo");
+            parametros.put("codigo", rangoNota.getCodigo());
         }
         final Query q = em.createQuery(sql.toString());
         for (String key : parametros.keySet()) {

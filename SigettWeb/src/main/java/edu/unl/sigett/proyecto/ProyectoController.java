@@ -440,6 +440,7 @@ public class ProyectoController implements Serializable {
                 proyectoCarreraOferta.getProyectoId().setDirectores(directores(proyectoCarreraOferta.getProyectoId()));
                 proyectoCarreraOferta.getProyectoId().setNombreOferta(ofertaAcademicaService.find(proyectoCarreraOferta.getOfertaAcademicaId()).getNombre());
                 if (!this.sessionProyecto.getProyectos().contains(proyectoCarreraOferta.getProyectoId())) {
+                    proyectoCarreraOferta.getProyectoId().setCarrera(carreraService.find(proyectoCarreraOferta.getCarreraId()).getNombre());
                     this.sessionProyecto.getProyectos().add(proyectoCarreraOferta.getProyectoId());
                 }
             }

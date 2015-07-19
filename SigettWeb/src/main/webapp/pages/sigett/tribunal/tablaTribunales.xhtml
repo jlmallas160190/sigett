@@ -20,9 +20,9 @@
                 <f:facet name="header">
                     <h:outputLabel value="#{lbl.accion}"/>  
                 </f:facet>
-                <p:commandButton icon="ui-icon-pencil" action="#{tribunalController.editar(item)}" 
-                                 onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide(),PF('schedule').update(),PF('tblMTFilter').filter()" 
-                                 update=":contenido:dlgEditarTribunal,:contenido:tabViewDatosTribunal:schedule"
+                <p:commandButton icon="ui-icon-pencil" action="#{tribunalController.editar(item)}" process="@this"
+                                 onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide(),PF('tblMTFilter').filter()" 
+                                 update=":contenido:dlgEditarTribunal"
                                  rendered="#{sessionTribunal.renderedEditar}"/>
             </p:column>
         </p:dataTable>

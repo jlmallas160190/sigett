@@ -19,4 +19,6 @@ public interface RangoNotaService {
     RangoNota buscarPorId(final RangoNota rangoNota);
 
     List<RangoNota> buscar(final RangoNota rangoNota);
+
+    RangoNota buscarPorCodigo(final RangoNota rangoNota);
 }

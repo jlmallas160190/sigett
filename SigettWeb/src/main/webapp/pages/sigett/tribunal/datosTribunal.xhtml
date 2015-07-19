@@ -6,8 +6,7 @@
     <body>
         <h:panelGrid columns="2" styleClass="panelgrid" rowClasses="rowpanelgrid">
             <h:outputLabel value="#{lbl.descripcion}"/>
-            <p:inputTextarea required="true" value="#{sessionTribunal.tribunal.descripcion}"/>
-           
+            <p:inputTextarea required="true" onkeyup="this.value=this.value.toUpperCase()" value="#{sessionTribunal.tribunal.descripcion}"/>
         </h:panelGrid>
     </body>
 
