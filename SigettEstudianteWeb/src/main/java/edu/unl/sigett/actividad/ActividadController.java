@@ -10,6 +10,7 @@ import com.jlmallas.comun.entity.Documento;
 import com.jlmallas.comun.entity.Evento;
 import com.jlmallas.comun.entity.EventoPersona;
 import com.jlmallas.comun.entity.Item;
+import com.jlmallas.comun.entity.Persona;
 import com.jlmallas.comun.enumeration.CatalogoEnum;
 import com.jlmallas.comun.enumeration.ConfiguracionEnum;
 import com.jlmallas.comun.enumeration.EventoEnum;
@@ -19,6 +20,7 @@ import com.jlmallas.comun.service.DocumentoService;
 import com.jlmallas.comun.service.EventoPersonaService;
 import com.jlmallas.comun.service.EventoService;
 import com.jlmallas.comun.service.ItemService;
+import com.jlmallas.comun.service.PersonaService;
 import edu.unl.sigett.autorProyecto.SessionAutorProyecto;
 import edu.unl.sigett.directorProyecto.DirectorProyectoDTO;
 import edu.unl.sigett.documentoActividad.DocumentoActividadDTO;
@@ -44,6 +46,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
@@ -92,6 +95,8 @@ public class ActividadController implements Serializable {
     private CronogramaService cronogramaService;
     @EJB(lookup = "java:global/SigettService/RevisionActividadServiceImplement!edu.unl.sigett.service.RevisionActividadService")
     private RevisionActividadService revisionActividadService;
+    @EJB(lookup = "java:global/ComunService/PersonaServiceImplement!com.jlmallas.comun.service.PersonaService")
+    private PersonaService personaService;
     //</editor-fold>
     private static final Logger LOG = Logger.getLogger(ActividadController.class.getName());
 
@@ -338,6 +343,10 @@ public class ActividadController implements Serializable {
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
         String param = (String) facesContext.getExternalContext().getRequestParameterMap().get("tipo");
         try {
+            if (!validaDirectores()) {
+                cabeceraController.getMessageView().message(FacesMessage.SEVERITY_ERROR, bundle.getString("director_ocupado"), "");
+                return;
+            }
             if (sessionActividad.getActividad().getId() == null) {
                 enviar(param);
                 actividadService.guardar(sessionActividad.getActividad());
@@ -366,6 +375,15 @@ public class ActividadController implements Serializable {
         } catch (Exception e) {
             LOG.warning(e.getMessage());
         }
+    }
+
+    public Boolean validaDirectores() {
+        for (DirectorProyectoDTO directorProyectoDTO : sessionAutorProyecto.getDirectoresProyectoDTO()) {
+            if (!validaDocenteDisponible(directorProyectoDTO.getDirectorDTO().getPersona())) {
+                return Boolean.FALSE;
+            }
+        }
+        return Boolean.TRUE;
     }
 
     public void remover(Actividad actividad) {
@@ -496,6 +514,52 @@ public class ActividadController implements Serializable {
                 nodoPadre.getChildren().add(new DefaultTreeNode(actividad));
             }
         }
+    }
+
+    @SuppressWarnings("UnusedAssignment")
+    public Boolean validaDocenteDisponible(Persona persona) {
+        Date fechaInicioEvaluacion = null;
+        Date fechaFinEvaluacion = null;
+        Date fechaInicioEvento = null;
+        Date fechaFinEvento = null;
+        Date horaInicioEvaluacion = null;
+        Date horaFinEvaluacion = null;
+        Date horaInicioEvento = null;
+        Date horaFinEvento = null;
+        List<EventoPersona> eventoPersonas = eventoPersonaService.buscar(new EventoPersona(null, persona, null));
+        for (EventoPersona eventoPersona : eventoPersonas) {
+            if (eventoPersona.getEvento().getTablaId().equals(sessionActividad.getActividad().getId())) {
+                continue;
+            }
+            fechaInicioEvento = cabeceraController.getUtilService().parserFecha(
+                    cabeceraController.getUtilService().formatoFecha(eventoPersona.getEvento().getFechaInicio(), "yyyy-MMM-dd"), "yyyy-MMM-dd");
+            fechaFinEvento = cabeceraController.getUtilService().parserFecha(
+                    cabeceraController.getUtilService().formatoFecha(eventoPersona.getEvento().getFechaFin(), "yyyy-MMM-dd"), "yyyy-MMM-dd");
+            horaInicioEvento = cabeceraController.getUtilService().parserFecha(
+                    cabeceraController.getUtilService().formatoFecha(eventoPersona.getEvento().getFechaInicio(), "HH:mm:ssZ"), "HH:mm:ssZ");
+            horaFinEvento = cabeceraController.getUtilService().parserFecha(
+                    cabeceraController.getUtilService().formatoFecha(eventoPersona.getEvento().getFechaFin(), "HH:mm:ssZ"), "HH:mm:ssZ");
+            fechaInicioEvaluacion = cabeceraController.getUtilService().parserFecha(
+                    cabeceraController.getUtilService().formatoFecha(sessionActividad.getActividad().getFechaInicio(), "yyyy-MMM-dd"), "yyyy-MMM-dd");
+            fechaFinEvaluacion = cabeceraController.getUtilService().parserFecha(
+                    cabeceraController.getUtilService().formatoFecha(sessionActividad.getActividad().getFechaCulminacion(), "yyyy-MMM-dd"), "yyyy-MMM-dd");
+            horaInicioEvaluacion = cabeceraController.getUtilService().parserFecha(
+                    cabeceraController.getUtilService().formatoFecha(sessionActividad.getActividad().getFechaInicio(), "HH:mm:ssZ"), "HH:mm:ssZ");
+            horaFinEvaluacion = cabeceraController.getUtilService().parserFecha(
+                    cabeceraController.getUtilService().formatoFecha(sessionActividad.getActividad().getFechaCulminacion(), "HH:mm:ssZ"), "HH:mm:ssZ");
+            if ((fechaInicioEvaluacion.equals(fechaInicioEvento) || fechaInicioEvaluacion.equals(fechaFinEvento)
+                    || (fechaInicioEvaluacion.after(fechaInicioEvento) && fechaInicioEvaluacion.before(fechaFinEvento)))
+                    || (fechaFinEvaluacion.equals(fechaInicioEvento) || fechaFinEvaluacion.equals(fechaFinEvento)
+                    || (fechaFinEvaluacion.after(fechaFinEvento) && fechaFinEvaluacion.before(fechaFinEvento)))) {
+                if ((horaInicioEvaluacion.equals(horaInicioEvento) || horaInicioEvaluacion.equals(horaFinEvento)
+                        || (horaInicioEvaluacion.after(horaInicioEvento) && horaInicioEvaluacion.before(horaFinEvento)))
+                        || (horaFinEvaluacion.equals(horaInicioEvento) || horaFinEvaluacion.equals(horaFinEvento)
+                        || (horaFinEvaluacion.after(horaInicioEvento) && horaFinEvaluacion.before(horaFinEvento)))) {
+                    return Boolean.FALSE;
+                }
+            }
+        }
+        return Boolean.TRUE;
     }
 
     //</editor-fold>

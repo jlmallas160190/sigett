@@ -108,18 +108,18 @@ public class DocenteProyectoController implements Serializable {
     private DocumentoService documentoService;
 //</editor-fold>
     private static final Logger LOG = Logger.getLogger(DocenteProyectoController.class.getName());
-
+    
     public DocenteProyectoController() {
     }
-
+    
     public void preRenderView() {
         this.listadoProyectos();
     }
-
+    
     public void preRenderViewEditar() {
         this.recuperaEstadoActualProyecto();
     }
-
+    
     private void iniciar() {
         this.sessionAutorProyecto.getAutorProyectos().clear();
         this.sessionAutorProyecto.getFilterAutorProyectos().clear();
@@ -128,7 +128,7 @@ public class DocenteProyectoController implements Serializable {
         this.docenteProyectoDM.getLineasInvestigacionProyecto().clear();
         this.docenteProyectoDM.getFilterLineasInvestigacionProyecto().clear();
     }
-
+    
     public String editar(final DocenteProyectoDTO docenteProyectoDTO) {
         iniciar();
         docenteProyectoDM.setDocenteProyectoDTOSeleccionado(docenteProyectoDTO);
@@ -146,7 +146,7 @@ public class DocenteProyectoController implements Serializable {
         listadoAutores();
         return "pretty:editarDocenteProyecto";
     }
-
+    
     public String verHistorial(final DocenteProyectoDTO docenteProyectoDTO) {
         iniciar();
         docenteProyectoDM.setDocenteProyectoDTOSeleccionado(docenteProyectoDTO);
@@ -174,7 +174,7 @@ public class DocenteProyectoController implements Serializable {
             docenteProyectoDM.getFilterDocumentoProyectos().clear();
             Item catalogoDocumento = itemService.buscarPorCatalogoCodigo(
                     CatalogoEnum.CATALOGODOCUMENTOPROYECTO.getTipo(), CatalogoDocumentoProyectoEnum.ANTEPROYECTO.getTipo());
-
+            
             List<DocumentoProyecto> documentoProyectos = this.documentoProyectoService.buscar(
                     new DocumentoProyecto(Boolean.TRUE, null, docenteProyectoDM.getDocenteProyectoDTOSeleccionado().getDocenteProyecto().getProyectoId()));
             for (DocumentoProyecto documentoProyecto : documentoProyectos) {
@@ -189,7 +189,7 @@ public class DocenteProyectoController implements Serializable {
             LOG.warning(e.getMessage());
         }
     }
-
+    
     private void listadoAutores() {
         sessionAutorProyecto.getAutorProyectos().clear();
         sessionAutorProyecto.getFilterAutorProyectos().clear();
@@ -207,7 +207,7 @@ public class DocenteProyectoController implements Serializable {
         }
         sessionAutorProyecto.setFilterAutorProyectos(sessionAutorProyecto.getAutorProyectos());
     }
-
+    
     private void recuperaEstadoActualProyecto() {
         this.docenteProyectoDM.setEstadoActualProyecto(itemService.buscarPorId(
                 docenteProyectoDM.getDocenteProyectoDTOSeleccionado().getDocenteProyecto().getProyectoId().getEstadoProyectoId()));
@@ -243,10 +243,9 @@ public class DocenteProyectoController implements Serializable {
             docenteProyecto.getProyectoId().setTipo(tipo.getNombre());
             docenteProyecto.getProyectoId().setCatalogo(categoria.getNombre());
             docenteProyecto.getProyectoId().setAutores(autores(docenteProyecto.getProyectoId()));
-            DocenteProyectoDTO docenteProyectoDTO = new DocenteProyectoDTO(docenteProyecto,
-                    personaService.buscarPorId(new Persona(docenteProyecto.getDocenteCarreraId())),
+            DocenteProyectoDTO docenteProyectoDTO = new DocenteProyectoDTO(docenteProyecto, null,
                     docenteCarreraService.buscarPorId(new DocenteCarrera(docenteProyecto.getDocenteCarreraId(), null, null, null)));
-
+            docenteProyectoDTO.setPersona(personaService.buscarPorId(new Persona(docenteProyectoDTO.getDocenteCarrera().getDocenteId().getId())));
             docenteProyectoDM.getDocentesProyectoDTO().add(docenteProyectoDTO);
         }
         docenteProyectoDM.setFilterDocentesProyectoDTO(docenteProyectoDM.getDocentesProyectoDTO());

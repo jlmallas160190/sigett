@@ -8,11 +8,11 @@
     xmlns:sigett="http://www.owl-ontologies.com/sigett/"
     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" > 
   <rdf:Description rdf:about="http://www.owl-ontologies.com/sigett/proyectoCarreraOferta/3">
-    <rdf:type rdf:resource="http://www.owl-ontologies.com/sigett/proyectoCarreraOferta"/>
-    <sigett:id rdf:datatype="http://www.w3.org/2001/XMLSchema#long">3</sigett:id>
-    <sigett:hasProyecto rdf:resource="http://www.owl-ontologies.com/sigett/proyecto/3"/>
-    <sigett:hasOfertaAcademica rdf:resource="http://www.owl-ontologies.com/sigett/ofertaAcademica/64"/>
     <sigett:hasCarrera rdf:resource="http://www.owl-ontologies.com/sigett/carrera/235"/>
+    <sigett:hasOfertaAcademica rdf:resource="http://www.owl-ontologies.com/sigett/ofertaAcademica/64"/>
+    <sigett:hasProyecto rdf:resource="http://www.owl-ontologies.com/sigett/proyecto/3"/>
+    <sigett:id rdf:datatype="http://www.w3.org/2001/XMLSchema#long">3</sigett:id>
+    <rdf:type rdf:resource="http://www.owl-ontologies.com/sigett/proyectoCarreraOferta"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://www.owl-ontologies.com/sigett/proyecto">
     <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
@@ -21,43 +21,43 @@
     <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://www.owl-ontologies.com/sigett/autor/245">
-    <rdf:type rdf:resource="http://www.owl-ontologies.com/sigett/autor"/>
-    <sigett:id rdf:datatype="http://www.w3.org/2001/XMLSchema#long">245</sigett:id>
-    <foaf:name rdf:datatype="http://www.w3.org/2001/XMLSchema#string">diego armando cale pillco</foaf:name>
-    <foaf:gender rdf:datatype="http://www.w3.org/2001/XMLSchema#string">MASCULINO</foaf:gender>
-    <foaf:mbox rdf:datatype="http://www.w3.org/2001/XMLSchema#string">diego_cale92@hotmail.com</foaf:mbox>
     <foaf:birthday rdf:datatype="http://www.w3.org/2001/XMLSchema#string">1989-01-29</foaf:birthday>
+    <foaf:gender rdf:datatype="http://www.w3.org/2001/XMLSchema#string">MASCULINO</foaf:gender>
+    <foaf:name rdf:datatype="http://www.w3.org/2001/XMLSchema#string">diego armando cale pillco</foaf:name>
+    <sigett:id rdf:datatype="http://www.w3.org/2001/XMLSchema#long">245</sigett:id>
+    <foaf:mbox rdf:datatype="http://www.w3.org/2001/XMLSchema#string">diego_cale92@hotmail.com</foaf:mbox>
+    <rdf:type rdf:resource="http://www.owl-ontologies.com/sigett/autor"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://www.owl-ontologies.com/sigett/docente/393">
-    <foaf:birthday rdf:datatype="http://www.w3.org/2001/XMLSchema#string">2015-07-10</foaf:birthday>
-    <foaf:mbox rdf:datatype="http://www.w3.org/2001/XMLSchema#string">mapalma@unl.edu.es</foaf:mbox>
-    <foaf:gender rdf:datatype="http://www.w3.org/2001/XMLSchema#string">MASCULINO</foaf:gender>
-    <foaf:name rdf:datatype="http://www.w3.org/2001/XMLSchema#string">MARIO ANDRES PALMA JARAMILLO</foaf:name>
-    <sigett:id rdf:datatype="http://www.w3.org/2001/XMLSchema#long">393</sigett:id>
     <rdf:type rdf:resource="http://www.owl-ontologies.com/sigett/docente"/>
+    <sigett:id rdf:datatype="http://www.w3.org/2001/XMLSchema#long">393</sigett:id>
+    <foaf:name rdf:datatype="http://www.w3.org/2001/XMLSchema#string">MARIO ANDRES PALMA JARAMILLO</foaf:name>
+    <foaf:gender rdf:datatype="http://www.w3.org/2001/XMLSchema#string">MASCULINO</foaf:gender>
+    <foaf:mbox rdf:datatype="http://www.w3.org/2001/XMLSchema#string">mapalma@unl.edu.es</foaf:mbox>
+    <foaf:birthday rdf:datatype="http://www.w3.org/2001/XMLSchema#string">2015-07-10</foaf:birthday>
   </rdf:Description>
   <rdf:Description rdf:about="http://www.owl-ontologies.com/sigett/proyectoCarreraOferta">
     <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://www.owl-ontologies.com/sigett/hasDocente">
-    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
-    <rdfs:range rdf:resource="http://www.owl-ontologies.com/sigett/docente"/>
-    <rdfs:domain rdf:resource="http://www.owl-ontologies.com/sigett/directorProyecto"/>
     <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <rdfs:domain rdf:resource="http://www.owl-ontologies.com/sigett/directorProyecto"/>
+    <rdfs:range rdf:resource="http://www.owl-ontologies.com/sigett/docente"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://www.owl-ontologies.com/sigett/carrera/235">
-    <rdf:type rdf:resource="http://www.owl-ontologies.com/sigett/carrera"/>
-    <sigett:esParteDeArea rdf:resource="http://www.owl-ontologies.com/sigett/areaAcademica/4"/>
-    <sigett:esParteDeNivelAcademico rdf:resource="http://www.owl-ontologies.com/sigett/nivelAcademico/3"/>
-    <sigett:id rdf:datatype="http://www.w3.org/2001/XMLSchema#int">235</sigett:id>
-    <dc:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Ingeniería en Sistemas</dc:title>
     <sigett:sigla rdf:datatype="http://www.w3.org/2001/XMLSchema#string">S/N</sigett:sigla>
+    <dc:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Ingeniería en Sistemas</dc:title>
+    <sigett:id rdf:datatype="http://www.w3.org/2001/XMLSchema#int">235</sigett:id>
+    <sigett:esParteDeNivelAcademico rdf:resource="http://www.owl-ontologies.com/sigett/nivelAcademico/3"/>
+    <sigett:esParteDeArea rdf:resource="http://www.owl-ontologies.com/sigett/areaAcademica/4"/>
+    <rdf:type rdf:resource="http://www.owl-ontologies.com/sigett/carrera"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://www.owl-ontologies.com/sigett/autorProyecto/210">
-    <sigett:hasAutor rdf:resource="http://www.owl-ontologies.com/sigett/autor/210"/>
-    <sigett:hasProyecto rdf:resource="http://www.owl-ontologies.com/sigett/proyecto/2"/>
-    <sigett:id rdf:datatype="http://www.w3.org/2001/XMLSchema#long">210</sigett:id>
     <rdf:type rdf:resource="http://www.owl-ontologies.com/sigett/autorProyecto"/>
+    <sigett:id rdf:datatype="http://www.w3.org/2001/XMLSchema#long">210</sigett:id>
+    <sigett:hasProyecto rdf:resource="http://www.owl-ontologies.com/sigett/proyecto/2"/>
+    <sigett:hasAutor rdf:resource="http://www.owl-ontologies.com/sigett/autor/210"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://www.owl-ontologies.com/sigett/autor">
     <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
@@ -68,101 +68,107 @@
     <sigett:id rdf:datatype="http://www.w3.org/2001/XMLSchema#int">1</sigett:id>
   </rdf:Description>
   <rdf:Description rdf:about="http://www.owl-ontologies.com/sigett/fechaFin">
-    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
-    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
-    <rdfs:domain rdf:resource="http://www.owl-ontologies.com/sigett/periodoAcademico"/>
-    <rdfs:domain rdf:resource="http://www.owl-ontologies.com/sigett/ofertaAcademica"/>
     <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <rdfs:domain rdf:resource="http://www.owl-ontologies.com/sigett/ofertaAcademica"/>
+    <rdfs:domain rdf:resource="http://www.owl-ontologies.com/sigett/periodoAcademico"/>
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://www.owl-ontologies.com/sigett/autorProyecto/420">
-    <rdf:type rdf:resource="http://www.owl-ontologies.com/sigett/autorProyecto"/>
-    <sigett:id rdf:datatype="http://www.w3.org/2001/XMLSchema#long">420</sigett:id>
-    <sigett:hasProyecto rdf:resource="http://www.owl-ontologies.com/sigett/proyecto/3"/>
     <sigett:hasAutor rdf:resource="http://www.owl-ontologies.com/sigett/autor/420"/>
+    <sigett:hasProyecto rdf:resource="http://www.owl-ontologies.com/sigett/proyecto/3"/>
+    <sigett:id rdf:datatype="http://www.w3.org/2001/XMLSchema#long">420</sigett:id>
+    <rdf:type rdf:resource="http://www.owl-ontologies.com/sigett/autorProyecto"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://www.owl-ontologies.com/sigett/proyectoCarreraOferta/2">
-    <sigett:hasCarrera rdf:resource="http://www.owl-ontologies.com/sigett/carrera/40"/>
-    <sigett:hasOfertaAcademica rdf:resource="http://www.owl-ontologies.com/sigett/ofertaAcademica/64"/>
-    <sigett:hasProyecto rdf:resource="http://www.owl-ontologies.com/sigett/proyecto/2"/>
-    <sigett:id rdf:datatype="http://www.w3.org/2001/XMLSchema#long">2</sigett:id>
     <rdf:type rdf:resource="http://www.owl-ontologies.com/sigett/proyectoCarreraOferta"/>
+    <sigett:id rdf:datatype="http://www.w3.org/2001/XMLSchema#long">2</sigett:id>
+    <sigett:hasProyecto rdf:resource="http://www.owl-ontologies.com/sigett/proyecto/2"/>
+    <sigett:hasOfertaAcademica rdf:resource="http://www.owl-ontologies.com/sigett/ofertaAcademica/64"/>
+    <sigett:hasCarrera rdf:resource="http://www.owl-ontologies.com/sigett/carrera/40"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://www.owl-ontologies.com/sigett/lineaInvestigacionProyecto">
     <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://www.owl-ontologies.com/sigett/fechaInicio">
-    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
-    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
-    <rdfs:domain rdf:resource="http://www.owl-ontologies.com/sigett/periodoAcademico"/>
-    <rdfs:domain rdf:resource="http://www.owl-ontologies.com/sigett/ofertaAcademica"/>
     <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <rdfs:domain rdf:resource="http://www.owl-ontologies.com/sigett/ofertaAcademica"/>
+    <rdfs:domain rdf:resource="http://www.owl-ontologies.com/sigett/periodoAcademico"/>
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://www.owl-ontologies.com/sigett/esParteDeArea">
-    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
-    <rdfs:range rdf:resource="http://www.owl-ontologies.com/sigett/area"/>
-    <rdfs:domain rdf:resource="http://www.owl-ontologies.com/sigett/carrera"/>
     <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <rdfs:domain rdf:resource="http://www.owl-ontologies.com/sigett/carrera"/>
+    <rdfs:range rdf:resource="http://www.owl-ontologies.com/sigett/area"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://www.owl-ontologies.com/sigett/hasPeriodoAcademico">
-    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
-    <rdfs:range rdf:resource="http://www.owl-ontologies.com/sigett/periodoAcademico"/>
-    <rdfs:domain rdf:resource="http://www.owl-ontologies.com/sigett/ofertaAcademica"/>
     <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <rdfs:domain rdf:resource="http://www.owl-ontologies.com/sigett/ofertaAcademica"/>
+    <rdfs:range rdf:resource="http://www.owl-ontologies.com/sigett/periodoAcademico"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.owl-ontologies.com/sigett/directorProyecto/1">
+    <sigett:hasDocente rdf:resource="http://www.owl-ontologies.com/sigett/docente/31"/>
+    <sigett:hasProyecto rdf:resource="http://www.owl-ontologies.com/sigett/proyecto/1"/>
+    <sigett:id rdf:datatype="http://www.w3.org/2001/XMLSchema#long">1</sigett:id>
+    <rdf:type rdf:resource="http://www.owl-ontologies.com/sigett/directorProyecto"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://www.owl-ontologies.com/sigett/nivelAcademico">
     <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://www.owl-ontologies.com/sigett/hasLineaInvestigacion">
-    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
-    <rdfs:range rdf:resource="http://www.owl-ontologies.com/sigett/lineaInvestigacion"/>
-    <rdfs:domain rdf:resource="http://www.owl-ontologies.com/sigett/lineaInvestigacionProyecto"/>
     <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <rdfs:domain rdf:resource="http://www.owl-ontologies.com/sigett/lineaInvestigacionProyecto"/>
+    <rdfs:range rdf:resource="http://www.owl-ontologies.com/sigett/lineaInvestigacion"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://www.owl-ontologies.com/sigett/proyecto/3">
-    <dc:date rdf:datatype="http://www.w3.org/2001/XMLSchema#string">2015-07-14</dc:date>
-    <rdf:type rdf:resource="http://www.owl-ontologies.com/sigett/proyecto"/>
-    <sigett:id rdf:datatype="http://www.w3.org/2001/XMLSchema#long">3</sigett:id>
-    <dc:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">SISTEMA DE INFORMACIÓN INTEGRADO Y PUBLICACIÓN DE CONTENIDOS EDUCATIVOS PARA LA GESTIÓN Y DIFUSIÓN DE TRABAJOS DE TITULACIÓN.</dc:title>
-    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">PERTINENTE</dc:description>
     <dc:type rdf:datatype="http://www.w3.org/2001/XMLSchema#string">TRABAJO DE TITULACION</dc:type>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">PERTINENTE</dc:description>
+    <dc:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">SISTEMA DE INFORMACIÓN INTEGRADO Y PUBLICACIÓN DE CONTENIDOS EDUCATIVOS PARA LA GESTIÓN Y DIFUSIÓN DE TRABAJOS DE TITULACIÓN.</dc:title>
+    <sigett:id rdf:datatype="http://www.w3.org/2001/XMLSchema#long">3</sigett:id>
+    <rdf:type rdf:resource="http://www.owl-ontologies.com/sigett/proyecto"/>
+    <dc:date rdf:datatype="http://www.w3.org/2001/XMLSchema#string">2015-07-14</dc:date>
   </rdf:Description>
   <rdf:Description rdf:about="http://www.owl-ontologies.com/sigett/docente">
     <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://www.owl-ontologies.com/sigett/carrera/40">
     <sigett:sigla rdf:datatype="http://www.w3.org/2001/XMLSchema#string">S/N</sigett:sigla>
-    <rdf:type rdf:resource="http://www.owl-ontologies.com/sigett/carrera"/>
-    <sigett:esParteDeArea rdf:resource="http://www.owl-ontologies.com/sigett/areaAcademica/4"/>
     <sigett:esParteDeNivelAcademico rdf:resource="http://www.owl-ontologies.com/sigett/nivelAcademico/1"/>
+    <sigett:esParteDeArea rdf:resource="http://www.owl-ontologies.com/sigett/areaAcademica/4"/>
     <sigett:id rdf:datatype="http://www.w3.org/2001/XMLSchema#int">40</sigett:id>
+    <rdf:type rdf:resource="http://www.owl-ontologies.com/sigett/carrera"/>
     <dc:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Ingeniería en Sistemas</dc:title>
   </rdf:Description>
   <rdf:Description rdf:about="http://www.owl-ontologies.com/sigett/lineaInvestigacionProyecto/1">
-    <sigett:hasProyecto rdf:resource="http://www.owl-ontologies.com/sigett/proyecto/2"/>
-    <sigett:hasLineaInvestigacion rdf:resource="http://www.owl-ontologies.com/sigett/lineaInvestigacion/5"/>
-    <sigett:id rdf:datatype="http://www.w3.org/2001/XMLSchema#long">1</sigett:id>
+    <sigett:hasProyecto rdf:resource="http://www.owl-ontologies.com/sigett/proyecto/1"/>
     <rdf:type rdf:resource="http://www.owl-ontologies.com/sigett/lineaInvestigacionProyecto"/>
+    <sigett:id rdf:datatype="http://www.w3.org/2001/XMLSchema#long">1</sigett:id>
+    <sigett:hasLineaInvestigacion rdf:resource="http://www.owl-ontologies.com/sigett/lineaInvestigacion/5"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://www.owl-ontologies.com/sigett/ofertaAcademica/64">
     <sigett:hasPeriodoAcademico rdf:resource="http://www.owl-ontologies.com/sigett/periodo/12"/>
+    <sigett:id rdf:datatype="http://www.w3.org/2001/XMLSchema#long">64</sigett:id>
     <sigett:fechaInicio rdf:datatype="http://www.w3.org/2001/XMLSchema#string">2015-03-16</sigett:fechaInicio>
     <rdf:type rdf:resource="http://www.owl-ontologies.com/sigett/ofertaAcademica"/>
-    <sigett:id rdf:datatype="http://www.w3.org/2001/XMLSchema#long">64</sigett:id>
     <dc:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Pregrado Marzo - Agosto  2015</dc:title>
     <sigett:fechaFin rdf:datatype="http://www.w3.org/2001/XMLSchema#string">2015-08-07</sigett:fechaFin>
   </rdf:Description>
   <rdf:Description rdf:about="http://www.owl-ontologies.com/sigett/autorProyecto/245">
-    <rdf:type rdf:resource="http://www.owl-ontologies.com/sigett/autorProyecto"/>
+    <sigett:hasAutor rdf:resource="http://www.owl-ontologies.com/sigett/autor/245"/>
     <sigett:id rdf:datatype="http://www.w3.org/2001/XMLSchema#long">245</sigett:id>
     <sigett:hasProyecto rdf:resource="http://www.owl-ontologies.com/sigett/proyecto/1"/>
-    <sigett:hasAutor rdf:resource="http://www.owl-ontologies.com/sigett/autor/245"/>
+    <rdf:type rdf:resource="http://www.owl-ontologies.com/sigett/autorProyecto"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://www.owl-ontologies.com/sigett/proyectoCarreraOferta/1">
-    <rdf:type rdf:resource="http://www.owl-ontologies.com/sigett/proyectoCarreraOferta"/>
-    <sigett:id rdf:datatype="http://www.w3.org/2001/XMLSchema#long">1</sigett:id>
-    <sigett:hasProyecto rdf:resource="http://www.owl-ontologies.com/sigett/proyecto/1"/>
-    <sigett:hasOfertaAcademica rdf:resource="http://www.owl-ontologies.com/sigett/ofertaAcademica/64"/>
     <sigett:hasCarrera rdf:resource="http://www.owl-ontologies.com/sigett/carrera/40"/>
+    <sigett:hasProyecto rdf:resource="http://www.owl-ontologies.com/sigett/proyecto/1"/>
+    <sigett:id rdf:datatype="http://www.w3.org/2001/XMLSchema#long">1</sigett:id>
+    <sigett:hasOfertaAcademica rdf:resource="http://www.owl-ontologies.com/sigett/ofertaAcademica/64"/>
+    <rdf:type rdf:resource="http://www.owl-ontologies.com/sigett/proyectoCarreraOferta"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://www.owl-ontologies.com/sigett/periodo/12">
     <sigett:fechaFin rdf:datatype="http://www.w3.org/2001/XMLSchema#string">2015-01-01</sigett:fechaFin>
@@ -172,44 +178,44 @@
     <sigett:fechaInicio rdf:datatype="http://www.w3.org/2001/XMLSchema#string">2014-01-01</sigett:fechaInicio>
   </rdf:Description>
   <rdf:Description rdf:about="http://www.owl-ontologies.com/sigett/autor/420">
-    <rdf:type rdf:resource="http://www.owl-ontologies.com/sigett/autor"/>
-    <sigett:id rdf:datatype="http://www.w3.org/2001/XMLSchema#long">420</sigett:id>
-    <foaf:name rdf:datatype="http://www.w3.org/2001/XMLSchema#string">priscilla lourdes pacheco ordoñez</foaf:name>
-    <foaf:gender rdf:datatype="http://www.w3.org/2001/XMLSchema#string">FEMENINO</foaf:gender>
-    <foaf:mbox rdf:datatype="http://www.w3.org/2001/XMLSchema#string">plpachecoo@unl.edu.ec</foaf:mbox>
     <foaf:birthday rdf:datatype="http://www.w3.org/2001/XMLSchema#string">1991-05-13</foaf:birthday>
+    <foaf:mbox rdf:datatype="http://www.w3.org/2001/XMLSchema#string">plpachecoo@unl.edu.ec</foaf:mbox>
+    <foaf:gender rdf:datatype="http://www.w3.org/2001/XMLSchema#string">FEMENINO</foaf:gender>
+    <foaf:name rdf:datatype="http://www.w3.org/2001/XMLSchema#string">priscilla lourdes pacheco ordoñez</foaf:name>
+    <sigett:id rdf:datatype="http://www.w3.org/2001/XMLSchema#long">420</sigett:id>
+    <rdf:type rdf:resource="http://www.owl-ontologies.com/sigett/autor"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://www.owl-ontologies.com/sigett/esParteDeNivelAcademico">
-    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
-    <rdfs:range rdf:resource="http://www.owl-ontologies.com/sigett/nivelAcademico"/>
-    <rdfs:domain rdf:resource="http://www.owl-ontologies.com/sigett/carrera"/>
     <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <rdfs:domain rdf:resource="http://www.owl-ontologies.com/sigett/carrera"/>
+    <rdfs:range rdf:resource="http://www.owl-ontologies.com/sigett/nivelAcademico"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://www.owl-ontologies.com/sigett/autorProyecto">
     <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://www.owl-ontologies.com/sigett/sigla">
-    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
-    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
-    <rdfs:domain rdf:resource="http://www.owl-ontologies.com/sigett/area"/>
-    <rdfs:domain rdf:resource="http://www.owl-ontologies.com/sigett/carrera"/>
     <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <rdfs:domain rdf:resource="http://www.owl-ontologies.com/sigett/carrera"/>
+    <rdfs:domain rdf:resource="http://www.owl-ontologies.com/sigett/area"/>
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://www.owl-ontologies.com/sigett/proyecto/2">
-    <dc:date rdf:datatype="http://www.w3.org/2001/XMLSchema#string">2015-07-18</dc:date>
-    <dc:type rdf:datatype="http://www.w3.org/2001/XMLSchema#string">TRABAJO DE TITULACION</dc:type>
-    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">INICIO</dc:description>
-    <dc:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">PRUEBA 2</dc:title>
-    <sigett:id rdf:datatype="http://www.w3.org/2001/XMLSchema#long">2</sigett:id>
     <rdf:type rdf:resource="http://www.owl-ontologies.com/sigett/proyecto"/>
+    <sigett:id rdf:datatype="http://www.w3.org/2001/XMLSchema#long">2</sigett:id>
+    <dc:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">PRUEBA 2</dc:title>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">INICIO</dc:description>
+    <dc:type rdf:datatype="http://www.w3.org/2001/XMLSchema#string">TRABAJO DE TITULACION</dc:type>
+    <dc:date rdf:datatype="http://www.w3.org/2001/XMLSchema#string">2015-07-18</dc:date>
   </rdf:Description>
   <rdf:Description rdf:about="http://www.owl-ontologies.com/sigett/autor/210">
-    <foaf:birthday rdf:datatype="http://www.w3.org/2001/XMLSchema#string">1992-04-03</foaf:birthday>
-    <foaf:mbox rdf:datatype="http://www.w3.org/2001/XMLSchema#string">ragomeza@unl.edu.ec</foaf:mbox>
-    <foaf:gender rdf:datatype="http://www.w3.org/2001/XMLSchema#string">MASCULINO</foaf:gender>
-    <foaf:name rdf:datatype="http://www.w3.org/2001/XMLSchema#string">raul alexander gomez armijos</foaf:name>
-    <sigett:id rdf:datatype="http://www.w3.org/2001/XMLSchema#long">210</sigett:id>
     <rdf:type rdf:resource="http://www.owl-ontologies.com/sigett/autor"/>
+    <sigett:id rdf:datatype="http://www.w3.org/2001/XMLSchema#long">210</sigett:id>
+    <foaf:name rdf:datatype="http://www.w3.org/2001/XMLSchema#string">raul alexander gomez armijos</foaf:name>
+    <foaf:gender rdf:datatype="http://www.w3.org/2001/XMLSchema#string">MASCULINO</foaf:gender>
+    <foaf:mbox rdf:datatype="http://www.w3.org/2001/XMLSchema#string">ragomeza@unl.edu.ec</foaf:mbox>
+    <foaf:birthday rdf:datatype="http://www.w3.org/2001/XMLSchema#string">1992-04-03</foaf:birthday>
   </rdf:Description>
   <rdf:Description rdf:about="http://www.owl-ontologies.com/sigett/area">
     <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
@@ -222,9 +228,9 @@
     <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Area de Energía, Industria y Recursos Naturales No Renovables</dc:description>
   </rdf:Description>
   <rdf:Description rdf:about="http://www.owl-ontologies.com/sigett/nivelAcademico/3">
-    <rdf:type rdf:resource="http://www.owl-ontologies.com/sigett/nivelAcademico"/>
-    <sigett:id rdf:datatype="http://www.w3.org/2001/XMLSchema#int">3</sigett:id>
     <dc:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">presencial</dc:title>
+    <sigett:id rdf:datatype="http://www.w3.org/2001/XMLSchema#int">3</sigett:id>
+    <rdf:type rdf:resource="http://www.owl-ontologies.com/sigett/nivelAcademico"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://www.owl-ontologies.com/sigett/id">
     <rdfs:domain rdf:resource="http://www.owl-ontologies.com/sigett/autor"/>
@@ -239,25 +245,33 @@
     <rdfs:domain rdf:resource="http://www.owl-ontologies.com/sigett/periodoAcademico"/>
     <rdfs:domain rdf:resource="http://www.owl-ontologies.com/sigett/lineaInvestigacion"/>
     <rdfs:domain rdf:resource="http://www.owl-ontologies.com/sigett/lineaInvestigacionProyecto"/>
-    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
     <rdfs:domain rdf:resource="http://www.owl-ontologies.com/sigett/docente"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
     <rdfs:domain rdf:resource="http://www.owl-ontologies.com/sigett/directorProyecto"/>
     <rdfs:domain rdf:resource="http://www.owl-ontologies.com/sigett/carrera"/>
   </rdf:Description>
+  <rdf:Description rdf:about="http://www.owl-ontologies.com/sigett/docente/31">
+    <foaf:birthday rdf:datatype="http://www.w3.org/2001/XMLSchema#string">2015-07-17</foaf:birthday>
+    <foaf:mbox rdf:datatype="http://www.w3.org/2001/XMLSchema#string">mapalma@unl.edu.es</foaf:mbox>
+    <foaf:gender rdf:datatype="http://www.w3.org/2001/XMLSchema#string">MASCULINO</foaf:gender>
+    <foaf:name rdf:datatype="http://www.w3.org/2001/XMLSchema#string">MARIO ANDRES PALMA JARAMILLO</foaf:name>
+    <sigett:id rdf:datatype="http://www.w3.org/2001/XMLSchema#long">31</sigett:id>
+    <rdf:type rdf:resource="http://www.owl-ontologies.com/sigett/docente"/>
+  </rdf:Description>
   <rdf:Description rdf:about="http://www.owl-ontologies.com/sigett/hasCarrera">
-    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
-    <rdfs:range rdf:resource="http://www.owl-ontologies.com/sigett/carrera"/>
-    <rdfs:domain rdf:resource="http://www.owl-ontologies.com/sigett/proyectoCarreraOferta"/>
     <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <rdfs:domain rdf:resource="http://www.owl-ontologies.com/sigett/proyectoCarreraOferta"/>
+    <rdfs:range rdf:resource="http://www.owl-ontologies.com/sigett/carrera"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://www.owl-ontologies.com/sigett/directorProyecto">
     <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://www.owl-ontologies.com/sigett/lineaInvestigacionProyecto/3">
-    <rdf:type rdf:resource="http://www.owl-ontologies.com/sigett/lineaInvestigacionProyecto"/>
-    <sigett:id rdf:datatype="http://www.w3.org/2001/XMLSchema#long">3</sigett:id>
-    <sigett:hasLineaInvestigacion rdf:resource="http://www.owl-ontologies.com/sigett/lineaInvestigacion/5"/>
     <sigett:hasProyecto rdf:resource="http://www.owl-ontologies.com/sigett/proyecto/3"/>
+    <sigett:hasLineaInvestigacion rdf:resource="http://www.owl-ontologies.com/sigett/lineaInvestigacion/5"/>
+    <sigett:id rdf:datatype="http://www.w3.org/2001/XMLSchema#long">3</sigett:id>
+    <rdf:type rdf:resource="http://www.owl-ontologies.com/sigett/lineaInvestigacionProyecto"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://www.owl-ontologies.com/sigett/lineaInvestigacion/5">
     <dc:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">DESARROLLO DE SOFTWARE</dc:title>
@@ -265,47 +279,47 @@
     <sigett:id rdf:datatype="http://www.w3.org/2001/XMLSchema#long">5</sigett:id>
   </rdf:Description>
   <rdf:Description rdf:about="http://www.owl-ontologies.com/sigett/hasProyecto">
-    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
-    <rdfs:range rdf:resource="http://www.owl-ontologies.com/sigett/proyecto"/>
-    <rdfs:domain rdf:resource="http://www.owl-ontologies.com/sigett/lineaInvestigacionProyecto"/>
-    <rdfs:domain rdf:resource="http://www.owl-ontologies.com/sigett/proyectoCarreraOferta"/>
-    <rdfs:domain rdf:resource="http://www.owl-ontologies.com/sigett/directorProyecto"/>
-    <rdfs:domain rdf:resource="http://www.owl-ontologies.com/sigett/autorProyecto"/>
     <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <rdfs:domain rdf:resource="http://www.owl-ontologies.com/sigett/autorProyecto"/>
+    <rdfs:domain rdf:resource="http://www.owl-ontologies.com/sigett/directorProyecto"/>
+    <rdfs:domain rdf:resource="http://www.owl-ontologies.com/sigett/proyectoCarreraOferta"/>
+    <rdfs:domain rdf:resource="http://www.owl-ontologies.com/sigett/lineaInvestigacionProyecto"/>
+    <rdfs:range rdf:resource="http://www.owl-ontologies.com/sigett/proyecto"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://www.owl-ontologies.com/sigett/lineaInvestigacion">
     <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://www.owl-ontologies.com/sigett/proyecto/1">
-    <rdf:type rdf:resource="http://www.owl-ontologies.com/sigett/proyecto"/>
+    <dc:date rdf:datatype="http://www.w3.org/2001/XMLSchema#string">2015-07-20</dc:date>
     <sigett:id rdf:datatype="http://www.w3.org/2001/XMLSchema#long">1</sigett:id>
-    <dc:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">SISTEMA DE INFORMACIÓN PARA LA GESTIÓN DE TRABAJOS DE TITULACIÓN</dc:title>
-    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">INICIO</dc:description>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">PERTINENTE</dc:description>
+    <rdf:type rdf:resource="http://www.owl-ontologies.com/sigett/proyecto"/>
+    <dc:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">SOFTWARE COMO SERVICIO WEB, CON COMUNICACIÓN HACIA DISPOSITIVOS MÓVILES PARA EL CONTROL Y RESERVA DE BOLETERÍA</dc:title>
     <dc:type rdf:datatype="http://www.w3.org/2001/XMLSchema#string">TRABAJO DE TITULACION</dc:type>
-    <dc:date rdf:datatype="http://www.w3.org/2001/XMLSchema#string">2015-07-16</dc:date>
   </rdf:Description>
   <rdf:Description rdf:about="http://www.owl-ontologies.com/sigett/hasOfertaAcademica">
-    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
-    <rdfs:range rdf:resource="http://www.owl-ontologies.com/sigett/ofertaAcademica"/>
-    <rdfs:domain rdf:resource="http://www.owl-ontologies.com/sigett/proyectoCarreraOferta"/>
     <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <rdfs:domain rdf:resource="http://www.owl-ontologies.com/sigett/proyectoCarreraOferta"/>
+    <rdfs:range rdf:resource="http://www.owl-ontologies.com/sigett/ofertaAcademica"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://www.owl-ontologies.com/sigett/directorProyecto/3">
-    <sigett:hasDocente rdf:resource="http://www.owl-ontologies.com/sigett/docente/393"/>
-    <sigett:hasProyecto rdf:resource="http://www.owl-ontologies.com/sigett/proyecto/3"/>
-    <sigett:id rdf:datatype="http://www.w3.org/2001/XMLSchema#long">3</sigett:id>
     <rdf:type rdf:resource="http://www.owl-ontologies.com/sigett/directorProyecto"/>
+    <sigett:id rdf:datatype="http://www.w3.org/2001/XMLSchema#long">3</sigett:id>
+    <sigett:hasProyecto rdf:resource="http://www.owl-ontologies.com/sigett/proyecto/3"/>
+    <sigett:hasDocente rdf:resource="http://www.owl-ontologies.com/sigett/docente/393"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://www.owl-ontologies.com/sigett/hasAutor">
-    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
-    <rdfs:range rdf:resource="http://www.owl-ontologies.com/sigett/autor"/>
-    <rdfs:domain rdf:resource="http://www.owl-ontologies.com/sigett/autorProyecto"/>
     <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <rdfs:domain rdf:resource="http://www.owl-ontologies.com/sigett/autorProyecto"/>
+    <rdfs:range rdf:resource="http://www.owl-ontologies.com/sigett/autor"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://www.owl-ontologies.com/sigett/fechaPublicacion">
-    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
-    <rdfs:domain rdf:resource="http://www.owl-ontologies.com/sigett/proyecto"/>
     <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <rdfs:domain rdf:resource="http://www.owl-ontologies.com/sigett/proyecto"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://www.owl-ontologies.com/sigett/ofertaAcademica">
     <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>

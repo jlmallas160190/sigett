@@ -24,6 +24,7 @@ import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Calendar;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
@@ -91,7 +92,9 @@ public class CalificacionMiembroController implements Serializable {
                 if (miembroTribunal.getDocenteId().equals(docenteUsuarioDM.getDocenteUsuarioDTO().getDocente().getId())) {
                     calificacionMiembro.setEditar(Boolean.TRUE);
                 }
-                sessionCalificacionMiembro.getCalificacionMiembros().add(calificacionMiembro);
+                if (!sessionCalificacionMiembro.getCalificacionMiembros().contains(calificacionMiembro)) {
+                    sessionCalificacionMiembro.getCalificacionMiembros().add(calificacionMiembro);
+                }
             }
         } catch (NumberFormatException e) {
             LOG.warning(e.getMessage());
@@ -197,6 +200,13 @@ public class CalificacionMiembroController implements Serializable {
                 || estadoActualProyecto.getCodigo().equalsIgnoreCase(EstadoProyectoEnum.SUSTENTACIONPUBLICA.getTipo()))
                 || estadoActualProyecto.getCodigo().equalsIgnoreCase(EstadoProyectoEnum.RECUPERACIONPRIVADA.getTipo())
                 || estadoActualProyecto.getCodigo().equalsIgnoreCase(EstadoProyectoEnum.RECUPERACIONPUBLICA.getTipo())) {
+            return;
+        }
+        Calendar fechaActual = Calendar.getInstance();
+        if (!((fechaActual.getTime().after(sessionEvaluacionTribunal.getEvaluacionTribunal().getFechaInicio())
+                || fechaActual.getTime().equals(sessionEvaluacionTribunal.getEvaluacionTribunal().getFechaInicio()))
+                && fechaActual.getTime().before(sessionEvaluacionTribunal.getEvaluacionTribunal().getFechaPlazo())
+                || fechaActual.getTime().equals(sessionEvaluacionTribunal.getEvaluacionTribunal().getFechaPlazo()))) {
             return;
         }
         sessionCalificacionMiembro.setRenderedEditar(Boolean.TRUE);

@@ -1100,13 +1100,9 @@ public class ProyectoController implements Serializable {
                 return;
             }
             for (DocenteProyecto docenteProyecto : docenteProyectos) {
-                List<DocenteCarrera> docenteCarreras = docenteCarreraService.buscar(new DocenteCarrera(null, docenteService.buscarPorId(new Docente(docenteProyecto.getDocenteCarreraId())),
-                        null, Boolean.TRUE));
-                if (docenteCarreras.isEmpty()) {
-                    continue;
-                }
-                DocenteProyectoDTO docenteProyectoDTO = new DocenteProyectoDTO(docenteProyecto, personaService.buscarPorId(new Persona(docenteProyecto.getDocenteCarreraId())),
-                        docenteCarreras.get(0));
+                DocenteProyectoDTO docenteProyectoDTO = new DocenteProyectoDTO(docenteProyecto, null,
+                        docenteCarreraService.buscarPorId(new DocenteCarrera(docenteProyecto.getDocenteCarreraId())));
+                docenteProyectoDTO.setPersona(personaService.buscarPorId(new Persona(docenteProyectoDTO.getDocenteCarrera().getDocenteId().getId())));
                 sessionProyecto.getDocentesProyectoDTO().add(docenteProyectoDTO);
             }
             sessionProyecto.setFilterDocentesProyectoDTO(sessionProyecto.getDocentesProyectoDTO());
