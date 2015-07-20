@@ -20,7 +20,7 @@
                 <f:convertDateTime pattern="EEEEE dd MMMMM yyyy HH:mm:ss"/>
             </h:outputLabel>
             <h:outputLabel value="#{lbl.invitados}:"/>
-            <h:outputLabel  value="#{sessionEventoPersona.eventoPersona.evento.invitados}"/>
+            <h:outputLabel  value="#{sessionEventoPersona.eventoPersona.evento.invitados.toUpperCase()}"/>
         </h:panelGrid> 
     </body>
 </html>

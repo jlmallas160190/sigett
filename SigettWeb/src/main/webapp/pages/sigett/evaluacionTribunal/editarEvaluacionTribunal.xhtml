@@ -8,13 +8,20 @@
         <p:panel >
             <div class="row-fluid">
                 <div class="col-sm-8">
-                    <ui:include src="datosEvaluacionTribunal.xhtml"/>  
+                    <p:panel rendered="#{sessionEvaluacionTribunal.evaluacionTribunal.tribunalId.id == sessionTribunal.tribunal.id}">
+                        <ui:include src="datosEvaluacionTribunal.xhtml"/> 
+                    </p:panel>
+                    <p:panel rendered="#{sessionEvaluacionTribunal.evaluacionTribunal.tribunalId.id != sessionTribunal.tribunal.id}">
+                        <ui:include src="verEvaluacionTribunal.xhtml"/>
+                    </p:panel>
                 </div>
                 <div class="col-sm-4">
                     <p:panel header="#{msg['lbl.calificaciones']}" style="background: #333">
                         <ui:include src="calificaciones.xhtml"/>  
                         <f:facet name="footer">
-                            <p:outputLabel style="text-align:right!important;width: 100%" value="#{sessionEvaluacionTribunal.evaluacionTribunal.nota}"/>
+                            <p:outputLabel style="text-align:right!important;width: 100%" value="#{sessionEvaluacionTribunal.evaluacionTribunal.nota}">
+                                <f:convertNumber maxFractionDigits="2" minFractionDigits="2"/>
+                            </p:outputLabel>
                         </f:facet>
                     </p:panel>
                     <br/>

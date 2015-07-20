@@ -51,8 +51,6 @@ public class EvaluacionTribunalController implements Serializable {
     private DocenteUsuarioDM docenteUsuarioDM;
     //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="SERVICIOS">
-    @EJB(lookup = "java:global/SigettService/EvaluacionTribunalServiceImplement!edu.unl.sigett.service.EvaluacionTribunalService")
-    private EvaluacionTribunalService evaluacionTribunalService;
     @EJB(lookup = "java:global/SigettService/MiembroTribunalServiceImplement!edu.unl.sigett.service.MiembroTribunalService")
     private MiembroTribunalService miembroTribunalService;
     @EJB(lookup = "java:global/ComunService/ItemServiceImplement!com.jlmallas.comun.service.ItemService")
@@ -65,7 +63,7 @@ public class EvaluacionTribunalController implements Serializable {
     public void preRenderView() {
         buscar();
     }
-//<editor-fold defaultstate="collapsed" desc="CRUD">
+    //<editor-fold defaultstate="collapsed" desc="CRUD">
 
     private void buscar() {
         sessionEvaluacionTribunal.getEvaluacionesTribunal().clear();

@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <body>
+        <h:panelGrid columns="2" styleClass="panelgrid" rowClasses="rowpanelgrid">
+            <h:outputLabel value="#{lbl.fecha_inicio}:"/>
+            <h:outputText value="#{sessionEvaluacionTribunal.evaluacionTribunal.fechaInicio}">
+                <f:convertDateTime pattern="EEEEE dd MMMMM yyyy HH:mm:ss"/>
+            </h:outputText>
+            <h:outputLabel value="#{lbl.fecha_fin}:"/>
+            <h:outputText value="#{sessionEvaluacionTribunal.evaluacionTribunal.fechaPlazo}">
+                <f:convertDateTime pattern="EEEEE dd MMMMM yyyy HH:mm:ss"/>
+            </h:outputText>
+            <h:outputLabel value="#{lbl.catalogo_evaluacion}:"/>
+            <h:outputText value="#{sessionEvaluacionTribunal.evaluacionTribunal.catalogoEvaluacion}"/>
+            <h:outputLabel value="#{lbl.lugar}:"/>
+            <h:outputText value="#{sessionEvaluacionTribunal.evaluacionTribunal.lugar}"/>
+            <h:outputLabel value="#{lbl.equivalencia}:"/>
+            <h:outputText value="#{sessionEvaluacionTribunal.evaluacionTribunal.equivalencia}"/>
+        </h:panelGrid>
+    </body>
+</html>

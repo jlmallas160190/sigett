@@ -3,24 +3,48 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
 
     <body>
         <f:metadata>
             <f:event type="preRenderView" listener="#{calificacionMiembroController.preRenderView()}"/>
         </f:metadata>
-        <div class="row-fluid">
-            <div class="col-sm-4">
-                <p:panel>
-                    <ui:include src="calificaciones.xhtml" />
+        <ui:composition template="./../../template.xhtml">
+            <ui:define name="title">#{lbl.sustentacion}</ui:define>
+            <ui:define name="top">
+                <ui:include src="./../../inicio/menu.xhtml"/>
+            </ui:define>
+            <ui:define name="left">
+                <ui:include src="./../../inicio/menuIzquierdo.xhtml"/>
+            </ui:define>
+            <ui:define name="content">
+                <p:growl id="msm"/>
+                <p:panel header="#{sessionEvaluacionTribunal.evaluacionTribunal.catalogoEvaluacion}: 
+                         #{sessionEvaluacionTribunal.evaluacionTribunal.tribunalId.proyectoId.temaActual}">
+                    <div class="row-fluid">
+                        <div class="col-sm-4">
+                            <p:panel header="#{lbl.calificaciones}">
+                                <ui:include src="./../calificacionMiembro/calificaciones.xhtml" />
+                                <f:facet name="footer">
+                                    <h:panelGrid style="width: 100%">
+                                        <h:outputText id="promedioEval" style="text-align:right!important;float: right" value="#{sessionEvaluacionTribunal.evaluacionTribunal.nota}">
+                                            <f:convertNumber maxFractionDigits="2" minFractionDigits="2"/>
+                                        </h:outputText>
+                                    </h:panelGrid>
+                                </f:facet>
+                            </p:panel>
+                        </div>
+                        <div class="col-sm-8">
+                            <p:panel>
+                                <ui:include src="datosEvaluacionTribunal.xhtml" />
+                            </p:panel>
+                        </div>
+                    </div>
                 </p:panel>
-            </div>
-            <div class="col-sm-8">
-                <p:panel>
-
-                </p:panel>
-            </div>
-        </div>
+                <ui:include src="./../calificacionMiembro/dialogoCalificacionMiembro.xhtml" />
+            </ui:define>
+        </ui:composition>
     </body>
 
 </html>

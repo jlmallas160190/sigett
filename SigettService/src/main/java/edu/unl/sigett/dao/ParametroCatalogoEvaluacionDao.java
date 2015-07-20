@@ -14,7 +14,7 @@ import javax.ejb.Local;
  * @author jorge-luis
  */
 @Local
-public interface ParametroCatalogoEvaluacionFacadeLocal {
+public interface ParametroCatalogoEvaluacionDao {
 
     void create(ParametroCatalogoEvaluacion parametroCatalogoEvaluacion);
 
@@ -28,7 +28,7 @@ public interface ParametroCatalogoEvaluacionFacadeLocal {
 
     List<ParametroCatalogoEvaluacion> findRange(int[] range);
 
-    List<ParametroCatalogoEvaluacion> buscarPorCatalogoEvaluacion(Integer catalogoEvaluacionId);
+    List<ParametroCatalogoEvaluacion> buscar(final ParametroCatalogoEvaluacion parametroCatalogoEvaluacion);
 
     int count();
 

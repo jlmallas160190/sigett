@@ -14,7 +14,7 @@ import javax.ejb.Local;
  * @author jorge-luis
  */
 @Local
-public interface CalificacionParametroFacadeLocal {
+public interface CalificacionParametroDao {
 
     void create(CalificacionParametro calificacionParametro);
 
@@ -28,9 +28,7 @@ public interface CalificacionParametroFacadeLocal {
 
     List<CalificacionParametro> findRange(int[] range);
 
-    List<CalificacionParametro> buscarPorCalificacionMiembro(Long calificacionMiembroId);
-
-    CalificacionParametro buscarPorCalificacionMiembroParametro(Long calificacionMiembroId, Long parametroId);
+    List<CalificacionParametro> buscar(final CalificacionParametro calificacionParametro);
 
     int count();
 

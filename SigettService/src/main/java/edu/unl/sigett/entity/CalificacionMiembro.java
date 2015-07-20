@@ -20,6 +20,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -66,6 +67,8 @@ public class CalificacionMiembro implements Serializable {
     private List<CalificacionParametro> calificacionParametroList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "calificacionMiembroId")
     private List<SugerenciaCalificacionMiembro> sugerenciaCalificacionMiembroList;
+    @Transient
+    private Boolean editar;
 
     public CalificacionMiembro() {
     }
@@ -147,6 +150,14 @@ public class CalificacionMiembro implements Serializable {
 
     public void setSugerenciaCalificacionMiembroList(List<SugerenciaCalificacionMiembro> sugerenciaCalificacionMiembroList) {
         this.sugerenciaCalificacionMiembroList = sugerenciaCalificacionMiembroList;
+    }
+
+    public Boolean getEditar() {
+        return editar;
+    }
+
+    public void setEditar(Boolean editar) {
+        this.editar = editar;
     }
 
     @Override

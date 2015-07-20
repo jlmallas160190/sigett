@@ -22,9 +22,9 @@ import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
-import edu.unl.sigett.dao.CalificacionParametroFacadeLocal;
+import edu.unl.sigett.dao.CalificacionParametroDao;
 import edu.unl.sigett.dao.EvaluacionTribunalDao;
-import edu.unl.sigett.dao.ParametroCatalogoEvaluacionFacadeLocal;
+import edu.unl.sigett.dao.ParametroCatalogoEvaluacionDao;
 import edu.unl.sigett.dao.RangoEquivalenciaDao;
 
 /**
@@ -41,9 +41,9 @@ public class AdministrarCalificacionParametro implements Serializable {
 //    private AdministrarCalificacionMiembro administrarCalificacionMiembro;
 //
 //    @EJB
-//    private CalificacionParametroFacadeLocal calificacionParametroFacadeLocal;
+//    private CalificacionParametroDao calificacionParametroFacadeLocal;
 //    @EJB
-//    private ParametroCatalogoEvaluacionFacadeLocal parametroCatalogoEvaluacionFacadeLocal;
+//    private ParametroCatalogoEvaluacionDao parametroCatalogoEvaluacionFacadeLocal;
 ////    @EJB
 ////    private CalificacionMiembroFacadeLocal calificacionMiembroFacadeLocal;
 //    @EJB

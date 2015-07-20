@@ -366,6 +366,10 @@ public class EvaluacionTribunalController implements Serializable {
             if (!existeUnPresidente()) {
                 return;
             }
+            if (!validaMiembrosTribunal()) {
+                cabeceraController.getMessageView().message(FacesMessage.SEVERITY_ERROR, bundle.getString("miembro_ocupado"), "");
+                return;
+            }
             if (sessionEvaluacionTribunal.getEvaluacionTribunal().getId() == null) {
                 evaluacionTribunalService.guardar(sessionEvaluacionTribunal.getEvaluacionTribunal());
                 grabarEventosDirector();
@@ -402,6 +406,7 @@ public class EvaluacionTribunalController implements Serializable {
             CalificacionMiembro calificacionMiembroBuscar = new CalificacionMiembro();
             calificacionMiembroBuscar.setMiembroId(cabeceraController.getSecureService().encrypt(
                     new Secure(cabeceraController.getConfiguracionGeneralUtil().getSecureKey(), miembroTribunalDTO.getMiembroTribunal().getId() + "")));
+           calificacionMiembroBuscar.setEvaluacionTribunalId(sessionEvaluacionTribunal.getEvaluacionTribunal());
             CalificacionMiembro calificacionMiembro = calificacionMiembroService.buscarPorMiembro(calificacionMiembroBuscar);
             if (calificacionMiembro == null) {
                 calificacionMiembro = new CalificacionMiembro(null, BigDecimal.ZERO, "Ninguno", cabeceraController.getSecureService().encrypt(
@@ -514,6 +519,9 @@ public class EvaluacionTribunalController implements Serializable {
         Date horaFinEvento = null;
         List<EventoPersona> eventoPersonas = eventoPersonaService.buscar(new EventoPersona(null, persona, null));
         for (EventoPersona eventoPersona : eventoPersonas) {
+            if (eventoPersona.getEvento().getTablaId().equals(sessionEvaluacionTribunal.getEvaluacionTribunal().getId())) {
+                continue;
+            }
             fechaInicioEvento = cabeceraController.getUtilService().parserFecha(
                     cabeceraController.getUtilService().formatoFecha(eventoPersona.getEvento().getFechaInicio(), "yyyy-MMM-dd"), "yyyy-MMM-dd");
             fechaFinEvento = cabeceraController.getUtilService().parserFecha(
@@ -522,25 +530,23 @@ public class EvaluacionTribunalController implements Serializable {
                     cabeceraController.getUtilService().formatoFecha(eventoPersona.getEvento().getFechaInicio(), "HH:mm:ssZ"), "HH:mm:ssZ");
             horaFinEvento = cabeceraController.getUtilService().parserFecha(
                     cabeceraController.getUtilService().formatoFecha(eventoPersona.getEvento().getFechaFin(), "HH:mm:ssZ"), "HH:mm:ssZ");
-            for (EvaluacionTribunal evaluacionTribunal : sessionTribunal.getTribunal().getEvaluacionTribunalList()) {
-                fechaInicioEvaluacion = cabeceraController.getUtilService().parserFecha(
-                        cabeceraController.getUtilService().formatoFecha(evaluacionTribunal.getFechaInicio(), "yyyy-MMM-dd"), "yyyy-MMM-dd");
-                fechaFinEvaluacion = cabeceraController.getUtilService().parserFecha(
-                        cabeceraController.getUtilService().formatoFecha(evaluacionTribunal.getFechaFin(), "yyyy-MMM-dd"), "yyyy-MMM-dd");
-                horaInicioEvaluacion = cabeceraController.getUtilService().parserFecha(
-                        cabeceraController.getUtilService().formatoFecha(evaluacionTribunal.getFechaInicio(), "HH:mm:ssZ"), "HH:mm:ssZ");
-                horaFinEvaluacion = cabeceraController.getUtilService().parserFecha(
-                        cabeceraController.getUtilService().formatoFecha(evaluacionTribunal.getFechaFin(), "HH:mm:ssZ"), "HH:mm:ssZ");
-                if ((fechaInicioEvaluacion.equals(fechaInicioEvento) || fechaInicioEvaluacion.equals(fechaFinEvento)
-                        || (fechaInicioEvaluacion.after(fechaInicioEvento) && fechaInicioEvaluacion.before(fechaFinEvento)))
-                        || (fechaFinEvaluacion.equals(fechaInicioEvento) || fechaFinEvaluacion.equals(fechaFinEvento)
-                        || (fechaFinEvaluacion.after(fechaFinEvento) && fechaFinEvaluacion.before(fechaFinEvento)))) {
-                    if ((horaInicioEvaluacion.equals(horaInicioEvento) || horaInicioEvaluacion.equals(horaFinEvento)
-                            || (horaInicioEvaluacion.after(horaInicioEvento) && horaInicioEvaluacion.before(horaFinEvento)))
-                            || (horaFinEvaluacion.equals(horaInicioEvento) || horaFinEvaluacion.equals(horaFinEvento)
-                            || (horaFinEvaluacion.after(horaInicioEvento) && horaFinEvaluacion.before(horaFinEvento)))) {
-                        return Boolean.FALSE;
-                    }
+            fechaInicioEvaluacion = cabeceraController.getUtilService().parserFecha(
+                    cabeceraController.getUtilService().formatoFecha(sessionEvaluacionTribunal.getEvaluacionTribunal().getFechaInicio(), "yyyy-MMM-dd"), "yyyy-MMM-dd");
+            fechaFinEvaluacion = cabeceraController.getUtilService().parserFecha(
+                    cabeceraController.getUtilService().formatoFecha(sessionEvaluacionTribunal.getEvaluacionTribunal().getFechaFin(), "yyyy-MMM-dd"), "yyyy-MMM-dd");
+            horaInicioEvaluacion = cabeceraController.getUtilService().parserFecha(
+                    cabeceraController.getUtilService().formatoFecha(sessionEvaluacionTribunal.getEvaluacionTribunal().getFechaInicio(), "HH:mm:ssZ"), "HH:mm:ssZ");
+            horaFinEvaluacion = cabeceraController.getUtilService().parserFecha(
+                    cabeceraController.getUtilService().formatoFecha(sessionEvaluacionTribunal.getEvaluacionTribunal().getFechaFin(), "HH:mm:ssZ"), "HH:mm:ssZ");
+            if ((fechaInicioEvaluacion.equals(fechaInicioEvento) || fechaInicioEvaluacion.equals(fechaFinEvento)
+                    || (fechaInicioEvaluacion.after(fechaInicioEvento) && fechaInicioEvaluacion.before(fechaFinEvento)))
+                    || (fechaFinEvaluacion.equals(fechaInicioEvento) || fechaFinEvaluacion.equals(fechaFinEvento)
+                    || (fechaFinEvaluacion.after(fechaFinEvento) && fechaFinEvaluacion.before(fechaFinEvento)))) {
+                if ((horaInicioEvaluacion.equals(horaInicioEvento) || horaInicioEvaluacion.equals(horaFinEvento)
+                        || (horaInicioEvaluacion.after(horaInicioEvento) && horaInicioEvaluacion.before(horaFinEvento)))
+                        || (horaFinEvaluacion.equals(horaInicioEvento) || horaFinEvaluacion.equals(horaFinEvento)
+                        || (horaFinEvaluacion.after(horaInicioEvento) && horaFinEvaluacion.before(horaFinEvento)))) {
+                    return Boolean.FALSE;
                 }
             }
         }
@@ -582,7 +588,7 @@ public class EvaluacionTribunalController implements Serializable {
                         sessionEvaluacionTribunal.getEventModel().addEvent(evento);
                         continue;
                     }
-                    evento.setTitle(item.getNombre() + ": " + sessionProyecto.getProyectoSeleccionado().getTemaActual());
+                    evento.setTitle(item.getNombre() + ": " + evaluacionTribunal.getTribunalId().getProyectoId().getTemaActual());
                     evento.setStyleClass("otro");
                     sessionEvaluacionTribunal.getEventModel().addEvent(evento);
                 }
@@ -622,6 +628,12 @@ public class EvaluacionTribunalController implements Serializable {
 
     public void onEventMove(ScheduleEntryMoveEvent moveEvent) {
         try {
+            if (!(sessionProyecto.getEstadoActual().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.SUSTENTACIONPRIVADA.getTipo())
+                    || sessionProyecto.getEstadoActual().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.SUSTENTACIONPUBLICA.getTipo()))
+                    || sessionProyecto.getEstadoActual().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.RECUPERACIONPRIVADA.getTipo())
+                    || sessionProyecto.getEstadoActual().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.RECUPERACIONPUBLICA.getTipo())) {
+                return;
+            }
             FacesContext facesContext = FacesContext.getCurrentInstance();
             ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
             ScheduleEvent event = (ScheduleEvent) moveEvent.getScheduleEvent();
@@ -629,19 +641,30 @@ public class EvaluacionTribunalController implements Serializable {
             ev.setFechaInicio(event.getStartDate());
             ev.setFechaFin(event.getEndDate());
             ev.setFechaPlazo(event.getEndDate());
+            ev.setCatalogoEvaluacion(itemService.buscarPorId(ev.getCatalogoEvaluacionId()).getNombre());
+            sessionEvaluacionTribunal.setEvaluacionTribunal(ev);
             if (ev.getEsAptoCalificar()) {
                 return;
             }
             if (!validaMiembrosTribunal()) {
+                cabeceraController.getMessageView().message(FacesMessage.SEVERITY_ERROR, bundle.getString("miembro_ocupado"), "");
                 return;
             }
-            cabeceraController.getMessageView().message(FacesMessage.SEVERITY_ERROR, bundle.getString("miembro_ocupado"), "");
+            evaluacionTribunalService.actualizar(ev);
+            grabarEventosDirector();
+            cancelarEdicion();
         } catch (Exception e) {
             LOG.warning(e.getMessage());
         }
     }
 
     public void onEventResize(ScheduleEntryResizeEvent resizeEvent) {
+        if (!(sessionProyecto.getEstadoActual().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.SUSTENTACIONPRIVADA.getTipo())
+                || sessionProyecto.getEstadoActual().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.SUSTENTACIONPUBLICA.getTipo()))
+                || sessionProyecto.getEstadoActual().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.RECUPERACIONPRIVADA.getTipo())
+                || sessionProyecto.getEstadoActual().getCodigo().equalsIgnoreCase(EstadoProyectoEnum.RECUPERACIONPUBLICA.getTipo())) {
+            return;
+        }
         ScheduleEvent event = (ScheduleEvent) resizeEvent.getScheduleEvent();
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
@@ -649,13 +672,18 @@ public class EvaluacionTribunalController implements Serializable {
         ev.setFechaInicio(event.getStartDate());
         ev.setFechaFin(event.getEndDate());
         ev.setFechaPlazo(event.getEndDate());
+        ev.setCatalogoEvaluacion(itemService.buscarPorId(ev.getCatalogoEvaluacionId()).getNombre());
+        sessionEvaluacionTribunal.setEvaluacionTribunal(ev);
         if (ev.getEsAptoCalificar()) {
             return;
         }
         if (!validaMiembrosTribunal()) {
+            cabeceraController.getMessageView().message(FacesMessage.SEVERITY_ERROR, bundle.getString("miembro_ocupado"), "");
             return;
         }
-        cabeceraController.getMessageView().message(FacesMessage.SEVERITY_ERROR, bundle.getString("miembro_ocupado"), "");
+        evaluacionTribunalService.actualizar(ev);
+        grabarEventosDirector();
+        cancelarEdicion();
     }
 
     public Boolean existeUnPresidente() {

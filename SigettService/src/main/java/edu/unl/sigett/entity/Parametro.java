@@ -30,12 +30,6 @@ import javax.xml.bind.annotation.XmlTransient;
 @Entity
 @Table(name = "parametro")
 @XmlRootElement
-@NamedQueries({
-    @NamedQuery(name = "Parametro.findAll", query = "SELECT p FROM Parametro p"),
-    @NamedQuery(name = "Parametro.findById", query = "SELECT p FROM Parametro p WHERE p.id = :id"),
-    @NamedQuery(name = "Parametro.findByNombre", query = "SELECT p FROM Parametro p WHERE p.nombre = :nombre"),
-    @NamedQuery(name = "Parametro.findByDescripcion", query = "SELECT p FROM Parametro p WHERE p.descripcion = :descripcion"),
-    @NamedQuery(name = "Parametro.findByEsActivo", query = "SELECT p FROM Parametro p WHERE p.esActivo = :esActivo")})
 public class Parametro implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -57,7 +51,7 @@ public class Parametro implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "es_activo")
-    private boolean esActivo;
+    private Boolean esActivo;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "parametroId")
     private List<ParametroCatalogoEvaluacion> parametroCatalogoEvaluacionList;
 
@@ -68,7 +62,7 @@ public class Parametro implements Serializable {
         this.id = id;
     }
 
-    public Parametro(Integer id, String nombre, String descripcion, boolean esActivo) {
+    public Parametro(Integer id, String nombre, String descripcion, Boolean esActivo) {
         this.id = id;
         this.nombre = nombre;
         this.descripcion = descripcion;
@@ -99,11 +93,11 @@ public class Parametro implements Serializable {
         this.descripcion = descripcion;
     }
 
-    public boolean getEsActivo() {
+    public Boolean getEsActivo() {
         return esActivo;
     }
 
-    public void setEsActivo(boolean esActivo) {
+    public void setEsActivo(Boolean esActivo) {
         this.esActivo = esActivo;
     }
 

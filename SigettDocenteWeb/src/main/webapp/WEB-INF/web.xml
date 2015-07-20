@@ -43,7 +43,8 @@
             edu.unl.sigett.docenteProyecto,
             edu.unl.sigett.directorProyecto,
             edu.unl.sigett.lineaInvestigacionDocente,
-            edu.unl.sigett.actividad, edu.unl.sigett.evaluacionTribunal
+            edu.unl.sigett.actividad, edu.unl.sigett.evaluacionTribunal,
+            edu.unl.sigett.calificacionMiembro
         </param-value>
     </context-param>
     <context-param>

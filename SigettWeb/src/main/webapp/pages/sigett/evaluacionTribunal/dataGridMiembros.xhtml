@@ -4,14 +4,17 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:p="http://primefaces.org/ui">
     <body>
-        <p:dataGrid  value="#{sessionEvaluacionTribunal.miembrosTribunalDTO}"
-                     var="item" columns="1"  paginator="false" paginatorPosition="bottom"
+        <p:dataGrid  value="#{sessionEvaluacionTribunal.miembrosTribunalDTO}" paginator="true" rows="3"
+                     var="item" columns="1"  paginatorPosition="bottom"
                      paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} "
                      emptyMessage="#{msg['lbl.table.empty']}">
-            <h:panelGrid >
+            <h:panelGrid columns="2" styleClass="panelgrid">
                 <h:outputLabel value="#{lbl.nombres}:"/>
                 <h:outputText value="#{item.persona.nombres}"/>
+                <h:outputLabel value="#{lbl.apellidos}:"/>
+                <h:outputText value="#{item.persona.apellidos}"/>
             </h:panelGrid>
+            <br/>
         </p:dataGrid>
     </body>
 </html>

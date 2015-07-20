@@ -315,9 +315,10 @@ public class MiembroTribunalController implements Serializable {
                         cancelarEdicion();
                         return;
                     }
-                    cabeceraController.getMessageView().message(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.msm_grabar"), "");
+                    cabeceraController.getMessageView().message(FacesMessage.SEVERITY_INFO, bundle.getString("editar"), "");
+                    return;
                 }
-                cabeceraController.getMessageView().message(FacesMessage.SEVERITY_ERROR, bundle.getString("denegado_crear"), "");
+                cabeceraController.getMessageView().message(FacesMessage.SEVERITY_ERROR, bundle.getString("denegar_crear"), "");
                 return;
             }
             Integer tienePermiso = usuarioService.tienePermiso(sessionUsuario.getUsuario(), cabeceraController.getValueFromProperties(

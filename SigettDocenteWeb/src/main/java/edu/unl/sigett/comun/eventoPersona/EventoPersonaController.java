@@ -12,7 +12,6 @@ import com.jlmallas.comun.enumeration.EventoEnum;
 import com.jlmallas.comun.service.EventoPersonaService;
 import com.jlmallas.comun.service.EventoService;
 import com.jlmallas.comun.service.ItemService;
-import com.jlmallas.comun.service.PersonaService;
 import edu.jlmallas.academico.entity.DocenteCarrera;
 import edu.jlmallas.academico.service.DocenteCarreraService;
 import edu.unl.sigett.director.DirectorDTO;
@@ -27,7 +26,7 @@ import edu.unl.sigett.enumeration.EstiloScheduleEnum;
 import edu.unl.sigett.evaluacionTribunal.SessionEvaluacionTribunal;
 import edu.unl.sigett.service.ActividadService;
 import edu.unl.sigett.service.DirectorProyectoService;
-import edu.unl.sigett.service.MiembroTribunalService;
+import edu.unl.sigett.service.EvaluacionTribunalService;
 import edu.unl.sigett.service.ProyectoService;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
@@ -76,10 +75,8 @@ public class EventoPersonaController implements Serializable {
     private ProyectoService proyectoService;
     @EJB(lookup = "java:global/AcademicoService/DocenteCarreraServiceImplement!edu.jlmallas.academico.service.DocenteCarreraService")
     private DocenteCarreraService docenteCarreraService;
-    @EJB(lookup = "java:global/SigettService/MiembroTribunalServiceImplement!edu.unl.sigett.service.MiembroTribunalService")
-    private MiembroTribunalService miembroTribunalService;
-    @EJB(lookup = "java:global/ComunService/PersonaServiceImplement!com.jlmallas.comun.service.PersonaService")
-    private PersonaService personaService;
+    @EJB(lookup = "java:global/SigettService/EvaluacionTribunalServiceImplement!edu.unl.sigett.service.EvaluacionTribunalService")
+    private EvaluacionTribunalService evaluacionTribunalService;
 
     //</editor-fold>
     public EventoPersonaController() {
@@ -98,18 +95,19 @@ public class EventoPersonaController implements Serializable {
         List<EventoPersona> eventoPersonas = eventoPersonaService.buscar(new EventoPersona(
                 null, docenteUsuarioDM.getDocenteUsuarioDTO().getPersona(), null));
         for (EventoPersona eventoPersona : eventoPersonas) {
-            List<EventoPersona> otrosEventoPersonas = eventoPersonaService.buscar(new EventoPersona(null, null, eventoPersona.getEvento()));
-            for (EventoPersona ev : otrosEventoPersonas) {
-                if (ev.getPersonaId().equals(docenteUsuarioDM.getDocenteUsuarioDTO().getPersona())) {
-                    continue;
-                }
-                ev.getEvento().setInvitados("");
-                ev.getEvento().setInvitados(ev.getEvento().getInvitados().concat(" ") + ev.getPersonaId().getNombres().concat(" ")
-                        + ev.getPersonaId().getApellidos().concat("\n"));
-                if (!sessionEventoPersona.getEventoPersonas().contains(ev)) {
-                    sessionEventoPersona.getEventoPersonas().add(ev);
-                }
+            obtenerInvitados(eventoPersona);
+            sessionEventoPersona.getEventoPersonas().add(eventoPersona);
+        }
+    }
+
+    private void obtenerInvitados(EventoPersona eventoPersona) {
+        eventoPersona.getEvento().setInvitados("");
+        for (EventoPersona ev : eventoPersona.getEvento().getEventoPersonas()) {
+            if (ev.getId().equals(eventoPersona.getId())) {
+                continue;
             }
+            eventoPersona.getEvento().setInvitados(eventoPersona.getEvento().getInvitados().concat(ev.getPersonaId().getNombres().concat(" ")
+                    + ev.getPersonaId().getApellidos().concat("\n\n")));
         }
     }
 
@@ -174,12 +172,14 @@ public class EventoPersonaController implements Serializable {
             return "pretty:editarDirectorProyecto";
         }
         if (catalogo.getCodigo().equals(EventoEnum.MIEMBROTRIBUNAL.getTipo())) {
-            EvaluacionTribunal evaluacionTribunal = new EvaluacionTribunal();
-            evaluacionTribunal.setId(sessionEventoPersona.getEventoPersona().getEvento().getTablaId());
+            EvaluacionTribunal evaluacionTribunal = evaluacionTribunalService.buscarPorId(
+                    new EvaluacionTribunal(sessionEventoPersona.getEventoPersona().getEvento().getTablaId()));
             if (evaluacionTribunal != null) {
+                evaluacionTribunal.setCatalogoEvaluacion(itemService.buscarPorId(evaluacionTribunal.getCatalogoEvaluacionId()).getNombre());
+                evaluacionTribunal.setEquivalencia(itemService.buscarPorId(evaluacionTribunal.getRangoEquivalenciaId().getEquivalenciaId()).getNombre());
                 sessionEvaluacionTribunal.setEvaluacionTribunal(evaluacionTribunal);
+                return "pretty:editarEvaluacionTribunal";
             }
-            return "pretty:editarEvaluacionTribunal";
         }
         return "";
     }

@@ -6,6 +6,7 @@
 package edu.unl.sigett.calificacionMiembro;
 
 import edu.unl.sigett.entity.CalificacionMiembro;
+import edu.unl.sigett.entity.CalificacionParametro;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
@@ -22,8 +23,13 @@ public class SessionCalificacionMiembro implements Serializable {
 
     private List<CalificacionMiembro> calificacionMiembros;
     private CalificacionMiembro calificacionMiembro;
+    private List<CalificacionParametro> calificacionParametros;
+
+    private Boolean renderedCrud;
+    private Boolean renderedEditar;
 
     public SessionCalificacionMiembro() {
+        this.calificacionParametros = new ArrayList<>();
         this.calificacionMiembro = new CalificacionMiembro();
         this.calificacionMiembros = new ArrayList<>();
     }
@@ -42,6 +48,30 @@ public class SessionCalificacionMiembro implements Serializable {
 
     public void setCalificacionMiembro(CalificacionMiembro calificacionMiembro) {
         this.calificacionMiembro = calificacionMiembro;
+    }
+
+    public List<CalificacionParametro> getCalificacionParametros() {
+        return calificacionParametros;
+    }
+
+    public void setCalificacionParametros(List<CalificacionParametro> calificacionParametros) {
+        this.calificacionParametros = calificacionParametros;
+    }
+
+    public Boolean getRenderedCrud() {
+        return renderedCrud;
+    }
+
+    public void setRenderedCrud(Boolean renderedCrud) {
+        this.renderedCrud = renderedCrud;
+    }
+
+    public Boolean getRenderedEditar() {
+        return renderedEditar;
+    }
+
+    public void setRenderedEditar(Boolean renderedEditar) {
+        this.renderedEditar = renderedEditar;
     }
 
 }
