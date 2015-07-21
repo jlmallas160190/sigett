@@ -6,7 +6,7 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core">
 
     <body>
-        <p:dialog id="dlgCrudCalificacionMiembro" styleClass="modal-md" widgetVar="dlgCrudCalificacionMiembro" modal="true"
+        <p:dialog id="dlgCrudCalificacionMiembro" header="#{lbl.registrar_calificacion}" styleClass="modal-md" widgetVar="dlgCrudCalificacionMiembro" modal="true"
                   closable="false" position="center" draggable="false">
             <p:panel rendered="#{sessionCalificacionMiembro.renderedCrud}">
                <ui:include src="editarCalificacionMiembro.xhtml"/>

@@ -5,6 +5,12 @@
  */
 package edu.unl.sigett.ws.rs;
 
+import com.jlmallas.comun.entity.Evento;
+import com.jlmallas.comun.entity.EventoPersona;
+import com.jlmallas.comun.entity.Persona;
+import com.jlmallas.comun.service.EventoPersonaService;
+import com.jlmallas.comun.service.EventoService;
+import com.jlmallas.comun.service.PersonaService;
 import edu.unl.sigett.entity.ProyectoCarreraOferta;
 import edu.unl.sigett.service.ProyectoCarreraOfertaService;
 import java.util.ArrayList;
@@ -29,6 +35,10 @@ public class SigettResource {
 
     @EJB(lookup = "java:global/SigettService/ProyectoCarreraOfertaServiceImplement!edu.unl.sigett.service.ProyectoCarreraOfertaService")
     private ProyectoCarreraOfertaService proyectoCarreraOfertaService;
+    @EJB(lookup = "java:global/ComunService/EventoPersonaServiceImplement!com.jlmallas.comun.service.EventoPersonaService")
+    private EventoPersonaService eventoPersonaService;
+    @EJB(lookup = "java:global/ComunService/PersonaServiceImplement!com.jlmallas.comun.service.PersonaService")
+    private PersonaService personaService;
 
     @GET
     @Path("/proyectos_carrera_oferta/{carreraId}/{ofertaId}")
@@ -38,13 +48,32 @@ public class SigettResource {
         proyectoCarreraOfertaBuscar.setCarreraId(Integer.parseInt(carreraId));
         proyectoCarreraOfertaBuscar.setOfertaAcademicaId(Long.parseLong(ofertaId));
         List<ProyectoCarreraOferta> proyectoCarreraOfertas = proyectoCarreraOfertaService.buscar(proyectoCarreraOfertaBuscar);
-        List<ProyectoCarreraOferta> lista=new ArrayList<>();
-        for(ProyectoCarreraOferta pc:proyectoCarreraOfertas){
-           pc.getProyectoId().setProyectoCarreraOfertaList(null);
-           pc.getProyectoId().setConfiguracionProyectoList(null);
-           pc.getProyectoId().getCronograma().setProyecto(null);
-           lista.add(pc);
+        List<ProyectoCarreraOferta> lista = new ArrayList<>();
+        for (ProyectoCarreraOferta pc : proyectoCarreraOfertas) {
+            pc.getProyectoId().setProyectoCarreraOfertaList(null);
+            pc.getProyectoId().setConfiguracionProyectoList(null);
+            pc.getProyectoId().getCronograma().setProyecto(null);
+            lista.add(pc);
         }
         return lista;
+    }
+
+    @GET
+    @Path("/eventos_docente/{numeroIdentificacion}")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    public List<Evento> sigettWSEventoDocente(@PathParam("numeroIdentificacion") String numeroIdentificacion) {
+        List<Evento> result = new ArrayList<>();
+        Persona personaBuscar = personaService.buscarPorNumeroIdentificacion(numeroIdentificacion);
+        if (personaBuscar == null) {
+            return result;
+        }
+        EventoPersona eventoPersonaBuscar = new EventoPersona();
+        eventoPersonaBuscar.setPersonaId(personaBuscar);
+        List<EventoPersona> eventoPersonas = eventoPersonaService.buscar(eventoPersonaBuscar);
+        for (EventoPersona eventoPersona : eventoPersonas) {
+            eventoPersona.getEvento().setEventoPersonas(null);
+            result.add(eventoPersona.getEvento());
+        }
+        return result;
     }
 }
