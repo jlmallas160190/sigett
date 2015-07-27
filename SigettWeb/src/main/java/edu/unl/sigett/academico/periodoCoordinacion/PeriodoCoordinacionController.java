@@ -3,11 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.unl.sigett.academico.controlador;
+package edu.unl.sigett.academico.periodoCoordinacion;
 
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 import com.ocpsoft.pretty.faces.annotation.URLMappings;
-import edu.unl.sigett.academico.managed.session.SessionPeriodoCoordinacion;
 import edu.jlmallas.academico.entity.Carrera;
 import edu.jlmallas.academico.entity.PeriodoCoordinacion;
 import org.jlmallas.seguridad.entity.Usuario;
@@ -29,7 +28,7 @@ import org.jlmallas.seguridad.service.UsuarioService;
  *
  * @author JorgeLuis
  */
-@Named
+@Named(value = "periodoCoordinacionController")
 @SessionScoped
 @URLMappings(mappings = {
     @URLMapping(
@@ -47,7 +46,7 @@ import org.jlmallas.seguridad.service.UsuarioService;
             pattern = "/periodosCoordinacion/",
             viewId = "/faces/pages/academico/periodosCoordinacion/index.xhtml"
     )})
-public class AdministrarPeriodoCoordinacion implements Serializable {
+public class PeriodoCoordinacionController implements Serializable {
 
     //<editor-fold defaultstate="collapsed" desc="MANAGE BEANS"> 
     @Inject
@@ -64,7 +63,7 @@ public class AdministrarPeriodoCoordinacion implements Serializable {
     private PeriodoCoordinacionService periodoCoordinacionService;
     //</editor-fold>
 
-    public AdministrarPeriodoCoordinacion() {
+    public PeriodoCoordinacionController() {
     }
 
     public void init() {

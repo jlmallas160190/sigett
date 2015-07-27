@@ -29,7 +29,7 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author jorge-luis
  */
 @Entity
-@Table(name = "estudiante_carrera",schema = "academico")
+@Table(name = "estudiante_carrera", schema = "academico")
 @XmlRootElement
 public class EstudianteCarrera implements Serializable {
 
@@ -52,6 +52,9 @@ public class EstudianteCarrera implements Serializable {
     @JoinColumn(name = "carrera_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Carrera carreraId;
+    @JoinColumn(name = "oferta_academica_id", referencedColumnName = "id")
+    @ManyToOne(optional = false)
+    private OfertaAcademica ofertaAcademica;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "estudianteCarreraId")
     private List<ReporteMatricula> reporteMatriculaList;
     @Transient
@@ -65,10 +68,11 @@ public class EstudianteCarrera implements Serializable {
         this.id = id;
     }
 
-    public EstudianteCarrera(Carrera carrera, Estudiante estudiante, Boolean esActivo,Long estadoId) {
+    public EstudianteCarrera(Carrera carrera, Estudiante estudiante, OfertaAcademica ofertaAcademica, Boolean esActivo, Long estadoId) {
         this.carreraId = carrera;
-        this.estadoId=estadoId;
+        this.estadoId = estadoId;
         this.estudianteId = estudiante;
+        this.ofertaAcademica = ofertaAcademica;
         this.esActivo = esActivo;
     }
 
@@ -112,6 +116,14 @@ public class EstudianteCarrera implements Serializable {
         this.carreraId = carreraId;
     }
 
+    public OfertaAcademica getOfertaAcademica() {
+        return ofertaAcademica;
+    }
+
+    public void setOfertaAcademica(OfertaAcademica ofertaAcademica) {
+        this.ofertaAcademica = ofertaAcademica;
+    }
+
     @XmlTransient
     public List<ReporteMatricula> getReporteMatriculaList() {
         return reporteMatriculaList;
@@ -135,10 +147,7 @@ public class EstudianteCarrera implements Serializable {
             return false;
         }
         EstudianteCarrera other = (EstudianteCarrera) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
+        return (this.id != null || other.id == null) && (this.id == null || this.id.equals(other.id));
     }
 
     public String getEstado() {

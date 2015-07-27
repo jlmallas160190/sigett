@@ -9,7 +9,7 @@
         <h:panelGrid styleClass="pnl-botones" columns="1">
             <p:commandButton value="#{msg['lbl.crear']}" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()"
                              rendered="#{sessionCoordinadorPeriodo.renderedCrear}" icon="ui-icon-newwin" 
-                             action="#{administrarCoordinadoresPeriodos.crear(sessionUsuario.usuario)}">
+                             action="#{coordinadorPeriodoController.crear(sessionUsuario.usuario)}">
                 <f:param name="1" value="crear"/>
             </p:commandButton>
         </h:panelGrid>

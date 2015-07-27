@@ -6,11 +6,11 @@
     <body>
         <h:panelGrid  columns="2">
             <p:commandButton value="#{msg['lbl.crear']}" rendered="#{sessionDocenteCarrera.renderedCrear}"
-                             icon="ui-icon-newwin" action="#{administrarDocentesCarrera.crear()}"/>
+                             icon="ui-icon-newwin" action="#{docenteCarreraController.crear()}"/>
             <p:commandButton value="#{msg['lbl.sincronizar']}" rendered="#{sessionDocenteCarrera.renderedCrear}" 
                              icon="ui-icon-refresh" update="@form" onstart="PF('dlgLoading').show();"
                              oncomplete="PF('dlgLoading').hide(),PF('tblDocentesFilter').filter()" 
-                             action="#{administrarDocentesCarrera.sgaWebServicesPorCarrera(sessionUsuarioCarrera.usuarioCarreraDTO.carrera)}" />
+                             action="#{docenteCarreraController.sgaWebServicesPorCarrera(sessionUsuarioCarrera.usuarioCarreraDTO.carrera)}" />
         </h:panelGrid>  
     </body>
 

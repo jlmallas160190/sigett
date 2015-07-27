@@ -4,13 +4,13 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:p="http://primefaces.org/ui">
     <body>
-        <h:panelGrid  columns="2">
-            <p:commandButton value="#{msg['lbl.crear']}" rendered="#{sessionEstudianteCarrera.renderedCrear}"
-                             icon="ui-icon-newwin" action="#{administrarEstudiantesCarrera.crear()}"/>
-            <p:commandButton value="#{msg['lbl.sincronizar']}" rendered="#{sessionEstudianteCarrera.renderedCrear}" 
+        <h:panelGrid id="opcionesTblEstudiantes" columns="2">
+            <p:commandButton value="#{msg['lbl.crear']}" rendered="#{sessionEstudianteCarrera.renderedCrear and sessionEstudianteCarrera.ofertaAcademicaSeleccionada!=null}"
+                             icon="ui-icon-newwin" action="#{estudianteCarreraController.crear()}"/>
+            <p:commandButton value="#{msg['lbl.sincronizar']}" rendered="#{sessionEstudianteCarrera.renderedCrear and sessionEstudianteCarrera.ofertaAcademicaSeleccionada!=null}" 
                              icon="ui-icon-refresh" update="@form" onstart="PF('dlgLoading').show();"
                              oncomplete="PF('dlgLoading').hide(),PF('tblEstudiantesFilter').filter()" 
-                             action="#{administrarEstudiantesCarrera.sgaWebServicesParalelosCarrera(sessionUsuarioCarrera.usuarioCarreraDTO.carrera)}" />
+                             action="#{estudianteCarreraController.SGAWSParalelosCarrera(sessionUsuarioCarrera.usuarioCarreraDTO.carrera)}" />
         </h:panelGrid>  
     </body>
 

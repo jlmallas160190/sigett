@@ -11,18 +11,16 @@ import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Cacheable;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -36,12 +34,6 @@ import javax.xml.bind.annotation.XmlTransient;
 @Table(name = "periodo_academico", schema = "academico")
 @Cacheable(value = false)
 @XmlRootElement
-@NamedQueries({
-    @NamedQuery(name = "PeriodoAcademico.findAll", query = "SELECT p FROM PeriodoAcademico p"),
-    @NamedQuery(name = "PeriodoAcademico.findById", query = "SELECT p FROM PeriodoAcademico p WHERE p.id = :id"),
-    @NamedQuery(name = "PeriodoAcademico.findByFechaInicio", query = "SELECT p FROM PeriodoAcademico p WHERE p.fechaInicio = :fechaInicio"),
-    @NamedQuery(name = "PeriodoAcademico.findByFechaFin", query = "SELECT p FROM PeriodoAcademico p WHERE p.fechaFin = :fechaFin"),
-    @NamedQuery(name = "PeriodoAcademico.findByIdSga", query = "SELECT p FROM PeriodoAcademico p WHERE p.idSga = :idSga")})
 public class PeriodoAcademico implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -65,6 +57,8 @@ public class PeriodoAcademico implements Serializable {
     @Size(min = 1, max = 15)
     @Column(name = "id_sga")
     private String idSga;
+    @Transient
+    private String nombre;
     @OneToMany(mappedBy = "periodoAcademicoId")
     private List<OfertaAcademica> ofertaAcademicaList;
 
@@ -124,6 +118,14 @@ public class PeriodoAcademico implements Serializable {
         this.ofertaAcademicaList = ofertaAcademicaList;
     }
 
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -138,10 +140,7 @@ public class PeriodoAcademico implements Serializable {
             return false;
         }
         PeriodoAcademico other = (PeriodoAcademico) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
+        return (this.id != null || other.id == null) && (this.id == null || this.id.equals(other.id));
     }
 
     @Override

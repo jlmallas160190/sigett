@@ -52,6 +52,7 @@ public class OfertaAcademicaDaoImplement extends AbstractDao<OfertaAcademica> im
 
     @Override
     public OfertaAcademica ultimaOfertaPorFechaYPeriodoLectivo(Integer periodoId) {
+        @SuppressWarnings("UnusedAssignment")
         List<OfertaAcademica> ofertaAcademicas = new ArrayList<>();
         try {
             Query query = em.createQuery("SELECT o from OfertaAcademica o WHERE " + " o.fechaFin= (SELECT MAX(o1.fechaFin) FROM OfertaAcademica o1 "
@@ -67,6 +68,7 @@ public class OfertaAcademicaDaoImplement extends AbstractDao<OfertaAcademica> im
 
     @Override
     public OfertaAcademica primerOfertaPorFechaYPeriodoLectivo(Integer periodoId) {
+        @SuppressWarnings("UnusedAssignment")
         List<OfertaAcademica> ofertaAcademicas = new ArrayList<>();
         try {
             Query query = em.createQuery("SELECT o from OfertaAcademica o WHERE " + " o.fechaInicio= (SELECT MIN(o1.fechaInicio) "
@@ -84,20 +86,14 @@ public class OfertaAcademicaDaoImplement extends AbstractDao<OfertaAcademica> im
     public List<OfertaAcademica> buscar(final OfertaAcademica ofertaAcademica) {
         StringBuilder sql = new StringBuilder();
         HashMap<String, Object> parametros = new HashMap<>();
-        Boolean existeFiltro = Boolean.FALSE;
         sql.append("SELECT o from OfertaAcademica o WHERE 1=1 ");
         if (ofertaAcademica.getIdSga() != null) {
             sql.append(" and o.idSga = :idSga ");
             parametros.put("idSga", ofertaAcademica.getIdSga());
-            existeFiltro = Boolean.TRUE;
         }
         if (ofertaAcademica.getPeriodoAcademicoId() != null) {
             sql.append(" and o.periodoId=:periodoId");
             parametros.put("periodoId", ofertaAcademica.getPeriodoAcademicoId());
-            existeFiltro = Boolean.TRUE;
-        }
-        if (!existeFiltro) {
-            return new ArrayList<>();
         }
         final Query q = em.createQuery(sql.toString());
         for (String key : parametros.keySet()) {

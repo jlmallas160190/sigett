@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.unl.sigett.academico.converter;
+package edu.unl.sigett.academico.docenteCarrera;
 
-import edu.unl.sigett.academico.dto.DocenteCarreraDTO;
+import edu.unl.sigett.academico.docenteCarrera.DocenteCarreraDTO;
 import java.util.List;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;

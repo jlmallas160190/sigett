@@ -32,6 +32,8 @@ public interface OfertaAcademicaService {
 
     List<OfertaAcademica> buscarPorPeriodoActual();
 
+    List<OfertaAcademica> buscar(final OfertaAcademica ofertaAcademica);
+
     OfertaAcademica ultimaOfertaPorFechaYPeriodoLectivo(Integer periodoId);
 
     OfertaAcademica primerOfertaPorFechaYPeriodoLectivo(Integer periodoId);

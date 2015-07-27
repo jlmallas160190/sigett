@@ -15,8 +15,8 @@ import edu.jlmallas.academico.entity.EstudianteCarrera;
 import edu.jlmallas.academico.service.CarreraService;
 import edu.jlmallas.academico.service.DocenteCarreraService;
 import edu.jlmallas.academico.service.EstudianteCarreraService;
-import edu.unl.sigett.academico.dto.DocenteCarreraDTO;
-import edu.unl.sigett.academico.dto.EstudianteCarreraDTO;
+import edu.unl.sigett.academico.docenteCarrera.DocenteCarreraDTO;
+import edu.unl.sigett.academico.estudianteCarrera.EstudianteCarreraDTO;
 import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
 import org.jlmallas.seguridad.entity.Usuario;
 import edu.unl.sigett.entity.UsuarioCarrera;
@@ -270,7 +270,7 @@ public class AdministrarUsuarioCarrera implements Serializable {
     private void listasEstudiantes() {
         this.sessionUsuarioCarrera.getEstudiantesCarreraDTO().clear();
         for (Carrera carrera : sessionUsuarioCarrera.getCarreras()) {
-            List<EstudianteCarrera> estudiantesCarreras = estudianteCarreraService.buscar(new EstudianteCarrera(carrera, null, null, null));
+            List<EstudianteCarrera> estudiantesCarreras = estudianteCarreraService.buscar(new EstudianteCarrera(carrera,null, null, null, null));
             if (estudiantesCarreras.isEmpty()) {
                 continue;
             }
@@ -288,7 +288,7 @@ public class AdministrarUsuarioCarrera implements Serializable {
     private void listasDocentes() {
         this.sessionUsuarioCarrera.getDocentesCarreraDTO().clear();
         for (Carrera carrera : sessionUsuarioCarrera.getCarreras()) {
-            List<DocenteCarrera> docenteCarreras = docenteCarreraService.buscar(new DocenteCarrera(null, null, carrera, null));
+            List<DocenteCarrera> docenteCarreras = docenteCarreraService.buscar(new DocenteCarrera(null, null, carrera,null, null));
             if (docenteCarreras.isEmpty()) {
                 continue;
             }

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.unl.sigett.academico.dto;
+package edu.unl.sigett.academico.docenteCarrera;
 
 import com.jlmallas.comun.entity.Persona;
 import edu.jlmallas.academico.entity.Docente;
@@ -12,15 +12,15 @@ import edu.jlmallas.academico.entity.Docente;
  *
  * @author jorge-luis
  */
-public class DocentePersona {
+public class DocentePersonaDTO {
 
     private Docente docente;
     private Persona persona;
 
-    public DocentePersona() {
+    public DocentePersonaDTO() {
     }
 
-    public DocentePersona(Docente docente, Persona persona) {
+    public DocentePersonaDTO(Docente docente, Persona persona) {
         this.docente = docente;
         this.persona = persona;
     }

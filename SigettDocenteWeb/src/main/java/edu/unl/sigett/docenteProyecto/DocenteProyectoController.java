@@ -244,7 +244,7 @@ public class DocenteProyectoController implements Serializable {
             docenteProyecto.getProyectoId().setCatalogo(categoria.getNombre());
             docenteProyecto.getProyectoId().setAutores(autores(docenteProyecto.getProyectoId()));
             DocenteProyectoDTO docenteProyectoDTO = new DocenteProyectoDTO(docenteProyecto, null,
-                    docenteCarreraService.buscarPorId(new DocenteCarrera(docenteProyecto.getDocenteCarreraId(), null, null, null)));
+                    docenteCarreraService.buscarPorId(new DocenteCarrera(docenteProyecto.getDocenteCarreraId(), null,null, null, null)));
             docenteProyectoDTO.setPersona(personaService.buscarPorId(new Persona(docenteProyectoDTO.getDocenteCarrera().getDocenteId().getId())));
             docenteProyectoDM.getDocentesProyectoDTO().add(docenteProyectoDTO);
         }
@@ -271,7 +271,7 @@ public class DocenteProyectoController implements Serializable {
             docenteProyecto.getProyectoId().setCatalogo(categoria.getNombre());
             docenteProyecto.getProyectoId().setAutores(autores(docenteProyecto.getProyectoId()));
             DocenteProyectoDTO docenteProyectoDTO = new DocenteProyectoDTO(docenteProyecto, personaService.buscarPorId(new Persona(docenteProyecto.getDocenteCarreraId())),
-                    docenteCarreraService.buscarPorId(new DocenteCarrera(docenteProyecto.getDocenteCarreraId(), null, null, null)));
+                    docenteCarreraService.buscarPorId(new DocenteCarrera(docenteProyecto.getDocenteCarreraId(),null,null, null, null)));
             docenteProyectoDM.getHistorialDocenteProyectosDTO().add(docenteProyectoDTO);
         }
         docenteProyectoDM.setFilterHistorialDocenteProyectosDTO(docenteProyectoDM.getHistorialDocenteProyectosDTO());

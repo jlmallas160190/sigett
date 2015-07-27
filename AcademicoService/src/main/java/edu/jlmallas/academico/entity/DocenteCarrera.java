@@ -41,6 +41,9 @@ public class DocenteCarrera implements Serializable {
     @JoinColumn(name = "carrera_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Carrera carreraId;
+    @JoinColumn(name = "oferta_academica_id", referencedColumnName = "id")
+    @ManyToOne(optional = false)
+    private OfertaAcademica ofertaAcademica;
     @Basic(optional = false)
     @Column(name = "es_activo")
     @NotNull
@@ -49,11 +52,12 @@ public class DocenteCarrera implements Serializable {
     public DocenteCarrera() {
     }
 
-    public DocenteCarrera(Long id, Docente docente, Carrera carrera, Boolean esActivo) {
+    public DocenteCarrera(Long id, Docente docente, Carrera carrera, OfertaAcademica ofertaAcademica, Boolean esActivo) {
         this.id = id;
         this.docenteId = docente;
         this.carreraId = carrera;
         this.esActivo = esActivo;
+        this.ofertaAcademica = ofertaAcademica;
     }
 
     public DocenteCarrera(Long id) {
@@ -92,6 +96,14 @@ public class DocenteCarrera implements Serializable {
         this.esActivo = esActivo;
     }
 
+    public OfertaAcademica getOfertaAcademica() {
+        return ofertaAcademica;
+    }
+
+    public void setOfertaAcademica(OfertaAcademica ofertaAcademica) {
+        this.ofertaAcademica = ofertaAcademica;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -106,10 +118,7 @@ public class DocenteCarrera implements Serializable {
             return false;
         }
         DocenteCarrera other = (DocenteCarrera) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
+        return (this.id != null || other.id == null) && (this.id == null || this.id.equals(other.id));
     }
 
     @Override

@@ -3,12 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.unl.sigett.academico.managed.session;
+package edu.unl.sigett.academico.docenteCarrera;
 
 import com.jlmallas.comun.entity.Item;
 import edu.jlmallas.academico.entity.EstadoLaboral;
 import edu.jlmallas.academico.entity.TituloDocente;
-import edu.unl.sigett.academico.dto.DocenteCarreraDTO;
 import edu.unl.sigett.entity.LineaInvestigacion;
 import edu.unl.sigett.entity.LineaInvestigacionDocente;
 import java.io.Serializable;

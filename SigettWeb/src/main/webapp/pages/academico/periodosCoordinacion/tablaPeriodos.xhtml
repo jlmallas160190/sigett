@@ -16,7 +16,7 @@
                 <f:facet name="header">
                     <h:outputText value="#{msg['lbl.fecha']} #{msg['lbl.inicio']}"/>
                 </f:facet>
-                <p:commandLink action="#{administrarPeriodoCoordinacion.editar(item, sessionUsuario.usuario)}">
+                <p:commandLink action="#{periodoCoordinacionController.editar(item, sessionUsuario.usuario)}">
                     <h:outputText value="#{item.fechaInicio}">
                         <f:convertDateTime pattern="EEEEE dd MMMMM yyyy"/>
                     </h:outputText>

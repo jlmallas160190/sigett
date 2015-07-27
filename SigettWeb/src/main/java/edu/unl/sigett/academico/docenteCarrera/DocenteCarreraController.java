@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.unl.sigett.academico.controlador;
+package edu.unl.sigett.academico.docenteCarrera;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -13,7 +13,6 @@ import com.google.gson.JsonPrimitive;
 import com.jlmallas.comun.entity.Item;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 import com.ocpsoft.pretty.faces.annotation.URLMappings;
-import edu.unl.sigett.academico.managed.session.SessionDocenteCarrera;
 import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
 import edu.unl.sigett.usuarioCarrera.SessionUsuarioCarrera;
 import edu.jlmallas.academico.entity.Carrera;
@@ -56,7 +55,6 @@ import edu.jlmallas.academico.dao.TituloDao;
 import edu.jlmallas.academico.service.DocenteCarreraService;
 import edu.jlmallas.academico.service.DocenteService;
 import edu.jlmallas.academico.service.EstadoLaboralService;
-import edu.unl.sigett.academico.dto.DocenteCarreraDTO;
 import edu.unl.sigett.entity.ConfiguracionCarrera;
 import edu.unl.sigett.entity.DocenteUsuario;
 import edu.unl.sigett.entity.LineaInvestigacionCarrera;
@@ -83,7 +81,7 @@ import org.jlmallas.seguridad.service.UsuarioService;
  *
  * @author JorgeLuis
  */
-@Named
+@Named(value = "docenteCarreraController")
 @SessionScoped
 @URLMappings(mappings = {
     @URLMapping(
@@ -103,7 +101,7 @@ import org.jlmallas.seguridad.service.UsuarioService;
     )
 })
 @SuppressWarnings("CallToThreadDumpStack")
-public class AdministrarDocentesCarrera implements Serializable {
+public class DocenteCarreraController implements Serializable {
 
     //<editor-fold defaultstate="collapsed" desc="INYECCIÓN DE MANAGED BEANS">
     @Inject
@@ -223,7 +221,7 @@ public class AdministrarDocentesCarrera implements Serializable {
     public String crear() {
         String navegacion = "";
         try {
-            sessionDocenteCarrera.setDocenteCarreraDTO(new DocenteCarreraDTO(new DocenteCarrera(null, new Docente(), new Carrera(), Boolean.TRUE),
+            sessionDocenteCarrera.setDocenteCarreraDTO(new DocenteCarreraDTO(new DocenteCarrera(null, new Docente(), new Carrera(), null, Boolean.TRUE),
                     new Persona(), new Director(null, Boolean.TRUE)));
             sessionDocenteCarrera.setEstadoLaboral("");
             sessionDocenteCarrera.setTipoDocumento("");
@@ -276,7 +274,7 @@ public class AdministrarDocentesCarrera implements Serializable {
         this.sessionDocenteCarrera.getFilterDocenteCarrerasDTO().clear();
         try {
             List<DocenteCarrera> docenteCarreras = docenteCarreraService.buscar(new DocenteCarrera(null, null, sessionUsuarioCarrera.getUsuarioCarreraDTO().getCarrera(),
-                    Boolean.FALSE));
+                    null, Boolean.FALSE));
             if (docenteCarreras == null) {
                 return;
             }
@@ -680,7 +678,7 @@ public class AdministrarDocentesCarrera implements Serializable {
                         if (docente == null) {
                             docente = new Docente();
                         }
-                        DocenteCarrera dc = new DocenteCarrera(null, docente, carrera, Boolean.TRUE);
+                        DocenteCarrera dc = new DocenteCarrera(null, docente, carrera, null, Boolean.TRUE);
                         docenteCarreraAux = new DocenteCarreraDTO(dc,
                                 persona, new Director(null, Boolean.TRUE));
                         sessionDocenteCarrera.setDocenteCarreraDTOWS(docenteCarreraAux);

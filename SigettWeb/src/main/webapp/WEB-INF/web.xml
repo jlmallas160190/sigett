@@ -46,7 +46,10 @@
             edu.unl.sigett.lineaInvestigacionCarrera,
             edu.unl.sigett.configuracionCarrera,
             edu.unl.sigett.proyecto,
-            edu.unl.sigett.portada
+            edu.unl.sigett.academico.coordinadorPeriodo,
+            edu.unl.sigett.academico.estudianteCarrera,
+            edu.unl.sigett.academico.docenteCarrera,
+            edu.unl.sigett.academico.periodoCoordinacion
         </param-value>
     </context-param>
     <context-param>

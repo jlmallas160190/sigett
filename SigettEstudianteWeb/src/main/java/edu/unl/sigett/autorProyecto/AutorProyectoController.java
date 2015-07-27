@@ -111,7 +111,7 @@ public class AutorProyectoController implements Serializable {
         sessionAutorProyecto.getAutorProyectos().clear();
         sessionAutorProyecto.getFilterAutorProyectos().clear();
         List<EstudianteCarrera> estudianteCarreras = estudianteCarreraService.buscar(
-                new EstudianteCarrera(null, sessionEstudianteUsuario.getEstudianteUsuarioDTO().getEstudiante(), Boolean.TRUE, null));
+                new EstudianteCarrera(null, sessionEstudianteUsuario.getEstudianteUsuarioDTO().getEstudiante(), null, Boolean.TRUE, null));
         if (estudianteCarreras == null) {
             return;
         }

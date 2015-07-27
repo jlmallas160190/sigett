@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <body>
+        <p:dataTable id="tblOfertasAcademicas" paginatorPosition="bottom" rowIndexVar="rowIx" 
+                     rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'even-row' : 'odd-row'}" var="oferta" rowKey="#{oferta.id}" 
+                     selection="#{oferta}" selectionMode="single" paginator="true" rows="10"  value="#{sessionSelectItems.ofertaAcademicas}"
+                     filteredValue="#{sessionSelectItems.filterOfertaAcademicas}" widgetVar="tblOfertasFilter">
+            <p:ajax event="rowSelect" listener="#{estudianteCarreraController.seleccionarOfertaAcademica}" onstart="PF('dlgLoading').show()" 
+                    oncomplete="PF('dlgLoading').hide(),PF('tblOfertasFilter').filter()" 
+                    update=":contenido:tblEstudiantes,:contenido:opcionesTblEstudiantes"/>
+            <p:column filterBy="#{oferta.periodoAcademicoId.nombre}"  filterMatchMode="in">
+                <f:facet name="filter">
+                    <p:selectCheckboxMenu label="#{msg['lbl.periodosAcademicos']}"  onchange="PF('tblOfertasFilter').filter()" >
+                        <f:selectItem noSelectionOption="false" itemLabel="#{lbl.seleccionar}"/>
+                        <f:selectItems itemLabel="#{periodo.nombre}" itemValue="#{periodo.nombre}" var="periodo" value="#{sessionSelectItems.periodoAcademicos}" />
+                        <p:ajax onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()"/>
+                    </p:selectCheckboxMenu>
+                </f:facet>
+                <h:outputText value="#{oferta.nombre}"/>
+            </p:column> 
+        </p:dataTable>
+    </body>
+</html>
+

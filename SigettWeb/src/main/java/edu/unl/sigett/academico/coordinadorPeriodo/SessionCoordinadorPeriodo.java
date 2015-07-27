@@ -3,11 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.unl.sigett.academico.managed.session;
+package edu.unl.sigett.academico.coordinadorPeriodo;
 
 import edu.jlmallas.academico.entity.PeriodoCoordinacion;
-import edu.unl.sigett.academico.dto.CoordinadorPeriodoDTO;
-import edu.unl.sigett.academico.dto.DocenteCarreraDTO;
+import edu.unl.sigett.academico.docenteCarrera.DocenteCarreraDTO;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;

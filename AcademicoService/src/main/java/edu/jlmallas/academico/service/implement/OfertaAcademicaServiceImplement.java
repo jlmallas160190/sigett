@@ -72,4 +72,9 @@ public class OfertaAcademicaServiceImplement implements OfertaAcademicaService {
     public List<OfertaAcademica> findRange(int[] range) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    @Override
+    public List<OfertaAcademica> buscar(final OfertaAcademica ofertaAcademica) {
+        return this.ofertaAcademicaDao.buscar(ofertaAcademica);
+    }
 }

@@ -7,7 +7,7 @@ package edu.unl.sigett.director;
 
 import com.jlmallas.comun.entity.Persona;
 import com.jlmallas.comun.service.PersonaService;
-import edu.unl.sigett.academico.dto.DocenteCarreraDTO;
+import edu.unl.sigett.academico.docenteCarrera.DocenteCarreraDTO;
 import edu.unl.sigett.directorProyecto.DirectorProyectoDM;
 import edu.unl.sigett.docenteProyecto.SessionDocenteProyecto;
 import edu.unl.sigett.entity.Director;

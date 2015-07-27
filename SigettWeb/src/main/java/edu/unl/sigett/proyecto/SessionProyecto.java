@@ -8,7 +8,7 @@ package edu.unl.sigett.proyecto;
 import com.jlmallas.comun.entity.Item;
 import edu.jlmallas.academico.entity.Carrera;
 import edu.jlmallas.academico.entity.OfertaAcademica;
-import edu.unl.sigett.academico.dto.CoordinadorPeriodoDTO;
+import edu.unl.sigett.academico.coordinadorPeriodo.CoordinadorPeriodoDTO;
 import edu.unl.sigett.autorProyecto.AutorProyectoDTO;
 import edu.unl.sigett.directorProyecto.DirectorProyectoDTO;
 import edu.unl.sigett.docenteProyecto.DocenteProyectoDTO;

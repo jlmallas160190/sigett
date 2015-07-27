@@ -5,24 +5,24 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
     <body>
-        <h:panelGrid id="datosProyecto" styleClass="panelgrid" rowClasses="rowpanelgrid" columnClasses="col-sm-3,col-sm-8,col-sm-1" columns="3">
-            <h:outputLabel value="#{msg['lbl.tema']}*" for="tema" />
+        <h:panelGrid id="datosProyecto" styleClass="panelgrid" rowClasses="rowpanelgrid" columnClasses="col-sm-2,col-sm-9,col-sm-1" columns="3">
+            <h:outputLabel value="#{msg['lbl.tema']}:" for="tema" />            
             <p:inputTextarea id="tema" required="true"  rendered="#{sessionProyecto.renderedInicio}" onkeyup="this.value=this.value.toUpperCase()"
                       requiredMessage="#{msg['lbl.tema']} #{msg['lbl.obligatorio']}" value="#{sessionProyecto.temaProyecto.temaId.nombre}"/>
             <h:outputText rendered="#{!sessionProyecto.renderedInicio}" value="#{sessionProyecto.temaProyecto.temaId.nombre}"/>
             <p:message id="msmTema" display="icon" for="tema"/>
-            <h:outputLabel  value="#{msg['lbl.fecha']} #{msg['lbl.inicio']}*"/>
+            <h:outputLabel  value="#{msg['lbl.fecha']} #{msg['lbl.inicio']}"/>            
             <h:outputText value="#{sessionProyecto.cronograma.fechaInicio}">
                 <f:convertDateTime pattern="EEEEE dd MMMMM yyyy"/>
             </h:outputText>
             <h:inputHidden/>
-            <h:outputLabel value="#{msg['lbl.fechaCulminación']}*"/>
+            <h:outputLabel value="#{msg['lbl.fechaCulminación']}:"/>            
             <h:outputText value="#{sessionProyecto.cronograma.fechaFin}" >
                 <f:convertDateTime pattern="EEEEE dd MMMMM yyyy"/>
             </h:outputText>
             <h:outputLabel rendered="#{administrarProrrogas.tieneProrroga}" value="#{msg['lbl.fecha']} #{msg['lbl.prorroga']}"/>
             <h:inputHidden/>
-            <h:outputLabel value="#{msg['lbl.tipo']}*" />
+            <h:outputLabel value="#{msg['lbl.tipo']}:"/>
             <p:selectOneMenu id="tipoProyecto" rendered="#{sessionProyecto.renderedInicio}" converter="tipoProyectoConverter" 
                              value="#{sessionProyecto.tipoSeleccionado}" requiredMessage="#{msg['lbl.tipo']} #{msg['lbl.obligatorio']}.">
                 <f:selectItem noSelectionOption="true" itemLabel="#{msg['lbl.seleccionar']}"/>
@@ -32,7 +32,7 @@
             </p:selectOneMenu>
             <h:outputText rendered="#{!sessionProyecto.renderedInicio}" value="#{sessionProyecto.tipoSeleccionado}"/>
             <h:inputHidden/>
-            <h:outputLabel value="#{msg['lbl.categoria']}*" for="catProyecto"/>
+            <h:outputLabel value="#{msg['lbl.categoria']}:" for="catProyecto"/>
             <p:selectOneMenu id="catProyecto" rendered="#{sessionProyecto.renderedInicio}" converter="categoriaProyectoConverter"
                              value="#{sessionProyecto.categoriaSeleccionada}"  
                              requiredMessage="#{msg['lbl.categoria']} #{msg['lbl.obligatorio']}.">
@@ -40,13 +40,13 @@
             </p:selectOneMenu>
             <h:outputText value="#{sessionProyecto.categoriaSeleccionada.nombre}" rendered="#{!sessionProyecto.renderedInicio}"/>
             <h:inputHidden/>
-            <h:outputLabel value="#{msg['lbl.duracion']}*:"/>
+            <h:outputLabel value="#{msg['lbl.duracion']}:"/>
             <h:outputLabel id="duracion" styleClass="informacion" value="#{sessionProyecto.cronograma.duracion} #{msg['lbl.dias']}"/>
             <h:inputHidden/>
-            <h:outputLabel value="#{msg['lbl.avance']}"/>
+            <h:outputLabel value="#{msg['lbl.avance']}:"/>
             <p:progressBar id="avance"  labelTemplate="#{sessionProyecto.cronograma.avance}%" value="#{sessionProyecto.cronograma.avance}"/>
             <h:inputHidden/>
-            <h:outputLabel value="#{msg['lbl.faltante']}"/>
+            <h:outputLabel value="#{msg['lbl.faltante']}:"/>
             <p:progressBar id="faltante" labelTemplate="#{sessionProyecto.cronograma.faltante}%" value="#{sessionProyecto.cronograma.faltante}"/>
         </h:panelGrid>
     </body>

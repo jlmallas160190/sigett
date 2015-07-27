@@ -45,7 +45,7 @@ public class SelectItemsController implements Serializable {
     }
 
     private void listadoDocenteCarreras() {
-        this.sessionSelectItems.getDocenteCarreras().addAll(docenteCarreraService.buscar(new DocenteCarrera(null, docenteUsuarioDM.getDocenteUsuarioDTO().getDocente(), null, Boolean.TRUE)));
+        this.sessionSelectItems.getDocenteCarreras().addAll(docenteCarreraService.buscar(new DocenteCarrera(null, docenteUsuarioDM.getDocenteUsuarioDTO().getDocente(),null, null, Boolean.TRUE)));
     }
 
     private void listadoTipos() {

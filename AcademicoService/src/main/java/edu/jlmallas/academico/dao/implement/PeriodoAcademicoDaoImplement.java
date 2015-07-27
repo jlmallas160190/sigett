@@ -20,15 +20,15 @@ import javax.persistence.Query;
  */
 @Stateless
 public class PeriodoAcademicoDaoImplement extends AbstractDao<PeriodoAcademico> implements PeriodoAcademicoDao {
-    
+
     public PeriodoAcademicoDaoImplement() {
         super(PeriodoAcademico.class);
     }
-    
+
     @Override
     public List<PeriodoAcademico> buscarPorCriterio(PeriodoAcademico periodoAcademico) {
         StringBuilder sql = new StringBuilder();
-        HashMap<String, Object> parametros = new HashMap<String, Object>();
+        HashMap<String, Object> parametros = new HashMap<>();
         sql.append("Select p from PeriodoAcademico p where 1=1 ");
         if (periodoAcademico.getIdSga() != null) {
             sql.append(" and p.idSga=:idSga ");
@@ -41,12 +41,13 @@ public class PeriodoAcademicoDaoImplement extends AbstractDao<PeriodoAcademico> 
         }
         return q.getResultList();
     }
-    
+
     @Override
     public PeriodoAcademico buscarPorIdSga(PeriodoAcademico periodoAcademico) {
         StringBuilder sql = new StringBuilder();
+        @SuppressWarnings("UnusedAssignment")
         List<PeriodoAcademico> periodoAcademicos = new ArrayList<>();
-        HashMap<String, Object> parametros = new HashMap<String, Object>();
+        HashMap<String, Object> parametros = new HashMap<>();
         sql.append("Select p from PeriodoAcademico p where p.idSga=:idSga ");
         parametros.put("idSga", periodoAcademico.getIdSga());
         sql.append(" order by p.fechaInicio asc ");
@@ -57,5 +58,5 @@ public class PeriodoAcademicoDaoImplement extends AbstractDao<PeriodoAcademico> 
         periodoAcademicos = q.getResultList();
         return !periodoAcademicos.isEmpty() ? periodoAcademicos.get(0) : null;
     }
-    
+
 }

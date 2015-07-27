@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.unl.sigett.academico.controlador;
+package edu.unl.sigett.academico.estudianteCarrera;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -15,7 +15,6 @@ import com.jlmallas.comun.dao.PaisDao;
 import com.jlmallas.comun.entity.Item;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 import com.ocpsoft.pretty.faces.annotation.URLMappings;
-import edu.unl.sigett.academico.managed.session.SessionEstudianteCarrera;
 import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
 import edu.unl.sigett.usuarioCarrera.SessionUsuarioCarrera;
 import edu.unl.sigett.entity.Aspirante;
@@ -46,10 +45,8 @@ import com.jlmallas.comun.enumeration.ConfiguracionEnum;
 import com.jlmallas.comun.enumeration.GeneroEnum;
 import com.jlmallas.comun.enumeration.TipoDocIdentEnum;
 import com.jlmallas.comun.service.ItemService;
-import edu.jlmallas.academico.dao.ReporteMatriculaDao;
 import edu.jlmallas.academico.enumeration.EstadoEstudianteCarreraEnum;
 import edu.jlmallas.academico.enumeration.EstadoMatriculaEnum;
-import edu.unl.sigett.academico.dto.EstudianteCarreraDTO;
 import edu.unl.sigett.entity.ConfiguracionCarrera;
 import edu.unl.sigett.entity.EstudianteUsuario;
 import com.jlmallas.comun.enumeration.URLWSEnum;
@@ -73,6 +70,7 @@ import org.jlmallas.seguridad.dao.RolUsuarioDao;
 import org.jlmallas.seguridad.entity.Rol;
 import org.jlmallas.seguridad.entity.RolUsuario;
 import org.jlmallas.seguridad.service.UsuarioService;
+import org.primefaces.event.SelectEvent;
 
 /**
  *
@@ -96,7 +94,7 @@ import org.jlmallas.seguridad.service.UsuarioService;
             pattern = "/estudiantesCarrera/",
             viewId = "/faces/pages/academico/estudiantesCarrera/index.xhtml"
     )})
-public class AdministrarEstudiantesCarrera implements Serializable {
+public class EstudianteCarreraController implements Serializable {
 
     //<editor-fold defaultstate="collapsed" desc="INYECCIÓN DE MANAGED BEANS">
     @Inject
@@ -143,7 +141,7 @@ public class AdministrarEstudiantesCarrera implements Serializable {
     private NacionalidadDao nacionalidadDao;
 //</editor-fold>
 
-    public AdministrarEstudiantesCarrera() {
+    public EstudianteCarreraController() {
     }
 
     public void init() {
@@ -162,12 +160,18 @@ public class AdministrarEstudiantesCarrera implements Serializable {
 
     //<editor-fold defaultstate="collapsed" desc="MÉTODOS CRUD">
     public String crear() {
-        sessionEstudianteCarrera.setEstudianteCarreraDTO(new EstudianteCarreraDTO(new EstudianteCarrera(sessionUsuarioCarrera.getUsuarioCarreraDTO().getCarrera(), new Estudiante(Boolean.TRUE), Boolean.TRUE, itemService.buscarPorCatalogoCodigo(
-                CatalogoEnum.ESTADOESTUDIANTECARRERA.getTipo(), EstadoEstudianteCarreraEnum.ESTUDIANTE.getTipo()).getId()), new Persona(), new Aspirante(null, Boolean.FALSE)));
+        sessionEstudianteCarrera.setEstudianteCarreraDTO(new EstudianteCarreraDTO(new EstudianteCarrera(sessionUsuarioCarrera.getUsuarioCarreraDTO().getCarrera(), new Estudiante(Boolean.TRUE),
+                sessionEstudianteCarrera.getOfertaAcademicaSeleccionada(), Boolean.TRUE, itemService.buscarPorCatalogoCodigo(
+                        CatalogoEnum.ESTADOESTUDIANTECARRERA.getTipo(), EstadoEstudianteCarreraEnum.ESTUDIANTE.getTipo()).getId()), new Persona(), new Aspirante(null, Boolean.FALSE)));
         sessionEstudianteCarrera.setRenderedInformacionEstudio(false);
         habilitaCampoEsAptoAspirante(sessionUsuario.getUsuario());
         return "pretty:crearEstudianteCarrera";
 
+    }
+
+    public void seleccionarOfertaAcademica(SelectEvent selectEvent) {
+        sessionEstudianteCarrera.setOfertaAcademicaSeleccionada((OfertaAcademica) selectEvent.getObject());
+        this.buscar();
     }
 
     public String editar(EstudianteCarreraDTO estudianteCarreraDTO) {
@@ -201,8 +205,11 @@ public class AdministrarEstudiantesCarrera implements Serializable {
         this.sessionEstudianteCarrera.getEstudiantesCarreraDTO().clear();
         this.sessionEstudianteCarrera.getFilterEstudiantesCarreraDTO().clear();
         try {
+            if (sessionEstudianteCarrera.getOfertaAcademicaSeleccionada() == null) {
+                return;
+            }
             List<EstudianteCarrera> estudianteCarreras = this.estudianteCarreraService.buscar(new EstudianteCarrera(
-                    sessionUsuarioCarrera.getUsuarioCarreraDTO().getCarrera(), null, null, null));
+                    sessionUsuarioCarrera.getUsuarioCarreraDTO().getCarrera(), null, sessionEstudianteCarrera.getOfertaAcademicaSeleccionada(), null, null));
             if (estudianteCarreras == null) {
                 return;
             }
@@ -274,7 +281,7 @@ public class AdministrarEstudiantesCarrera implements Serializable {
                             + "|EsActivo= " + sessionEstudianteCarrera.getEstudianteCarreraDTO().getEstudianteCarrera().getEsActivo(),
                             sessionUsuario.getUsuario()));
                     if (param.equalsIgnoreCase("grabar")) {
-                        sessionEstudianteCarrera.setEstudianteCarreraDTO(new EstudianteCarreraDTO(new EstudianteCarrera(sessionUsuarioCarrera.getUsuarioCarreraDTO().getCarrera(), new Estudiante(), Boolean.TRUE, null), new Persona(), new Aspirante()));
+                        sessionEstudianteCarrera.setEstudianteCarreraDTO(new EstudianteCarreraDTO(new EstudianteCarrera(sessionUsuarioCarrera.getUsuarioCarreraDTO().getCarrera(), new Estudiante(), null, Boolean.TRUE, null), new Persona(), new Aspirante()));
                         return "pretty:estudiantesCarrera";
                     }
                     if (param.equalsIgnoreCase("grabar-editar")) {
@@ -304,7 +311,7 @@ public class AdministrarEstudiantesCarrera implements Serializable {
                 estudianteCarreraService.actualizar(sessionEstudianteCarrera.getEstudianteCarreraDTO().getEstudianteCarrera());
                 this.renderedInformacionEstudio(sessionEstudianteCarrera.getEstudianteCarreraDTO().getEstudianteCarrera().getEstudianteId());
                 if (param.equalsIgnoreCase("grabar")) {
-                    sessionEstudianteCarrera.setEstudianteCarreraDTO(new EstudianteCarreraDTO(new EstudianteCarrera(sessionUsuarioCarrera.getUsuarioCarreraDTO().getCarrera(), new Estudiante(), Boolean.TRUE, null), new Persona(), new Aspirante()));
+                    sessionEstudianteCarrera.setEstudianteCarreraDTO(new EstudianteCarreraDTO(new EstudianteCarrera(sessionUsuarioCarrera.getUsuarioCarreraDTO().getCarrera(), new Estudiante(), null, Boolean.TRUE, null), new Persona(), new Aspirante()));
                     return "pretty:estudiantesCarrera";
                 }
                 if (param.equalsIgnoreCase("grabar-editar")) {
@@ -332,6 +339,7 @@ public class AdministrarEstudiantesCarrera implements Serializable {
      *
      * @param estudiante
      */
+    @SuppressWarnings("CallToThreadDumpStack")
     public void grabarUsuarioEstudiante(Estudiante estudiante) {
         try {
             Usuario usuario = null;
@@ -463,7 +471,7 @@ public class AdministrarEstudiantesCarrera implements Serializable {
                 reporteMatriculaBuscar.setMatriculaId(rm.getMatriculaId());
                 ReporteMatricula reporte = reporteMatriculaService.buscarPorMatriculaId(reporteMatriculaBuscar);
                 if (reporte == null) {
-                    sgaWebServicesReporteMatricula(rm);
+                    SGAWSReporteMatricula(rm);
                     reporteMatriculaService.guardar(rm);
                     logFacadeLocal.create(logFacadeLocal.crearLog("ReporteMatricula", rm.getId() + "", "CREAR", "NUEVO: |MatriculaId"
                             + rm.getMatriculaId() + "|NombreModulo= " + rm.getModuloMatriculado() + "|Oferta= " + rm.getOfertaAcademicaId().getId()
@@ -476,7 +484,7 @@ public class AdministrarEstudiantesCarrera implements Serializable {
                     reporte.setModuloMatriculado(rm.getModuloMatriculado());
                     reporte.setOfertaAcademicaId(rm.getOfertaAcademicaId());
                     reporte.setParalelo(rm.getParalelo());
-                    sgaWebServicesReporteMatricula(reporte);
+                    SGAWSReporteMatricula(reporte);
                     reporteMatriculaService.actualizar(reporte);
                     logFacadeLocal.create(logFacadeLocal.crearLog("ReporteMatricula", reporte.getId() + "", "CREAR", "NUEVO: |MatriculaId"
                             + reporte.getMatriculaId() + "|NombreModulo= " + reporte.getModuloMatriculado() + "|Oferta= "
@@ -564,7 +572,7 @@ public class AdministrarEstudiantesCarrera implements Serializable {
     public void renderedInformacionEstudio(Estudiante estudiante) {
         try {
             this.sessionEstudianteCarrera.setRenderedInformacionEstudio(false);
-            for (EstudianteCarrera ec : estudianteCarreraService.buscar(new EstudianteCarrera(null, estudiante, Boolean.TRUE, null))) {
+            for (EstudianteCarrera ec : estudianteCarreraService.buscar(new EstudianteCarrera(null, estudiante, null, Boolean.TRUE, null))) {
                 if (ec.getEsActivo()) {
                     this.sessionEstudianteCarrera.setRenderedInformacionEstudio(true);
                     break;
@@ -599,7 +607,7 @@ public class AdministrarEstudiantesCarrera implements Serializable {
      *
      * @param c
      */
-    public void sgaWebServicesParalelosCarrera(Carrera c) {
+    public void SGAWSParalelosCarrera(Carrera c) {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
         MessageView messageView = new MessageView();
@@ -612,8 +620,8 @@ public class AdministrarEstudiantesCarrera implements Serializable {
                     configuracionService.buscar(new Configuracion(ConfiguracionEnum.CLAVEWS.getTipo())).get(0).getValor()));
             String userService = configuracionService.buscar(new Configuracion(ConfiguracionEnum.USUARIOWS.getTipo())).get(0).getValor();
             String serviceUrl = configuracionService.buscar(new Configuracion(URLWSEnum.PARALELOCARRERA.getTipo())).get(0).getValor();
-            String ofertaIdActual = configuracionCarrera.getValor();
-            String s = serviceUrl + "?id_oferta=" + ofertaIdActual + ";id_carrera=" + c.getIdSga();
+
+            String s = serviceUrl + "?id_oferta=" + sessionEstudianteCarrera.getOfertaAcademicaSeleccionada().getIdSga() + ";id_carrera=" + c.getIdSga();
             ConexionDTO seguridad = new ConexionDTO(passwordService, s, userService);
             NetClientService conexion = new NetClientServiceImplement();
             String datosJson = conexion.response(seguridad);
@@ -667,7 +675,7 @@ public class AdministrarEstudiantesCarrera implements Serializable {
                 if (valor.isNumber()) {
                     if (sessionEstudianteCarrera.getKeyWsParalelosCarreraEntero() == 0) {
                         String paraleloId = valor.getAsInt() + "";
-                        this.sgaWebServicesEstadoEstudiantesParalelo(paraleloId, c);
+                        this.SGAWSEstadoEstudiantesParalelo(paraleloId, c);
                         sessionEstudianteCarrera.setKeyWsParalelosCarreraEntero(sessionEstudianteCarrera.getKeyWsParalelosCarreraEntero() + 1);
                     }
                 }
@@ -747,7 +755,7 @@ public class AdministrarEstudiantesCarrera implements Serializable {
         }
     }
 
-    public void sgaWebServicesDatosEstudiante() {
+    public void SGAWSDatosEstudiante() {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
         MessageView messageView = new MessageView();
@@ -874,7 +882,7 @@ public class AdministrarEstudiantesCarrera implements Serializable {
         }
     }
 
-    public void sgaWebServicesEstudianteMatriculas() {
+    public void SGAWSMatriculasEstudiante() {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
         MessageView messageView = new MessageView();
@@ -905,7 +913,7 @@ public class AdministrarEstudiantesCarrera implements Serializable {
         }
     }
 
-    public void sgaWebServicesReporteMatricula(ReporteMatricula rm) {
+    public void SGAWSReporteMatricula(ReporteMatricula rm) {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
         MessageView messageView = new MessageView();
@@ -1079,7 +1087,7 @@ public class AdministrarEstudiantesCarrera implements Serializable {
      * @param paraleloId
      * @param carrera
      */
-    public void sgaWebServicesEstadoEstudiantesParalelo(String paraleloId, Carrera carrera) {
+    public void SGAWSEstadoEstudiantesParalelo(String paraleloId, Carrera carrera) {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
         MessageView messageView = new MessageView();
@@ -1156,7 +1164,7 @@ public class AdministrarEstudiantesCarrera implements Serializable {
                                 estudiante = new Estudiante(Boolean.TRUE);
                             }
                             sessionEstudianteCarrera.setEstudianteCarreraDTOWS(new EstudianteCarreraDTO(
-                                    new EstudianteCarrera(carrera, estudiante, Boolean.TRUE, itemService.buscarPorCatalogoCodigo(
+                                    new EstudianteCarrera(carrera, estudiante, sessionEstudianteCarrera.getOfertaAcademicaSeleccionada(), Boolean.TRUE, itemService.buscarPorCatalogoCodigo(
                                                     CatalogoEnum.ESTADOESTUDIANTECARRERA.getTipo(), EstadoEstudianteCarreraEnum.ESTUDIANTE.getTipo()).getId()), persona, new Aspirante(null, Boolean.FALSE)));
                             this.grabarDesdeWebService();
                         }

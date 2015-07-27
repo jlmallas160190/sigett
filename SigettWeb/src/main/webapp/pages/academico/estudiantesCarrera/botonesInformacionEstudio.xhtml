@@ -9,12 +9,12 @@
             <p:commandButton  icon="ui-icon-info" value="#{lbl.detalle_matriculas}" id="detalleMatriculas"/>
             <p:commandButton onstart="PF('dlgLoading').show();" oncomplete="PF('dlgLoading').hide()" update="tblReporteMatriculas,:contenido:msm"
                              value="#{lbl.sincronizar_matriculas}" 
-                             action="#{administrarEstudiantesCarrera.sgaWebServicesEstudianteMatriculas()}"
+                             action="#{estudianteCarreraController.SGAWSMatriculasEstudiante()}"
                              icon="ui-icon-refresh"/>
             <p:commandButton icon="ui-icon-comprobar" value="#{msg['lbl.comprobar']}" 
                              onstart="PF('dlgLoading').show();" 
                              oncomplete="PF('dlgLoading').hide()" update="pnlInformacionEstudio,:contenido:msm" 
-                             action="#{administrarEstudiantesCarrera.compruebaEsAspiranteApto()}"/>
+                             action="#{estudianteCarreraController.compruebaEsAspiranteApto()}"/>
         </h:panelGrid>
     </body>
 

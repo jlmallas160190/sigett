@@ -6,8 +6,8 @@
 package edu.unl.sigett.usuarioCarrera;
 
 import edu.jlmallas.academico.entity.Carrera;
-import edu.unl.sigett.academico.dto.DocenteCarreraDTO;
-import edu.unl.sigett.academico.dto.EstudianteCarreraDTO;
+import edu.unl.sigett.academico.docenteCarrera.DocenteCarreraDTO;
+import edu.unl.sigett.academico.estudianteCarrera.EstudianteCarreraDTO;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;

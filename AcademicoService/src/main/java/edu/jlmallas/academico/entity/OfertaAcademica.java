@@ -68,6 +68,10 @@ public class OfertaAcademica implements Serializable {
     private PeriodoAcademico periodoAcademicoId;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "ofertaAcademicaId")
     private List<ReporteMatricula> reporteMatriculaList;
+    @OneToMany(mappedBy = "ofertaAcademica")
+    private List<EstudianteCarrera> estudianteCarreras;
+    @OneToMany(mappedBy = "ofertaAcademica")
+    private List<DocenteCarrera> docenteCarreras;
 
     public OfertaAcademica() {
         this.reporteMatriculaList = new ArrayList<>();
@@ -140,6 +144,22 @@ public class OfertaAcademica implements Serializable {
 
     public void setReporteMatriculaList(List<ReporteMatricula> reporteMatriculaList) {
         this.reporteMatriculaList = reporteMatriculaList;
+    }
+
+    public List<EstudianteCarrera> getEstudianteCarreras() {
+        return estudianteCarreras;
+    }
+
+    public void setEstudianteCarreras(List<EstudianteCarrera> estudianteCarreras) {
+        this.estudianteCarreras = estudianteCarreras;
+    }
+
+    public List<DocenteCarrera> getDocenteCarreras() {
+        return docenteCarreras;
+    }
+
+    public void setDocenteCarreras(List<DocenteCarrera> docenteCarreras) {
+        this.docenteCarreras = docenteCarreras;
     }
 
     @Override

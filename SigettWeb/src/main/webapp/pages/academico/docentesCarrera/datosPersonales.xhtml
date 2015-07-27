@@ -22,7 +22,7 @@
             <p:fragment autoUpdate="true">
                 <p:commandButton icon="ui-icon-refresh" value="#{msg['lbl.sincronizar']}" update=":contenido:tabViewDatosDocente,:contenido:msgs" 
                                  onstart="PF('dlgLoading').show();" oncomplete="PF('dlgLoading').hide()" 
-                                 action="#{administrarDocentesCarrera.sgaWebServicesDatosDocente()}"/>
+                                 action="#{docenteCarreraController.sgaWebServicesDatosDocente()}"/>
             </p:fragment>
             <p:message id="msmNumeroIdentificacion" display="icon" for="numeroIdentificacion"/>
             <h:outputLabel value="#{msg['lbl.nombres']}:" for="nombres" />

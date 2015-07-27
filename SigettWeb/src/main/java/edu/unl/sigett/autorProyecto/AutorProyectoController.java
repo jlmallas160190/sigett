@@ -12,7 +12,7 @@ import com.jlmallas.comun.service.ItemService;
 import com.jlmallas.comun.service.PersonaService;
 import edu.jlmallas.academico.entity.EstudianteCarrera;
 import edu.jlmallas.academico.service.EstudianteCarreraService;
-import edu.unl.sigett.academico.dto.EstudianteCarreraDTO;
+import edu.unl.sigett.academico.estudianteCarrera.EstudianteCarreraDTO;
 import edu.unl.sigett.entity.Aspirante;
 import edu.unl.sigett.entity.AutorProyecto;
 import edu.unl.sigett.enumeration.EstadoAutorEnum;

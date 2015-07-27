@@ -7,11 +7,11 @@
         <p:autoComplete   effect="fade" minQueryLength="2" placeholder="#{msg['lbl.ci']}"
                           scrollHeight="250" maxResults="10" 
                           value="#{sessionCoordinadorPeriodo.docenteCarreraDTOSeleccionado}"
-                          completeMethod="#{administrarCoordinadoresPeriodos.completarDocentesCarrera}"
+                          completeMethod="#{coordinadorPeriodoController.completarDocentesCarrera}"
                           var="d" itemLabel="#{d.persona.apellidos} #{d.persona.nombres}"
                           converter="docenteCarreraDTOConverter" itemValue="#{d}" multiple="false">
             <p:ajax event="itemSelect" update="datos,msm"
-                    listener="#{administrarCoordinadoresPeriodos.agregarCoordinador()}" />
+                    listener="#{coordinadorPeriodoController.agregarCoordinador()}" />
         </p:autoComplete>
     </body>
 

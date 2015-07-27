@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.unl.sigett.academico.managed.session;
+package edu.unl.sigett.academico.periodoCoordinacion;
 
 import edu.jlmallas.academico.entity.PeriodoCoordinacion;
 import java.io.Serializable;

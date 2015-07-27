@@ -32,7 +32,7 @@ import edu.jlmallas.academico.service.DocenteCarreraService;
 import edu.jlmallas.academico.service.DocenteService;
 import edu.jlmallas.academico.service.EstudianteCarreraService;
 import edu.jlmallas.academico.service.OfertaAcademicaService;
-import edu.unl.sigett.academico.dto.CoordinadorPeriodoDTO;
+import edu.unl.sigett.academico.coordinadorPeriodo.CoordinadorPeriodoDTO;
 import edu.unl.sigett.autorProyecto.AutorProyectoDTO;
 import edu.unl.sigett.director.DirectorDTO;
 import edu.unl.sigett.directorProyecto.DirectorProyectoDTO;

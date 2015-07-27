@@ -11,6 +11,9 @@
             <ui:define name="top">
                 <ui:include src="./../../inicio/menu.xhtml"/>
             </ui:define>
+             <ui:define name="left">
+                <ui:include src="tablaOfertaAcademicaFilter.xhtml"/>
+            </ui:define>
             <ui:define name="right">
                 <ui:include src="./../../sigett/usuarioCarrera/menu.xhtml"/>
             </ui:define>
@@ -23,7 +26,7 @@
                     </f:facet>
                 </p:panel>
                 <f:metadata>
-                    <f:event type="preRenderView" listener="#{administrarEstudiantesCarrera.init}"/>
+                    <f:event type="preRenderView" listener="#{estudianteCarreraController.init}"/>
                 </f:metadata>
             </ui:define>
         </ui:composition>

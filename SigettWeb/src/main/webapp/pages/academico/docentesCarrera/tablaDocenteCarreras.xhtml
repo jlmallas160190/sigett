@@ -14,22 +14,24 @@
                     <p:inputText id="globalFilter" onkeyup="PF('tblDocentesFilter').filter()" style="width:150px" placeholder="#{msg['lbl.buscar']}"/>
                 </h:panelGrid>
             </f:facet>
-            <p:column>
+            <p:column width="5%">
                 <h:outputText value="#{rowIx+1}" />
             </p:column>
             <p:column rendered="#{sessionDocenteCarrera.renderedEditar}" 
                       sortBy="#{item.persona.numeroIdentificacion}" 
                       filterBy="#{item.persona.numeroIdentificacion}"
+                      width="25%"
                       filterMatchMode="contains">
                 <f:facet name="header">
                     <h:outputText value="#{msg['lbl.ci']}"/>
                 </f:facet>
                     <p:commandLink update="tblDocentes" value="#{item.persona.numeroIdentificacion}" 
-                                   action="#{administrarDocentesCarrera.editar(item)}"/>
+                                   action="#{docenteCarreraController.editar(item)}"/>
             </p:column>
             <p:column rendered="#{sessionDocenteCarrera.renderedNoEditar}" 
                       sortBy="#{item.persona.numeroIdentificacion}"
                       filterBy="#{item.persona.numeroIdentificacion}"
+                      width="25%"
                       filterMatchMode="contains">
                 <f:facet name="header">
                     <h:outputText value="#{msg['lbl.ci']}"/>
@@ -38,7 +40,8 @@
             </p:column>
             <p:column  sortBy="#{item.persona.nombres} #{item.persona.apellidos}"
                        filterBy="#{item.persona.nombres} #{item.persona.apellidos}"
-                       filterMatchMode="contains">
+                       filterMatchMode="contains"
+                       width="40%">
                 <f:facet name="header">
                     <h:outputText value="#{msg['lbl.docente']}"/>
                 </f:facet>
@@ -47,6 +50,7 @@
             </p:column>
             <p:column headerText="#{msg['lbl.email']}" sortBy="#{item.persona.email}"
                       filterBy="#{item.persona.email}"
+                      width="30%"
                       filterMatchMode="contains">
                 <h:outputText value="#{item.persona.email}"/>
             </p:column>

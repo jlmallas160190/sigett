@@ -3,11 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.unl.sigett.academico.controlador;
+package edu.unl.sigett.academico.coordinadorPeriodo;
 
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 import com.ocpsoft.pretty.faces.annotation.URLMappings;
-import edu.unl.sigett.academico.managed.session.SessionCoordinadorPeriodo;
 import edu.jlmallas.academico.entity.Coordinador;
 import edu.jlmallas.academico.entity.CoordinadorPeriodo;
 import edu.jlmallas.academico.entity.PeriodoCoordinacion;
@@ -31,9 +30,8 @@ import edu.jlmallas.academico.service.CoordinadorService;
 import edu.jlmallas.academico.service.DocenteCarreraService;
 import edu.jlmallas.academico.service.DocenteService;
 import edu.jlmallas.academico.service.PeriodoCoordinacionService;
-import edu.unl.sigett.academico.converter.DocenteCarreraDTOConverter;
-import edu.unl.sigett.academico.dto.CoordinadorPeriodoDTO;
-import edu.unl.sigett.academico.dto.DocenteCarreraDTO;
+import edu.unl.sigett.academico.docenteCarrera.DocenteCarreraDTOConverter;
+import edu.unl.sigett.academico.docenteCarrera.DocenteCarreraDTO;
 import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
 import edu.unl.sigett.usuarioCarrera.SessionUsuarioCarrera;
 import java.util.ArrayList;
@@ -43,7 +41,7 @@ import org.jlmallas.seguridad.service.UsuarioService;
  *
  * @author JorgeLuis
  */
-@Named
+@Named(value = "coordinadorPeriodoController")
 @SessionScoped
 @URLMappings(mappings = {
     @URLMapping(
@@ -61,7 +59,7 @@ import org.jlmallas.seguridad.service.UsuarioService;
             pattern = "/coordinadores/",
             viewId = "/faces/pages/academico/coordinadores/index.xhtml"
     )})
-public class AdministrarCoordinadoresPeriodos implements Serializable {
+public class CoordinadorPeriodoController implements Serializable {
 
     //<editor-fold defaultstate="collapsed" desc="MANAGED BEANS">
     @Inject
@@ -88,7 +86,7 @@ public class AdministrarCoordinadoresPeriodos implements Serializable {
     private DocenteService docenteService;
     //</editor-fold>
 
-    public AdministrarCoordinadoresPeriodos() {
+    public CoordinadorPeriodoController() {
     }
 
     public void init() {
@@ -179,8 +177,8 @@ public class AdministrarCoordinadoresPeriodos implements Serializable {
             }
 
             for (Docente docente : docentes) {
-                List<DocenteCarrera> docenteCarreras = docenteCarreraService.buscar(new DocenteCarrera(null, docente,
-                        sessionUsuarioCarrera.getUsuarioCarreraDTO().getCarrera(), Boolean.TRUE));
+                List<DocenteCarrera> docenteCarreras = docenteCarreraService.buscar(new DocenteCarrera(null,docente,
+                        sessionUsuarioCarrera.getUsuarioCarreraDTO().getCarrera(),null, Boolean.TRUE));
                 if (docenteCarreras == null) {
                     continue;
                 }

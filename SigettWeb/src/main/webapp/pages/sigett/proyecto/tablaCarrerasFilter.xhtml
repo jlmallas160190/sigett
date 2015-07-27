@@ -6,7 +6,7 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core">
     <body>
         <p:dataTable id="tblCarreras" paginatorPosition="bottom" rowIndexVar="rowIx" 
-                     rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'even-row' : 'odd-row'}" var="carrera" rowKey="#{carrera.nombre}" 
+                     rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'even-row' : 'odd-row'}" var="carrera" rowKey="#{carrera.id}" 
                      selection="#{carrera}" selectionMode="single" paginator="true" rows="10"  value="#{sessionProyecto.carreras}"
                      filteredValue="#{sessionProyecto.filterCarreras}" widgetVar="tblCarrerasFilter">
             <p:ajax event="rowSelect" listener="#{proyectoController.seleccionarCarrera}" onstart="PF('dlgLoading').show()" 

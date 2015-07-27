@@ -3,11 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.unl.sigett.academico.managed.session;
+package edu.unl.sigett.academico.estudianteCarrera;
 
 import com.jlmallas.comun.entity.Item;
+import edu.jlmallas.academico.entity.OfertaAcademica;
 import edu.jlmallas.academico.entity.ReporteMatricula;
-import edu.unl.sigett.academico.dto.EstudianteCarreraDTO;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +24,7 @@ public class SessionEstudianteCarrera implements Serializable {
 
     private EstudianteCarreraDTO estudianteCarreraDTO;
     private List<ReporteMatricula> reporteMatriculasWS;
+    private OfertaAcademica ofertaAcademicaSeleccionada;
     private ReporteMatricula reporteMatricula;
     private List<ReporteMatricula> reporteMatriculas;
     private List<EstudianteCarreraDTO> estudiantesCarreraDTO;
@@ -48,8 +49,8 @@ public class SessionEstudianteCarrera implements Serializable {
     private int keyWsParalelosCarreraEntero;
 
     public SessionEstudianteCarrera() {
-        this.reporteMatriculas=new ArrayList<>();
-        this.reporteMatriculaPrimer=new ReporteMatricula();
+        this.reporteMatriculas = new ArrayList<>();
+        this.reporteMatriculaPrimer = new ReporteMatricula();
         this.reporteMatriculaUltimo = new ReporteMatricula();
         this.filterEstudiantesCarreraDTO = new ArrayList<>();
         this.reporteMatriculasWS = new ArrayList<>();
@@ -155,7 +156,6 @@ public class SessionEstudianteCarrera implements Serializable {
         this.renderedInformacionEstudio = renderedInformacionEstudio;
     }
 
-
     public Boolean getRenderedEsAptoAspirante() {
         return renderedEsAptoAspirante;
     }
@@ -163,8 +163,6 @@ public class SessionEstudianteCarrera implements Serializable {
     public void setRenderedEsAptoAspirante(Boolean renderedEsAptoAspirante) {
         this.renderedEsAptoAspirante = renderedEsAptoAspirante;
     }
-
-   
 
     public int getKeyEnteroRm() {
         return keyEnteroRm;
@@ -252,6 +250,14 @@ public class SessionEstudianteCarrera implements Serializable {
 
     public void setReporteMatriculas(List<ReporteMatricula> reporteMatriculas) {
         this.reporteMatriculas = reporteMatriculas;
+    }
+
+    public OfertaAcademica getOfertaAcademicaSeleccionada() {
+        return ofertaAcademicaSeleccionada;
+    }
+
+    public void setOfertaAcademicaSeleccionada(OfertaAcademica ofertaAcademicaSeleccionada) {
+        this.ofertaAcademicaSeleccionada = ofertaAcademicaSeleccionada;
     }
 
 }

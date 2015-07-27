@@ -41,6 +41,11 @@ public class EstudianteCarreraDaoImplement extends AbstractDao<EstudianteCarrera
             parametros.put("estudianteId", estudianteCarrera.getEstudianteId());
             existeFiltro = Boolean.TRUE;
         }
+        if (estudianteCarrera.getOfertaAcademica() != null) {
+            sql.append(" and ec.ofertaAcademica=:ofertaAcademica");
+            parametros.put("ofertaAcademica", estudianteCarrera.getOfertaAcademica());
+            existeFiltro = Boolean.TRUE;
+        }
         if (estudianteCarrera.getEsActivo() != null) {
             sql.append(" and ec.esActivo=:activo");
             parametros.put("activo", estudianteCarrera.getEsActivo());

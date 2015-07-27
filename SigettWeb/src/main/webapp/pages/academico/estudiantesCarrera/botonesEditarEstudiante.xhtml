@@ -8,12 +8,12 @@
     <body>
         <h:panelGrid styleClass="pnl-botones" columns="3">
             <p:commandButton id="guardar" value="#{msg['lbl.grabar']}" update=":contenido:msm,:contenido:tabViewDatosEstudiante" 
-                             icon="ui-icon-disk"  action="#{administrarEstudiantesCarrera.grabar()}">
+                             icon="ui-icon-disk"  action="#{estudianteCarreraController.grabar()}">
                 <f:param name="1" value="grabar" />
             </p:commandButton>
             <p:commandButton id="guardarEditar"  onstart="PF('dlgLoading').show();" oncomplete="PF('dlgLoading').hide()" 
                              value="#{msg['lbl.grabar']} #{msg['lbl.editar']}" update=":contenido:msm,:contenido:tabViewDatosEstudiante"
-                             icon="ui-icon-disk" action="#{administrarEstudiantesCarrera.grabar()}">
+                             icon="ui-icon-disk" action="#{estudianteCarreraController.grabar()}">
                 <f:param name="1" value="grabar-editar" />
             </p:commandButton>
         </h:panelGrid>

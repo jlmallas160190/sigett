@@ -20,7 +20,7 @@
                 </f:facet>
                 <p:commandLink value="#{item.persona.apellidos}
                                #{item.persona.nombres}" update="@this" 
-                               action="#{administrarCoordinadoresPeriodos.editar(sessionUsuario.usuario,item)}">
+                               action="#{coordinadorPeriodoController.editar(sessionUsuario.usuario,item)}">
                     <f:param name="1" value="editar"/>
                 </p:commandLink>
             </p:column>
@@ -53,7 +53,7 @@
                     <f:facet name="input">
                         <p:selectBooleanCheckbox  value="#{item.coordinadorPeriodo.esVigente}">
                             <p:ajax update="tblCoordinadores" event="change" 
-                                    listener="#{administrarCoordinadoresPeriodos.encargarCoordinacion(item, sessionUsuario.usuario)}"/>
+                                    listener="#{coordinadorPeriodoController.encargarCoordinacion(item, sessionUsuario.usuario)}"/>
                         </p:selectBooleanCheckbox>
                     </f:facet>
                 </p:cellEditor>
@@ -62,7 +62,7 @@
                 <p:fragment autoUpdate="true">
                     <p:commandButton icon="ui-icon-trash" onclick="if (!confirm('¿#{msg['lbl.confirmarEliminar']}?'))
                                 return false;" update="tblCoordinadores" 
-                                     action="#{administrarCoordinadoresPeriodos.remover(item, sessionUsuario.usuario)}"/>
+                                     action="#{coordinadorPeriodoController.remover(item, sessionUsuario.usuario)}"/>
                 </p:fragment>
             </p:column>
         </p:dataTable>

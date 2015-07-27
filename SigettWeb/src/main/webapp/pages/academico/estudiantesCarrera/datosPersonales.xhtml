@@ -7,10 +7,6 @@
 
     <body>
         <h:panelGrid styleClass="panelgrid" rowClasses="rowpanelgrid" columnClasses="col-sm-3,col-sm-7,col-sm-1,col-sm-1" columns="4">
-            <!--<f:facet name="header">
-                <p:graphicImage id="foto" styleClass="img-thumbnail" cache="false"  height="100" width="100" 
-                                value="/AppServlet?id={sessionEstudianteCarrera.estudianteCarreraDTO.persona.id}&amp;entity=Persona"/>
-            </f:facet>-->
             <h:outputLabel value="#{msg['lbl.ci']}:" for="numeroIdentificacion" />
             <p:inputText id="numeroIdentificacion" value="#{sessionEstudianteCarrera.estudianteCarreraDTO.persona.numeroIdentificacion}"
                          title="#{msg['lbl.ci']}"
@@ -22,7 +18,7 @@
             <p:fragment autoUpdate="true">
                 <p:commandButton icon="ui-icon-refresh" value="#{msg['lbl.sincronizar']}" update=":contenido:tabViewDatosEstudiante,:contenido:msm" 
                                  onstart="PF('dlgLoading').show();" oncomplete="PF('dlgLoading').hide()" 
-                                 action="#{administrarEstudiantesCarrera.sgaWebServicesDatosEstudiante()}"/>
+                                 action="#{estudianteCarreraController.SGAWSDatosEstudiante()}"/>
             </p:fragment>
             <p:message id="msmNumeroIdentificacion" display="icon" for="numeroIdentificacion"/>
             <h:outputLabel value="#{msg['lbl.nombres']}:" for="nombres" />
