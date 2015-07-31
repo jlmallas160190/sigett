@@ -9,9 +9,9 @@
                      rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'even-row' : 'odd-row'}" var="oferta" rowKey="#{oferta.nombre}" 
                      selection="#{oferta}" selectionMode="single" paginator="true" rows="10"  value="#{sessionSelectItems.ofertaAcademicas}"
                      filteredValue="#{sessionSelectItems.filterOfertaAcademicas}" widgetVar="tblOfertasFilter">
-            <p:ajax event="rowSelect" listener="#{estudianteCarreraController.seleccionarOfertaAcademica}" onstart="PF('dlgLoading').show()" 
+            <p:ajax event="rowSelect" listener="#{docenteCarreraController.seleccionarOfertaAcademica}" onstart="PF('dlgLoading').show()" 
                     oncomplete="PF('dlgLoading').hide(),PF('tblOfertasFilter').filter()" 
-                    update=":contenido:tblEstudiantes,:contenido:opcionesTblEstudiantes,:contenido:pnlEstudiantes"/>
+                    update=":contenido:tblDocentes,:contenido:opcionesTblDocentes,:contenido:pnlDocentes"/>
             <p:column filterBy="#{oferta.periodoAcademicoId.nombre}"  filterMatchMode="in">
                 <f:facet name="filter">
                     <p:selectCheckboxMenu label="#{msg['lbl.periodosAcademicos']}"  onchange="PF('tblOfertasFilter').filter()" >

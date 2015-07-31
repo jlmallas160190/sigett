@@ -7,6 +7,7 @@ package edu.unl.sigett.academico.docenteCarrera;
 
 import com.jlmallas.comun.entity.Item;
 import edu.jlmallas.academico.entity.EstadoLaboral;
+import edu.jlmallas.academico.entity.OfertaAcademica;
 import edu.jlmallas.academico.entity.TituloDocente;
 import edu.unl.sigett.entity.LineaInvestigacion;
 import edu.unl.sigett.entity.LineaInvestigacionDocente;
@@ -26,6 +27,7 @@ import org.primefaces.model.DualListModel;
 public class SessionDocenteCarrera implements Serializable {
 
     private DocenteCarreraDTO docenteCarreraDTO;
+    private OfertaAcademica ofertaAcademicaSeleccionada;
     private DocenteCarreraDTO docenteCarreraDTOWS;
     private List<DocenteCarreraDTO> docenteCarreraDTOs;
     private List<DocenteCarreraDTO> filterDocenteCarrerasDTO;
@@ -233,6 +235,14 @@ public class SessionDocenteCarrera implements Serializable {
 
     public void setFilterDocenteCarrerasDTO(List<DocenteCarreraDTO> filterDocenteCarrerasDTO) {
         this.filterDocenteCarrerasDTO = filterDocenteCarrerasDTO;
+    }
+
+    public OfertaAcademica getOfertaAcademicaSeleccionada() {
+        return ofertaAcademicaSeleccionada;
+    }
+
+    public void setOfertaAcademicaSeleccionada(OfertaAcademica ofertaAcademicaSeleccionada) {
+        this.ofertaAcademicaSeleccionada = ofertaAcademicaSeleccionada;
     }
 
 }

@@ -52,6 +52,7 @@ import com.jlmallas.comun.service.PersonaService;
 import edu.jlmallas.academico.entity.Titulo;
 import edu.jlmallas.academico.dao.TituloDocenteDao;
 import edu.jlmallas.academico.dao.TituloDao;
+import edu.jlmallas.academico.entity.OfertaAcademica;
 import edu.jlmallas.academico.service.DocenteCarreraService;
 import edu.jlmallas.academico.service.DocenteService;
 import edu.jlmallas.academico.service.EstadoLaboralService;
@@ -76,6 +77,7 @@ import org.jlmallas.seguridad.entity.Rol;
 import org.jlmallas.seguridad.entity.RolUsuario;
 import org.jlmallas.seguridad.entity.Usuario;
 import org.jlmallas.seguridad.service.UsuarioService;
+import org.primefaces.event.SelectEvent;
 
 /**
  *
@@ -177,6 +179,11 @@ public class DocenteCarreraController implements Serializable {
         }
     }
 
+    public void seleccionarOfertaAcademica(SelectEvent selectEvent) {
+        sessionDocenteCarrera.setOfertaAcademicaSeleccionada((OfertaAcademica) selectEvent.getObject());
+        this.buscar();
+    }
+
     /**
      * LISTADO DE ESTADOS LABORALES
      */
@@ -273,8 +280,11 @@ public class DocenteCarreraController implements Serializable {
         this.sessionDocenteCarrera.getDocenteCarreraDTOs().clear();
         this.sessionDocenteCarrera.getFilterDocenteCarrerasDTO().clear();
         try {
+            if(sessionDocenteCarrera.getOfertaAcademicaSeleccionada()==null){
+                return;
+            }
             List<DocenteCarrera> docenteCarreras = docenteCarreraService.buscar(new DocenteCarrera(null, null, sessionUsuarioCarrera.getUsuarioCarreraDTO().getCarrera(),
-                    null, Boolean.FALSE));
+                  sessionDocenteCarrera.getOfertaAcademicaSeleccionada(), Boolean.TRUE));
             if (docenteCarreras == null) {
                 return;
             }
@@ -678,7 +688,7 @@ public class DocenteCarreraController implements Serializable {
                         if (docente == null) {
                             docente = new Docente();
                         }
-                        DocenteCarrera dc = new DocenteCarrera(null, docente, carrera, null, Boolean.TRUE);
+                        DocenteCarrera dc = new DocenteCarrera(null, docente, carrera,sessionDocenteCarrera.getOfertaAcademicaSeleccionada(), Boolean.TRUE);
                         docenteCarreraAux = new DocenteCarreraDTO(dc,
                                 persona, new Director(null, Boolean.TRUE));
                         sessionDocenteCarrera.setDocenteCarreraDTOWS(docenteCarreraAux);
@@ -791,8 +801,7 @@ public class DocenteCarreraController implements Serializable {
                         configuracionService.buscar(new Configuracion(ConfiguracionEnum.CLAVEWS.getTipo())).get(0).getValor()));
                 String userService = configuracionService.buscar(new Configuracion(ConfiguracionEnum.USUARIOWS.getTipo())).get(0).getValor();
                 String serviceUrl = configuracionService.buscar(new Configuracion(URLWSEnum.PARALELOCARRERA.getTipo())).get(0).getValor();
-                String ofertaIdActual = configuracionCarrera.getValor();
-                String s = serviceUrl + "?id_oferta=" + ofertaIdActual + ";id_carrera=" + c.getIdSga();
+                String s = serviceUrl + "?id_oferta=" + sessionDocenteCarrera.getOfertaAcademicaSeleccionada().getIdSga() + ";id_carrera=" + c.getIdSga();
                 ConexionDTO seguridad = new ConexionDTO(passwordService, s, userService);
                 NetClientService conexion = new NetClientServiceImplement();
                 String datosJson = conexion.response(seguridad);

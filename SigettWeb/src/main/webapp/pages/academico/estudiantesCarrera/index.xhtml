@@ -11,15 +11,17 @@
             <ui:define name="top">
                 <ui:include src="./../../inicio/menu.xhtml"/>
             </ui:define>
-             <ui:define name="left">
+            <ui:define name="left">
                 <ui:include src="tablaOfertaAcademicaFilter.xhtml"/>
             </ui:define>
             <ui:define name="right">
-                <ui:include src="./../../sigett/usuarioCarrera/menu.xhtml"/>
+                <p:panel header="#{sessionUsuarioCarrera.usuarioCarreraDTO.carrera.nombre}">
+                    <ui:include src="./../../sigett/usuarioCarrera/menu.xhtml"/>
+                </p:panel>
             </ui:define>
             <ui:define name="content">
                 <p:messages id="msm"/>
-                <p:panel header="#{msg['lbl.docentes']}">
+                <p:panel id="pnlEstudiantes" header="#{msg['lbl.estudiantes']}/ #{sessionEstudianteCarrera.ofertaAcademicaSeleccionada.nombre}">
                     <ui:include src="tablaEstudiantes.xhtml" /> 
                     <f:facet name="footer">
                         <ui:include src="botonesTablaEstudiante.xhtml"/>  

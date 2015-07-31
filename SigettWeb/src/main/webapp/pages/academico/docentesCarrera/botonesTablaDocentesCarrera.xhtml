@@ -4,10 +4,10 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:p="http://primefaces.org/ui">
     <body>
-        <h:panelGrid  columns="2">
-            <p:commandButton value="#{msg['lbl.crear']}" rendered="#{sessionDocenteCarrera.renderedCrear}"
+        <h:panelGrid id="opcionesTblDocentes" columns="2">
+            <p:commandButton value="#{msg['lbl.crear']}" rendered="#{sessionDocenteCarrera.renderedCrear and sessionDocenteCarrera.ofertaAcademicaSeleccionada!=null}"
                              icon="ui-icon-newwin" action="#{docenteCarreraController.crear()}"/>
-            <p:commandButton value="#{msg['lbl.sincronizar']}" rendered="#{sessionDocenteCarrera.renderedCrear}" 
+            <p:commandButton value="#{msg['lbl.sincronizar']}" rendered="#{sessionDocenteCarrera.renderedCrear and sessionDocenteCarrera.ofertaAcademicaSeleccionada!=null}" 
                              icon="ui-icon-refresh" update="@form" onstart="PF('dlgLoading').show();"
                              oncomplete="PF('dlgLoading').hide(),PF('tblDocentesFilter').filter()" 
                              action="#{docenteCarreraController.sgaWebServicesPorCarrera(sessionUsuarioCarrera.usuarioCarreraDTO.carrera)}" />

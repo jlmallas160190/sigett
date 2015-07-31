@@ -36,6 +36,11 @@ public class DocenteCarreraDaoImplement extends AbstractDao<DocenteCarrera> impl
             parametros.put("carreraId", docenteCarrera.getCarreraId());
             existeFiltro = Boolean.TRUE;
         }
+        if (docenteCarrera.getOfertaAcademica() != null) {
+            sql.append(" and d.ofertaAcademica=:ofertaAcademica");
+            parametros.put("ofertaAcademica", docenteCarrera.getOfertaAcademica());
+            existeFiltro = Boolean.TRUE;
+        }
         if (docenteCarrera.getDocenteId() != null) {
             sql.append(" and d.docenteId=:docenteId");
             parametros.put("docenteId", docenteCarrera.getDocenteId());
