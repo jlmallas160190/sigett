@@ -40,10 +40,9 @@ public class DocumentoCarreraDaoImplement extends AbstractDao<DocumentoCarrera> 
             sql.append(" and d.esActivo=:activo");
             parametros.put("activo", oficioCarrera.getEsActivo());
         }
-        if (oficioCarrera.getDocumentoId() != null && oficioCarrera.getTablaId() != null) {
+        if (oficioCarrera.getDocumentoId() != null) {
             sql.append(" and d.documentoId=:documento and d.tablaId=:tabla");
             parametros.put("documento", oficioCarrera.getDocumentoId());
-            parametros.put("tabla", oficioCarrera.getTablaId());
             existeFiltro = Boolean.TRUE;
         }
         if (!existeFiltro) {

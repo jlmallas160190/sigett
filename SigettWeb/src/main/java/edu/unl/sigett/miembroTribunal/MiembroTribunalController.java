@@ -6,6 +6,7 @@
 package edu.unl.sigett.miembroTribunal;
 
 import com.jlmallas.comun.entity.Configuracion;
+import com.jlmallas.comun.entity.Documento;
 import com.jlmallas.comun.entity.Evento;
 import com.jlmallas.comun.entity.EventoPersona;
 import com.jlmallas.comun.entity.Item;
@@ -15,6 +16,7 @@ import com.jlmallas.comun.enumeration.ConfiguracionEnum;
 import com.jlmallas.comun.enumeration.EventoEnum;
 import com.jlmallas.comun.enumeration.ValorEnum;
 import com.jlmallas.comun.service.ConfiguracionService;
+import com.jlmallas.comun.service.DocumentoService;
 import com.jlmallas.comun.service.EventoPersonaService;
 import com.jlmallas.comun.service.EventoService;
 import com.jlmallas.comun.service.ItemService;
@@ -27,21 +29,31 @@ import edu.jlmallas.academico.service.DocenteService;
 import edu.unl.sigett.director.DirectorDTO;
 import edu.unl.sigett.director.DirectorDTOConverter;
 import edu.unl.sigett.directorProyecto.DirectorProyectoDTO;
+import edu.unl.sigett.documentoCarrera.DocumentoCarreraDM;
+import edu.unl.sigett.documentoCarrera.DocumentoCarreraDTO;
 import edu.unl.sigett.entity.CalificacionMiembro;
+import edu.unl.sigett.entity.ConfiguracionCarrera;
 import edu.unl.sigett.entity.Director;
+import edu.unl.sigett.entity.DocumentoCarrera;
 import edu.unl.sigett.entity.EvaluacionTribunal;
 import edu.unl.sigett.entity.MiembroTribunal;
 import edu.unl.sigett.enumeration.CargoMiembroEnum;
+import edu.unl.sigett.enumeration.CatalogoDocumentoCarreraEnum;
 import edu.unl.sigett.enumeration.EstadoProyectoEnum;
 import edu.unl.sigett.evaluacionTribunal.SessionEvaluacionTribunal;
 import edu.unl.sigett.proyecto.SessionProyecto;
+import edu.unl.sigett.reporte.ReporteController;
+import edu.unl.sigett.reporte.ReporteOficio;
 import edu.unl.sigett.seguridad.managed.session.SessionUsuario;
 import edu.unl.sigett.service.CalificacionMiembroService;
+import edu.unl.sigett.service.ConfiguracionCarreraService;
 import edu.unl.sigett.service.DirectorService;
+import edu.unl.sigett.service.DocumentoCarreraService;
 import edu.unl.sigett.service.MiembroTribunalService;
 import edu.unl.sigett.tribunal.SessionTribunal;
 import edu.unl.sigett.util.CabeceraController;
 import edu.unl.sigett.util.PropertiesFileEnum;
+import java.io.File;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
@@ -56,6 +68,7 @@ import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import org.jlmallas.secure.Secure;
 import org.jlmallas.seguridad.service.UsuarioService;
 import org.primefaces.context.RequestContext;
@@ -81,6 +94,8 @@ public class MiembroTribunalController implements Serializable {
     private CabeceraController cabeceraController;
     @Inject
     private SessionEvaluacionTribunal sessionEvaluacionTribunal;
+    @Inject
+    private DocumentoCarreraDM documentoCarreraDM;
     //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="SERVICIOS">
     @EJB(lookup = "java:global/SeguridadService/UsuarioServiceImplement!org.jlmallas.seguridad.service.UsuarioService")
@@ -105,6 +120,12 @@ public class MiembroTribunalController implements Serializable {
     private EventoService eventoService;
     @EJB(lookup = "java:global/SigettService/CalificacionMiembroServiceImplement!edu.unl.sigett.service.CalificacionMiembroService")
     private CalificacionMiembroService calificacionMiembroService;
+    @EJB(lookup = "java:global/ComunService/DocumentoServiceImplement!com.jlmallas.comun.service.DocumentoService")
+    private DocumentoService documentoService;
+    @EJB(lookup = "java:global/SigettService/DocumentoCarreraServiceImplement!edu.unl.sigett.service.DocumentoCarreraService")
+    private DocumentoCarreraService documentoCarreraService;
+    @EJB(lookup = "java:global/SigettService/ConfiguracionCarreraServiceImplement!edu.unl.sigett.service.ConfiguracionCarreraService")
+    private ConfiguracionCarreraService configuracionCarreraService;
     //</editor-fold>
     private static final Logger LOG = Logger.getLogger(MiembroTribunalController.class.getName());
 
@@ -119,6 +140,133 @@ public class MiembroTribunalController implements Serializable {
     }
 
     //<editor-fold defaultstate="collapsed" desc="MÉTODOS CRUD">
+    /**
+     * IMPRIMIR OFICIO AL MIEMBRO DEL TRIBUNAL.
+     *
+     * @param miembroTribunalDTO
+     */
+    public void imprimirOficioPrivada(MiembroTribunalDTO miembroTribunalDTO) {
+        try {
+            sessionMiembroTribunal.setMiembroTribunalDTOSeleccionado(miembroTribunalDTO);
+            Item item = itemService.buscarPorCatalogoCodigo(CatalogoEnum.CATALOGOOFICIO.getTipo(),
+                    CatalogoDocumentoCarreraEnum.MIEMBROTRIBUNALPRIVADA.getTipo());
+            Documento documentoBuscar = documentoService.buscarPorCatalogo(new Documento(null, null, item.getId(), null, null, null, null, null, miembroTribunalDTO.getMiembroTribunal().getId()));
+            List<DocumentoCarrera> documentoCarreras = documentoCarreraService.buscar(new DocumentoCarrera(
+                    null, documentoBuscar != null ? documentoBuscar.getId() : null, Boolean.TRUE, null));
+            if (documentoCarreras == null) {
+                generarOficioPrivada();
+                return;
+            }
+            DocumentoCarrera documentoCarrera = !documentoCarreras.isEmpty() ? documentoCarreras.get(0) : null;
+            if (documentoCarrera != null) {
+                documentoCarreraDM.setDocumentoCarreraDTO(new DocumentoCarreraDTO(
+                        documentoCarrera, documentoService.buscarPorId(new Documento(documentoCarrera.getDocumentoId())), sessionProyecto.getCarreraSeleccionada()));
+                File file = new File(documentoCarreraDM.getDocumentoCarreraDTO().getDocumento().getRuta());
+                documentoCarreraDM.getDocumentoCarreraDTO().getDocumento().setContents(cabeceraController.getUtilService().obtenerBytes(file));
+                sessionMiembroTribunal.setRenderedMediaOficio(Boolean.TRUE);
+                return;
+            }
+            generarOficioPrivada();
+        } catch (Exception e) {
+            LOG.info(e.getMessage());
+        }
+    }
+
+    /**
+     * GENERA OFICIO DE PERTINENCIA
+     *
+     */
+    public void generarOficioPrivada() {
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        HttpServletRequest request = (HttpServletRequest) facesContext.getExternalContext().getRequest();
+        ReporteController reporteController = new ReporteController();
+        Carrera carrera = sessionProyecto.getCarreraSeleccionada();
+        Calendar fechaActual = Calendar.getInstance();
+        ConfiguracionCarrera configuracionCarrera = configuracionCarreraService.buscarPrimero(new ConfiguracionCarrera(carrera.getId(), "NO"));
+        if (configuracionCarrera == null) {
+            return;
+        }
+        String numeracion = configuracionCarrera.getValor();
+        String rutaReporte = request.getRealPath("/") + configuracionService.buscar(new Configuracion(ConfiguracionEnum.RUTAREPORTEOFICIO.getTipo())).get(0).getValor();
+        byte[] resultado = reporteController.oficio(new ReporteOficio(carrera.getLogo() != null ? carrera.getLogo() : null,
+                request.getRealPath("/") + "" + configuracionService.buscar(new Configuracion(ConfiguracionEnum.RUTALOGOINSTITUCION.getTipo())).get(0).getValor(), carrera.getNombre(),
+                carrera.getAreaId().getNombre(), carrera.getSigla(), cabeceraController.getValueFromProperties(
+                        PropertiesFileEnum.CONTENIDOREPORTE, "nro_oficio"), cabeceraController.getValueFromProperties(
+                        PropertiesFileEnum.CONTENIDOREPORTE, "nombre_institucion"), cabeceraController.getValueFromProperties(
+                        PropertiesFileEnum.CONTENIDOREPORTE, "oficio") + " " + carrera.getSigla() + "-" + cabeceraController.getValueFromProperties(
+                        PropertiesFileEnum.CONTENIDOREPORTE, "sigla_institucion"), carrera.getLugar(), cabeceraController.getUtilService().formatoFecha(
+                        fechaActual.getTime(), "EEEEE dd MMMMM yyyy"), numeracion, cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "docente_carrera") + " "
+                + carrera.getNombre(), sessionMiembroTribunal.getMiembroTribunalDTOSeleccionado().getDocente().getTituloDocenteId().getTituloId().getAbreviacion()
+                + "<br/>" + sessionMiembroTribunal.getMiembroTribunalDTOSeleccionado().getPersona().getNombres() + " " + sessionMiembroTribunal.getMiembroTribunalDTOSeleccionado().getPersona().getApellidos(),
+                cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "coordinador_carrera") + " " + carrera.getNombre(),
+                sessionProyecto.getCoordinadorPeriodoDTOCarreraSeleccionada().getDocente().getTituloDocenteId().getTituloId().getAbreviacion() + "<br/>"
+                + sessionProyecto.getCoordinadorPeriodoDTOCarreraSeleccionada().getPersona().getNombres() + " " + sessionProyecto.
+                getCoordinadorPeriodoDTOCarreraSeleccionada().getPersona().getApellidos(), generarCuerpoOficioPrivada(carrera),
+                "", "", "", " ", "",cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "desarrollado_por")+": "+sessionUsuario.getUsuario().getNombres().toUpperCase() + " "
+                + sessionUsuario.getUsuario().getApellidos().toUpperCase(), rutaReporte));
+        if (resultado == null) {
+            return;
+        }
+        Integer numeracionNext = Integer.parseInt(numeracion) + 1;
+        String ruta = configuracionService.buscar(new Configuracion(ConfiguracionEnum.RUTAOFICIO.getTipo())).get(0).getValor() + "/oficio" + numeracionNext + ".pdf";
+        Documento documento = new Documento(null, ruta, itemService.buscarPorCatalogoCodigo(CatalogoEnum.CATALOGOOFICIO.getTipo(),
+                CatalogoDocumentoCarreraEnum.MIEMBROTRIBUNALPRIVADA.getTipo()).getId(), Double.parseDouble(resultado.length + ""), fechaActual.getTime(), resultado, null, "pdf",sessionMiembroTribunal.getMiembroTribunalDTOSeleccionado().getMiembroTribunal().getId());
+        documentoService.guardar(documento);
+        documentoCarreraDM.setDocumentoCarreraDTO(new DocumentoCarreraDTO(new DocumentoCarrera(
+                numeracionNext + "", documento.getId(), Boolean.TRUE, carrera.getId()), documento, carrera));
+        documentoCarreraService.guardar(documentoCarreraDM.getDocumentoCarreraDTO().getDocumentoCarrera());
+        sessionMiembroTribunal.setRenderedMediaOficio(Boolean.TRUE);
+        cabeceraController.getUtilService().generaDocumento(new File(ruta), documento.getContents());
+        configuracionCarrera.setValor(numeracionNext + 1 + "");
+        configuracionCarreraService.actualizar(configuracionCarrera);
+    }
+
+    /**
+     * PERMITE OBTENER EL PRESIDENTE DEL TRIBUNAL
+     *
+     * @return
+     */
+    private MiembroTribunalDTO obtenerPresidente() {
+        Item presidente = itemService.buscarPorCatalogoCodigo(CatalogoEnum.CARGOMIEMBROTRIBUNAL.getTipo(), CargoMiembroEnum.PRESIDENTE.getTipo());
+        for (MiembroTribunalDTO miembroTribunalDTO : sessionMiembroTribunal.getMiembrosTribunalDTO()) {
+            if (miembroTribunalDTO.getMiembroTribunal().getCargoId().equals(presidente.getId())) {
+                return miembroTribunalDTO;
+            }
+        }
+        return null;
+    }
+
+    private String obtenerMiembros() {
+        Item presidente = itemService.buscarPorCatalogoCodigo(CatalogoEnum.CARGOMIEMBROTRIBUNAL.getTipo(), CargoMiembroEnum.PRESIDENTE.getTipo());
+        StringBuilder miembroStringBuilder = new StringBuilder();
+        int contador = 0;
+        for (MiembroTribunalDTO miembroTribunalDTO : sessionMiembroTribunal.getMiembrosTribunalDTO()) {
+            if (miembroTribunalDTO.getMiembroTribunal().getCargoId().equals(presidente.getId())) {
+                continue;
+            }
+            if (contador > 0) {
+                miembroStringBuilder.append(", ");
+            }
+            miembroStringBuilder.append(miembroTribunalDTO.getDocente().getTituloDocenteId().getTituloId().getAbreviacion()).append(" ").append(miembroTribunalDTO.getPersona().getNombres()).append(" ").append(miembroTribunalDTO.getPersona().getApellidos());
+            contador++;
+        }
+        return miembroStringBuilder.toString();
+    }
+
+    private String generarCuerpoOficioPrivada(Carrera carrera) {
+        StringBuilder builder = new StringBuilder();
+        MiembroTribunalDTO presidente = obtenerPresidente();
+        builder.append(cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "oficio_miembro_tribunal_cu_a")).append(" ").append(carrera.getNombre()).append(" ").append(cabeceraController.
+                getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "oficio_miembro_tribunal_cu_b")).append(": ").append(sessionProyecto.getProyectoSeleccionado().getAutores().toUpperCase()).append(", ").append(cabeceraController.
+                        getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "oficio_miembro_tribunal_cu_c")).append(" ").append(carrera.getNombreTitulo()).append(" ").append(cabeceraController.
+                                getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "oficio_miembro_tribunal_cu_d")).append(": <b>").append(presidente.getDocente().getTituloDocenteId().getTituloId().getAbreviacion()).append(" ").append(presidente.getPersona().getNombres()).append(" ").
+                append(presidente.getPersona().getApellidos()).append(" ").append(cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "oficio_miembro_tribunal_cu_e")).append(" ").append(obtenerMiembros()).append(" ").
+                append(cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "oficio_miembro_tribunal_cu_f")).append(" ").append(sessionProyecto.getProyectoSeleccionado().getTemaActual()).append("<b/> ");
+
+        return builder.toString();
+
+    }
+
     public void crear() {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
@@ -150,6 +298,12 @@ public class MiembroTribunalController implements Serializable {
         RequestContext.getCurrentInstance().execute("PF('dlgCrudMiembroTribunal').hide()");
         sessionMiembroTribunal.setMiembroTribunalDTOSeleccionado(new MiembroTribunalDTO());
         sessionMiembroTribunal.setRenderedDlgCrud(Boolean.FALSE);
+    }
+
+    public void cancelarImprimirOficio() {
+        documentoCarreraDM.setDocumentoCarreraDTO(new DocumentoCarreraDTO());
+        sessionMiembroTribunal.setMiembroTribunalDTOSeleccionado(new MiembroTribunalDTO());
+        sessionMiembroTribunal.setRenderedMediaOficio(Boolean.FALSE);
     }
 
     public void editar(MiembroTribunalDTO miembroTribunal) {

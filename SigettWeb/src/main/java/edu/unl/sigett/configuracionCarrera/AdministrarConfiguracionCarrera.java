@@ -311,8 +311,6 @@ public class AdministrarConfiguracionCarrera implements Serializable {
                 } else {
                     sessionConfiguracionCarrera.setTieneModulos(false);
                 }
-            } else if (elemento.isJsonPrimitive()) {
-
             }
         } catch (Exception e) {
             System.out.println(e);

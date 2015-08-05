@@ -19,12 +19,12 @@
                                onstart="PF('dlgLoading').show();" oncomplete="PF('dlgLoading').hide(),PF('tblMTFilter').filter()"
                                action="#{miembroTribunalController.editar(item)}"/>
             </p:column>
-           <p:column sortBy="#{item.persona.apellidos}" filterBy="#{item.persona.nombres} #{item.persona.apellidos}"
+            <p:column sortBy="#{item.persona.apellidos}" filterBy="#{item.persona.nombres} #{item.persona.apellidos}"
                       rendered="#{!sessionMiembroTribunal.renderedEditar}">
                 <f:facet name="header">
                     <h:outputText value="#{lbl.miembro}"/>
                 </f:facet>
-               <p:outputLabel value="#{item.persona.nombres} #{item.persona.apellidos}"/>
+                <p:outputLabel value="#{item.persona.nombres} #{item.persona.apellidos}"/>
             </p:column>
             <p:column sortBy="#{item.persona.numeroIdentificacion}" filterBy="#{item.persona.numeroIdentificacion}" >
                 <f:facet name="header">
@@ -38,26 +38,27 @@
                 </f:facet>
                 <h:outputText value="#{item.miembroTribunal.cargo}"/>
             </p:column>
-            <!--<p:column rendered="#{administrarMiembrosTribunal.renderedImprimirOficioSustentacionPrivada}">
+            <p:column width="40%" >
                 <f:facet name="header">
-                    <h:outputText value="#{msg['lbl.imprimir']} #{msg['lbl.oficio']}"/>
+                    <h:outputText value="#{msg['lbl.accion']}"/>
                 </f:facet> 
-                <p:commandButton onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" icon="ui-icon-print" update=":editarTribunal:msm,:oficioMiembroTribunalSprivada" action="#{administrarMiembrosTribunal.imprimirOficioMiembroTribunal(miembro,tribunal,sessionProyecto.proyecto,sessionUsuario.usuario)}"/>
-            </p:column>
-            <p:column rendered="#{administrarMiembrosTribunal.renderedImprimirOficioSustentacionPublica}">
-                <f:facet name="header">
-                    <h:outputText value="#{msg['lbl.imprimir']} #{msg['lbl.oficio']}"/>
-                </f:facet> 
-                <p:commandButton onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" icon="ui-icon-print" update=":editarTribunal:msm,:oficioMiembroTribunalSpublica,:dlgOficioMiembroTribunalSpublica,:dlgOficioMiembroTribunalSprivada" action="#{administrarMiembrosTribunal.imprimirOficioMiembroTribunal(miembro,tribunal,sessionProyecto.proyecto,sessionUsuario.usuario)}"/>
-            </p:column>-->
-            <p:column rendered="#{sessionMiembroTribunal.renderedEliminar}">
-                <f:facet name="header">
-                    <h:outputText value="#{msg['lbl.eliminar']}"/>
-                </f:facet>
-                <p:commandButton icon="ui-icon-trash"  onclick="if (!confirm('#{msg['lbl.confirmarEliminar']}'))
+                <p:row>
+                    <p:column>
+                        <p:commandButton onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide(),PF('dlgOficioMiembroTribunal').show()" icon="ui-icon-print"
+                                         update=":contenido:msm,:contenido:pnlOficioMiembroTribunal" 
+                                         rendered="#{item.miembroTribunal.id!=null}" value="#{msg['lbl.oficio']}"
+                                         action="#{miembroTribunalController.imprimirOficioPrivada()}"/>
+                    </p:column>
+                    <p:column rendered="#{sessionMiembroTribunal.renderedEliminar}">
+                        <f:facet name="header">
+                            <h:outputText value="#{msg['lbl.eliminar']}"/>
+                        </f:facet>
+                        <p:commandButton icon="ui-icon-trash"  onclick="if (!confirm('#{msg['lbl.confirmarEliminar']}'))
                             return false;" update="tblMiembros" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide(),PF('tblMTFilter').filter()" 
-                            action="#{miembroTribunalController.remover(item)}">
-                </p:commandButton>
+                                         action="#{miembroTribunalController.remover(item)}">
+                        </p:commandButton>
+                    </p:column>
+                </p:row>
             </p:column>
         </p:dataTable>
     </body>

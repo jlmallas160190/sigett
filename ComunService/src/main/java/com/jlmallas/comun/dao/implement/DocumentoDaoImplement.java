@@ -35,6 +35,11 @@ public class DocumentoDaoImplement extends AbstractDao<Documento> implements Doc
             parametros.put("catalogoId", documento.getCatalogoId());
             existeFiltro = Boolean.TRUE;
         }
+        if (documento.getTablaId() != null) {
+            sql.append(" and d.tablaId=:tablaId");
+            parametros.put("tablaId", documento.getTablaId());
+            existeFiltro = Boolean.TRUE;
+        }
         if (!existeFiltro) {
             return null;
         }

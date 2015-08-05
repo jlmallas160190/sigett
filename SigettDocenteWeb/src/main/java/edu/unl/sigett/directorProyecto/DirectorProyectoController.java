@@ -220,7 +220,7 @@ public class DirectorProyectoController implements Serializable {
         Item item = itemService.buscarPorCatalogoCodigo(CatalogoEnum.CATALOGODOCUMENTOPROYECTO.getTipo(),
                 CatalogoDocumentoProyectoEnum.CERTIFICACIONDIRECTOR.getTipo());
         this.sessionDirectorProyecto.setRenderedMediaCertificado(Boolean.TRUE);
-        Documento documentoBuscar = documentoService.buscarPorCatalogo(new Documento(null, null, item.getId(), null, null, null, null, null));
+        Documento documentoBuscar = documentoService.buscarPorCatalogo(new Documento(null, null, item.getId(), null, null, null, null, null,sessionDirectorProyecto.getDirectorProyectoDTO().getDirectorProyecto().getProyectoId().getId()));
         if (documentoBuscar == null) {
             generarCertificado();
             return;
@@ -266,7 +266,8 @@ public class DirectorProyectoController implements Serializable {
         String ruta = configuracionService.buscar(new Configuracion(ConfiguracionEnum.RUTADOCUMENTOPROYECTO.getTipo())).get(0).getValor()
                 + "/certificado_" + sessionDirectorProyecto.getDirectorProyectoDTO().getDirectorProyecto().getId() + ".pdf";
         Documento documento = new Documento(null, ruta, itemService.buscarPorCatalogoCodigo(CatalogoEnum.CATALOGODOCUMENTOPROYECTO.getTipo(),
-                CatalogoDocumentoProyectoEnum.CERTIFICACIONDIRECTOR.getTipo()).getId(), Double.parseDouble(resultado.length + ""), fechaActual.getTime(), resultado, null, "pdf");
+                CatalogoDocumentoProyectoEnum.CERTIFICACIONDIRECTOR.getTipo()).getId(), Double.parseDouble(resultado.length + ""), fechaActual.getTime(), resultado, null, "pdf",null);
+        documento.setTablaId(sessionDirectorProyecto.getDirectorProyectoDTO().getDirectorProyecto().getProyectoId().getId());
         documentoService.guardar(documento);
         sessionDirectorProyecto.setCerticadoDirector(new DocumentoProyectoDTO(
                 new DocumentoProyecto(Boolean.TRUE, documento.getId(), sessionDirectorProyecto.getDirectorProyectoDTO().getDirectorProyecto().getProyectoId()), documento));

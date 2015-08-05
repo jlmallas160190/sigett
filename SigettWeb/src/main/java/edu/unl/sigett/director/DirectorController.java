@@ -57,7 +57,7 @@ public class DirectorController implements Serializable {
 
     //</editor-fold>
     private static final Logger LOG = Logger.getLogger(DirectorController.class.getName());
-
+    
     public DirectorController() {
     }
 
@@ -95,18 +95,26 @@ public class DirectorController implements Serializable {
                         }
                         DirectorDTO directorDTO = new DirectorDTO(directorService.buscarPorId(new Director(
                                 docenteCarreraDTO.getDocenteCarrera().getId())), docenteCarreraDTO.getDocenteCarrera(), personaService.buscarPorId(
-                                       new Persona(docenteCarreraDTO.getDocenteCarrera().getDocenteId().getId())));
-                        if (!directorDM.getDirectoresDTO().contains(directorDTO)) {
+                                        new Persona(docenteCarreraDTO.getDocenteCarrera().getDocenteId().getId())));
+                        if (!containDirector(directorDTO)) {
                             directorDM.getDirectoresDTO().add(directorDTO);
                         }
                     }
                 }
             }
-
+            
             directorDM.setFilterDirectoresDTO(directorDM.getDirectoresDTO());
         } catch (Exception e) {
             LOG.info(e.getMessage());
         }
     }
 
+    private Boolean containDirector(DirectorDTO directorDTO) {
+        for (DirectorDTO director : directorDM.getDirectoresDTO()) {
+            if (director.getDirector().equals(directorDTO.getDirector())) {
+                return Boolean.TRUE;
+            }
+        }
+        return Boolean.FALSE;
+    }
 }

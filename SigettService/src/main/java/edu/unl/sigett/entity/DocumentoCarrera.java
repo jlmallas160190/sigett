@@ -47,20 +47,15 @@ public class DocumentoCarrera implements Serializable {
     @NotNull
     @Column(name = "carrera_id")
     private Integer carreraId;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "tabla_id")
-    private Long tablaId;
 
     public DocumentoCarrera() {
     }
 
-    public DocumentoCarrera(String numeracion, Long documentoId, Boolean esActivo, Integer carreraId, Long tablaId) {
+    public DocumentoCarrera(String numeracion, Long documentoId, Boolean esActivo, Integer carreraId) {
         this.numeracion = numeracion;
         this.documentoId = documentoId;
         this.esActivo = esActivo;
         this.carreraId = carreraId;
-        this.tablaId = tablaId;
     }
 
     public DocumentoCarrera(Long id) {
@@ -108,15 +103,6 @@ public class DocumentoCarrera implements Serializable {
         this.documentoId = documentoId;
     }
 
-    public Long getTablaId() {
-        return tablaId;
-    }
-
-    public void setTablaId(Long tablaId) {
-        this.tablaId = tablaId;
-    }
-    
-
     @Override
     public int hashCode() {
         int hash = 0;
@@ -131,10 +117,7 @@ public class DocumentoCarrera implements Serializable {
             return false;
         }
         DocumentoCarrera other = (DocumentoCarrera) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
+        return (this.id != null || other.id == null) && (this.id == null || this.id.equals(other.id));
     }
 
     @Override

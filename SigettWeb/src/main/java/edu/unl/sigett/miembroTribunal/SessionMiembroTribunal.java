@@ -37,6 +37,7 @@ public class SessionMiembroTribunal implements Serializable {
     private Boolean renderedEliminar;
     private Boolean renderedDlgCrud;
     private Boolean renderedDlgDocentesDisponibles;
+    private Boolean renderedMediaOficio;
 
     public SessionMiembroTribunal() {
         this.filterDirectoresDTO = new ArrayList<>();
@@ -159,6 +160,14 @@ public class SessionMiembroTribunal implements Serializable {
 
     public void setFilterDirectoresDTO(List<DirectorDTO> filterDirectoresDTO) {
         this.filterDirectoresDTO = filterDirectoresDTO;
+    }
+
+    public Boolean getRenderedMediaOficio() {
+        return renderedMediaOficio;
+    }
+
+    public void setRenderedMediaOficio(Boolean renderedMediaOficio) {
+        this.renderedMediaOficio = renderedMediaOficio;
     }
 
 }

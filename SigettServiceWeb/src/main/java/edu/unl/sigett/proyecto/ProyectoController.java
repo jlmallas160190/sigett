@@ -304,7 +304,7 @@ public class ProyectoController implements Serializable {
             for (DocumentoProyecto documentoProyecto : documentoProyectos) {
                 DocumentoProyectoDTO documentoProyectoDTO = new DocumentoProyectoDTO(
                         documentoProyecto, documentoService.buscarPorId(new Documento(
-                                        documentoProyecto.getDocumentoId(), null, null, null, null, null, null, null)));
+                                        documentoProyecto.getDocumentoId(), null, null, null, null, null, null, null,documentoProyecto.getDocumentoId())));
                 documentoProyectoDTO.getDocumento().setCatalogo(itemService.buscarPorId(documentoProyectoDTO.getDocumento().getCatalogoId()).getNombre());
                 documentoProyectoDTO.getDocumento().setContents(cabeceraController.getUtilService().obtenerBytes(new File(documentoProyectoDTO.getDocumento().getRuta())));
                 sessionProyecto.getDocumentosProyectoDTO().add(documentoProyectoDTO);

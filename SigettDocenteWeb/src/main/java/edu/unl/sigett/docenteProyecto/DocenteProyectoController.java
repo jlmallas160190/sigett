@@ -180,7 +180,7 @@ public class DocenteProyectoController implements Serializable {
             for (DocumentoProyecto documentoProyecto : documentoProyectos) {
                 DocumentoProyectoDTO documentoProyectoDTO = new DocumentoProyectoDTO(
                         documentoProyecto, documentoService.buscarPorId(new Documento(
-                                        documentoProyecto.getDocumentoId(), null, catalogoDocumento.getId(), null, null, null, null, null)));
+                                        documentoProyecto.getDocumentoId(), null, catalogoDocumento.getId(), null, null, null, null, null,docenteProyectoDM.getDocenteProyectoDTOSeleccionado().getDocenteProyecto().getProyectoId().getId())));
                 documentoProyectoDTO.getDocumento().setCatalogo(itemService.buscarPorId(documentoProyectoDTO.getDocumento().getCatalogoId()).getNombre());
                 docenteProyectoDM.getDocumentoProyectos().add(documentoProyectoDTO);
             }

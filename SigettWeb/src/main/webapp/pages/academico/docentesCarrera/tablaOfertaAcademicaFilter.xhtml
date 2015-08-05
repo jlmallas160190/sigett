@@ -10,7 +10,7 @@
                      selection="#{oferta}" selectionMode="single" paginator="true" rows="10"  value="#{sessionSelectItems.ofertaAcademicas}"
                      filteredValue="#{sessionSelectItems.filterOfertaAcademicas}" widgetVar="tblOfertasFilter">
             <p:ajax event="rowSelect" listener="#{docenteCarreraController.seleccionarOfertaAcademica}" onstart="PF('dlgLoading').show()" 
-                    oncomplete="PF('dlgLoading').hide(),PF('tblOfertasFilter').filter()" 
+                    oncomplete="PF('dlgLoading').hide(),PF('tblOfertasFilter').filter(),PF('tblDocentesFilter').filter()" 
                     update=":contenido:tblDocentes,:contenido:opcionesTblDocentes,:contenido:pnlDocentes"/>
             <p:column filterBy="#{oferta.periodoAcademicoId.nombre}"  filterMatchMode="in">
                 <f:facet name="filter">

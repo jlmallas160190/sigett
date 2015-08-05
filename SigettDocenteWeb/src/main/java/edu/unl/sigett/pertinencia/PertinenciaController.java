@@ -286,9 +286,9 @@ public class PertinenciaController implements Serializable {
                     CatalogoDocumentoCarreraEnum.PERTINENCIA.getTipo());
             this.pertinenciaDM.setRenderedMediaInforme(Boolean.TRUE);
             pertinenciaDM.setPertinencia(pertinencia);
-            Documento documentoBuscar = documentoService.buscarPorCatalogo(new Documento(null, null, item.getId(), null, null, null, null, null));
+            Documento documentoBuscar = documentoService.buscarPorCatalogo(new Documento(null, null, item.getId(), null, null, null, null, null,pertinencia.getId()));
             List<DocumentoCarrera> documentoCarreras = documentoCarreraService.buscar(new DocumentoCarrera(
-                    null, documentoBuscar != null ? documentoBuscar.getId() : null, Boolean.TRUE, null, pertinencia.getId()));
+                    null, documentoBuscar != null ? documentoBuscar.getId() : null, Boolean.TRUE, null));
             if (documentoCarreras == null) {
                 generarInformePertinencia(pertinencia);
                 return;
@@ -348,10 +348,11 @@ public class PertinenciaController implements Serializable {
         String ruta = configuracionService.buscar(new Configuracion(ConfiguracionEnum.RUTAINFORME.getTipo())).get(0).getValor()
                 + "/informe_" + pertinencia.getId() + ".pdf";
         Documento documento = new Documento(null, ruta, itemService.buscarPorCatalogoCodigo(CatalogoEnum.CATALOGOINFORME.getTipo(),
-                CatalogoDocumentoCarreraEnum.PERTINENCIA.getTipo()).getId(), Double.parseDouble(resultado.length + ""), fechaActual.getTime(), resultado, null, "pdf");
+                CatalogoDocumentoCarreraEnum.PERTINENCIA.getTipo()).getId(), Double.parseDouble(resultado.length + ""), fechaActual.getTime(), resultado,
+                null, "pdf",pertinencia.getId());
         documentoService.guardar(documento);
         pertinenciaDM.setDocumentoCarreraDTO(new DocumentoCarreraDTO(new DocumentoCarrera(
-                "", documento.getId(), Boolean.TRUE, carrera.getId(), pertinencia.getId()), documento, carrera));
+                "", documento.getId(), Boolean.TRUE, carrera.getId()), documento, carrera));
         documentoCarreraService.guardar(pertinenciaDM.getDocumentoCarreraDTO().getDocumentoCarrera());
         pertinenciaDM.setRenderedMediaInforme(Boolean.TRUE);
         cabeceraController.getUtilService().generaDocumento(new File(ruta), documento.getContents());
@@ -383,10 +384,10 @@ public class PertinenciaController implements Serializable {
         String numeracion = null;
         Item item = itemService.buscarPorCatalogoCodigo(CatalogoEnum.CATALOGOOFICIO.getTipo(),
                 CatalogoDocumentoCarreraEnum.PERTINENCIA.getTipo());
-        Documento documentoBuscar = documentoService.buscarPorCatalogo(new Documento(null, null, item.getId(), null, null, null, null, null));
-        List<DocumentoCarrera> documentoCarreras = documentoCarreraService.buscar(new DocumentoCarrera(
-                null, documentoBuscar != null ? documentoBuscar.getId() : null, Boolean.TRUE, null, docenteProyectoDM.getDocenteProyectoDTOSeleccionado().
+        Documento documentoBuscar = documentoService.buscarPorCatalogo(new Documento(null, null, item.getId(), null, null, null, null, null,docenteProyectoDM.getDocenteProyectoDTOSeleccionado().
                 getDocenteProyecto().getId()));
+        List<DocumentoCarrera> documentoCarreras = documentoCarreraService.buscar(new DocumentoCarrera(
+                null, documentoBuscar != null ? documentoBuscar.getId() : null, Boolean.TRUE, null));
         if (documentoCarreras == null) {
             numeracion = "";
         }

@@ -80,7 +80,7 @@ public class DocumentoProyectoController implements Serializable {
         Documento documento = new Documento(null, ruta, itemService.buscarPorCatalogoCodigo(CatalogoEnum.CATALOGODOCUMENTOPROYECTO.getTipo(),
                 CatalogoDocumentoProyectoEnum.CERTIFICACIONDIRECTOR.getTipo()).getId(), Double.parseDouble(
                         documentoProyectoDM.getDocumentoProyectoDTOSeleccionado().getDocumento().getContents().length + ""), fechaActual.getTime(),
-                documentoProyectoDM.getDocumentoProyectoDTOSeleccionado().getDocumento().getContents(), null, "pdf");
+                documentoProyectoDM.getDocumentoProyectoDTOSeleccionado().getDocumento().getContents(), null, "pdf",null);
         documentoService.guardar(documento);
         sessionDirectorProyecto.setCerticadoDirector(new DocumentoProyectoDTO(
                 new DocumentoProyecto(Boolean.TRUE, documento.getId(), sessionDirectorProyecto.getDirectorProyectoDTO().getDirectorProyecto().getProyectoId()), documento));

@@ -5,13 +5,13 @@
       xmlns:p="http://primefaces.org/ui">
     <h:panelGrid rowClasses="rowpanelgrid" styleClass="panelgrid" columns="3" columnClasses="col-sm-3,col-sm-8,col-lg-1">  
         <h:outputLabel value="#{msg['lbl.nombres']}:" for="nombres" />
-        <p:inputText id="nombres" value="#{usuarioCRUDDM.usuario.nombres}" title="#{msg['lbl.nombres']}" required="true" 
+        <p:inputText id="nombres" onkeyup="this.value=this.value.toUpperCase()" value="#{usuarioCRUDDM.usuario.nombres}" title="#{msg['lbl.nombres']}" required="true" 
                      requiredMessage="#{msg['lbl.nombres']} #{msg['lbl.obligatorio']}.">
             <p:ajax event="change" update="@this,:contenido:msm"/>
         </p:inputText>
         <p:message id="msmNombres" for="nombres" display="icon"/>
         <h:outputLabel value="#{msg['lbl.apellidos']}:"  />
-        <p:inputText id="apellidos" value="#{usuarioCRUDDM.usuario.apellidos}" title="#{msg['lbl.apellidos']}" required="true" 
+        <p:inputText id="apellidos" onkeyup="this.value=this.value.toUpperCase()" value="#{usuarioCRUDDM.usuario.apellidos}" title="#{msg['lbl.apellidos']}" required="true" 
                      requiredMessage="#{msg['lbl.apellidos']} #{msg['lbl.obligatorio']}.">
             <p:ajax event="change" update="@this,:contenido:msm"/>
         </p:inputText>

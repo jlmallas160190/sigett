@@ -220,7 +220,7 @@ public class EstudianteCarreraController implements Serializable {
                         aspiranteService.buscarPorId(estudianteCarrera.getId()));
                 sessionEstudianteCarrera.getEstudiantesCarreraDTO().add(estudianteCarreraDTO);
             }
-            sessionEstudianteCarrera.setFilterEstudiantesCarreraDTO(sessionEstudianteCarrera.getEstudiantesCarreraDTO());
+            sessionEstudianteCarrera.getFilterEstudiantesCarreraDTO().addAll(sessionEstudianteCarrera.getEstudiantesCarreraDTO());
         } catch (Exception e) {
         }
     }

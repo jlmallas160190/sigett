@@ -112,7 +112,7 @@ public class ProyectoOntServiceImplement extends AbstractSigettLUD implements Pr
                 sparql.append("|| regex(?estadoProyecto,'").append(proyectoOntDTO.getEstado()).append("','i')");
             }
             if (proyectoOntDTO.getDocente() != null) {
-                sparql.append("|| regex(?datosDocente,'").append(proyectoOntDTO.getDocente()).append("','i')");
+                sparql.append("|| regex(?datosDirector,'").append(proyectoOntDTO.getDocente()).append("','i')");
             }
             if (proyectoOntDTO.getLineaInvestigacion() != null) {
                 sparql.append("|| regex(?nombreLineaInvestigacion,'").append(proyectoOntDTO.getLineaInvestigacion()).append("','i')");

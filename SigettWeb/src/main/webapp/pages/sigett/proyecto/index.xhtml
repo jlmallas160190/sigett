@@ -14,7 +14,7 @@
                   <ui:include src="tablaCarrerasFilter.xhtml"/>
             </ui:define>
             <ui:define name="content">
-                <p:messages id="msm"/>
+                <p:growl id="msm"/>
                 <p:panel id="pnlProyectos" header="#{lbl.proyectos_carrera} #{sessionProyecto.carreraSeleccionada.nombre}" toggleable="true">
                     <ui:include src="tablaProyectos.xhtml"/>
                     <f:facet name="footer">
