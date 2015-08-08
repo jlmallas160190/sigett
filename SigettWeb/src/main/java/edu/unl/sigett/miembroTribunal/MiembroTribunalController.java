@@ -579,7 +579,7 @@ public class MiembroTribunalController implements Serializable {
      * CREAR EVENTO PARA LOS MIEMBROS DE TRIBUANAL
      */
     private void grabarEventosDirector() {
-        Item tipoEvento = itemService.buscarPorCatalogoCodigo(CatalogoEnum.CATALOGOEVENTO.getTipo(), EventoEnum.MIEMBROTRIBUNAL.getTipo());
+        Item tipoEvento = itemService.buscarPorCatalogoCodigo(CatalogoEnum.CATALOGOEVENTO.getTipo(), EventoEnum.SUSTENTACIONPRIVADA.getTipo());
         for (EvaluacionTribunal evaluacionTribunal : sessionEvaluacionTribunal.getEvaluacionesTribunal()) {
             if (!evaluacionTribunal.getEsActivo()) {
                 continue;

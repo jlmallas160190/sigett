@@ -158,6 +158,7 @@ public class EvaluacionTribunalController implements Serializable {
             }
             cabeceraController.getMessageView().message(FacesMessage.SEVERITY_ERROR, bundle.getString("denegado_crear"), "");
         } catch (Exception e) {
+            System.out.println(e);
         }
     }
 
@@ -232,7 +233,11 @@ public class EvaluacionTribunalController implements Serializable {
      * CREAR EVENTO PARA LOS MIEMBROS DE TRIBUANAL
      */
     private void grabarEventosDirector() {
-        Item tipoEvento = itemService.buscarPorCatalogoCodigo(CatalogoEnum.CATALOGOEVENTO.getTipo(), EventoEnum.MIEMBROTRIBUNAL.getTipo());
+        Item tipoEvento = itemService.buscarPorCatalogoCodigo(CatalogoEnum.CATALOGOEVENTO.getTipo(), EventoEnum.SUSTENTACIONPRIVADA.getTipo());
+        if (sessionProyecto.getEstadoActual().getCodigo().equals(EstadoProyectoEnum.SUSTENTACIONPUBLICA.getTipo())
+                    || sessionProyecto.getEstadoActual().getCodigo().equals(EstadoProyectoEnum.RECUPERACIONPUBLICA.getTipo())) {
+            tipoEvento=itemService.buscarPorCatalogoCodigo(CatalogoEnum.CATALOGOEVENTO.getTipo(), EventoEnum.SUSTENTACIONPUBLICA.getTipo());
+        }
         for (MiembroTribunalDTO miembroTribunalDTO : sessionMiembroTribunal.getMiembrosTribunalDTO()) {
             if (!miembroTribunalDTO.getMiembroTribunal().getEsActivo()) {
                 continue;

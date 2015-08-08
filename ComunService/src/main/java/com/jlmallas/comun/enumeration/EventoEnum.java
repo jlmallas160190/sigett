@@ -12,7 +12,8 @@ package com.jlmallas.comun.enumeration;
 public enum EventoEnum {
 
     ACTIVIDAD("ACTIVIDAD"),
-    MIEMBROTRIBUNAL("MIEMBRO_TRIBUNAL");
+    SUSTENTACIONPUBLICA("SUSTENTACION_PUBLICA"),
+    SUSTENTACIONPRIVADA("SUSTENTACION_PRIVADA");
     String tipo;
 
     private EventoEnum(String tipo) {

@@ -38,7 +38,6 @@ public class RangoNota implements Serializable {
     @Column(name = "id")
     private Integer id;
     @Basic(optional = false)
-    @NotNull
     @Size(min = 1, max = 250)
     @Column(name = "codigo")
     private String codigo;

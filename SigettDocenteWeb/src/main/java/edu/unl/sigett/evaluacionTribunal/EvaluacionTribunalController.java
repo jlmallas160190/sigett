@@ -6,16 +6,11 @@
 package edu.unl.sigett.evaluacionTribunal;
 
 import com.jlmallas.comun.service.ItemService;
-import com.jlmallas.comun.service.PersonaService;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 import com.ocpsoft.pretty.faces.annotation.URLMappings;
-import edu.jlmallas.academico.service.DocenteService;
 import edu.unl.sigett.docenteUsuario.DocenteUsuarioDM;
 import edu.unl.sigett.entity.EvaluacionTribunal;
 import edu.unl.sigett.entity.MiembroTribunal;
-import edu.unl.sigett.entity.Tribunal;
-import edu.unl.sigett.miembroTribunal.MiembroTribunalDTO;
-import edu.unl.sigett.service.EvaluacionTribunalService;
 import edu.unl.sigett.service.MiembroTribunalService;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;

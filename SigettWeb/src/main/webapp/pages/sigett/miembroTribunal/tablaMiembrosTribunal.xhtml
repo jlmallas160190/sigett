@@ -47,7 +47,7 @@
                         <p:commandButton onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide(),PF('dlgOficioMiembroTribunal').show()" icon="ui-icon-print"
                                          update=":contenido:msm,:contenido:pnlOficioMiembroTribunal" 
                                          rendered="#{item.miembroTribunal.id!=null}" value="#{msg['lbl.oficio']}"
-                                         action="#{miembroTribunalController.imprimirOficioPrivada()}"/>
+                                         action="#{miembroTribunalController.imprimirOficioPrivada(item)}"/>
                     </p:column>
                     <p:column rendered="#{sessionMiembroTribunal.renderedEliminar}">
                         <f:facet name="header">

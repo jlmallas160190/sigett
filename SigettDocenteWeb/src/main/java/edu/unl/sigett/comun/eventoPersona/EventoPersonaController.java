@@ -7,11 +7,13 @@ package edu.unl.sigett.comun.eventoPersona;
 
 import com.jlmallas.comun.entity.EventoPersona;
 import com.jlmallas.comun.entity.Item;
+import com.jlmallas.comun.entity.Persona;
 import com.jlmallas.comun.enumeration.CatalogoEnum;
 import com.jlmallas.comun.enumeration.EventoEnum;
 import com.jlmallas.comun.service.EventoPersonaService;
 import com.jlmallas.comun.service.EventoService;
 import com.jlmallas.comun.service.ItemService;
+import com.jlmallas.comun.service.PersonaService;
 import edu.jlmallas.academico.entity.DocenteCarrera;
 import edu.jlmallas.academico.service.DocenteCarreraService;
 import edu.unl.sigett.director.DirectorDTO;
@@ -77,6 +79,8 @@ public class EventoPersonaController implements Serializable {
     private DocenteCarreraService docenteCarreraService;
     @EJB(lookup = "java:global/SigettService/EvaluacionTribunalServiceImplement!edu.unl.sigett.service.EvaluacionTribunalService")
     private EvaluacionTribunalService evaluacionTribunalService;
+    @EJB(lookup = "java:global/ComunService/PersonaServiceImplement!com.jlmallas.comun.service.PersonaService")
+    private PersonaService personaService;
 
     //</editor-fold>
     public EventoPersonaController() {
@@ -168,10 +172,12 @@ public class EventoPersonaController implements Serializable {
             }
             DirectorProyectoDTO directorProyectoDTO = new DirectorProyectoDTO(directorProyecto, new DirectorDTO(directorProyecto.getDirectorId(),
                     docenteCarreraService.buscarPorId(new DocenteCarrera(directorProyecto.getDirectorId().getId())), null));
+             directorProyectoDTO.getDirectorDTO().setPersona(personaService.buscarPorId(
+                    new Persona(directorProyectoDTO.getDirectorDTO().getDocenteCarrera().getDocenteId().getId())));
             sessionDirectorProyecto.setDirectorProyectoDTO(directorProyectoDTO);
             return "pretty:editarDirectorProyecto";
         }
-        if (catalogo.getCodigo().equals(EventoEnum.MIEMBROTRIBUNAL.getTipo())) {
+        if (catalogo.getCodigo().equals(EventoEnum.SUSTENTACIONPRIVADA.getTipo())) {
             EvaluacionTribunal evaluacionTribunal = evaluacionTribunalService.buscarPorId(
                     new EvaluacionTribunal(sessionEventoPersona.getEventoPersona().getEvento().getTablaId()));
             if (evaluacionTribunal != null) {

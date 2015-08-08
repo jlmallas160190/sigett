@@ -52,8 +52,7 @@ public class Documento implements Serializable {
     @Column(name = "fecha_creacion")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaCreacion;
-        @Basic(optional = false)
-    @NotNull
+    @Basic(optional = false)
     @Column(name = "tabla_id")
     private Long tablaId;
     @Transient
@@ -68,7 +67,7 @@ public class Documento implements Serializable {
         this.id = id;
     }
 
-    public Documento(Long id, String ruta, Long catalogoId, Double tamanio, Date fechaCreacion, byte[] contents, String catalogo, String tipo,Long tablaId) {
+    public Documento(Long id, String ruta, Long catalogoId, Double tamanio, Date fechaCreacion, byte[] contents, String catalogo, String tipo, Long tablaId) {
         this.id = id;
         this.contents = contents;
         this.fechaCreacion = fechaCreacion;
@@ -77,7 +76,7 @@ public class Documento implements Serializable {
         this.catalogoId = catalogoId;
         this.catalogo = catalogo;
         this.tipo = tipo;
-        this.tablaId=tablaId;
+        this.tablaId = tablaId;
     }
 
     public Long getId() {
