@@ -4106,7 +4106,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 }
 .navbar-default .navbar-nav > li > a:hover,
 .navbar-default .navbar-nav > li > a:focus {
-    color: #333;
+    color: #eee;
     background-color: transparent;
 }
 .navbar-default .navbar-nav > .active > a,
@@ -4185,6 +4185,7 @@ fieldset[disabled] .navbar-default .btn-link:focus {
 .navbar-inverse {
     background-color: #222;
     border-color: #080808;
+
 }
 .navbar-inverse .navbar-brand {
     color: #777;

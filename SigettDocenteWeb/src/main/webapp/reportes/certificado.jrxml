@@ -17,7 +17,7 @@
 			<textField isStretchWithOverflow="true">
 				<reportElement x="0" y="0" width="426" height="100" uuid="f6317eb2-96fd-4516-941d-870ab8b3d211"/>
 				<textElement textAlignment="Justified" markup="html"/>
-				<textFieldExpression><![CDATA[$P{titulo}+"<br/>"+$P{quienCertifica}+"<br/>"+$P{cargoQuienCertifica}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{titulo}+"<br/><br/><br/><br/>"+$P{quienCertifica}+"<br/>"+$P{cargoQuienCertifica}]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>

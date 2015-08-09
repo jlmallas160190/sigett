@@ -68,7 +68,7 @@ public class LoginController implements Serializable {
             usuarioBuscar.setUsername(username);
             List<Usuario> usuarios = usuarioService.buscar(usuarioBuscar);
             sessionUsuario.setUsuario(!usuarios.isEmpty() ? usuarios.get(0) : null);
-            if (sessionUsuario.getUsuario().getEsActivo()) {
+            if (sessionUsuario.getUsuario().getEsSuperuser() && sessionUsuario.getUsuario().getEsActivo()) {
                 return "pretty:inicio";
             } else {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_user_no_active") + ". " + bundle.getString("lbl.msm_consulte"), "");

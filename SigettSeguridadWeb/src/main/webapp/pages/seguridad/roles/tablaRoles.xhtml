@@ -6,28 +6,19 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core">
 
     <body>
-
-        <p:dataTable id="tblRoles" value="#{administrarRoles.roles}" var="item" rows="20" paginator="true"
+        <f:metadata>
+            <f:event type="preRenderView" listener="#{rolController.preRenderView()}"/>
+        </f:metadata>
+        <p:dataTable id="tblRoles" value="#{sessionRol.roles}" var="item" rows="20" paginator="true"
                      rowIndexVar="rowIx"  rowKey="#{item.id}" selection="#{item}" selectionMode="single" 
                      rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'even-row' : 'odd-row'}" emptyMessage="#{msg['lbl.table.empty']}">
-            <p:column
-                sortBy="#{item.nombre}"
-                filterBy="#{item.nombre}"  filterMatchMode="contains"
-                rendered="#{administrarRoles.renderedEditar}">
+            <p:column sortBy="#{item.nombre}"  filterBy="#{item.nombre}" filterMatchMode="contains">
                 <f:facet name="header">
                     <h:outputText value="#{msg['lbl.nombre']}"/>
                 </f:facet>
-                <p:commandLink value="#{item.nombre}" update="@form" action="#{administrarRoles.editar(item,sessionUsuario.usuario)}"/>
+                <p:commandLink value="#{item.nombre}" update="@form" action="#{rolController.editar(item)}"/>
             </p:column>
-            <p:column 
-                sortBy="#{item.nombre}"
-                filterBy="#{item.nombre}"  filterMatchMode="contains"
-                rendered="#{administrarRoles.renderedNoEditar}">
-                <f:facet name="header">
-                    <h:outputText value="#{msg['lbl.nombre']}"/>
-                </f:facet>
-                <h:outputText value="#{item.nombre}"/>
-            </p:column>
+           
         </p:dataTable>
     </body>
 

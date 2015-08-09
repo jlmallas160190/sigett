@@ -20,7 +20,7 @@
                 <p:panel>
                     <f:facet name="header">
                         <h:panelGrid>
-                            <p:commandButton  value="#{msg['lbl.historial']}" update="@form" icon="ui-icon-document-w" action="#{administrarLogs.historico('Area', sessionArea.area.id)}"/>
+                            <p:commandButton  value="#{msg['lbl.historial']}" update="@form" icon="ui-icon-document-w" action="#{logController.historico('Area', sessionArea.area.id)}"/>
                         </h:panelGrid>
                     </f:facet>
                     <p:panel header="#{msg['lbl.editar']} #{msg['lbl.area']}" toggleable="true">

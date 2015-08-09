@@ -43,6 +43,8 @@ public class SelectItemsController implements Serializable {
     }
 
     private void listadoOfertasAcademicas() {
+        sessionSelectItems.getOfertaAcademicas().clear();
+        sessionSelectItems.getFilterOfertaAcademicas().clear();
         List<OfertaAcademica> ofertaAcademicas = ofertaAcademicaService.buscar(new OfertaAcademica());
         for (OfertaAcademica ofertaAcademica : ofertaAcademicas) {
             PeriodoAcademico periodoAcademico = ofertaAcademica.getPeriodoAcademicoId();
@@ -54,6 +56,7 @@ public class SelectItemsController implements Serializable {
     }
 
     private void listadoPeriodosAcademicos() {
+        sessionSelectItems.getPeriodoAcademicos().clear();
         List<PeriodoAcademico> periodoAcademicos = periodoAcademicoService.buscarPorCriterio(new PeriodoAcademico());
         for (PeriodoAcademico periodoAcademico : periodoAcademicos) {
             periodoAcademico.setNombre(cabeceraController.getUtilService().formatoFecha(periodoAcademico.getFechaInicio(), "MMMM/yyyy/dd") + " - "

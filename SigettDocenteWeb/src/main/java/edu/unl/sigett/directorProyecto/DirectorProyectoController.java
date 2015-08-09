@@ -220,7 +220,7 @@ public class DirectorProyectoController implements Serializable {
         Item item = itemService.buscarPorCatalogoCodigo(CatalogoEnum.CATALOGODOCUMENTOPROYECTO.getTipo(),
                 CatalogoDocumentoProyectoEnum.CERTIFICACIONDIRECTOR.getTipo());
         this.sessionDirectorProyecto.setRenderedMediaCertificado(Boolean.TRUE);
-        Documento documentoBuscar = documentoService.buscarPorCatalogo(new Documento(null, null, item.getId(), null, null, null, null, null,sessionDirectorProyecto.getDirectorProyectoDTO().getDirectorProyecto().getProyectoId().getId()));
+        Documento documentoBuscar = documentoService.buscarPorCatalogo(new Documento(null, null, item.getId(), null, null, null, null, null, sessionDirectorProyecto.getDirectorProyectoDTO().getDirectorProyecto().getProyectoId().getId()));
         if (documentoBuscar == null) {
             generarCertificado();
             return;
@@ -256,9 +256,9 @@ public class DirectorProyectoController implements Serializable {
         Calendar fechaActual = Calendar.getInstance();
         byte[] resultado = reporteController.certificado(new CertificadoReporte(rutaReporte, carrera.getLugar(), cabeceraController.getUtilService().formatoFecha(
                 fechaActual.getTime(), "EEEEE dd MMMMM yyyy"), cabeceraController.getValueFromProperties(
-                        PropertiesFileEnum.CONTENIDOREPORTE, "docente_carrera") + " " + carrera.getNombreTitulo(), sessionDirectorProyecto.getDirectorProyectoDTO().getDirectorDTO().getDocenteCarrera().
+                        PropertiesFileEnum.CONTENIDOREPORTE, "director_tt") + " " + carrera.getNombre(), sessionDirectorProyecto.getDirectorProyectoDTO().getDirectorDTO().getDocenteCarrera().
                 getDocenteId().getTituloDocenteId().getTituloId().getAbreviacion() + " "
-                + sessionDirectorProyecto.getDirectorProyectoDTO().getDirectorDTO().getPersona(), cuerpoCertificado(carrera), cabeceraController.getValueFromProperties(
+                + sessionDirectorProyecto.getDirectorProyectoDTO().getDirectorDTO().getPersona(), cuerpoCertificado(), cabeceraController.getValueFromProperties(
                         PropertiesFileEnum.CONTENIDOREPORTE, "certificado_titulo")));
         if (resultado == null) {
             return;
@@ -266,7 +266,7 @@ public class DirectorProyectoController implements Serializable {
         String ruta = configuracionService.buscar(new Configuracion(ConfiguracionEnum.RUTADOCUMENTOPROYECTO.getTipo())).get(0).getValor()
                 + "/certificado_" + sessionDirectorProyecto.getDirectorProyectoDTO().getDirectorProyecto().getId() + ".pdf";
         Documento documento = new Documento(null, ruta, itemService.buscarPorCatalogoCodigo(CatalogoEnum.CATALOGODOCUMENTOPROYECTO.getTipo(),
-                CatalogoDocumentoProyectoEnum.CERTIFICACIONDIRECTOR.getTipo()).getId(), Double.parseDouble(resultado.length + ""), fechaActual.getTime(), resultado, null, "pdf",null);
+                CatalogoDocumentoProyectoEnum.CERTIFICACIONDIRECTOR.getTipo()).getId(), Double.parseDouble(resultado.length + ""), fechaActual.getTime(), resultado, null, "pdf", null);
         documento.setTablaId(sessionDirectorProyecto.getDirectorProyectoDTO().getDirectorProyecto().getProyectoId().getId());
         documentoService.guardar(documento);
         sessionDirectorProyecto.setCerticadoDirector(new DocumentoProyectoDTO(
@@ -283,14 +283,13 @@ public class DirectorProyectoController implements Serializable {
      * @param pertinencia
      * @return
      */
-    private String cuerpoCertificado(final Carrera carrera) {
-        return (cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "certificado_cuerpo_a") + "<br/>" + cabeceraController
-                .getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "certificado_cuerpo_b") + " " + carrera.getNombreTitulo() + " " + cabeceraController.
+    private String cuerpoCertificado() {
+        return (cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "certificado_cuerpo_a").toUpperCase() + "<br/><br/>" + cabeceraController
+                .getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "certificado_cuerpo_b") + " " + autores(sessionDirectorProyecto.getDirectorProyectoDTO()
+                        .getDirectorProyecto().getProyectoId()).toUpperCase() + " " + cabeceraController.
                 getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "certificado_cuerpo_c") + ": <b> " + sessionDirectorProyecto.
-                getDirectorProyectoDTO().getDirectorProyecto().getProyectoId().getTemaActual() + "<b/> " + cabeceraController.getValueFromProperties(
-                        PropertiesFileEnum.CONTENIDOREPORTE, "certificado_cuerpo_d") + " "
-                + autores(sessionDirectorProyecto.getDirectorProyectoDTO().getDirectorProyecto().getProyectoId()).toUpperCase() + ". " + cabeceraController.getValueFromProperties(
-                        PropertiesFileEnum.CONTENIDOREPORTE, "certificado_cuerpo_e"));
+                getDirectorProyectoDTO().getDirectorProyecto().getProyectoId().getTemaActual() + "</b> " + cabeceraController.getValueFromProperties(
+                        PropertiesFileEnum.CONTENIDOREPORTE, "certificado_cuerpo_d"));
     }
 
     public void cancelarFinalizacion() {

@@ -406,24 +406,26 @@ input[disabled="disabled"], select[disabled="disabled"], textarea[disabled="disa
 .ui-paginator-first,
 .ui-paginator-prev,
 .ui-paginator-current {
-    background: #eee !important;
-    padding: 4px 4px;
-    color: #fff!important;
-    margin-left: 1px;
-    margin-right: 1px;
-    text-decoration: none;
-    outline: none;
+        display: inline-block;
+        padding: 2px 6px;
+        zoom: 1;
+        margin-left: 1px;
+        margin-right: 1px;
+        text-decoration: none;
+        outline: none;
 }
+
 .ui-paginator-page,
 .ui-paginator-pages,
 .ui-paginator-next,
 .ui-paginator-last,
 .ui-paginator-first,
 .ui-paginator-prev,
-.ui-paginator-current:active {
-    background: transparent!important;
-    border:  transparent !important;
+.ui-paginator-current {
+   cursor: pointer;
+
 }
+
 .ui-paginator-rowperpagestemplates {
     *padding-bottom: 0px;
     background: #eee !important;
@@ -493,12 +495,6 @@ button.ui-button-icons-only {
     border:1px solid #eee !important;
 }
 
-.ui-datatable thead th:first-letter{
-    text-transform: uppercase;
-}
-.ui-datatable thead th{
-    text-transform: lowercase; 
-}
 .ui-datatable .ui-datatable-header,
 .ui-datatable .ui-datatable-footer {
     text-align: justify;
@@ -528,11 +524,8 @@ button.ui-button-icons-only {
     -webkit-appearance: none;
 }
 
-.ui-datatable tbody td:first-letter {
-    text-transform: uppercase;
-}
-.ui-datatable tbody td {
-    text-transform: lowercase;
+.ui-datatable tbody td{
+    text-transform:capitalize;
 }
 .ui-datatable .ui-sortable-column {
     cursor: pointer;

@@ -8,18 +8,13 @@
         <h:panelGrid styleClass="pnl-botones"  columns="3">
             <p:commandButton id="guardar" value="#{msg['lbl.grabar']}" icon="ui-icon-disk" onstart="PF('dlgLoading').show()" 
                              oncomplete="PF('dlgLoading').hide()" update="@form" 
-                             action="#{administrarRoles.guardar(sessionRol.rol,sessionUsuario.usuario)}">
+                             action="#{rolController.guardar(sessionRol.rol)}">
                 <f:param name="1" value="guardar" />
             </p:commandButton>
             <p:commandButton value="#{msg['lbl.grabar']} #{msg['lbl.editar']}" icon="ui-icon-disk" onstart="PF('dlgLoading').show()" 
                              oncomplete="PF('dlgLoading').hide()" update="@form" 
-                             action="#{administrarRoles.guardar(sessionRol.rol,sessionUsuario.usuario)}">
+                             action="#{rolController.guardar(sessionRol.rol)}">
                 <f:param name="1" value="guardar-editar" />
-            </p:commandButton>
-            <p:commandButton id="guardarCrear" icon="ui-icon-disk" onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" 
-                             value="#{msg['lbl.grabar']} #{msg['lbl.agregar']} #{msg['lbl.otro']}" update="@form" 
-                             action="#{administrarRoles.guardar(sessionRol.rol,sessionUsuario.usuario)}">
-                <f:param name="1" value="guardarCrear" />
             </p:commandButton>
         </h:panelGrid>
     </body>

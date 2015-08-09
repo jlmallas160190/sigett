@@ -421,7 +421,7 @@ input[disabled="disabled"], select[disabled="disabled"], textarea[disabled="disa
 .ui-paginator-first,
 .ui-paginator-prev,
 .ui-paginator-current:active {
-    background: transparent!important;
+    background: blue!important;
     border:  transparent !important;
 }
 .ui-paginator-rowperpagestemplates {
@@ -432,6 +432,7 @@ input[disabled="disabled"], select[disabled="disabled"], textarea[disabled="disa
 .ui-paginator-jtp-select option,
 .ui-paginator-rpp-options option {
     background-image: none;
+    background: #003399!important
     border:0 none;
     box-shadow:none;
     -moz-box-shadow: none;
@@ -3811,6 +3812,12 @@ table.fc-border-separate {
     margin-top: -0.1em;
     float:left;
 }
-
+.navbar-bottom {
+min-height: 300px;
+margin-top: 100px;
+background-color: #28364f;
+padding-top: 35px;
+color:#FFFFFF;
+}
 
 

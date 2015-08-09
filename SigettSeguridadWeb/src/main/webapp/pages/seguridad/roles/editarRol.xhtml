@@ -9,19 +9,19 @@
 
     <body>
 
-        <ui:composition template="./../../../template.xhtml">
+        <ui:composition template="./../../template.xhtml">
             <ui:define name="title">#{msg['lbl.editar']} #{msg['lbl.rol']}</ui:define>
             <ui:define name="top">
-                <ui:include src="./../../admin/menu.xhtml"/>
+                <ui:include src="./../../inicio/menu.xhtml"/>
             </ui:define>
             <ui:define name="left">
-                <ui:include src="./../../admin/menuIzquierdo.xhtml"/>
+                <ui:include src="./../../inicio/menuIzquierdo.xhtml"/>
             </ui:define>
             <ui:define name="content">
                 <p:panel>
                     <f:facet name="header">
                         <h:panelGrid styleClass="pnl-botones">
-                            <p:commandButton value="#{msg['lbl.historial']}" icon="ui-icon-document-w" update="@form" action="#{administrarLogs.historico('Rol', sessionRol.rol.id)}"/>
+                            <p:commandButton value="#{msg['lbl.historial']}" icon="ui-icon-document-w" update="@form" action="#{logController.historico('Rol', sessionRol.rol.id)}"/>
                         </h:panelGrid>
                     </f:facet>
                     <p:growl id="msm"/>

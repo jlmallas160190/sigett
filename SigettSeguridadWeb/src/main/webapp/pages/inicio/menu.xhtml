@@ -19,7 +19,7 @@
             <!--<p:menuitem value="#{msg['lbl.configuraciones']}" icon="ui-icon-wrench"  ajax="false" action="pretty:configuraciones"/>-->
             <p:submenu icon="ui-icon-key" label="#{msg['lbl.seguridad']}" >
                 <p:menuitem  value="#{msg['lbl.usuarios']}" icon="ui-icon-user" ajax="false" action="#{usuarioController.abrirBuscarUsuarios(usuarioDM.usuario)}"/>
-                <!--<p:menuitem value="#{msg['lbl.roles']}" ajax="false" icon="ui-icon-rol"  action="#{administrarRoles.abrirBuscarRoles(usuarioDM.usuario)}"/>-->
+             <p:menuitem value="#{msg['lbl.roles']}" icon="ui-icon-rol"  action="pretty:roles"/>
                 <!--<p:menuitem value="#{msg['lbl.logs']}" icon="ui-icon-document" ajax="false" action="pretty:buscarTodoLogs"/>-->
 
             </p:submenu>

@@ -9,7 +9,7 @@
 
     <body>
 
-        <ui:composition template="./../../../template.xhtml">
+        <ui:composition template="./../../template.xhtml">
             <ui:define name="top">
                 <ui:include src="./../../inicio/menu.xhtml"/>
             </ui:define>
@@ -17,7 +17,7 @@
             <ui:define name="content">
                 <p:messages id="msm"/>
                 <h:panelGrid styleClass="pnl-botones">
-                    <p:commandButton value="#{msg['lbl.historial']}" update="@form" icon="ui-icon-document-w" action="#{administrarLogs.historico('Carrera', sessionCarrera.carrera.id)}"/>
+                    <p:commandButton value="#{msg['lbl.historial']}" update="@form" icon="ui-icon-document-w" action="#{logController.historico('Carrera', sessionCarrera.carrera.id)}"/>
                 </h:panelGrid>
                 <br/>
                 <p:panel header="#{msg['lbl.carrera']}">

@@ -20,7 +20,7 @@
             <ui:define name="content">
                 <p:messages id="msm"/>
                 <h:panelGrid styleClass="pnl-botones">
-                    <p:commandButton onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" value="#{msg['lbl.historial']}" icon="ui-icon-document-w" update="@form" action="#{administrarLogs.historico('OfertaAcademica', sessionOfertaAcademica.ofertaAcademica.id)}"/>
+                    <p:commandButton onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()" value="#{msg['lbl.historial']}" icon="ui-icon-document-w" update="@form" action="#{logController.historico('OfertaAcademica', sessionOfertaAcademica.ofertaAcademica.id)}"/>
                 </h:panelGrid>
                 <br/>
                 <p:panel toggleable="true" header="Editar Oferta Academica">

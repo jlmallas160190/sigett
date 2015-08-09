@@ -493,12 +493,10 @@ button.ui-button-icons-only {
     border:1px solid #eee !important;
 }
 
-.ui-datatable thead th:first-letter{
-    text-transform: uppercase;
-}
 .ui-datatable thead th{
-    text-transform: lowercase; 
+    text-transform: none;
 }
+
 .ui-datatable .ui-datatable-header,
 .ui-datatable .ui-datatable-footer {
     text-align: justify;
@@ -528,11 +526,8 @@ button.ui-button-icons-only {
     -webkit-appearance: none;
 }
 
-.ui-datatable tbody td:first-letter {
-    text-transform: uppercase;
-}
 .ui-datatable tbody td {
-    text-transform: lowercase;
+    text-transform: capitalize;
 }
 .ui-datatable .ui-sortable-column {
     cursor: pointer;

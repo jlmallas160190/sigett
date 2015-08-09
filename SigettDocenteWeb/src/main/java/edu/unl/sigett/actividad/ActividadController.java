@@ -14,6 +14,11 @@ import com.jlmallas.comun.enumeration.ValorEnum;
 import com.jlmallas.comun.service.ConfiguracionService;
 import com.jlmallas.comun.service.DocumentoService;
 import com.jlmallas.comun.service.ItemService;
+import com.lowagie.text.Chunk;
+import com.lowagie.text.Document;
+import com.lowagie.text.FontFactory;
+import com.lowagie.text.PageSize;
+import com.lowagie.text.Paragraph;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 import com.ocpsoft.pretty.faces.annotation.URLMappings;
 import edu.unl.sigett.directorProyecto.SessionDirectorProyecto;
@@ -337,6 +342,16 @@ public class ActividadController implements Serializable {
             revisionService.actualizar(revisionActividad.getRevision());
             revisionActividadService.actualizar(revisionActividad);
         }
+    }
+
+    public void preProcessPDFAsesorias(Object document) {
+        final Document pdf = (Document) document;
+        pdf.setPageSize(PageSize.A4.rotate());
+        pdf.open();
+         Paragraph encabezado = new Paragraph();
+            Chunk text = new Chunk("UNIVERSIDAD NACIONAL DE LOJA",
+                FontFactory.getFont(FontFactory.TIMES_ROMAN, 16));
+           encabezado.add(text);
     }
     //</editor-fold>
 }

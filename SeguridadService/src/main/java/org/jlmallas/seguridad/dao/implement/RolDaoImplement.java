@@ -26,7 +26,7 @@ public class RolDaoImplement extends AbstractDao<Rol> implements RolDao {
     }
 
     @Override
-    public List<Rol> buscarPorCriterio(Rol rol) {
+    public List<Rol> buscar(final Rol rol) {
         StringBuilder sql = new StringBuilder();
         HashMap<String, Object> parametros = new HashMap<>();
         sql.append("Select r from Rol r where 1=1 ");

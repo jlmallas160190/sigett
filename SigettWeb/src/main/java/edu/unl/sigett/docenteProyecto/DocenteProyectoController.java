@@ -101,9 +101,13 @@ public class DocenteProyectoController implements Serializable {
             sessionDocenteProyecto.setDocenteProyectoDTO(docenteProyectoDTO);
             Item item = itemService.buscarPorCatalogoCodigo(CatalogoEnum.CATALOGOOFICIO.getTipo(),
                     CatalogoDocumentoCarreraEnum.PERTINENCIA.getTipo());
-            Documento documentoBuscar = documentoService.buscarPorCatalogo(new Documento(null, null, item.getId(), null, null, null, null, null,docenteProyectoDTO.getDocenteProyecto().getId()));
+            Documento documentoBuscar = documentoService.buscarPorCatalogo(new Documento(null, null, item.getId(), null, null, null, null, null, docenteProyectoDTO.getDocenteProyecto().getId()));
+            if (documentoBuscar == null) {
+                generarOficioPertinencia();
+                return;
+            }
             List<DocumentoCarrera> documentoCarreras = documentoCarreraService.buscar(new DocumentoCarrera(
-                    null, documentoBuscar != null ? documentoBuscar.getId() : null, Boolean.TRUE,sessionProyecto.getCarreraSeleccionada().getId()));
+                    null, documentoBuscar != null ? documentoBuscar.getId() : null, Boolean.TRUE, sessionProyecto.getCarreraSeleccionada().getId()));
             if (documentoCarreras == null) {
                 generarOficioPertinencia();
                 return;
@@ -162,7 +166,7 @@ public class DocenteProyectoController implements Serializable {
         Integer numeracionNext = Integer.parseInt(numeracion) + 1;
         String ruta = configuracionService.buscar(new Configuracion(ConfiguracionEnum.RUTAOFICIO.getTipo())).get(0).getValor() + "/oficio" + numeracionNext + ".pdf";
         Documento documento = new Documento(null, ruta, itemService.buscarPorCatalogoCodigo(CatalogoEnum.CATALOGOOFICIO.getTipo(),
-                CatalogoDocumentoCarreraEnum.PERTINENCIA.getTipo()).getId(), Double.parseDouble(resultado.length + ""), fechaActual.getTime(), resultado, null, "pdf",sessionDocenteProyecto.getDocenteProyectoDTO().getDocenteProyecto().getId());
+                CatalogoDocumentoCarreraEnum.PERTINENCIA.getTipo()).getId(), Double.parseDouble(resultado.length + ""), fechaActual.getTime(), resultado, null, "pdf", sessionDocenteProyecto.getDocenteProyectoDTO().getDocenteProyecto().getId());
         documentoService.guardar(documento);
         documentoCarreraDM.setDocumentoCarreraDTO(new DocumentoCarreraDTO(new DocumentoCarrera(
                 numeracionNext + "", documento.getId(), Boolean.TRUE, carrera.getId()), documento, carrera));

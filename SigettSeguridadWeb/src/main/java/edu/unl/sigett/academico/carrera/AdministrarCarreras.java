@@ -146,96 +146,85 @@ public class AdministrarCarreras implements Serializable {
                 carrera.setLogo(sessionCarrera.getContents());
             }
             if (carrera.getId() == null) {
-                int tienePermiso = usuarioService.tienePermiso(usuario, "crear_carrera");
-                if (tienePermiso == 1) {
-                    carreraService.create(carrera);
-                    logFacadeLocal.create(logFacadeLocal.crearLog("Carrera", carrera.getId() + "", "CREAR", "|Nombre=" + carrera.getNombre() + "|IdSga="
-                            + carrera.getIdSga() + "|Área=" + carrera.getAreaId().getId(), usuario));
-                    ConfiguracionCarrera configuracionCarrera1 = new ConfiguracionCarrera(null,
-                            "Número de Módulo Aprobado por el estudiante para ser Apto a realizar un trabajo de titulación", "1", "MA", carrera.getId(), "MA",
-                            TipoConfiguracionEnum.NUMERICO.getTipo());
-                    configuracionCarreraService.guardar(configuracionCarrera1);
+                carreraService.create(carrera);
+                logFacadeLocal.create(logFacadeLocal.crearLog("Carrera", carrera.getId() + "", "CREAR", "|Nombre=" + carrera.getNombre() + "|IdSga="
+                        + carrera.getIdSga() + "|Área=" + carrera.getAreaId().getId(), usuario));
+                ConfiguracionCarrera configuracionCarrera1 = new ConfiguracionCarrera(null,
+                        "Número de Módulo Aprobado por el estudiante para ser Apto a realizar un trabajo de titulación", "1", "MA", carrera.getId(), "MA",
+                        TipoConfiguracionEnum.NUMERICO.getTipo());
+                configuracionCarreraService.guardar(configuracionCarrera1);
 
-                    ConfiguracionCarrera configuracionCarrera3 = new ConfiguracionCarrera(null,
-                            "Número de Oficio", "1", "NO", carrera.getId(), "NO", TipoConfiguracionEnum.NUMERICO.getTipo());
-                    configuracionCarreraService.guardar(configuracionCarrera3);
+                ConfiguracionCarrera configuracionCarrera3 = new ConfiguracionCarrera(null,
+                        "Número de Oficio", "1", "NO", carrera.getId(), "NO", TipoConfiguracionEnum.NUMERICO.getTipo());
+                configuracionCarreraService.guardar(configuracionCarrera3);
 
-                    ConfiguracionCarrera configuracionCarrera2 = new ConfiguracionCarrera(null,
-                            "Número de Módulo para ser egresado", "1", "ME", carrera.getId(), "ME", TipoConfiguracionEnum.NUMERICO.getTipo());
-                    configuracionCarreraService.guardar(configuracionCarrera2);
-                    ConfiguracionCarrera configuracionCarrera = new ConfiguracionCarrera(null,
-                            "Id de oferta académica", "S/N", "OA", carrera.getId(), "OA", TipoConfiguracionEnum.BOTON.getTipo());
-                    configuracionCarreraService.guardar(configuracionCarrera);
+                ConfiguracionCarrera configuracionCarrera2 = new ConfiguracionCarrera(null,
+                        "Número de Módulo para ser egresado", "1", "ME", carrera.getId(), "ME", TipoConfiguracionEnum.NUMERICO.getTipo());
+                configuracionCarreraService.guardar(configuracionCarrera2);
+                ConfiguracionCarrera configuracionCarrera = new ConfiguracionCarrera(null,
+                        "Id de oferta académica", "S/N", "OA", carrera.getId(), "OA", TipoConfiguracionEnum.BOTON.getTipo());
+                configuracionCarreraService.guardar(configuracionCarrera);
 
-                    ConfiguracionCarrera configuracionCarrera4 = new ConfiguracionCarrera(null,
-                            "Número de acta", "1", "NA", carrera.getId(), "NA", TipoConfiguracionEnum.NUMERICO.getTipo());
-                    configuracionCarreraService.guardar(configuracionCarrera4);
-                    if (param.equalsIgnoreCase("grabar")) {
-                        carrera = new Carrera();
-                        navegacion = "pretty:editarArea";
+                ConfiguracionCarrera configuracionCarrera4 = new ConfiguracionCarrera(null,
+                        "Número de acta", "1", "NA", carrera.getId(), "NA", TipoConfiguracionEnum.NUMERICO.getTipo());
+                configuracionCarreraService.guardar(configuracionCarrera4);
+                if (param.equalsIgnoreCase("grabar")) {
+                    carrera = new Carrera();
+                    navegacion = "pretty:editarArea";
+                } else {
+                    if (param.equalsIgnoreCase("grabar-editar")) {
+                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.carrera") + " " + bundle.getString("lbl.msm_grabar"), "");
+                        FacesContext.getCurrentInstance().addMessage(null, message);
                     } else {
-                        if (param.equalsIgnoreCase("grabar-editar")) {
-                            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.carrera") + " " + bundle.getString("lbl.msm_grabar"), "");
-                            FacesContext.getCurrentInstance().addMessage(null, message);
-                        } else {
-                            if (param.equalsIgnoreCase("grabar-crear")) {
-                                carrera = new Carrera();
-                            }
+                        if (param.equalsIgnoreCase("grabar-crear")) {
+                            carrera = new Carrera();
                         }
                     }
-                } else {
-                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_crear") + ". " + bundle.getString("lbl.msm_consulte"), "");
-                    FacesContext.getCurrentInstance().addMessage(null, message);
                 }
+                return "";
+            }
+            carreraService.edit(carrera);
+            logFacadeLocal.create(logFacadeLocal.crearLog("Carrera", carrera.getId() + "", "EDITAR", "|Nombre=" + carrera.getNombre() + "|IdSga=" + carrera.getIdSga() + "|Área=" + carrera.getAreaId().getId(), usuario));
+            if (configuracionCarreraService.buscarPrimero(new ConfiguracionCarrera(carrera.getId(), "MA")) == null) {
+                ConfiguracionCarrera configuracionCarrera1 = new ConfiguracionCarrera(null,
+                        "Número de Módulo Aprobado por el estudiante para ser Apto a realizar un trabajo de titulación", "1", "MA", carrera.getId(), "MA",
+                        TipoConfiguracionEnum.NUMERICO.getTipo());
+                configuracionCarreraService.guardar(configuracionCarrera1);
+            }
+            if (configuracionCarreraService.buscarPrimero(new ConfiguracionCarrera(carrera.getId(), "ME")) == null) {
+                ConfiguracionCarrera configuracionCarrera2 = new ConfiguracionCarrera(null,
+                        "Número de Módulo para ser egresado", "1", "ME", carrera.getId(), "ME", TipoConfiguracionEnum.NUMERICO.getTipo());
+                configuracionCarreraService.guardar(configuracionCarrera2);
+            }
+            if (configuracionCarreraService.buscarPrimero(new ConfiguracionCarrera(carrera.getId(), "OA")) == null) {
+                ConfiguracionCarrera configuracionCarrera = new ConfiguracionCarrera(null,
+                        "Id de oferta académica", "S/N", "OA", carrera.getId(), "OA", TipoConfiguracionEnum.BOTON.getTipo());
+                configuracionCarreraService.guardar(configuracionCarrera);
+            }
+            if (configuracionCarreraService.buscarPrimero(new ConfiguracionCarrera(carrera.getId(), "NO")) == null) {
+                ConfiguracionCarrera configuracionCarrera3 = new ConfiguracionCarrera(null,
+                        "Número de Oficio", "1", "NO", carrera.getId(), "NO", TipoConfiguracionEnum.NUMERICO.getTipo());
+                configuracionCarreraService.guardar(configuracionCarrera3);
+            }
+
+            if (configuracionCarreraService.buscarPrimero(new ConfiguracionCarrera(carrera.getId(), "NA")) == null) {
+                ConfiguracionCarrera configuracionCarrera4 = new ConfiguracionCarrera(null,
+                        "Número de acta", "1", "NA", carrera.getId(), "NA", TipoConfiguracionEnum.NUMERICO.getTipo());
+                configuracionCarreraService.guardar(configuracionCarrera4);
+            }
+
+            if (param.equalsIgnoreCase("grabar")) {
+                navegacion = "pretty:editarArea";
             } else {
-                int tienePermiso = usuarioService.tienePermiso(usuario, "editar_carrera");
-                if (tienePermiso == 1) {
-                    carreraService.edit(carrera);
-                    logFacadeLocal.create(logFacadeLocal.crearLog("Carrera", carrera.getId() + "", "EDITAR", "|Nombre=" + carrera.getNombre() + "|IdSga=" + carrera.getIdSga() + "|Área=" + carrera.getAreaId().getId(), usuario));
-                    if (configuracionCarreraService.buscarPrimero(new ConfiguracionCarrera(carrera.getId(), "MA")) == null) {
-                        ConfiguracionCarrera configuracionCarrera1 = new ConfiguracionCarrera(null,
-                                "Número de Módulo Aprobado por el estudiante para ser Apto a realizar un trabajo de titulación", "1", "MA", carrera.getId(), "MA",
-                                TipoConfiguracionEnum.NUMERICO.getTipo());
-                        configuracionCarreraService.guardar(configuracionCarrera1);
-                    }
-                    if (configuracionCarreraService.buscarPrimero(new ConfiguracionCarrera(carrera.getId(), "ME")) == null) {
-                        ConfiguracionCarrera configuracionCarrera2 = new ConfiguracionCarrera(null,
-                                "Número de Módulo para ser egresado", "1", "ME", carrera.getId(), "ME", TipoConfiguracionEnum.NUMERICO.getTipo());
-                        configuracionCarreraService.guardar(configuracionCarrera2);
-                    }
-                    if (configuracionCarreraService.buscarPrimero(new ConfiguracionCarrera(carrera.getId(), "OA")) == null) {
-                        ConfiguracionCarrera configuracionCarrera = new ConfiguracionCarrera(null,
-                                "Id de oferta académica", "S/N", "OA", carrera.getId(), "OA", TipoConfiguracionEnum.BOTON.getTipo());
-                        configuracionCarreraService.guardar(configuracionCarrera);
-                    }
-                    if (configuracionCarreraService.buscarPrimero(new ConfiguracionCarrera(carrera.getId(), "NO")) == null) {
-                        ConfiguracionCarrera configuracionCarrera3 = new ConfiguracionCarrera(null,
-                                "Número de Oficio", "1", "NO", carrera.getId(), "NO", TipoConfiguracionEnum.NUMERICO.getTipo());
-                        configuracionCarreraService.guardar(configuracionCarrera3);
-                    }
-
-                    if (configuracionCarreraService.buscarPrimero(new ConfiguracionCarrera(carrera.getId(), "NA")) == null) {
-                        ConfiguracionCarrera configuracionCarrera4 = new ConfiguracionCarrera(null,
-                                "Número de acta", "1", "NA", carrera.getId(), "NA", TipoConfiguracionEnum.NUMERICO.getTipo());
-                        configuracionCarreraService.guardar(configuracionCarrera4);
-                    }
-
-                    if (param.equalsIgnoreCase("grabar")) {
-                        navegacion = "pretty:editarArea";
-                    } else {
-                        if (param.equalsIgnoreCase("grabar-editar")) {
-                            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.carrera") + " " + bundle.getString("lbl.msm_editar"), "");
-                            FacesContext.getCurrentInstance().addMessage(null, message);
-                        } else {
-                            if (param.equalsIgnoreCase("grabar-crear")) {
-                            }
-                        }
-                    }
-                } else {
-                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.msm_permiso_denegado_editar") + ". " + bundle.getString("lbl.msm_consulte"), "");
+                if (param.equalsIgnoreCase("grabar-editar")) {
+                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.carrera") + " " + bundle.getString("lbl.msm_editar"), "");
                     FacesContext.getCurrentInstance().addMessage(null, message);
+                } else {
+                    if (param.equalsIgnoreCase("grabar-crear")) {
+                    }
                 }
             }
+
             buscar(usuario, area);
         } catch (Exception e) {
         }

@@ -28,7 +28,7 @@ public interface RolDao {
 
     List<Rol> findRange(int[] range);
 
-    List<Rol> buscarPorCriterio(Rol rol);
+    List<Rol> buscar(Rol rol);
 
     int count();
 

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.unl.sigett.seguridad.logs;
+package edu.unl.sigett.seguridad.log;
 
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 import com.ocpsoft.pretty.faces.annotation.URLMappings;
@@ -35,9 +35,9 @@ import org.jlmallas.seguridad.service.UsuarioService;
     @URLMapping(
             id = "logs",
             pattern = "/logs/",
-            viewId = "/faces/pages/buscarLogs.xhtml"
+            viewId = "/faces/pages/seguridad/log/index.xhtml"
     )})
-public class AdministrarLogs implements Serializable {
+public class LogController implements Serializable {
 
     @Inject
     private UsuarioDM sessionUsuario;
@@ -54,7 +54,7 @@ public class AdministrarLogs implements Serializable {
     private String tabla = "";
     private String tablaId;
 
-    public AdministrarLogs() {
+    public LogController() {
 
     }
 

@@ -9,15 +9,15 @@
         <ui:composition template="./../../template.xhtml">
             <ui:define name="title">#{msg['lbl.roles']}</ui:define>
             <ui:define name="top">
-                <ui:include src="./../../admin/menu.xhtml"/>
+                <ui:include src="./../../inicio/menu.xhtml"/>
             </ui:define>
              <ui:define name="left">
-                <ui:include src="./../../admin/menuIzquierdo.xhtml"/>
+                <ui:include src="./../../inicio/menuIzquierdo.xhtml"/>
             </ui:define>
             <ui:define name="content">
                 <p:growl id="msm"/>
                 <p:panel toggleable="true"
-                        header="#{msg['lbl.usuarios']}">
+                        header="#{lbl.roles}">
                     <ui:include src="tablaRoles.xhtml" /> 
                     <f:facet name="footer">
                         <ui:include src="botonesTablaRoles.xhtml" /> 

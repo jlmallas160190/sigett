@@ -1,0 +1,61 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xml:lang="es" lang="es">
+
+    <body>
+
+       <ui:composition template="./../../template.xhtml">
+            <ui:define name="title"><h:outputText value="#{msg['lbl.logs']}"/></ui:define>
+              <ui:define name="top">
+                <ui:include src="./../../inicio/menu.xhtml"/>
+            </ui:define>
+            <ui:define name="content">
+                <p:panel header="#{msg['lbl.logs']}">
+                    <p:dataTable id="tblLog" value="#{logController.logs}" var="item" rows="20" paginator="true"
+                                 rowIndexVar="rowIx"  rowKey="#{item.id}" selectionMode="single" selection="#{item}" 
+                                 rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'even-row' : 'odd-row'}" 
+                                 emptyMessage="#{msg['table_empty']}">
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{msg['lbl.fecha']}"/>
+                            </f:facet>
+                            <h:outputText value="#{administrarConfiguraciones.date(item.fechaAccion)}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{msg['lbl.hora']}"/>
+                            </f:facet>
+                            <h:outputText value="#{administrarConfiguraciones.time(item.horaAccion)}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{msg['lbl.usuario']}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.usuarioId}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{msg['lbl.informe']}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.informe}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{msg['lbl.accion']}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.accion}"/>
+                        </p:column>
+                    </p:dataTable>
+                </p:panel>
+            </ui:define>
+
+
+        </ui:composition>
+
+    </body>
+</html>

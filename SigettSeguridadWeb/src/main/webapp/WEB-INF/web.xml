@@ -43,7 +43,7 @@
             edu.unl.sigett.academico.carrera,
             edu.unl.sigett.academico.periodoAcademico,
             edu.unl.sigett.academico.ofertaAcademica,
-            edu.unl.sigett.seguridad.usuario
+            edu.unl.sigett.seguridad.usuario,edu.unl.sigett.seguridad.rol,edu.unl.sigett.seguridad.log
         </param-value>
     </context-param>
     <context-param>

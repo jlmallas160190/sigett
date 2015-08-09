@@ -21,7 +21,7 @@
                 <p:panel>
                     <f:facet name="header">
                         <h:panelGrid>
-                            <p:commandButton  value="#{msg['lbl.historial']}" icon="ui-icon-document-w" update="@form" action="#{administrarLogs.historico('PeriodoAcademico', sessionPeriodoAcademico.periodoAcademico.id)}"/>
+                            <p:commandButton  value="#{msg['lbl.historial']}" icon="ui-icon-document-w" update="@form" action="#{logController.historico('PeriodoAcademico', sessionPeriodoAcademico.periodoAcademico.id)}"/>
                         </h:panelGrid>  
                     </f:facet>
                     <p:panel header="#{msg['lbl.periodoAcademico']}" toggleable="true">

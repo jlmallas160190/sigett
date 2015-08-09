@@ -26,14 +26,14 @@
                             <ui:include src="datosProyecto.xhtml"/>
                             <f:facet name="footer">
                                 <h:panelGrid id="botonesDatosProyecto" styleClass="pnl-botones" columns="2">
-                                    <p:commandButton value="#{btn.autorizar_tt}" rendered="#{sessionDirectorProyecto.renderedBotonAutoriza}"
+                                    <p:commandButton value="#{btn.autorizar_tt}" icon="ui-icon-print" rendered="#{sessionDirectorProyecto.renderedBotonAutoriza}"
                                                      action="#{directorProyectoController.autorizarFinalizacion()}" 
                                                      update=":contenido:msm,:contenido:pnlCertificadoDirector,botonesDatosProyecto"
                                                      onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide(),PF('dlgCertificadoDirector').show()"/>
-                                    <p:commandButton value="#{btn.ver_certificado}" action="#{directorProyectoController.verCertficado()}" 
+                                    <p:commandButton value="#{btn.ver_certificado}" icon="ui-icon-search" action="#{directorProyectoController.verCertficado()}" 
                                                      update=":contenido:msm,botonesDatosProyecto,:contenido:pnlCertificadoDirector" rendered="#{!sessionDirectorProyecto.renderedBotonAutoriza}"
                                                      onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide(),PF('dlgCertificadoDirector').show()"/>
-                                    <p:commandButton value="#{btn.cancelar_tt}" action="#{directorProyectoController.cancelarFinalizacion()}" 
+                                    <p:commandButton value="#{btn.cancelar_tt}" icon="ui-icon-circle-arrow-w" action="#{directorProyectoController.cancelarFinalizacion()}" 
                                                      update=":contenido:msm,botonesDatosProyecto,:contenido:pnlCertificadoDirector" rendered="#{!sessionDirectorProyecto.renderedBotonAutoriza}"
                                                      onstart="PF('dlgLoading').show()" oncomplete="PF('dlgLoading').hide()"/>
                                 </h:panelGrid>
