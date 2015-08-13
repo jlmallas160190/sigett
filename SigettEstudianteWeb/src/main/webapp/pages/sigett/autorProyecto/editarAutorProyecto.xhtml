@@ -15,8 +15,11 @@
             <ui:include src="./../../inicio/menuIzquierdo.xhtml"/>
         </ui:define>
         <ui:define name="content">
+            <f:metadata>
+                <f:event type="preRenderView" listener="#{autorProyectoController.preRenderEditarView()}"/>
+            </f:metadata>
             <p:growl id="msm" showDetail="true" /> 
-            <p:panel>
+            <p:panel header="#{sessionAutorProyecto.autorProyectoDTO.autorProyecto.proyectoId.temaActual}">
                 <p:tabView  id="tabViewDatosProyecto">
                     <p:tab id="tabActividades" title="#{lbl.actividades}" >
                         <p:panel>

@@ -26,6 +26,7 @@ import edu.unl.sigett.estudianteUsuario.SessionEstudianteUsuario;
 import edu.unl.sigett.service.AspiranteService;
 import edu.unl.sigett.service.AutorProyectoService;
 import edu.unl.sigett.service.DirectorProyectoService;
+import edu.unl.sigett.service.ProyectoService;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
@@ -62,6 +63,8 @@ public class AutorProyectoController implements Serializable {
     //<editor-fold defaultstate="collapsed" desc="SERVICIOS">
     @EJB(lookup = "java:global/SigettService/AutorProyectoServiceImplement!edu.unl.sigett.service.AutorProyectoService")
     private AutorProyectoService autorProyectoService;
+    @EJB(lookup = "java:global/SigettService/ProyectoServiceImplement!edu.unl.sigett.service.ProyectoService")
+    private ProyectoService proyectoService;
     @EJB(lookup = "java:global/ComunService/PersonaServiceImplement!com.jlmallas.comun.service.PersonaService")
     private PersonaService personaService;
     @EJB(lookup = "java:global/AcademicoService/EstudianteCarreraServiceImplement!edu.jlmallas.academico.service.EstudianteCarreraService")
@@ -86,6 +89,10 @@ public class AutorProyectoController implements Serializable {
         listadoTipos();
     }
 
+    public void preRenderEditarView() {
+        estadoActual();
+    }
+
     public String editar(AutorProyectoDTO autorProyectoDTO) {
         sessionAutorProyecto.setAutorProyectoDTO(autorProyectoDTO);
         this.listadoDirectores();
@@ -105,6 +112,17 @@ public class AutorProyectoController implements Serializable {
     private void listadoEstados() {
         sessionAutorProyecto.getEstados().clear();
         sessionAutorProyecto.setEstados(itemService.buscarPorCatalogo(CatalogoEnum.ESTADOPROYECTO.getTipo()));
+    }
+
+    private void estadoActual() {
+        if (sessionAutorProyecto.getAutorProyectoDTO().getAutorProyecto().getProyectoId().getId() != null) {
+            sessionAutorProyecto.getAutorProyectoDTO().getAutorProyecto().setProyectoId(proyectoService.buscarPorId(sessionAutorProyecto.getAutorProyectoDTO().getAutorProyecto().getProyectoId()));
+        }
+        if (sessionAutorProyecto.getAutorProyectoDTO().getAutorProyecto().getProyectoId().getEstadoProyectoId() == null) {
+            return;
+        }
+        Item estado = itemService.buscarPorId(sessionAutorProyecto.getAutorProyectoDTO().getAutorProyecto().getProyectoId().getEstadoProyectoId());
+        sessionAutorProyecto.setEstadoActual(estado);
     }
 
     private void listadoProyectos() {

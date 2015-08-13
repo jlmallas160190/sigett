@@ -158,7 +158,8 @@ public class DocenteProyectoController implements Serializable {
                 + sessionProyecto.getCoordinadorPeriodoDTOCarreraSeleccionada().getPersona().getNombres() + " " + sessionProyecto.
                 getCoordinadorPeriodoDTOCarreraSeleccionada().getPersona().getApellidos(), generarCuerpoOficioPertinencia(sessionDocenteProyecto.getDocenteProyectoDTO(),
                         carrera), "", "", cabeceraController.getValueFromProperties(PropertiesFileEnum.CONTENIDOREPORTE, "despedida_pertinencia"), cabeceraController.getValueFromProperties(
-                        PropertiesFileEnum.CONTENIDOREPORTE, "saludo"), "", sessionUsuario.getUsuario().getNombres().toUpperCase() + " "
+                        PropertiesFileEnum.CONTENIDOREPORTE, "saludo"), "", cabeceraController.getValueFromProperties(
+                        PropertiesFileEnum.CONTENIDOREPORTE, "desarrollado_por")+": " + sessionUsuario.getUsuario().getNombres().toUpperCase() + " "
                 + sessionUsuario.getUsuario().getApellidos().toUpperCase(), rutaReporte));
         if (resultado == null) {
             return;
@@ -239,7 +240,9 @@ public class DocenteProyectoController implements Serializable {
         byte[] resultado = reporteController.fePresentacion(new ReporteFePresentacion(generaReferenciaFePresentacion(fechaActual, carrera),
                 generaCuerpoFePresentacion(sessionDocenteProyecto.getDocenteProyectoDTO(), fechaActual, carrera),
                 generaFirmasInvolucrados(sessionDocenteProyecto.getDocenteProyectoDTO(), carrera), generaFinalFePresentacion(sessionDocenteProyecto.getDocenteProyectoDTO(), fechaActual, carrera),
-                sessionUsuario.getUsuario().getNombres().toUpperCase() + " " + sessionUsuario.getUsuario().getApellidos(), rutaReporte));
+                sessionUsuario.getUsuario().getNombres().toUpperCase() + " " + cabeceraController.getValueFromProperties(
+                        PropertiesFileEnum.CONTENIDOREPORTE, "desarrollado_por")+": " + sessionUsuario.getUsuario().getNombres().toUpperCase() + " "
+                + sessionUsuario.getUsuario().getApellidos().toUpperCase(), rutaReporte));
         if (resultado == null) {
             return;
         }

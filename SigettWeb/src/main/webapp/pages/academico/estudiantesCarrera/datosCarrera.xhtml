@@ -9,15 +9,15 @@
         <h:panelGrid id="datosEstudianteCarrera" styleClass="panelgrid" rowClasses="rowpanelgrid" columnClasses="col-lg-2,col-lg-10" columns="2" >
             <h:outputLabel value="#{msg['lbl.estado']}:"/>
             <h:outputText value="#{sessionEstudianteCarrera.estudianteCarreraDTO.estudianteCarrera.estado}"/>
-            <h:outputLabel value="#{msg['lbl.fechaIngreso']}:"/>
-            <h:outputText value="#{sessionEstudianteCarrera.reporteMatriculaUltimo.ofertaAcademicaId.nombre}">
+            <h:outputLabel value="#{lbl.fecha_ingreso}:"/>
+            <h:outputText value="#{sessionEstudianteCarrera.reporteMatriculaPrimer.ofertaAcademicaId.nombre}">
                 <f:convertDateTime pattern="dd/MM/yyyy"/>
             </h:outputText>
             <h:outputLabel value="#{msg['lbl.ultimoModuloAprobado']}:"/>
             <h:outputText value="#{sessionEstudianteCarrera.reporteMatriculaUltimo.numeroModuloMatriculado} 
                           #{sessionEstudianteCarrera.reporteMatriculaUltimo.paralelo}"/>
-            <h:outputLabel value="#{msg['lbl.fechaCulminación']}:"/>
-            <h:outputText value="#{sessionEstudianteCarrera.reporteMatriculaUltimo.ofertaAcademicaId.fechaFin}">
+            <h:outputLabel value="#{lbl.fecha_culminacion}:"/>
+            <h:outputText value="#{sessionEstudianteCarrera.reporteMatriculaUltimo.ofertaAcademicaId.nombre}">
                 <f:convertDateTime pattern="dd/MM/yyyy"/>
             </h:outputText>
             <h:outputLabel id="lbEsApto" rendered="#{sessionEstudianteCarrera.renderedEsAptoAspirante}" value="#{msg['lbl.esApto']}:"/>

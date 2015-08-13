@@ -14,7 +14,7 @@
         <p:menubar>
             <f:facet name="options">
                 <h:panelGrid styleClass="panelGroup" columns="3">
-                    <p:outputLabel style="font-weight: bold;color: #D20005" 
+                    <p:outputLabel style="font-weight: bold;color: #D20005;text-transform: capitalize" 
                                    value="#{lbl.saludo}: #{sessionEstudianteUsuario.estudianteUsuarioDTO.persona.nombres} 
                                    #{sessionEstudianteUsuario.estudianteUsuarioDTO.persona.apellidos}"/>
                     <p:commandButton value="#{lbl.regresar}" icon="ui-icon-arrowreturnthick-1-w" onclick="regresar()"/>

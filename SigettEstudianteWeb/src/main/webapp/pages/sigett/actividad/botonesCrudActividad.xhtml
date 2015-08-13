@@ -16,7 +16,7 @@
                 <f:param name="tipo" value="enviar"/>
             </p:commandButton>
             <p:commandButton  value="#{btn.cancelar}" icon="ui-icon-circle-arrow-w" onstart="PF('dlgLoading').show()" 
-                              oncomplete="PF('dlgLoading').hide()" 
+                              oncomplete="PF('dlgLoading').hide()" process="@this"
                               action="#{actividadController.cancelarEdicion()}"/>
         </h:panelGrid>  
     </body>

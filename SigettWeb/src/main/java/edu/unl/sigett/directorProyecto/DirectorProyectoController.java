@@ -255,7 +255,7 @@ public class DirectorProyectoController implements Serializable {
             directorProyectoDM.setDirectorProyectoDTO(directorProyectoDTO);
             Item item = itemService.buscarPorCatalogoCodigo(CatalogoEnum.CATALOGOOFICIO.getTipo(),
                     CatalogoDocumentoCarreraEnum.DIRECTORPROYECTO.getTipo());
-            Documento documentoBuscar = documentoService.buscarPorCatalogo(new Documento(null, null, item.getId(), null, null, null, null, null,directorProyectoDTO.getDirectorProyecto().getId()));
+            Documento documentoBuscar = documentoService.buscarPorCatalogo(new Documento(null, null, item.getId(), null, null, null, null, null, directorProyectoDTO.getDirectorProyecto().getId()));
             List<DocumentoCarrera> documentoCarreras = documentoCarreraService.buscar(new DocumentoCarrera(
                     null, documentoBuscar != null ? documentoBuscar.getId() : null, Boolean.TRUE, null));
             if (documentoCarreras == null) {
@@ -303,7 +303,8 @@ public class DirectorProyectoController implements Serializable {
                 getTituloId().getAbreviacion() + "<br/>" + sessionProyecto.getCoordinadorPeriodoDTOCarreraSeleccionada().getPersona().getNombres() + " " + sessionProyecto.getCoordinadorPeriodoDTOCarreraSeleccionada().getPersona().getApellidos(),
                 generarCuerpoOficio(directorProyectoDM.getDirectorProyectoDTO()), "", "", cabeceraController.getValueFromProperties(
                         PropertiesFileEnum.CONTENIDOREPORTE, "oficio_director_despedida"), cabeceraController.getValueFromProperties(
-                        PropertiesFileEnum.CONTENIDOREPORTE, "oficio_director_saludo"), "", sessionUsuario.getUsuario().getNombres().toUpperCase() + " "
+                        PropertiesFileEnum.CONTENIDOREPORTE, "oficio_director_saludo"), "", cabeceraController.getValueFromProperties(
+                        PropertiesFileEnum.CONTENIDOREPORTE, "desarrollado_por")+": " + sessionUsuario.getUsuario().getNombres().toUpperCase() + " "
                 + sessionUsuario.getUsuario().getApellidos().toUpperCase(),
                 rutaReporte));
         if (resultado == null) {
@@ -347,7 +348,7 @@ public class DirectorProyectoController implements Serializable {
             directorProyectoDM.setDirectorProyectoDTO(directorProyectoDTO);
             Item item = itemService.buscarPorCatalogoCodigo(CatalogoEnum.FEPRESENTACION.getTipo(),
                     CatalogoDocumentoCarreraEnum.DIRECTORPROYECTO.getTipo());
-            Documento documentoBuscar = documentoService.buscarPorCatalogo(new Documento(null, null, item.getId(), null, null, null, null, null,directorProyectoDTO.getDirectorProyecto().getId()));
+            Documento documentoBuscar = documentoService.buscarPorCatalogo(new Documento(null, null, item.getId(), null, null, null, null, null, directorProyectoDTO.getDirectorProyecto().getId()));
             List<DocumentoCarrera> documentoCarreras = documentoCarreraService.buscar(new DocumentoCarrera(
                     null, documentoBuscar != null ? documentoBuscar.getId() : null, Boolean.TRUE, null));
             if (documentoCarreras == null) {
@@ -382,7 +383,8 @@ public class DirectorProyectoController implements Serializable {
 
         byte[] resultado = reporteController.fePresentacion(new ReporteFePresentacion(generaReferenciaFePresentacion(fechaActual, carrera), generaCuerpoFePresentacion(directorProyectoDM.getDirectorProyectoDTO(), fechaActual, carrera),
                 generaFirmasInvolucrados(directorProyectoDM.getDirectorProyectoDTO(), carrera), generaFinalFePresentacion(directorProyectoDM.getDirectorProyectoDTO(), fechaActual, carrera),
-                sessionUsuario.getUsuario().getNombres().toUpperCase() + " " + sessionUsuario.getUsuario().getApellidos(), rutaReporte));
+                sessionUsuario.getUsuario().getNombres().toUpperCase() + " " + cabeceraController.getValueFromProperties(
+                        PropertiesFileEnum.CONTENIDOREPORTE, "desarrollado_por")+": " + sessionUsuario.getUsuario().getNombres().toUpperCase() + " " + sessionUsuario.getUsuario().getApellidos().toUpperCase(), rutaReporte));
         if (resultado == null) {
             return;
         }
@@ -390,7 +392,7 @@ public class DirectorProyectoController implements Serializable {
                 + directorProyectoDM.getDirectorProyectoDTO().getDirectorProyecto().getId() + ".pdf";
         Documento documento = new Documento(null, ruta, itemService.buscarPorCatalogoCodigo(CatalogoEnum.FEPRESENTACION.getTipo(),
                 CatalogoDocumentoCarreraEnum.DIRECTORPROYECTO.getTipo()).getId(), Double.parseDouble(resultado.length + ""), fechaActual.getTime(),
-                resultado, null, "pdf",directorProyectoDM.getDirectorProyectoDTO().getDirectorProyecto().getId());
+                resultado, null, "pdf", directorProyectoDM.getDirectorProyectoDTO().getDirectorProyecto().getId());
         documentoService.guardar(documento);
         documentoCarreraDM.setDocumentoCarreraDTO(new DocumentoCarreraDTO(new DocumentoCarrera("", documento.getId(), Boolean.TRUE,
                 carrera.getId()), documento, carrera));

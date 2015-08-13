@@ -109,7 +109,9 @@ public class EstudianteUsuarioController implements Serializable {
                 if (usuarios == null) {
                     return "";
                 }
-                iniciarUsuario();
+                if (!iniciarUsuario()) {
+                    return "";
+                }
                 return "pretty:inicio";
             }
             if (var == 2) {
@@ -128,24 +130,27 @@ public class EstudianteUsuarioController implements Serializable {
             this.cabeceraController.getMessageView().message(FacesMessage.SEVERITY_ERROR, bundle.getString("username_incorrecto"), "");
             return "";
         }
-        iniciarUsuario();
+        if(!iniciarUsuario()){
+            return "";
+        }
         return "pretty:inicio";
     }
 
-    private void iniciarUsuario() {
+    private Boolean iniciarUsuario() {
         List<Usuario> usuarios = usuarioService.buscar(new Usuario(null, null, sessionEstudianteUsuario.getEstudianteUsuarioDTO().getUsuario().
                 getUsername(), null, null, null, Boolean.TRUE, Boolean.FALSE));
         if (usuarios == null) {
-            return;
+            return Boolean.FALSE;
         }
         EstudianteUsuario estudianteUsuario = estudianteUsuarioService.buscarPorId(!usuarios.isEmpty() ? usuarios.get(0).getId() : null);
         if (estudianteUsuario == null) {
-            return;
+            return Boolean.FALSE;
         }
         sessionEstudianteUsuario.setEstudianteUsuarioDTO(new EstudianteUsuarioDTO(!usuarios.isEmpty() ? usuarios.get(0) : null,
                 estudianteService.buscarPorId(new Estudiante(estudianteUsuario.getEstudianteId())),
                 personaService.buscarPorId(new Persona(estudianteUsuario.getEstudianteId())), new Rol(null,
                         cabeceraController.getValueFromProperties(PropertiesFileEnum.ETIQUETASES, "estudiante"))));
+        return Boolean.TRUE;
     }
     //<editor-fold defaultstate="collapsed" desc="SERVICIOS WEB">
 

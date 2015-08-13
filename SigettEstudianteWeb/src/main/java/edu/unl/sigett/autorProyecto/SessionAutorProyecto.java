@@ -6,7 +6,6 @@
 package edu.unl.sigett.autorProyecto;
 
 import com.jlmallas.comun.entity.Item;
-import edu.jlmallas.academico.entity.OfertaAcademica;
 import edu.unl.sigett.directorProyecto.DirectorProyectoDTO;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
@@ -28,16 +27,17 @@ public class SessionAutorProyecto implements Serializable {
     private List<DirectorProyectoDTO> directoresProyectoDTO;
     private List<Item> estados;
     private List<Item> categorias;
+    private Item estadoActual;
     private List<Item> tipos;
     private List<AutorProyectoDTO> filterAutorProyectos;
 
     public SessionAutorProyecto() {
-        this.estados=new ArrayList<>();
-        this.categorias=new ArrayList<>();
-        this.tipos=new ArrayList<>();
-        this.directoresProyectoDTO=new ArrayList<>();
-        this.estados=new ArrayList<>();
-        this.categorias=new ArrayList<>();
+        this.estados = new ArrayList<>();
+        this.categorias = new ArrayList<>();
+        this.tipos = new ArrayList<>();
+        this.directoresProyectoDTO = new ArrayList<>();
+        this.estados = new ArrayList<>();
+        this.categorias = new ArrayList<>();
         this.filterAutorProyectos = new ArrayList<>();
         this.autorProyectos = new ArrayList<>();
         this.autorProyectoDTO = new AutorProyectoDTO();
@@ -97,6 +97,14 @@ public class SessionAutorProyecto implements Serializable {
 
     public void setDirectoresProyectoDTO(List<DirectorProyectoDTO> directoresProyectoDTO) {
         this.directoresProyectoDTO = directoresProyectoDTO;
+    }
+
+    public Item getEstadoActual() {
+        return estadoActual;
+    }
+
+    public void setEstadoActual(Item estadoActual) {
+        this.estadoActual = estadoActual;
     }
 
 }

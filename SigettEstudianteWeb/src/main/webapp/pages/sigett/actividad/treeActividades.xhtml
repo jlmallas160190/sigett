@@ -13,22 +13,22 @@
                     <p:commandLink value="#{node.nombre}"  oncomplete="PF('dlgLoading').hide()"
                                    onstart="PF('dlgLoading').show()" update="@form"
                                    action="#{actividadController.editar(node)}"/>
-                    <p:commandButton  title="#{btn.agregar_tarea}" rendered="#{node.padreId==null}"  onstart="PF('dlgLoading').show()" 
-                                      oncomplete="PF('dlgLoading').hide(),PF('dlgCrudActividad').show()" icon="ui-icon-plus" 
-                                   update=":contenido:dlgCrudActividad,:contenido:msm" action="#{actividadController.crear()}" >
-                       <!-- <p:graphicImage value="/resources/img/icon_addlink.gif"/>-->
+                    <p:commandLink  title="#{btn.agregar_tarea}" rendered="#{node.padreId==null}"  onstart="PF('dlgLoading').show()" 
+                                    oncomplete="PF('dlgLoading').hide(),PF('dlgCrudActividad').show()" 
+                                    update=":contenido:dlgCrudActividad,:contenido:msm" action="#{actividadController.crear()}" >
+                        <p:graphicImage value="/resources/img/icon_addlink.gif"/>
                         <f:param name="tipo" value="#{sessionActividad.tarea}"/>
                         <f:param name="padreId" value="#{node.id}"/>
-                    </p:commandButton>
-                    <p:commandButton   oncomplete="PF('dlgLoading').hide()" icon="ui-icon-trash"
-                                     onstart="PF('dlgLoading').show()" update=":contenido:tabViewDatosProyecto:treeActividades"
-                                     onclick="if (!confirm('¿#{msg.confirmar_remover}?'))
-                                                 return false;"
-                                     action="#{actividadController.remover(node)}">
-                        <!--<p:graphicImage value="/resources/img/icon_deletelink.gif"/>-->
-                    </p:commandButton>
+                    </p:commandLink>
+                    <p:commandLink  oncomplete="PF('dlgLoading').hide()" 
+                                    onstart="PF('dlgLoading').show()" update=":contenido:tabViewDatosProyecto:treeActividades"
+                                    onclick="if (!confirm('¿#{msg.confirmar_remover}?'))
+                                                return false;"
+                                    action="#{actividadController.remover(node)}">
+                        <p:graphicImage value="/resources/img/icon_deletelink.gif"/>
+                    </p:commandLink>
                     <p:progressBar  labelTemplate="Avance: #{node.porcentajeAvance}%" value="#{node.porcentajeAvance}"/>
-                   <p:progressBar labelTemplate="Faltante: #{node.porcentajeFaltante}%" value="#{node.porcentajeFaltante}"/>
+                  <!-- <p:progressBar labelTemplate="Faltante: #{node.porcentajeFaltante}%" value="#{node.porcentajeFaltante}"/>-->
                 </h:panelGrid>
             </p:treeNode>
 

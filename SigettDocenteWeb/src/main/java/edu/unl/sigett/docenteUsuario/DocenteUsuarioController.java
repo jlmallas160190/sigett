@@ -103,7 +103,9 @@ public class DocenteUsuarioController implements Serializable {
                 this.cabeceraController.getMessageView().message(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.clave_incorrecta") + "", "");
             }
             if (var == 1) {
-                iniciarUsuario();
+                if (!iniciarUsuario()) {
+                    return "";
+                }
                 return "pretty:inicioDocente";
             }
             if (var == 2) {
@@ -122,22 +124,25 @@ public class DocenteUsuarioController implements Serializable {
             this.cabeceraController.getMessageView().message(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.usuario_incorrecto"), "");
             return "";
         }
-        iniciarUsuario();
+        if (!iniciarUsuario()) {
+            return "";
+        }
         return "pretty:inicioDocente";
     }
 
-    private void iniciarUsuario() {
+    private Boolean iniciarUsuario() {
         List<Usuario> usuarios = usuarioService.buscar(new Usuario(null, null, docenteUsuarioDM.getDocenteUsuarioDTO().getUsuario().
                 getUsername(), null, null, null, Boolean.TRUE, Boolean.FALSE));
         if (usuarios == null) {
-            return;
+            return Boolean.FALSE;
         }
         DocenteUsuario docenteUsuario = docenteUsuarioDao.buscarPorId(!usuarios.isEmpty() ? usuarios.get(0).getId() : null);
         if (docenteUsuario == null) {
-            return;
+            return Boolean.FALSE;
         }
         docenteUsuarioDM.setDocenteUsuarioDTO(new DocenteUsuarioDTO(docenteService.buscarPorId(new Docente(docenteUsuario.getDocenteId())),
                 !usuarios.isEmpty() ? usuarios.get(0) : null, personaService.buscarPorId(new Persona(docenteUsuario.getDocenteId()))));
+        return Boolean.TRUE;
     }
 
     public String logout() {

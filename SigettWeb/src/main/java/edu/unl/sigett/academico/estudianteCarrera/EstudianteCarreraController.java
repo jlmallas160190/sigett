@@ -917,31 +917,31 @@ public class EstudianteCarreraController implements Serializable {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
         MessageView messageView = new MessageView();
-        if (usuarioService.tienePermiso(sessionUsuario.getUsuario(), "sga_ws_estudiante_carrera") == 1) {
-            try {
-                Persona p = personaService.buscarPorId(new Persona(rm.getEstudianteCarreraId().getEstudianteId().getId()));
-                String passwordService = this.cabeceraController.getSecureService().decrypt(new Secure(cabeceraController.getConfiguracionGeneralUtil().getSecureKey(),
-                        configuracionService.buscar(new Configuracion(ConfiguracionEnum.CLAVEWS.getTipo())).get(0).getValor()));
-                String userService = configuracionService.buscar(new Configuracion(ConfiguracionEnum.USUARIOWS.getTipo())).get(0).getValor();
-                String serviceUrl = configuracionService.buscar(new Configuracion(URLWSEnum.REPORTEMATRICULAESTUDIANTE.getTipo())).get(0).getValor();
-                String s = serviceUrl + "?cedula=" + p.getNumeroIdentificacion() + ";id_carrera="
-                        + rm.getEstudianteCarreraId().getCarreraId().getIdSga() + ";id_oferta=" + rm.getOfertaAcademicaId().getIdSga();
+//        if (usuarioService.tienePermiso(sessionUsuario.getUsuario(), "sga_ws_estudiante_carrera") == 1) {
+        try {
+            Persona p = personaService.buscarPorId(new Persona(rm.getEstudianteCarreraId().getEstudianteId().getId()));
+            String passwordService = this.cabeceraController.getSecureService().decrypt(new Secure(cabeceraController.getConfiguracionGeneralUtil().getSecureKey(),
+                    configuracionService.buscar(new Configuracion(ConfiguracionEnum.CLAVEWS.getTipo())).get(0).getValor()));
+            String userService = configuracionService.buscar(new Configuracion(ConfiguracionEnum.USUARIOWS.getTipo())).get(0).getValor();
+            String serviceUrl = configuracionService.buscar(new Configuracion(URLWSEnum.REPORTEMATRICULAESTUDIANTE.getTipo())).get(0).getValor();
+            String s = serviceUrl + "?cedula=" + p.getNumeroIdentificacion() + ";id_carrera="
+                    + rm.getEstudianteCarreraId().getCarreraId().getIdSga() + ";id_oferta=" + rm.getOfertaAcademicaId().getIdSga();
 
-                ConexionDTO seguridad = new ConexionDTO(passwordService, s, userService);
-                NetClientService conexion = new NetClientServiceImplement();
-                String datosJson = conexion.response(seguridad);
-                if (!datosJson.equalsIgnoreCase("")) {
-                    JsonParser parser = new JsonParser();
-                    JsonElement datos = parser.parse(datosJson);
-                    parserReporteMatricula(datos, rm);
-                    messageView.message(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.sincronizado"), "");
-                }
-            } catch (Exception e) {
-                messageView.message(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.no_sincronizar_web_services"), "");
+            ConexionDTO seguridad = new ConexionDTO(passwordService, s, userService);
+            NetClientService conexion = new NetClientServiceImplement();
+            String datosJson = conexion.response(seguridad);
+            if (!datosJson.equalsIgnoreCase("")) {
+                JsonParser parser = new JsonParser();
+                JsonElement datos = parser.parse(datosJson);
+                parserReporteMatricula(datos, rm);
+//                    messageView.message(FacesMessage.SEVERITY_INFO, bundle.getString("lbl.sincronizado"), "");
             }
-        } else {
-            messageView.message(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.permiso_denegado_sincronizar") + ". " + bundle.getString("lbl.msm_consulte"), "");
+        } catch (Exception e) {
+            messageView.message(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.no_sincronizar_web_services"), "");
         }
+//        } else {
+//            messageView.message(FacesMessage.SEVERITY_ERROR, bundle.getString("lbl.permiso_denegado_sincronizar") + ". " + bundle.getString("lbl.msm_consulte"), "");
+//        }
 
     }
 

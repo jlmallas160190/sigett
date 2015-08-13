@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" pageWidth="595" pageHeight="842" columnWidth="426" leftMargin="113" rightMargin="56" topMargin="113" bottomMargin="56" uuid="74f1761f-b07c-47cd-a15d-303abbbd4a98">
 	<property name="ireport.zoom" value="1.3310000000000013"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="181"/>
 	<parameter name="cabecera1" class="java.lang.String"/>
 	<parameter name="selloInstitucion" class="java.lang.String"/>
 	<parameter name="cabecera2" class="java.lang.String"/>
@@ -34,7 +34,7 @@
 				<textElement textAlignment="Justified" verticalAlignment="Top" markup="html">
 					<font fontName="SansSerif" size="11"/>
 				</textElement>
-				<textFieldExpression><![CDATA["<p>"+$P{destinatario}+"<p/><br/><p>"+$P{cargoDestinatario}+"<p/>"+"<br/><p>Ciudad<p/>"]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{destinatario}+"<br/>"+$P{cargoDestinatario}+"<br/>Ciudad"]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="0" y="85" width="426" height="15" uuid="ee528df2-c008-446b-8a61-390a5ab6b659"/>
@@ -72,7 +72,7 @@
 				<textElement textAlignment="Justified" markup="html">
 					<font size="11"/>
 				</textElement>
-				<textFieldExpression><![CDATA["<p>"+$P{despedida}+"<p/><br/> <br/><p>"+$P{quienFirma}+"<p/></br><p>"+$P{cargoQuienFirma}+"<p/>"]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{despedida}+"<br/><br/>"+$P{quienFirma}+"</br>"+$P{cargoQuienFirma}]]></textFieldExpression>
 			</textField>
 		</band>
 	</summary>

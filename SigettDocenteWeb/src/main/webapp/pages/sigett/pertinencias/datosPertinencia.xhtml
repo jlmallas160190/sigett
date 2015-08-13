@@ -29,7 +29,7 @@
             <p:message id="msmFechaFin" rendered="#{pertinenciaDM.renderedCrudCronograma}" display="icon" for="fechaFin"/>
             <h:outputLabel id="lblDuracion" rendered="#{pertinenciaDM.renderedCrudCronograma}" value="#{msg['lbl.duracion']}:"/>
             <h:outputLabel id="duracion"  rendered="#{pertinenciaDM.renderedCrudCronograma}"
-                           value="#{docenteProyectoDM.docenteProyectoDTOSeleccionado.docenteProyecto.proyectoId.cronograma.duracion} Horas"/>
+                           value="#{docenteProyectoDM.docenteProyectoDTOSeleccionado.docenteProyecto.proyectoId.cronograma.duracion} #{lbl.dias}"/>
             <h:inputHidden id="hidden" rendered="#{pertinenciaDM.renderedCrudCronograma}"/>
             <h:outputLabel value="#{msg['lbl.observacion']}:"/>
             <p:editor id="observacion" value="#{pertinenciaDM.pertinencia.observacion}"

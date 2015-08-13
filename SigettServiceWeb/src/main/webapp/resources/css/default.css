@@ -406,23 +406,24 @@ input[disabled="disabled"], select[disabled="disabled"], textarea[disabled="disa
 .ui-paginator-first,
 .ui-paginator-prev,
 .ui-paginator-current {
-    background: #eee !important;
-    padding: 4px 4px;
-    color: #fff!important;
+    display: inline-block;
+    padding: 2px 6px;
+    zoom: 1;
     margin-left: 1px;
     margin-right: 1px;
     text-decoration: none;
     outline: none;
 }
+
 .ui-paginator-page,
 .ui-paginator-pages,
 .ui-paginator-next,
 .ui-paginator-last,
 .ui-paginator-first,
 .ui-paginator-prev,
-.ui-paginator-current:active {
-    background: transparent!important;
-    border:  transparent !important;
+.ui-paginator-current {
+    cursor: pointer;
+
 }
 .ui-paginator-rowperpagestemplates {
     *padding-bottom: 0px;

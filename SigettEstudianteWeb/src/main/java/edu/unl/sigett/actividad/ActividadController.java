@@ -31,6 +31,7 @@ import edu.unl.sigett.entity.DocumentoActividad;
 import edu.unl.sigett.entity.RevisionActividad;
 import edu.unl.sigett.enumeration.ConfiguracionProyectoEnum;
 import edu.unl.sigett.enumeration.EstadoActividadEnum;
+import edu.unl.sigett.enumeration.EstadoProyectoEnum;
 import edu.unl.sigett.enumeration.EstiloTreeNodeEnum;
 import edu.unl.sigett.enumeration.TipoActividadEnum;
 import edu.unl.sigett.service.ActividadService;
@@ -116,6 +117,9 @@ public class ActividadController implements Serializable {
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "lbl");
         String param = (String) facesContext.getExternalContext().getRequestParameterMap().get("tipo");
         String padreId = (String) facesContext.getExternalContext().getRequestParameterMap().get("padreId");
+        if (!sessionAutorProyecto.getEstadoActual().getCodigo().equals(EstadoProyectoEnum.SEGUIMIENTO.getTipo())) {
+            return;
+        }
         Item estado = itemService.buscarPorCatalogoCodigo(CatalogoEnum.ESTADOACTIVIDAD.getTipo(), EstadoActividadEnum.DESARROLLO.getTipo());
         Item objetivo = itemService.buscarPorCatalogoCodigo(CatalogoEnum.TIPOACTIVIDAD.getTipo(), TipoActividadEnum.OBJETIVO.getTipo());
         sessionActividad.setActividad(new Actividad(null, null, null, BigDecimal.ZERO, padreId != null ? Long.parseLong(padreId) : null, Boolean.TRUE, BigDecimal.ZERO,
@@ -343,6 +347,9 @@ public class ActividadController implements Serializable {
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
         String param = (String) facesContext.getExternalContext().getRequestParameterMap().get("tipo");
         try {
+            if (!sessionAutorProyecto.getEstadoActual().getCodigo().equals(EstadoProyectoEnum.SEGUIMIENTO.getTipo())) {
+                return;
+            }
             if (!validaDirectores()) {
                 cabeceraController.getMessageView().message(FacesMessage.SEVERITY_ERROR, bundle.getString("director_ocupado"), "");
                 return;
@@ -387,20 +394,29 @@ public class ActividadController implements Serializable {
     }
 
     public void remover(Actividad actividad) {
+        if (!sessionAutorProyecto.getEstadoActual().getCodigo().equals(EstadoProyectoEnum.SEGUIMIENTO.getTipo())) {
+            return;
+        }
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "msg");
         actividad.setEsActivo(Boolean.FALSE);
+        sessionActividad.setActividad(actividad);
         actividadService.actualizar(actividad);
         actualizarPorcentajes();
         calculosObjetivo();
         calculosCronograma();
+        removerEventosDirector();
+        removerEventosAutor();
+        sessionActividad.setActividad(new Actividad());
         cabeceraController.getMessageView().message(FacesMessage.SEVERITY_INFO, bundle.getString("eliminar"), "");
     }
 
     private void grabarEventosAutor() {
         Item objetivo = itemService.buscarPorCatalogoCodigo(CatalogoEnum.TIPOACTIVIDAD.getTipo(), TipoActividadEnum.OBJETIVO.getTipo());
+        Item catalogoEvento = itemService.buscarPorCatalogoCodigo(CatalogoEnum.CATALOGOEVENTO.getTipo(), EventoEnum.ACTIVIDAD.getTipo());
         Evento eventoBuscar = new Evento();
         eventoBuscar.setTablaId(sessionActividad.getActividad().getId());
+        eventoBuscar.setCatalogoId(catalogoEvento.getId());
         List<Evento> eventos = eventoService.buscar(eventoBuscar);
         Evento evento = !eventos.isEmpty() ? eventos.get(0) : null;
         Calendar fechaCulminacion = Calendar.getInstance();
@@ -411,8 +427,7 @@ public class ActividadController implements Serializable {
                 return;
             }
             evento = new Evento(null, sessionActividad.getActividad().getNombre(), "", sessionActividad.getActividad().getFechaCulminacion(),
-                    fechaCulminacion.getTime(),
-                    itemService.buscarPorCatalogoCodigo(CatalogoEnum.CATALOGOEVENTO.getTipo(), EventoEnum.ACTIVIDAD.getTipo()).getId(), sessionActividad.getActividad().getId());
+                    fechaCulminacion.getTime(), catalogoEvento.getId(), sessionActividad.getActividad().getId());
             eventoService.guardar(evento);
             EventoPersona eventoPersona = new EventoPersona(null, sessionAutorProyecto.getAutorProyectoDTO().getPersona(), evento);
             eventoPersonaService.guardar(eventoPersona);
@@ -434,12 +449,14 @@ public class ActividadController implements Serializable {
 
     private void grabarEventosDirector() {
         Item estado = itemService.buscarPorCatalogoCodigo(CatalogoEnum.ESTADOACTIVIDAD.getTipo(), EstadoActividadEnum.DESARROLLO.getTipo());
+        Item catalogoEvento = itemService.buscarPorCatalogoCodigo(CatalogoEnum.CATALOGOEVENTO.getTipo(), EventoEnum.ACTIVIDAD.getTipo());
         for (DirectorProyectoDTO directorProyectoDTO : sessionAutorProyecto.getDirectoresProyectoDTO()) {
             if (sessionActividad.getActividad().getEstadoId().equals(estado.getId())) {
                 continue;
             }
             Evento eventoBuscar = new Evento();
             eventoBuscar.setTablaId(sessionActividad.getActividad().getId());
+            eventoBuscar.setCatalogoId(catalogoEvento.getId());
             Calendar fechaCulminacion = Calendar.getInstance();
             fechaCulminacion.setTime(sessionActividad.getActividad().getFechaCulminacion());
             fechaCulminacion.add(Calendar.HOUR_OF_DAY, 1);
@@ -447,8 +464,7 @@ public class ActividadController implements Serializable {
             Evento evento = !eventos.isEmpty() ? eventos.get(0) : null;
             if (evento == null) {
                 evento = new Evento(null, sessionActividad.getActividad().getNombre(), "", sessionActividad.getActividad().getFechaCulminacion(),
-                        fechaCulminacion.getTime(),
-                        itemService.buscarPorCatalogoCodigo(CatalogoEnum.CATALOGOEVENTO.getTipo(), EventoEnum.ACTIVIDAD.getTipo()).getId(), sessionActividad.getActividad().getId());
+                        fechaCulminacion.getTime(), catalogoEvento.getId(), sessionActividad.getActividad().getId());
                 eventoService.guardar(evento);
                 EventoPersona eventoDirector = new EventoPersona(null, directorProyectoDTO.getDirectorDTO().getPersona(), evento);
                 eventoPersonaService.guardar(eventoDirector);
@@ -466,6 +482,58 @@ public class ActividadController implements Serializable {
                 eventoPersonaService.guardar(eventoPersona);
             }
         }
+    }
+
+    /**
+     * REMOVER EVENTO DE DIRECTOR
+     */
+    private void removerEventosDirector() {
+        Evento eventoBuscar = new Evento();
+        Item catalogoEvento = itemService.buscarPorCatalogoCodigo(CatalogoEnum.CATALOGOEVENTO.getTipo(), EventoEnum.ACTIVIDAD.getTipo());
+        eventoBuscar.setTablaId(sessionActividad.getActividad().getId());
+        eventoBuscar.setCatalogoId(catalogoEvento.getId());
+        List<Evento> eventos = eventoService.buscar(eventoBuscar);
+        Evento evento = !eventos.isEmpty() ? eventos.get(0) : null;
+        if (evento == null) {
+            return;
+        }
+        for (DirectorProyectoDTO directorProyectoDTO : sessionAutorProyecto.getDirectoresProyectoDTO()) {
+            EventoPersona eventoPersonaBuscar = new EventoPersona(null, directorProyectoDTO.getDirectorDTO().getPersona(), evento);
+            List<EventoPersona> eventoPersonas = eventoPersonaService.buscar(eventoPersonaBuscar);
+            if (eventoPersonas == null) {
+                return;
+            }
+            EventoPersona eventoPersona = !eventoPersonas.isEmpty() ? eventoPersonas.get(0) : null;
+            if (eventoPersona == null) {
+                return;
+            }
+            eventoPersonaService.eliminar(eventoPersona);
+        }
+    }
+
+    /**
+     * ELIMINAR EVENTOS DE AUTOR
+     */
+    private void removerEventosAutor() {
+        Evento eventoBuscar = new Evento();
+        Item catalogoEvento = itemService.buscarPorCatalogoCodigo(CatalogoEnum.CATALOGOEVENTO.getTipo(), EventoEnum.ACTIVIDAD.getTipo());
+        eventoBuscar.setTablaId(sessionActividad.getActividad().getId());
+        eventoBuscar.setCatalogoId(catalogoEvento.getId());
+        List<Evento> eventos = eventoService.buscar(eventoBuscar);
+        Evento evento = !eventos.isEmpty() ? eventos.get(0) : null;
+        if (evento == null) {
+            return;
+        }
+        EventoPersona eventoPersonaBuscar = new EventoPersona(null, sessionAutorProyecto.getAutorProyectoDTO().getPersona(), evento);
+        List<EventoPersona> eventoPersonas = eventoPersonaService.buscar(eventoPersonaBuscar);
+        if (eventoPersonas == null) {
+            return;
+        }
+        EventoPersona eventoPersona = !eventoPersonas.isEmpty() ? eventoPersonas.get(0) : null;
+        if (eventoPersona == null) {
+            return;
+        }
+        eventoPersonaService.eliminar(eventoPersona);
     }
 
     private void buscar() {
