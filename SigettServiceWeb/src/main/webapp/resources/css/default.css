@@ -529,11 +529,8 @@ button.ui-button-icons-only {
     -webkit-appearance: none;
 }
 
-.ui-datatable tbody td:first-letter {
-    text-transform: uppercase;
-}
-.ui-datatable tbody td {
-    text-transform: lowercase;
+.ui-datatable tbody td{
+    text-transform:capitalize;
 }
 .ui-datatable .ui-sortable-column {
     cursor: pointer;

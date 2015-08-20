@@ -8,11 +8,16 @@
     <body>
         <p:dataTable id="tblEstudiantes" value="#{sessionEstudianteCarrera.estudiantesCarreraDTO}" var="item" rows="20" paginator="true"
                      rowIndexVar="rowIx"  rowKey="#{item.estudianteCarrera.id}" selectionMode="single" widgetVar="tblEstudiantesFilter"
+                     rowsPerPageTemplate="10,20,30,40,50,100"
                      selection="#{sessionEstudianteCarrera.estudianteCarreraDTO}" filteredValue="#{sessionEstudianteCarrera.filterEstudiantesCarreraDTO}"
                      rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'even-row' : 'odd-row'}" emptyMessage="#{msg['lbl.table.empty']}">
             <f:facet name="header">
-                <h:panelGrid styleClass="panelgrid" rowClasses="rowpanelgrid" columns="1">
+                <h:panelGrid styleClass="panelgrid" rowClasses="rowpanelgrid" columnClasses="col-sm-10,col-sm-2" columns="2">
                     <p:inputText id="globalFilter" onkeyup="PF('tblEstudiantesFilter').filter()" style="width:150px" placeholder="#{msg['lbl.buscar']}"/>
+                    <p:commandButton icon="ui-icon-search" onstart="PF('dlgLoading').show()" 
+                    oncomplete="PF('dlgLoading').hide(),PF('tblEstudiantesFilter').filter()"  action="#{estudianteCarreraController.buscar()}" value="#{btn.buscar_todo}">
+                        <f:param name="tipo-busqueda" value="todo"/>
+                    </p:commandButton>
                 </h:panelGrid>
             </f:facet>
             <p:column width="5%">

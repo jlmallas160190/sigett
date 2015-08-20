@@ -804,7 +804,7 @@ hr {
     padding: 4px 4px ;
     margin-top: -0.4em  !important;
     margin-left: -0.4em;
-    text-transform: none;
+    text-transform: capitalize;
     margin-right: -0.4em;
     color: #666;
     background: white url(../img/nav-bg.gif) 0 100% repeat-x;

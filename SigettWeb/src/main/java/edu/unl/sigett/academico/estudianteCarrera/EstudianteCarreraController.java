@@ -145,7 +145,6 @@ public class EstudianteCarreraController implements Serializable {
     }
 
     public void init() {
-        this.buscar();
         this.renderedCrear();
         this.renderedEditar();
     }
@@ -202,14 +201,20 @@ public class EstudianteCarreraController implements Serializable {
     }
 
     public void buscar() {
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        String param = (String) facesContext.getExternalContext().getRequestParameterMap().get("tipo-busqueda");
         this.sessionEstudianteCarrera.getEstudiantesCarreraDTO().clear();
         this.sessionEstudianteCarrera.getFilterEstudiantesCarreraDTO().clear();
+        OfertaAcademica ofertaAcademicaFiltro = null;
         try {
-            if (sessionEstudianteCarrera.getOfertaAcademicaSeleccionada() == null) {
-                return;
+            if (param == null) {
+                if (sessionEstudianteCarrera.getOfertaAcademicaSeleccionada() == null) {
+                    return;
+                }
+                ofertaAcademicaFiltro = sessionEstudianteCarrera.getOfertaAcademicaSeleccionada();
             }
             List<EstudianteCarrera> estudianteCarreras = this.estudianteCarreraService.buscar(new EstudianteCarrera(
-                    sessionUsuarioCarrera.getUsuarioCarreraDTO().getCarrera(), null, sessionEstudianteCarrera.getOfertaAcademicaSeleccionada(), null, null));
+                    sessionUsuarioCarrera.getUsuarioCarreraDTO().getCarrera(), null, ofertaAcademicaFiltro, null, null));
             if (estudianteCarreras == null) {
                 return;
             }

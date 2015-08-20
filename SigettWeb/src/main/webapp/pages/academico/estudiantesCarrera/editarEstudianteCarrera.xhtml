@@ -19,10 +19,10 @@
                 <p:growl id="msm" showDetail="true"/>
                 <p:panel>
                     <p:tabView id="tabViewDatosEstudiante">
-                        <p:tab title="#{msg['lbl.datos']} #{msg['lbl.personales']}">
+                        <p:tab title="#{lbl.datos_personales}">
                             <ui:include src="datosPersonales.xhtml"/> 
                         </p:tab>
-                        <p:tab  title="#{msg['lbl.informacion']} #{msg['lbl.estudio']}" rendered="#{sessionEstudianteCarrera.renderedInformacionEstudio}">
+                        <p:tab  title="#{lbl.datos_academicos}" rendered="#{sessionEstudianteCarrera.renderedInformacionEstudio}">
                             <p:panel id="pnlInformacionEstudio">
                                 <ui:include src="datosCarrera.xhtml"/>
                                 <p:overlayPanel appendToBody="true" my="left-top" showEffect="blind" for="detalleMatriculas" styleClass="modal-md"  

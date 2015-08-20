@@ -12,7 +12,9 @@
                 <ui:include src="./../../inicio/menu.xhtml"/>
             </ui:define>
             <ui:define name="left">
+                <p:panel header="#{lbl.buscar_por_periodos}" toggleable="true">
                 <ui:include src="tablaOfertaAcademicaFilter.xhtml"/>
+                </p:panel>
             </ui:define>
             <ui:define name="right">
                 <p:panel header="#{sessionUsuarioCarrera.usuarioCarreraDTO.carrera.nombre}">
